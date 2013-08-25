@@ -369,7 +369,7 @@ try:
 except IOError: # If file does not exist, create with defaults.
     gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "rsn": 0, "htp": 80, "nst": 8,
               "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
-              "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "checked",
+              "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
               "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
               "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1})
     sdf = open('./data/sd.json', 'w')
