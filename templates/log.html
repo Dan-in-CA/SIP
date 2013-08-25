@@ -1,0 +1,134 @@
+$def with (records)
+
+<!doctype html>
+
+<html>
+
+<head>
+<title>Water Log</title>
+<meta content="width=640" name="viewport">
+<link href="./static/images/icons/favicon.ico" rel="icon" type="image/x-icon" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+#overlay {
+	 visibility: hidden;
+	 position: absolute;
+	 left: 0px;
+	 top: 0px;
+	 width: 100%;
+	 height:100%;
+	 text-align:center;
+	 z-index: 1000;
+	 background-image:url(../static/images/misc/BlueTile.png);
+}
+#overlay div {
+	 width:200px;
+	 margin: 100px auto;
+	 background-color: #fff;
+	 border:1px solid #000;
+	 padding:10px;
+	 text-align:left;	 
+}
+h2 {
+	text-align: center;
+	font-family: Sans-serif;
+}
+
+.pwspan { 
+	float:left; 
+	border-style:none;
+	clear:both;
+	margin:10px 0px 10px 0px;
+}
+
+</style>
+
+<script>
+function fcancel() {window.location="/";}
+function ocancel() {window.location="/vl";}
+function link(s) {window.location=s;}
+function del(form) {
+  var p="";
+  if(!$sd['ipas']) p=prompt("Password Required","");
+  if(p!=null){form.elements[0].value=p;form.submit();}
+ }
+function subm(form) {
+  form.submit();
+}
+function hidepw(){
+	if ($sd['ipas']) {
+		document.getElementById("pwarea").style.display = "none";
+		}
+	else {
+		document.getElementById("pwarea").style.display = "block";
+		}
+}
+function overlay() {
+	el = document.getElementById("overlay");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+}
+</script>
+</head>
+	
+<body onload="hidepw()">
+
+<form method="get" action="cl" name="df">
+<input type="hidden" name="pw">
+</form>
+<form method="get" action="mp" name="mf">
+<input type="hidden" name="pid" value="-1">
+</form>
+<button onclick="fcancel()" style="height:44">
+<img align="absmiddle" height="20" src="../static/images/icons/svc_back.png">
+ Back
+</button>
+<button onclick="link('/vl')" style="height:44">
+<img align="absmiddle" height="20" src="../static/images/icons/svc_refresh.png">
+<b>Refresh</b>
+</button>
+<button onclick="del(df, 0)" style="height:44">
+<img align="absmiddle" height="20" src="../static/images/icons/svc_delall.png">
+ Delete All
+</button>
+<button onclick="overlay()" style="height:44">
+<img align="absmiddle" height="20" src="../static/images/icons/svc_options.png">
+ Log Options
+</button>
+
+$code:
+    if sd['lg'] == 'checked':
+        log_state = "Enabled"
+    else:
+        log_state = "Disabled"
+
+<br><br>	
+Logging $log_state
+<br>
+<b>Total number of records: $(len(records)-1)</b>
+<hr>
+
+<table>
+$for r in records:
+	    <tr class="log_rec">
+		$for d in r:
+	        <td align='center'>$d</td>
+	    </tr>
+</table>
+
+<div id="overlay">
+     <div>
+		<form name="logopts" action="/lo" method="get">
+		  <p><h2>Log Options</h2></p>
+		  	<label for="log">Enable Logging</label> <input type="checkbox" id="log" name="log" $sd['lg'] ><br>
+		  <label for="max">Maximum records to keep:</label> <input type="text" size="4" value="$sd['lr']" id="max" name="nrecords">(0 = no limit)<br>
+		  <span id='pwarea' style='display:block'; class="pwspan">
+			<label for="pw">Password Required:</label> <input type="password" size="10"id="pw">
+		  </span><br>
+		  <input type="submit" value="Submit">
+		  <button type="button" onclick="overlay()"; return false;>Cancel</button>
+		</form>
+     </div>
+</div>
+
+</body>
+</html>

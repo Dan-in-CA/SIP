@@ -1,0 +1,38 @@
+Vars held in the settings dict (gv.sd)
+
+from controller values (cvalues):
+en:1	enabled (operation)
+rd:0	rain delay (hours)
+mm:0	manual mode (bool)
+rbt:0	reboot (bool) 
+
+from options:
+htp:80	http port pi is using (o12 - not used)
+seq:1	sequential/concurrent operation (o16)
+sdt:0	station delay time(o17)
+mton:0	master on delay (o19)
+mtoff:0	master off delay (020)
+nbrd:1	number of boards (o15)
+tz:16	time zone (o1)
+urs:0	use rain sensor (o21 - not used)
+rst:1	Rain sensor type (normaly open =1, dafault, or closed, o22 - not used)
+wl:100	water level (percent, o23)
+mas:0	master station index (o18)
+ipas:1	ignore passwprd (bool, o25)
+pwd:"b3BlbmRvb3I=" encoded password (default shown here)
+loc:""	location (for weather - not used)
+rdst:0	rain delay stop time (unix time stamp)
+rs:0	rain sensed (o22 - not used)
+nopts:13 Number of optiions to be displayed
+
+for scheduling:
+bsy:0	program buisy
+mnp:32	maximum number of programs
+nprogs:0 number of programs (can be calculated form length of prog array)
+mo:[0] master operation bytes - contains bits per board for stations with master set
+rsn:0 Reset all stations
+nst:8 number of stations
+
+for logging:
+lg:0 log runs if = "checked"
+lr:100 limit number of log records to keep, 0 = no limit
