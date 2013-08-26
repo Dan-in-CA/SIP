@@ -16,10 +16,11 @@ August 25 2013
 --------------
 Additions, bug fixes:<br/>
 1. Implemented improved installation and update methods using GitHub.<br/>
-2. Added a "Run now" button to the programs page. Allows a schedule program to be started at any time. This overrides (stops) any running program.<br/>
-3. Added a readout of the Raspberry Pi's CPU temperature to the home page.<br/>
-4. Fixed a bug that would allow a station to be stopped / started without a password ueing the HTML API.<br/>
-5. Fixed a bug that would display an incorrect start day for a schedule program.<br/>
+2. Modified the program to automatically create default config files on new installations. This also prevents existing settings from being overwritten.<br/>
+3. Added a "Run now" button to the programs page. Allows a schedule program to be started at any time. This overrides (stops) any running program.<br/>
+4. Added a readout of the Raspberry Pi's CPU temperature to the home page.<br/>
+5. Fixed a bug that would allow a station to be stopped / started without a password ueing the HTML API.<br/>
+6. Fixed a bug that would display an incorrect start day for a schedule program.<br/>
 
 August 1 2013 Reved to firmware V 1.8.3
 ---------------------------------------
