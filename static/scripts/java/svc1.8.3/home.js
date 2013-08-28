@@ -11,6 +11,9 @@ function linkn(s){window.open(s, '_blank');}
 function setrd(form,idx) {var h=prompt("Enter hours to delay","0");if(h!=null){form.elements[idx].value=h;form.submit()};}
 function imgstr(s) {return "<img src=\""+baseurl+"/static/images/icons/svc_"+s+".png\" height=20 align=absmiddle>&nbsp;";}
 function datestr(t) {var _t=tz-48; return (new Date(t)).toUTCString()+((_t>=0)?"+":"-")+(Math.abs(_t)/4>>0)+":"+((Math.abs(_t)%4)*15/10>>0)+((Math.abs(_t)%4)*15%10);}
+// raspi CPU temp unit
+function toggle(form) {form.elements[0].value=tempunit;form.submit();}
+w("<form name=tt action=ttu method=get><input type=hidden name=tunit></form>");
 // print menu links
 w("<button style=\"height:44\" onclick=link(\"/\")>"+imgstr("reset")+"Refresh</button>");
 w("<button style=\"height:44\" onclick=link(\"/vo\")>"+imgstr("options")+"Options</button>");
@@ -23,7 +26,7 @@ if(ver>=100) w("<b>Firmware version</b>: "+(ver/100>>0)+"."+((ver/10>>0)%10)+"."
 else w("<b>Firmware version</b>: "+(ver/10>>0)+"."+(ver%10)+"<br>");
 w("<b>Device time</b>: "+datestr(devt*1000)+"<br>");
 if (typeof cputemp === 'undefined') cputemp="";
-w("<b>CPU Temp</b>: "+cputemp+"&deg;F"+"<hr>");
+w("<b>CPU Temp</b>: <span style='cursor:pointer' onclick='toggle(tt)' title='Click to toggle Celsius <> Fahrenheit'>"+cputemp+"&deg;"+tempunit+"</span><hr>");
 w("<script type=\"text/javascript\" src=\""+baseurl+"/static/scripts/java/svc1.8.3/"+((mm)?"manualmode.js":"progmode.js")+"\"></script>");
 // print status and other information
 w("<br><b>Operation</b>: "+(en?("on").fontcolor("green"):("OFF").fontcolor("red")));

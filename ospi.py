@@ -27,6 +27,7 @@ urls = [
     '/cl', 'clear_log',
     '/lo', 'log_options',
     '/rp', 'run_now',
+    '/ttu', 'toggle_temp',
     ]
 
   #### Import ospi_addon module (ospi_addon.py) if it exists. ####
@@ -366,12 +367,13 @@ try:
     if not 'lg' in gv.sd: gv.sd['lg'] = 0
     if not 'lr' in gv.sd: gv.sd['lr'] = 100
     if not 'seq' in gv.sd: gv.sd['seq'] = 1
+    if not 'tu' in gv.sd: gv.sd['tu'] = "C"
 except IOError: # If file does not exist, create with defaults.
     gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "rsn": 0, "htp": 80, "nst": 8,
               "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
               "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
               "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
-              "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1})
+              "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C"})
     sdf = open('./data/sd.json', 'w')
     json.dump(gv.sd, sdf)
     sdf.close()
@@ -465,8 +467,11 @@ class home:
         homepg += '<script>var en='+str(gv.sd['en'])+',rd='+str(gv.sd['rd'])+',mm='+str(gv.sd['mm'])+',rdst='+str(gv.sd['rdst'])+',mas='+str(gv.sd['mas'])+',urs='+str(gv.sd['urs'])+',rs='+str(gv.sd['rs'])+',wl='+str(gv.sd['wl'])+',ipas='+str(gv.sd['ipas'])+',loc="'+str(gv.sd['loc'])+'";</script>\n'
         homepg += '<script>var sbits='+str(gv.sbits).replace(' ', '')+',ps='+str(gv.ps).replace(' ', '')+';</script>\n'
         homepg += '<script>var lrun='+str(gv.lrun).replace(' ', '')+';</script>\n'
-        homepg += '<script>var snames='+data('snames')+';</script>\n'
-        homepg += '<script>var cputemp='+str(9.0/5.0*int(float(CPU_temperature()))+32)+';</script>\n'
+        homepg += '<script>var snames='+data('snames')+'; var tempunit="'+str(gv.sd['tu'])+'";</script>\n'
+        if gv.sd['tu'] == "F":
+          homepg += '<script>var cputemp='+str(9.0/5.0*int(float(CPU_temperature()))+32)+'; var tempunit="F";</script>\n'
+        else:   
+          homepg += '<script>var cputemp='+str(float(CPU_temperature()))+'; var tempunit="C";</script>\n'            
         homepg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/home.js\"></script>'
         return homepg
 
@@ -547,6 +552,9 @@ class change_options:
         except KeyError:
             pass 
         vstr = data('options')
+        if vstr.find("Sequential:") == -1: ### Temp fix for upgrade bug
+            os.remove("./data/options.txt")
+            vstr = data('options')
         ops = vstr.index('[')+1
         ope = vstr.index(']')
         optstr = vstr[ops:ope]
@@ -946,6 +954,18 @@ class run_now:
                     gv.ps[sid][1] = gv.rs[sid][2] # duration
         schedule_stations(time.time())
         raise web.seeother('/')
+
+class toggle_temp:
+    """Change units of Raspi's CPU temperature display on nome page."""
+    def GET(self):
+        qdict = web.input()
+        if qdict['tunit'] == "C":
+            gv.sd['tu'] = "F"
+        else:
+            gv.sd['tu'] = "C"
+        jsave(gv.sd, 'sd')
+        raise web.seeother('/')
+    
 
 if __name__ == '__main__':
     app = web.application(urls, globals())
