@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Updated 25/August/2013."""
+"""Updated 30/August/2013."""
 import re, os, json, time, base64, thread # standard Python modules
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads.
@@ -88,7 +88,8 @@ def log_run(datetime):
         else:
             pgr = str(gv.lrun[1])
         datastr = (pgr +', '+str(zones[gv.lrun[0]])+', '+str(gv.lrun[2]/60)+'m'+str(gv.lrun[2]%60)+
-                   's, '+time.strftime("%H:%M:%S, %a. %d %b %Y", time.localtime(datetime))+'\n')
+                   's, '+time.strftime("%H:%M:%S, %a. %d %b %Y", time.gmtime(datetime+((gv.sd['tz']/4)-12)*3600))+'\n')
+                    #lt = time.gmtime(now+((gv.sd['tz']/4)-12)*3600)
         f = open('./static/log/water_log.csv', 'r')
         log = f.readlines()
         f.close()
@@ -105,7 +106,7 @@ def prog_match(now, prog):
     """Test a program for current date and time match."""
     if not prog[0]: return 0 # Skip if program is not enabled
     devday = int(now/86400) # Check day match
-    lt = time.localtime(now)
+    lt = time.gmtime(now+((gv.sd['tz']/4)-12)*3600)
     if (prog[1]>=128) and (prog[2]>1): #Inverval program
         if (devday %prog[2]) != (prog[1] - 128): return 0
     else: # Weekday program
@@ -166,7 +167,7 @@ def main_loop(): # Runs in a seperate thread
         match = 0
         now = time.time()
         if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']) and not gv.sd['rd']:
-            lt = time.localtime(now)
+            lt = time.gmtime(now+((gv.sd['tz']/4)-12)*3600)
             if (lt[3]*60)+lt[4] != last_min: # only check programs once a minute
                 last_min = (lt[3]*60)+lt[4]
                 for i, p in enumerate(gv.pd): # get both index and prog item 
@@ -555,6 +556,7 @@ class change_options:
         if vstr.find("Sequential:") == -1: ### Temp fix for upgrade bug
             os.remove("./data/options.txt")
             vstr = data('options')
+
         ops = vstr.index('[')+1
         ope = vstr.index(']')
         optstr = vstr[ops:ope]
@@ -963,7 +965,7 @@ class toggle_temp:
             gv.sd['tu'] = "F"
         else:
             gv.sd['tu'] = "C"
-        jsave(gv.sd, 'sd')
+        jsave(gv.sd, 'sd')    
         raise web.seeother('/')
     
 

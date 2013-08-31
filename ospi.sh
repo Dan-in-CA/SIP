@@ -31,11 +31,11 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="Open Sprinkler Raspberry Pi"
 HOST=$(hostname -I | sed 's/ *$//g')
-PORT=:80 # Edit if different on your system 
+PORT=:8080 # Edit if different on your Raspberry Pi
 NAME=ospi.py
 DAEMON=/usr/bin/python
 DAEMON_ARGS="ospi.py $HOST$PORT"
-HOMEDIR=/home/pi/OSPi/ # Edit if different on your system 
+HOMEDIR=/home/pi/OSPi/ # Edit if different on your Raspberry Pi
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
