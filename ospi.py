@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Updated 30/August/2013."""
+"""Updated 25/August/2013."""
 import re, os, json, time, base64, thread # standard Python modules
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads.
@@ -789,7 +789,7 @@ class modify_program:
         if qdict['pid'] != '-1':
             mp = gv.pd[int(qdict['pid'])][:]
             if mp[1] >= 128 and mp[2] > 1: # If this is an interval program
-                dse = int((time.time()-time.timezone)/86400)
+                dse = int(((time.time()+(gv.sd['tz']/4)-12)*3600)/86400)
                 rel_rem = (((mp[1]-128) + mp[2])-(dse%mp[2]))%mp[2] # Convert absolute to relative days remaining for display
                 mp[1] = rel_rem + 128
             modprogpg += 'var pid='+qdict['pid']+', prog='+str(mp).replace(' ', '')+';</script>\n'
@@ -821,7 +821,7 @@ class change_program:
                 if gv.rs[i][3] == pnum:
                     gv.rs[i] = [0,0,0,0]
         if cp[1] >= 128 and cp[2] > 1:
-            dse = int((time.time()-time.timezone)/86400)
+            dse = int(((time.time()+(gv.sd['tz']/4)-12)*3600)/86400)
             ref = dse + cp[1]-128
             cp[1] = (ref%cp[2])+128            
         if int(qdict['pid']) > gv.sd['mnp']:
