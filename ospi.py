@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Updated 25/August/2013."""
+"""Updated 03/September/2013."""
 import re, os, json, time, base64, thread # standard Python modules
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads.
