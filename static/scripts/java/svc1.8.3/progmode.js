@@ -17,11 +17,14 @@ w("<button style=\"height:32\" onclick=link(\"/vr\")>"+imgstr("start")+"Run-Once
 w("<p><b>Station Status</b>:</p>");
 w("<table border=1>");
 var bid,s,sid,sn,rem,remm,rems,off,pname;
-off=((en==0||rd!=0||(urs!=0&&rs!=0))?1:0);
+//off=((en==0||rd!=0||(urs!=0&&rs!=0))?1:0); // move rain stuff to after sid = ...
+off=((en==0)?1:0); 
 for(bid=0;bid<nbrd;bid++){
   for(s=0;s<8;s++){
     w("<tr><td bgcolor=\"#E4E4E4\">");
     sid=bid*8+s;
+	 exempt=((ir[bid]&1<<s)?1:0);
+	 if(en==1) {off=(((rd!=0||(urs!=0&&rs!=0))&&exempt!=1)?1:0);}
     sn=sid+1;
     w(snames[sid]+':&nbsp;&nbsp;');
     w("</td><td>");

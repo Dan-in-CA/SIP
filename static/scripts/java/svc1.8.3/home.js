@@ -30,8 +30,8 @@ w("<button style=\"height:44\" onclick=link(\"/vl\")>"+imgstr("log")+"Log</butto
 if(ver>=100) w("<b>Firmware version</b>: "+(ver/100>>0)+"."+((ver/10>>0)%10)+"."+(ver%10)+"<br>");
 else w("<b>Firmware version</b>: "+(ver/10>>0)+"."+(ver%10)+"<br>");
 w("<b>Device time</b>: "+datestr(devt*1000)+"<br>");
-if (typeof cputemp === 'undefined') cputemp="";
 
+if (typeof cputemp === 'undefined') cputemp="";
 w("<b>CPU Temp</b>: <span id='heat' onmouseover='bluebg(this)' onmouseout='nobg(this)' style='cursor:pointer' onclick='toggle(tt)' title='Click to toggle Celsius <> Fahrenheit'>"+cputemp+"&deg;"+tempunit+"</span><hr>");
 w("<script type=\"text/javascript\" src=\""+baseurl+"/static/scripts/java/svc1.8.3/"+((mm)?"manualmode.js":"progmode.js")+"\"></script>");
 // print status and other information

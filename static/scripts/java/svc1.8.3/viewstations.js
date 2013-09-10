@@ -28,7 +28,20 @@ function fsubmit(f) {
       }
       f.elements["m"+bid].value=v;
     }
-  }
+	}
+    var vi;	
+    for(bid=0;bid<nboards;bid++) {
+      vi=0;
+      for(s=0;s<8;s++){
+       sid=bid*8+(7-s);
+		 vi=vi<<1;	
+	   if(sid+1==mas) {vi=vi+1;continue;}  
+      if(document.getElementById("rc"+sid).checked) {
+          vi=vi+1;
+        }	     		
+      }
+	   f.elements["i"+bid].value=vi;
+	}
   f.submit();
 }
 function fcancel() {window.location="/";}
@@ -43,6 +56,8 @@ for(sid=0;sid<nboards*8;sid++) {
   s=sid%8;
   w("Station "+(sn/10>>0)+(sn%10)+":");
   w("<input type=text size="+maxlen+" maxlength="+maxlen+" value=\""+snames[sid]+"\" name=s"+sid+" id=n"+sid+">&nbsp;");
+    if (sid+1!=mas) w("<input type=checkbox "+(rop[bid]&(1<<s)?"checked":"")+" id=rc"+sid+">Ignore rain?");
+  
   if (sid+1==mas) w("(<b>Master</b>)");
   else if (mas>0) w("<input type=checkbox "+(masop[bid]&(1<<s)?"checked":"")+" id=mc"+sid+">Activate master?");
   w("<br>");
@@ -50,6 +65,7 @@ for(sid=0;sid<nboards*8;sid++) {
 w("<hr><font size=3><b>Password:</b><input type=password size=10 "+(ipas?"disabled":"")+" name=pw></font><p></p>");
 for(bid=0;bid<nboards;bid++) {
   w("<input type=hidden name=m"+bid+">");
+  w("<input type=hidden name=i"+bid+">");
 }
 w("</form></span>");
 w("<button style=\"height:36\" onclick=\"fsubmit(sf)\">"+imgstr("submit")+"<b>Submit Changes</b></button>");

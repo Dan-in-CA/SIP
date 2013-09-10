@@ -12,6 +12,14 @@ UPDATES
 ===========
 ***********
 
+September 10 2013
+--------------
+Additions, bug fixes:<br/>
+1. Added a per-station "Ignore rain" option that allows a station to operate during rain delay or if a rain sensor detects rain.
+2. Modified the program to use the HTTP port setting from the Options page.
+3. Improved the way the program tracks current time. This simplified the code and should eliminate some timing bugs.
+4. Edited Denny's init.d startup script to remove IP address and port settings no longer needed.
+
 August 30 2013
 --------------
 Additions, bug fixes:<br/>
