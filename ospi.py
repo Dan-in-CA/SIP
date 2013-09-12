@@ -641,7 +641,7 @@ class change_options:
             incr = int(qdict['o15']) - (gv.sd['nbrd']-1)
             for i in range(incr):
                 gv.sd['mo'].append(0)
-			for i in range(incr):
+            for i in range(incr):
                 gv.sd['ir'].append(0) 	
             snames = data('snames')
             nlst = re.findall('[\'"].*?[\'"]', snames)
