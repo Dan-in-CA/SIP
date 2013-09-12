@@ -641,6 +641,8 @@ class change_options:
             incr = int(qdict['o15']) - (gv.sd['nbrd']-1)
             for i in range(incr):
                 gv.sd['mo'].append(0)
+			for i in range(incr):
+                gv.sd['ir'].append(0) 	
             snames = data('snames')
             nlst = re.findall('[\'"].*?[\'"]', snames)
             ln = len(nlst)
@@ -653,6 +655,7 @@ class change_options:
         elif int(qdict['o15'])+1 < gv.sd['nbrd']: # Shorten lists
             decr = gv.sd['nbrd'] - (int(qdict['o15'])+1)
             gv.sd['mo'] = gv.sd['mo'][:(int(qdict['o15'])+1)]
+			gv.sd['ir'] = gv.sd['ir'][:(int(qdict['o15'])+1)]
             snames = data('snames')
             nlst = re.findall('[\'"].*?[\'"]', snames)
             nstr = '['+','.join(nlst[:8+(int(qdict['o15'])*8)])+','']'
