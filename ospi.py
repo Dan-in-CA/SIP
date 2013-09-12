@@ -620,6 +620,7 @@ class change_options:
         gv.sd['htp'] = int(qdict['htp'])
         gv.sd['nbrd'] = int(qdict['o15'])+1
         gv.sd['nst'] = gv.sd['nbrd']*8
+		gv.sd['ir'] = [0]*gv.sd['nbrd']
         gv.sd['sdt']= int(qdict['o17'])
         gv.sd['mas'] = int(qdict['o18'])
         gv.sd['mton']= int(qdict['o19'])
