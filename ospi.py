@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Updated 10/September/2013."""
+"""Updated 12/September/2013."""
 import re, os, json, time, base64, thread # standard Python modules
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
@@ -655,7 +655,7 @@ class change_options:
         elif int(qdict['o15'])+1 < gv.sd['nbrd']: # Shorten lists
             decr = gv.sd['nbrd'] - (int(qdict['o15'])+1)
             gv.sd['mo'] = gv.sd['mo'][:(int(qdict['o15'])+1)]
-			gv.sd['ir'] = gv.sd['ir'][:(int(qdict['o15'])+1)]
+            gv.sd['ir'] = gv.sd['ir'][:(int(qdict['o15'])+1)]
             snames = data('snames')
             nlst = re.findall('[\'"].*?[\'"]', snames)
             nstr = '['+','.join(nlst[:8+(int(qdict['o15'])*8)])+','']'
