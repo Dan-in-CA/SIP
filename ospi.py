@@ -393,7 +393,7 @@ try:
     if not 'lr' in gv.sd: gv.sd['lr'] = 100
     if not 'seq' in gv.sd: gv.sd['seq'] = 1
     if not 'tu' in gv.sd: gv.sd['tu'] = "C"
-    if not 'ir' in gv.sd: gv.sd['ir'] = [0]
+    if not 'ir' in gv.sd: gv.sd['ir'] = [0]*gv.sd['nbrd']
 except IOError: # If file does not exist, create with defaults.
     gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
               "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
