@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Updated 12/September/2013."""
+"""Updated 14/September/2013."""
 import re, os, json, time, base64, thread # standard Python modules
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
@@ -149,7 +149,10 @@ def schedule_stations():
                     if gv.rs[sid][2]: # if station has a duration value
                         if not rain or gv.sd['ir'][b]&1<<s: # if no rain or station ignores rain
                             gv.rs[sid][0] = accumulate_time # set start time
-                            gv.rs[sid][1] = accumulate_time + gv.rs[sid][2] # Stop time = Start time + duration
+                            print 'start time ',gv.rs[sid][0]
+                            print 'gv.now ', gv.now
+                            gv.rs[sid][1] = (accumulate_time + gv.rs[sid][2]) # set new stop time
+                            #accumulate_time += gv.sd['sdt'] # add station delay
                         else: # if rain and station does not ignore, clear station from display
                             gv.sbits[b] = gv.sbits[b]&~2**s
                             gv.ps[s] = [0,0]    
@@ -238,7 +241,7 @@ def main_loop(): # Runs in a seperate thread
                                 set_output()
                                 gv.sbits[b] = gv.sbits[b]|2**s # Set display to on
                                 gv.ps[sid][0] = gv.rs[sid][3]
-                                gv.ps[sid][1] = gv.rs[sid][2]
+                                gv.ps[sid][1] = gv.rs[sid][2]+1 ### testing display
                                 if gv.sd['mas'] and gv.sd['mo'][b]&1<<(s-(s/8)*80):# Master settings
                                     masid = gv.sd['mas'] - 1 # master index
                                     gv.rs[masid][0] = gv.rs[sid][0] + gv.sd['mton']
@@ -265,8 +268,8 @@ def main_loop(): # Runs in a seperate thread
                         continue
                     if gv.srvals[idx]: # If station is on, decrement time remaining
                         gv.ps[idx][1] -= 1
-                        if gv.ps[idx][1] == 0:
-                            gv.ps[idx][0] = 0
+                        #if gv.ps[idx][1] == 0:
+                            #gv.ps[idx][0] = 0
 
             if not program_running:
                 gv.srvals = [0]*(gv.sd['nst'])
@@ -393,7 +396,7 @@ try:
     if not 'lr' in gv.sd: gv.sd['lr'] = 100
     if not 'seq' in gv.sd: gv.sd['seq'] = 1
     if not 'tu' in gv.sd: gv.sd['tu'] = "C"
-    if not 'ir' in gv.sd: gv.sd['ir'] = [0]*gv.sd['nbrd']
+    if not 'ir' in gv.sd: gv.sd['ir'] = [0]#*gv.sd['nbrd']
 except IOError: # If file does not exist, create with defaults.
     gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
               "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
@@ -642,7 +645,7 @@ class change_options:
             for i in range(incr):
                 gv.sd['mo'].append(0)
             for i in range(incr):
-                gv.sd['ir'].append(0) 	
+                gv.sd['ir'].append(0)    
             snames = data('snames')
             nlst = re.findall('[\'"].*?[\'"]', snames)
             ln = len(nlst)
