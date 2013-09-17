@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Updated 14/September/2013."""
+"""Updated 16/September/2013."""
 import re, os, json, time, base64, thread # standard Python modules
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
@@ -27,6 +27,7 @@ urls = [
     '/lo', 'log_options',
     '/rp', 'run_now',
     '/ttu', 'toggle_temp',
+    '/rev', 'show_revision',
     ]
 
   #### Import ospi_addon module (ospi_addon.py) if it exists. ####
@@ -139,7 +140,7 @@ def schedule_stations():
                             gv.rs[sid][1] = accumulate_time # set new stop time
                             accumulate_time += gv.sd['sdt'] # add station delay
                         else:
-                            gv.sbits[b] = gv.sbits[b]&~2**s
+                            gv.sbits[b] = gv.sbits[b]&~1<<s
                             gv.ps[s] = [0,0]
 
     else: # concurrent mode, stations allowed to run in parallel
@@ -148,11 +149,8 @@ def schedule_stations():
                     sid = b*8 + s # station index
                     if gv.rs[sid][2]: # if station has a duration value
                         if not rain or gv.sd['ir'][b]&1<<s: # if no rain or station ignores rain
-                            gv.rs[sid][0] = accumulate_time # set start time
-                            print 'start time ',gv.rs[sid][0]
-                            print 'gv.now ', gv.now
-                            gv.rs[sid][1] = (accumulate_time + gv.rs[sid][2]) # set new stop time
-                            #accumulate_time += gv.sd['sdt'] # add station delay
+                            gv.rs[sid][0] = gv.now #accumulate_time # set start time
+                            gv.rs[sid][1] = (gv.now + gv.rs[sid][2]) # set stop time
                         else: # if rain and station does not ignore, clear station from display
                             gv.sbits[b] = gv.sbits[b]&~2**s
                             gv.ps[s] = [0,0]    
@@ -199,31 +197,39 @@ def main_loop(): # Runs in a seperate thread
                 last_min = (lt[3]*60)+lt[4]
                 for i, p in enumerate(gv.pd): # get both index and prog item 
                     if prog_match(p) and p[0] and p[6]: # check if program time matches current time, is active, and has a duration
+                        duration = p[6]*gv.sd['wl']/100 # program duration scaled by "water level"
                         for b in range(gv.sd['nbrd']): # check each station 
                             for s in range(8):
                                 sid = b*8+s # station index
-                                if sid+1 == gv.sd['mas']: continue # skip if this is master valve
-                                if gv.srvals[sid]: continue # skip if currently on
+                                if sid+1 == gv.sd['mas']: continue # skip if this is master station
+                                if gv.srvals[sid]: continue # skip if currently on ???
                                 
                                 if p[7+b]&1<<s: # if this station is scheduled in this program
-                                    gv.rs[sid][2] = p[6]*gv.sd['wl']/100 # duration scaled by water level
-                                    gv.rs[sid][3] = i+1 # store program number
-                                    gv.ps[sid][0] = i+1 # store program number for display
-                                    gv.ps[sid][1] = gv.rs[sid][2] # duration
+                                    if not gv.sd['seq']: # If in concurrent mode
+                                        if duration > gv.rs[sid][2]: # If duration is longer than any already set for this station
+                                            gv.rs[sid][2] = duration
+                                            gv.rs[sid][3] = i+1 # store program number
+                                            gv.ps[sid][0] = i+1 # store program number for display
+                                            gv.ps[sid][1] = duration
+                                    else:
+                                        gv.rs[sid][2] = duration # p[6]*gv.sd['wl']/100 # store duration scaled by water level
+                                        gv.rs[sid][3] = i+1 # store program number for scheduling                                 
+                                        gv.ps[sid][0] = i+1 # store program number for display
+                                        gv.ps[sid][1] = duration
                                     match = True
             if match:
                 schedule_stations() # turns on gv.sd['bsy']
 
         if gv.sd['bsy']:
-            for b in range(gv.sd['nbrd']): 
+            for b in range(gv.sd['nbrd']): # Check each station once a second
                 for s in range(8):
                     sid = b*8 + s # station index
                     if gv.srvals[sid]: # if this station is on
                         if gv.now >= gv.rs[sid][1]: # check if time is up
                             gv.srvals[sid] = 0
                             set_output()
+                            gv.sbits[b] = gv.sbits[b]&~2**s
                             if gv.sd['mas']-1 != sid: # if not master, fill out log
-                                gv.sbits[b] = gv.sbits[b]&~2**s
                                 gv.ps[sid] = [0,0]
                                 gv.lrun[0] = sid
                                 gv.lrun[1] = gv.rs[sid][3]
@@ -231,15 +237,13 @@ def main_loop(): # Runs in a seperate thread
                                 gv.lrun[3] = gv.now
                                 log_run()
                                 gv.pon = None # Program has ended
-                            elif gv.sd['mas']-1 == sid:
-                                gv.sbits[b] = gv.sbits[b]&~2**s
                             gv.rs[sid] = [0,0,0,0]
                     else: # if this station is not yet on
                         if gv.now >= gv.rs[sid][0] and gv.now < gv.rs[sid][1]:
                             if gv.sd['mas']-1 != sid: # if not master
                                 gv.srvals[sid] = 1 # station is turned on
                                 set_output()
-                                gv.sbits[b] = gv.sbits[b]|2**s # Set display to on
+                                gv.sbits[b] = gv.sbits[b]|1<<s # Set display to on
                                 gv.ps[sid][0] = gv.rs[sid][3]
                                 gv.ps[sid][1] = gv.rs[sid][2]+1 ### testing display
                                 if gv.sd['mas'] and gv.sd['mo'][b]&1<<(s-(s/8)*80):# Master settings
@@ -248,12 +252,13 @@ def main_loop(): # Runs in a seperate thread
                                     gv.rs[masid][1] = gv.rs[sid][1] + gv.sd['mtoff']
                                     gv.rs[masid][3] = gv.rs[sid][3]
                             elif gv.sd['mas'] == sid+1:
-                                gv.sbits[b] = gv.sbits[b]|2**sid #(gv.sd['mas'] - 1)
+                                gv.sbits[b] = gv.sbits[b]|1<<sid #(gv.sd['mas'] - 1)
                                 gv.srvals[masid] = 1                              
                                 set_output()                   
             
             for s in range(gv.sd['nst']):
-                if gv.rs[s][1]: # if any station is running
+                #if gv.rs[s][1]: # if any station is running
+                if gv.srvals[s]: # if any station is on
                     program_running = True
                     gv.pon = gv.rs[s][3] # Store number of running program
                     break              
@@ -263,13 +268,11 @@ def main_loop(): # Runs in a seperate thread
             if program_running:           
                 if gv.sd['urs'] and gv.sd['rs']: # Stop stations if use rain sensor and rain detected.
                     stop_onrain() #### Should clear schedule for stations that do not ignore rain ####                
-                for idx in range(len(gv.ps)): # loop through program schedule (gv.ps)
-                    if gv.ps[idx][1] == 0: # skip stations with no duration
+                for idx in range(len(gv.rs)): # loop through program schedule (gv.ps) #### MAYBE SB gv.rs
+                    if gv.rs[idx][2] == 0: # skip stations with no duration
                         continue
                     if gv.srvals[idx]: # If station is on, decrement time remaining
                         gv.ps[idx][1] -= 1
-                        #if gv.ps[idx][1] == 0:
-                            #gv.ps[idx][0] = 0
 
             if not program_running:
                 gv.srvals = [0]*(gv.sd['nst'])
@@ -382,6 +385,8 @@ def to_sec(d=0, h=0, m=0, s=0):
     
 
   #### Global vars #####
+gv.ver = 183
+
 try:
     sdf = open('./data/sd.json', 'r') ## A config file ##
     gv.sd = json.load(sdf) #Settings Dictionary. A set of vars kept in memory and persisted in a file
@@ -492,7 +497,7 @@ class home:
         homepg += '<link href="./static/images/icons/favicon.ico" rel="icon" type="image/x-icon" />\n'
         homepg += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n'
         homepg += '<script>var baseurl=\"'+baseurl()+'\"</script>\n'
-        homepg += '<script>var ver=183,devt='+str(gv.now)+';var nbrd='+str(gv.sd['nbrd'])+',tz='+str(gv.sd['tz'])+';</script>\n'
+        homepg += '<script>var ver='+str(gv.ver)+',devt='+str(gv.now)+';var nbrd='+str(gv.sd['nbrd'])+',tz='+str(gv.sd['tz'])+';</script>\n'
         homepg += '<script>var en='+str(gv.sd['en'])+',rd='+str(gv.sd['rd'])+',mm='+str(gv.sd['mm'])+',rdst='+str(gv.sd['rdst'])+',mas='+str(gv.sd['mas'])+',urs='+str(gv.sd['urs'])+',rs='+str(gv.sd['rs'])+',ir='+str(gv.sd['ir'])+',wl='+str(gv.sd['wl'])+',ipas='+str(gv.sd['ipas'])+',loc="'+str(gv.sd['loc'])+'";</script>\n'
         homepg += '<script>var sbits='+str(gv.sbits).replace(' ', '')+',ps='+str(gv.ps).replace(' ', '')+';</script>\n'
         homepg += '<script>var lrun='+str(gv.lrun).replace(' ', '')+';</script>\n'
@@ -692,7 +697,6 @@ class change_stations:
     """Save changes to station names and master associations."""
     def GET(self):
         qdict = web.input()
-        print qdict
         try:
             if gv.sd['ipas'] != 1 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
                 raise web.unauthorized()
@@ -991,8 +995,16 @@ class run_now:
         schedule_stations()
         raise web.seeother('/')
 
+class show_revision:
+    """Show revision info to the user. Use: [URL of Pi]/rev."""
+    def GET(self):
+        revpg = '<!DOCTYPE html>\n'
+        revpg += 'ospi.py revision: 133<br/>\n'
+        revpg += 'September 16, 2013\n'
+        return revpg
+
 class toggle_temp:
-    """Change units of Raspi's CPU temperature display on home page."""
+    """Change units of Raspi\'s CPU temperature display on home page."""
     def GET(self):
         qdict = web.input()
         if qdict['tunit'] == "C":
@@ -1006,7 +1018,8 @@ class OSPi_app(web.application):
     """Allows HTTP port the program runs on to be selected by the program."""
     def run(self, port=gv.sd['htp'], *middleware): # get port number from options settings
         func = self.wsgifunc(*middleware)
-        return web.httpserver.runsimple(func, ('0.0.0.0', port)) 
+        return web.httpserver.runsimple(func, ('0.0.0.0', port))
+    
 
 if __name__ == '__main__':
     app = OSPi_app(urls, globals())
