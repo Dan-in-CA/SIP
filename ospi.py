@@ -1,9 +1,13 @@
 #!/usr/bin/python
-"""Updated 16/September/2013."""
+"""Updated 19/September/2013."""
 import re, os, json, time, base64, thread # standard Python modules
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
 import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
+ #### Revision information ####
+gv.ver = 183
+gv.rev = 134
+gv.rev_date = '19/September/2013'
 
  #### urls is a feature of web.py. When a GET request is recieved , the corrisponding class is exicuted.
 urls = [
@@ -122,7 +126,7 @@ def prog_match(prog):
         return 1 # Program matched
     return 0
 
-def schedule_stations():
+def schedule_stations(stations):
     """Schedule stattions/valves/zones to run."""
     if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']): # If rain delay or rain detected by sensor
         rain = True
@@ -147,13 +151,15 @@ def schedule_stations():
         for b in range(gv.sd['nbrd']): 
                 for s in range(8):
                     sid = b*8 + s # station index
+                    if not stations[b]&1<<s: # skip stations not in prog
+                        continue
                     if gv.rs[sid][2]: # if station has a duration value
                         if not rain or gv.sd['ir'][b]&1<<s: # if no rain or station ignores rain
                             gv.rs[sid][0] = gv.now #accumulate_time # set start time
                             gv.rs[sid][1] = (gv.now + gv.rs[sid][2]) # set stop time
                         else: # if rain and station does not ignore, clear station from display
                             gv.sbits[b] = gv.sbits[b]&~2**s
-                            gv.ps[s] = [0,0]    
+                            gv.ps[s] = [0,0]
     gv.sd['bsy'] = 1
     return
 
@@ -189,7 +195,6 @@ def main_loop(): # Runs in a seperate thread
     print 'Starting main loop \n'
     last_min = 0
     while True: # infinite loop
-        match = 0
         gv.now = time.time()+((gv.sd['tz']/4)-12)*3600 # Current time based on UTC time from the Pi adjusted by the Time Zone setting from options. updated once per second.
         if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']): # and not gv.sd['rd']:
             lt = time.gmtime(gv.now)
@@ -205,20 +210,21 @@ def main_loop(): # Runs in a seperate thread
                                 if gv.srvals[sid]: continue # skip if currently on ???
                                 
                                 if p[7+b]&1<<s: # if this station is scheduled in this program
-                                    if not gv.sd['seq']: # If in concurrent mode
-                                        if duration > gv.rs[sid][2]: # If duration is longer than any already set for this station
-                                            gv.rs[sid][2] = duration
-                                            gv.rs[sid][3] = i+1 # store program number
-                                            gv.ps[sid][0] = i+1 # store program number for display
-                                            gv.ps[sid][1] = duration
-                                    else:
+                                    if gv.sd['seq']: # sequential mode
                                         gv.rs[sid][2] = duration # p[6]*gv.sd['wl']/100 # store duration scaled by water level
                                         gv.rs[sid][3] = i+1 # store program number for scheduling                                 
                                         gv.ps[sid][0] = i+1 # store program number for display
-                                        gv.ps[sid][1] = duration
-                                    match = True
-            if match:
-                schedule_stations() # turns on gv.sd['bsy']
+                                        gv.ps[sid][1] = duration                                 
+                                    else: # concurrent mode
+                                        if duration < gv.rs[sid][2]: # If duration is shortter than any already set for this station
+                                            continue
+                                        else:    
+                                            gv.rs[sid][2] = duration
+                                            gv.rs[sid][3] = i+1 # store program number
+                                            gv.ps[sid][0] = i+1 # store program number for display
+                                            gv.ps[sid][1] = duration                                            
+                        schedule_stations(p[7:]) # turns on gv.sd['bsy']                    
+
 
         if gv.sd['bsy']:
             for b in range(gv.sd['nbrd']): # Check each station once a second
@@ -257,8 +263,8 @@ def main_loop(): # Runs in a seperate thread
                                 set_output()                   
             
             for s in range(gv.sd['nst']):
-                #if gv.rs[s][1]: # if any station is running
-                if gv.srvals[s]: # if any station is on
+                if gv.rs[s][1]: # if any station is scheduled
+                #if gv.srvals[s]: # if any station is on
                     program_running = True
                     gv.pon = gv.rs[s][3] # Store number of running program
                     break              
@@ -271,7 +277,7 @@ def main_loop(): # Runs in a seperate thread
                 for idx in range(len(gv.rs)): # loop through program schedule (gv.ps) #### MAYBE SB gv.rs
                     if gv.rs[idx][2] == 0: # skip stations with no duration
                         continue
-                    if gv.srvals[idx]: # If station is on, decrement time remaining
+                    if gv.srvals[idx]: # If station is on, decrement time remaining display
                         gv.ps[idx][1] -= 1
 
             if not program_running:
@@ -385,7 +391,6 @@ def to_sec(d=0, h=0, m=0, s=0):
     
 
   #### Global vars #####
-gv.ver = 183
 
 try:
     sdf = open('./data/sd.json', 'r') ## A config file ##
@@ -422,6 +427,8 @@ except KeyError:
     pass
 
 sdref = {'15':'nbrd', '16':'seq', '18':'mas', '21':'urs', '23':'wl', '25':'ipas'} #lookup table (Dictionary)
+
+gv.now = time.time()+((gv.sd['tz']/4)-12)*3600
 
 gv.srvals = [0]*(gv.sd['nst']) #Shift Register values
 
@@ -501,7 +508,8 @@ class home:
         homepg += '<script>var en='+str(gv.sd['en'])+',rd='+str(gv.sd['rd'])+',mm='+str(gv.sd['mm'])+',rdst='+str(gv.sd['rdst'])+',mas='+str(gv.sd['mas'])+',urs='+str(gv.sd['urs'])+',rs='+str(gv.sd['rs'])+',ir='+str(gv.sd['ir'])+',wl='+str(gv.sd['wl'])+',ipas='+str(gv.sd['ipas'])+',loc="'+str(gv.sd['loc'])+'";</script>\n'
         homepg += '<script>var sbits='+str(gv.sbits).replace(' ', '')+',ps='+str(gv.ps).replace(' ', '')+';</script>\n'
         homepg += '<script>var lrun='+str(gv.lrun).replace(' ', '')+';</script>\n'
-        homepg += '<script>var snames='+data('snames')+'; var tempunit="'+str(gv.sd['tu'])+'";</script>\n'
+        homepg += '<script>var snames='+data('snames')+';</script>\n'
+        homepg += '<script>var tempunit="'+str(gv.sd['tu'])+'";</script>\n'
         if gv.sd['tu'] == "F":
           homepg += '<script>var cputemp='+str(9.0/5.0*int(float(CPU_temperature()))+32)+'; var tempunit="F";</script>\n'
         else:   
@@ -999,8 +1007,10 @@ class show_revision:
     """Show revision info to the user. Use: [URL of Pi]/rev."""
     def GET(self):
         revpg = '<!DOCTYPE html>\n'
-        revpg += 'ospi.py revision: 133<br/>\n'
-        revpg += 'September 16, 2013\n'
+        revpg += 'Python Interval Program for OpenSprinkler Pi<br/><br/>\n'
+        revpg += 'Compatable with OpenSprinkler firmware 1.8.3.<br/><br/>\n'
+        revpg += 'ospi.py revision: '+str(gv.rev) +'<br/><br/>\n'
+        revpg += 'updated ' + gv.rev_date +'\n'
         return revpg
 
 class toggle_temp:
