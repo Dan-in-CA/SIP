@@ -6,8 +6,8 @@ import gv # 'global vars' An empty module, used for storing vars (as attributes)
 import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
  #### Revision information ####
 gv.ver = 183
-gv.rev = 134
-gv.rev_date = '19/September/2013'
+gv.rev = 135
+gv.rev_date = '23/September/2013'
 
  #### urls is a feature of web.py. When a GET request is recieved , the corrisponding class is exicuted.
 urls = [
@@ -134,7 +134,7 @@ def schedule_stations(stations):
         rain = False
     accumulate_time = gv.now
     if gv.sd['seq']: #sequential mode, stations run one after another
-        for b in range(gv.sd['nbrd']): 
+        for b in range(len(stations)):     
                 for s in range(8):
                     sid = b*8 + s # station index
                     if gv.rs[sid][2]: # if station has a duration value
@@ -148,7 +148,7 @@ def schedule_stations(stations):
                             gv.ps[s] = [0,0]
 
     else: # concurrent mode, stations allowed to run in parallel
-        for b in range(gv.sd['nbrd']): 
+        for b in range(len(stations)):      
                 for s in range(8):
                     sid = b*8 + s # station index
                     if not stations[b]&1<<s: # skip stations not in prog
@@ -203,11 +203,11 @@ def main_loop(): # Runs in a seperate thread
                 for i, p in enumerate(gv.pd): # get both index and prog item 
                     if prog_match(p) and p[0] and p[6]: # check if program time matches current time, is active, and has a duration
                         duration = p[6]*gv.sd['wl']/100 # program duration scaled by "water level"
-                        for b in range(gv.sd['nbrd']): # check each station 
+                        for b in range(len(p[7:7+gv.sd['nbrd']])): # check each station for boards listed in program up to number of boards in Options
                             for s in range(8):
                                 sid = b*8+s # station index
                                 if sid+1 == gv.sd['mas']: continue # skip if this is master station
-                                if gv.srvals[sid]: continue # skip if currently on ???
+                                if gv.srvals[sid]: continue # skip if currently on
                                 
                                 if p[7+b]&1<<s: # if this station is scheduled in this program
                                     if gv.sd['seq']: # sequential mode
@@ -222,8 +222,8 @@ def main_loop(): # Runs in a seperate thread
                                             gv.rs[sid][2] = duration
                                             gv.rs[sid][3] = i+1 # store program number
                                             gv.ps[sid][0] = i+1 # store program number for display
-                                            gv.ps[sid][1] = duration                                            
-                        schedule_stations(p[7:]) # turns on gv.sd['bsy']                    
+                                            gv.ps[sid][1] = duration          
+                        schedule_stations(p[7:7+gv.sd['nbrd']]) # turns on gv.sd['bsy']                    
 
 
         if gv.sd['bsy']:
@@ -539,7 +539,6 @@ class change_values:
         if qdict.has_key('mm') and qdict['mm'] == '0': clear_mm() #self.clear_mm()
         if qdict.has_key('rd') and qdict['rd'] != '0':
             gv.sd['rdst'] = (gv.now+(int(qdict['rd'])*3600))
-            #stop_stations()
             stop_onrain()
         elif qdict.has_key('rd') and qdict['rd'] == '0': gv.sd['rdst'] = 0   
         if qdict.has_key('rbt') and qdict['rbt'] == '1':
@@ -646,7 +645,6 @@ class change_options:
         gv.sd['wl'] = int(qdict['o23'])
         if qdict.has_key('o25'): gv.sd['ipas'] = int(qdict['o25'])
         gv.sd['loc'] = qdict['loc'] 
-        gv.srvals = [0]*(gv.sd['nst']) # Shift Register values
         gv.rovals = [0]*(gv.sd['nst']) # Run Once Durations
         jsave(gv.sd, 'sd')
         return
@@ -667,7 +665,13 @@ class change_options:
                 nlst.append("'S"+('%d'%(i+ln)).zfill(2)+"'")
             nstr = '['+','.join(nlst)
             nstr = nstr.replace("', ", "',")+",'']"
-            save('snames', nstr)         
+            save('snames', nstr)            
+            for i in range(incr*8):
+                gv.srvals.append(0)
+                gv.ps.append([0,0])
+                gv.rs.append([0,0,0,0])
+            for i in range(incr):    
+                gv.sbits.append(0)
         elif int(qdict['o15'])+1 < gv.sd['nbrd']: # Shorten lists
             decr = gv.sd['nbrd'] - (int(qdict['o15'])+1)
             gv.sd['mo'] = gv.sd['mo'][:(int(qdict['o15'])+1)]
@@ -675,15 +679,12 @@ class change_options:
             snames = data('snames')
             nlst = re.findall('[\'"].*?[\'"]', snames)
             nstr = '['+','.join(nlst[:8+(int(qdict['o15'])*8)])+','']'
-            save('snames', nstr)
-        gv.srvals = [0] * (int(qdict['o15'])+1) * 8
-        gv.ps = []
-        for i in range((int(qdict['o15'])+1) * 8):
-            gv.ps.append([0,0])
-        gv.rs = []
-        for i in range((int(qdict['o15'])+1) * 8):
-            gv.rs.append([0,0,0,0])    
-        gv.sbits = [0] * (int(qdict['o15'])+2)
+            save('snames', nstr) 
+            newlen = gv.sd['nst'] - decr * 8
+            gv.srvals = gv.srvals[:newlen]
+            gv.ps = gv.ps[:newlen]
+            gv.rs = gv.rs[:newlen]
+            gv.sbits = gv.sbits[:int(qdict['o15'])+1]
         return
 
 class view_stations:
@@ -695,7 +696,6 @@ class view_stations:
         stationpg += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n'
         stationpg += '<script>var baseurl=\"'+baseurl()+'\"</script>\n'
         stationpg += '<script>var nboards='+str(gv.sd['nbrd'])+',maxlen=12,mas='+str(gv.sd['mas'])+',ipas='+str(gv.sd['ipas'])+';</script>\n'
-        #stationpg += '<script>var masop='+str(gv.sd['mo'])+';</script>\n'
         stationpg += '<script>var masop='+str(gv.sd['mo'])+',rop='+str(gv.sd['ir'])+';</script>\n' ## added experimental "Ignore Rain"' feature
         stationpg += '<script>snames='+data('snames')+';</script>\n'
         stationpg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/viewstations.js\"></script>'
@@ -795,12 +795,12 @@ class change_runonce:
         if not gv.sd['en']: return # check operation status
         gv.rovals = json.loads(qdict['t'])
         gv.rovals.pop()
-        gv.ps = []
+        stations = [0] * gv.sd['nbrd']
+        gv.ps = [] # program schedule (for display)
+        gv.rs = [] # run schedule
         for i in range(gv.sd['nst']):
             gv.ps.append([0,0])
-        gv.rs = [] #run schedule
-        for i in range(gv.sd['nst']): # clear run schedule
-            gv.rs.append([0,0,0,0])
+            gv.rs.append([0,0,0,0])   
         for i, v in enumerate(gv.rovals):
             if v: # if this element has a value
                 gv.rs[i][0] = gv.now
@@ -808,7 +808,8 @@ class change_runonce:
                 gv.rs[i][3] = 98
                 gv.ps[i][0] = 98
                 gv.ps[i][1] = v
-        schedule_stations()
+                stations[i/8] += 2**(i%8)
+        schedule_stations(stations)
         raise web.seeother('/')
 
 class view_programs:
@@ -991,7 +992,8 @@ class run_now:
         if not p[0]: # if program is disabled
             raise web.seeother('/vp')
         stop_stations()
-        for b in range(gv.sd['nbrd']): # check each station 
+        #for b in range(gv.sd['nbrd']): # check each station
+        for b in range(len(p[7:7+gv.sd['nbrd']])): # check each station 
             for s in range(8):
                 sid = b*8+s # station index
                 if sid+1 == gv.sd['mas']: continue # skip if this is master valve
@@ -1000,7 +1002,7 @@ class run_now:
                     gv.rs[sid][3] = pid+1 # store program number in schedule
                     gv.ps[sid][0] = pid+1 # store program number for display
                     gv.ps[sid][1] = gv.rs[sid][2] # duration
-        schedule_stations()
+        schedule_stations(p[7:7+gv.sd['nbrd']])
         raise web.seeother('/')
 
 class show_revision:
