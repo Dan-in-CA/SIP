@@ -12,6 +12,23 @@ UPDATES
 ===========
 ***********
 
+September 28 2013 (jonathanmarsh)
+--------------
+Additions, bug fixes:<br/>
+1. Improved options handling and passing logic
+2. Added a "System Name" option to help users distinguish between multiple systems
+3. Configurable station name length (increased default to 32)
+4. Added logging options to options page
+
+September 23 2013
+--------------
+Additions, bug fixes:<br/>
+1. Added a new revisions page to the native web interface. 
+2. Modified the home.js file to show time zone info in the last run log near the bottom of the page.
+3. Fixed a bug in concurrent mode that kept a station running after it's duration had expired.
+4. Fixed a bug that would cause an exception (freeze the program) after the number of expansion boards was changed in Options.
+5. Fixed a bug that would stop a running station and clear scheduled stations when the number of expansion boards was changed in Options.
+
 September 10 2013
 --------------
 Additions, bug fixes:<br/>
