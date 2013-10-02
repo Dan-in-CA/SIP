@@ -1,8 +1,8 @@
-###!/usr/bin/python
+#!/usr/bin/python
 import re, os, json, time, base64, thread # standard Python modules
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
-##import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
+import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
  #### Revision information ####
 gv.ver = 183
 gv.rev = 136
@@ -57,13 +57,13 @@ def clear_mm():
         for i in range(gv.sd['nst']):
             gv.rs.append([0,0,0,0])    
         gv.srvals = [0]*(gv.sd['nst'])
-##        set_output()
+        set_output()
     return
 
-##def CPU_temperature():
-##    """Returns the temperature of the Raspberry Pi's CPU."""
-##    res = os.popen('vcgencmd measure_temp').readline()
-##    return(res.replace("temp=","").replace("'C\n",""))
+def CPU_temperature():
+    """Returns the temperature of the Raspberry Pi's CPU."""
+    res = os.popen('vcgencmd measure_temp').readline()
+    return(res.replace("temp=","").replace("'C\n",""))
 
 def log_run():
     """add run data to csv file - most recent first."""
@@ -156,7 +156,7 @@ def stop_onrain():
                 continue
             elif not all(v == 0 for v in gv.rs[sid]):
                 gv.srvals[sid] = [0]
-##                set_output()            
+                set_output()            
                 gv.ps[sid] = [0,0]
                 #gv.sbits = [0] * (gv.sd['nbrd'] +1)
                 gv.rs[sid] = [0,0,0,0]
@@ -164,7 +164,7 @@ def stop_onrain():
 
 def stop_stations():
         gv.srvals = [0]*(gv.sd['nst'])
-##        set_output()            
+        set_output()            
         gv.ps = []
         for i in range(gv.sd['nst']):
             gv.ps.append([0,0])   
@@ -218,7 +218,7 @@ def main_loop(): # Runs in a seperate thread
                     if gv.srvals[sid]: # if this station is on
                         if gv.now >= gv.rs[sid][1]: # check if time is up
                             gv.srvals[sid] = 0
-##                            set_output()
+                            set_output()
                             gv.sbits[b] = gv.sbits[b]&~2**s
                             if gv.sd['mas']-1 != sid: # if not master, fill out log
                                 gv.ps[sid] = [0,0]
@@ -233,7 +233,7 @@ def main_loop(): # Runs in a seperate thread
                         if gv.now >= gv.rs[sid][0] and gv.now < gv.rs[sid][1]:
                             if gv.sd['mas']-1 != sid: # if not master
                                 gv.srvals[sid] = 1 # station is turned on
-##                                set_output()
+                                set_output()
                                 gv.sbits[b] = gv.sbits[b]|1<<s # Set display to on
                                 gv.ps[sid][0] = gv.rs[sid][3]
                                 gv.ps[sid][1] = gv.rs[sid][2]+1 ### testing display
@@ -245,7 +245,7 @@ def main_loop(): # Runs in a seperate thread
                             elif gv.sd['mas'] == sid+1:
                                 gv.sbits[b] = gv.sbits[b]|1<<sid #(gv.sd['mas'] - 1)
                                 gv.srvals[masid] = 1                              
-##                                set_output()                   
+                                set_output()                   
             
             for s in range(gv.sd['nst']):
                 if gv.rs[s][1]: # if any station is scheduled
@@ -266,7 +266,7 @@ def main_loop(): # Runs in a seperate thread
 
             if not program_running:
                 gv.srvals = [0]*(gv.sd['nst'])
-##                set_output()
+                set_output()
                 gv.sbits = [0] * (gv.sd['nbrd'] +1)
                 gv.ps = []
                 for i in range(gv.sd['nst']):
@@ -438,37 +438,37 @@ gv.scount = 0 # Station count, used in set station to track on stations with mas
 
   ####  GPIO  #####
 
-##GPIO.setwarnings(False)
+GPIO.setwarnings(False)
 
   #### pin defines ####
-##pin_sr_dat = 13
-##pin_sr_clk = 7
-##pin_sr_noe = 11
-##pin_sr_lat = 15
+pin_sr_dat = 13
+pin_sr_clk = 7
+pin_sr_noe = 11
+pin_sr_lat = 15
 
-##def enableShiftRegisterOutput():
-##    GPIO.output(pin_sr_noe, GPIO.LOW)
+def enableShiftRegisterOutput():
+    GPIO.output(pin_sr_noe, GPIO.LOW)
 
-##def disableShiftRegisterOutput():
-##    GPIO.output(pin_sr_noe, GPIO.HIGH)
+def disableShiftRegisterOutput():
+    GPIO.output(pin_sr_noe, GPIO.HIGH)
 
-##GPIO.cleanup()
+GPIO.cleanup()
   #### setup GPIO pins to interface with shift register ####
-##GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
-##GPIO.setup(pin_sr_clk, GPIO.OUT)
-##GPIO.setup(pin_sr_noe, GPIO.OUT)
-##disableShiftRegisterOutput()
-##GPIO.setup(pin_sr_dat, GPIO.OUT)
-##GPIO.setup(pin_sr_lat, GPIO.OUT)
+GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
+GPIO.setup(pin_sr_clk, GPIO.OUT)
+GPIO.setup(pin_sr_noe, GPIO.OUT)
+disableShiftRegisterOutput()
+GPIO.setup(pin_sr_dat, GPIO.OUT)
+GPIO.setup(pin_sr_lat, GPIO.OUT)
 
-##def setShiftRegister(srvals):
-##    GPIO.output(pin_sr_clk, GPIO.LOW)
-##    GPIO.output(pin_sr_lat, GPIO.LOW)
-##    for s in range(gv.sd['nst']):
-##        GPIO.output(pin_sr_clk, GPIO.LOW)
-##        GPIO.output(pin_sr_dat, srvals[gv.sd['nst']-1-s])
-##        GPIO.output(pin_sr_clk, GPIO.HIGH)
-##    GPIO.output(pin_sr_lat, GPIO.HIGH)
+def setShiftRegister(srvals):
+    GPIO.output(pin_sr_clk, GPIO.LOW)
+    GPIO.output(pin_sr_lat, GPIO.LOW)
+    for s in range(gv.sd['nst']):
+        GPIO.output(pin_sr_clk, GPIO.LOW)
+        GPIO.output(pin_sr_dat, srvals[gv.sd['nst']-1-s])
+        GPIO.output(pin_sr_clk, GPIO.HIGH)
+    GPIO.output(pin_sr_lat, GPIO.HIGH)
 
   ##################
 
@@ -487,10 +487,10 @@ class home:
         homepg += '<script>var lrun='+str(gv.lrun).replace(' ', '')+';</script>\n'
         homepg += '<script>var snames='+data('snames')+';</script>\n'
         homepg += '<script>var tempunit="'+str(gv.sd['tu'])+'";</script>\n'
-##        if gv.sd['tu'] == "F":
-##          homepg += '<script>var cputemp='+str(9.0/5.0*int(float(CPU_temperature()))+32)+'; var tempunit="F";</script>\n'
-##        else:   
-##          homepg += '<script>var cputemp='+str(float(CPU_temperature()))+'; var tempunit="C";</script>\n'            
+        if gv.sd['tu'] == "F":
+          homepg += '<script>var cputemp='+str(9.0/5.0*int(float(CPU_temperature()))+32)+'; var tempunit="F";</script>\n'
+        else:   
+          homepg += '<script>var cputemp='+str(float(CPU_temperature()))+'; var tempunit="C";</script>\n'            
         homepg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/home.js\"></script>'
         return homepg
 
@@ -512,7 +512,7 @@ class change_values:
             qdict['en'] = '1' #default
         elif qdict.has_key('en') and qdict['en'] == '0':
             gv.srvals = [0]*(gv.sd['nst']) # turn off all stations
-##            set_output()
+            set_output()
         if qdict.has_key('mm') and qdict['mm'] == '0': clear_mm() #self.clear_mm()
         if qdict.has_key('rd') and qdict['rd'] != '0':
             gv.sd['rdst'] = (gv.now+(int(qdict['rd'])*3600))
@@ -521,7 +521,7 @@ class change_values:
         if qdict.has_key('rbt') and qdict['rbt'] == '1':
             jsave(gv.sd, 'sd')
             gv.srvals = [0]*(gv.sd['nst'])
-##            set_output()
+            set_output()
             os.system('reboot')
             raise web.seeother('/')
         for key in qdict.keys():
