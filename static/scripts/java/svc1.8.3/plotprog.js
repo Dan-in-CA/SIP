@@ -8,7 +8,7 @@
 var prog_color=["rgba(0,0,200,0.5)","rgba(0,200,0,0.5)","rgba(200,0,0,0.5)","rgba(0,200,200,0.5)"];
 var days_str=["Sun","Mon","Tue","Wed","Thur","Fri","Sat"];
 var xstart=80,ystart=80,stwidth=40,stheight=180;
-var winwidth=stwidth*nboards*8+xstart, winheight=26*stheight+ystart;
+var winwidth=stwidth*sd['nbrd']*8+xstart, winheight=26*stheight+ystart;
 var sid,sn,t;
 var simt=Date.UTC(yy,mm-1,dd,0,0,0,0);
 var simdate=new Date(simt);
@@ -50,39 +50,39 @@ function getrunstr(start,end){ // run time string
   return str;
 } 
 function plot_bar(sid,start,pid,end) { // plot program bar
-  w("<div title=\""+snames[sid]+" ["+getrunstr(start,end)+"]\" align=\"center\" style=\"position:absolute;background-color:"+prog_color[(pid+3)%4]+";left:"+getx(sid)+";top:"+gety(start/60)+";border:0;width:"+stwidth+";height:"+((end-start)/60*stheight/60)+"\">P"+pid+"</div>");
+  w("<div title=\""+snames[sid]+" ["+getrunstr(start,end)+"]\" align=\"center\" style=\"position:absolute;background-color:"+prog_color[(pid+3)%4]+";left:"+getx(sid)+"px;top:"+gety(start/60)+"px;border:0;width:"+stwidth+"px;height:"+((end-start)/60*stheight/60)+"px\">P"+pid+"</div>");
 }
 function plot_master(start,end) {  // plot master station
-  w("<div title=\"Master ["+getrunstr(start,end)+"]\" style=\"position:absolute;background-color:#CCCC80;left:"+getx(mas-1)+";top:"+gety(start/60)+";border:0;width:"+stwidth+";height:"+((end-start)/60*stheight/60)+"\"></div>");
+  w("<div title=\"Master ["+getrunstr(start,end)+"]\" style=\"position:absolute;background-color:#CCCC80;left:"+getx(mas-1)+"px;top:"+gety(start/60)+"px;border:0;width:"+stwidth+"px;height:"+((end-start)/60*stheight/60)+"px\"></div>");
   //if(mas==0||start==end)  return;
   //ctx.fillStyle="rgba(64,64,64,0.5)";
   //ctx.fillRect(getx(mas-1),gety(start/60),stwidth,(end-start)/60*stheight/60);
 }
 function plot_currtime() {
-  w("<div style=\"position:absolute;left:"+(xstart-stwidth/2-10)+";top:"+gety(devmin)+";border:1px solid rgba(200,0,0,0.5);width:"+(winwidth-xstart+stwidth/2)+";height:0;\"></div>");
+  w("<div style=\"position:absolute;left:"+(xstart-stwidth/2-10)+"px;top:"+gety(devmin)+"px;border:1px solid rgba(200,0,0,0.5);width:"+(winwidth-xstart+stwidth/2)+"px;height:0px;\"></div>");
 }
 function run_sched(simseconds,st_array,pid_array,et_array) { // run and plot schedule stored in array data
   var sid,endtime=simseconds;
-  for(sid=0;sid<nboards*8;sid++) {
+  for(sid=0;sid<sd['nbrd']*8;sid++) {
     if(pid_array[sid]) {
-      if(seq==1) { // sequential
+      if(sd['seq']==1) { // sequential
         plot_bar(sid,st_array[sid],pid_array[sid],et_array[sid]);
-        if((mas>0)&&(mas!=sid+1)&&(masop[sid>>3]&(1<<(sid%8))))
-          plot_master(st_array[sid]+mton, et_array[sid]+mtoff);
+        if((sd['mas']>0)&&(sd['mas']!=sid+1)&&(sd['mo'][sid>>3]&(1<<(sid%8))))
+          plot_master(st_array[sid]+sd['mton'], et_array[sid]+sd['mtoff']);
         endtime=et_array[sid];
       } else { // concurrent
         plot_bar(sid,simseconds,pid_array[sid],et_array[sid]);
         // check if this station activates master
-        if((mas>0)&&(mas!=sid+1)&&(masop[sid>>3]&(1<<(sid%8))))
+        if((sd['mas']>0)&&(sd['mas']!=sid+1)&&(sd['mo'][sid>>3]&(1<<(sid%8))))
           endtime=(endtime>et_array[sid])?endtime:et_array[sid];
       }
     }
   }
-  if(seq==0&&mas>0) plot_master(simseconds,endtime);
+  if(sd['seq']==0&&sd['mas']>0) plot_master(simseconds,endtime);
   return endtime;
 }
 function draw_title() {
-  w("<div align=\"center\" style=\"background-color:#EEEEEE;position:absolute;left:0px;top:10px;border:2px solid gray;padding:5px 0px;width:"+(winwidth)+";border-radius:10px;box-shadow:3px 3px 2px #888888;\"><b>Program Preview of</b>&nbsp;");
+  w("<div align=\"center\" style=\"background-color:#EEEEEE;position:absolute;left:0px;top:10px;border:2px solid gray;padding:5px 0px;width:"+(winwidth)+"px;border-radius:10px;box-shadow:3px 3px 2px #888888;\"><b>Program Preview of</b>&nbsp;");
   w(days_str[simdate.getUTCDay()]+" "+(simdate.getUTCMonth()+1)+"/"+(simdate.getUTCDate())+" "+(simdate.getUTCFullYear()));
   w("<br><font size=2>(Hover over each colored bar to see tooltip)</font>");
   w("</div>");
@@ -90,25 +90,25 @@ function draw_title() {
 
 function draw_grid() {
   // draw table and grid
-  for(sid=0;sid<=nboards*8;sid++) {
+  for(sid=0;sid<=sd['nbrd']*8;sid++) {
     sn=sid+1;
-    if(sid<nboards*8) w("<div style=\"position:absolute;left:"+(xstart+sid*stwidth-10)+";top:"+(ystart-15)+";width:"+stwidth+";height:20;border:0;padding:0;\"><font size=2>S"+(sn/10>>0)+(sn%10)+"</font></div>");
-    w("<div style=\"position:absolute;left:"+getx(sid)+";top:"+(ystart-10)+";border:1px solid gray;width:0;height:"+(winheight-ystart+30)+";\"></div>");
+    if(sid<sd['nbrd']*8) w("<div style=\"position:absolute;left:"+(xstart+sid*stwidth-10)+"px;top:"+(ystart-15)+"px;width:"+stwidth+"px;height:20px;border:0;padding:0;\"><font size=2>S"+(sn/10>>0)+(sn%10)+"</font></div>");
+    w("<div style=\"position:absolute;left:"+getx(sid)+"px;top:"+(ystart-10)+"px;border:1px solid gray;width:0px;height:"+(winheight-ystart+30)+"px;\"></div>");
   }
   // horizontal grid, time
   for(t=0;t<=24;t++) {
-    w("<div style=\"position:absolute;left:"+(xstart-stwidth/2-15)+";top:"+gety(t*60)+";border:1px solid gray;width:15;height:0;\"></div>");
-    w("<div style=\"position:absolute;left:"+(xstart-stwidth/2-8)+";top:"+(gety(t*60)+stheight/2)+";border:1px solid gray;width:8;height:0;\"></div>");
-    w("<div style=\"position:absolute;left:"+(xstart-70)+";top:"+(ystart+t*stheight-7)+";width=70;height:20;border:0;padding:0;\"><font size=2>"+(t/10>>0)+(t%10)+":00</font></div>");
+    w("<div style=\"position:absolute;left:"+(xstart-stwidth/2-15)+"px;top:"+gety(t*60)+"px;border:1px solid gray;width:15px;height:0px;\"></div>");
+    w("<div style=\"position:absolute;left:"+(xstart-stwidth/2-8)+"px;top:"+(gety(t*60)+stheight/2)+"px;border:1px solid gray;width:8px;height:0px;\"></div>");
+    w("<div style=\"position:absolute;left:"+(xstart-70)+"px;top:"+(ystart+t*stheight-7)+"px;width=70;height:20px;border:0;padding:0;\"><font size=2>"+(t/10>>0)+(t%10)+":00</font></div>");
   }
   plot_currtime();
 }
 function draw_program() {
   // plot program data by a full simulation
   var simminutes=0,busy=0,match_found=0,bid,s,sid,pid,match=[0,0];
-  var st_array=new Array(nboards*8),pid_array=new Array(nboards*8);
-  var et_array=new Array(nboards*8);
-  for(sid=0;sid<nboards*8;sid++)  {
+  var st_array=new Array(sd['nbrd']*8),pid_array=new Array(sd['nbrd']*8);
+  var et_array=new Array(sd['nbrd']*8);
+  for(sid=0;sid<sd['nbrd']*8;sid++)  {
     st_array[sid]=0;pid_array[sid]=0;et_array[sid]=0;
   }
   do { // check through every program
@@ -117,11 +117,11 @@ function draw_program() {
     for(pid=0;pid<nprogs;pid++) {
       var prog=pd[pid];
       if(check_match(prog,simminutes,simdate,simday)) {
-        for(sid=0;sid<nboards*8;sid++) {
+        for(sid=0;sid<sd['nbrd']*8;sid++) {
           bid=sid>>3;s=sid%8;
-          if(mas==(sid+1)) continue; // skip master station
+          if(sd['mas']==(sid+1)) continue; // skip master station
           if(prog[7+bid]&(1<<s)) {
-            et_array[sid]=prog[6]*wl/100>>0;pid_array[sid]=pid+1;
+            et_array[sid]=prog[6]*sd['wl']/100>>0;pid_array[sid]=pid+1;
             match_found=1;
           }//if
         }//for_sid
@@ -129,16 +129,16 @@ function draw_program() {
     }//for_pid
     if(match_found) {
       var acctime=simminutes*60;
-      if(seq) { // sequential
-        for(sid=0;sid<nboards*8;sid++) {
+      if(sd['seq']) { // sequential
+        for(sid=0;sid<sd['nbrd']*8;sid++) {
           if(et_array[sid]) {
             st_array[sid]=acctime;acctime+=et_array[sid];
-            et_array[sid]=acctime;acctime+=sdt;
+            et_array[sid]=acctime;acctime+=sd['sdt'];
             busy=1;
           }//if
         }//for
       } else {
-        for(sid=0;sid<nboards*8;sid++) {
+        for(sid=0;sid<sd['nbrd']*8;sid++) {
           if(et_array[sid]) {
             st_array[sid]=simminutes*60;
             et_array[sid]=simminutes*60+et_array[sid];
@@ -149,9 +149,9 @@ function draw_program() {
     }//if(match_found)
     if (busy) {
       var endminutes=run_sched(simminutes*60,st_array,pid_array,et_array)/60>>0;
-      if(seq&&simminutes!=endminutes) simminutes=endminutes;
+      if(sd['seq']&&simminutes!=endminutes) simminutes=endminutes;
       else simminutes++;
-      for(sid=0;sid<nboards*8;sid++)  {st_array[sid]=0;pid_array[sid]=0;et_array[sid]=0;} // clear program data
+      for(sid=0;sid<sd['nbrd']*8;sid++)  {st_array[sid]=0;pid_array[sid]=0;et_array[sid]=0;} // clear program data
     } else {
       simminutes++; // increment simulation time
     }

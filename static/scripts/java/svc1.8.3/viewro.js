@@ -8,17 +8,17 @@ function w(s) {document.writeln(s);}
 function imgstr(s) {return "<img src=\""+baseurl+"/static/images/icons/svc_"+s+".png\" height=20 align=absmiddle>&nbsp;";}
 function rst(f) {
   var sid,sn;
-  for(sid=0;sid<nboards*8;sid++) {
-    if(sid+1==mas)  continue;
+  for(sid=0;sid<sd['nbrd']*8;sid++) {
+    if(sid+1==sd['mas'])  continue;
     f.elements["mm"+sid].value=0;
     f.elements["ss"+sid].value=0;
   }
 }
 function fsubmit(f) {
-  var comm="/cr?pw="+(ipas?"":f.elements["pw"].value)+"&t=[";
+  var comm="/cr?pw="+(sd['ipas']?"":f.elements["pw"].value)+"&t=[";
   var sid,strmm,strss,mm,ss,matchfound=0;
-  for(sid=0;sid<nboards*8;sid++) {
-    if(sid+1==mas) {comm+="0,";continue;}
+  for(sid=0;sid<sd['nbrd']*8;sid++) {
+    if(sid+1==sd['mas']) {comm+="0,";continue;}
     strmm=f.elements["mm"+sid].value;
     strss=f.elements["ss"+sid].value;
     mm=(strmm=="")?0:parseInt(strmm);
@@ -37,16 +37,16 @@ w("<font size=3><b>Run-Once Program:</b></font></div><p></p>");
 var sid;
 w("<table border=1>");
 w("<form name=rf action=cr method=get>");
-for(sid=0;sid<nboards*8;sid++) {
+for(sid=0;sid<sd['nbrd']*8;sid++) {
   w("<tr><td bgcolor=\"#E4E4E4\">");
   w(snames[sid]+":&nbsp;&nbsp;</td><td>");
-  if (sid+1==mas) {w("(<b>Master</b>)<br>");continue;}
+  if (sid+1==sd['mas']) {w("(<b>Master</b>)<br>");continue;}
   w("<input type=text size=3 maxlength=3 value=0 name=mm"+sid+">:");
   w("<input type=text size=2 maxlength=2 value=0 name=ss"+sid+"> (mm:ss)<br>");
   w("</td>");
 }
 w("</table>");
-w("<hr><font size=3><b>Password:</b><input type=password size=10 "+(ipas?"disabled":"")+" name=pw></font><p></p>");
+w("<hr><font size=3><b>Password:</b><input type=password size=10 "+(sd['ipas']?"disabled":"")+" name=pw></font><p></p>");
 w("</form></span>");
 w("<button style=\"height:36\" onclick=\"fsubmit(rf)\">"+imgstr("submit")+"<b>Run Now</b></button>");
 w("<button style=\"height:36\" onclick=\"rst(rf)\">"+imgstr("reset")+"Reset Time</button>");

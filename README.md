@@ -12,6 +12,14 @@ UPDATES
 ===========
 ***********
 
+September 28 2013 (jonathanmarsh)
+--------------
+Additions, bug fixes:<br/>
+1. Improved options handling and passing logic
+2. Added a "System Name" option to help users distinguish between multiple systems
+3. Configurable station name length (increased default to 32)
+4. Added logging options to options page
+
 September 23 2013
 --------------
 Additions, bug fixes:<br/>

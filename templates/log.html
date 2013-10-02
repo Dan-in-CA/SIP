@@ -96,10 +96,12 @@ function overlay() {
 </button>
 
 $code:
-    if sd['lg'] == 'checked':
+    if sd['lg'] == 1:
         log_state = "Enabled"
+        log_option = "checked"
     else:
         log_state = "Disabled"
+        log_option = ""
 
 <br><br>	
 Logging $log_state
@@ -119,7 +121,7 @@ $for r in records:
      <div>
 		<form name="logopts" action="/lo" method="get">
 		  <p><h2>Log Options</h2></p>
-		  	<label for="log">Enable Logging</label> <input type="checkbox" id="log" name="log" $sd['lg'] ><br>
+		  	<label for="log">Enable Logging</label> <input type="checkbox" id="log" name="log" $log_option ><br>
 		  <label for="max">Maximum records to keep:</label> <input type="text" size="4" value="$sd['lr']" id="max" name="nrecords">(0 = no limit)<br>
 		  <span id='pwarea' style='display:block'; class="pwspan">
 			<label for="pw">Password Required:</label> <input type="password" size="10"id="pw">

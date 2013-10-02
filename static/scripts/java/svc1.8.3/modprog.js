@@ -45,7 +45,7 @@ function fsubmit(f) {
 	if(days[0]==0||(days[1]<2&&(days[0]&0x7f)==0)) {alert("Error: You have not selected any day.");return;}
 	// process stations
 	var stations=[0],station_selected=0,bid;
-	for(bid=0;bid<nboards;bid++) {
+	for(bid=0;bid<sd['nbrd'];bid++) {
 		stations[bid]=0;
 		for(s=0;s<8;s++) {
 			sid=bid*8+s;
@@ -67,12 +67,12 @@ function fsubmit(f) {
 	if(!(dm>=0&&ds>=0&&ds<60&&duration>0))	{alert("Error: Incorrect duration.");return;}
   // password
   var p="";
-  if(!ipas) p=prompt("Please enter your password:","");
+  if(!sd['ipas']) p=prompt("Please enter your password:","");
 	if(p!=null){
 		f.elements[0].value=p;
 		f.elements[1].value=pid;
 		f.elements[2].value="["+en+","+days[0]+","+days[1]+","+start_time+","+end_time+","+interval+","+duration;
-		for(i=0;i<nboards;i++) {f.elements[2].value+=","+stations[i];}
+		for(i=0;i<sd['nbrd'];i++) {f.elements[2].value+=","+stations[i];}
 		f.elements[2].value+="]";
 		f.submit();
 	}
@@ -91,7 +91,7 @@ w("<input type=radio name=rad_day id=days_n><b><u>Interval</u>:</b> Every <input
 w("<p><b>Select Stations:</b></p>");
 w("<table border=1 cellpadding=3>");
 var bid,s,sid;
-for(bid=0;bid<nboards;bid++) {
+for(bid=0;bid<sd['nbrd'];bid++) {
   for(s=0;s<8;s++) {
     sid=bid*8+s;
     if(sid%4==0) w("<tr>");
@@ -135,7 +135,7 @@ if(pid>-1) {
 	id("tds").value=""+((t%60)/10>>0)+((t%60)%10);
 	// process stations
 	var bits;
-	for(bid=0;bid<nboards;bid++) {
+	for(bid=0;bid<sd['nbrd'];bid++) {
 		bits=prog[bid+7];
 		for(s=0;s<8;s++) {sid=bid*8+s;id("s"+sid).checked=(bits&(1<<s)?true:false);}
 	}
