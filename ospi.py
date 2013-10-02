@@ -2,15 +2,12 @@
 import re, os, json, time, base64, thread # standard Python modules
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
-<<<<<<< HEAD
-import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
-=======
+
 try:
     import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
 except ImportError:
     pass
 
->>>>>>> working
  #### Revision information ####
 gv.ver = 183
 gv.rev = 136
@@ -446,46 +443,16 @@ gv.scount = 0 # Station count, used in set station to track on stations with mas
 
   ####  GPIO  #####
 
-<<<<<<< HEAD
-GPIO.setwarnings(False)
-=======
 try:
     GPIO.setwarnings(False)
 except NameError:
     pass
->>>>>>> working
 
   #### pin defines ####
 pin_sr_dat = 13
 pin_sr_clk = 7
 pin_sr_noe = 11
 pin_sr_lat = 15
-<<<<<<< HEAD
-
-def enableShiftRegisterOutput():
-    GPIO.output(pin_sr_noe, GPIO.LOW)
-
-def disableShiftRegisterOutput():
-    GPIO.output(pin_sr_noe, GPIO.HIGH)
-
-GPIO.cleanup()
-  #### setup GPIO pins to interface with shift register ####
-GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
-GPIO.setup(pin_sr_clk, GPIO.OUT)
-GPIO.setup(pin_sr_noe, GPIO.OUT)
-disableShiftRegisterOutput()
-GPIO.setup(pin_sr_dat, GPIO.OUT)
-GPIO.setup(pin_sr_lat, GPIO.OUT)
-
-def setShiftRegister(srvals):
-    GPIO.output(pin_sr_clk, GPIO.LOW)
-    GPIO.output(pin_sr_lat, GPIO.LOW)
-    for s in range(gv.sd['nst']):
-        GPIO.output(pin_sr_clk, GPIO.LOW)
-        GPIO.output(pin_sr_dat, srvals[gv.sd['nst']-1-s])
-        GPIO.output(pin_sr_clk, GPIO.HIGH)
-    GPIO.output(pin_sr_lat, GPIO.HIGH)
-=======
 
 def enableShiftRegisterOutput():
     try:
@@ -522,7 +489,6 @@ def setShiftRegister(srvals):
         GPIO.output(pin_sr_lat, GPIO.HIGH)
     except NameError:
         pass    
->>>>>>> working
 
   ##################
 
@@ -542,11 +508,6 @@ class home:
         homepg += '<script>var snames='+data('snames')+';</script>\n'
         homepg += '<script>var tempunit="'+str(gv.sd['tu'])+'";</script>\n'
         if gv.sd['tu'] == "F":
-<<<<<<< HEAD
-          homepg += '<script>var cputemp='+str(9.0/5.0*int(float(CPU_temperature()))+32)+'; var tempunit="F";</script>\n'
-        else:   
-          homepg += '<script>var cputemp='+str(float(CPU_temperature()))+'; var tempunit="C";</script>\n'            
-=======
             try:  
               homepg += '<script>var cputemp='+str(9.0/5.0*int(float(CPU_temperature()))+32)+'; var tempunit="F";</script>\n'
             except ValueError:
@@ -556,7 +517,6 @@ class home:
                 homepg += '<script>var cputemp='+str(float(CPU_temperature()))+'; var tempunit="C";</script>\n'            
             except ValueError:
                 pass
->>>>>>> working
         homepg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/home.js\"></script>'
         return homepg
 
