@@ -2,7 +2,11 @@
 import re, os, json, time, base64, thread # standard Python modules
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
-##import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
+try:
+    import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
+except ImportError:
+    pass
+
  #### Revision information ####
 gv.ver = 183
 gv.rev = 136
@@ -60,10 +64,10 @@ def clear_mm():
 ##        set_output()
     return
 
-##def CPU_temperature():
-##    """Returns the temperature of the Raspberry Pi's CPU."""
-##    res = os.popen('vcgencmd measure_temp').readline()
-##    return(res.replace("temp=","").replace("'C\n",""))
+def CPU_temperature():
+    """Returns the temperature of the Raspberry Pi's CPU."""
+    res = os.popen('vcgencmd measure_temp').readline()
+    return(res.replace("temp=","").replace("'C\n",""))
 
 def log_run():
     """add run data to csv file - most recent first."""
@@ -438,37 +442,44 @@ gv.scount = 0 # Station count, used in set station to track on stations with mas
 
   ####  GPIO  #####
 
-##GPIO.setwarnings(False)
+try:
+    GPIO.setwarnings(False)
+except NameError:
+    pass
 
   #### pin defines ####
-##pin_sr_dat = 13
-##pin_sr_clk = 7
-##pin_sr_noe = 11
-##pin_sr_lat = 15
+pin_sr_dat = 13
+pin_sr_clk = 7
+pin_sr_noe = 11
+pin_sr_lat = 15
 
-##def enableShiftRegisterOutput():
-##    GPIO.output(pin_sr_noe, GPIO.LOW)
+def enableShiftRegisterOutput():
+##    try:
+    GPIO.output(pin_sr_noe, GPIO.LOW)
+    
 
-##def disableShiftRegisterOutput():
-##    GPIO.output(pin_sr_noe, GPIO.HIGH)
-
-##GPIO.cleanup()
+def disableShiftRegisterOutput():
+    GPIO.output(pin_sr_noe, GPIO.HIGH)
+try:
+    GPIO.cleanup()
   #### setup GPIO pins to interface with shift register ####
-##GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
-##GPIO.setup(pin_sr_clk, GPIO.OUT)
-##GPIO.setup(pin_sr_noe, GPIO.OUT)
-##disableShiftRegisterOutput()
-##GPIO.setup(pin_sr_dat, GPIO.OUT)
-##GPIO.setup(pin_sr_lat, GPIO.OUT)
+    GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
+    GPIO.setup(pin_sr_clk, GPIO.OUT)
+    GPIO.setup(pin_sr_noe, GPIO.OUT)
+    disableShiftRegisterOutput()
+    GPIO.setup(pin_sr_dat, GPIO.OUT)
+    GPIO.setup(pin_sr_lat, GPIO.OUT)
 
-##def setShiftRegister(srvals):
-##    GPIO.output(pin_sr_clk, GPIO.LOW)
-##    GPIO.output(pin_sr_lat, GPIO.LOW)
-##    for s in range(gv.sd['nst']):
-##        GPIO.output(pin_sr_clk, GPIO.LOW)
-##        GPIO.output(pin_sr_dat, srvals[gv.sd['nst']-1-s])
-##        GPIO.output(pin_sr_clk, GPIO.HIGH)
-##    GPIO.output(pin_sr_lat, GPIO.HIGH)
+    def setShiftRegister(srvals):
+        GPIO.output(pin_sr_clk, GPIO.LOW)
+        GPIO.output(pin_sr_lat, GPIO.LOW)
+        for s in range(gv.sd['nst']):
+            GPIO.output(pin_sr_clk, GPIO.LOW)
+            GPIO.output(pin_sr_dat, srvals[gv.sd['nst']-1-s])
+            GPIO.output(pin_sr_clk, GPIO.HIGH)
+        GPIO.output(pin_sr_lat, GPIO.HIGH)
+except NameError:
+    pass    
 
   ##################
 
@@ -487,10 +498,16 @@ class home:
         homepg += '<script>var lrun='+str(gv.lrun).replace(' ', '')+';</script>\n'
         homepg += '<script>var snames='+data('snames')+';</script>\n'
         homepg += '<script>var tempunit="'+str(gv.sd['tu'])+'";</script>\n'
-##        if gv.sd['tu'] == "F":
-##          homepg += '<script>var cputemp='+str(9.0/5.0*int(float(CPU_temperature()))+32)+'; var tempunit="F";</script>\n'
-##        else:   
-##          homepg += '<script>var cputemp='+str(float(CPU_temperature()))+'; var tempunit="C";</script>\n'            
+        if gv.sd['tu'] == "F":
+            try:  
+              homepg += '<script>var cputemp='+str(9.0/5.0*int(float(CPU_temperature()))+32)+'; var tempunit="F";</script>\n'
+            except ValueError:
+               pass
+        else:
+            try:
+                homepg += '<script>var cputemp='+str(float(CPU_temperature()))+'; var tempunit="C";</script>\n'            
+            except ValueError:
+                pass
         homepg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/home.js\"></script>'
         return homepg
 
