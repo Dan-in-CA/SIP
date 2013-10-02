@@ -12,6 +12,11 @@ UPDATES
 ===========
 ***********
 
+October 1 2013
+--------------
+Changes:<br/>
+1. Changed the pin numbering option in the RPi.GPIO module from BCM to BOARD.
+
 September 23 2013
 --------------
 Additions, bug fixes:<br/>
