@@ -1,15 +1,14 @@
 ###!/usr/bin/python
-"""Master Git branch"""
 import re, os, json, time, base64, thread # standard Python modules
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
 ##import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
  #### Revision information ####
 gv.ver = 183
-gv.rev = 135
-gv.rev_date = '23/September/2013'
+gv.rev = 136
+gv.rev_date = '01/October/2013'
 
- #### urls is a feature of web.py. When a GET request is recieved , the corrisponding class is exicuted.
+ #### urls is a feature of web.py. When a GET request is recieved , the corrisponding class is executed.
 urls = [
     '/',  'home',
     '/cv', 'change_values',
@@ -46,20 +45,6 @@ def baseurl():
     """Return URL app is running under.""" 
     baseurl = web.ctx['home']
     return baseurl
-
-##def board_rev():
-##    """Auto-detect the Raspberry Pi board rev."""
-##    revision = "unknown"
-##    with open('/proc/cmdline', 'r') as f:
-##        line = f.readline()
-##    m = re.search('bcm2708.boardrev=(0x[0123456789abcdef]*) ', line)
-##    revision = m.group(1)
-##    revcode = int(revision, 16)
-##    if revcode <= 3:
-##        rev = 1
-##    else:
-##        rev = 2   
-##    return rev
 
 def clear_mm():
     """Clear manual mode settings."""
@@ -264,7 +249,6 @@ def main_loop(): # Runs in a seperate thread
             
             for s in range(gv.sd['nst']):
                 if gv.rs[s][1]: # if any station is scheduled
-                #if gv.srvals[s]: # if any station is on
                     program_running = True
                     gv.pon = gv.rs[s][3] # Store number of running program
                     break              
@@ -273,8 +257,8 @@ def main_loop(): # Runs in a seperate thread
 
             if program_running:           
                 if gv.sd['urs'] and gv.sd['rs']: # Stop stations if use rain sensor and rain detected.
-                    stop_onrain() #### Should clear schedule for stations that do not ignore rain ####                
-                for idx in range(len(gv.rs)): # loop through program schedule (gv.ps) #### MAYBE SB gv.rs
+                    stop_onrain() #Clear schedule for stations that do not ignore rain.               
+                for idx in range(len(gv.rs)): # loop through program schedule (gv.ps)
                     if gv.rs[idx][2] == 0: # skip stations with no duration
                         continue
                     if gv.srvals[idx]: # If station is on, decrement time remaining display
@@ -351,7 +335,7 @@ def load_programs():
         gv.pd = json.load(pf)
         pf.close()
     except IOError:
-        gv.pd = [] ## A config file -- return default and create file if not found. ##
+        gv.pd = [] #A config file -- return default and create file if not found.
         pf = open('./data/programs.json', 'w')
         json.dump(gv.pd, pf)
         pf.close()
@@ -457,27 +441,20 @@ gv.scount = 0 # Station count, used in set station to track on stations with mas
 ##GPIO.setwarnings(False)
 
   #### pin defines ####
-
-##if board_rev() == 1:
-##    pin_sr_dat = 21
-##else:
-##    pin_sr_dat = 27
-##pin_sr_clk =  4
-##pin_sr_noe = 17
-##pin_sr_lat = 22
-
-  #### NUMBER OF STATIONS
-##num_stations = gv.sd['nst']
+##pin_sr_dat = 13
+##pin_sr_clk = 7
+##pin_sr_noe = 11
+##pin_sr_lat = 15
 
 ##def enableShiftRegisterOutput():
-##    GPIO.output(pin_sr_noe, False)
+##    GPIO.output(pin_sr_noe, GPIO.LOW)
 
 ##def disableShiftRegisterOutput():
-##    GPIO.output(pin_sr_noe, True)
+##    GPIO.output(pin_sr_noe, GPIO.HIGH)
 
 ##GPIO.cleanup()
   #### setup GPIO pins to interface with shift register ####
-##GPIO.setmode(GPIO.BCM)
+##GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
 ##GPIO.setup(pin_sr_clk, GPIO.OUT)
 ##GPIO.setup(pin_sr_noe, GPIO.OUT)
 ##disableShiftRegisterOutput()
@@ -485,13 +462,13 @@ gv.scount = 0 # Station count, used in set station to track on stations with mas
 ##GPIO.setup(pin_sr_lat, GPIO.OUT)
 
 ##def setShiftRegister(srvals):
-##    GPIO.output(pin_sr_clk, False)
-##    GPIO.output(pin_sr_lat, False)
-##    for s in range(num_stations):
-##        GPIO.output(pin_sr_clk, False)
-##        GPIO.output(pin_sr_dat, srvals[num_stations-1-s])
-##        GPIO.output(pin_sr_clk, True)
-##    GPIO.output(pin_sr_lat, True)
+##    GPIO.output(pin_sr_clk, GPIO.LOW)
+##    GPIO.output(pin_sr_lat, GPIO.LOW)
+##    for s in range(gv.sd['nst']):
+##        GPIO.output(pin_sr_clk, GPIO.LOW)
+##        GPIO.output(pin_sr_dat, srvals[gv.sd['nst']-1-s])
+##        GPIO.output(pin_sr_clk, GPIO.HIGH)
+##    GPIO.output(pin_sr_lat, GPIO.HIGH)
 
   ##################
 
