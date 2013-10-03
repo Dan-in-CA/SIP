@@ -405,7 +405,7 @@ except IOError: # If file does not exist, create with defaults.
               "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
               "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
               "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
-              "snlen":32, "name":"OpenSprinkler Pi"})
+              "snlen":32, "name":u"OpenSprinkler Pi",})
     sdf = open('./data/sd.json', 'w')
     json.dump(gv.sd, sdf)
     sdf.close()
@@ -586,6 +586,7 @@ class change_options:
     """Save changes to options made on the options page."""
     def GET(self):
         qdict = web.input()
+        print 'qdict', qdict
         try:
             if gv.sd['ipas'] == 0 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
                 raise web.unauthorized()
@@ -614,6 +615,7 @@ class change_options:
         gv.sd['sdt']= int(qdict['osdt'])
         
         gv.sd['mas'] = int(qdict['omas'])
+        #gv.sd['mas'] = int(qdict['mas'])
         gv.sd['mton']= int(qdict['omton'])
         gv.sd['mtoff']= int(qdict['omtoff'])
         gv.sd['wl'] = int(qdict['owl'])
@@ -707,7 +709,7 @@ class change_options:
 ##=======
                 gv.sbits.append(0)         
         elif int(qdict['onbrd'])+1 < gv.sd['nbrd']: # Shorten lists
-            onbrd = qdict['onbrd']
+            onbrd = int(qdict['onbrd'])
             decr = gv.sd['nbrd'] - (onbrd+1)
             gv.sd['mo'] = gv.sd['mo'][:(onbrd+1)]
             gv.sd['ir'] = gv.sd['ir'][:(onbrd+1)]
