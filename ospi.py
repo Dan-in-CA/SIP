@@ -305,12 +305,11 @@ def data(dataf):
         f = open('./data/'+dataf+'.txt', 'r')
         data = f.read()
         f.close()
+        if dataf == 'options' and len(data.splitlines()) == 1:
+            data = write_options()
     except IOError:
         if dataf == 'options': ## A config file -- return defaults and create file if not found. ##
-            data = 'var opts=["Time zone:",0,48,1,"HTTP port:",0,80,12,"",0,0,13,"Ext. boards:",0,0,15,"Sequential:",1,1,16,"Station delay:",0,0,17,"Master station:",0,0,18,"Mas. on adj.:",0,0,19,"Mas. off adj.:",0,0,20,"Use rain sensor:",1,0,21,"Normally open:",1,1,22,"Water level (%):",0,100,23,"Ignore password:",1,0,25,0];var nopts=12,loc="";'
-            f = open('./data/'+dataf+'.txt', 'w')
-            f.write(data)
-            f.close()
+            data = write_options()
         elif dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
             data = "['S01','S02','S03','S04','S05','S06','S07','S08',]"
             f = open('./data/'+dataf+'.txt', 'w')
@@ -319,6 +318,30 @@ def data(dataf):
         else:
             return None
     return data
+
+def write_options():
+    optionstext = '''var opts=[
+["System name","string","name","Unique name of this OpenSprinkler system."],
+["HTTP port","int","htp", "HTTP port (effective after reboot)."],
+["Location","string","loc", "City name or zip code. Use comma or + in place of space."],
+["Time zone","int","tz", "Example: GMT-4:00, GMT+5:30 (effective after reboot)."],
+["Sequential","boolean","seq", "Sequential or concurrent running mode"],
+["Extension boards","int","nbrd", "Number of extension boards"],
+["Station delay","int","sdt", "Station delay time (in seconds), between 0 and 240."],
+["Master station","int","mas", "Select master station"],
+["Master on adjust","int","mton", "Master on delay (in seconds), between +0 and +60."],
+["Master off adjust","int","mtoff", "Master off delay (in seconds), between -60 and +60."],
+["Use rain sensor","boolean","urs", "Use rain sensor"],
+["Normally open","boolean","rst", "Rain sensor type"],
+["Water level (%)","int","wl", "Water level, between 0% and 250%."],
+["Enable logging","boolean","lg", "Log all events - note that repetitive writing to an SD card can shorten its lifespan."],
+["Maximum log entries","int","lr", "Length of log to keep, 0=no limits."],
+["Ignore password","boolean","ipas", "Ignore web password"]
+];'''
+    f = open('./data/options.txt', 'w')
+    f.write(optionstext)
+    f.close()
+    return optionstext
 
 def save(dataf, datastr):
     """Save data to text file. dataf = file to save to, datastr = data string to save."""
@@ -505,7 +528,7 @@ def pass_options(opts):
         else:
             optstring += str(gv.sd[o])
         optstring += ",\n" 
-    optstring = optstring[:-2] + "\n}\n"   
+    optstring = optstring[:-2] + "\n}\n"
     return optstring
     
   #### Class Definitions ####
@@ -615,7 +638,6 @@ class change_options:
         gv.sd['sdt']= int(qdict['osdt'])
         
         gv.sd['mas'] = int(qdict['omas'])
-        #gv.sd['mas'] = int(qdict['mas'])
         gv.sd['mton']= int(qdict['omton'])
         gv.sd['mtoff']= int(qdict['omtoff'])
         gv.sd['wl'] = int(qdict['owl'])
@@ -652,28 +674,6 @@ class change_options:
         #alert = '<script>alert("Options values saved.");window.location="/";</script>'
         return #alert # -- Alerts are not considered good interface progrmming. Use sparingly!
 
-##<<<<<<< HEAD
-##    def update_sd(self, qdict):
-##        """Transfer user input to vars."""
-##        gv.sd['htp'] = int(qdict['htp'])
-##        gv.sd['nbrd'] = int(qdict['o15'])+1
-##        gv.sd['nst'] = gv.sd['nbrd']*8
-##        gv.sd['sdt']= int(qdict['o17'])
-##        gv.sd['mas'] = int(qdict['o18'])
-##        gv.sd['mton']= int(qdict['o19'])
-##        gv.sd['mtoff']= int(qdict['o20'])
-##        gv.sd['tz'] = int(qdict['o1'])
-##        if qdict.has_key('o16'): gv.sd['seq'] = int(qdict['o16'])
-##        if qdict.has_key('o21'): gv.sd['urs'] = int(qdict['o21'])
-##        gv.sd['wl'] = int(qdict['o23'])
-##        if qdict.has_key('o25'): gv.sd['ipas'] = int(qdict['o25'])
-##        gv.sd['loc'] = qdict['loc'] 
-##        gv.rovals = [0]*(gv.sd['nst']) # Run Once Durations
-##        jsave(gv.sd, 'sd')
-##        return
-##
-##=======
-##>>>>>>> JM_from_remote
     def update_scount(self, qdict):
         """Increase or decrease the number of stations shown when expansion boards are added in options."""
         if int(qdict['onbrd'])+1 > gv.sd['nbrd']: # Lengthen lists
@@ -696,17 +696,6 @@ class change_options:
                 gv.ps.append([0,0])
                 gv.rs.append([0,0,0,0])
             for i in range(incr):    
-##<<<<<<< HEAD
-##                gv.sbits.append(0)
-##        elif int(qdict['o15'])+1 < gv.sd['nbrd']: # Shorten lists
-##            decr = gv.sd['nbrd'] - (int(qdict['o15'])+1)
-##            gv.sd['mo'] = gv.sd['mo'][:(int(qdict['o15'])+1)]
-##            gv.sd['ir'] = gv.sd['ir'][:(int(qdict['o15'])+1)]
-##            snames = data('snames')
-##            nlst = re.findall('[\'"].*?[\'"]', snames)
-##            nstr = '['+','.join(nlst[:8+(int(qdict['o15'])*8)])+','']'
-##            save('snames', nstr) 
-##=======
                 gv.sbits.append(0)         
         elif int(qdict['onbrd'])+1 < gv.sd['nbrd']: # Shorten lists
             onbrd = int(qdict['onbrd'])
@@ -717,18 +706,12 @@ class change_options:
             nlst = re.findall('[\'"].*?[\'"]', snames)
             nstr = '['+','.join(nlst[:8+(onbrd*8)])+','']'
             save('snames', nstr)
-##>>>>>>> JM_from_remote
             newlen = gv.sd['nst'] - decr * 8
             gv.srvals = gv.srvals[:newlen]
             gv.ps = gv.ps[:newlen]
             gv.rs = gv.rs[:newlen]
-##<<<<<<< HEAD
-##            gv.sbits = gv.sbits[:int(qdict['o15'])+1]
-##        return
-##=======
             gv.sbits = gv.sbits[:onbrd+1]
         return
-##>>>>>>> JM_from_remote
 
 class view_stations:
     """Open a page to view and edit station names and master associations."""
@@ -736,12 +719,7 @@ class view_stations:
         stationpg = '<!DOCTYPE html>\n'
         stationpg += data('meta')
         stationpg += '<script>var baseurl=\"'+baseurl()+'\"</script>\n'
-##<<<<<<< HEAD
-##        stationpg += '<script>var nboards='+str(gv.sd['nbrd'])+',maxlen=12,mas='+str(gv.sd['mas'])+',ipas='+str(gv.sd['ipas'])+';</script>\n'
-##        stationpg += '<script>var masop='+str(gv.sd['mo'])+',rop='+str(gv.sd['ir'])+';</script>\n' ## added experimental "Ignore Rain"' feature
-##=======
         stationpg += '<script>var baseurl=\"'+baseurl()+'\"\n' + pass_options(["nbrd","snlen","mas","ipas","mo","ir"]) + '</script>\n'
-##>>>>>>> JM_from_remote
         stationpg += '<script>snames='+data('snames')+';</script>\n'
         stationpg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/viewstations.js\"></script>'
         return stationpg
