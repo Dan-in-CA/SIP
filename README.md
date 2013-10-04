@@ -12,6 +12,21 @@ UPDATES
 ===========
 ***********
 
+October 4 2013 (jonathanmarsh)
+--------------
+Additions, bug fixes:<br/>
+1. Improved options handling and passing logic
+2. Added a "System Name" option to help users distinguish between multiple systems
+3. Configurable station name length (increased default to 32)
+4. Added logging options to options page
+
+(Dan)
+Additions, bug fixes:<br/>
+1. Moved RasPi specific code into try-except blocks allowing program to run on multiple platforms
+2. Added "write_options" function to create/update new style options.txt file in data directory.
+3. Fixed a bug in new options code that prevented master station from being selected.
+4. Fixed a bug that caused an exception when the number of expansion boards was reduced.
+
 October 1 2013
 --------------
 Changes:<br/>

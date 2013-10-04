@@ -18,14 +18,14 @@ function snf(sid,sbit) {
 w("<b>Manual Control:</b> (timer is optional)<p></p>");
 w("<table border=1>");
 var bid,s,sid,sn,rem,remm,rems,sbit;
-for(bid=0;bid<nbrd;bid++){
+for(bid=0;bid<sd['nbrd'];bid++){
   for(s=0;s<8;s++){
     w("<tr><td bgcolor='#E4E4E4'>");
     sid=bid*8+s;
     sn=sid+1;
     //w("Station "+(sn/10>>0)+(sn%10)+": ");
     w(snames[sid]+":&nbsp;&nbsp;</td><td>");
-    if(sn==mas) {w(((sbits[bid]>>s)&1?("<b>On</b>").fontcolor("green"):("Off").fontcolor("black"))+" (<b>Master</b>)");}
+    if(sn==sd['mas']) {w(((sbits[bid]>>s)&1?("<b>On</b>").fontcolor("green"):("Off").fontcolor("black"))+" (<b>Master</b>)");}
     else {
       rem=ps[sid][1];
       if(rem>65536) rem=0;

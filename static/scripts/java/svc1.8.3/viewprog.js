@@ -9,7 +9,7 @@ function w(s) {document.writeln(s);}
 function imgstr(s) {return "<img src=\""+baseurl+"/static/images/icons/svc_"+s+".png\" height=20 align=absmiddle>&nbsp;";}
 function del(form,idx) {
   var p="";
-  if(!ipas) p=prompt("Please enter your password:","");
+  if(!sd['ipas']) p=prompt("Please enter your password:","");
   if(p!=null){form.elements[0].value=p;form.elements[1].value=idx;form.submit();}
 }
 function mod(form,idx) {form.elements[0].value=idx;form.submit();}
@@ -38,7 +38,7 @@ function pdays(days){
 function pstations(data){
   w("<table border=1 cellpadding=3px>");
   var bid,s,bits,sid;
-  for(bid=0;bid<nboards;bid++){
+  for(bid=0;bid<sd['nbrd'];bid++){
     bits=data[bid+7];
     for(s=0;s<8;s++){
       sid=bid*8+s;
@@ -61,7 +61,7 @@ w("<button style=\"height:44\" onclick=\"fcancel()\">"+imgstr("back")+"Back</but
 w("<button style=\"height:44\" onclick=\"mod(mf,-1)\">"+imgstr("addall")+"<b>Add a New Program</b></button>");
 w("<button style=\"height:44\" onclick=\"del(df,-1)\">"+imgstr("delall")+"Delete All</button>");
 w("<button style=\"height:44\" onclick=\"fplot()\">"+imgstr("preview")+"Preview</button><hr>");
-w("<b>Total number of programs: "+nprogs+" (maximum is "+mnp+")</b><br>");
+w("<b>Total number of programs: "+nprogs+" (maximum is "+sd['mnp']+")</b><br>");
 // print programs
 var pid,st,et,iv,du,sd;
 for(pid=0;pid<nprogs;pid++) {

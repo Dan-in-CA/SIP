@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 import re, os, json, time, base64, thread # standard Python modules
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
@@ -10,8 +11,8 @@ except ImportError:
 
  #### Revision information ####
 gv.ver = 183
-gv.rev = 136
-gv.rev_date = '01/October/2013'
+gv.rev = 137
+gv.rev_date = '04/October/2013'
 
  #### urls is a feature of web.py. When a GET request is recieved , the corrisponding class is executed.
 urls = [
@@ -305,12 +306,11 @@ def data(dataf):
         f = open('./data/'+dataf+'.txt', 'r')
         data = f.read()
         f.close()
+        if dataf == 'options' and len(data.splitlines()) == 1:
+            data = write_options()
     except IOError:
         if dataf == 'options': ## A config file -- return defaults and create file if not found. ##
-            data = 'var opts=["Time zone:",0,48,1,"HTTP port:",0,80,12,"",0,0,13,"Ext. boards:",0,0,15,"Sequential:",1,1,16,"Station delay:",0,0,17,"Master station:",0,0,18,"Mas. on adj.:",0,0,19,"Mas. off adj.:",0,0,20,"Use rain sensor:",1,0,21,"Normally open:",1,1,22,"Water level (%):",0,100,23,"Ignore password:",1,0,25,0];var nopts=12,loc="";'
-            f = open('./data/'+dataf+'.txt', 'w')
-            f.write(data)
-            f.close()
+            data = write_options()
         elif dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
             data = "['S01','S02','S03','S04','S05','S06','S07','S08',]"
             f = open('./data/'+dataf+'.txt', 'w')
@@ -319,6 +319,30 @@ def data(dataf):
         else:
             return None
     return data
+
+def write_options():
+    optionstext = '''var opts=[
+["System name","string","name","Unique name of this OpenSprinkler system."],
+["HTTP port","int","htp", "HTTP port (effective after reboot)."],
+["Location","string","loc", "City name or zip code. Use comma or + in place of space."],
+["Time zone","int","tz", "Example: GMT-4:00, GMT+5:30 (effective after reboot)."],
+["Sequential","boolean","seq", "Sequential or concurrent running mode"],
+["Extension boards","int","nbrd", "Number of extension boards"],
+["Station delay","int","sdt", "Station delay time (in seconds), between 0 and 240."],
+["Master station","int","mas", "Select master station"],
+["Master on adjust","int","mton", "Master on delay (in seconds), between +0 and +60."],
+["Master off adjust","int","mtoff", "Master off delay (in seconds), between -60 and +60."],
+["Use rain sensor","boolean","urs", "Use rain sensor"],
+["Normally open","boolean","rst", "Rain sensor type"],
+["Water level (%)","int","wl", "Water level, between 0% and 250%."],
+["Enable logging","boolean","lg", "Log all events - note that repetitive writing to an SD card can shorten its lifespan."],
+["Maximum log entries","int","lr", "Length of log to keep, 0=no limits."],
+["Ignore password","boolean","ipas", "Ignore web password"]
+];'''
+    f = open('./data/options.txt', 'w')
+    f.write(optionstext)
+    f.close()
+    return optionstext
 
 def save(dataf, datastr):
     """Save data to text file. dataf = file to save to, datastr = data string to save."""
@@ -396,12 +420,16 @@ try:
     if not 'seq' in gv.sd: gv.sd['seq'] = 1
     if not 'tu' in gv.sd: gv.sd['tu'] = "C"
     if not 'ir' in gv.sd: gv.sd['ir'] = [0]#*gv.sd['nbrd']
+    if not 'loc' in gv.sd: gv.sd['loc'] = ""
+    if not 'snlen' in gv.sd: gv.sd['snlen'] = 32
+    if not 'name' in gv.sd: gv.sd['name'] = "OpenSprinkler Pi"
 except IOError: # If file does not exist, create with defaults.
     gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
               "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
               "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
               "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
-              "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C"})
+              "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
+              "snlen":32, "name":u"OpenSprinkler Pi",})
     sdf = open('./data/sd.json', 'w')
     json.dump(gv.sd, sdf)
     sdf.close()
@@ -492,17 +520,27 @@ def setShiftRegister(srvals):
 
   ##################
 
+def pass_options(opts):
+    optstring = "var sd = {\n"
+    for o in opts:
+        optstring += "\t" + o + " : "
+        if (type(gv.sd[o]) == unicode):
+            optstring += "'" + gv.sd[o] + "'"
+        else:
+            optstring += str(gv.sd[o])
+        optstring += ",\n" 
+    optstring = optstring[:-2] + "\n}\n"
+    return optstring
+    
   #### Class Definitions ####
 class home:
     """Open Home page."""
     def GET(self):
         homepg = '<!DOCTYPE html>\n'
-        homepg += data('meta')+'\n'
-        homepg += '<link href="./static/images/icons/favicon.ico" rel="icon" type="image/x-icon" />\n'
-        homepg += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n'
+        homepg += data('meta')
         homepg += '<script>var baseurl=\"'+baseurl()+'\"</script>\n'
-        homepg += '<script>var ver='+str(gv.ver)+',devt='+str(gv.now)+';var nbrd='+str(gv.sd['nbrd'])+',tz='+str(gv.sd['tz'])+';</script>\n'
-        homepg += '<script>var en='+str(gv.sd['en'])+',rd='+str(gv.sd['rd'])+',mm='+str(gv.sd['mm'])+',rdst='+str(gv.sd['rdst'])+',mas='+str(gv.sd['mas'])+',urs='+str(gv.sd['urs'])+',rs='+str(gv.sd['rs'])+',ir='+str(gv.sd['ir'])+',wl='+str(gv.sd['wl'])+',ipas='+str(gv.sd['ipas'])+',loc="'+str(gv.sd['loc'])+'";</script>\n'
+        homepg += '<script>var ver='+str(gv.ver)+',devt='+str(gv.now)+';</script>\n'
+        homepg += '<script>' + pass_options(["nbrd","tz","en","rd","rs","mm","rdst","mas","urs","rs","wl","ipas","nopts","loc","name","ir"]) + '</script>\n'
         homepg += '<script>var sbits='+str(gv.sbits).replace(' ', '')+',ps='+str(gv.ps).replace(' ', '')+';</script>\n'
         homepg += '<script>var lrun='+str(gv.lrun).replace(' ', '')+';</script>\n'
         homepg += '<script>var snames='+data('snames')+';</script>\n'
@@ -563,15 +601,8 @@ class view_options:
     """Open the options page for viewing and editing."""
     def GET(self):
         optpg = '<!DOCTYPE html>\n'
-        optpg += data('meta')+'\n'
-        optpg += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n'
-        optpg += '<link href="./static/images/icons/favicon.ico" rel="icon" type="image/x-icon" />\n'
-        optpg += '<script>var baseurl=\"'+baseurl()+'\"</script>\n'
-        optpg += '<script>var opts=["Time zone:",0,'+str(gv.sd['tz'])+',1,"HTTP port:",0,'+str(gv.sd['htp'])+',12,"",0,0,13,"Ext. boards:",\
-0,'+str(gv.sd['nbrd']-1)+',15,"Sequential:",1,'+str(gv.sd['seq'])+',16,"Station delay:",0,'+str(gv.sd['sdt'])+',17,"Master station:",0,'+str(gv.sd['mas'])+',18,"Mas. on adj.:",0,'+str(gv.sd['mton'])+',19,"Mas. off adj.:",0,'+str(gv.sd['mtoff'])+',20,\
-"Use rain sensor:",1,'+str(gv.sd['urs'])+',21,"Normally open:",1,'+str(gv.sd['rst'])+',22,"Water level (%):",0,'+str(gv.sd['wl'])+',23,\
-"Ignore password:",1,'+str(gv.sd['ipas'])+',25,0];</script>\n'
-        optpg += '<script>var nopts='+str(gv.sd['nopts'])+',loc="'+str(gv.sd['loc'])+'";</script>\n'
+        optpg += data('meta')
+        optpg += '<script>var baseurl=\"'+baseurl()+'\";\n' + pass_options(["tz","htp","nbrd","sdt","seq","mas","mton","mtoff","urs","wl","ipas","rst","loc","name","lr","lg"]) + data('options')+ '</script>\n'
         optpg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/viewoptions.js\"></script>'
         return optpg
 
@@ -579,83 +610,75 @@ class change_options:
     """Save changes to options made on the options page."""
     def GET(self):
         qdict = web.input()
+        print 'qdict', qdict
         try:
-            if not qdict.has_key('o25') and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
+            if gv.sd['ipas'] == 0 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
                 raise web.unauthorized()
                 return
-            elif qdict.has_key('o25') and gv.sd['ipas'] == 0 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
-                raise web.unauthorized()
-                return
-            elif qdict.has_key('o25') and gv.sd['ipas'] == 0 and qdict['pw'] == base64.b64decode(gv.sd['pwd']):
+            if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == ''):
                 gv.sd['ipas'] = 1
+            else:
+                gv.sd['ipas'] = 0
         except KeyError:
             pass
         try:
             if qdict['cpw'] !='' and qdict['cpw'] == qdict['npw']:
                 gv.sd['pwd'] = base64.b64encode(qdict['npw'])
         except KeyError:
-            pass 
-        vstr = data('options')
-        if vstr.find("Sequential:") == -1:
-            os.remove("./data/options.txt")
-            vstr = data('options')
-        ops = vstr.index('[')+1
-        ope = vstr.index(']')
-        optstr = vstr[ops:ope]
-        optlst = optstr.split(',')
-        onumlst = []
-        i=3
-        while i < len(optlst):
-            onumlst.append(optlst[i].replace(' ', ''))
-            if optlst[i-2] == '1': #clear check box items
-                optlst[i-1]= '0'
-                try:
-                  sdref[optlst[i]];  
-                  gv.sd[sdref[optlst[i]]]=0
-                except KeyError:
-                    pass
-            i+=4
-        for key in qdict.keys():
-            if key[:1] == 'o':
-                oidx = onumlst.index(key[1:])
-                if qdict[key] == 'on' or '':
-                    qdict[key] = '1'
-                optlst[(oidx*4)+2] = qdict[key]   
-        optstr = ','.join(optlst)
-        optstr = optstr.replace(', ', ',')
-        vstr = vstr.replace(vstr[ops:ope], optstr)
-        save('options', vstr)
-        if int(qdict['o15'])+1 != gv.sd['nbrd']: self.update_scount(qdict)
-        if int(qdict['o18']) != gv.sd['mas']:
-            clear_mm()
-        self.update_sd(qdict)
+            pass
+        
+        gv.sd['name'] = qdict['oname']
+        gv.sd['loc'] = qdict['oloc']
+        gv.sd['tz'] = int(qdict['otz'])
+        
+        if int(qdict['onbrd'])+1 != gv.sd['nbrd']: self.update_scount(qdict)
+        gv.sd['nbrd'] = int(qdict['onbrd'])+1
+        
+        gv.sd['nst'] = gv.sd['nbrd']*8
+        gv.sd['htp']= int(qdict['ohtp'])
+        gv.sd['sdt']= int(qdict['osdt'])
+        
+        gv.sd['mas'] = int(qdict['omas'])
+        gv.sd['mton']= int(qdict['omton'])
+        gv.sd['mtoff']= int(qdict['omtoff'])
+        gv.sd['wl'] = int(qdict['owl'])
+        
+        if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == ''):
+          gv.sd['urs'] = 1
+        else:
+          gv.sd['urs'] = 0
+        
+        if qdict.has_key('oseq') and (qdict['oseq'] == 'on' or qdict['oseq'] == ''):
+          gv.sd['seq'] = 1
+        else:
+          gv.sd['seq'] = 0
+        
+        if qdict.has_key('orst') and (qdict['orst'] == 'on' or qdict['orst'] == ''):
+          gv.sd['rst'] = 1
+        else:
+          gv.sd['rst'] = 0
+        
+        if qdict.has_key('olg') and (qdict['olg'] == 'on' or qdict['olg'] == ''):
+          gv.sd['lg'] = 1
+        else:
+          gv.sd['lg'] = 0
+        gv.lg = gv.sd['lg'] # necessary to make logging work correctly on Pi (see run_log())    
+        
+        gv.sd['lr'] = int(qdict['olr'])
+        gv.lr = gv.sd['lr']
+
+        srvals = [0]*(gv.sd['nst']) # Shift Register values
+        rovals = [0]*(gv.sd['nst']) # Run Once Durations
+        jsave(gv.sd, 'sd')
+        
         raise web.seeother('/')
         #alert = '<script>alert("Options values saved.");window.location="/";</script>'
         return #alert # -- Alerts are not considered good interface progrmming. Use sparingly!
 
-    def update_sd(self, qdict):
-        """Transfer user input to vars."""
-        gv.sd['htp'] = int(qdict['htp'])
-        gv.sd['nbrd'] = int(qdict['o15'])+1
-        gv.sd['nst'] = gv.sd['nbrd']*8
-        gv.sd['sdt']= int(qdict['o17'])
-        gv.sd['mas'] = int(qdict['o18'])
-        gv.sd['mton']= int(qdict['o19'])
-        gv.sd['mtoff']= int(qdict['o20'])
-        gv.sd['tz'] = int(qdict['o1'])
-        if qdict.has_key('o16'): gv.sd['seq'] = int(qdict['o16'])
-        if qdict.has_key('o21'): gv.sd['urs'] = int(qdict['o21'])
-        gv.sd['wl'] = int(qdict['o23'])
-        if qdict.has_key('o25'): gv.sd['ipas'] = int(qdict['o25'])
-        gv.sd['loc'] = qdict['loc'] 
-        gv.rovals = [0]*(gv.sd['nst']) # Run Once Durations
-        jsave(gv.sd, 'sd')
-        return
-
     def update_scount(self, qdict):
         """Increase or decrease the number of stations shown when expansion boards are added in options."""
-        if int(qdict['o15'])+1 > gv.sd['nbrd']: # Lengthen lists
-            incr = int(qdict['o15']) - (gv.sd['nbrd']-1)
+        if int(qdict['onbrd'])+1 > gv.sd['nbrd']: # Lengthen lists
+            incr = int(qdict['onbrd']) - (gv.sd['nbrd']-1)
             for i in range(incr):
                 gv.sd['mo'].append(0)
             for i in range(incr):
@@ -674,32 +697,30 @@ class change_options:
                 gv.ps.append([0,0])
                 gv.rs.append([0,0,0,0])
             for i in range(incr):    
-                gv.sbits.append(0)
-        elif int(qdict['o15'])+1 < gv.sd['nbrd']: # Shorten lists
-            decr = gv.sd['nbrd'] - (int(qdict['o15'])+1)
-            gv.sd['mo'] = gv.sd['mo'][:(int(qdict['o15'])+1)]
-            gv.sd['ir'] = gv.sd['ir'][:(int(qdict['o15'])+1)]
+                gv.sbits.append(0)         
+        elif int(qdict['onbrd'])+1 < gv.sd['nbrd']: # Shorten lists
+            onbrd = int(qdict['onbrd'])
+            decr = gv.sd['nbrd'] - (onbrd+1)
+            gv.sd['mo'] = gv.sd['mo'][:(onbrd+1)]
+            gv.sd['ir'] = gv.sd['ir'][:(onbrd+1)]
             snames = data('snames')
             nlst = re.findall('[\'"].*?[\'"]', snames)
-            nstr = '['+','.join(nlst[:8+(int(qdict['o15'])*8)])+','']'
-            save('snames', nstr) 
+            nstr = '['+','.join(nlst[:8+(onbrd*8)])+','']'
+            save('snames', nstr)
             newlen = gv.sd['nst'] - decr * 8
             gv.srvals = gv.srvals[:newlen]
             gv.ps = gv.ps[:newlen]
             gv.rs = gv.rs[:newlen]
-            gv.sbits = gv.sbits[:int(qdict['o15'])+1]
+            gv.sbits = gv.sbits[:onbrd+1]
         return
 
 class view_stations:
     """Open a page to view and edit station names and master associations."""
     def GET(self):
         stationpg = '<!DOCTYPE html>\n'
-        stationpg += data('meta')+'\n'
-        stationpg += '<link href="./static/images/icons/favicon.ico" rel="icon" type="image/x-icon" />\n'
-        stationpg += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n'
+        stationpg += data('meta')
         stationpg += '<script>var baseurl=\"'+baseurl()+'\"</script>\n'
-        stationpg += '<script>var nboards='+str(gv.sd['nbrd'])+',maxlen=12,mas='+str(gv.sd['mas'])+',ipas='+str(gv.sd['ipas'])+';</script>\n'
-        stationpg += '<script>var masop='+str(gv.sd['mo'])+',rop='+str(gv.sd['ir'])+';</script>\n' ## added experimental "Ignore Rain"' feature
+        stationpg += '<script>var baseurl=\"'+baseurl()+'\"\n' + pass_options(["nbrd","snlen","mas","ipas","mo","ir"]) + '</script>\n'
         stationpg += '<script>snames='+data('snames')+';</script>\n'
         stationpg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/viewstations.js\"></script>'
         return stationpg
@@ -776,17 +797,15 @@ class view_runonce:
     """Open a page to view and edit a run once program."""
     def GET(self):
         ropg = '<!DOCTYPE html>\n'
-        ropg += data('meta')+'\n'
-        ropg += '<link href="./static/images/icons/favicon.ico" rel="icon" type="image/x-icon" />\n'
-        ropg += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n'
-        ropg += '<script >var baseurl=\"'+baseurl()+'\"</script>\n'
-        ropg += '<script >var nboards='+str(gv.sd['nbrd'])+',mas='+str(gv.sd['mas'])+',ipas='+str(gv.sd['ipas'])+',dur='+str(gv.rovals).replace(' ', '')+';</script>\n'
+        ropg += data('meta')
+        ropg += '<script >var baseurl=\"'+baseurl()+'\"\n' + pass_options(["nbrd","mas","ipas"]) + '</script>\n'
+        ropg += '<script >var dur='+str(gv.rovals).replace(' ', '')+';</script>\n'
         ropg += '<script >snames='+data('snames')+';</script>\n'
         ropg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/viewro.js\"></script>'
         return ropg
 
 class change_runonce:
-    """Start a Run Once program. This wil. override any running program."""
+    """Start a Run Once program. This will override any running program."""
     def GET(self):
         qdict = web.input()
         try:
@@ -819,11 +838,9 @@ class view_programs:
     """Open programs page."""
     def GET(self):
         programpg = '<!DOCTYPE html>\n'
-        programpg += data('meta')+'\n'
-        programpg += '<link href="./static/images/icons/favicon.ico" rel="icon" type="image/x-icon" />\n'
-        programpg += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n'
+        programpg += data('meta')
         programpg += '<script >var baseurl=\"'+baseurl()+'\"</script>\n'       
-        programpg += '<script >'+output_prog()+'</script>\n'
+        programpg += '<script >'+ pass_options(["nbrd","ipas","mnp"]) + output_prog()+'</script>\n'
         programpg += '<script >snames='+data('snames')+';</script>\n'
         programpg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/viewprog.js\"></script>'
         return programpg
@@ -833,11 +850,8 @@ class modify_program:
     def GET(self):
         qdict = web.input()
         modprogpg = '<!DOCTYPE html>\n'
-        modprogpg += data('meta')+'\n'
-        modprogpg += '<link href="./static/images/icons/favicon.ico" rel="icon" type="image/x-icon" />\n'
-        modprogpg += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n'
-        modprogpg += '<script >var baseurl=\"'+baseurl()+'\"</script>\n'
-        modprogpg += '<script >var nboards='+str(gv.sd['nbrd'])+',ipas='+str(gv.sd['ipas'])+';\n'
+        modprogpg += data('meta')
+        modprogpg += '<script >var baseurl=\"'+baseurl()+'\"\n' + pass_options(["nbrd","ipas"]) + '\n'
         if qdict['pid'] != '-1':
             mp = gv.pd[int(qdict['pid'])][:]
             if mp[1] >= 128 and mp[2] > 1: # If this is an interval program
@@ -920,15 +934,11 @@ class graph_programs:
         else: mm = str(lt.tm_mon)
         if qdict.has_key('y'): yy = str(qdict['y'])
         else: yy = str(lt.tm_year)
-        graphpg = '<script >var baseurl=\"'+baseurl()+'\"</script>\n'
-        graphpg += '<link href="./static/images/icons/favicon.ico" rel="icon" type="image/x-icon" />\n'
-        graphpg += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n'
-        graphpg += ('<script >var mas='+str(gv.sd['mas'])+',wl='+str(gv.sd['wl'])+',sdt='+str(gv.sd['sdt'])+
-                    ',mton='+str(gv.sd['mton'])+',mtoff='+str(gv.sd['mtoff'])+',devday='+str(int(t/86400))+
-                    ',devmin='+str((lt.tm_hour*60)+lt.tm_min)+',dd='+dd+',mm='+mm+',yy='+yy+';var masop='+
-                    str(gv.sd['mo'])+';'+output_prog()+'</script>\n')
-        graphpg += '<script>var seq='+str(gv.sd['seq'])+';</script>\n'
-        graphpg += '<script >var snames='+data('snames').replace(' ', '')+';</script>\n'
+        graphpg = '<!DOCTYPE html>\n'
+        graphpg += data('meta')
+        graphpg += '<script>var baseurl=\"'+baseurl()+'\";\n' + pass_options(["mas","seq","wl","sdt","mton","mtoff","nbrd","ipas","mnp","mo"]) + '</script>\n'
+        graphpg += '<script>var devday='+str(int(t/86400))+',devmin='+str((lt.tm_hour*60)+lt.tm_min)+',dd='+dd+',mm='+mm+',yy='+yy+';'+output_prog()+'</script>\n'
+        graphpg += '<script>var snames='+data('snames').replace(' ', '')+';</script>\n'
         graphpg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/plotprog.js\"></script>'
         return graphpg
 
@@ -972,10 +982,10 @@ class log_options:
                 return
         except KeyError:
             pass
-        if qdict.has_key('log'): gv.sd['lg'] = "checked"
-        else: gv.sd['lg'] = ""
+        if qdict.has_key('log'): gv.sd['lg'] = 1
+        else: gv.sd['lg'] = 0
         gv.lg = gv.sd['lg'] # necessary to make logging work correctly on Pi (see run_log())        
-        gv.sd['lr'] = qdict['nrecords']
+        gv.sd['lr'] = int(qdict['nrecords'])
         gv.lr = int(gv.sd['lr'])
         jsave(gv.sd, 'sd')
         raise web.seeother('/vl')
@@ -995,7 +1005,6 @@ class run_now:
         if not p[0]: # if program is disabled
             raise web.seeother('/vp')
         stop_stations()
-        #for b in range(gv.sd['nbrd']): # check each station
         for b in range(len(p[7:7+gv.sd['nbrd']])): # check each station 
             for s in range(8):
                 sid = b*8+s # station index
