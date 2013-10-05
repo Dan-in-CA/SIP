@@ -1,4 +1,3 @@
 web/
 /data
 *.pyc
-/data/options.txt
