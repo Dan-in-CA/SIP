@@ -309,7 +309,7 @@ def data(dataf):
         if dataf == 'options' and len(data.splitlines()) == 1:
             data = write_options()
     except IOError:
-        if dataf == 'options': ## A config file -- return defaults and create file if not found. ##
+        if dataf == 'options':
             data = write_options()
         elif dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
             data = "['S01','S02','S03','S04','S05','S06','S07','S08',]"
