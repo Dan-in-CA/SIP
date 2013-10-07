@@ -16,7 +16,7 @@ function submit_form(f) {
   f.elements["otz"].value=((th+12)*4)>>0;
   f.elements["ohtp"].value=(f.elements["htp"].value)&0xff;
   f.elements["ohtp2"].value=(f.elements["htp"].value>>8)&0xff;
-  f.elements["omas"].value=f.elements["mas"].value;
+  //f.elements["omas"].value=f.elements["mas"].value;
   f.submit();
 }
 function fcancel() {window.location="/";}
@@ -56,8 +56,8 @@ for(oid=0;oid<opts.length;oid++){
       w(":<input type=text size=3 maxlength=3 value="+((Math.abs(tz)%4)*15/10>>0)+((Math.abs(tz)%4)*15%10)+" name=tq>");
       break;
     case "mas":
-      w("<input type=hidden value=0 name=o"+name+">");
-      w("<p title=\""+tooltip+"\"><b>"+label+":</b> <select name=mas><option "+(value==0?" selected ":" ")+"value=0>None</option>");
+      //w("<input type=hidden value=0 name=o"+name+">");
+      w("<p title=\""+tooltip+"\"><b>"+label+":</b> <select name=o"+name+"><option "+(value==0?" selected ":" ")+"value=0>None</option>");
       for(i=1;i<=8;i++) w("<option "+(value==i?" selected ":" ")+"value="+i+">Station 0"+i+"</option>");
       w("</select>");
       break;

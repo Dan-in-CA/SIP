@@ -37,7 +37,7 @@ w("<b>CPU Temp</b>: <span id='heat' onmouseover='bluebg(this)' onmouseout='nobg(
 w("<script type=\"text/javascript\" src=\""+baseurl+"/static/scripts/java/svc1.8.3/"+((sd['mm'])?"manualmode.js":"progmode.js")+"\"></script>");
 // print status and other information
 w("<br><b>Operation</b>: "+(sd['en']?("on").fontcolor("green"):("OFF").fontcolor("red")));
-w("<br><b>Raindelay</b>: "+(sd['rd']?("ON").fontcolor("red")+" (till "+datestr(rdst*1000)+")":("off").fontcolor("black")));
+w("<br><b>Raindelay</b>: "+(sd['rd']?("ON").fontcolor("red")+" (till "+datestr(sd['rdst']*1000)+")":("off").fontcolor("black")));
 w("<br><b>Rainsense</b>: "+(sd['urs']?(sd['rs']?("Rain Detected").fontcolor("red"):("no rain").fontcolor("green")):"<font color=gray>n/a</font>"));
 w("<br><b>Water level</b>: <font color="+((sd['wl']==100)?"green":"red")+">"+sd['wl']+"\%</font>");
 var lrsid=lrun[0],lrpid=lrun[1],lrdur=lrun[2],lret=lrun[3];

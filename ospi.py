@@ -1,17 +1,23 @@
 #!/usr/bin/python
-"""Updated 19/September/2013."""
+
 import re, os, json, time, base64, thread # standard Python modules
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
-import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
+
+try:
+    import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
+except ImportError:
+    pass
+
  #### Revision information ####
 gv.ver = 183
-gv.rev = 135
-gv.rev_date = '23/September/2013'
+gv.rev = 137
+gv.rev_date = '04/October/2013'
 
- #### urls is a feature of web.py. When a GET request is recieved , the corrisponding class is exicuted.
+ #### urls is a feature of web.py. When a GET request is received, the corresponding class is executed.
 urls = [
     '/',  'home',
+    '/oldhome',  'oldhome',
     '/cv', 'change_values',
     '/vo', 'view_options',
     '/co', 'change_options',
@@ -46,20 +52,6 @@ def baseurl():
     """Return URL app is running under.""" 
     baseurl = web.ctx['home']
     return baseurl
-
-def board_rev():
-    """Auto-detect the Raspberry Pi board rev."""
-    revision = "unknown"
-    with open('/proc/cmdline', 'r') as f:
-        line = f.readline()
-    m = re.search('bcm2708.boardrev=(0x[0123456789abcdef]*) ', line)
-    revision = m.group(1)
-    revcode = int(revision, 16)
-    if revcode <= 3:
-        rev = 1
-    else:
-        rev = 2   
-    return rev
 
 def clear_mm():
     """Clear manual mode settings."""
@@ -264,7 +256,6 @@ def main_loop(): # Runs in a seperate thread
             
             for s in range(gv.sd['nst']):
                 if gv.rs[s][1]: # if any station is scheduled
-                #if gv.srvals[s]: # if any station is on
                     program_running = True
                     gv.pon = gv.rs[s][3] # Store number of running program
                     break              
@@ -273,8 +264,8 @@ def main_loop(): # Runs in a seperate thread
 
             if program_running:           
                 if gv.sd['urs'] and gv.sd['rs']: # Stop stations if use rain sensor and rain detected.
-                    stop_onrain() #### Should clear schedule for stations that do not ignore rain ####                
-                for idx in range(len(gv.rs)): # loop through program schedule (gv.ps) #### MAYBE SB gv.rs
+                    stop_onrain() #Clear schedule for stations that do not ignore rain.               
+                for idx in range(len(gv.rs)): # loop through program schedule (gv.ps)
                     if gv.rs[idx][2] == 0: # skip stations with no duration
                         continue
                     if gv.srvals[idx]: # If station is on, decrement time remaining display
@@ -316,12 +307,11 @@ def data(dataf):
         f = open('./data/'+dataf+'.txt', 'r')
         data = f.read()
         f.close()
+        if dataf == 'options' and len(data.splitlines()) == 1:
+            data = write_options()
     except IOError:
         if dataf == 'options': ## A config file -- return defaults and create file if not found. ##
-            data = 'var opts=["Time zone:",0,48,1,"HTTP port:",0,80,12,"",0,0,13,"Ext. boards:",0,0,15,"Sequential:",1,1,16,"Station delay:",0,0,17,"Master station:",0,0,18,"Mas. on adj.:",0,0,19,"Mas. off adj.:",0,0,20,"Use rain sensor:",1,0,21,"Normally open:",1,1,22,"Water level (%):",0,100,23,"Ignore password:",1,0,25,0];var nopts=12,loc="";'
-            f = open('./data/'+dataf+'.txt', 'w')
-            f.write(data)
-            f.close()
+            data = write_options()
         elif dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
             data = "['S01','S02','S03','S04','S05','S06','S07','S08',]"
             f = open('./data/'+dataf+'.txt', 'w')
@@ -330,6 +320,30 @@ def data(dataf):
         else:
             return None
     return data
+
+def write_options():
+    optionstext = '''var opts=[
+["System name","string","name","Unique name of this OpenSprinkler system."],
+["HTTP port","int","htp", "HTTP port (effective after reboot)."],
+["Location","string","loc", "City name or zip code. Use comma or + in place of space."],
+["Time zone","int","tz", "Example: GMT-4:00, GMT+5:30 (effective after reboot)."],
+["Sequential","boolean","seq", "Sequential or concurrent running mode"],
+["Extension boards","int","nbrd", "Number of extension boards"],
+["Station delay","int","sdt", "Station delay time (in seconds), between 0 and 240."],
+["Master station","int","mas", "Select master station"],
+["Master on adjust","int","mton", "Master on delay (in seconds), between +0 and +60."],
+["Master off adjust","int","mtoff", "Master off delay (in seconds), between -60 and +60."],
+["Use rain sensor","boolean","urs", "Use rain sensor"],
+["Normally open","boolean","rst", "Rain sensor type"],
+["Water level (%)","int","wl", "Water level, between 0% and 250%."],
+["Enable logging","boolean","lg", "Log all events - note that repetitive writing to an SD card can shorten its lifespan."],
+["Maximum log entries","int","lr", "Length of log to keep, 0=no limits."],
+["Ignore password","boolean","ipas", "Ignore web password"]
+];'''
+    f = open('./data/options.txt', 'w')
+    f.write(optionstext)
+    f.close()
+    return optionstext
 
 def save(dataf, datastr):
     """Save data to text file. dataf = file to save to, datastr = data string to save."""
@@ -351,7 +365,7 @@ def load_programs():
         gv.pd = json.load(pf)
         pf.close()
     except IOError:
-        gv.pd = [] ## A config file -- return default and create file if not found. ##
+        gv.pd = [] #A config file -- return default and create file if not found.
         pf = open('./data/programs.json', 'w')
         json.dump(gv.pd, pf)
         pf.close()
@@ -416,7 +430,7 @@ except IOError: # If file does not exist, create with defaults.
               "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
               "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
               "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
-              "snlen":32, "name":"OpenSprinkler Pi"})
+              "snlen":32, "name":u"OpenSprinkler Pi",})
     sdf = open('./data/sd.json', 'w')
     json.dump(gv.sd, sdf)
     sdf.close()
@@ -458,44 +472,52 @@ gv.scount = 0 # Station count, used in set station to track on stations with mas
 
   ####  GPIO  #####
 
-GPIO.setwarnings(False)
+try:
+    GPIO.setwarnings(False)
+except NameError:
+    pass
 
   #### pin defines ####
-
-if board_rev() == 1:
-    pin_sr_dat = 21
-else:
-    pin_sr_dat = 27
-pin_sr_clk =  4
-pin_sr_noe = 17
-pin_sr_lat = 22
-
-  #### NUMBER OF STATIONS
-num_stations = gv.sd['nst']
+pin_sr_dat = 13
+pin_sr_clk = 7
+pin_sr_noe = 11
+pin_sr_lat = 15
 
 def enableShiftRegisterOutput():
-    GPIO.output(pin_sr_noe, False)
+    try:
+        GPIO.output(pin_sr_noe, GPIO.LOW)
+    except NameError:
+        pass
+    
 
 def disableShiftRegisterOutput():
-    GPIO.output(pin_sr_noe, True)
-
-GPIO.cleanup()
+    try:
+        GPIO.output(pin_sr_noe, GPIO.HIGH)
+    except NameError:
+        pass
+try:
+    GPIO.cleanup()
   #### setup GPIO pins to interface with shift register ####
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(pin_sr_clk, GPIO.OUT)
-GPIO.setup(pin_sr_noe, GPIO.OUT)
-disableShiftRegisterOutput()
-GPIO.setup(pin_sr_dat, GPIO.OUT)
-GPIO.setup(pin_sr_lat, GPIO.OUT)
+    GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
+    GPIO.setup(pin_sr_clk, GPIO.OUT)
+    GPIO.setup(pin_sr_noe, GPIO.OUT)
+    disableShiftRegisterOutput()
+    GPIO.setup(pin_sr_dat, GPIO.OUT)
+    GPIO.setup(pin_sr_lat, GPIO.OUT)
+except NameError:
+    pass     
 
 def setShiftRegister(srvals):
-    GPIO.output(pin_sr_clk, False)
-    GPIO.output(pin_sr_lat, False)
-    for s in range(num_stations):
-        GPIO.output(pin_sr_clk, False)
-        GPIO.output(pin_sr_dat, srvals[num_stations-1-s])
-        GPIO.output(pin_sr_clk, True)
-    GPIO.output(pin_sr_lat, True)
+    try:
+        GPIO.output(pin_sr_clk, GPIO.LOW)
+        GPIO.output(pin_sr_lat, GPIO.LOW)
+        for s in range(gv.sd['nst']):
+            GPIO.output(pin_sr_clk, GPIO.LOW)
+            GPIO.output(pin_sr_dat, srvals[gv.sd['nst']-1-s])
+            GPIO.output(pin_sr_clk, GPIO.HIGH)
+        GPIO.output(pin_sr_lat, GPIO.HIGH)
+    except NameError:
+        pass    
 
   ##################
 
@@ -508,12 +530,17 @@ def pass_options(opts):
         else:
             optstring += str(gv.sd[o])
         optstring += ",\n" 
-    optstring = optstring[:-2] + "\n}\n"   
+    optstring = optstring[:-2] + "\n}\n"
     return optstring
     
   #### Class Definitions ####
 class home:
     """Open Home page."""
+    def GET(self):  
+        render = web.template.render('templates')
+        return render.home(gv.sd, baseurl(), ".".join(list(str(gv.ver))), gv.now, str(float(CPU_temperature())), gv.sbits, gv.ps, gv.lrun, data('snames'))
+
+class oldhome:
     def GET(self):
         homepg = '<!DOCTYPE html>\n'
         homepg += data('meta')
@@ -522,11 +549,18 @@ class home:
         homepg += '<script>' + pass_options(["nbrd","tz","en","rd","rs","mm","rdst","mas","urs","rs","wl","ipas","nopts","loc","name","ir"]) + '</script>\n'
         homepg += '<script>var sbits='+str(gv.sbits).replace(' ', '')+',ps='+str(gv.ps).replace(' ', '')+';</script>\n'
         homepg += '<script>var lrun='+str(gv.lrun).replace(' ', '')+';</script>\n'
-        homepg += '<script>var snames='+data('snames')+'; var tempunit="'+str(gv.sd['tu'])+'";</script>\n'
+        homepg += '<script>var snames='+data('snames')+';</script>\n'
+        homepg += '<script>var tempunit="'+str(gv.sd['tu'])+'";</script>\n'
         if gv.sd['tu'] == "F":
-          homepg += '<script>var cputemp='+str(9.0/5.0*int(float(CPU_temperature()))+32)+'; var tempunit="F";</script>\n'
-        else:   
-          homepg += '<script>var cputemp='+str(float(CPU_temperature()))+'; var tempunit="C";</script>\n'            
+            try:  
+              homepg += '<script>var cputemp='+str(9.0/5.0*int(float(CPU_temperature()))+32)+'; var tempunit="F";</script>\n'
+            except ValueError:
+               pass
+        else:
+            try:
+                homepg += '<script>var cputemp='+str(float(CPU_temperature()))+'; var tempunit="C";</script>\n'            
+            except ValueError:
+                pass
         homepg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/home.js\"></script>'
         return homepg
 
@@ -582,6 +616,7 @@ class change_options:
     """Save changes to options made on the options page."""
     def GET(self):
         qdict = web.input()
+        print 'qdict', qdict
         try:
             if gv.sd['ipas'] == 0 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
                 raise web.unauthorized()
@@ -670,7 +705,7 @@ class change_options:
             for i in range(incr):    
                 gv.sbits.append(0)         
         elif int(qdict['onbrd'])+1 < gv.sd['nbrd']: # Shorten lists
-            onbrd = qdict['onbrd']
+            onbrd = int(qdict['onbrd'])
             decr = gv.sd['nbrd'] - (onbrd+1)
             gv.sd['mo'] = gv.sd['mo'][:(onbrd+1)]
             gv.sd['ir'] = gv.sd['ir'][:(onbrd+1)]
@@ -683,7 +718,7 @@ class change_options:
             gv.ps = gv.ps[:newlen]
             gv.rs = gv.rs[:newlen]
             gv.sbits = gv.sbits[:onbrd+1]
-    	return
+        return
 
 class view_stations:
     """Open a page to view and edit station names and master associations."""
@@ -976,7 +1011,6 @@ class run_now:
         if not p[0]: # if program is disabled
             raise web.seeother('/vp')
         stop_stations()
-        #for b in range(gv.sd['nbrd']): # check each station
         for b in range(len(p[7:7+gv.sd['nbrd']])): # check each station 
             for s in range(8):
                 sid = b*8+s # station index

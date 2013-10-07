@@ -12,37 +12,49 @@ UPDATES
 ===========
 ***********
 
-September 28 2013 (jonathanmarsh)
+October 4 2013 (jonathanmarsh)
 --------------
 Additions, bug fixes:<br/>
-1. Improved options handling and passing logic
-2. Added a "System Name" option to help users distinguish between multiple systems
-3. Configurable station name length (increased default to 32)
-4. Added logging options to options page
+1. Improved options handling and passing logic<br/>
+2. Added a "System Name" option to help users distinguish between multiple systems<br/>
+3. Configurable station name length (increased default to 32)<br/>
+4. Added logging options to options page<br/>
+
+(Dan)
+Additions, bug fixes:<br/>
+1. Moved RasPi specific code into try-except blocks allowing program to run on multiple platforms<br/>
+2. Added "write_options" function to create/update new style options.txt file in data directory.<br/>
+3. Fixed a bug in new options code that prevented master station from being selected.<br/>
+4. Fixed a bug that caused an exception when the number of expansion boards was reduced.<br/>
+
+October 1 2013
+--------------
+Changes:<br/>
+1. Changed the pin numbering option in the RPi.GPIO module from BCM to BOARD.<br/>
 
 September 23 2013
 --------------
 Additions, bug fixes:<br/>
-1. Added a new revisions page to the native web interface. 
-2. Modified the home.js file to show time zone info in the last run log near the bottom of the page.
-3. Fixed a bug in concurrent mode that kept a station running after it's duration had expired.
-4. Fixed a bug that would cause an exception (freeze the program) after the number of expansion boards was changed in Options.
-5. Fixed a bug that would stop a running station and clear scheduled stations when the number of expansion boards was changed in Options.
+1. Added a new revisions page to the native web interface.<br/>
+2. Modified the home.js file to show time zone info in the last run log near the bottom of the page.<br/>
+3. Fixed a bug in concurrent mode that kept a station running after it's duration had expired.<br/>
+4. Fixed a bug that would cause an exception (freeze the program) after the number of expansion boards was changed in Options.<br/>
+5. Fixed a bug that would stop a running station and clear scheduled stations when the number of expansion boards was changed in Options.<br/>
 
 September 10 2013
 --------------
 Additions, bug fixes:<br/>
-1. Added a per-station "Ignore rain" option that allows a station to operate during rain delay or if a rain sensor detects rain.
-2. Modified the program to use the HTTP port setting from the Options page.
-3. Improved the way the program tracks current time. This simplified the code and should eliminate some timing bugs.
-4. Edited Denny's init.d startup script to remove IP address and port settings no longer needed.
+1. Added a per-station "Ignore rain" option that allows a station to operate during rain delay or if a rain sensor detects rain.<br/>
+2. Modified the program to use the HTTP port setting from the Options page.<br/>
+3. Improved the way the program tracks current time. This simplified the code and should eliminate some timing bugs.<br/>
+4. Edited Denny's init.d startup script to remove IP address and port settings no longer needed.<br/>
 
 August 30 2013
 --------------
 Additions, bug fixes:<br/>
-1. Modified the program to use only the time zone setting from the Options page and not the tz setting from the py.
-2. Made the CPU temperature readout on the home page clickable to toggle between C and F.
-3. Added a copy of Denny Fox's init.d auto startup script
+1. Modified the program to use only the time zone setting from the Options page and not the tz setting from the py.<br/>
+2. Made the CPU temperature readout on the home page clickable to toggle between C and F.<br/>
+3. Added a copy of Denny Fox's init.d auto startup script<br/>
 
 August 25 2013
 --------------
