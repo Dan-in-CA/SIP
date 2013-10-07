@@ -538,7 +538,7 @@ class home:
     """Open Home page."""
     def GET(self):  
         render = web.template.render('templates')
-        return render.home(gv.sd, baseurl(), ".".join(list(str(gv.ver))), gv.now, str(float(CPU_temperature())), gv.sbits, gv.ps, gv.lrun, data('snames'))
+        return render.home(gv.sd, baseurl(), ".".join(list(str(gv.ver))), gv.now, CPU_temperature(), gv.sbits, gv.ps, gv.lrun, data('snames'))
 
 class oldhome:
     def GET(self):
