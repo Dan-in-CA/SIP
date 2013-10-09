@@ -422,7 +422,7 @@ try:
     if not 'ir' in gv.sd: gv.sd['ir'] = [0]#*gv.sd['nbrd']
     if not 'loc' in gv.sd: gv.sd['loc'] = ""
     if not 'snlen' in gv.sd: gv.sd['snlen'] = 32
-    if not 'name' in gv.sd: gv.sd['name'] = "OpenSprinkler Pi"
+    if not 'name' in gv.sd: gv.sd['name'] = u"OpenSprinkler Pi"
 except IOError: # If file does not exist, create with defaults.
     gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
               "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
