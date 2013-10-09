@@ -15,18 +15,18 @@ function rst() {
 }
 function fsubmit(f) {
   if(sd['mas']>0) {
-    var s, bid, sid, v;
+    var s, bid, sid;
     for(bid=0;bid<sd['nbrd'];bid++) {
-      v=0;
+      var vm=0;
       for(s=0;s<8;s++){
         sid=bid*8+(7-s);
-        v=v<<1;
-        if(sid+1==sd['mas']) {v=v+1;continue;}
+        vm=vm<<1;
+        if(sid+1==sd['mas']) {vm=vm+1;continue;}
         if(document.getElementById("mc"+sid).checked) {
-          v=v+1;
+          vm=vm+1;
         }
       }
-      f.elements["m"+bid].value=v;
+      f.elements["m"+bid].value=vm;
     }
 	}
     var vi;	
@@ -72,6 +72,7 @@ w("</table>");
 w("<hr><font size=3><b>Password:</b><input type=password size=10 "+(sd['ipas']?"disabled":"")+" name=pw></font><p></p>");
 for(bid=0;bid<sd['nbrd'];bid++) {
   w("<input type=hidden name=i"+bid+">");
+  w("<input type=hidden name=m"+bid+">");
 }
 w("</form>");
 w("<button style=\"height:36\" onclick=\"fsubmit(sf)\">"+imgstr("submit")+"<b>Submit Changes</b></button>");

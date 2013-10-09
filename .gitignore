@@ -1,3 +1,6 @@
 web/
 /data
+/.settings
 *.pyc
+.project
+.pydevproject
