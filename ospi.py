@@ -610,7 +610,6 @@ class change_options:
     """Save changes to options made on the options page."""
     def GET(self):
         qdict = web.input()
-        print 'qdict', qdict
         try:
             if gv.sd['ipas'] == 0 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
                 raise web.unauthorized()
@@ -690,7 +689,7 @@ class change_options:
             for i in range((incr*8)+1):
                 nlst.append("'S"+('%d'%(i+ln)).zfill(2)+"'")
             nstr = '['+','.join(nlst)
-            nstr = nstr.replace("', ", "',")+",'']"
+            nstr = nstr.replace("', ", "',")+"]"
             save('snames', nstr)            
             for i in range(incr*8):
                 gv.srvals.append(0)
@@ -705,7 +704,7 @@ class change_options:
             gv.sd['ir'] = gv.sd['ir'][:(onbrd+1)]
             snames = data('snames')
             nlst = re.findall('[\'"].*?[\'"]', snames)
-            nstr = '['+','.join(nlst[:8+(onbrd*8)])+','']'
+            nstr = '['+','.join(nlst[:8+(onbrd*8)])+']'
             save('snames', nstr)
             newlen = gv.sd['nst'] - decr * 8
             gv.srvals = gv.srvals[:newlen]
