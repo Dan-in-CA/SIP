@@ -317,11 +317,7 @@ def data(dataf):
         f = open('./data/'+dataf+'.txt', 'r')
         data = f.read()
         f.close()
-#         if dataf == 'options' and len(data.splitlines()) == 1:
-#             data = write_options()
     except IOError:
-#         if dataf == 'options':
-#             data = write_options()
         if dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
             data = "['S01','S02','S03','S04','S05','S06','S07','S08',]"
             f = open('./data/'+dataf+'.txt', 'w')
@@ -330,30 +326,6 @@ def data(dataf):
         else:
             return None
     return data
-
-# def write_options():
-#     optionstext = '''var opts=[
-# ["System name","string","name","Unique name of this OpenSprinkler system."],
-# ["HTTP port","int","htp", "HTTP port (effective after reboot)."],
-# ["Location","string","loc", "City name or zip code. Use comma or + in place of space."],
-# ["Time zone","int","tz", "Example: GMT-4:00, GMT+5:30 (effective after reboot)."],
-# ["Sequential","boolean","seq", "Sequential or concurrent running mode"],
-# ["Extension boards","int","nbrd", "Number of extension boards"],
-# ["Station delay","int","sdt", "Station delay time (in seconds), between 0 and 240."],
-# ["Master station","int","mas", "Select master station"],
-# ["Master on adjust","int","mton", "Master on delay (in seconds), between +0 and +60."],
-# ["Master off adjust","int","mtoff", "Master off delay (in seconds), between -60 and +60."],
-# ["Use rain sensor","boolean","urs", "Use rain sensor"],
-# ["Normally open","boolean","rst", "Rain sensor type"],
-# ["Water level (%)","int","wl", "Water level, between 0% and 250%."],
-# ["Enable logging","boolean","lg", "Log all events - note that repetitive writing to an SD card can shorten its lifespan."],
-# ["Maximum log entries","int","lr", "Length of log to keep, 0=no limits."],
-# ["Ignore password","boolean","ipas", "Ignore web password"]
-# ];'''
-#     f = open('./data/options.txt', 'w')
-#     f.write(optionstext)
-#     f.close()
-#     return optionstext
 
 def save(dataf, datastr):
     """Save data to text file. dataf = file to save to, datastr = data string to save."""
