@@ -11,8 +11,8 @@ except ImportError:
 
  #### Revision information ####
 gv.ver = 183
-gv.rev = 137
-gv.rev_date = '04/October/2013'
+gv.rev = 138
+gv.rev_date = '11/October/2013'
 
  #### urls is a feature of web.py. When a GET request is recieved , the corrisponding class is executed.
 urls = [
@@ -46,6 +46,14 @@ except ImportError:
     print 'add_on not imported'
     
   #### Function Definitions ####
+  
+def approve_pwd(qdict):
+    """Password checking"""
+    try:
+        if not gv.sd['ipas'] and not qdict['pw'] == base64.b64decode(gv.sd['pwd']):
+            raise web.unauthorized()
+    except KeyError:
+        pass
 
 def baseurl():
     """Return URL app is running under.""" 
@@ -68,8 +76,11 @@ def clear_mm():
 
 def CPU_temperature():
     """Returns the temperature of the Raspberry Pi's CPU."""
-    res = os.popen('vcgencmd measure_temp').readline()
-    return(res.replace("temp=","").replace("'C\n",""))
+    try:
+        res = os.popen('vcgencmd measure_temp').readline()
+        return(res.replace("temp=","").replace("'C\n",""))
+    except:
+        pass
 
 def log_run():
     """add run data to csv file - most recent first."""
@@ -181,7 +192,7 @@ def stop_stations():
         gv.sd['bsy'] = 0
         return
 
-def main_loop(): # Runs in a seperate thread
+def main_loop(): # Runs in a separate thread
     """ ***** Main algorithm.***** """
     print 'Starting main loop \n'
     last_min = 0
@@ -306,12 +317,12 @@ def data(dataf):
         f = open('./data/'+dataf+'.txt', 'r')
         data = f.read()
         f.close()
-        if dataf == 'options' and len(data.splitlines()) == 1:
-            data = write_options()
+#         if dataf == 'options' and len(data.splitlines()) == 1:
+#             data = write_options()
     except IOError:
-        if dataf == 'options':
-            data = write_options()
-        elif dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
+#         if dataf == 'options':
+#             data = write_options()
+        if dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
             data = "['S01','S02','S03','S04','S05','S06','S07','S08',]"
             f = open('./data/'+dataf+'.txt', 'w')
             f.write(data)
@@ -320,29 +331,29 @@ def data(dataf):
             return None
     return data
 
-def write_options():
-    optionstext = '''var opts=[
-["System name","string","name","Unique name of this OpenSprinkler system."],
-["HTTP port","int","htp", "HTTP port (effective after reboot)."],
-["Location","string","loc", "City name or zip code. Use comma or + in place of space."],
-["Time zone","int","tz", "Example: GMT-4:00, GMT+5:30 (effective after reboot)."],
-["Sequential","boolean","seq", "Sequential or concurrent running mode"],
-["Extension boards","int","nbrd", "Number of extension boards"],
-["Station delay","int","sdt", "Station delay time (in seconds), between 0 and 240."],
-["Master station","int","mas", "Select master station"],
-["Master on adjust","int","mton", "Master on delay (in seconds), between +0 and +60."],
-["Master off adjust","int","mtoff", "Master off delay (in seconds), between -60 and +60."],
-["Use rain sensor","boolean","urs", "Use rain sensor"],
-["Normally open","boolean","rst", "Rain sensor type"],
-["Water level (%)","int","wl", "Water level, between 0% and 250%."],
-["Enable logging","boolean","lg", "Log all events - note that repetitive writing to an SD card can shorten its lifespan."],
-["Maximum log entries","int","lr", "Length of log to keep, 0=no limits."],
-["Ignore password","boolean","ipas", "Ignore web password"]
-];'''
-    f = open('./data/options.txt', 'w')
-    f.write(optionstext)
-    f.close()
-    return optionstext
+# def write_options():
+#     optionstext = '''var opts=[
+# ["System name","string","name","Unique name of this OpenSprinkler system."],
+# ["HTTP port","int","htp", "HTTP port (effective after reboot)."],
+# ["Location","string","loc", "City name or zip code. Use comma or + in place of space."],
+# ["Time zone","int","tz", "Example: GMT-4:00, GMT+5:30 (effective after reboot)."],
+# ["Sequential","boolean","seq", "Sequential or concurrent running mode"],
+# ["Extension boards","int","nbrd", "Number of extension boards"],
+# ["Station delay","int","sdt", "Station delay time (in seconds), between 0 and 240."],
+# ["Master station","int","mas", "Select master station"],
+# ["Master on adjust","int","mton", "Master on delay (in seconds), between +0 and +60."],
+# ["Master off adjust","int","mtoff", "Master off delay (in seconds), between -60 and +60."],
+# ["Use rain sensor","boolean","urs", "Use rain sensor"],
+# ["Normally open","boolean","rst", "Rain sensor type"],
+# ["Water level (%)","int","wl", "Water level, between 0% and 250%."],
+# ["Enable logging","boolean","lg", "Log all events - note that repetitive writing to an SD card can shorten its lifespan."],
+# ["Maximum log entries","int","lr", "Length of log to keep, 0=no limits."],
+# ["Ignore password","boolean","ipas", "Ignore web password"]
+# ];'''
+#     f = open('./data/options.txt', 'w')
+#     f.write(optionstext)
+#     f.close()
+#     return optionstext
 
 def save(dataf, datastr):
     """Save data to text file. dataf = file to save to, datastr = data string to save."""
@@ -562,12 +573,7 @@ class change_values:
     """Save controller values, return browser to home page."""
     def GET(self):
         qdict = web.input()
-        try:
-            if gv.sd['ipas'] != 1 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
-                raise web.unauthorized()
-                return
-        except KeyError:
-            pass
+        approve_pwd(qdict)
         if qdict.has_key('rsn') and qdict['rsn'] == '1':
             stop_stations()    
             raise web.seeother('/')
@@ -610,10 +616,8 @@ class change_options:
     """Save changes to options made on the options page."""
     def GET(self):
         qdict = web.input()
+        approve_pwd(qdict)
         try:
-            if gv.sd['ipas'] == 0 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
-                raise web.unauthorized()
-                return
             if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == ''):
                 gv.sd['ipas'] = 1
             else:
@@ -728,12 +732,7 @@ class change_stations:
     """Save changes to station names and master associations."""
     def GET(self):
         qdict = web.input()
-        try:
-            if gv.sd['ipas'] != 1 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
-                raise web.unauthorized()
-                return
-        except KeyError:
-            pass
+        approve_pwd(qdict)
         for i in range(gv.sd['nbrd']): # capture master associations
             if qdict.has_key('m'+str(i)):
                 try:
@@ -747,12 +746,15 @@ class change_stations:
                     gv.sd['ir'][i] = 0        
         names = '['
         for i in range(gv.sd['nst']):
-            names += "'" + qdict['s'+str(i)] + "',"
-        names += ']'
+            if qdict.has_key('s'+str(i)): # This is to work around a bug introduced during UI changes 10/13
+                names += "'" + qdict['s'+str(i)] + "',"
+            else:
+                names += "'S0"+str(i+1) + "',"   
+        names += ']'             
         save('snames', names.encode('ascii', 'backslashreplace'))
         jsave(gv.sd, 'sd')
         raise web.seeother('/')
-        return
+#         return
 
 class get_station:
     """Return a page containing a number representing the state of a station or all stations if 0 is entered as statin number."""
@@ -807,12 +809,7 @@ class change_runonce:
     """Start a Run Once program. This will override any running program."""
     def GET(self):
         qdict = web.input()
-        try:
-            if gv.sd['ipas'] != 1 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
-                raise web.unauthorized()
-                return
-        except KeyError:
-            pass
+        approve_pwd(qdict)
         if not gv.sd['en']: return # check operation status
         gv.rovals = json.loads(qdict['t'])
         gv.rovals.pop()
@@ -868,12 +865,7 @@ class change_program:
     """Add a program or modify an existing one."""
     def GET(self):
         qdict = web.input()
-        try:
-            if gv.sd['ipas'] != 1 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
-                raise web.unauthorized()
-                return
-        except KeyError:
-            pass
+        approve_pwd(qdict)
         pnum = int(qdict['pid'])+1 # program number
         cp = json.loads(qdict['v'])      
         if cp[0] == 0 and pnum == gv.pon: # if disabled and program is running
@@ -905,12 +897,7 @@ class delete_program:
     """Delete one or all existing program(s)."""
     def GET(self):
         qdict = web.input()
-        try:
-            if gv.sd['ipas'] != 1 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
-                raise web.unauthorized()
-                return
-        except KeyError:
-            pass
+        approve_pwd(qdict)
         if qdict['pid'] == '-1':
             del gv.pd[:]
             jsave(gv.pd, 'programs')
@@ -960,12 +947,7 @@ class clear_log:
     """Delete all log records"""
     def GET(self):
         qdict = web.input()
-        try:
-            if gv.sd['ipas'] != 1 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
-                raise web.unauthorized()
-                return
-        except KeyError:
-            pass
+        approve_pwd(qdict)
         f = open('./static/log/water_log.csv', 'w')
         f.write('Program, Zone, Duration, Finish Time, Date'+'\n')
         f.close
@@ -975,12 +957,7 @@ class log_options:
     """Set log options from dialog."""
     def GET(self):
         qdict = web.input()
-        try:
-            if gv.sd['ipas'] != 1 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
-                raise web.unauthorized()
-                return
-        except KeyError:
-            pass
+        approve_pwd(qdict)
         if qdict.has_key('log'): gv.sd['lg'] = 1
         else: gv.sd['lg'] = 0
         gv.lg = gv.sd['lg'] # necessary to make logging work correctly on Pi (see run_log())        
@@ -993,12 +970,7 @@ class run_now:
     """Run a scheduled program now. This will override any running programs."""
     def GET(self):
         qdict = web.input()
-        try:
-            if gv.sd['ipas'] != 1 and qdict['pw'] != base64.b64decode(gv.sd['pwd']):
-                raise web.unauthorized()
-                return
-        except KeyError:
-            pass
+        approve_pwd(qdict)
         pid = int(qdict['pid'])
         p = gv.pd[int(qdict['pid'])] # program data
         if not p[0]: # if program is disabled
@@ -1027,7 +999,7 @@ class show_revision:
         return revpg
 
 class toggle_temp:
-    """Change units of Raspi\'s CPU temperature display on home page."""
+    """Change units of Raspi's CPU temperature display on home page."""
     def GET(self):
         qdict = web.input()
         if qdict['tunit'] == "C":
@@ -1038,11 +1010,10 @@ class toggle_temp:
         raise web.seeother('/')
 
 class OSPi_app(web.application):
-    """Allows HTTP port the program runs on to be selected by the program."""
+    """Allow program to select HTTP port."""
     def run(self, port=gv.sd['htp'], *middleware): # get port number from options settings
         func = self.wsgifunc(*middleware)
         return web.httpserver.runsimple(func, ('0.0.0.0', port))
-    
 
 if __name__ == '__main__':
     app = OSPi_app(urls, globals())

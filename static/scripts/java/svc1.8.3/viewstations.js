@@ -10,6 +10,10 @@ function rst() {
   var sid,sn;
   for(sid=0;sid<sd['nbrd']*8;sid++) {
     sn=sid+1;
+    console.log(sn)
+    if (document.getElementById("n"+sid)== null) {
+    	continue;
+    }	
     document.getElementById("n"+sid).value="S"+(sn/10>>0)+(sn%10);
   }
 }
