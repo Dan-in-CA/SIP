@@ -555,7 +555,7 @@ class change_values:
         elif qdict.has_key('en') and qdict['en'] == '0':
             gv.srvals = [0]*(gv.sd['nst']) # turn off all stations
             set_output()
-        if qdict.has_key('mm') and qdict['mm'] == '0': clear_mm() #self.clear_mm()
+        if qdict.has_key('mm') and qdict['mm'] == '0': clear_mm()
         if qdict.has_key('rd') and qdict['rd'] != '0':
             gv.sd['rdst'] = (gv.now+(int(qdict['rd'])*3600))
             stop_onrain()
@@ -726,7 +726,6 @@ class change_stations:
         save('snames', names.encode('ascii', 'backslashreplace'))
         jsave(gv.sd, 'sd')
         raise web.seeother('/')
-#         return
 
 class get_station:
     """Return a page containing a number representing the state of a station or all stations if 0 is entered as statin number."""
