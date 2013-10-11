@@ -12,6 +12,14 @@ UPDATES
 ===========
 ***********
 
+October 11 2013
+--------------
+(Dan)<br/>
+Additions, bug fixes:<br/>
+1. Fixed a bug that would cause an error when a master was enabled and making changes to station settings.<br/>
+2. added approve_pwd function and removed redundant code.<br/>
+3. removed write_options function and added options.txt file to distribution.<br/>
+
 October 4 2013
 --------------
 (jonathanmarsh)<br/>
