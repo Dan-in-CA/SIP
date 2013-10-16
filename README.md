@@ -12,6 +12,13 @@ UPDATES
 ===========
 ***********
 
+October 16 2013
+--------------
+(Dan)<br/>
+Additions, bug fixes:<br/>
+1. Fixed a bug that would cause an error in program preview when a master was enabled.<br/>
+2. Changing to manual mode would clear rain delay setting, Setting rain delay in manual mode would switch to program mode - fixed.
+
 October 11 2013
 --------------
 (Dan)<br/>
