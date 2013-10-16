@@ -1,136 +1,167 @@
-$def with (records)
+$def with (baseurl, records)
 
 <!doctype html>
 
 <html>
 
+<html>
 <head>
-<title>Water Log</title>
-<meta content="width=640" name="viewport">
-<link href="./static/images/icons/favicon.ico" rel="icon" type="image/x-icon" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<style>
-#overlay {
-	 visibility: hidden;
-	 position: absolute;
-	 left: 0px;
-	 top: 0px;
-	 width: 100%;
-	 height:100%;
-	 text-align:center;
-	 z-index: 1000;
-	 background-image:url(../static/images/misc/BlueTile.png);
-}
-#overlay div {
-	 width:200px;
-	 margin: 100px auto;
-	 background-color: #fff;
-	 border:1px solid #000;
-	 padding:10px;
-	 text-align:left;	 
-}
-h2 {
-	text-align: center;
-	font-family: Sans-serif;
-}
-
-.pwspan { 
-	float:left; 
-	border-style:none;
-	clear:both;
-	margin:10px 0px 10px 0px;
-}
-
-</style>
-
-<script>
-function fcancel() {window.location="/";}
-function ocancel() {window.location="/vl";}
-function link(s) {window.location=s;}
-function del(form) {
-  var p="";
-  if(!$sd['ipas']) p=prompt("Password Required","");
-  if(p!=null){form.elements[0].value=p;form.submit();}
- }
-function subm(form) {
-  form.submit();
-}
-function hidepw(){
-	if ($sd['ipas']) {
-		document.getElementById("pwarea").style.display = "none";
+	<meta name="viewport" content="width=640">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>OpenSprinkler Pi Log${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
+	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
+	<style>
+		#overlay {
+			 display:none;
+			 position: absolute;
+			 left: 0px;
+			 top: 0px;
+			 width: 100%;
+			 height:100%;
+			 text-align:center;
+			 z-index: 1000;
+			 background-image:url(../static/images/misc/BlueTile.png);
 		}
-	else {
-		document.getElementById("pwarea").style.display = "block";
+		#overlay div {
+			 width:240px;
+			 margin: 100px auto;
+			 background-color: #fff;
+			 border:1px solid #000;
+			 padding:10px;
+			 text-align:left;	 
 		}
-}
-function overlay() {
-	el = document.getElementById("overlay");
-	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-}
-</script>
+		h2 {
+			text-align: center;
+			font-family: Sans-serif;
+		}
+		
+		.pwspan { 
+			float:left; 
+			border-style:none;
+			clear:both;
+			margin:10px 0px 10px 0px;
+		}
+	
+		button {
+			padding: 3px 6px 3px 30px;
+			background-color: #EEE;
+			background-repeat: no-repeat;
+			background-position: 4px center;
+			background-size: 20px;
+		}
+		#nav button {height:44px;}
+		button#nBack {background-image: url('${baseurl}/static/images/icons/svc_back.png');}
+		button#nRefresh {background-image: url('${baseurl}/static/images/icons/svc_refresh.png');}
+		button#nDeleteAll {background-image: url('${baseurl}/static/images/icons/svc_delall.png');}
+		button#nLogOptions {background-image: url('${baseurl}/static/images/icons/svc_options.png');}
+		button#oSubmit {background-image: url('${baseurl}/static/images/icons/svc_submit.png');}
+		button#oCancel {background-image: url('${baseurl}/static/images/icons/svc_delall.png');}
+	</style>
+	<script src="${baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+	<script>
+		// Initialize behaviors
+		jQuery(document).ready(function(){
+			var ipas = $gv.sd['ipas'];
+			
+			jQuery("button#nBack").click(function(){
+				window.location="/";
+			});
+			jQuery("button#nRefresh").click(function(){
+				window.location="/vl";
+			});
+			jQuery("button#nDeleteAll").click(function(){
+				var p = "";
+				if (!ipas) {
+					p = prompt("Password Required","");
+				}
+				if (p != null) {
+					jQuery("#pw") = p;
+					jQuery("form#df").submit();
+				}
+			});
+			jQuery("button#nLogOptions,button#oCancel").click(function(){
+				jQuery("#overlay").toggle();
+			});
+			jQuery("button#oSubmit").click(function(){
+				jQuery("form#logopts").submit();
+				jQuery("#overlay").toggle();
+			});
+
+			if (ipas) {
+				jQuery("#pwarea").hide()
+			} else {
+				jQuery("#pwarea").show()
+			}
+		});
+
+	</script>
 </head>
 	
-<body onload="hidepw()">
+<body>
+	<div class="content">
+		<div class="header">
+		</div>
+		
+		<div class="body">
+		
+			<div id="nav">
+				<form method="get" action="cl" name="df">
+					<input id="pw" name="pw" type="hidden" />
+				</form>
+				<form method="get" action="mp" name="mf">
+					<input id="pid" name="pid" type="hidden" value="-1" />
+				</form>
+				
+				<button id="nBack">Back</button>
+				<button id="nRefresh">Refresh</button>
+				<button id="nDeleteAll">Delete All</button>
+				<button id="nLogOptions">Log Options</button>
+			</div>
+			
+			<div id="log">
+				$code:
+				    if gv.sd['lg'] == 1:
+				        log_state = "Enabled"
+				        log_option = "checked"
+				    else:
+				        log_state = "Disabled"
+				        log_option = ""
 
-<form method="get" action="cl" name="df">
-<input type="hidden" name="pw">
-</form>
-<form method="get" action="mp" name="mf">
-<input type="hidden" name="pid" value="-1">
-</form>
-<button onclick="fcancel()" style="height:44">
-<img align="absmiddle" height="20" src="../static/images/icons/svc_back.png">
- Back
-</button>
-<button onclick="link('/vl')" style="height:44">
-<img align="absmiddle" height="20" src="../static/images/icons/svc_refresh.png">
-<b>Refresh</b>
-</button>
-<button onclick="del(df, 0)" style="height:44">
-<img align="absmiddle" height="20" src="../static/images/icons/svc_delall.png">
- Delete All
-</button>
-<button onclick="overlay()" style="height:44">
-<img align="absmiddle" height="20" src="../static/images/icons/svc_options.png">
- Log Options
-</button>
+				<div>Logging $log_state</div>
+				<b>Total number of records: $(len(records)-1)</b>
+				<hr>
+				
+				<table>
+					$for r in records:
+						<tr class="log_rec">
+						$for d in r:
+							<td align='center'>$d</td>
+						</tr>
+				</table>
 
-$code:
-    if sd['lg'] == 1:
-        log_state = "Enabled"
-        log_option = "checked"
-    else:
-        log_state = "Disabled"
-        log_option = ""
-
-<br><br>	
-Logging $log_state
-<br>
-<b>Total number of records: $(len(records)-1)</b>
-<hr>
-
-<table>
-$for r in records:
-	    <tr class="log_rec">
-		$for d in r:
-	        <td align='center'>$d</td>
-	    </tr>
-</table>
-
-<div id="overlay">
-     <div>
-		<form name="logopts" action="/lo" method="get">
-		  <p><h2>Log Options</h2></p>
-		  	<label for="log">Enable Logging</label> <input type="checkbox" id="log" name="log" $log_option ><br>
-		  <label for="max">Maximum records to keep:</label> <input type="text" size="4" value="$sd['lr']" id="max" name="nrecords">(0 = no limit)<br>
-		  <span id='pwarea' style='display:block'; class="pwspan">
-			<label for="pw">Password Required:</label> <input type="password" size="10"id="pw">
-		  </span><br>
-		  <input type="submit" value="Submit">
-		  <button type="button" onclick="overlay()"; return false;>Cancel</button>
-		</form>
-     </div>
-</div>
-
+			</div>
+		</div>
+		
+		<div id="overlay">
+			<div>
+				<form id="logopts" action="/lo" method="get">
+					<h2>Log Options</h2>
+					<label for="log">Enable Logging</label>
+					<input type="checkbox" id="log" name="log" $log_option ><br>
+					<label for="nrecords">Maximum records to keep:</label>
+					<input type="text" size="4" value="$gv.sd['lr']" id="nrecords" name="nrecords">(0 = no limit)<br>
+					<span id='pwarea' class="pwspan">
+						<label for="pw">Password Required:</label> <input type="password" size="10" id="pw">
+					</span><br>
+					<button id="oSubmit" type="button">Submit</button>
+					<button id="oCancel" type="button">Cancel</button>
+				</form>
+			</div>
+		</div>
+		
+		<div class="footer">
+		</div>
+	</div>
 </body>
+
 </html>

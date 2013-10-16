@@ -1,4 +1,7 @@
-$def with (sd, baseurl, ver, devt, cputemp, sbits, ps, lrun, snames)
+$def with (baseurl, cputemp)
+$code:
+	snames = data('snames')
+
 <!-- 
   2013-10-06: jonathanmarsh
     - Converted to web.py template, retaining 99% of older look and feel
@@ -10,6 +13,7 @@ $def with (sd, baseurl, ver, devt, cputemp, sbits, ps, lrun, snames)
 <head>
 	<meta name="viewport" content="width=640">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>OpenSprinkler Pi${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
 	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
 	<style type="text/css">
 		.bluebg {background-color:lightblue;}
@@ -70,13 +74,13 @@ $def with (sd, baseurl, ver, devt, cputemp, sbits, ps, lrun, snames)
 	<script src="${baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>
 		// Variables set by ospi.py
-		var devt = ${devt}*1000;
-		var tz = ${sd['tz']};
+		var devt = ${gv.now}*1000;
+		var tz = ${gv.sd['tz']};
 		var cputemp = "${cputemp}";
-		var tempunit = "${sd['tu']}";
+		var tempunit = "${gv.sd['tu']}";
 		var snames = $:{snames};
-		var lrun = ${lrun};
-		var rdst = ${sd['rdst']}*1000;
+		var lrun = ${gv.lrun};
+		var rdst = ${gv.sd['rdst']}*1000;
 		
 		// date/time formating helpers
 		var timezoneSuffix =
@@ -121,10 +125,10 @@ $def with (sd, baseurl, ver, devt, cputemp, sbits, ps, lrun, snames)
 		// Program display formatting
 		function displayStations() { 
 			var bid, s, sid, sn, sbit, rem, remm, rems, pname, rowElement, cellElement;
-			var nbrd = ${sd['nbrd']}, en = ${sd['en']}, mas = ${sd['mas']}, rd = ${sd['rd']}, urs = ${sd['urs']}, rs = ${sd['rs']}, ir = ${sd['ir']};
-			var sbits = ${sbits}, ps = ${ps};
+			var nbrd = ${gv.sd['nbrd']}, en = ${gv.sd['en']}, mas = ${gv.sd['mas']}, rd = ${gv.sd['rd']}, urs = ${gv.sd['urs']}, rs = ${gv.sd['rs']}, ir = ${gv.sd['ir']};
+			var sbits = ${gv.sbits}, ps = ${gv.ps};
 			
-			var off = ${1 if sd['en'] == 0 else 0}; 
+			var off = ${1 if gv.sd['en'] == 0 else 0}; 
 			var tableElement = jQuery("table#stations");
 			
 			for (bid = 0; bid < nbrd; bid++) {
@@ -185,8 +189,8 @@ $def with (sd, baseurl, ver, devt, cputemp, sbits, ps, lrun, snames)
 		// Manual mode formatting
 		function displayManual() {
 			var bid, s, sid, sn, sbit, rem, remm, rems, rowElement, cellElement;
-			var nbrd = ${sd['nbrd']}, mas = ${sd['mas']};
-			var sbits = ${sbits}, ps = ${ps};
+			var nbrd = ${gv.sd['nbrd']}, mas = ${gv.sd['mas']};
+			var sbits = ${gv.sbits}, ps = ${gv.ps};
 			var tableElement = jQuery("table#stations");
 			
 			for (bid = 0; bid < nbrd; bid++) {
@@ -277,7 +281,7 @@ $def with (sd, baseurl, ver, devt, cputemp, sbits, ps, lrun, snames)
 			});
 			jQuery("button#bStopAll").click(function(){
 				var p="";
-				if(!${sd['ipas']}) {
+				if(!${gv.sd['ipas']}) {
 					p = prompt("Please enter your password:","");
 				}
 				if (p != null) {
@@ -289,11 +293,11 @@ $def with (sd, baseurl, ver, devt, cputemp, sbits, ps, lrun, snames)
 			});
 									
 			jQuery("button#cStartStop").click(function(){
-				jQuery("form[name='hf'] input[name='en']").val(${1-sd['en']});
+				jQuery("form[name='hf'] input[name='en']").val(${1-gv.sd['en']});
 				jQuery("form[name='hf']").submit();
 			});
 			jQuery("button#cManual").click(function(){
-				jQuery("form[name='hf'] input[name='mm']").val(${1-sd['mm']});
+				jQuery("form[name='hf'] input[name='mm']").val(${1-gv.sd['mm']});
 				jQuery("form[name='hf']").submit();
 			});
 			jQuery("button#cRainDelay").click(function(){
@@ -327,13 +331,13 @@ $def with (sd, baseurl, ver, devt, cputemp, sbits, ps, lrun, snames)
 			});
 			
 			// update the rain delay end date (if engaged)
-			if (${sd['rd']} != 0) {
+			if (${gv.sd['rd']} != 0) {
 				var delayEnd = new Date(rdst);
 				jQuery("#rdEnd").html(formatDeviceDate(delayEnd));
 			}
 
 			// Generate the station status
-			$if sd['mm']:
+			$if gv.sd['mm']:
 				displayManual();
 			$else:
 				displayStations();
@@ -366,8 +370,8 @@ $def with (sd, baseurl, ver, devt, cputemp, sbits, ps, lrun, snames)
 			</div>
 			
 			<div id="status">
-				<p><b>System name</b>: ${sd['name']}</p>
-		 		<p><b>Firmware version</b>: ${ver}</p>
+				<p><b>System name</b>: ${gv.sd['name']}</p>
+		 		<p><b>Firmware version</b>: ${".".join(list(str(gv.ver)))}</p>
 				<p><b>Device time</b>: <span id="deviceTime"></span></p>
 				<p><b>CPU Temp</b>: <span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></p>
 			</div>
@@ -375,7 +379,7 @@ $def with (sd, baseurl, ver, devt, cputemp, sbits, ps, lrun, snames)
 			
 			<div id="stations">
 			
-			$if sd['mm']:
+			$if gv.sd['mm']:
 				<div id="manualmode">
 					<p><b>Manual Control:</b> (timer is optional)<p></p>
 					<table id="stations"></table>
@@ -395,25 +399,25 @@ $def with (sd, baseurl, ver, devt, cputemp, sbits, ps, lrun, snames)
 			</div>
 			
 			<div id="options">	
-				<p><b>Operation</b>: <span class="${'opOn' if sd['en'] else 'opOff'}">${'on' if sd['en'] else 'OFF'}</span></p>
-				<p><b>Raindelay</b>: <span class="${'rdOn' if sd['rd'] else 'rdOff'}">$:{'ON (till <span id="rdEnd"></span>)' if sd['rd'] else 'off'}</span></p>
-				<p><b>Rainsense</b>: <span class="${('rsOn' if sd['rs'] else 'rsOff') if sd['urs'] else 'rsNA'}">${('rain detected' if sd['rs'] else 'no rain') if sd['urs'] else 'n/a'}</span></p>
-				<p><b>Water level</b>: <span class="${'wlOn' if sd['wl']==100 else 'wlOff'}">${sd['wl']}%</span></p>
+				<p><b>Operation</b>: <span class="${'opOn' if gv.sd['en'] else 'opOff'}">${'on' if gv.sd['en'] else 'OFF'}</span></p>
+				<p><b>Raindelay</b>: <span class="${'rdOn' if gv.sd['rd'] else 'rdOff'}">$:{'ON (till <span id="rdEnd"></span>)' if gv.sd['rd'] else 'off'}</span></p>
+				<p><b>Rainsense</b>: <span class="${('rsOn' if gv.sd['rs'] else 'rsOff') if gv.sd['urs'] else 'rsNA'}">${('rain detected' if gv.sd['rs'] else 'no rain') if gv.sd['urs'] else 'n/a'}</span></p>
+				<p><b>Water level</b>: <span class="${'wlOn' if gv.sd['wl']==100 else 'wlOff'}">${gv.sd['wl']}%</span></p>
 				<p><b>Last run</b>: <span id="lastRun"></span></p>
 			</div>
 			<hr>
 			
 			<div id="controls">
 				<form name="hf" action="cv" method="get">
-					<p>Password:<input type="password" ${"disabled" if sd['ipas'] else ""} size="10" id="pwd" name="pw"></p>
+					<p>Password:<input type="password" ${"disabled" if gv.sd['ipas'] else ""} size="10" id="pwd" name="pw"></p>
 					<input type="hidden" name="en">
 					<input type="hidden" name="mm" value="0">
 					<input type="hidden" name="rd" value="0">
 					<input type="hidden" name="rbt" value="0">
 				</form>
 		
-				<button id="cStartStop" class="${'stop' if sd['en'] else 'start'}">${'Stop' if sd['en'] else 'Start'} Operation</button>
-				<button id="cManual" class="${'auto' if sd['mm'] else 'man'}">Manual ${'Off' if sd['mm'] else 'On'}</button>
+				<button id="cStartStop" class="${'stop' if gv.sd['en'] else 'start'}">${'Stop' if gv.sd['en'] else 'Start'} Operation</button>
+				<button id="cManual" class="${'auto' if gv.sd['mm'] else 'man'}">Manual ${'Off' if gv.sd['mm'] else 'On'}</button>
 				<button id="cRainDelay">Rain Delay</button>
 				<button id="cReboot">Reboot</button>
 			</div>
@@ -421,7 +425,7 @@ $def with (sd, baseurl, ver, devt, cputemp, sbits, ps, lrun, snames)
 		
 		<div class="footer">
 			<hr>
-			<p style="font-size:9pt">This version is an experimental use of web.py templates.  Visit the <a href="/oldhome">old home page</a> if something seems wrong.</p>
+			<p style="font-size:9pt">This version is an experimental use of web.py templates.  Visit the <a href="/_old">old home page</a> if something seems wrong.</p>
 		</div>
 	</div>
 </body>

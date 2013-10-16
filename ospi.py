@@ -17,9 +17,10 @@ gv.rev_date = '04/October/2013'
  #### urls is a feature of web.py. When a GET request is received, the corresponding class is executed.
 urls = [
     '/',  'home',
-    '/oldhome',  'oldhome',
+    '/_old',  'home_old',
     '/cv', 'change_values',
     '/vo', 'view_options',
+    '/vo_old', 'view_options_old',
     '/co', 'change_options',
     '/vs', 'view_stations',
     '/cs', 'change_stations',
@@ -537,10 +538,10 @@ def pass_options(opts):
 class home:
     """Open Home page."""
     def GET(self):  
-        render = web.template.render('templates')
-        return render.home(gv.sd, baseurl(), ".".join(list(str(gv.ver))), gv.now, CPU_temperature(), gv.sbits, gv.ps, gv.lrun, data('snames'))
+        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'data': data })
+        return render.home(baseurl(), CPU_temperature())
 
-class oldhome:
+class home_old:
     def GET(self):
         homepg = '<!DOCTYPE html>\n'
         homepg += data('meta')
@@ -605,6 +606,11 @@ class change_values:
 
 class view_options:
     """Open the options page for viewing and editing."""
+    def GET(self):
+        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
+        return render.options(baseurl())
+
+class view_options_old:
     def GET(self):
         optpg = '<!DOCTYPE html>\n'
         optpg += data('meta')
@@ -950,7 +956,7 @@ class graph_programs:
 
 class view_log:
     def __init__(self):
-        self.render = web.template.render('templates/', globals={'sd':gv.sd})
+        self.render = web.template.render('templates', globals={'gv': gv})
  
     def GET(self):
         logf = open('static/log/water_log.csv')
@@ -961,7 +967,7 @@ class view_log:
             t = r.split(', ')
             t[1] = t[1].decode('unicode-escape')
             data.append(t)    
-        return self.render.log(data)
+        return self.render.log(baseurl(), data)
 
 class clear_log:
     """Delete all log records"""

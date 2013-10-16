@@ -1,0 +1,140 @@
+$def with (baseurl)
+
+<!-- 
+  2013-13-06: jonathanmarsh
+    - Converted to web.py template, retaining 99% of older look and feel
+    - Moved inline styling to stylesheet
+    - Moved inline behaviors to jQuery.
+    Note that the normal jQuery use of the dollar sign conflicts with the templating syntax - used the longer jQuery() throughout.
+ -->
+
+$code:
+	opts = eval(data('options'))
+	snames = eval(data('snames'))
+	def renderoptions():
+		output = ""
+		for opt in opts:
+			label = opt[0]
+			datatype = opt[1]
+			value = gv.sd[opt[2]]
+			name = opt[2]
+			tooltip = opt[3]
+			
+			output += "<div class='option' title='" + tooltip + "'><span class='label'>" + label + ":</span>\n"
+			if datatype == "boolean":
+				output += "<input name='o" + name + "' type='checkbox' " + ("checked" if value>0 else "") + ">\n"
+			elif datatype == "string":
+				output += "<input name='o" + name + "' type='text' size='31' maxlength='31' value='" + value + "'>\n"
+			elif name == "tz":
+				output += "<input name='otz' type='hidden' value='0'>\n"
+				tz = value - 48
+				th = ("+" if tz>=0 else "-") + str(abs(tz)/4>>0)
+				tq = str((abs(tz)%4)*15/10>>0) + str((abs(tz)%4)*15%10)
+				output += "<input name='th' type='text' size='3' maxlength='3' value='"+ th +"'>:<input name='tq' type='text' size='3' maxlength='3' value='" + tq + "'>\n"
+			elif name == "mas":
+				output += "<select name='omas'>\n"
+				output += "<option " + ("selected " if value==0 else "") + "value='0'>None</option>\n"
+				for i in range(1,9):
+					output += "<option " + ("selected " if value==i else "") + "value='" + str(i) + "'>" + snames[i-1] + "  (Station " + str(i) + ")</option>\n"
+				output += "</select>\n"
+			elif name == "htp":
+				output += "<input name='ohtp' type='text' size='5' maxlength='5' value='" + str(value) + "'>\n"
+			elif name == "nbrd":
+				output += "<input name='onbrd' type='text' size='3' maxlength='3' value='" + str(value - 1) + "'>\n"
+			else:
+				output += "<input name='o" + name + "' type='text' size='3' maxlength='3' value='" + str(value) + "'>\n"
+						
+			output += "<span class='tooltip'>" + tooltip + "</span>\n"
+			output += "</div>\n\n"
+		return output
+	
+
+<html>
+<head>
+	<meta name="viewport" content="width=640">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>OpenSprinkler Pi Options ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
+	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
+	<style type="text/css">
+		button {
+			padding: 3px 6px 3px 30px;
+			background-color: #EEE;
+			background-repeat: no-repeat;
+			background-position: 4px center;
+			background-size: 20px;
+		}
+		button#tooltip {height:24px;}
+		#controls button {height:36px;}
+		button#cSubmit {background-image: url('${baseurl}/static/images/icons/svc_submit.png');}
+		button#cCancel {background-image: url('${baseurl}/static/images/icons/svc_delall.png');}
+		
+		
+		.tooltip {background-color:#FFF2B8; display:none; font-size:10pt; margin-left:4px;}
+		.label {font-weight:bold; float:left; width:160px; text-align:right; padding-right:4px;}
+		.option {margin: 6px 0px; clear:both;}
+	</style>
+	<script src="${baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+	<script>		
+		// Initialize behaviors
+		jQuery(document).ready(function(){
+			
+			jQuery("button#tooltips").click(function(){
+				var visible = jQuery(this).text() == "Hide Tooltips";
+				jQuery(this).text(visible ? "Show Tooltips" : "Hide Tooltips");
+				jQuery(".tooltip").toggle();
+			});
+			
+			jQuery("button#cSubmit").click(function(){
+				// process time zone value
+				var th = parseInt(jQuery("input[name='th']").val(),10);
+				var tq = parseInt(jQuery("input[name='tq']").val(),10);
+				tq = (tq/15>>0)/4.0;
+				th = th+(th>=0?tq:-tq);
+				jQuery("input[name='otz']").val(((th+12)*4)>>0);
+				jQuery("form").submit();
+			});
+			
+			jQuery("button#cCancel").click(function(){
+				window.location="/";
+			});
+
+		});
+
+	</script>
+</head>
+<body>
+	<div class="content">
+		<div class="header">
+			<div align="center" style="background-color:#EEEEEE;border:2px solid gray;padding:5px 10px;width:240px;border-radius:10px;box-shadow:3px 3px 2px #888888;">
+				<b>Set Options</b><br>
+				<font size=2>(Hover on each option to see tooltip)</font>
+			</div>
+			<p></p>
+		</div>
+		
+		<div class="body">
+		
+			<div id="nav">
+				<button id="tooltips">Show Tooltips</button>
+			</div>
+			
+			<div id="options">
+				<form name="of" action="co" method="get">
+					$:{renderoptions()}
+
+					<h4>Password:<input name='pw' type='password' size='10' ${"disabled" if gv.sd['ipas'] else ""}/></h4>
+					<h4>Change password: <input name='npw' type='password' size='10'>&nbsp;&nbsp;Confirm:&nbsp;<input name='cpw' type='password' size='10'/></h4>
+				</form>
+			</div>
+			
+			<div id="controls">
+				<button id='cSubmit'>Submit Changes</button>
+				<button id='cCancel'>Cancel</button>
+			</div>
+		<div class="footer">
+			<hr>
+			<p style="font-size:9pt">This version is an experimental use of web.py templates.  Visit the <a href="/vo_old">old options page</a> if something seems wrong.</p>
+		</div>
+	</div>
+</body>
+</html>
