@@ -53,8 +53,8 @@ function plot_bar(sid,start,pid,end) { // plot program bar
   w("<div title=\""+snames[sid]+" ["+getrunstr(start,end)+"]\" align=\"center\" style=\"position:absolute;background-color:"+prog_color[(pid+3)%4]+";left:"+getx(sid)+"px;top:"+gety(start/60)+"px;border:0;width:"+stwidth+"px;height:"+((end-start)/60*stheight/60)+"px\">P"+pid+"</div>");
 }
 function plot_master(start,end) {  // plot master station
-  w("<div title=\"Master ["+getrunstr(start,end)+"]\" style=\"position:absolute;background-color:#CCCC80;left:"+getx(mas-1)+"px;top:"+gety(start/60)+"px;border:0;width:"+stwidth+"px;height:"+((end-start)/60*stheight/60)+"px\"></div>");
-  //if(mas==0||start==end)  return;
+  w("<div title=\"Master ["+getrunstr(start,end)+"]\" style=\"position:absolute;background-color:#CCCC80;left:"+getx(sd['mas']-1)+"px;top:"+gety(start/60)+"px;border:0;width:"+stwidth+"px;height:"+((end-start)/60*stheight/60)+"px\"></div>");
+  //if(sd['mas']==0||start==end)  return;
   //ctx.fillStyle="rgba(64,64,64,0.5)";
   //ctx.fillRect(getx(mas-1),gety(start/60),stwidth,(end-start)/60*stheight/60);
 }
