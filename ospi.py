@@ -11,8 +11,8 @@ except ImportError:
 
  #### Revision information ####
 gv.ver = 183
-gv.rev = 138
-gv.rev_date = '11/October/2013'
+gv.rev = 139
+gv.rev_date = '16/October/2013'
 
  #### urls is a feature of web.py. When a GET request is received , the corresponding class is executed.
 urls = [
@@ -556,7 +556,7 @@ class change_values:
             gv.srvals = [0]*(gv.sd['nst']) # turn off all stations
             set_output()
         if qdict.has_key('mm') and qdict['mm'] == '0': clear_mm()
-        if qdict.has_key('rd') and qdict['rd'] > '0':
+        if qdict.has_key('rd') and qdict['rd'] != '0' and qdict['rd'] != '':
             gv.sd['rdst'] = (gv.now+(int(qdict['rd'])*3600))
             stop_onrain()
         elif qdict.has_key('rd') and qdict['rd'] == '0': gv.sd['rdst'] = 0   
