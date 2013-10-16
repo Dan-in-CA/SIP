@@ -1,6 +1,0 @@
-web/
-/data/programs.json
-/data/sd.json
-/data/snames.txt
-*.pyc
-/static/log/
