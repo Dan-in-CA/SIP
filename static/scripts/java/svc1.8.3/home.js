@@ -51,7 +51,7 @@ else w("<br><b>Log</b>: <font color=gray>n/a</font>");
 w("<hr>");
 // print html form
 w("<form name=hf action=cv method=get><p>Password:<input type=password "+(sd['ipas']?"disabled":"")+" size=10 id=pwd name=pw></p>");
-w("<input type=hidden name=en><input type=hidden name=rd value=0><input type=hidden name=rbt value=0><input type=hidden name=mm value=0></form>");
+w("<input type=hidden name=en><input type=hidden name=rd value=''><input type=hidden name=rbt value=0><input type=hidden name=mm value=''></form>");
 w("<button style=\"height:36\" onclick=\"hf.elements[1].value="+(1-sd['en'])+";hf.submit();\">"+imgstr(sd['en']?"stop":"start")+(sd['en']?"Stop Operation":"Start Operation")+"</button>");
 w("<button style=\"height:36\" onclick=\"hf.elements[4].value="+(1-sd['mm'])+";hf.submit();\">"+imgstr(sd['mm']?"auto":"manual")+(sd['mm']?"Manual Off":"Manual On")+"</button>");
 w("<button style=\"height:36\" onclick=\"setrd(hf,2)\">"+imgstr("rain")+"Rain Delay</button>");
