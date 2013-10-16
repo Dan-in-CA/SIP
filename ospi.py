@@ -14,7 +14,7 @@ gv.ver = 183
 gv.rev = 138
 gv.rev_date = '11/October/2013'
 
- #### urls is a feature of web.py. When a GET request is recieved , the corrisponding class is executed.
+ #### urls is a feature of web.py. When a GET request is received , the corresponding class is executed.
 urls = [
     '/',  'home',
     '/cv', 'change_values',
@@ -193,8 +193,8 @@ def stop_stations():
         return
 
 def main_loop(): # Runs in a separate thread
-    """ ***** Main algorithm.***** """
-    print 'Starting main loop \n'
+    """ ***** Main timing algorithm.***** """
+    print 'Starting timing loop \n'
     last_min = 0
     while True: # infinite loop
         gv.now = time.time()+((gv.sd['tz']/4)-12)*3600 # Current time based on UTC time from the Pi adjusted by the Time Zone setting from options. updated once per second.
@@ -309,7 +309,7 @@ def main_loop(): # Runs in a separate thread
             gv.sd['rdst'] = 0 # Rain delay stop time
             jsave(gv.sd, 'sd')
         time.sleep(1)
-        #### End of main loop #### 
+        #### End of timing loop #### 
 
 def data(dataf):
     """Return contents of requested text file as string or create file if a missing config file."""
