@@ -1,6 +1,6 @@
 web/
-/data
-/.settings
+/data/programs.json
+/data/sd.json
+/data/snames.txt
 *.pyc
-.project
-.pydevproject
+/static/log/
