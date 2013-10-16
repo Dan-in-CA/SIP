@@ -3,4 +3,4 @@ web/
 /data/sd.json
 /data/snames.txt
 *.pyc
-/static/log/water_log.csv
+*.csv
