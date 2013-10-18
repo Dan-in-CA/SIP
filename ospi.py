@@ -602,22 +602,31 @@ class change_options:
         except KeyError:
             pass
         
-        gv.sd['name'] = qdict['oname']
-        gv.sd['loc'] = qdict['oloc']
-        gv.sd['tz'] = int(qdict['otz'])
-        
+        if qdict.has_key('oname'):
+            gv.sd['name'] = qdict['oname']
+        if qdict.has_key('oloc'):
+            gv.sd['loc'] = qdict['oloc']
+        if qdict.has_key('otz'):
+            gv.sd['tz'] = int(qdict['otz'])
+
         if int(qdict['onbrd'])+1 != gv.sd['nbrd']: self.update_scount(qdict)
         gv.sd['nbrd'] = int(qdict['onbrd'])+1
         
         gv.sd['nst'] = gv.sd['nbrd']*8
-        gv.sd['htp']= int(qdict['ohtp'])
-        gv.sd['sdt']= int(qdict['osdt'])
-        
-        gv.sd['mas'] = int(qdict['omas'])
-        gv.sd['mton']= int(qdict['omton'])
-        gv.sd['mtoff']= int(qdict['omtoff'])
-        gv.sd['wl'] = int(qdict['owl'])
-        
+        if qdict.has_key('ohtp'):
+            gv.sd['htp']= int(qdict['ohtp'])
+        if qdict.has_key('osdt'):
+            gv.sd['sdt']= int(qdict['osdt'])
+
+        if qdict.has_key('omas'):
+            gv.sd['mas'] = int(qdict['omas'])
+        if qdict.has_key('omton'):
+            gv.sd['mton']= int(qdict['omton'])
+        if qdict.has_key('omtoff'):
+            gv.sd['mtoff']= int(qdict['omtoff'])
+        if qdict.has_key('owl'):
+            gv.sd['wl'] = int(qdict['owl'])
+                
         if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == ''):
           gv.sd['urs'] = 1
         else:
@@ -639,7 +648,8 @@ class change_options:
           gv.sd['lg'] = 0
         gv.lg = gv.sd['lg'] # necessary to make logging work correctly on Pi (see run_log())    
         
-        gv.sd['lr'] = int(qdict['olr'])
+        if qdict.has_key('olr'):
+            gv.sd['lr'] = int(qdict['olr'])
         gv.lr = gv.sd['lr']
 
         srvals = [0]*(gv.sd['nst']) # Shift Register values
