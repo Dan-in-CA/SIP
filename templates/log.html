@@ -1,4 +1,4 @@
-$def with (baseurl, records)
+$def with (records)
 
 <!doctype html>
 
@@ -50,14 +50,14 @@ $def with (baseurl, records)
 			background-size: 20px;
 		}
 		#nav button {height:44px;}
-		button#nBack {background-image: url('${baseurl}/static/images/icons/svc_back.png');}
-		button#nRefresh {background-image: url('${baseurl}/static/images/icons/svc_refresh.png');}
-		button#nDeleteAll {background-image: url('${baseurl}/static/images/icons/svc_delall.png');}
-		button#nLogOptions {background-image: url('${baseurl}/static/images/icons/svc_options.png');}
-		button#oSubmit {background-image: url('${baseurl}/static/images/icons/svc_submit.png');}
-		button#oCancel {background-image: url('${baseurl}/static/images/icons/svc_delall.png');}
+		button#nBack {background-image: url('${gv.baseurl}/static/images/icons/svc_back.png');}
+		button#nRefresh {background-image: url('${gv.baseurl}/static/images/icons/svc_refresh.png');}
+		button#nDeleteAll {background-image: url('${gv.baseurl}/static/images/icons/svc_delall.png');}
+		button#nLogOptions {background-image: url('${gv.baseurl}/static/images/icons/svc_options.png');}
+		button#oSubmit {background-image: url('${gv.baseurl}/static/images/icons/svc_submit.png');}
+		button#oCancel {background-image: url('${gv.baseurl}/static/images/icons/svc_delall.png');}
 	</style>
-	<script src="${baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>
 		// Initialize behaviors
 		jQuery(document).ready(function(){

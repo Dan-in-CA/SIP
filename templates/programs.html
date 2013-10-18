@@ -1,4 +1,4 @@
-$def with (baseurl)
+$def with ()
 
 <!-- 
   2013-13-06: jonathanmarsh
@@ -46,10 +46,10 @@ $code:
 			background-size: 20px;
 		}
 		#nav button {height:44px;}
-		button#nBack {background-image: url('${baseurl}/static/images/icons/svc_back.png');}
-		button#nAdd {background-image: url('${baseurl}/static/images/icons/svc_addall.png');}
-		button#nDelAll {background-image: url('${baseurl}/static/images/icons/svc_delall.png');}
-		button#nPreview {background-image: url('${baseurl}/static/images/icons/svc_preview.png');}
+		button#nBack {background-image: url('${gv.baseurl}/static/images/icons/svc_back.png');}
+		button#nAdd {background-image: url('${gv.baseurl}/static/images/icons/svc_addall.png');}
+		button#nDelAll {background-image: url('${gv.baseurl}/static/images/icons/svc_delall.png');}
+		button#nPreview {background-image: url('${gv.baseurl}/static/images/icons/svc_preview.png');}
 		#controls button {height:28px;}
 
 		.program {line-height:22px}
@@ -60,7 +60,7 @@ $code:
 		
 			
 	</style>
-	<script src="${baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>		
 		// Initialize behaviors
 		jQuery(document).ready(function(){

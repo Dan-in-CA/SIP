@@ -1,4 +1,4 @@
-$def with (baseurl, cputemp)
+$def with (cputemp)
 $code:
 	snames = data('snames')
 
@@ -47,20 +47,20 @@ $code:
 		#controls button {height:36px;}
 		#status button {height:32px;}
 		#programcontrols button {height:32px;}
-		button#bRefresh {background-image: url('${baseurl}/static/images/icons/svc_reset.png');}
-		button#bOptions {background-image: url('${baseurl}/static/images/icons/svc_options.png');}
-		button#bStations {background-image: url('${baseurl}/static/images/icons/svc_edit.png');}
-		button#bPrograms {background-image: url('${baseurl}/static/images/icons/svc_cal.png');}
-		button#bLog {background-image: url('${baseurl}/static/images/icons/svc_log.png');}
-		button#pPreview {background-image: url('${baseurl}/static/images/icons/svc_preview.png');}
-		button#pStopAll {background-image: url('${baseurl}/static/images/icons/svc_del.png');}
-		button#pRunOnce {background-image: url('${baseurl}/static/images/icons/svc_start.png');}
-		button#cStartStop.stop {background-image: url('${baseurl}/static/images/icons/svc_stop.png');}
-		button#cStartStop.start {background-image: url('${baseurl}/static/images/icons/svc_start.png');}
-		button#cManual.auto {background-image: url('${baseurl}/static/images/icons/svc_auto.png');}
-		button#cManual.man {background-image: url('${baseurl}/static/images/icons/svc_manual.png');}
-		button#cRainDelay {background-image: url('${baseurl}/static/images/icons/svc_rain.png');}
-		button#cReboot {background-image: url('${baseurl}/static/images/icons/svc_reboot.png');}
+		button#bRefresh {background-image: url('${gv.baseurl}/static/images/icons/svc_reset.png');}
+		button#bOptions {background-image: url('${gv.baseurl}/static/images/icons/svc_options.png');}
+		button#bStations {background-image: url('${gv.baseurl}/static/images/icons/svc_edit.png');}
+		button#bPrograms {background-image: url('${gv.baseurl}/static/images/icons/svc_cal.png');}
+		button#bLog {background-image: url('${gv.baseurl}/static/images/icons/svc_log.png');}
+		button#pPreview {background-image: url('${gv.baseurl}/static/images/icons/svc_preview.png');}
+		button#pStopAll {background-image: url('${gv.baseurl}/static/images/icons/svc_del.png');}
+		button#pRunOnce {background-image: url('${gv.baseurl}/static/images/icons/svc_start.png');}
+		button#cStartStop.stop {background-image: url('${gv.baseurl}/static/images/icons/svc_stop.png');}
+		button#cStartStop.start {background-image: url('${gv.baseurl}/static/images/icons/svc_start.png');}
+		button#cManual.auto {background-image: url('${gv.baseurl}/static/images/icons/svc_auto.png');}
+		button#cManual.man {background-image: url('${gv.baseurl}/static/images/icons/svc_manual.png');}
+		button#cRainDelay {background-image: url('${gv.baseurl}/static/images/icons/svc_rain.png');}
+		button#cReboot {background-image: url('${gv.baseurl}/static/images/icons/svc_reboot.png');}
 		
 		#lastRun {color:gray;}
 		button img {height:20px;vertical-align:middle}
@@ -71,7 +71,7 @@ $code:
 		td.stationOn {background-color:#FFCCCC;}
 		td.stationOff, td:stationClosed, td.stationWaiting {background-color:#FFCCCC;}
 	</style>
-	<script src="${baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>
 		// Variables set by ospi.py
 		var devt = ${gv.now}*1000;

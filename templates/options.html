@@ -1,4 +1,4 @@
-$def with (baseurl)
+$def with ()
 
 <!-- 
   2013-13-06: jonathanmarsh
@@ -75,15 +75,15 @@ $code:
 		}
 		button#tooltip {height:24px;}
 		#controls button {height:36px;}
-		button#cSubmit {background-image: url('${baseurl}/static/images/icons/svc_submit.png');}
-		button#cCancel {background-image: url('${baseurl}/static/images/icons/svc_delall.png');}
+		button#cSubmit {background-image: url('${gv.baseurl}/static/images/icons/svc_submit.png');}
+		button#cCancel {background-image: url('${gv.baseurl}/static/images/icons/svc_delall.png');}
 		
 		
 		.tooltip {background-color:#FFF2B8; display:none; font-size:10pt; margin-left:4px;}
 		.label {font-weight:bold; float:left; width:160px; text-align:right; padding-right:4px;}
 		.option {margin: 6px 0px; clear:both;}
 	</style>
-	<script src="${baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>		
 		// Initialize behaviors
 		jQuery(document).ready(function(){

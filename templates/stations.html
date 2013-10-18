@@ -1,4 +1,4 @@
-$def with (baseurl)
+$def with ()
 
 <!-- 
   2013-13-06: jonathanmarsh
@@ -36,12 +36,12 @@ $code:
 			background-size: 20px;
 		}
 		#controls button {height:36px;}
-		button#cSubmit {background-image: url('${baseurl}/static/images/icons/svc_submit.png');}
-		button#cResetNames {background-image: url('${baseurl}/static/images/icons/svc_reset.png');}
-		button#cCancel {background-image: url('${baseurl}/static/images/icons/svc_delall.png');}
+		button#cSubmit {background-image: url('${gv.baseurl}/static/images/icons/svc_submit.png');}
+		button#cResetNames {background-image: url('${gv.baseurl}/static/images/icons/svc_reset.png');}
+		button#cCancel {background-image: url('${gv.baseurl}/static/images/icons/svc_delall.png');}
 		
 	</style>
-	<script src="${baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>		
 		var mas = ${gv.sd['mas']};
 		var nbrd = ${gv.sd['nbrd']};

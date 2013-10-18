@@ -15,6 +15,7 @@ gv.rev = 137
 gv.rev_date = '04/October/2013'
 
  #### urls is a feature of web.py. When a GET request is received, the corresponding class is executed.
+gv.baseurl = web.ctx['home']
 urls = [
     '/',  'home',
     '/_old',  'home_old',
@@ -36,6 +37,7 @@ urls = [
     '/cp', 'change_program',
     '/dp', 'delete_program',
     '/gp', 'graph_programs',
+    '/gp_old', 'graph_programs_old',
     '/vl', 'view_log',
     '/cl', 'clear_log',
     '/lo', 'log_options',
@@ -51,11 +53,6 @@ except ImportError:
     print 'add_on not imported'
     
   #### Function Definitions ####
-
-def baseurl():
-    """Return URL app is running under.""" 
-    baseurl = web.ctx['home']
-    return baseurl
 
 def clear_mm():
     """Clear manual mode settings."""
@@ -542,13 +539,13 @@ class home:
     """Open Home page."""
     def GET(self):  
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'data': data })
-        return render.home(baseurl(), CPU_temperature())
+        return render.home(CPU_temperature())
 
 class home_old:
     def GET(self):
         homepg = '<!DOCTYPE html>\n'
         homepg += data('meta')
-        homepg += '<script>var baseurl=\"'+baseurl()+'\"</script>\n'
+        homepg += '<script>var baseurl=\"'+gv.baseurl+'\"</script>\n'
         homepg += '<script>var ver='+str(gv.ver)+',devt='+str(gv.now)+';</script>\n'
         homepg += '<script>' + pass_options(["nbrd","tz","en","rd","rs","mm","rdst","mas","urs","rs","wl","ipas","nopts","loc","name","ir"]) + '</script>\n'
         homepg += '<script>var sbits='+str(gv.sbits).replace(' ', '')+',ps='+str(gv.ps).replace(' ', '')+';</script>\n'
@@ -565,7 +562,7 @@ class home_old:
                 homepg += '<script>var cputemp='+str(float(CPU_temperature()))+'; var tempunit="C";</script>\n'            
             except ValueError:
                 pass
-        homepg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/home.js\"></script>'
+        homepg += '<script src=\"'+gv.baseurl+'/static/scripts/java/svc1.8.3/home.js\"></script>'
         return homepg
 
 class change_values:
@@ -611,14 +608,14 @@ class view_options:
     """Open the options page for viewing and editing."""
     def GET(self):
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
-        return render.options(baseurl())
+        return render.options()
 
 class view_options_old:
     def GET(self):
         optpg = '<!DOCTYPE html>\n'
         optpg += data('meta')
-        optpg += '<script>var baseurl=\"'+baseurl()+'\";\n' + pass_options(["tz","htp","nbrd","sdt","seq","mas","mton","mtoff","urs","wl","ipas","rst","loc","name","lr","lg"]) + data('options')+ '</script>\n'
-        optpg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/viewoptions.js\"></script>'
+        optpg += '<script>var baseurl=\"'+gv.baseurl+'\";\n' + pass_options(["tz","htp","nbrd","sdt","seq","mas","mton","mtoff","urs","wl","ipas","rst","loc","name","lr","lg"]) + data('options')+ '</script>\n'
+        optpg += '<script src=\"'+gv.baseurl+'/static/scripts/java/svc1.8.3/viewoptions.js\"></script>'
         return optpg
 
 class change_options:
@@ -733,17 +730,17 @@ class view_stations:
     """Open a page to view and edit a run once program."""
     def GET(self):
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
-        return render.stations(baseurl())
+        return render.stations()
 
 class view_stations_old:
     """Open a page to view and edit station names and master associations."""
     def GET(self):
         stationpg = '<!DOCTYPE html>\n'
         stationpg += data('meta')
-        stationpg += '<script>var baseurl=\"'+baseurl()+'\"</script>\n'
-        stationpg += '<script>var baseurl=\"'+baseurl()+'\"\n' + pass_options(["nbrd","snlen","mas","ipas","mo","ir"]) + '</script>\n'
+        stationpg += '<script>var baseurl=\"'+gv.baseurl+'\"</script>\n'
+        stationpg += '<script>var baseurl=\"'+gv.baseurl+'\"\n' + pass_options(["nbrd","snlen","mas","ipas","mo","ir"]) + '</script>\n'
         stationpg += '<script>snames='+data('snames')+';</script>\n'
-        stationpg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/viewstations.js\"></script>'
+        stationpg += '<script src=\"'+gv.baseurl+'/static/scripts/java/svc1.8.3/viewstations.js\"></script>'
         return stationpg
 
 class change_stations:
@@ -818,17 +815,17 @@ class view_runonce:
     """Open a page to view and edit a run once program."""
     def GET(self):
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
-        return render.runonce(baseurl())
+        return render.runonce()
 
 class view_runonce_old:
     """Open a page to view and edit a run once program."""
     def GET(self):
         ropg = '<!DOCTYPE html>\n'
         ropg += data('meta')
-        ropg += '<script >var baseurl=\"'+baseurl()+'\"\n' + pass_options(["nbrd","mas","ipas"]) + '</script>\n'
+        ropg += '<script >var baseurl=\"'+gv.baseurl+'\"\n' + pass_options(["nbrd","mas","ipas"]) + '</script>\n'
         ropg += '<script >var dur='+str(gv.rovals).replace(' ', '')+';</script>\n'
         ropg += '<script >snames='+data('snames')+';</script>\n'
-        ropg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/viewro.js\"></script>'
+        ropg += '<script src=\"'+gv.baseurl+'/static/scripts/java/svc1.8.3/viewro.js\"></script>'
         return ropg
 
 class change_runonce:
@@ -865,7 +862,7 @@ class view_programs:
     """Open programs page."""
     def GET(self):
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
-        return render.programs(baseurl())
+        return render.programs()
                 
 
 class view_programs_old:
@@ -873,10 +870,10 @@ class view_programs_old:
     def GET(self):
         programpg = '<!DOCTYPE html>\n'
         programpg += data('meta')
-        programpg += '<script >var baseurl=\"'+baseurl()+'\"</script>\n'       
+        programpg += '<script >var baseurl=\"'+gv.baseurl+'\"</script>\n'       
         programpg += '<script >'+ pass_options(["nbrd","ipas","mnp"]) + output_prog()+'</script>\n'
         programpg += '<script >snames='+data('snames')+';</script>\n'
-        programpg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/viewprog.js\"></script>'
+        programpg += '<script src=\"'+gv.baseurl+'/static/scripts/java/svc1.8.3/viewprog.js\"></script>'
         return programpg
     
 class modify_program:
@@ -885,7 +882,7 @@ class modify_program:
         qdict = web.input()
         modprogpg = '<!DOCTYPE html>\n'
         modprogpg += data('meta')
-        modprogpg += '<script >var baseurl=\"'+baseurl()+'\"\n' + pass_options(["nbrd","ipas"]) + '\n'
+        modprogpg += '<script >var baseurl=\"'+gv.baseurl+'\"\n' + pass_options(["nbrd","ipas"]) + '\n'
         if qdict['pid'] != '-1':
             mp = gv.pd[int(qdict['pid'])][:]
             if mp[1] >= 128 and mp[2] > 1: # If this is an interval program
@@ -896,7 +893,7 @@ class modify_program:
         else:
            modprogpg += 'var pid=-1;</script>\n'
         modprogpg += '<script >var snames='+data('snames').replace(' ', '')+';</script>\n'
-        modprogpg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/modprog.js\"></script>'
+        modprogpg += '<script src=\"'+gv.baseurl+'/static/scripts/java/svc1.8.3/modprog.js\"></script>'
         return modprogpg
 
 class change_program:
@@ -957,6 +954,23 @@ class delete_program:
         return
                           
 class graph_programs:
+    """Open page to display program schedule."""
+    def GET(self):
+        qdict = web.input()
+        t = gv.now
+        lt = time.gmtime(t)
+        if qdict['d'] == '0': dd = str(lt.tm_mday)
+        else: dd = str(qdict['d'])
+        if qdict.has_key('m'): mm = str(qdict['m'])
+        else: mm = str(lt.tm_mon)
+        if qdict.has_key('y'): yy = str(qdict['y'])
+        else: yy = str(lt.tm_year)
+    	devday = int(t/86400)
+    	devmin = (lt.tm_hour*60) + lt.tm_min
+        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
+        return render.schedule(yy, mm, dd, devday, devmin)
+
+class graph_programs_old:
     """Open page to display program schedule"""
     def GET(self):
         qdict = web.input()
@@ -970,10 +984,10 @@ class graph_programs:
         else: yy = str(lt.tm_year)
         graphpg = '<!DOCTYPE html>\n'
         graphpg += data('meta')
-        graphpg += '<script>var baseurl=\"'+baseurl()+'\";\n' + pass_options(["mas","seq","wl","sdt","mton","mtoff","nbrd","ipas","mnp","mo"]) + '</script>\n'
+        graphpg += '<script>var baseurl=\"'+gv.baseurl+'\";\n' + pass_options(["mas","seq","wl","sdt","mton","mtoff","nbrd","ipas","mnp","mo"]) + '</script>\n'
         graphpg += '<script>var devday='+str(int(t/86400))+',devmin='+str((lt.tm_hour*60)+lt.tm_min)+',dd='+dd+',mm='+mm+',yy='+yy+';'+output_prog()+'</script>\n'
         graphpg += '<script>var snames='+data('snames').replace(' ', '')+';</script>\n'
-        graphpg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/plotprog.js\"></script>'
+        graphpg += '<script src=\"'+gv.baseurl+'/static/scripts/java/svc1.8.3/plotprog.js\"></script>'
         return graphpg
 
 class view_log:
@@ -989,7 +1003,7 @@ class view_log:
             t = r.split(', ')
             t[1] = t[1].decode('unicode-escape')
             data.append(t)    
-        return self.render.log(baseurl(), data)
+        return self.render.log(data)
 
 class clear_log:
     """Delete all log records"""
