@@ -627,22 +627,22 @@ class change_options:
         if qdict.has_key('owl'):
             gv.sd['wl'] = int(qdict['owl'])
                 
-        if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == ''):
+        if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == '1'):
           gv.sd['urs'] = 1
         else:
           gv.sd['urs'] = 0
         
-        if qdict.has_key('oseq') and (qdict['oseq'] == 'on' or qdict['oseq'] == ''):
+        if qdict.has_key('oseq') and (qdict['oseq'] == 'on' or qdict['oseq'] == '1'):
           gv.sd['seq'] = 1
         else:
           gv.sd['seq'] = 0
         
-        if qdict.has_key('orst') and (qdict['orst'] == 'on' or qdict['orst'] == ''):
+        if qdict.has_key('orst') and (qdict['orst'] == 'on' or qdict['orst'] == '1'):
           gv.sd['rst'] = 1
         else:
           gv.sd['rst'] = 0
         
-        if qdict.has_key('olg') and (qdict['olg'] == 'on' or qdict['olg'] == ''):
+        if qdict.has_key('olg') and (qdict['olg'] == 'on' or qdict['olg'] == '1'):
           gv.sd['lg'] = 1
         else:
           gv.sd['lg'] = 0
