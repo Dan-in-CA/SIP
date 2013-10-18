@@ -1,0 +1,42 @@
+body {
+	margin:0px;
+}
+
+div.header {
+	background-image: url('logo.png');
+	background-color: #484;
+	background-repeat: no-repeat;
+	background-position: 4px center;
+	height:48px;	
+}
+
+div.body {
+	margin:.5em;
+}
+
+div.footer {
+	background-color: #484;
+	height: 36px;
+}
+
+div.header div {
+	font-weight:bold;
+	text-align:center;
+	background-color:#EEEEEE;
+	border:2px solid gray;
+	padding:5px 10px;
+	width:240px;
+	border-radius:10px;
+	box-shadow:3px 3px 2px #888888;
+}
+
+button.icon {
+	padding: 3px 6px 3px 30px;
+	background-color: #EEE;
+	background-repeat: no-repeat;
+	background-position: 4px center;
+	background-size: 20px;
+}
+
+#nav button {height:24px;}
+#controls button {height:24px;}

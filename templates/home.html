@@ -15,6 +15,7 @@ $code:
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>OpenSprinkler Pi${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
 	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<style type="text/css">
 		.bluebg {background-color:lightblue;}
 		.opOn {color:green;}
@@ -36,15 +37,6 @@ $code:
 		button.manual.on {background-color:#FFCCCC;}
 		button.manual.off {background-color:#CCFFCC;}
 		
-		button.icon {
-			padding: 3px 6px 3px 30px;
-			background-color: #EEE;
-			background-repeat: no-repeat;
-			background-position: 4px center;
-			background-size: 20px;
-		}
-		#nav button {height:30px;}
-		#controls button {height:36px;}
 		#status button {height:32px;}
 		#programcontrols button {height:32px;}
 		button#bRefresh {background-image: url('${gv.baseurl}/static/images/icons/svc_reset.png');}

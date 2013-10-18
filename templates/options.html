@@ -55,30 +55,12 @@ $code:
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>OpenSprinkler Pi Options ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
 	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<style type="text/css">
-		div.header div {
-			font-weight:bold;
-			text-align:center;
-			background-color:#EEEEEE;
-			border:2px solid gray;
-			padding:5px 10px;
-			width:240px;
-			border-radius:10px;
-			box-shadow:3px 3px 2px #888888;
-		}
-		button.icon {
-			padding: 3px 6px 3px 30px;
-			background-color: #EEE;
-			background-repeat: no-repeat;
-			background-position: 4px center;
-			background-size: 20px;
-		}
 		button#tooltip {height:24px;}
-		#controls button {height:36px;}
 		button#cSubmit {background-image: url('${gv.baseurl}/static/images/icons/svc_submit.png');}
 		button#cCancel {background-image: url('${gv.baseurl}/static/images/icons/svc_delall.png');}
-		
-		
+				
 		.tooltip {background-color:#FFF2B8; display:none; font-size:10pt; margin-left:4px;}
 		.label {font-weight:bold; float:left; width:160px; text-align:right; padding-right:4px;}
 		.option {margin: 6px 0px; clear:both;}

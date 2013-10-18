@@ -15,18 +15,7 @@ $code:
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>OpenSprinkler Pi Schedule ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
 	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
-	<style type="text/css">
-		div.header div {
-			font-weight:bold;
-			text-align:center;
-			background-color:#EEEEEE;
-			border:2px solid gray;
-			padding:5px 10px;
-			width:240px;
-			border-radius:10px;
-			box-shadow:3px 3px 2px #888888;
-		}
-	</style>
+	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>		
 	var sd = {

@@ -10,6 +10,7 @@ $def with (records)
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>OpenSprinkler Pi Log${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
 	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<style>
 		#overlay {
 			 display:none;
@@ -42,14 +43,6 @@ $def with (records)
 			margin:10px 0px 10px 0px;
 		}
 	
-		button.icon {
-			padding: 3px 6px 3px 30px;
-			background-color: #EEE;
-			background-repeat: no-repeat;
-			background-position: 4px center;
-			background-size: 20px;
-		}
-		#nav button {height:44px;}
 		button#nBack {background-image: url('${gv.baseurl}/static/images/icons/svc_back.png');}
 		button#nRefresh {background-image: url('${gv.baseurl}/static/images/icons/svc_refresh.png');}
 		button#nDeleteAll {background-image: url('${gv.baseurl}/static/images/icons/svc_delall.png');}
