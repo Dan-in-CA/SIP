@@ -42,7 +42,7 @@ $def with (baseurl, records)
 			margin:10px 0px 10px 0px;
 		}
 	
-		button {
+		button.icon {
 			padding: 3px 6px 3px 30px;
 			background-color: #EEE;
 			background-repeat: no-repeat;
@@ -112,10 +112,10 @@ $def with (baseurl, records)
 					<input id="pid" name="pid" type="hidden" value="-1" />
 				</form>
 				
-				<button id="nBack">Back</button>
-				<button id="nRefresh">Refresh</button>
-				<button id="nDeleteAll">Delete All</button>
-				<button id="nLogOptions">Log Options</button>
+				<button id="nBack" class="icon">Back</button>
+				<button id="nRefresh" class="icon">Refresh</button>
+				<button id="nDeleteAll" class="icon">Delete All</button>
+				<button id="nLogOptions" class="icon">Log Options</button>
 			</div>
 			
 			<div id="log">
@@ -153,8 +153,8 @@ $def with (baseurl, records)
 					<span id='pwarea' class="pwspan">
 						<label for="pw">Password Required:</label> <input type="password" size="10" id="pw">
 					</span><br>
-					<button id="oSubmit" type="button">Submit</button>
-					<button id="oCancel" type="button">Cancel</button>
+					<button id="oSubmit" class="icon">Submit</button>
+					<button id="oCancel" class="icon">Cancel</button>
 				</form>
 			</div>
 		</div>

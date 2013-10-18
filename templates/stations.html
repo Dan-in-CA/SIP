@@ -1,0 +1,165 @@
+$def with (baseurl)
+
+<!-- 
+  2013-13-06: jonathanmarsh
+    - Converted to web.py template, retaining 99% of older look and feel
+    - Moved inline styling to stylesheet
+    - Moved inline behaviors to jQuery.
+    Note that the normal jQuery use of the dollar sign conflicts with the templating syntax - used the longer jQuery() throughout.
+ -->
+
+$code:
+	snames = eval(data('snames'))
+
+<html>
+<head>
+	<meta name="viewport" content="width=640">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>OpenSprinkler Pi Stations ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
+	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
+	<style type="text/css">
+		div.header div {
+			font-weight:bold;
+			text-align:center;
+			background-color:#EEEEEE;
+			border:2px solid gray;
+			padding:5px 10px;
+			width:240px;
+			border-radius:10px;
+			box-shadow:3px 3px 2px #888888;
+		}
+		button.icon {
+			padding: 3px 6px 3px 30px;
+			background-color: #EEE;
+			background-repeat: no-repeat;
+			background-position: 4px center;
+			background-size: 20px;
+		}
+		#controls button {height:36px;}
+		button#cSubmit {background-image: url('${baseurl}/static/images/icons/svc_submit.png');}
+		button#cResetNames {background-image: url('${baseurl}/static/images/icons/svc_reset.png');}
+		button#cCancel {background-image: url('${baseurl}/static/images/icons/svc_delall.png');}
+		
+	</style>
+	<script src="${baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+	<script>		
+		var mas = ${gv.sd['mas']};
+		var nbrd = ${gv.sd['nbrd']};
+		
+		
+		// Initialize behaviors
+		jQuery(document).ready(function(){
+			
+			jQuery("button#cSubmit").click(function(){
+				if (mas>0) {
+					var s, bid, sid, v;
+					for (bid=0; bid<nbrd; bid++) {
+						v = 0;
+						for (s=0; s<8; s++) {
+							sid = bid*8 + (7-s);
+							v = v<<1;
+							if (sid+1 == mas) {
+								v = v + 1;
+								continue;
+							}
+							if	(jQuery("#mc"+sid).is(":checked")) {
+								v = v + 1;
+							}
+						}
+						jQuery("#m"+bid).val(v);
+					}
+				}
+				var vi;	
+				for (bid=0; bid<nbrd; bid++) {
+					vi = 0;
+					for (s=0; s<8; s++) {
+						sid = bid*8 + (7-s);
+						vi = vi<<1;	
+						if (sid+1 == mas) {
+							vi = vi + 1;
+							continue;
+						}
+						if (jQuery("#rc"+sid).is(":checked")) {
+							vi = vi + 1;
+						}	     		
+					}
+					jQuery("#i"+bid).val(vi);
+				}
+				jQuery("#sf").submit();
+			});
+			jQuery("button#cResetNames").click(function(){
+				jQuery("input[type='text']").each(function () {
+					jQuery(this).val(jQuery(this).attr("name").toUpperCase());
+				});
+			});
+			
+			jQuery("button#cCancel").click(function(){
+				window.location="/";
+			});
+
+		});
+
+	</script>
+</head>
+<body>
+	<div class="content">
+		<div class="header">
+			<div>
+				<b>Set Stations:</b><br>
+				<font size=2>(Maximum names length is ${gv.sd['snlen']} letters.)</font>
+			</div>
+		</div>
+		
+		<div class="body">
+			<div id="nav">
+			</div>
+			
+			<div id="stations">
+				<form id="sf" name="sf" action="cs" method="get">
+					<table>
+						<tr>
+							<th>Station</th>
+							<th>Name</th>
+							<th>Ignore Rain?</th>
+							$if gv.sd['mas'] > 0:
+								<th>Activate Master?</th>
+						</tr>
+						$for sid in range(0, gv.sd['nbrd']*8):
+							$ bid = sid>>3
+							$ s = sid%8
+							<tr>
+								<td>${(sid+1)/10>>0}${(sid+1)%10}</td>
+								$if sid+1 == gv.sd['mas']:
+									<td colspan="2">--Master--</td>
+								$else:
+									<td>
+										<input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid}" id="n${sid}">
+									</td>
+									<td>
+										<input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">
+									</td>
+								$if gv.sd['mas']>0:
+									<td>
+										<input type="checkbox" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}">
+									</td>
+							</tr>
+					</table>
+					<hr><font size=3><b>Password:</b><input type=password size=10 ${"disabled" if gv.sd['ipas'] else ""} name="pw"></font>
+					<p></p>
+				</form>
+			</div>
+			
+			<div id="controls">
+				<button id="cSubmit" class="icon">Submit Changes</button>
+				<button id="cResetNames" class="icon">Reset Names</button>
+				<button id="cCancel" class="icon">Cancel</button>
+			</div>
+		</div>
+		
+		<div class="footer">
+			<hr>
+			<p style="font-size:9pt">This version is an experimental use of web.py templates.  Visit the <a href="/vs_old">old stations page</a> if something seems wrong.</p>
+		</div>
+	</div>
+</body>
+</html>

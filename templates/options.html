@@ -56,7 +56,17 @@ $code:
 	<title>OpenSprinkler Pi Options ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
 	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
 	<style type="text/css">
-		button {
+		div.header div {
+			font-weight:bold;
+			text-align:center;
+			background-color:#EEEEEE;
+			border:2px solid gray;
+			padding:5px 10px;
+			width:240px;
+			border-radius:10px;
+			box-shadow:3px 3px 2px #888888;
+		}
+		button.icon {
 			padding: 3px 6px 3px 30px;
 			background-color: #EEE;
 			background-repeat: no-repeat;
@@ -105,7 +115,7 @@ $code:
 <body>
 	<div class="content">
 		<div class="header">
-			<div align="center" style="background-color:#EEEEEE;border:2px solid gray;padding:5px 10px;width:240px;border-radius:10px;box-shadow:3px 3px 2px #888888;">
+			<div>
 				<b>Set Options</b><br>
 				<font size=2>(Hover on each option to see tooltip)</font>
 			</div>
@@ -113,7 +123,6 @@ $code:
 		</div>
 		
 		<div class="body">
-		
 			<div id="nav">
 				<button id="tooltips">Show Tooltips</button>
 			</div>
@@ -128,9 +137,11 @@ $code:
 			</div>
 			
 			<div id="controls">
-				<button id='cSubmit'>Submit Changes</button>
-				<button id='cCancel'>Cancel</button>
+				<button id='cSubmit' class="icon">Submit Changes</button>
+				<button id='cCancel' class="icon">Cancel</button>
 			</div>
+		</div>
+		
 		<div class="footer">
 			<hr>
 			<p style="font-size:9pt">This version is an experimental use of web.py templates.  Visit the <a href="/vo_old">old options page</a> if something seems wrong.</p>

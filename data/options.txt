@@ -1,4 +1,4 @@
-var opts=[
+[
 	["System name","string","name","Unique name of this OpenSprinkler system."],
 	["HTTP port","int","htp", "HTTP port (effective after reboot)."],
 	["Location","string","loc", "City name or zip code. Use comma or + in place of space."],
@@ -15,4 +15,4 @@ var opts=[
 	["Enable logging","boolean","lg", "Log all events - note that repetitive writing to an SD card can shorten its lifespan."],
 	["Maximum log entries","int","lr", "Length of log to keep, 0=no limits."],
 	["Ignore password","boolean","ipas", "Ignore web password"]
-];
+]

@@ -36,7 +36,7 @@ $code:
 		button.manual.on {background-color:#FFCCCC;}
 		button.manual.off {background-color:#CCFFCC;}
 		
-		button {
+		button.icon {
 			padding: 3px 6px 3px 30px;
 			background-color: #EEE;
 			background-repeat: no-repeat;
@@ -288,7 +288,7 @@ $code:
 					window.location="/cv?pw="+p+"&rsn=1";
 				}
 			});
-			jQuery("button#bRunOnce").click(function(){
+			jQuery("button#pRunOnce").click(function(){
 				window.location = "/vr";
 			});
 									
@@ -362,11 +362,11 @@ $code:
 		<div class="body">
 		
 			<div id="nav">
-				<button id="bRefresh">Refresh</button>
-				<button id="bOptions">Options</button>
-				<button id="bStations">Stations</button>
-				<button id="bPrograms">Programs</button>
-				<button id="bLog">Log</button>
+				<button id="bRefresh" class="icon">Refresh</button>
+				<button id="bOptions" class="icon">Options</button>
+				<button id="bStations" class="icon">Stations</button>
+				<button id="bPrograms" class="icon">Programs</button>
+				<button id="bLog" class="icon">Log</button>
 			</div>
 			
 			<div id="status">
@@ -388,9 +388,9 @@ $code:
 			$else:
 				<div id="programmode">
 					<div id="programcontrols">
-						<button id="pPreview">Program Preview</button>
-						<button id="pStopAll">Stop All Stations</button>
-						<button id="pRunOnce">Run-Once Program</button>
+						<button id="pPreview" class="icon">Program Preview</button>
+						<button id="pStopAll" class="icon">Stop All Stations</button>
+						<button id="pRunOnce" class="icon">Run-Once Program</button>
 					</div>
 					<p><b>Station Status</b>:</p>
 					<table id="stations"></table>
@@ -416,10 +416,10 @@ $code:
 					<input type="hidden" name="rbt" value="0">
 				</form>
 		
-				<button id="cStartStop" class="${'stop' if gv.sd['en'] else 'start'}">${'Stop' if gv.sd['en'] else 'Start'} Operation</button>
-				<button id="cManual" class="${'auto' if gv.sd['mm'] else 'man'}">Manual ${'Off' if gv.sd['mm'] else 'On'}</button>
-				<button id="cRainDelay">Rain Delay</button>
-				<button id="cReboot">Reboot</button>
+				<button id="cStartStop" class="icon ${'stop' if gv.sd['en'] else 'start'}">${'Stop' if gv.sd['en'] else 'Start'} Operation</button>
+				<button id="cManual" class="icon ${'auto' if gv.sd['mm'] else 'man'}">Manual ${'Off' if gv.sd['mm'] else 'On'}</button>
+				<button id="cRainDelay" class="icon">Rain Delay</button>
+				<button id="cReboot" class="icon">Reboot</button>
 			</div>
 		</div>
 		
