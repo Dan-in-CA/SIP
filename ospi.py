@@ -23,12 +23,15 @@ urls = [
     '/vo_old', 'view_options_old',
     '/co', 'change_options',
     '/vs', 'view_stations',
+    '/vs_old', 'view_stations_old',
     '/cs', 'change_stations',
     '/sn(\d+?\Z)', 'get_station', # regular expression, accepts any station number
     '/sn(\d+?=\d(&t=\d+?\Z)?)', 'set_station', # regular expression, accepts any digits
     '/vr', 'view_runonce',
+    '/vr_old', 'view_runonce_old',
     '/cr', 'change_runonce',
     '/vp', 'view_programs',
+    '/vp_old', 'view_programs_old',
     '/mp', 'modify_program',
     '/cp', 'change_program',
     '/dp', 'delete_program',
@@ -727,6 +730,12 @@ class change_options:
         return
 
 class view_stations:
+    """Open a page to view and edit a run once program."""
+    def GET(self):
+        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
+        return render.stations(baseurl())
+
+class view_stations_old:
     """Open a page to view and edit station names and master associations."""
     def GET(self):
         stationpg = '<!DOCTYPE html>\n'
@@ -808,6 +817,12 @@ class set_station:
 class view_runonce:
     """Open a page to view and edit a run once program."""
     def GET(self):
+        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
+        return render.runonce(baseurl())
+
+class view_runonce_old:
+    """Open a page to view and edit a run once program."""
+    def GET(self):
         ropg = '<!DOCTYPE html>\n'
         ropg += data('meta')
         ropg += '<script >var baseurl=\"'+baseurl()+'\"\n' + pass_options(["nbrd","mas","ipas"]) + '</script>\n'
@@ -847,6 +862,13 @@ class change_runonce:
         raise web.seeother('/')
 
 class view_programs:
+    """Open programs page."""
+    def GET(self):
+        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
+        return render.programs(baseurl())
+                
+
+class view_programs_old:
     """Open programs page."""
     def GET(self):
         programpg = '<!DOCTYPE html>\n'
