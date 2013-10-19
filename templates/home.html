@@ -1,6 +1,18 @@
 $def with (cputemp)
 $code:
-	snames = data('snames')
+	snames = eval(data('snames'))
+
+	def twodigits(n):
+		return str((n>>0)/10>>0) + str((n>>0)%10)
+
+	def programName(id):
+		pname = "P" + str(id)
+		if (id == 255 or id == 99):
+			pname = "Manual Mode"
+		if (id == 254 or id == 98):
+			pname = "Run-once Program"
+		return pname
+
 
 <!-- 
   2013-10-06: jonathanmarsh
@@ -55,7 +67,6 @@ $code:
 		button#cReboot {background-image: url('${gv.baseurl}/static/images/icons/svc_reboot.png');}
 		
 		#lastRun {color:gray;}
-		button img {height:20px;vertical-align:middle}
 		p {margin:0px;}
 		div.body div {margin-top:1em;}
 		table, td {border:1px solid black;}
@@ -85,17 +96,6 @@ $code:
 			return d.toUTCString() + timezoneSuffix;
 		}
 		
-		function programName(id) {
-			var pname = "P" + id;
-			if (id == 255 || id == 99) {
-				pname="Manual Mode";
-			}
-			if (id == 254 || id == 98) {
-				pname="Run-once Program";
-			}
-			return pname;
-		}
-		
 		function formatLogline(log) {
 			var lrsid = lrun[0], lrpid = lrun[1], lrdur = lrun[2], lret = lrun[3];
 			if (lrpid == 0) {
@@ -112,125 +112,6 @@ $code:
 			var now = new Date(new Date() - deviceTimeOffset);
 			jQuery("#deviceTime").text(formatDeviceDate(now));
 			setTimeout(updateClock, 500);
-		}
-		
-		// Program display formatting
-		function displayStations() { 
-			var bid, s, sid, sn, sbit, rem, remm, rems, pname, rowElement, cellElement;
-			var nbrd = ${gv.sd['nbrd']}, en = ${gv.sd['en']}, mas = ${gv.sd['mas']}, rd = ${gv.sd['rd']}, urs = ${gv.sd['urs']}, rs = ${gv.sd['rs']}, ir = ${gv.sd['ir']};
-			var sbits = ${gv.sbits}, ps = ${gv.ps};
-			
-			var off = ${1 if gv.sd['en'] == 0 else 0}; 
-			var tableElement = jQuery("table#stations");
-			
-			for (bid = 0; bid < nbrd; bid++) {
-				for (s = 0; s < 8; s++) {
-					sid = bid*8 + s;
-				 	if (en == 1) {
-				 		off = (rd != 0 || (urs !=0 && rs !=0)) && !(ir[bid]&1<<s);
-				 	}
-					sn = sid + 1;
-					sbit = (sbits[bid]>>s)&1;
-					
-					rowElement = jQuery("<tr/>");
-					jQuery("<td class='station'>" + snames[sid] + ":&nbsp;&nbsp;</td>").appendTo(rowElement);
-					cellElement = jQuery("<td></td>");
-					if (off) {
-						cellElement.addClass("strike");
-					}
-					if (sn == mas) {
-						cellElement.addClass("master");
-						if (sbit) {
-							cellElement
-								.addClass("stationOn")
-								.html("On (Master)");
-						} else {
-							cellElement
-								.addClass("stationOff")
-								.html("Off (Master)");
-						}
-					} else {
-						rem = ps[sid][1];
-						if (rem > 65536) {rem = 0;}
-						remm = rem/60>>0;
-						rems = rem%60;
-						remString = (remm/10>>0) + (remm%10) + ":" + (rems/10>>0) + (rems%10);
-						pname = programName(ps[sid][0]);
-						if (sbit) {
-							cellElement
-								.addClass("stationOn")
-								.html("<b>Running " + pname + "</b> (" + remString + " remaining)");
-						} else {
-							if (ps[sid][0] == 0) {
-								cellElement
-									.addClass("stationClosed")
-									.html("(closed)");
-							} else {
-								cellElement
-									.addClass("stationWaiting")
-									.html("Waiting " + pname + " (" + remString + " scheduled)");
-							}
-						}
-					}
-					cellElement.appendTo(rowElement);
-					rowElement.appendTo(tableElement);
-				}
-			}
-		}
-		
-		// Manual mode formatting
-		function displayManual() {
-			var bid, s, sid, sn, sbit, rem, remm, rems, rowElement, cellElement;
-			var nbrd = ${gv.sd['nbrd']}, mas = ${gv.sd['mas']};
-			var sbits = ${gv.sbits}, ps = ${gv.ps};
-			var tableElement = jQuery("table#stations");
-			
-			for (bid = 0; bid < nbrd; bid++) {
-				for (s = 0; s < 8; s++) {
-					sid = bid*8 + s;
-					sn = sid + 1;
-					sbit = (sbits[bid]>>s)&1;
-					
-					rowElement = jQuery("<tr/>");
-					jQuery("<td class='station'>" + snames[sid] + ":&nbsp;&nbsp;</td>").appendTo(rowElement);
-					cellElement = jQuery("<td></td>");
-					if (sn == mas) {
-						cellElement.addClass("master");
-						if (sbit) {
-							cellElement
-								.addClass("stationOn")
-								.html("On (Master)");
-						} else {
-							cellElement
-								.addClass("stationOff")
-								.html("Off (Master)");
-						}
-					} else {
-						rem = ps[sid][1];
-						if (rem > 65536) {rem = 0;}
-						remm = rem/60>>0;
-						rems = rem%60;
-						remString = (remm/10>>0) + (remm%10) + ":" + (rems/10>>0) + (rems%10);
-						
-						if (sbit) {
-							cellElement
-								.addClass("stationRunning")
-								.html("<button class='manual on' id='" + sid + "'>Turn off</button> in " +
-									  "<input type=text id=mm" + sid + " size=2 maxlength=3 value=" + remm + " disabled />:" + 
-									  "<input type=text id=ss" + sid + " size=2 maxlength=2 value=" + rems + " disabled /> (mm:ss)");
-						} else {
-							cellElement
-								.addClass("stationStopped")
-								.html("<button class='manual off' id='" + sid + "'>Turn on</button> with timer " +
-									  "<input type=text id=mm" + sid + " size=2 maxlength=3 value=" + remm + " />:" + 
-									  "<input type=text id=ss" + sid + " size=2 maxlength=2 value=" + rems + " /> (mm:ss)");
-							
-						}
-					}
-					cellElement.appendTo(rowElement);
-					rowElement.appendTo(tableElement);
-				}
-			}
 		}
 				
 		// Initialize behaviors
@@ -328,12 +209,6 @@ $code:
 				jQuery("#rdEnd").html(formatDeviceDate(delayEnd));
 			}
 
-			// Generate the station status
-			$if gv.sd['mm']:
-				displayManual();
-			$else:
-				displayStations();
-			
 			// Update last log entry
 			jQuery("#lastRun").html(formatLogline(lrun));
 			
@@ -371,10 +246,34 @@ $code:
 			
 			<div id="stations">
 			
-			$if gv.sd['mm']:
+			$if gv.sd['mm']:			
 				<div id="manualmode">
 					<p><b>Manual Control:</b> (timer is optional)<p></p>
-					<table id="stations"></table>
+					<table id="stations">
+					$# Manual program control formatting
+					$for bid in range(0, gv.sd['nbrd']):
+						$for s in range(0,8):
+							$ sid = bid*8 + s;
+							$ sn = sid + 1
+							$ sbit = (gv.sbits[bid]>>s)&1
+							<tr>
+								<td class='station'>${snames[sid]}:&nbsp;&nbsp;</td>
+								$if sn == gv.sd['mas']:
+									$if sbit:
+										<td class="master stationOn ${'strike' if off else ''}">On (Master)</td>
+									$else:
+										<td class="master stationOff ${'strike' if off else ''}">Off (Master)</td>
+								$else:
+									$ rem = gv.ps[sid][1]
+									$if rem > 65536:
+										$ rem = 0
+									<td class="stationRunning">
+										<button class='manual ${'on' if sbit else 'off'}' id='${sid}'>Turn ${'off' if sbit else 'on'}</button> in
+								  		<input type='text' id='mm${sid}' size='2' maxlength='3' value='${twodigits(rem/60)}' ${'' if sbit else 'disabled'} />: 
+								  		<input type='text' id='ss${sid}' size='2' maxlength='2' value='${twodigits(rem%60)}' ${'' if sbit else 'disabled'} /> (mm:ss)
+								  	</td>
+							</tr>
+					</table>
 				</div>	
 
 			$else:
@@ -385,7 +284,37 @@ $code:
 						<button id="pRunOnce" class="icon">Run-Once Program</button>
 					</div>
 					<p><b>Station Status</b>:</p>
-					<table id="stations"></table>
+					<table id="stations">
+					$# Program display formatting
+					$for bid in range(0, gv.sd['nbrd']):
+						$for s in range(0,8):
+							$ sid = bid*8 + s;
+							$ sn = sid + 1
+							$ sbit = (gv.sbits[bid]>>s)&1
+				 			$if gv.sd['en'] == 1:
+				 				$ off = (gv.sd['rd']!=0 or (gv.sd['urs']!=0 and gv.sd['rs']!=0)) and not(gv.sd['ir'][bid]&1<<s)
+							<tr>
+								<td class='station'>${snames[sid]}:&nbsp;&nbsp;</td>
+								$if sn == gv.sd['mas']:
+									$if sbit:
+										<td class="master stationOn ${'strike' if off else ''}">On (Master)</td>
+									$else:
+										<td class="master stationOff ${'strike' if off else ''}">Off (Master)</td>
+								$else:
+									$ rem = gv.ps[sid][1]
+									$if rem > 65536:
+										$ rem = 0
+									$ remString = twodigits(rem/60) + ":" + twodigits(rem%60)
+									$ pname = programName(gv.ps[sid][0]);
+									$if sbit:
+										<td class="stationOn"><b>Running ${pname}</b> (${remString} remaining)</td>
+									$else:
+										$if gv.ps[sid][0] == 0:
+											<td class="stationClosed">(closed)</td>
+										$else:
+											<td class="stationWaiting">Waiting ${pname} (${remString} scheduled)</td>
+							</tr>
+					</table>
 				</div>	
 				
 			</div>
