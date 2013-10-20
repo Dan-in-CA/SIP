@@ -195,6 +195,7 @@ def stop_stations():
 def main_loop(): # Runs in a separate thread
     """ ***** Main timing algorithm.***** """
     print 'Starting timing loop \n'
+    gv.sd['rs'] = data('rain')
     last_min = 0
     while True: # infinite loop
         gv.now = time.time()+((gv.sd['tz']/4)-12)*3600 # Current time based on UTC time from the Pi adjusted by the Time Zone setting from options. updated once per second.
@@ -523,7 +524,7 @@ class home:
         homepg += data('meta')
         homepg += '<script>var baseurl=\"'+baseurl()+'\"</script>\n'
         homepg += '<script>var ver='+str(gv.ver)+',devt='+str(gv.now)+';</script>\n'
-        homepg += '<script>' + pass_options(["nbrd","tz","en","rd","rs","mm","rdst","mas","urs","rs","wl","ipas","nopts","loc","name","ir"]) + '</script>\n'
+        homepg += '<script>' + pass_options(["nbrd","tz","en","rd","mm","rdst","mas","urs","rs","wl","ipas","nopts","loc","name","ir"]) + '</script>\n'
         homepg += '<script>var sbits='+str(gv.sbits).replace(' ', '')+',ps='+str(gv.ps).replace(' ', '')+';</script>\n'
         homepg += '<script>var lrun='+str(gv.lrun).replace(' ', '')+';</script>\n'
         homepg += '<script>var snames='+data('snames')+';</script>\n'
