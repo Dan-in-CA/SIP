@@ -172,10 +172,10 @@ def stop_onrain():
             if gv.sd['ir'][b]&1<<s: # if station ignores rain...
                 continue
             elif not all(v == 0 for v in gv.rs[sid]):
-                gv.srvals[sid] = [0]
-                set_output()            
+                gv.srvals[sid] = 0
+                set_output()
+                gv.sbits[b] = gv.sbits[b]&~2**s # Clears stopped stations from display     
                 gv.ps[sid] = [0,0]
-                #gv.sbits = [0] * (gv.sd['nbrd'] +1)
                 gv.rs[sid] = [0,0,0,0]
     return
 
@@ -195,7 +195,6 @@ def stop_stations():
 def main_loop(): # Runs in a separate thread
     """ ***** Main timing algorithm.***** """
     print 'Starting timing loop \n'
-    gv.sd['rs'] = data('rain')
     last_min = 0
     while True: # infinite loop
         gv.now = time.time()+((gv.sd['tz']/4)-12)*3600 # Current time based on UTC time from the Pi adjusted by the Time Zone setting from options. updated once per second.
