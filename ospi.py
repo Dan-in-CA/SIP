@@ -172,10 +172,10 @@ def stop_onrain():
             if gv.sd['ir'][b]&1<<s: # if station ignores rain...
                 continue
             elif not all(v == 0 for v in gv.rs[sid]):
-                gv.srvals[sid] = [0]
-                set_output()            
+                gv.srvals[sid] = 0
+                set_output()
+                gv.sbits[b] = gv.sbits[b]&~2**s # Clears stopped stations from display     
                 gv.ps[sid] = [0,0]
-                #gv.sbits = [0] * (gv.sd['nbrd'] +1)
                 gv.rs[sid] = [0,0,0,0]
     return
 
@@ -523,7 +523,7 @@ class home:
         homepg += data('meta')
         homepg += '<script>var baseurl=\"'+baseurl()+'\"</script>\n'
         homepg += '<script>var ver='+str(gv.ver)+',devt='+str(gv.now)+';</script>\n'
-        homepg += '<script>' + pass_options(["nbrd","tz","en","rd","rs","mm","rdst","mas","urs","rs","wl","ipas","nopts","loc","name","ir"]) + '</script>\n'
+        homepg += '<script>' + pass_options(["nbrd","tz","en","rd","mm","rdst","mas","urs","rs","wl","ipas","nopts","loc","name","ir"]) + '</script>\n'
         homepg += '<script>var sbits='+str(gv.sbits).replace(' ', '')+',ps='+str(gv.ps).replace(' ', '')+';</script>\n'
         homepg += '<script>var lrun='+str(gv.lrun).replace(' ', '')+';</script>\n'
         homepg += '<script>var snames='+data('snames')+';</script>\n'
@@ -602,44 +602,54 @@ class change_options:
         except KeyError:
             pass
         
-        gv.sd['name'] = qdict['oname']
-        gv.sd['loc'] = qdict['oloc']
-        gv.sd['tz'] = int(qdict['otz'])
-        
+        if qdict.has_key('oname'):
+            gv.sd['name'] = qdict['oname']
+        if qdict.has_key('oloc'):
+            gv.sd['loc'] = qdict['oloc']
+        if qdict.has_key('otz'):
+            gv.sd['tz'] = int(qdict['otz'])
+
         if int(qdict['onbrd'])+1 != gv.sd['nbrd']: self.update_scount(qdict)
         gv.sd['nbrd'] = int(qdict['onbrd'])+1
         
         gv.sd['nst'] = gv.sd['nbrd']*8
-        gv.sd['htp']= int(qdict['ohtp'])
-        gv.sd['sdt']= int(qdict['osdt'])
-        
-        gv.sd['mas'] = int(qdict['omas'])
-        gv.sd['mton']= int(qdict['omton'])
-        gv.sd['mtoff']= int(qdict['omtoff'])
-        gv.sd['wl'] = int(qdict['owl'])
-        
-        if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == ''):
+        if qdict.has_key('ohtp'):
+            gv.sd['htp']= int(qdict['ohtp'])
+        if qdict.has_key('osdt'):
+            gv.sd['sdt']= int(qdict['osdt'])
+
+        if qdict.has_key('omas'):
+            gv.sd['mas'] = int(qdict['omas'])
+        if qdict.has_key('omton'):
+            gv.sd['mton']= int(qdict['omton'])
+        if qdict.has_key('omtoff'):
+            gv.sd['mtoff']= int(qdict['omtoff'])
+        if qdict.has_key('owl'):
+            gv.sd['wl'] = int(qdict['owl'])
+                
+        if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == '1'):
           gv.sd['urs'] = 1
         else:
           gv.sd['urs'] = 0
         
-        if qdict.has_key('oseq') and (qdict['oseq'] == 'on' or qdict['oseq'] == ''):
+        if qdict.has_key('oseq') and (qdict['oseq'] == 'on' or qdict['oseq'] == '1'):
           gv.sd['seq'] = 1
         else:
           gv.sd['seq'] = 0
         
-        if qdict.has_key('orst') and (qdict['orst'] == 'on' or qdict['orst'] == ''):
+        if qdict.has_key('orst') and (qdict['orst'] == 'on' or qdict['orst'] == '1'):
           gv.sd['rst'] = 1
         else:
           gv.sd['rst'] = 0
         
-        if qdict.has_key('olg') and (qdict['olg'] == 'on' or qdict['olg'] == ''):
+        if qdict.has_key('olg') and (qdict['olg'] == 'on' or qdict['olg'] == '1'):
           gv.sd['lg'] = 1
         else:
           gv.sd['lg'] = 0
         gv.lg = gv.sd['lg'] # necessary to make logging work correctly on Pi (see run_log())    
         
-        gv.sd['lr'] = int(qdict['olr'])
+        if qdict.has_key('olr'):
+            gv.sd['lr'] = int(qdict['olr'])
         gv.lr = gv.sd['lr']
 
         srvals = [0]*(gv.sd['nst']) # Shift Register values
