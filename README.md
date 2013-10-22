@@ -12,9 +12,31 @@ UPDATES
 ===========
 ***********
 
-October 4 2013 (jonathanmarsh)
+October 16 2013
 --------------
+(Dan)<br/>
 Additions, bug fixes:<br/>
+1. Fixed a bug that would cause an error in program preview when a master was enabled.<br/>
+2. Changing to manual mode would clear rain delay setting, Setting rain delay in manual mode would switch to program mode - fixed.<br/>
+
+October 11 2013
+--------------
+(Dan)<br/>
+Additions, bug fixes:<br/>
+1. Fixed a bug that would cause an error when a master was enabled and making changes to station settings.<br/>
+2. added approve_pwd function and removed redundant code.<br/>
+3. removed write_options function and added options.txt file to distribution.<br/>
+
+October 4 2013
+--------------
+(jonathanmarsh)<br/>
+Additions, bug fixes:<br/>
+1. Improved options handling and passing logic<br/>
+2. Added a "System Name" option to help users distinguish between multiple systems<br/>
+3. Configurable station name length (increased default to 32)<br/>
+4. Added logging options to options page<br/>
+
+(Dan)<br/>
 1. Improved options handling and passing logic<br/>
 2. Added a "System Name" option to help users distinguish between multiple systems<br/>
 3. Configurable station name length (increased default to 32)<br/>
