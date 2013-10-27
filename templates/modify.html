@@ -1,0 +1,308 @@
+$def with (pid, prog)
+
+<!-- 
+  2013-10-22: jonathanmarsh
+    - Converted to web.py template, retaining 99% of older look and feel
+    - Moved inline styling to stylesheet
+    - Moved inline behaviors to jQuery.
+    Note that the normal jQuery use of the dollar sign conflicts with the templating syntax - used the longer jQuery() throughout.
+ -->
+
+$code:
+	snames = eval(data('snames'))
+	nprogs = len(gv.pd)
+		
+<html>
+<head>
+	<meta name="viewport" content="width=640">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>OpenSprinkler Pi Modify Program ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
+	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
+	<style type="text/css">
+		button#cSubmit {background-image: url('${gv.baseurl}/static/images/icons/svc_submit.png');}
+		button#cCancel {background-image: url('${gv.baseurl}/static/images/icons/svc_delall.png');}
+	</style>
+	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+	<script>		
+		// Variables set by ospi.py
+		var pid = ${pid};
+		var prog = ${prog};
+		var nbrd = ${gv.sd['nbrd']};
+		var ipas = ${gv.sd['ipas']};
+		
+		// Helper functions
+		function twodigits(n) {
+			return ((n>>0)/10>>0).toString() + ((n>>0)%10).toString();
+		}
+		
+		function parse_time(prefix) {
+			var h = parseInt(jQuery("#"+prefix+"h").val());
+			var m = parseInt(jQuery("#"+prefix+"m").val());
+			if (!(h>=0 && h<24 && m>=0 && m<60)) {
+				alert("Error: Incorrect time input " + prefix + ".");
+				return -1;
+			}
+			return h*60 + m;
+		}
+		
+		function fill_time(prefix, idx) { // fill time
+			var t = prog[idx];
+			jQuery("#"+prefix+"h").val(twodigits(t/60));
+			jQuery("#"+prefix+"m").val(twodigits(t%60));
+		}
+		
+		function seldays(v) { // check/uncheck all days
+			for (var i=0; i<7; i++) {
+				jQuery("#d"+i).prop("checked", (v>0));
+			}
+		}
+
+		// Initialize behaviors
+		jQuery(document).ready(function(){
+			
+			jQuery("button#cSubmit").click(function(){
+				var errmsg = "", days=[0,0], i, s, sid;
+				var en = jQuery("#en_on").is(":checked") ? 1 : 0;
+				// process days
+				if (jQuery("#days_week").is(":checked")) {
+					for (i=0; i<7; i++) {
+						if (jQuery("#d"+i).is(":checked")) {
+							days[0] |= (1<<i);
+						}
+					}
+					if (jQuery("#days_odd").is(":checked")) {
+						days[0] |= 0x80;
+						days[1] = 1;
+					}
+					else if (jQuery("#days_even").is(":checked")) {
+						days[0] |= 0x80;
+						days[1] = 0;
+					}
+				} else if (jQuery("#days_n").is(":checked")) {
+					days[1] = parseInt(jQuery("#dn").val());
+					if (!(days[1]>=2 && days[1]<=128)) {
+						alert("Error: interval days must be between 2 and 128.");
+						return;
+					}
+					days[0] = parseInt(jQuery("#drem").val());
+					if (!(days[0]>=0 && days[0]<days[1])) {
+						alert("Error: starting in days wrong.");
+						return;
+					}
+					days[0]|=0x80;
+				}
+				if (days[0]==0 || (days[1]<2 && (days[0]&0x7f)==0)) {
+					alert("Error: You have not selected any day.");
+					return;
+				}
+				// process stations
+				var stations = [0], station_selected=0;
+				for (var bid=0; bid<nbrd; bid++) {
+					stations[bid] = 0;
+					for (var s=0; s<8; s++) {
+						sid = bid*8 + s;
+						if (jQuery("#s"+sid).is(":checked")) {
+							stations[bid] |= 1<<s;
+							station_selected = 1;
+						}
+					}
+				}
+				if (station_selected == 0) {
+					alert("Error: You have not selected any station.");
+					return;
+				}
+				// process time
+				var start_time = parse_time("ts");
+				var end_time = parse_time("te");
+				if (start_time < 0 || end_time < 0) {
+					alert("Error: Start and end times must be positive.");
+					return;
+				}
+				if (start_time >= end_time) {
+					// Possible bug - can you run a program from 10PM to 2AM?
+					alert("Error: Start time must be prior to end time.");
+					return;
+				}
+				var interval = parse_time("ti");
+				if (interval < 0) {
+					alert("Error: Intervals must be positive.");
+					return;
+				}
+				var dm = parseInt(jQuery("#tdm").val());
+				var ds = parseInt(jQuery("#tds").val());
+				var duration = dm*60 + ds;
+				if (!(dm>=0 && ds>=0 && ds<60 && duration>0)) {
+					alert("Error: Incorrect duration.");
+					return;
+				}
+				// password
+				var p = "";
+				if (!ipas) {
+					p = prompt("Please enter your password:","");
+				}
+				if (p != null) {
+					jQuery("form#mf input[name='pw']").val(p);
+					jQuery("form#mf input[name='pid']").val(pid);
+					var v = "[" + en + "," + days[0] + "," + days[1] + "," + start_time + 
+					                    "," + end_time + "," + interval + "," + duration;
+					for (var i=0; i<nbrd; i++) {
+						v += "," + stations[i];
+					}
+					v += "]";
+					jQuery("form#mf input[name='v']").val(v);
+					jQuery("form#mf").submit();
+				}
+			});
+			jQuery("button#cCancel").click(function(){
+				window.location="/vp";
+			});
+
+			
+			// default values
+			jQuery("#en_on").prop("checked", true);
+			jQuery("#days_week").prop("checked", true);
+			jQuery("#days_norst").prop("checked", true);
+			jQuery("#dn").val("3");
+			jQuery("#drem").val("0");
+			jQuery("#tsh").val("06");
+			jQuery("#tsm").val("00");
+			jQuery("#teh").val("18");
+			jQuery("#tem").val("00");
+			jQuery("#tih").val("04");
+			jQuery("#tim").val("00");
+			jQuery("#tdm").val("15");
+			jQuery("#tds").val("00");
+			// fill in existing program values
+			if (pid > -1) {
+				if (prog[0]==0) {
+					jQuery("#en_off").prop("checked", true);
+				}
+				// process days
+				var _days = [prog[1], prog[2]];
+				if ((_days[0]&0x80) && (_days[1]>1)) {
+					jQuery("#days_n").prop("checked", true);
+					jQuery("#dn").val(_days[1]);
+					jQuery("#drem").val(_days[0]&0x7f);
+				} else {
+					jQuery("#days_week").prop("checked", true);
+					for (var i=0; i<7; i++) {
+						if (_days[0]&(1<<i)) {
+							jQuery("#d"+i).prop("checked", true);}
+						}
+					if ((_days[0]&0x80) && (_days[1]==0))	{
+						jQuery("#days_even").prop("checked", true);
+					}
+					if ((_days[0]&0x80) && (_days[1]==1)) {
+						jQuery("#days_odd").prop("checked", true);
+					}
+				}
+				// process time
+				fill_time("ts",3);
+				fill_time("te",4);
+				fill_time("ti",5);
+				var t = prog[6];
+				jQuery("#tdm").val(twodigits(t/60));
+				jQuery("#tds").val(twodigits(t%60));
+				// process stations
+				var bits;
+				for (var bid=0; bid<nbrd; bid++) {
+					bits = prog[bid+7];
+					for (var s=0; s<8; s++) {
+						sid = bid*8+s;
+						jQuery("#s"+sid).prop("checked", bits&(1<<s));
+					}
+				}
+			}
+
+		});
+
+	</script>
+</head>
+<body>
+	<div class="content">
+		<div class="header">
+			<div class="title">${"Modify Program" if (pid>-1) else "Add a New Program"}</div>
+		</div>
+		
+		<div class="body">
+			<div id="nav">
+			</div>
+			
+			<div id="programs">
+				<form name="mf" id="mf" action="cp" method="get">
+					<input type="hidden" name="pw">
+					<input type="hidden" name="pid">
+					<input type="hidden" name="v">
+					<div style="padding-left:5px;padding-right:5px;">
+						<p><b>This program is: </b>
+							<input type="radio" name="rad_en" id="en_on"><b>On</b>
+							<input type="radio" name="rad_en" id="en_off"><b>Off</b>
+						</p>
+						<p><b>Select Days:</b></p>
+						<input type="radio" name="rad_day" id="days_week"><b><u>Weekly</u>:</b>
+						<input type="checkbox" id="d0">Mon
+						<input type="checkbox" id="d1">Tue
+						<input type="checkbox" id="d2">Wed
+						<input type="checkbox" id="d3">Thu
+						<input type="checkbox" id="d4">Fri
+						<input type="checkbox" id="d5">Sat
+						<input type="checkbox" id="d6">Sun
+						<br>
+						<div style="padding-left:80px;">
+							<button onclick="seldays(1);return false;">Select All</button>
+							<button onclick="seldays(0);return false;">Select None</button>
+						</div>
+						<div style="padding-left:20px;">
+							<p><b>Select Restrictions:</b><br>
+								<input type="radio" name="rad_rst" id="days_norst">No restriction<br>
+								<input type="radio" name="rad_rst" id="days_odd">Odd days only (except 31st and Feb 29th)<br>
+								<input type="radio" name="rad_rst" id="days_even">Even days only<br>
+							</p>
+						</div>
+						<input type="radio" name="rad_day" id="days_n"><b><u>Interval</u>:</b>
+						Every <input type="text" size="2" maxlength="2" id="dn"> days, starting in 
+						<input type="text" size="2" maxlength="2" id="drem"> days.
+						<hr>
+						<p><b>Select Stations:</b></p>
+							<table border="1" cellpadding="3">
+								$for bid in range(0,gv.sd['nbrd']):
+									$for s in range(0,8):
+										$ sid = bid*8 + s
+										$if sid % 4 == 0:
+											<tr>
+										<td><input type="checkbox" id="s${sid}">${snames[sid]}</td>
+										$if sid % 4 == 3:
+											</tr>
+							</table>
+						</p>
+						<p></p>
+						<hr>
+						<p></p>
+						<b>Time:</b> <input type="text" size="2" maxlength="2" id="tsh"> : 
+						<input type="text" size="2" maxlength="2" id="tsm"> -> 
+						<input type="text" size="2" maxlength="2" id="teh"> : 
+						<input type="text" size="2" maxlength="2" id="tem"> (hh:mm)<br>
+						<b>Every:</b> <input type="text" size="2" maxlength="2" id="tih"> hours 
+						<input type="text" size="2" maxlength="2" id="tim"> minutes <br>
+						<b>Duration:</b> <input type="text" size="2" maxlength="3" id="tdm"> minutes 
+						<input type="text" size="2" maxlength="2" id="tds"> seconds
+						<p></p>
+						<hr>
+					</div>
+				</form>
+			</div>
+			
+			<div id="controls">
+				<button id="cSubmit" class="icon"><b>Submit</b></button>
+				<button id="cCancel" class="icon">Cancel</button>
+			</div>
+		</div>
+		
+		<div class="footer">
+			<hr>
+			<p style="font-size:9pt">This version is an experimental use of web.py templates.  Visit the <a href="/mp_old">old modify page</a> if something seems wrong.</p>
+		</div>
+	</div>
+</body>
+</html>

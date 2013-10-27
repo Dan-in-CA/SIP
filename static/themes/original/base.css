@@ -2,7 +2,7 @@ body {
 	margin:0px;
 }
 
-div.header {
+x-div.header {
 	background-image: url('logo.png');
 	background-color: #484;
 	background-repeat: no-repeat;
@@ -10,24 +10,33 @@ div.header {
 	height:48px;	
 }
 
-div.body {
-	margin:.5em;
-}
-
-div.footer {
+x-div.footer {
 	background-color: #484;
 	height: 36px;
 }
 
-div.header div {
+div.body {
+	margin:.5em;
+}
+
+
+div.header {
 	font-weight:bold;
 	text-align:center;
 	background-color:#EEEEEE;
 	border:2px solid gray;
 	padding:5px 10px;
-	width:240px;
+	width:480px;
 	border-radius:10px;
 	box-shadow:3px 3px 2px #888888;
+}
+
+div.header div.title {
+	font-size: 16pt;
+}
+
+div.header div.titlenote {
+	font-size: 10pt;
 }
 
 button.icon {

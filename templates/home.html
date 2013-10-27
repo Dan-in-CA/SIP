@@ -84,6 +84,10 @@ $code:
 		var snames = $:{snames};
 		var lrun = ${gv.lrun};
 		var rdst = ${gv.sd['rdst']}*1000;
+		var ipas = ${gv.sd['ipas']};
+		var en = ${gv.sd['en']};
+		var mm = ${gv.sd['mm']};
+		var rd = ${gv.sd['rd']};
 		
 		// date/time formating helpers
 		var timezoneSuffix =
@@ -152,9 +156,9 @@ $code:
 			jQuery("button#pPreview").click(function(){
 				window.open('/gp?d=0');
 			});
-			jQuery("button#bStopAll").click(function(){
+			jQuery("button#pStopAll").click(function(){
 				var p="";
-				if(!${gv.sd['ipas']}) {
+				if(!ipas) {
 					p = prompt("Please enter your password:","");
 				}
 				if (p != null) {
@@ -166,11 +170,11 @@ $code:
 			});
 									
 			jQuery("button#cStartStop").click(function(){
-				jQuery("form[name='hf'] input[name='en']").val(${1-gv.sd['en']});
+				jQuery("form[name='hf'] input[name='en']").val(1-en);
 				jQuery("form[name='hf']").submit();
 			});
 			jQuery("button#cManual").click(function(){
-				jQuery("form[name='hf'] input[name='mm']").val(${1-gv.sd['mm']});
+				jQuery("form[name='hf'] input[name='mm']").val(1-mm);
 				jQuery("form[name='hf']").submit();
 			});
 			jQuery("button#cRainDelay").click(function(){
@@ -204,7 +208,7 @@ $code:
 			});
 			
 			// update the rain delay end date (if engaged)
-			if (${gv.sd['rd']} != 0) {
+			if (rd != 0) {
 				var delayEnd = new Date(rdst);
 				jQuery("#rdEnd").html(formatDeviceDate(delayEnd));
 			}
@@ -224,7 +228,9 @@ $code:
 			<input type="hidden" name="tunit">
 		</form>
 		
-		<div class="header"></div>
+		<div class="header">
+			<div class="title">OpenSprinkler Pi${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
+		</div>
 		
 		<div class="body">
 		
@@ -345,8 +351,6 @@ $code:
 		</div>
 		
 		<div class="footer">
-			<hr>
-			<p style="font-size:9pt">This version is an experimental use of web.py templates.  Visit the <a href="/_old">old home page</a> if something seems wrong.</p>
 		</div>
 	</div>
 </body>

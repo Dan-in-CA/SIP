@@ -1,4 +1,4 @@
-$def with (yy, mm, dd, devmin, devday)
+$def with (yy, mm, dd, devday, devmin)
 
 <!-- 
   2013-13-06: jonathanmarsh
@@ -197,16 +197,12 @@ $code:
 <body>
 	<div class="content">
 		<div class="header">
-			<div>Program Preview of <span id="scheduledate"></span>
-	  			<br><font size=2>(Hover over each colored bar to see tooltip)</font>
-			</div>
+			<div class="title">Program Preview of <span id="scheduledate"></span></div>
+			<div class="titlenote">Hover over each colored bar to see tooltip.</div>
 	  	</div>
 		
 		<div class="body">
-			<div id="nav">
-				<p style="font-size:9pt">This version is an experimental use of web.py templates.  Visit the <a href="/gp_old?d=0">old schedule page</a> if something seems wrong.</p>
-				<hr>
-			</div>
+			<div id="nav"></div>
 			
 			<div id="schedule"></div>
 			

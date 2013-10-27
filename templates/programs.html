@@ -19,7 +19,7 @@ $code:
 		output = ""
 		if (days[0]&0x80) and (days[1]>1): # this is an interval program 
 			days[0] = days[0]&0x7f
-			output += "Every " + days[1] + " days, starting in " + days[0] + " days."
+			output += "Every " + str(days[1]) + " days, starting in " + str(days[0]) + " days."
 		else: # this is a weekly program 
 			for d in range(0,7):
 				if days[0] & (1<<d):
@@ -37,55 +37,64 @@ $code:
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>OpenSprinkler Pi Programs ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
 	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<style type="text/css">
-		button.icon {
-			padding: 3px 6px 3px 30px;
-			background-color: #EEE;
-			background-repeat: no-repeat;
-			background-position: 4px center;
-			background-size: 20px;
-		}
-		#nav button {height:44px;}
 		button#nBack {background-image: url('${gv.baseurl}/static/images/icons/svc_back.png');}
 		button#nAdd {background-image: url('${gv.baseurl}/static/images/icons/svc_addall.png');}
 		button#nDelAll {background-image: url('${gv.baseurl}/static/images/icons/svc_delall.png');}
 		button#nPreview {background-image: url('${gv.baseurl}/static/images/icons/svc_preview.png');}
-		#controls button {height:28px;}
 
 		.program {line-height:22px}
-		.strike {font-decoration:strike;}
+		.strike {text-decoration:line-through;}
 		
-		.progstation_on {background-color:#9AFA9A; color:block; font-size:10pt}
+		.progstation_on {background-color:#9AFA9A; color:black; font-size:10pt}
 		.progstation_off {background-color:white; color:lightgray; font-size:10pt}						
-		
-			
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>		
+		// Variables set by ospi.py
+		var ipas = ${gv.sd['ipas']};
+		
 		// Initialize behaviors
 		jQuery(document).ready(function(){
 			
 			jQuery("button#nBack").click(function(){
 				window.location="/";
 			});
-			jQuery("button#nAdd").click(function(){
-				mod(mf,-1);
-			});
-			jQuery("button#nDelAll").click(function(){
-				del(df,-1);
-			});
 			jQuery("button#nPreview").click(function(){
 				window.open("/gp?d=0","_blank");
 			});
 			
-			jQuery("button.cDelete").click(function(){
-				
+			jQuery("button#nDelAll, button.cDelete").click(function(){
+				var p="";
+				if (!ipas) {
+					p = prompt("Please enter your password:","");
+				}
+				if (p != null) {
+					var pid = jQuery(this).attr("data");
+					jQuery("form#df input[name='pw']").val(p);
+					jQuery("form#df input[name='pid']").val(pid);
+					jQuery("form#df").submit();
+				}
 			});
-			jQuery("button.cModify").click(function(){
-				
+			
+			jQuery("button#nAdd, button.cModify").click(function(){
+				var pid = jQuery(this).attr("data");
+				jQuery("form#mf input[name='pid']").val(pid);
+				jQuery("form#mf").submit();
 			});
+			
 			jQuery("button.cRunNow").click(function(){
-				
+				var p="";
+				if (!ipas) {
+					p = prompt("Please enter your password:","");
+				}
+				if (p != null) {
+					var pid = jQuery(this).attr("data");
+					jQuery("form#rn input[name='pw']").val(p);
+					jQuery("form#rn input[name='pid']").val(pid);
+					jQuery("form#rn").submit();
+				}
 			});
 
 		});
@@ -94,19 +103,33 @@ $code:
 </head>
 <body>
 	<div class="content">
-		<div class="header"></div>
+		<div class="header">
+			<div class="title">Programs</div>
+			<div class="titlenote">Total number of programs: ${nprogs} (maximum is ${gv.sd['mnp']}).</div>
+		</div>
 		
 		<div class="body">
 			<div id="nav">
 				<button id="nBack" class="icon">Back</button>
-				<button id="nAdd" class="icon">Add a New Program</button>
-				<button id="nDelAll" class="icon">Delete All</button>
+				<button id="nAdd" class="icon" data="-1">Add a New Program</button>
+				<button id="nDelAll" class="icon" data="-1">Delete All</button>
 				<button id="nPreview" class="icon">Preview</button>
 				<hr>
 			</div>
 			
+			<form name="df" id="df" action="dp" method="get">
+				<input type="hidden" name="pw">
+				<input type="hidden" name="pid">
+			</form>
+			<form name="rn" id="rn" action="rp" method="get">
+				<input type="hidden" name="pw">
+				<input type="hidden" name="pid">
+			</form>
+			<form name="mf" id="mf" action="mp" method="get">
+				<input type="hidden" name="pid">
+			</form>
+			
 			<div id="programs">
-				<p>Total number of programs: ${nprogs} (maximum is ${gv.sd['mnp']})</p>
 				$for pid in range(0,nprogs):
 					$ prog = gv.pd[pid]
 					<div id="p${pid}" class="program ${'strike' if prog[0] == 0 else ''}">
@@ -122,7 +145,7 @@ $code:
 						<b>Every</b> ${(interval/60>>0)} hrs ${(interval%60)} mins,<br>
 						<b>Run</b>: ${(duration/60>>0)} mins ${(duration%60)} secs.<br>
 
-						<table border=1 cellpadding=3px>
+						<table border="1" cellpadding="3">
 							$for bid in range(0,gv.sd['nbrd']):
 								$ bits = prog[bid + 7]
 								$for s in range(0,8):
@@ -133,9 +156,9 @@ $code:
 									$if sid % 4 == 3:
 										</tr>
 						</table>
-	 					<button class="cDelete">Delete</button>
-						<button class="cModify">Modify</button>
-						<button class="cRunNow">Run Now</button>
+	 					<button class="cDelete" data="${pid}">Delete</button>
+						<button class="cModify" data="${pid}">Modify</button>
+						<button class="cRunNow" data="${pid}">Run Now</button>
 					</div>
 					<hr/>
 			</div>
@@ -145,8 +168,6 @@ $code:
 		</div>
 		
 		<div class="footer">
-			<hr>
-			<p style="font-size:9pt">This version is an experimental use of web.py templates.  Visit the <a href="/vp_old">old programs page</a> if something seems wrong.</p>
 		</div>
 	</div>
 </body>
