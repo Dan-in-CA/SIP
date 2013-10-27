@@ -54,13 +54,10 @@ $code:
 	<meta name="viewport" content="width=640">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>OpenSprinkler Pi Options ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
-	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
 	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<style type="text/css">
-		button#tooltip {height:24px;}
-		button#cSubmit {background-image: url('${gv.baseurl}/static/images/icons/svc_submit.png');}
-		button#cCancel {background-image: url('${gv.baseurl}/static/images/icons/svc_delall.png');}
-				
+		button#tooltip {height:24px;}				
 		.tooltip {background-color:#FFF2B8; display:none; font-size:10pt; margin-left:4px;}
 		.label {font-weight:bold; float:left; width:160px; text-align:right; padding-right:4px;}
 		.option {margin: 6px 0px; clear:both;}
@@ -116,8 +113,8 @@ $code:
 			</div>
 			
 			<div id="controls">
-				<button id='cSubmit' class="icon">Submit Changes</button>
-				<button id='cCancel' class="icon">Cancel</button>
+				<button id='cSubmit' class="submit icon">Submit Changes</button>
+				<button id='cCancel' class="cancel icon">Cancel</button>
 			</div>
 		</div>
 		

@@ -16,14 +16,8 @@ $code:
 	<meta name="viewport" content="width=640">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>OpenSprinkler Pi Run-Once ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
-	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
 	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
-	<style type="text/css">
-		button#cRunNow {background-image: url('${gv.baseurl}/static/images/icons/svc_submit.png');}
-		button#cResetTime {background-image: url('${gv.baseurl}/static/images/icons/svc_reset.png');}
-		button#cCancel {background-image: url('${gv.baseurl}/static/images/icons/svc_delall.png');}
-		
-	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>		
 		var ipas = ${gv.sd['ipas']};
@@ -106,15 +100,13 @@ $code:
 			</div>
 			
 			<div id="controls">
-				<button id="cRunNow" class="icon"><b>Run Now</b></button>
-				<button id="cResetTime" class="icon">Reset Time</button>
-				<button id="cCancel" class="icon">Cancel</button>
+				<button id="cRunNow" class="submit icon"><b>Run Now</b></button>
+				<button id="cResetTime" class="refresh icon">Reset Time</button>
+				<button id="cCancel" class="cancel icon">Cancel</button>
 			</div>
 		</div>
 		
 		<div class="footer">
-			<hr>
-			<p style="font-size:9pt">This version is an experimental use of web.py templates.  Visit the <a href="/vr_old">old runonce page</a> if something seems wrong.</p>
 		</div>
 	</div>
 </body>

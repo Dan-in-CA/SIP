@@ -15,16 +15,9 @@ $code:
 <head>
 	<meta name="viewport" content="width=640">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>OpenSprinkler Pi Stations ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
-	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
+	<title>OpenSprinkler Pi Configure Stations ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
+	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
 	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
-	<style type="text/css">
-		#controls button {height:36px;}
-		button#cSubmit {background-image: url('${gv.baseurl}/static/images/icons/svc_submit.png');}
-		button#cResetNames {background-image: url('${gv.baseurl}/static/images/icons/svc_reset.png');}
-		button#cCancel {background-image: url('${gv.baseurl}/static/images/icons/svc_delall.png');}
-		
-	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>		
 		// Variables set by ospi.py
@@ -88,7 +81,7 @@ $code:
 <body>
 	<div class="content">
 		<div class="header">
-			<div class="title">Set Station Names:</div>
+			<div class="title">Configure Stations:</div>
 			<div class="titlenote">Maximum names length is ${gv.sd['snlen']} letters.</div>
 		</div>
 		
@@ -132,9 +125,9 @@ $code:
 			</div>
 			
 			<div id="controls">
-				<button id="cSubmit" class="icon">Submit Changes</button>
-				<button id="cResetNames" class="icon">Reset Names</button>
-				<button id="cCancel" class="icon">Cancel</button>
+				<button id="cSubmit" class="submit icon">Submit Changes</button>
+				<button id="cResetNames" class="refresh icon">Reset Names</button>
+				<button id="cCancel" class="cancel icon">Cancel</button>
 			</div>
 		</div>
 		

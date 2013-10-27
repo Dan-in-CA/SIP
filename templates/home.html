@@ -26,45 +26,23 @@ $code:
 	<meta name="viewport" content="width=640">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>OpenSprinkler Pi${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
-	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
 	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<style type="text/css">
 		.bluebg {background-color:lightblue;}
-		.opOn {color:green;}
-		.opOff {color:red;}
+		.opOn, .stationOn, .wlOn, .rsOn {color:green;}
+		.opOff, .wlOff, .rsOff {color:red;}
+		.rdOff, .stationOff {color:black;}
 		.rdOn {color:red;}
-		.rdOff {color:black;}
-		.rsNA {color:gray;}
-		.rsOn {color:green;}
-		.rsOff {color:red;}
-		.nav button {height:44px;}
-		.wlOn {color:green;}
-		.wlOff {color:red;}
+		.rsNA, stationWaiting {color:gray;}
+
 		.master {font-weight:bold;}
-		.stationOn {color:green;}
-		.stationOff {color:black;}
-		.stationClosed {color:lightgray;}
-		.stationWaiting {color:gray;}
 		button.manual {width:100px; height:32px; border-radius:8px;}
 		button.manual.on {background-color:#FFCCCC;}
 		button.manual.off {background-color:#CCFFCC;}
 		
 		#status button {height:32px;}
 		#programcontrols button {height:32px;}
-		button#bRefresh {background-image: url('${gv.baseurl}/static/images/icons/svc_reset.png');}
-		button#bOptions {background-image: url('${gv.baseurl}/static/images/icons/svc_options.png');}
-		button#bStations {background-image: url('${gv.baseurl}/static/images/icons/svc_edit.png');}
-		button#bPrograms {background-image: url('${gv.baseurl}/static/images/icons/svc_cal.png');}
-		button#bLog {background-image: url('${gv.baseurl}/static/images/icons/svc_log.png');}
-		button#pPreview {background-image: url('${gv.baseurl}/static/images/icons/svc_preview.png');}
-		button#pStopAll {background-image: url('${gv.baseurl}/static/images/icons/svc_del.png');}
-		button#pRunOnce {background-image: url('${gv.baseurl}/static/images/icons/svc_start.png');}
-		button#cStartStop.stop {background-image: url('${gv.baseurl}/static/images/icons/svc_stop.png');}
-		button#cStartStop.start {background-image: url('${gv.baseurl}/static/images/icons/svc_start.png');}
-		button#cManual.auto {background-image: url('${gv.baseurl}/static/images/icons/svc_auto.png');}
-		button#cManual.man {background-image: url('${gv.baseurl}/static/images/icons/svc_manual.png');}
-		button#cRainDelay {background-image: url('${gv.baseurl}/static/images/icons/svc_rain.png');}
-		button#cReboot {background-image: url('${gv.baseurl}/static/images/icons/svc_reboot.png');}
 		
 		#lastRun {color:gray;}
 		p {margin:0px;}
@@ -72,7 +50,7 @@ $code:
 		table, td {border:1px solid black;}
 		td.station {background-color:#E4E4E4;}
 		td.stationOn {background-color:#FFCCCC;}
-		td.stationOff, td:stationClosed, td.stationWaiting {background-color:#FFCCCC;}
+		td.stationOff, td.stationClosed, td.stationWaiting {background-color:#FFCCCC;}
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>
@@ -235,11 +213,11 @@ $code:
 		<div class="body">
 		
 			<div id="nav">
-				<button id="bRefresh" class="icon">Refresh</button>
-				<button id="bOptions" class="icon">Options</button>
-				<button id="bStations" class="icon">Stations</button>
-				<button id="bPrograms" class="icon">Programs</button>
-				<button id="bLog" class="icon">Log</button>
+				<button id="bRefresh" class="refresh icon">Refresh</button>
+				<button id="bOptions" class="options icon">Options</button>
+				<button id="bStations" class="stations icon">Stations</button>
+				<button id="bPrograms" class="programs icon">Programs</button>
+				<button id="bLog" class="log icon">Log</button>
 			</div>
 			
 			<div id="status">
@@ -285,9 +263,9 @@ $code:
 			$else:
 				<div id="programmode">
 					<div id="programcontrols">
-						<button id="pPreview" class="icon">Program Preview</button>
-						<button id="pStopAll" class="icon">Stop All Stations</button>
-						<button id="pRunOnce" class="icon">Run-Once Program</button>
+						<button id="pPreview" class="preview icon">Program Preview</button>
+						<button id="pStopAll" class="delete icon">Stop All Stations</button>
+						<button id="pRunOnce" class="start icon">Run-Once Program</button>
 					</div>
 					<p><b>Station Status</b>:</p>
 					<table id="stations">
@@ -345,8 +323,8 @@ $code:
 		
 				<button id="cStartStop" class="icon ${'stop' if gv.sd['en'] else 'start'}">${'Stop' if gv.sd['en'] else 'Start'} Operation</button>
 				<button id="cManual" class="icon ${'auto' if gv.sd['mm'] else 'man'}">Manual ${'Off' if gv.sd['mm'] else 'On'}</button>
-				<button id="cRainDelay" class="icon">Rain Delay</button>
-				<button id="cReboot" class="icon">Reboot</button>
+				<button id="cRainDelay" class="rain icon">Rain Delay</button>
+				<button id="cReboot" class="reboot icon">Reboot</button>
 			</div>
 		</div>
 		

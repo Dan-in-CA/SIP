@@ -36,14 +36,9 @@ $code:
 	<meta name="viewport" content="width=640">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>OpenSprinkler Pi Programs ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
-	<link href="/static/images/icons/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
 	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<style type="text/css">
-		button#nBack {background-image: url('${gv.baseurl}/static/images/icons/svc_back.png');}
-		button#nAdd {background-image: url('${gv.baseurl}/static/images/icons/svc_addall.png');}
-		button#nDelAll {background-image: url('${gv.baseurl}/static/images/icons/svc_delall.png');}
-		button#nPreview {background-image: url('${gv.baseurl}/static/images/icons/svc_preview.png');}
-
 		.program {line-height:22px}
 		.strike {text-decoration:line-through;}
 		
@@ -110,10 +105,10 @@ $code:
 		
 		<div class="body">
 			<div id="nav">
-				<button id="nBack" class="icon">Back</button>
-				<button id="nAdd" class="icon" data="-1">Add a New Program</button>
-				<button id="nDelAll" class="icon" data="-1">Delete All</button>
-				<button id="nPreview" class="icon">Preview</button>
+				<button id="nBack" class="back icon">Back</button>
+				<button id="nAdd" class="add icon" data="-1">Add a New Program</button>
+				<button id="nDelAll" class="deleteAll icon" data="-1">Delete All</button>
+				<button id="nPreview" class="preview icon">Preview</button>
 				<hr>
 			</div>
 			
