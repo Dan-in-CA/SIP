@@ -18,6 +18,12 @@ $code:
 	<title>OpenSprinkler Pi Configure Stations ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
 	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
 	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
+	<style type="text/css">
+		.stationNumber {text-align:center}
+		.stationName {text-align:left}
+		.stationIgnore {text-align:center}	
+		.stationMaster {text-align:center}
+	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>		
 		// Variables set by ospi.py
@@ -32,10 +38,10 @@ $code:
 					var s, bid, sid, v;
 					for (bid=0; bid<nbrd; bid++) {
 						v = 0;
-						for (s=0; s<8; s++) {
-							sid = bid*8 + (7-s);
+						for (s=1; s<=8; s++) {
+							sid = bid*8 + (8-s);
 							v = v<<1;
-							if (sid+1 == mas) {
+							if (sid == mas) {
 								v = v + 1;
 								continue;
 							}
@@ -49,10 +55,10 @@ $code:
 				var vi;	
 				for (bid=0; bid<nbrd; bid++) {
 					vi = 0;
-					for (s=0; s<8; s++) {
-						sid = bid*8 + (7-s);
+					for (s=1; s<=8; s++) {
+						sid = bid*8 + (8-s);
 						vi = vi<<1;	
-						if (sid+1 == mas) {
+						if (sid == mas) {
 							vi = vi + 1;
 							continue;
 						}
@@ -82,7 +88,7 @@ $code:
 	<div class="content">
 		<div class="header">
 			<div class="title">Configure Stations:</div>
-			<div class="titlenote">Maximum names length is ${gv.sd['snlen']} letters.</div>
+			<div class="titlenote">Maximum name length is ${gv.sd['snlen']} characters.</div>
 		</div>
 		
 		<div class="body">
@@ -93,34 +99,37 @@ $code:
 				<form id="sf" name="sf" action="cs" method="get">
 					<table>
 						<tr>
-							<th>Station</th>
-							<th>Name</th>
-							<th>Ignore Rain?</th>
+							<th class="stationNumber">Station</th>
+							<th class="stationName">Name</th>
+							<th class="stationIgnore">Ignore Rain?</th>
 							$if gv.sd['mas'] > 0:
-								<th>Activate Master?</th>
+								<th class="stationMaster">Activate Master?</th>
 						</tr>
-						$for sid in range(0, gv.sd['nbrd']*8):
-							$ bid = sid>>3
-							$ s = sid%8
-							<tr>
-								<td>${(sid+1)/10>>0}${(sid+1)%10}</td>
-								$if sid+1 == gv.sd['mas']:
-									<td colspan="2">--Master--</td>
-								$else:
-									<td>
-										<input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid}" id="n${sid}">
-									</td>
-									<td>
-										<input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">
-									</td>
-								$if gv.sd['mas']>0:
-									<td>
-										<input type="checkbox" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}">
-									</td>
-							</tr>
+						$for bid in range(0,gv.sd['nbrd']):
+							$for s in range(1,9):
+								$ sid = bid*8 + s;
+								<tr>
+									<td class="stationNumber">${sid}</td>
+									$if sid == gv.sd['mas']:
+										<td class="stationMaster" colspan="3">- - - - - - - Master - - - - - - </td>
+									$else:
+										<td class="stationName">
+											<input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid-1]}" name="s${sid}" id="n${sid}">
+										</td>
+										<td class="stationIgnore">
+											<input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">
+										</td>
+									$if gv.sd['mas'] > 0 and gv.sd['mas'] != sid:
+										<td class="stationMaster">
+											<input type="checkbox" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}">
+										</td>
+								</tr>
 					</table>
+					
 					<hr><font size=3><b>Password:</b><input type=password size=10 ${"disabled" if gv.sd['ipas'] else ""} name="pw"></font>
 					<p></p>
+					$for bid in range(gv.sd['nbrd']):
+						<input type="hidden" id="i${bid}"/>
 				</form>
 			</div>
 			

@@ -693,10 +693,10 @@ class change_stations:
                     gv.sd['ir'][i] = 0        
         names = '['
         for i in range(gv.sd['nst']):
-            if qdict.has_key('s'+str(i)): # This is to work around a bug introduced during UI changes 10/13
-                names += "'" + qdict['s'+str(i)] + "',"
+            if qdict.has_key('s'+str(i+1)): # This is to work around a bug introduced during UI changes 10/13
+                names += "'" + qdict['s'+str(i+1)] + "',"
             else:
-                names += "'S0"+str(i+1) + "',"   
+                names += "'S"+str(i+1) + "',"   
         names += ']'
         save('snames', names.encode('ascii', 'backslashreplace'))
         jsave(gv.sd, 'sd')
