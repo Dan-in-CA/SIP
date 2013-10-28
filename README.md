@@ -12,6 +12,14 @@ UPDATES
 ===========
 ***********
 
+October 25 2013
+--------------
+(Jonathan)<br/>
+1. Rewrote HTML generation to use web.py templates, for 1) easier readability and maintenance; 2) properly separate structure, style, 
+and behavior (jQuery); 3) add rudimentary theme capability to encourage UI variety an experimentation; and 4) reduce leakage between
+server-side details to client code.<br/>
+2. Set "theme" option to "basic" in sd.json and reboot to use an experimental theme.
+
 October 16 2013
 --------------
 (Dan)<br/>

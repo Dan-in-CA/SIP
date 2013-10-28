@@ -54,10 +54,10 @@ $code:
 		jQuery(document).ready(function(){
 			
 			jQuery("button#nBack").click(function(){
-				window.location="/";
+				window.location = "/";
 			});
 			jQuery("button#nPreview").click(function(){
-				window.open("/gp?d=0","_blank");
+				window.location = "/gp?d=0","_blank";
 			});
 			
 			jQuery("button#nDelAll, button.cDelete").click(function(){
@@ -109,7 +109,6 @@ $code:
 				<button id="nAdd" class="add icon" data="-1">Add a New Program</button>
 				<button id="nDelAll" class="deleteAll icon" data="-1">Delete All</button>
 				<button id="nPreview" class="preview icon">Preview</button>
-				<hr>
 			</div>
 			
 			<form name="df" id="df" action="dp" method="get">
@@ -127,6 +126,7 @@ $code:
 			<div id="programs">
 				$for pid in range(0,nprogs):
 					$ prog = gv.pd[pid]
+					<hr>
 					<div id="p${pid}" class="program ${'strike' if prog[0] == 0 else ''}">
 						<b>Program ${pid+1}: ${pdays([prog[1], prog[2]])}</b>
 						$if prog[0]&0x01 == 0:
@@ -155,7 +155,6 @@ $code:
 						<button class="cModify" data="${pid}">Modify</button>
 						<button class="cRunNow" data="${pid}">Run Now</button>
 					</div>
-					<hr/>
 			</div>
 			
 			<div id="controls">

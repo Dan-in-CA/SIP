@@ -40,7 +40,7 @@ $code:
 	// colors to draw different programs
 	var prog_color=["rgba(0,0,200,0.5)","rgba(0,200,0,0.5)","rgba(200,0,0,0.5)","rgba(0,200,200,0.5)"];
 	var days_str=["Sun","Mon","Tue","Wed","Thur","Fri","Sat"];
-	var xstart=80,ystart=150,stwidth=60,stheight=40;
+	var xstart=80,ystart=30,stwidth=60,stheight=40;
 	var winwidth=stwidth*sd['nbrd']*8+xstart, winheight=26*stheight+ystart;
 	var sid,sn,t;
 	var simt=Date.UTC(yy,mm-1,dd,0,0,0,0);
@@ -188,8 +188,14 @@ $code:
 		// Initialize behaviors
 		jQuery(document).ready(function(){
 			jQuery("#scheduledate").text(days_str[simdate.getUTCDay()]+" "+(simdate.getUTCMonth()+1)+"/"+(simdate.getUTCDate())+" "+(simdate.getUTCFullYear()));
+			jQuery("#schedule").height((winheight + ystart) + "px");
 			draw_grid();
 			draw_program();
+			
+			jQuery("button#nBack").click(function(){
+				window.location = "/";
+			});
+
 		});
 
 	</script>
@@ -201,10 +207,14 @@ $code:
 			<div class="titlenote">Hover over each colored bar to see tooltip.</div>
 	  	</div>
 		
+		<div id="nav">
+			<button id="nBack" class="back icon">Back</button>
+		</div>
+		
 		<div class="body">
 			<div id="nav"></div>
 			
-			<div id="schedule"></div>
+			<div id="schedule" style="position:relative"></div>
 			
 			<div id="controls"></div>
 		</div>

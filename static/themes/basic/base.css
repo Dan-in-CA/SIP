@@ -1,29 +1,45 @@
 body {
 	margin:0px;
+	background-color:#8A8;
+	font-family: sans-serif;
+	font-size:11pt;
+}
+
+div.header {
+	background-image: url('logo.png');
+	background-color: #484;
+	background-repeat: no-repeat;
+	background-position: 450px center;
+	height:72px;
+}
+
+div.footer {
+	background-color: #484;
+	height: 36px;
+}
+
+div.content {
+	width:640px;
+	margin:auto;
+	background-color:white;
 }
 
 div.body {
-	margin:.5em;
+	margin:0.5em;
 }
 
-
-div.header {
-	font-weight:bold;
-	text-align:center;
-	background-color:#EEEEEE;
-	border:2px solid gray;
-	padding:5px 10px;
-	width:480px;
-	border-radius:10px;
-	box-shadow:3px 3px 2px #888888;
-}
 
 div.header div.title {
 	font-size: 16pt;
+	color:white;
+	padding-top:30px;
+	padding-left:8px;
 }
 
 div.header div.titlenote {
 	font-size: 10pt;
+	color:white;
+	padding-left:8px;
 }
 
 button.icon {
@@ -75,4 +91,3 @@ button.submit		{background-image: url('icons/svc_submit.png');}
 	 padding:10px;
 	 text-align:left;	 
 }
-
