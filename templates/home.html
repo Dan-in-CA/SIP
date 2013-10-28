@@ -1,0 +1,335 @@
+$def with (cputemp)
+$code:
+	snames = eval(data('snames'))
+
+	def twodigits(n):
+		return str((n>>0)/10>>0) + str((n>>0)%10)
+
+	def programName(id):
+		pname = "P" + str(id)
+		if (id == 255 or id == 99):
+			pname = "Manual Mode"
+		if (id == 254 or id == 98):
+			pname = "Run-once Program"
+		return pname
+
+
+<!-- 
+  2013-10-06: jonathanmarsh
+    - Converted to web.py template, retaining 99% of older look and feel
+    - Moved inline styling to stylesheet
+    - Moved inline behaviors to jQuery.
+    Note that the normal jQuery use of the dollar sign conflicts with the templating syntax - used the longer jQuery() throughout.
+ -->
+<html>
+<head>
+	<meta name="viewport" content="width=640">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>OpenSprinkler Pi${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
+	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
+	<style type="text/css">
+		.bluebg {background-color:lightblue;}
+		.opOn, .stationOn, .wlOn, .rsOn {color:green;}
+		.opOff, .wlOff, .rsOff {color:red;}
+		.rdOff, .stationOff {color:black;}
+		.rdOn {color:red;}
+		.rsNA, stationWaiting {color:gray;}
+
+		.master {font-weight:bold;}
+		button.manual {width:100px; height:32px; border-radius:8px;}
+		button.manual.on {background-color:#FFCCCC;}
+		button.manual.off {background-color:#CCFFCC;}
+		
+		#status button {height:32px;}
+		#programcontrols button {height:32px;}
+		
+		#lastRun {color:gray;}
+		p {margin:0px;}
+		div.body div {margin-top:1em;}
+		table, td {border:1px solid black;}
+		td.station {background-color:#E4E4E4;}
+		td.stationOn {background-color:#FFCCCC;}
+		td.stationOff, td.stationClosed, td.stationWaiting {background-color:#FFCCCC;}
+	</style>
+	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+	<script>
+		// Variables set by ospi.py
+		var devt = ${gv.now}*1000;
+		var tz = ${gv.sd['tz']};
+		var cputemp = "${cputemp}";
+		var tempunit = "${gv.sd['tu']}";
+		var snames = $:{snames};
+		var lrun = ${gv.lrun};
+		var rdst = ${gv.sd['rdst']}*1000;
+		var ipas = ${gv.sd['ipas']};
+		var en = ${gv.sd['en']};
+		var mm = ${gv.sd['mm']};
+		var rd = ${gv.sd['rd']};
+		
+		// date/time formating helpers
+		var timezoneSuffix =
+			((tz-48>=0) ? "+" : "-") +
+			(Math.abs(tz-48)/4>>0) + ":" +
+			((Math.abs(tz-48)%4)*15/10>>0) +
+			((Math.abs(tz-48)%4)*15%10);
+		
+		function formatDeviceDate(d) {
+			return d.toUTCString() + timezoneSuffix;
+		}
+		
+		function formatLogline(log) {
+			var lrsid = lrun[0], lrpid = lrun[1], lrdur = lrun[2], lret = lrun[3];
+			if (lrpid == 0) {
+				return "n/a";
+			}
+			var pname = programName(lrpid);
+			var runDate = (new Date(lret*1000)).toUTCString() + timezoneSuffix;
+			return snames[lrsid] + " ran " + pname + " for " + (lrdur/60>>0) + "m" + (lrdur%60) + "s on " + runDate;
+		}
+
+		// Set up a live clock based on device time
+		var deviceTimeOffset = new Date(devt) - new Date() + tz*60*60*1000;
+		function updateClock() {
+			var now = new Date(new Date() - deviceTimeOffset);
+			jQuery("#deviceTime").text(formatDeviceDate(now));
+			setTimeout(updateClock, 500);
+		}
+				
+		// Initialize behaviors
+		jQuery(document).ready(function(){
+			jQuery("#heat")
+				.mouseenter(function() {
+					jQuery(this).toggleClass("bluebg",true);
+				})
+				.mouseleave(function() {
+					jQuery(this).toggleClass("bluebg",false);
+				})
+				.click(function() {
+					jQuery("input[name='tunit']").val(tempunit);
+					jQuery("form[name='tt']").submit();
+				});
+			var temp = parseFloat(cputemp);
+			if (isNaN(temp)) {
+				jQuery("#heat").html(cputemp);
+			} else {
+				jQuery("#heat").html((tempunit == "F" ? Math.round(10*(9/5*cputemp+32))/10 : cputemp) + "&deg;" + tempunit);		
+			}
+			
+			jQuery("button#bRefresh").click(function(){
+				window.location = "/";
+			});
+			jQuery("button#bOptions").click(function(){
+				window.location = "/vo";
+			});
+			jQuery("button#bStations").click(function(){
+				window.location = "/vs";
+			});
+			jQuery("button#bPrograms").click(function(){
+				window.location = "/vp";
+			});
+			jQuery("button#bLog").click(function(){
+				window.location = "/vl";
+			});
+			jQuery("button#pPreview").click(function(){
+				window.location = '/gp?d=0';
+			});
+			jQuery("button#pStopAll").click(function(){
+				var p="";
+				if(!ipas) {
+					p = prompt("Please enter your password:","");
+				}
+				if (p != null) {
+					window.location="/cv?pw="+p+"&rsn=1";
+				}
+			});
+			jQuery("button#pRunOnce").click(function(){
+				window.location = "/vr";
+			});
+									
+			jQuery("button#cStartStop").click(function(){
+				jQuery("form[name='hf'] input[name='en']").val(1-en);
+				jQuery("form[name='hf']").submit();
+			});
+			jQuery("button#cManual").click(function(){
+				jQuery("form[name='hf'] input[name='mm']").val(1-mm);
+				jQuery("form[name='hf']").submit();
+			});
+			jQuery("button#cRainDelay").click(function(){
+				var h=prompt("Enter hours to delay","0");
+				if (h!=null){
+					jQuery("form[name='hf'] input[name='rd']").val(h);
+					jQuery("form[name='hf']").submit();
+				}
+			});
+			jQuery("button#cReboot").click(function(){
+				jQuery("form[name='hf'] input[name='rbt']").val(1);
+				jQuery("form[name='hf']").submit();
+			});
+			
+			jQuery("button.manual").click(function () {
+				sid = jQuery(this).attr("id");
+				sbit = jQuery(this).hasClass("on");
+				if (sbit) {
+					window.location = "/sn"+(sid+1)+"=0"; // turn off station
+				} else {
+					var strmm = jQuery("#mm"+sid).val();
+					var strss = jQuery("#ss"+sid).val();
+					var mm = (strmm == "" ? 0 : parseInt(strmm));
+					var ss = (strss == "" ? 0 : parseInt(strss));
+					if (!(mm >= 0 && ss >= 0 && ss < 60)) {
+						alert("Timer values wrong: " + strmm + ":" + strss);
+						return;
+					}
+					window.location = "/sn" + (sid+1) + "=1" + "&t=" + (mm*60+ss);  // turn it off with timer
+				}
+			});
+			
+			// update the rain delay end date (if engaged)
+			if (rd != 0) {
+				var delayEnd = new Date(rdst);
+				jQuery("#rdEnd").html(formatDeviceDate(delayEnd));
+			}
+
+			// Update last log entry
+			jQuery("#lastRun").html(formatLogline(lrun));
+			
+			// start the clock
+			updateClock();
+		});
+
+	</script>
+</head>
+<body>
+	<div class="content">
+		<form name="tt" action="ttu" method="get">
+			<input type="hidden" name="tunit">
+		</form>
+		
+		<div class="header">
+			<div class="title">OpenSprinkler Pi${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
+		</div>
+		
+		<div class="body">
+		
+			<div id="nav">
+				<button id="bRefresh" class="refresh icon">Refresh</button>
+				<button id="bOptions" class="options icon">Options</button>
+				<button id="bStations" class="stations icon">Stations</button>
+				<button id="bPrograms" class="programs icon">Programs</button>
+				<button id="bLog" class="log icon">Log</button>
+			</div>
+			
+			<div id="status">
+				<p><b>System name</b>: ${gv.sd['name']}</p>
+		 		<p><b>Firmware version</b>: ${".".join(list(str(gv.ver)))}</p>
+				<p><b>Device time</b>: <span id="deviceTime"></span></p>
+				<p><b>CPU Temp</b>: <span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></p>
+			</div>
+			<hr>
+			
+			<div id="stations">
+			
+			$if gv.sd['mm']:			
+				<div id="manualmode">
+					<p><b>Manual Control:</b> (timer is optional)<p></p>
+					<table id="stations">
+					$# Manual program control formatting
+					$for bid in range(0, gv.sd['nbrd']):
+						$for s in range(0,8):
+							$ sid = bid*8 + s;
+							$ sn = sid + 1
+							$ sbit = (gv.sbits[bid]>>s)&1
+							<tr>
+								<td class='station'>${snames[sid]}:&nbsp;&nbsp;</td>
+								$if sn == gv.sd['mas']:
+									$if sbit:
+										<td class="master stationOn ${'strike' if off else ''}">On (Master)</td>
+									$else:
+										<td class="master stationOff ${'strike' if off else ''}">Off (Master)</td>
+								$else:
+									$ rem = gv.ps[sid][1]
+									$if rem > 65536:
+										$ rem = 0
+									<td class="stationRunning">
+										<button class='manual ${'on' if sbit else 'off'}' id='${sid}'>Turn ${'off' if sbit else 'on'}</button> ${'in' if sbit else 'for'}
+								  		<input type='text' id='mm${sid}' size='2' maxlength='3' value='${twodigits(rem/60)}'/>: 
+								  		<input type='text' id='ss${sid}' size='2' maxlength='2' value='${twodigits(rem%60)}'/> (mm:ss)
+								  	</td>
+							</tr>
+					</table>
+				</div>	
+
+			$else:
+				<div id="programmode">
+					<div id="programcontrols">
+						<button id="pPreview" class="preview icon">Program Preview</button>
+						<button id="pStopAll" class="delete icon">Stop All Stations</button>
+						<button id="pRunOnce" class="start icon">Run-Once Program</button>
+					</div>
+					<p><b>Station Status</b>:</p>
+					<table id="stations">
+					$# Program display formatting
+					$for bid in range(0, gv.sd['nbrd']):
+						$for s in range(0,8):
+							$ sid = bid*8 + s;
+							$ sn = sid + 1
+							$ sbit = (gv.sbits[bid]>>s)&1
+				 			$if gv.sd['en'] == 1:
+				 				$ off = (gv.sd['rd']!=0 or (gv.sd['urs']!=0 and gv.sd['rs']!=0)) and not(gv.sd['ir'][bid]&1<<s)
+							<tr>
+								<td class='station'>${snames[sid]}:&nbsp;&nbsp;</td>
+								$if sn == gv.sd['mas']:
+									$if sbit:
+										<td class="master stationOn ${'strike' if off else ''}">On (Master)</td>
+									$else:
+										<td class="master stationOff ${'strike' if off else ''}">Off (Master)</td>
+								$else:
+									$ rem = gv.ps[sid][1]
+									$if rem > 65536:
+										$ rem = 0
+									$ remString = twodigits(rem/60) + ":" + twodigits(rem%60)
+									$ pname = programName(gv.ps[sid][0]);
+									$if sbit:
+										<td class="stationOn"><b>Running ${pname}</b> (${remString} remaining)</td>
+									$else:
+										$if gv.ps[sid][0] == 0:
+											<td class="stationClosed">(closed)</td>
+										$else:
+											<td class="stationWaiting">Waiting ${pname} (${remString} scheduled)</td>
+							</tr>
+					</table>
+				</div>	
+				
+			</div>
+			
+			<div id="options">	
+				<p><b>Operation</b>: <span class="${'opOn' if gv.sd['en'] else 'opOff'}">${'on' if gv.sd['en'] else 'OFF'}</span></p>
+				<p><b>Raindelay</b>: <span class="${'rdOn' if gv.sd['rd'] else 'rdOff'}">$:{'ON (till <span id="rdEnd"></span>)' if gv.sd['rd'] else 'off'}</span></p>
+				<p><b>Rainsense</b>: <span class="${('rsOn' if gv.sd['rs'] else 'rsOff') if gv.sd['urs'] else 'rsNA'}">${('rain detected' if gv.sd['rs'] else 'no rain') if gv.sd['urs'] else 'n/a'}</span></p>
+				<p><b>Water level</b>: <span class="${'wlOn' if gv.sd['wl']==100 else 'wlOff'}">${gv.sd['wl']}%</span></p>
+				<p><b>Last run</b>: <span id="lastRun"></span></p>
+			</div>
+			<hr>
+			
+			<div id="controls">
+				<form name="hf" action="cv" method="get">
+					<p>Password:<input type="password" ${"disabled" if gv.sd['ipas'] else ""} size="10" id="pwd" name="pw"></p>
+					<input type="hidden" name="en">
+					<input type="hidden" name="mm" value="0">
+					<input type="hidden" name="rd" value="0">
+					<input type="hidden" name="rbt" value="0">
+				</form>
+		
+				<button id="cStartStop" class="icon ${'stop' if gv.sd['en'] else 'start'}">${'Stop' if gv.sd['en'] else 'Start'} Operation</button>
+				<button id="cManual" class="icon ${'auto' if gv.sd['mm'] else 'man'}">Manual ${'Off' if gv.sd['mm'] else 'On'}</button>
+				<button id="cRainDelay" class="rain icon">Rain Delay</button>
+				<button id="cReboot" class="reboot icon">Reboot</button>
+			</div>
+		</div>
+		
+		<div class="footer">
+		</div>
+	</div>
+</body>
+</html>

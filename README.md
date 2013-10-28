@@ -12,12 +12,20 @@ UPDATES
 ===========
 ***********
 
+October 25 2013
+--------------
+(Jonathan)<br/>
+1. Rewrote HTML generation to use web.py templates, for 1) easier readability and maintenance; 2) properly separate structure, style, 
+and behavior (jQuery); 3) add rudimentary theme capability to encourage UI variety an experimentation; and 4) reduce leakage between
+server-side details to client code.<br/>
+2. Set "theme" option to "basic" in sd.json and reboot to use an experimental theme.
+
 October 16 2013
 --------------
 (Dan)<br/>
 Additions, bug fixes:<br/>
 1. Fixed a bug that would cause an error in program preview when a master was enabled.<br/>
-2. Changing to manual mode would clear rain delay setting, Setting rain delay in manual mode would switch to program mode - fixed.
+2. Changing to manual mode would clear rain delay setting, Setting rain delay in manual mode would switch to program mode - fixed.<br/>
 
 October 11 2013
 --------------
@@ -37,6 +45,12 @@ Additions, bug fixes:<br/>
 4. Added logging options to options page<br/>
 
 (Dan)<br/>
+1. Improved options handling and passing logic<br/>
+2. Added a "System Name" option to help users distinguish between multiple systems<br/>
+3. Configurable station name length (increased default to 32)<br/>
+4. Added logging options to options page<br/>
+
+(Dan)
 Additions, bug fixes:<br/>
 1. Moved RasPi specific code into try-except blocks allowing program to run on multiple platforms<br/>
 2. Added "write_options" function to create/update new style options.txt file in data directory.<br/>
@@ -165,3 +179,4 @@ Installation and set up
 
 For complete and up-to-date installation and set up instructions, see the Rays Hobby wiki page at:
 http://rayshobby.net/mediawiki/index.php?title=Python_Interval_Program_for_OSPi
+>>>>>>> refs/heads/From_JMRemote

@@ -1,0 +1,113 @@
+$def with ()
+
+<!-- 
+  2013-13-06: jonathanmarsh
+    - Converted to web.py template, retaining 99% of older look and feel
+    - Moved inline styling to stylesheet
+    - Moved inline behaviors to jQuery.
+    Note that the normal jQuery use of the dollar sign conflicts with the templating syntax - used the longer jQuery() throughout.
+ -->
+
+$code:
+	snames = eval(data('snames'))
+
+<html>
+<head>
+	<meta name="viewport" content="width=640">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>OpenSprinkler Pi Run-Once ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
+	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
+	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+	<script>		
+		var ipas = ${gv.sd['ipas']};
+		var nbrd = ${gv.sd['nbrd']};
+		var mas = ${gv.sd['mas']};
+
+		// Initialize behaviors
+		jQuery(document).ready(function(){
+			
+			jQuery("button#cRunNow").click(function(){
+				var comm="/cr?pw=" + (ipas ? "" : jQuery("input[name='pw']").val()) + "&t=[";
+				var sid,strmm,strss,mm,ss,matchfound=0;
+				for (sid=0; sid<nbrd*8; sid++) {
+					if (sid+1 == mas) {
+						comm+="0,";
+						continue;
+					}
+					strmm = jQuery("input[name='mm" + sid + "']").val();
+					strss = jQuery("input[name='ss" + sid + "']").val();
+					mm = (strmm=="" ? 0 : parseInt(strmm));
+					ss = (strss=="" ? 0 : parseInt(strss));
+					if (!(mm >= 0 && ss >= 0 && ss < 60)) {
+						alert("Timer values wrong: " + strmm + ":" + strss);
+						return;
+					}
+			    	if (mm*60+ss > 0) {
+			    		matchfound=1;
+			    	}
+					comm += (mm*60+ss) + ",";
+				}
+				comm += "0]";
+				if (!matchfound) {
+					alert("No station is schedule to run");
+					return;
+				}
+				window.location = comm;
+			});
+			
+			jQuery("button#cResetTime").click(function(){
+				jQuery("input[type='text']").val(0);
+			});
+			
+			jQuery("button#cCancel").click(function(){
+				window.location="/";
+			});
+
+		});
+
+	</script>
+</head>
+<body>
+	<div class="content">
+		<div class="header">
+			<div class="title">Run Once Program</div>
+		</div>
+		
+		<div class="body">
+			<div id="nav">
+			</div>
+			
+			<div id="runonce">
+				<form name="rf" action="cr" method="get">
+					<table border=1>
+						$for sid in range(0,gv.sd['nbrd']*8):
+							<tr>
+								<td bgcolor="#E4E4E4">${snames[sid]}&nbsp;&nbsp;</td>
+								<td>
+								$if sid+1 == gv.sd['mas']:
+									(<b>Master</b>)
+								$else:
+									<input type="text" size="3" maxlength="3" value="0" name="mm${sid}">:
+									<input type="text" size="2" maxlength="2" value="0" name="ss${sid}"> (mm:ss)
+								</td>
+							</tr>
+					
+					</table>
+					<hr><font size=3><b>Password:</b><input type=password size=10 ${"disabled" if gv.sd['ipas'] else ""} name="pw"></font>
+					<p></p>
+				</form>	
+			</div>
+			
+			<div id="controls">
+				<button id="cRunNow" class="submit icon"><b>Run Now</b></button>
+				<button id="cResetTime" class="refresh icon">Reset Time</button>
+				<button id="cCancel" class="cancel icon">Cancel</button>
+			</div>
+		</div>
+		
+		<div class="footer">
+		</div>
+	</div>
+</body>
+</html>
