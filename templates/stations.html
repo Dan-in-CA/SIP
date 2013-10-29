@@ -38,10 +38,10 @@ $code:
 					var s, bid, sid, v;
 					for (bid=0; bid<nbrd; bid++) {
 						v = 0;
-						for (s=1; s<=8; s++) {
-							sid = bid*8 + (8-s);
+						for (s=0; s<=8; s++) {
+							sid = bid*8 + s;
 							v = v<<1;
-							if (sid == mas) {
+							if (sid+1 == mas) {
 								v = v + 1;
 								continue;
 							}
@@ -55,10 +55,10 @@ $code:
 				var vi;	
 				for (bid=0; bid<nbrd; bid++) {
 					vi = 0;
-					for (s=1; s<=8; s++) {
-						sid = bid*8 + (8-s);
+					for (s=0; s<=8; s++) {
+						sid = bid*8 + s;
 						vi = vi<<1;	
-						if (sid == mas) {
+						if (sid+1 == mas) {
 							vi = vi + 1;
 							continue;
 						}
@@ -106,20 +106,20 @@ $code:
 								<th class="stationMaster">Activate Master?</th>
 						</tr>
 						$for bid in range(0,gv.sd['nbrd']):
-							$for s in range(1,9):
+							$for s in range(0,8):
 								$ sid = bid*8 + s;
 								<tr>
-									<td class="stationNumber">${sid}</td>
-									$if sid == gv.sd['mas']:
+									<td class="stationNumber">${sid+1}</td>
+									$if sid+1 == gv.sd['mas']:
 										<td class="stationMaster" colspan="3">- - - - - - - Master - - - - - - </td>
 									$else:
 										<td class="stationName">
-											<input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid-1]}" name="s${sid}" id="n${sid}">
+											<input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid}" id="n${sid}">
 										</td>
 										<td class="stationIgnore">
 											<input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">
 										</td>
-									$if gv.sd['mas'] > 0 and gv.sd['mas'] != sid:
+									$if gv.sd['mas'] > 0 and gv.sd['mas'] != sid+1:
 										<td class="stationMaster">
 											<input type="checkbox" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}">
 										</td>
