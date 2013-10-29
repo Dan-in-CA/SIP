@@ -239,9 +239,9 @@ $code:
 					$# Manual program control formatting
 					$for bid in range(0, gv.sd['nbrd']):
 						$for s in range(0,8):
-							$sid = bid*8 + s
-							$sn = sid + 1
-							$sbit = (gv.sbits[bid]>>s)&1
+							$ sid = bid*8 + s;
+							$ sn = sid + 1
+							$ sbit = (gv.sbits[bid]>>s)&1
 							<tr>
 								<td class='station'>${snames[sid]}:&nbsp;&nbsp;</td>
 								$if sn == gv.sd['mas']:
@@ -250,9 +250,9 @@ $code:
 									$else:
 										<td class="master stationOff ${'strike' if off else ''}">Off (Master)</td>
 								$else:
-									$rem = gv.ps[sid][1]
+									$ rem = gv.ps[sid][1]
 									$if rem > 65536:
-										$rem = 0
+										$ rem = 0
 									<td class="stationRunning">
 										<button class='manual ${'on' if sbit else 'off'}' id='${sid}'>Turn ${'off' if sbit else 'on'}</button> ${'in' if sbit else 'for'}
 								  		<input type='text' id='mm${sid}' size='2' maxlength='3' value='${twodigits(rem/60)}'/>: 
@@ -274,11 +274,11 @@ $code:
 					$# Program display formatting
 					$for bid in range(0, gv.sd['nbrd']):
 						$for s in range(0,8):
-							$sid = bid * 8 + s
-							$sn = sid + 1
-							$sbit = (gv.sbits[bid]>>s)&1
+							$ sid = bid*8 + s;
+							$ sn = sid + 1
+							$ sbit = (gv.sbits[bid]>>s)&1
 				 			$if gv.sd['en'] == 1:
-				 				$off = (gv.sd['rd']!=0 or (gv.sd['urs']!=0 and gv.sd['rs']!=0)) and not(gv.sd['ir'][bid]&1<<s)
+				 				$ off = (gv.sd['rd']!=0 or (gv.sd['urs']!=0 and gv.sd['rs']!=0)) and not(gv.sd['ir'][bid]&1<<s)
 							<tr>
 								<td class='station'>${snames[sid]}:&nbsp;&nbsp;</td>
 								$if sn == gv.sd['mas']:
@@ -289,9 +289,9 @@ $code:
 								$else:
 									$ rem = gv.ps[sid][1]
 									$if rem > 65536:
-										$rem = 0
-									$remString = twodigits(rem/60) + ":" + twodigits(rem%60)
-									$pname = programName(gv.ps[sid][0]);
+										$ rem = 0
+									$ remString = twodigits(rem/60) + ":" + twodigits(rem%60)
+									$ pname = programName(gv.ps[sid][0]);
 									$if sbit:
 										<td class="stationOn"><b>Running ${pname}</b> (${remString} remaining)</td>
 									$else:
@@ -318,8 +318,8 @@ $code:
 				<form name="hf" action="cv" method="get">
 					<p>Password:<input type="password" ${"disabled" if gv.sd['ipas'] else ""} size="10" id="pwd" name="pw"></p>
 					<input type="hidden" name="en">
-					<input type="hidden" name="mm" value="">
-					<input type="hidden" name="rd" value="">
+					<input type="hidden" name="mm">
+					<input type="hidden" name="rd">
 					<input type="hidden" name="rbt" value="0">
 				</form>
 		
