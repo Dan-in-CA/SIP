@@ -32,9 +32,10 @@ $code:
 		.bluebg {background-color:lightblue;}
 		.opOn, .stationOn, .wlOn, .rsOn {color:green;}
 		.opOff, .wlOff, .rsOff {color:red;}
-		.rdOff, .stationOff {color:black;}
+		.rdOff, .stationOff, {color:black;}
 		.rdOn {color:red;}
 		.rsNA, stationWaiting {color:gray;}
+		.stationDisabled {color:gray;}
 
 		.master {font-weight:bold;}
 		button.manual {width:100px; height:32px; border-radius:8px;}
@@ -51,6 +52,7 @@ $code:
 		td.station {background-color:#E4E4E4;}
 		td.stationOn {background-color:#CCCCFF;}
 		td.stationOff, td.stationClosed, td.stationWaiting {background-color:#FFCCCC;}
+		td.stationDisabled {background-color:#CCC;}
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>
@@ -277,6 +279,7 @@ $code:
 							$ sid = bid*8 + s;
 							$ sn = sid + 1
 							$ sbit = (gv.sbits[bid]>>s)&1
+							$ irbit = (gv.sd['ir'][bid]>>s)&1
 				 			$if gv.sd['en'] == 1:
 				 				$ off = (gv.sd['rd']!=0 or (gv.sd['urs']!=0 and gv.sd['rs']!=0)) and not(gv.sd['ir'][bid]&1<<s)
 							<tr>
@@ -296,7 +299,10 @@ $code:
 										<td class="stationOn"><b>Running ${pname}</b> (${remString} remaining)</td>
 									$else:
 										$if gv.ps[sid][0] == 0:
-											<td class="stationClosed">(closed)</td>
+											$if not irbit and (gv.sd['rd'] or gv.sd['rs']):
+												<td class="stationDisabled">(disabled)</td>
+											$else:
+												<td class="stationClosed">(closed)</td>	
 										$else:
 											<td class="stationWaiting">Waiting ${pname} (${remString} scheduled)</td>
 							</tr>
