@@ -30,8 +30,8 @@ $code:
 	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<style type="text/css">
 		.bluebg {background-color:lightblue;}
-		.opOn, .stationOn, .wlOn, .rsOn {color:green;}
-		.opOff, .wlOff, .rsOff {color:red;}
+		.opOn, .stationOn, .wlOn, .rsOff {color:green;}
+		.opOff, .wlOff, .rsOn {color:red;}
 		.rdOff, .stationOff, {color:black;}
 		.rdOn {color:red;}
 		.rsNA, stationWaiting {color:gray;}
@@ -302,7 +302,7 @@ $code:
 											$if not irbit and (gv.sd['rd'] or gv.sd['rs']):
 												<td class="stationDisabled">(disabled)</td>
 											$else:
-												<td class="stationClosed">(closed)</td>	
+												<td class="stationClosed">(closed)</td>
 										$else:
 											<td class="stationWaiting">Waiting ${pname} (${remString} scheduled)</td>
 							</tr>
