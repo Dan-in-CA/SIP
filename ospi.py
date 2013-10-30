@@ -642,7 +642,8 @@ class change_options:
             ln = len(nlst)
             nlst.pop()
             for i in range((incr*8)+1):
-                nlst.append("'S"+('%d'%(i+ln)).zfill(2)+"'")
+#                nlst.append("'S"+('%d'%(i+ln)).zfill(2)+"'")
+                nlst.append("'S"+('%d'%(i+ln))+"'")
             nstr = '['+','.join(nlst)
             nstr = nstr.replace("', ", "',")+"]"
             save('snames', nstr)            

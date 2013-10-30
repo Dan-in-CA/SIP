@@ -35,28 +35,28 @@ $code:
 			
 			jQuery("button#cSubmit").click(function(){
 				if (mas>0) {
-					var s, bid, sid, v;
+					var s, bid, sid, vm;
 					for (bid=0; bid<nbrd; bid++) {
-						v = 0;
+						vm = 0;
 						for (s=0; s<=8; s++) {
-							sid = bid*8 + s;
-							v = v<<1;
+							sid = bid*8 + (8-s);
+							vm = vm<<1;
 							if (sid+1 == mas) {
-								v = v + 1;
+								vm = vm + 1;
 								continue;
 							}
 							if	(jQuery("#mc"+sid).is(":checked")) {
-								v = v + 1;
+								vm = vm + 1;
 							}
 						}
-						jQuery("#m"+bid).val(v);
+						jQuery("#m"+bid).val(vm);
 					}
 				}
 				var vi;	
 				for (bid=0; bid<nbrd; bid++) {
 					vi = 0;
 					for (s=0; s<=8; s++) {
-						sid = bid*8 + s;
+						sid = bid*8 + (8-s);
 						vi = vi<<1;	
 						if (sid+1 == mas) {
 							vi = vi + 1;
@@ -114,7 +114,7 @@ $code:
 										<td class="stationMaster" colspan="3">- - - - - - - Master - - - - - - </td>
 									$else:
 										<td class="stationName">
-											<input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid}" id="n${sid}">
+											<input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid+1}" id="n${sid+1}">
 										</td>
 										<td class="stationIgnore">
 											<input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">
@@ -128,8 +128,11 @@ $code:
 					
 					<hr><font size=3><b>Password:</b><input type=password size=10 ${"disabled" if gv.sd['ipas'] else ""} name="pw"></font>
 					<p></p>
+					
 					$for bid in range(gv.sd['nbrd']):
-						<input type="hidden" id="i${bid}"/>
+						<input type="hidden" id="m${bid}" name="m${bid}"/>
+						<input type="hidden" id="i${bid}" name="i${bid}"/>
+
 				</form>
 			</div>
 			
