@@ -192,7 +192,7 @@ def stop_stations():
         gv.sd['bsy'] = 0
         return
 
-def main_loop(): # Runs in a separate thread
+def timing_loop(): # Runs in a separate thread
     """ ***** Main timing algorithm.***** """
     print 'Starting timing loop \n'
     last_min = 0
@@ -626,8 +626,7 @@ class change_options:
         jsave(gv.sd, 'sd')
         
         raise web.seeother('/')
-        #alert = '<script>alert("Options values saved.");window.location="/";</script>'
-        return #alert # -- Alerts are not considered good interface progrmming. Use sparingly!
+        return
 
     def update_scount(self, qdict):
         """Increase or decrease the number of stations shown when expansion boards are added in options."""
@@ -642,7 +641,6 @@ class change_options:
             ln = len(nlst)
             nlst.pop()
             for i in range((incr*8)+1):
-#                nlst.append("'S"+('%d'%(i+ln)).zfill(2)+"'")
                 nlst.append("'S"+('%d'%(i+ln))+"'")
             nstr = '['+','.join(nlst)
             nstr = nstr.replace("', ", "',")+"]"
@@ -694,7 +692,7 @@ class change_stations:
                     gv.sd['ir'][i] = 0        
         names = '['
         for i in range(gv.sd['nst']):
-            if qdict.has_key('s'+str(i+1)): # This is to work around a bug introduced during UI changes 10/13
+            if qdict.has_key('s'+str(i+1)):
                 names += "'" + qdict['s'+str(i+1)] + "',"
             else:
                 names += "'S"+str(i+1) + "',"   
@@ -954,5 +952,5 @@ class OSPi_app(web.application):
 
 if __name__ == '__main__':
     app = OSPi_app(urls, globals())
-    thread.start_new_thread(main_loop, ())
+    thread.start_new_thread(timing_loop, ())
     app.run()
