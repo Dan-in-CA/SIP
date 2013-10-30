@@ -166,6 +166,7 @@ def schedule_stations(stations):
     return
 
 def stop_onrain():
+    """Stop stations that do not ignore rain."""
     for b in range(gv.sd['nbrd']):
         for s in range(8):
             sid = b*8 + s # station index
@@ -180,6 +181,7 @@ def stop_onrain():
     return
 
 def stop_stations():
+        """Stop all running stations, clear schedules."""
         gv.srvals = [0]*(gv.sd['nst'])
         set_output()            
         gv.ps = []
@@ -192,8 +194,8 @@ def stop_stations():
         gv.sd['bsy'] = 0
         return
 
-def timing_loop(): # Runs in a separate thread
-    """ ***** Main timing algorithm.***** """
+def timing_loop():
+    """ ***** Main timing algorithm. Runs in a separate thread.***** """
     print 'Starting timing loop \n'
     last_min = 0
     while True: # infinite loop
@@ -341,7 +343,7 @@ def jsave(data, fname):
     f.close()
 
 def load_programs():
-    """Load program data from json file if it exists into memory, otherwise create an empty programs var."""
+    """Load program data from json file, if it exists, into memory, otherwise create an empty programs var."""
     try:
         pf = open('./data/programs.json', 'r')
         gv.pd = json.load(pf)
@@ -427,7 +429,7 @@ try:
 except KeyError:
     pass
 
-sdref = {'15':'nbrd', '16':'seq', '18':'mas', '21':'urs', '23':'wl', '25':'ipas'} #lookup table (Dictionary)
+sdref = {'15':'nbrd', '16':'seq', '18':'mas', '21':'urs', '23':'wl', '25':'ipas'} #lookup table
 
 gv.now = time.time()+((gv.sd['tz']/4)-12)*3600
 
@@ -629,7 +631,7 @@ class change_options:
         return
 
     def update_scount(self, qdict):
-        """Increase or decrease the number of stations shown when expansion boards are added in options."""
+        """Increase or decrease the number of stations displayed when number of expansion boards is changed options."""
         if int(qdict['onbrd'])+1 > gv.sd['nbrd']: # Lengthen lists
             incr = int(qdict['onbrd']) - (gv.sd['nbrd']-1)
             for i in range(incr):
@@ -675,7 +677,7 @@ class view_stations:
         return render.stations()
 
 class change_stations:
-    """Save changes to station names and master associations."""
+    """Save changes to station names, ignore rain and master associations."""
     def GET(self):
         qdict = web.input()
         approve_pwd(qdict)
