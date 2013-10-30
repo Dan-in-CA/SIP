@@ -13,7 +13,3 @@ class custom_page_1:
       #Insert Custom Code here.
       custpg += '<body>Hello form an ospi_addon program!</body>'
       return custpg
-
-
-
-  

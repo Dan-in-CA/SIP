@@ -11,8 +11,8 @@ except ImportError:
 
  #### Revision information ####
 gv.ver = 183
-gv.rev = 140
-gv.rev_date = '21/October/2013'
+gv.rev = 141
+gv.rev_date = '30/October/2013'
 
  #### urls is a feature of web.py. When a GET request is received, the corresponding class is executed.
 urls = [
