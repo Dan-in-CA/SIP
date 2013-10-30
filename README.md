@@ -37,14 +37,8 @@ Additions, bug fixes:<br/>
 
 October 4 2013
 --------------
-(jonathanmarsh)<br/>
+(Jonathan)<br/>
 Additions, bug fixes:<br/>
-1. Improved options handling and passing logic<br/>
-2. Added a "System Name" option to help users distinguish between multiple systems<br/>
-3. Configurable station name length (increased default to 32)<br/>
-4. Added logging options to options page<br/>
-
-(Dan)<br/>
 1. Improved options handling and passing logic<br/>
 2. Added a "System Name" option to help users distinguish between multiple systems<br/>
 3. Configurable station name length (increased default to 32)<br/>
