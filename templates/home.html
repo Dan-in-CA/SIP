@@ -30,11 +30,12 @@ $code:
 	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<style type="text/css">
 		.bluebg {background-color:lightblue;}
-		.opOn, .stationOn, .wlOn, .rsOn {color:green;}
-		.opOff, .wlOff, .rsOff {color:red;}
-		.rdOff, .stationOff {color:black;}
+		.opOn, .stationOn, .wlOn, .rsOff {color:green;}
+		.opOff, .wlOff, .rsOn {color:red;}
+		.rdOff, .stationOff, {color:black;}
 		.rdOn {color:red;}
 		.rsNA, stationWaiting {color:gray;}
+		.stationDisabled {color:gray;}
 
 		.master {font-weight:bold;}
 		button.manual {width:100px; height:32px; border-radius:8px;}
@@ -49,8 +50,9 @@ $code:
 		div.body div {margin-top:1em;}
 		table, td {border:1px solid black;}
 		td.station {background-color:#E4E4E4;}
-		td.stationOn {background-color:#FFCCCC;}
+		td.stationOn {background-color:#CCCCFF;}
 		td.stationOff, td.stationClosed, td.stationWaiting {background-color:#FFCCCC;}
+		td.stationDisabled {background-color:#CCC;}
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>
@@ -83,15 +85,17 @@ $code:
 			if (lrpid == 0) {
 				return "n/a";
 			}
-			var pname = programName(lrpid);
+			var pname = "${programName(gv.lrun[1])}";
 			var runDate = (new Date(lret*1000)).toUTCString() + timezoneSuffix;
 			return snames[lrsid] + " ran " + pname + " for " + (lrdur/60>>0) + "m" + (lrdur%60) + "s on " + runDate;
 		}
 
 		// Set up a live clock based on device time
-		var deviceTimeOffset = new Date(devt) - new Date() + tz*60*60*1000;
+		//var deviceTimeOffset = new Date(devt) - new Date() + tz*60*60*1000;
+		var deviceTimeOffset = devt - Date.now(); //dk change
 		function updateClock() {
-			var now = new Date(new Date() - deviceTimeOffset);
+			//var now = new Date(new Date()- deviceTimeOffset);
+			var now = new Date(Date.now() + deviceTimeOffset); //dk change
 			jQuery("#deviceTime").text(formatDeviceDate(now));
 			setTimeout(updateClock, 500);
 		}
@@ -275,6 +279,7 @@ $code:
 							$ sid = bid*8 + s;
 							$ sn = sid + 1
 							$ sbit = (gv.sbits[bid]>>s)&1
+							$ irbit = (gv.sd['ir'][bid]>>s)&1
 				 			$if gv.sd['en'] == 1:
 				 				$ off = (gv.sd['rd']!=0 or (gv.sd['urs']!=0 and gv.sd['rs']!=0)) and not(gv.sd['ir'][bid]&1<<s)
 							<tr>
@@ -294,7 +299,10 @@ $code:
 										<td class="stationOn"><b>Running ${pname}</b> (${remString} remaining)</td>
 									$else:
 										$if gv.ps[sid][0] == 0:
-											<td class="stationClosed">(closed)</td>
+											$if not irbit and (gv.sd['rd'] or gv.sd['rs']):
+												<td class="stationDisabled">(rain hold)</td>
+											$else:
+												<td class="stationClosed">(closed)</td>
 										$else:
 											<td class="stationWaiting">Waiting ${pname} (${remString} scheduled)</td>
 							</tr>
@@ -316,8 +324,8 @@ $code:
 				<form name="hf" action="cv" method="get">
 					<p>Password:<input type="password" ${"disabled" if gv.sd['ipas'] else ""} size="10" id="pwd" name="pw"></p>
 					<input type="hidden" name="en">
-					<input type="hidden" name="mm" value="0">
-					<input type="hidden" name="rd" value="0">
+					<input type="hidden" name="mm">
+					<input type="hidden" name="rd">
 					<input type="hidden" name="rbt" value="0">
 				</form>
 		
