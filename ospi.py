@@ -1,13 +1,26 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
-import re, os, json, time, base64, thread # standard Python modules
+import re, os, time, base64, thread, sys # standard Python modules
+try:
+    import json
+except ImportError:
+    import simplejson as json
+except:
+    print "Error: json module not found"
+    sys.exit()
+     
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
 
 try:
     import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
+    gv.platform = 'pi'
 except ImportError:
-    pass
+    try:
+        import Adafruit_BBIO.GPIO as GPIO
+        gv.platform = 'bbb'
+    except ImportError:
+        pass
 
  #### Revision information ####
 gv.ver = 183
@@ -321,7 +334,7 @@ def data(dataf):
         f.close()
     except IOError:
         if dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
-            data = "['S01','S02','S03','S04','S05','S06','S07','S08',]"
+            data = "['S1','S2','S3','S4','S5','S6','S7','S8',]"
             f = open('./data/'+dataf+'.txt', 'w')
             f.write(data)
             f.close()
@@ -463,10 +476,10 @@ except NameError:
     pass
 
   #### pin defines ####
-pin_sr_dat = 13
-pin_sr_clk = 7
-pin_sr_noe = 11
-pin_sr_lat = 15
+pin_sr_dat = 13 # Data
+pin_sr_clk = 7  # clock
+pin_sr_noe = 11 # output enable
+pin_sr_lat = 15 # latch
 
 def enableShiftRegisterOutput():
     try:
