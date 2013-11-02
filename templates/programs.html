@@ -135,7 +135,6 @@ $code:
 						$ end = prog[4]
 						$ interval = prog[5]
 						$ duration = prog[6]
-						$ bits = prog[7]
 						<br>
 						<b>Time</b>: ${twodigits(start/60)}:${twodigits(start%60)} - ${twodigits(end/60)}:${twodigits(end%60)},
 						<b>Every</b> ${(interval/60>>0)} hrs ${(interval%60)} mins,<br>
@@ -143,6 +142,10 @@ $code:
 
 						<table border="1" cellpadding="3">
 							$for bid in range(0,gv.sd['nbrd']):
+								$if len(prog)>8:
+									$ bits = prog[7 + bid]
+								$else:
+									$ bits = prog[7]
 								$for s in range(0,8):
 									$ sid = bid*8 + s
 									$if sid % 4 == 0:
