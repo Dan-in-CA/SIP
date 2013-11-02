@@ -83,7 +83,13 @@ $code:
 			if (lrpid == 0) {
 				return "n/a";
 			}
-			var pname = programName(lrpid);
+			var pname = "P" + lrpid;
+			if (lrpid == 255 || lrpid == 99) {
+				pname = "Manual Mode";
+			}
+			if (lrpid == 254 || lrpid == 98) {
+				pname = "Run-once Program";
+			}
 			var runDate = (new Date(lret*1000)).toUTCString() + timezoneSuffix;
 			return snames[lrsid] + " ran " + pname + " for " + (lrdur/60>>0) + "m" + (lrdur%60) + "s on " + runDate;
 		}
