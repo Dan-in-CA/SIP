@@ -34,8 +34,9 @@ $code:
 			elif name == "mas":
 				output += "<select name='omas'>\n"
 				output += "<option " + ("selected " if value==0 else "") + "value='0'>None</option>\n"
-				for i in range(1,9):
-					output += "<option " + ("selected " if value==i else "") + "value='" + str(i) + "'>" + snames[i-1] + "  (Station " + str(i) + ")</option>\n"
+				for i in range(0,8):
+					if (gv.sd['show'][0]>>i)&1 == 1:
+						output += "<option " + ("selected " if value==i+1 else "") + "value='" + str(i+1) + "'>" + snames[i] + "  (Station " + str(i+1) + ")</option>\n"
 				output += "</select>\n"
 			elif name == "htp":
 				output += "<input name='ohtp' type='text' size='5' maxlength='5' value='" + str(value) + "'>\n"

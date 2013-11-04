@@ -12,6 +12,11 @@ UPDATES
 ===========
 ***********
 
+November 3 2013
+--------------
+(Jonathan)<br/>
+Added "Connected?" option to suppress unused stations from the display. 
+
 October 25 2013
 --------------
 (Jonathan)<br/>
