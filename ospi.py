@@ -1,18 +1,31 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
-import re, os, json, time, base64, thread # standard Python modules
+import re, os, time, base64, thread, sys # standard Python modules
+try:
+    import json
+except ImportError:
+    import simplejson as json
+except:
+    print "Error: json module not found"
+    sys.exit()
+     
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
 
 try:
     import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
+    gv.platform = 'pi'
 except ImportError:
-    pass
+    try:
+        import Adafruit_BBIO.GPIO as GPIO
+        gv.platform = 'bbb'
+    except ImportError:
+        pass
 
  #### Revision information ####
 gv.ver = 183
-gv.rev = 140
-gv.rev_date = '21/October/2013'
+gv.rev = 141
+gv.rev_date = '30/October/2013'
 
  #### urls is a feature of web.py. When a GET request is received, the corresponding class is executed.
 urls = [
@@ -46,7 +59,7 @@ except ImportError:
     print 'add_on not imported'
     
   #### Function Definitions ####
-
+  
 def approve_pwd(qdict):
     """Password checking"""
     try:
@@ -166,6 +179,7 @@ def schedule_stations(stations):
     return
 
 def stop_onrain():
+    """Stop stations that do not ignore rain."""
     for b in range(gv.sd['nbrd']):
         for s in range(8):
             sid = b*8 + s # station index
@@ -180,6 +194,7 @@ def stop_onrain():
     return
 
 def stop_stations():
+        """Stop all running stations, clear schedules."""
         gv.srvals = [0]*(gv.sd['nst'])
         set_output()            
         gv.ps = []
@@ -192,8 +207,8 @@ def stop_stations():
         gv.sd['bsy'] = 0
         return
 
-def main_loop(): # Runs in a separate thread
-    """ ***** Main timing algorithm.***** """
+def timing_loop():
+    """ ***** Main timing algorithm. Runs in a separate thread.***** """
     print 'Starting timing loop \n'
     last_min = 0
     while True: # infinite loop
@@ -319,7 +334,7 @@ def data(dataf):
         f.close()
     except IOError:
         if dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
-            data = "['S01','S02','S03','S04','S05','S06','S07','S08',]"
+            data = "['S1','S2','S3','S4','S5','S6','S7','S8',]"
             f = open('./data/'+dataf+'.txt', 'w')
             f.write(data)
             f.close()
@@ -341,7 +356,7 @@ def jsave(data, fname):
     f.close()
 
 def load_programs():
-    """Load program data from json file if it exists into memory, otherwise create an empty programs var."""
+    """Load program data from json file, if it exists, into memory, otherwise create an empty programs var."""
     try:
         pf = open('./data/programs.json', 'r')
         gv.pd = json.load(pf)
@@ -427,7 +442,7 @@ try:
 except KeyError:
     pass
 
-sdref = {'15':'nbrd', '16':'seq', '18':'mas', '21':'urs', '23':'wl', '25':'ipas'} #lookup table (Dictionary)
+sdref = {'15':'nbrd', '16':'seq', '18':'mas', '21':'urs', '23':'wl', '25':'ipas'} #lookup table
 
 gv.now = time.time()+((gv.sd['tz']/4)-12)*3600
 
@@ -461,10 +476,10 @@ except NameError:
     pass
 
   #### pin defines ####
-pin_sr_dat = 13
-pin_sr_clk = 7
-pin_sr_noe = 11
-pin_sr_lat = 15
+pin_sr_dat = 13 # Data
+pin_sr_clk = 7  # clock
+pin_sr_noe = 11 # output enable
+pin_sr_lat = 15 # latch
 
 def enableShiftRegisterOutput():
     try:
@@ -601,17 +616,17 @@ class change_options:
         else:
           gv.sd['urs'] = 0
         
-        if qdict.has_key('oseq') and (qdict['oseq'] == 'on' or qdict['oseq'] == ''):
+        if qdict.has_key('oseq') and (qdict['oseq'] == 'on' or qdict['oseq'] == '1'):
           gv.sd['seq'] = 1
         else:
           gv.sd['seq'] = 0
         
-        if qdict.has_key('orst') and (qdict['orst'] == 'on' or qdict['orst'] == ''):
+        if qdict.has_key('orst') and (qdict['orst'] == 'on' or qdict['orst'] == '1'):
           gv.sd['rst'] = 1
         else:
           gv.sd['rst'] = 0
         
-        if qdict.has_key('olg') and (qdict['olg'] == 'on' or qdict['olg'] == ''):
+        if qdict.has_key('olg') and (qdict['olg'] == 'on' or qdict['olg'] == '1'):
           gv.sd['lg'] = 1
         else:
           gv.sd['lg'] = 0
@@ -626,11 +641,10 @@ class change_options:
         jsave(gv.sd, 'sd')
         
         raise web.seeother('/')
-        #alert = '<script>alert("Options values saved.");window.location="/";</script>'
-        return #alert # -- Alerts are not considered good interface progrmming. Use sparingly!
+        return
 
     def update_scount(self, qdict):
-        """Increase or decrease the number of stations shown when expansion boards are added in options."""
+        """Increase or decrease the number of stations displayed when number of expansion boards is changed options."""
         if int(qdict['onbrd'])+1 > gv.sd['nbrd']: # Lengthen lists
             incr = int(qdict['onbrd']) - (gv.sd['nbrd']-1)
             for i in range(incr):
@@ -642,7 +656,7 @@ class change_options:
             ln = len(nlst)
             nlst.pop()
             for i in range((incr*8)+1):
-                nlst.append("'S"+('%d'%(i+ln)).zfill(2)+"'")
+                nlst.append("'S"+('%d'%(i+ln))+"'")
             nstr = '['+','.join(nlst)
             nstr = nstr.replace("', ", "',")+"]"
             save('snames', nstr)            
@@ -676,7 +690,7 @@ class view_stations:
         return render.stations()
 
 class change_stations:
-    """Save changes to station names and master associations."""
+    """Save changes to station names, ignore rain and master associations."""
     def GET(self):
         qdict = web.input()
         approve_pwd(qdict)
@@ -693,7 +707,7 @@ class change_stations:
                     gv.sd['ir'][i] = 0        
         names = '['
         for i in range(gv.sd['nst']):
-            if qdict.has_key('s'+str(i+1)): # This is to work around a bug introduced during UI changes 10/13
+            if qdict.has_key('s'+str(i+1)):
                 names += "'" + qdict['s'+str(i+1)] + "',"
             else:
                 names += "'S"+str(i+1) + "',"   
@@ -953,5 +967,5 @@ class OSPi_app(web.application):
 
 if __name__ == '__main__':
     app = OSPi_app(urls, globals())
-    thread.start_new_thread(main_loop, ())
+    thread.start_new_thread(timing_loop, ())
     app.run()
