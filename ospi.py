@@ -84,7 +84,7 @@ def CPU_temperature():
 
 def log_run():
     """add run data to csv file - most recent first."""
-    if gv.lg:
+    if gv.sd['lg']:
         snames = data('snames')
         zones=re.findall(r"\'(.+?)\'",snames)
         if gv.lrun[1] == 98:
@@ -100,8 +100,8 @@ def log_run():
         f.close()
         log.insert(1, datastr)
         f = open('./static/log/water_log.csv', 'w') 
-        if gv.lr:
-            f.writelines(log[:gv.lr+1])
+        if gv.sd['lr']:
+            f.writelines(log[:gv.sd['lr']+1])
         else:
             f.writelines(log)
         f.close  
@@ -192,7 +192,7 @@ def stop_stations():
         gv.sd['bsy'] = 0
         return
 
-def main_loop(): # Runs in a separate thread
+def timing_loop(): # Runs in a separate thread
     """ ***** Main timing algorithm.***** """
     print 'Starting timing loop \n'
     last_min = 0
@@ -387,46 +387,27 @@ def to_sec(d=0, h=0, m=0, s=0):
     
 
   #### Global vars #####
-
+  
+#Settings Dictionary. A set of vars kept in memory and persisted in a file.
+#Edit this default dictionary definition to add or remove key-value pairs or change defaults.
+gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
+            "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
+            "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
+            "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
+            "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
+            "snlen":32, "name":u"OpenSprinkler Pi",})
 try:
     sdf = open('./data/sd.json', 'r') ## A config file ##
-    gv.sd = json.load(sdf) #Settings Dictionary. A set of vars kept in memory and persisted in a file
+    sd_temp = json.load(sdf) 
     sdf.close()
-    # test for missing or extra vars (update to current state)
-    gv.sd.pop('m0', None)
-    gv.sd.pop('m1', None)
-    gv.sd.pop('m2', None)
-    gv.sd.pop('m3', None)
-    if not 'mo' in gv.sd: gv.sd['mo'] = [0]
-    if not 'lg' in gv.sd: gv.sd['lg'] = 0
-    if not 'lr' in gv.sd: gv.sd['lr'] = 100
-    if not 'seq' in gv.sd: gv.sd['seq'] = 1
-    if not 'tu' in gv.sd: gv.sd['tu'] = "C"
-    if not 'ir' in gv.sd: gv.sd['ir'] = [0]#*gv.sd['nbrd']
-    if not 'loc' in gv.sd: gv.sd['loc'] = ""
-    if not 'snlen' in gv.sd: gv.sd['snlen'] = 32
-    if not 'name' in gv.sd: gv.sd['name'] = u"OpenSprinkler Pi"
-except IOError: # If file does not exist, create with defaults.
-    gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
-              "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
-              "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
-              "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
-              "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
-              "snlen":32, "name":u"OpenSprinkler Pi",})
-    sdf = open('./data/sd.json', 'w')
-    json.dump(gv.sd, sdf)
-    sdf.close()
-
-try:
-    gv.lg = gv.sd['lg'] # Controlls logging
-except KeyError:
+    for key in gv.sd: # If file loaded, replce default values in gv.sd with values from file
+        if key in sd_temp:
+            gv.sd[key] = sd_temp[key]
+except IOError: # If file does not exist, it will be created created using defaults.
     pass
-try:
-    gv.lr = int(gv.sd['lr'])
-except KeyError:
-    pass
-
-sdref = {'15':'nbrd', '16':'seq', '18':'mas', '21':'urs', '23':'wl', '25':'ipas'} #lookup table (Dictionary)
+sdf = open('./data/sd.json', 'w') # save file
+json.dump(gv.sd, sdf)
+sdf.close()
 
 gv.now = time.time()+((gv.sd['tz']/4)-12)*3600
 
@@ -645,12 +626,10 @@ class change_options:
         if qdict.has_key('olg') and (qdict['olg'] == 'on' or qdict['olg'] == '1'):
           gv.sd['lg'] = 1
         else:
-          gv.sd['lg'] = 0
-        gv.lg = gv.sd['lg'] # necessary to make logging work correctly on Pi (see run_log())    
+          gv.sd['lg'] = 0 
         
         if qdict.has_key('olr'):
             gv.sd['lr'] = int(qdict['olr'])
-        gv.lr = gv.sd['lr']
 
         srvals = [0]*(gv.sd['nst']) # Shift Register values
         rovals = [0]*(gv.sd['nst']) # Run Once Durations
@@ -940,10 +919,8 @@ class log_options:
         qdict = web.input()
         approve_pwd(qdict)
         if qdict.has_key('log'): gv.sd['lg'] = 1
-        else: gv.sd['lg'] = 0
-        gv.lg = gv.sd['lg'] # necessary to make logging work correctly on Pi (see run_log())        
+        else: gv.sd['lg'] = 0      
         gv.sd['lr'] = int(qdict['nrecords'])
-        gv.lr = int(gv.sd['lr'])
         jsave(gv.sd, 'sd')
         raise web.seeother('/vl')
 
@@ -998,5 +975,5 @@ class OSPi_app(web.application):
 
 if __name__ == '__main__':
     app = OSPi_app(urls, globals())
-    thread.start_new_thread(main_loop, ())
+    thread.start_new_thread(timing_loop, ())
     app.run()
