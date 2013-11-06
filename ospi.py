@@ -17,10 +17,18 @@ try:
     gv.platform = 'pi'
 except ImportError:
     try:
-        import Adafruit_BBIO.GPIO as GPIO
+        import Adafruit_BBIO.GPIO as GPIOB
         gv.platform = 'bbb'
     except ImportError:
+        print 'No GPIO module was found' 
         pass
+
+try:
+    from flup.server.fcgi import WSGIServer
+except ImportError:
+    pass
+    
+web.config.debug = False
 
  #### Revision information ####
 gv.ver = 183
@@ -53,10 +61,10 @@ urls = [
     ]
 
   #### Import ospi_addon module (ospi_addon.py) if it exists. ####
-try:
-    import ospi_addon #This provides a stub for adding custom features to ospi.py as external modules.
-except ImportError:
-    print 'add_on not imported'
+# try:
+#     import ospi_addon #This provides a stub for adding custom features to ospi.py as external modules.
+# except ImportError:
+#     print 'add_on not imported'
     
   #### Function Definitions ####
   
@@ -410,7 +418,7 @@ gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst":
             "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
             "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
             "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
-            "snlen":32, "name":u"OpenSprinkler Pi",})
+            "snlen":32, "name":u"OpenSprinkler Pi","theme":"original"})
 try:
     sdf = open('./data/sd.json', 'r') ## A config file ##
     sd_temp = json.load(sdf) 
