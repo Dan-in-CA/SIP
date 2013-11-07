@@ -262,14 +262,19 @@ $code:
 						<hr>
 						<p><b>Select Stations:</b></p>
 							<table border="1" cellpadding="3">
+								$ inRow = 4
 								$for bid in range(0,gv.sd['nbrd']):
 									$for s in range(0,8):
 										$ sid = bid*8 + s
-										$if sid % 4 == 0:
-											<tr>
-										<td><input type="checkbox" id="s${sid}">${snames[sid]}</td>
-										$if sid % 4 == 3:
-											</tr>
+										$ show = (gv.sd['show'][bid]>>s)&1
+				 						$if show == 1:
+				 							$ inRow = inRow - 1
+				 							$if inRow < 0:
+												<tr>
+											<td><input type="checkbox" id="s${sid}">${snames[sid]}</td>
+				 							$if inRow < 0:
+												</tr>
+												$ inRow = 4
 							</table>
 						</p>
 						<p></p>

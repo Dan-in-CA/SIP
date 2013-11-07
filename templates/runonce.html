@@ -81,17 +81,21 @@ $code:
 			<div id="runonce">
 				<form name="rf" action="cr" method="get">
 					<table border=1>
-						$for sid in range(0,gv.sd['nbrd']*8):
-							<tr>
-								<td bgcolor="#E4E4E4">${snames[sid]}&nbsp;&nbsp;</td>
-								<td>
-								$if sid+1 == gv.sd['mas']:
-									(<b>Master</b>)
-								$else:
-									<input type="text" size="3" maxlength="3" value="0" name="mm${sid}">:
-									<input type="text" size="2" maxlength="2" value="0" name="ss${sid}"> (mm:ss)
-								</td>
-							</tr>
+						$for bid in range(0, gv.sd['nbrd']):
+							$for s in range(0,8):
+							$ sid = bid*8 + s;
+							$ show = (gv.sd['show'][bid]>>s)&1
+				 			$if show == 1:
+					 			<tr>
+									<td bgcolor="#E4E4E4">${snames[sid]}&nbsp;&nbsp;</td>
+									<td>
+									$if sid+1 == gv.sd['mas']:
+										(<b>Master</b>)
+									$else:
+										<input type="text" size="3" maxlength="3" value="0" name="mm${sid}">:
+										<input type="text" size="2" maxlength="2" value="0" name="ss${sid}"> (mm:ss)
+									</td>
+								</tr>
 					
 					</table>
 					<hr><font size=3><b>Password:</b><input type=password size=10 ${"disabled" if gv.sd['ipas'] else ""} name="pw"></font>

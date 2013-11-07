@@ -418,7 +418,7 @@ gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst":
             "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
             "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
             "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
-            "snlen":32, "name":u"OpenSprinkler Pi","theme":"original"})
+            "snlen":32, "name":u"OpenSprinkler Pi","theme":"original","show":[255]})
 try:
     sdf = open('./data/sd.json', 'r') ## A config file ##
     sd_temp = json.load(sdf) 
@@ -427,10 +427,9 @@ try:
         if key in sd_temp:
             gv.sd[key] = sd_temp[key]
 except IOError: # If file does not exist, it will be created created using defaults.
-    pass
-sdf = open('./data/sd.json', 'w') # save file
-json.dump(gv.sd, sdf)
-sdf.close()
+    sdf = open('./data/sd.json', 'w') # save file
+    json.dump(gv.sd, sdf)
+    sdf.close()
 
 gv.now = time.time()+((gv.sd['tz']/4)-12)*3600
 
@@ -635,8 +634,8 @@ class change_options:
             incr = int(qdict['onbrd']) - (gv.sd['nbrd']-1)
             for i in range(incr):
                 gv.sd['mo'].append(0)
-            for i in range(incr):
-                gv.sd['ir'].append(0)    
+                gv.sd['ir'].append(0)
+                gv.sd['show'].append(255)   
             snames = data('snames')
             nlst = re.findall('[\'"].*?[\'"]', snames)
             ln = len(nlst)
@@ -657,6 +656,7 @@ class change_options:
             decr = gv.sd['nbrd'] - (onbrd+1)
             gv.sd['mo'] = gv.sd['mo'][:(onbrd+1)]
             gv.sd['ir'] = gv.sd['ir'][:(onbrd+1)]
+            gv.sd['show'] = gv.sd['show'][:(onbrd+1)]
             snames = data('snames')
             nlst = re.findall('[\'"].*?[\'"]', snames)
             nstr = '['+','.join(nlst[:8+(onbrd*8)])+']'
@@ -691,10 +691,15 @@ class change_stations:
                     gv.sd['ir'][i] = int(qdict['i'+str(i)])
                 except ValueError:
                     gv.sd['ir'][i] = 0        
+            if qdict.has_key('sh'+str(i)):
+                try:
+                    gv.sd['show'][i] = int(qdict['sh'+str(i)])
+                except ValueError:
+                    gv.sd['show'][i] = 255        
         names = '['
         for i in range(gv.sd['nst']):
-            if qdict.has_key('s'+str(i+1)):
-                names += "'" + qdict['s'+str(i+1)] + "',"
+            if qdict.has_key('s'+str(i)):
+                names += "'" + qdict['s'+str(i)] + "',"
             else:
                 names += "'S"+str(i+1) + "',"   
         names += ']'

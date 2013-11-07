@@ -85,7 +85,13 @@ $code:
 			if (lrpid == 0) {
 				return "n/a";
 			}
-			var pname = "${programName(gv.lrun[1])}";
+			var pname = "P" + lrpid;
+			if (lrpid == 255 || lrpid == 99) {
+				pname = "Manual Mode";
+			}
+			if (lrpid == 254 || lrpid == 98) {
+				pname = "Run-once Program";
+			}
 			var runDate = (new Date(lret*1000)).toUTCString() + timezoneSuffix;
 			return snames[lrsid] + " ran " + pname + " for " + (lrdur/60>>0) + "m" + (lrdur%60) + "s on " + runDate;
 		}
@@ -244,23 +250,25 @@ $code:
 							$ sid = bid*8 + s;
 							$ sn = sid + 1
 							$ sbit = (gv.sbits[bid]>>s)&1
-							<tr>
-								<td class='station'>${snames[sid]}:&nbsp;&nbsp;</td>
-								$if sn == gv.sd['mas']:
-									$if sbit:
-										<td class="master stationOn ${'strike' if off else ''}">On (Master)</td>
+							$ show = (gv.sd['show'][bid]>>s)&1
+				 			$if show == 1:
+								<tr>
+									<td class='station'>${snames[sid]}:&nbsp;&nbsp;</td>
+									$if sn == gv.sd['mas']:
+										$if sbit:
+											<td class="master stationOn ${'strike' if off else ''}">On (Master)</td>
+										$else:
+											<td class="master stationOff ${'strike' if off else ''}">Off (Master)</td>
 									$else:
-										<td class="master stationOff ${'strike' if off else ''}">Off (Master)</td>
-								$else:
-									$ rem = gv.ps[sid][1]
-									$if rem > 65536:
-										$ rem = 0
-									<td class="stationRunning">
-										<button class='manual ${'on' if sbit else 'off'}' id='${sid}'>Turn ${'off' if sbit else 'on'}</button> ${'in' if sbit else 'for'}
-								  		<input type='text' id='mm${sid}' size='2' maxlength='3' value='${twodigits(rem/60)}'/>: 
-								  		<input type='text' id='ss${sid}' size='2' maxlength='2' value='${twodigits(rem%60)}'/> (mm:ss)
-								  	</td>
-							</tr>
+										$ rem = gv.ps[sid][1]
+										$if rem > 65536:
+											$ rem = 0
+										<td class="stationRunning">
+											<button class='manual ${'on' if sbit else 'off'}' id='${sid}'>Turn ${'off' if sbit else 'on'}</button> ${'in' if sbit else 'for'}
+									  		<input type='text' id='mm${sid}' size='2' maxlength='3' value='${twodigits(rem/60)}'/>: 
+									  		<input type='text' id='ss${sid}' size='2' maxlength='2' value='${twodigits(rem%60)}'/> (mm:ss)
+									  	</td>
+								</tr>
 					</table>
 				</div>	
 
@@ -279,33 +287,37 @@ $code:
 							$ sid = bid*8 + s;
 							$ sn = sid + 1
 							$ sbit = (gv.sbits[bid]>>s)&1
-							$ irbit = (gv.sd['ir'][bid]>>s)&1
-				 			$if gv.sd['en'] == 1:
-				 				$ off = (gv.sd['rd']!=0 or (gv.sd['urs']!=0 and gv.sd['rs']!=0)) and not(gv.sd['ir'][bid]&1<<s)
-							<tr>
-								<td class='station'>${snames[sid]}:&nbsp;&nbsp;</td>
-								$if sn == gv.sd['mas']:
-									$if sbit:
-										<td class="master stationOn ${'strike' if off else ''}">On (Master)</td>
-									$else:
-										<td class="master stationOff ${'strike' if off else ''}">Off (Master)</td>
-								$else:
-									$ rem = gv.ps[sid][1]
-									$if rem > 65536:
-										$ rem = 0
-									$ remString = twodigits(rem/60) + ":" + twodigits(rem%60)
-									$ pname = programName(gv.ps[sid][0]);
-									$if sbit:
-										<td class="stationOn"><b>Running ${pname}</b> (${remString} remaining)</td>
-									$else:
-										$if gv.ps[sid][0] == 0:
-											$if not irbit and (gv.sd['rd'] or gv.sd['rs']):
-												<td class="stationDisabled">(rain hold)</td>
-											$else:
-												<td class="stationClosed">(closed)</td>
+							$ show = (gv.sd['show'][bid]>>s)&1
+				 			$if show == 1:
+				 				$ irbit = (gv.sd['ir'][bid]>>s)&1
+				 				$if gv.sd['en'] == 1:
+				 					$ off = (gv.sd['rd']!=0 or (gv.sd['urs']!=0 and gv.sd['rs']!=0)) and not(gv.sd['ir'][bid]&1<<s)
+								<tr>
+									<td class='station'>${snames[sid]}:&nbsp;&nbsp;</td>
+									$if sn == gv.sd['mas']:
+										$if sbit:
+											<td class="master stationOn ${'strike' if off else ''}">On (Master)</td>
 										$else:
-											<td class="stationWaiting">Waiting ${pname} (${remString} scheduled)</td>
-							</tr>
+											<td class="master stationOff ${'strike' if off else ''}">Off (Master)</td>
+									$else:
+										$ rem = gv.ps[sid][1]
+										$if rem > 65536:
+											$ rem = 0
+										$ remString = twodigits(rem/60) + ":" + twodigits(rem%60)
+										$ pname = programName(gv.ps[sid][0]);
+										$if sbit:
+											<td class="stationOn"><b>Running ${pname}</b> (${remString} remaining)</td>
+											$if gv.ps[sid][0] == 0:
+												$if not irbit and (gv.sd['rd'] or gv.sd['rs']):
+													<td class="stationDisabled">(rain hold)</td>
+												$else:
+													<td class="stationClosed">(closed)</td>
+										$else:
+											$if gv.ps[sid][0] == 0:
+												<td class="stationClosed">(closed)</td>
+											$else:
+												<td class="stationWaiting">Waiting ${pname} (${remString} scheduled)</td>
+								</tr>
 					</table>
 				</div>	
 				
