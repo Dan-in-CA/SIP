@@ -19,10 +19,11 @@ $code:
 	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
 	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<style type="text/css">
-		.stationNumber {text-align:center}
-		.stationName {text-align:left}
-		.stationIgnore {text-align:center}	
-		.stationMaster {text-align:center}
+		table {width:100%}
+		td.stationNumber, td.stationShow, td.stationIgnore, td.stationMaster {text-align:center}
+		th.stationShow, th.stationIgnore, th.stationMaster {text-align:center; border-left: 2px solid black}
+		td.stationName {text-align:left; padding-left:1em;}
+		th.stationName {text-align:left; padding-left:1em; border-left: 2px solid black}
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>		
@@ -38,10 +39,10 @@ $code:
 					var s, bid, sid, vm;
 					for (bid=0; bid<nbrd; bid++) {
 						vm = 0;
-						for (s=0; s<=8; s++) {
-							sid = bid*8 + (8-s);
+						for (s=0; s<8; s++) {
+							sid = bid*8 + (7-s);
 							vm = vm<<1;
-							if (sid+1 == mas) {
+							if (sid == mas-1) {
 								vm = vm + 1;
 								continue;
 							}
@@ -52,27 +53,37 @@ $code:
 						jQuery("#m"+bid).val(vm);
 					}
 				}
-				var vi;	
+				var vi, vs;	
 				for (bid=0; bid<nbrd; bid++) {
 					vi = 0;
-					for (s=0; s<=8; s++) {
-						sid = bid*8 + (8-s);
+					vs = 0;
+					for (s=0; s<8; s++) {
+						sid = bid*8 + (7-s);
 						vi = vi<<1;	
-						if (sid+1 == mas) {
+						vs = vs<<1;	
+						if (sid == mas-1) {
 							vi = vi + 1;
+							vs = vs + 1;
 							continue;
 						}
 						if (jQuery("#rc"+sid).is(":checked")) {
 							vi = vi + 1;
 						}	     		
+						if (jQuery("#show"+sid).is(":checked")) {
+							vs = vs + 1;
+						}	     		
 					}
 					jQuery("#i"+bid).val(vi);
+					jQuery("#sh"+bid).val(vs);
 				}
 				jQuery("#sf").submit();
 			});
 			jQuery("button#cResetNames").click(function(){
 				jQuery("input[type='text']").each(function () {
-					jQuery(this).val(jQuery(this).attr("name").toUpperCase());
+					jQuery(this).val("S" + (parseInt(jQuery(this).attr("name").substring(1)) + 1));
+				});
+				jQuery(".stationShow input").each(function () {
+					jQuery(this).prop('checked', true);
 				});
 			});
 			
@@ -101,6 +112,7 @@ $code:
 						<tr>
 							<th class="stationNumber">Station</th>
 							<th class="stationName">Name</th>
+							<th class="stationShow">Connected?</th>
 							<th class="stationIgnore">Ignore Rain?</th>
 							$if gv.sd['mas'] > 0:
 								<th class="stationMaster">Activate Master?</th>
@@ -109,12 +121,15 @@ $code:
 							$for s in range(0,8):
 								$ sid = bid*8 + s;
 								<tr>
-									<td class="stationNumber">${sid+1}</td>
-									$if sid+1 == gv.sd['mas']:
+									<td class="stationNumber">${sid + 1}</td>
+									$if sid == gv.sd['mas'] - 1:
 										<td class="stationMaster" colspan="3">- - - - - - - Master - - - - - - </td>
 									$else:
 										<td class="stationName">
-											<input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid+1}" id="n${sid+1}">
+											<input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid}" id="n${sid}">
+										</td>
+										<td class="stationShow">
+											<input type="checkbox" ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}">
 										</td>
 										<td class="stationIgnore">
 											<input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">
@@ -130,9 +145,9 @@ $code:
 					<p></p>
 					
 					$for bid in range(gv.sd['nbrd']):
-						<input type="hidden" id="m${bid}" name="m${bid}"/>
 						<input type="hidden" id="i${bid}" name="i${bid}"/>
-
+						<input type="hidden" id="sh${bid}" name="sh${bid}"/>
+						<input type="hidden" id="m${bid}" name="m${bid}"/>
 				</form>
 			</div>
 			

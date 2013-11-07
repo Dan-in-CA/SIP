@@ -141,6 +141,7 @@ $code:
 						<b>Run</b>: ${(duration/60>>0)} mins ${(duration%60)} secs.<br>
 
 						<table border="1" cellpadding="3">
+							$ inRow = 4
 							$for bid in range(0,gv.sd['nbrd']):
 								$if len(prog) >= 8 + bid:
 									$ bits = prog[7 + bid]
@@ -148,11 +149,15 @@ $code:
 									$ bits = 0
 								$for s in range(0,8):
 									$ sid = bid*8 + s
-									$if sid % 4 == 0:
-										<tr>
-									<td class="${'progstation_on' if bits&(1<<s) else 'progstation_off'}">${snames[sid]}</td>
-									$if sid % 4 == 3:
-										</tr>
+									$ show = (gv.sd['show'][bid]>>s)&1
+				 					$if show == 1:
+				 						$ inRow = inRow - 1
+				 						$if inRow < 0:
+											<tr>
+										<td class="${'progstation_on' if bits&(1<<s) else 'progstation_off'}">${snames[sid]}</td>
+										$if inRow < 0:
+											</tr>
+											$ inRow = 4
 						</table>
 	 					<button class="cDelete" data="${pid}">Delete</button>
 						<button class="cModify" data="${pid}">Modify</button>
