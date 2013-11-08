@@ -6,8 +6,14 @@ import gv # 'global vars' An empty module, used for storing vars (as attributes)
 
 try:
     import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
+    gv.platform = 'pi'
 except ImportError:
-    pass
+    try:
+        import Adafruit_BBIO.GPIO as GPIO
+        gv.platform = 'bo'
+    except ImportError:
+        print 'No GPIO module was loaded'
+        pass    
 
  #### Revision information ####
 gv.ver = 183
@@ -441,10 +447,19 @@ except NameError:
     pass
 
   #### pin defines ####
-pin_sr_dat = 13
-pin_sr_clk = 7
-pin_sr_noe = 11
-pin_sr_lat = 15
+try:
+    if gv.platform == 'pi':
+        pin_sr_dat = 13
+        pin_sr_clk = 7
+        pin_sr_noe = 11
+        pin_sr_lat = 15
+    elif gv.platform == 'bo':
+        pin_sr_dat = "P9_11"
+        pin_sr_clk = "P9_13"
+        pin_sr_noe = "P9_14"
+        pin_sr_lat = "P9_12"
+except AttributeError:
+    pass    
 
 def enableShiftRegisterOutput():
     try:
@@ -476,7 +491,10 @@ def setShiftRegister(srvals):
         GPIO.output(pin_sr_lat, GPIO.LOW)
         for s in range(gv.sd['nst']):
             GPIO.output(pin_sr_clk, GPIO.LOW)
-            GPIO.output(pin_sr_dat, srvals[gv.sd['nst']-1-s])
+            if srvals[gv.sd['nst']-1-s]:
+                GPIO.output(pin_sr_dat, GPIO.HIGH)
+            else:
+                GPIO.output(pin_sr_dat, GPIO.LOW)
             GPIO.output(pin_sr_clk, GPIO.HIGH)
         GPIO.output(pin_sr_lat, GPIO.HIGH)
     except NameError:
