@@ -178,4 +178,3 @@ Installation and set up
 
 For complete and up-to-date installation and set up instructions, see the Rays Hobby wiki page at:
 http://rayshobby.net/mediawiki/index.php?title=Python_Interval_Program_for_OSPi
->>>>>>> refs/heads/From_JMRemote

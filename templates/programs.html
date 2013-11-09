@@ -143,7 +143,10 @@ $code:
 						<table border="1" cellpadding="3">
 							$ inRow = 4
 							$for bid in range(0,gv.sd['nbrd']):
-								$ bits = prog[bid + 7]
+								$if len(prog) >= 8 + bid:
+									$ bits = prog[7 + bid]
+								$else:
+									$ bits = 0
 								$for s in range(0,8):
 									$ sid = bid*8 + s
 									$ show = (gv.sd['show'][bid]>>s)&1
