@@ -58,37 +58,37 @@ $code:
 		jQuery(document).ready(function(){
 			
 			jQuery("button#cSubmit").click(function(){
-				var errmsg = "", days=[0,0], i, s, sid;
+				var errmsg = "", days = 0, dayInterval = 0, i, s, sid;
 				var en = jQuery("#en_on").is(":checked") ? 1 : 0;
 				// process days
 				if (jQuery("#days_week").is(":checked")) {
 					for (i=0; i<7; i++) {
 						if (jQuery("#d"+i).is(":checked")) {
-							days[0] |= (1<<i);
+							days |= (1<<i);
 						}
 					}
 					if (jQuery("#days_odd").is(":checked")) {
-						days[0] |= 0x80;
-						days[1] = 1;
+						days |= 0x80;
+						dayInterval = 1;
 					}
 					else if (jQuery("#days_even").is(":checked")) {
-						days[0] |= 0x80;
-						days[1] = 0;
+						days |= 0x80;
+						dayInterval = 0;
 					}
 				} else if (jQuery("#days_n").is(":checked")) {
-					days[1] = parseInt(jQuery("#dn").val());
-					if (!(days[1]>=2 && days[1]<=128)) {
+					dayInterval = parseInt(jQuery("#dn").val());
+					if (!(dayInterval>=2 && dayInterval<=128)) {
 						alert("Error: interval days must be between 2 and 128.");
 						return;
 					}
-					days[0] = parseInt(jQuery("#drem").val());
-					if (!(days[0]>=0 && days[0]<days[1])) {
+					days = parseInt(jQuery("#drem").val());
+					if (!(days>=0 && days<dayInterval)) {
 						alert("Error: starting in days wrong.");
 						return;
 					}
-					days[0]|=0x80;
+					days|=0x80;
 				}
-				if (days[0]==0 || (days[1]<2 && (days[0]&0x7f)==0)) {
+				if (days==0 || (dayInterval<2 && (days&0x7f)==0)) {
 					alert("Error: You have not selected any day.");
 					return;
 				}
@@ -140,7 +140,7 @@ $code:
 				if (p != null) {
 					jQuery("form#mf input[name='pw']").val(p);
 					jQuery("form#mf input[name='pid']").val(pid);
-					var v = "[" + en + "," + days[0] + "," + days[1] + "," + start_time + 
+					var v = "[" + en + "," + days + "," + dayInterval + "," + start_time + 
 					                    "," + end_time + "," + interval + "," + duration;
 					for (var i=0; i<nbrd; i++) {
 						v += "," + stations[i];
@@ -175,21 +175,22 @@ $code:
 					jQuery("#en_off").prop("checked", true);
 				}
 				// process days
-				var _days = [prog[1], prog[2]];
-				if ((_days[0]&0x80) && (_days[1]>1)) {
+				var days = prog[1];
+				var dayInterval = prog[2];
+				if ((days&0x80) && (dayInterval>1)) {
 					jQuery("#days_n").prop("checked", true);
-					jQuery("#dn").val(_days[1]);
-					jQuery("#drem").val(_days[0]&0x7f);
+					jQuery("#dn").val(dayInterval);
+					jQuery("#drem").val(days&0x7f);
 				} else {
 					jQuery("#days_week").prop("checked", true);
 					for (var i=0; i<7; i++) {
-						if (_days[0]&(1<<i)) {
+						if (days&(1<<i)) {
 							jQuery("#d"+i).prop("checked", true);}
 						}
-					if ((_days[0]&0x80) && (_days[1]==0))	{
+					if ((days&0x80) && (dayInterval==0))	{
 						jQuery("#days_even").prop("checked", true);
 					}
-					if ((_days[0]&0x80) && (_days[1]==1)) {
+					if ((days&0x80) && (dayInterval==1)) {
 						jQuery("#days_odd").prop("checked", true);
 					}
 				}
