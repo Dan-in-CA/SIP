@@ -181,7 +181,7 @@ $code:
 				sid = jQuery(this).attr("id");
 				sbit = jQuery(this).hasClass("on");
 				if (sbit) {
-					window.location = "/sn"+(sid[0]+1)+"=0"; // turn off station
+					window.location = "/sn"+(sid+1)+"=0"; // turn off station
 				} else {
 					var strmm = jQuery("#mm"+sid).val();
 					var strss = jQuery("#ss"+sid).val();
