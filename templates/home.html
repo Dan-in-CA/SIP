@@ -30,14 +30,13 @@ $code:
 	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<style type="text/css">
 		.bluebg {background-color:lightblue;}
-		.opOn, .stationOn, .wlOn, .rsOff {color:green;}
+		.opOn, .wlOn, .rsOff {color:green;}
 		.opOff, .wlOff, .rsOn {color:red;}
-		.rdOff, .stationOff, {color:black;}
+		.rdOff {color:black;}
 		.rdOn {color:red;}
-		.rsNA, stationWaiting {color:gray;}
-		.stationDisabled {color:gray;}
+		.rsNA, station_waiting {color:gray;}
+		.station_disabled {color:gray;}
 
-		.master {font-weight:bold;}
 		button.manual {width:100px; height:32px; border-radius:8px;}
 		button.manual.on {background-color:#FFCCCC;}
 		button.manual.off {background-color:#CCFFCC;}
@@ -48,11 +47,6 @@ $code:
 		#lastRun {color:gray;}
 		p {margin:0px;}
 		div.body div {margin-top:1em;}
-		table, td {border:1px solid black;}
-		td.station {background-color:#E4E4E4;}
-		td.stationOn {background-color:#CCCCFF;}
-		td.stationOff, td.stationClosed, td.stationWaiting {background-color:#FFCCCC;}
-		td.stationDisabled {background-color:#CCC;}
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>
@@ -106,8 +100,57 @@ $code:
 			setTimeout(updateClock, 500);
 		}
 				
+		function updateStatus(status) {
+			var display, updateInterval = 30000;
+			for (var s=0; s<status.length; s++) {
+				var station = status[s];
+				var classes = "station_" + station.status;
+				switch (station.reason) {
+					case "program" :
+						var minutes = Math.floor(station.remaining/60);
+						var seconds = station.remaining - 60*minutes;
+					    if (minutes < 10) {minutes = "0"+minutes;}
+					    if (seconds < 10) {seconds = "0"+seconds;}
+					    if (station.status == "on") {
+							display = "Running " + station.programName + " (" + minutes+":"+seconds + " remaining)";
+						} else {
+							display = "Waiting " + station.programName + " (" + minutes+":"+seconds + " scheduled)";
+						}
+						updateInterval = 1000;
+						break;
+					case "master" :
+						classes += " master";
+						if (station.status == "on") {
+							display = "On (Master)";
+						} else {
+							display = "Off (Master)"; 
+							classes += " strike";
+						}
+						break;
+					case "rain_delay" :
+						display = "Off (rain delay hold)";
+						break;
+					case "rain_sensed" :
+						display = "Off (rain sensor hold)";
+						break;
+					default:
+						display = "Off";
+				}
+				jQuery("td#status" + station.station)
+					.text(display)
+					.removeClass()
+					.addClass(classes);
+			}
+			setTimeout(statusTimer,updateInterval);
+		}
+		function statusTimer() {
+			jQuery.getJSON("/api/status", updateStatus)
+		}
+				
 		// Initialize behaviors
 		jQuery(document).ready(function(){
+			$if gv.sd['mm'] == 0:
+				statusTimer();
 			jQuery("#heat")
 				.mouseenter(function() {
 					jQuery(this).toggleClass("bluebg",true);
@@ -126,9 +169,6 @@ $code:
 				jQuery("#heat").html((tempunit == "F" ? Math.round(10*(9/5*cputemp+32))/10 : cputemp) + "&deg;" + tempunit);		
 			}
 			
-			jQuery("button#bRefresh").click(function(){
-				window.location = "/";
-			});
 			jQuery("button#bOptions").click(function(){
 				window.location = "/vo";
 			});
@@ -223,7 +263,6 @@ $code:
 		<div class="body">
 		
 			<div id="nav">
-				<button id="bRefresh" class="refresh icon">Refresh</button>
 				<button id="bOptions" class="options icon">Options</button>
 				<button id="bStations" class="stations icon">Stations</button>
 				<button id="bPrograms" class="programs icon">Programs</button>
@@ -243,7 +282,7 @@ $code:
 			$if gv.sd['mm']:			
 				<div id="manualmode">
 					<p><b>Manual Control:</b> (timer is optional)<p></p>
-					<table id="stations">
+					<table id="stations" class="station_list">
 					$# Manual program control formatting
 					$for bid in range(0, gv.sd['nbrd']):
 						$for s in range(0,8):
@@ -253,17 +292,17 @@ $code:
 							$ show = (gv.sd['show'][bid]>>s)&1
 				 			$if show == 1:
 								<tr>
-									<td class='station'>${snames[sid]}:&nbsp;&nbsp;</td>
+									<td class='station_name'>${snames[sid]}</td>
 									$if sn == gv.sd['mas']:
 										$if sbit:
-											<td class="master stationOn ${'strike' if off else ''}">On (Master)</td>
+											<td class="master station_on">On (Master)</td>
 										$else:
-											<td class="master stationOff ${'strike' if off else ''}">Off (Master)</td>
+											<td class="master station_off">Off (Master)</td>
 									$else:
 										$ rem = gv.ps[sid][1]
 										$if rem > 65536:
 											$ rem = 0
-										<td class="stationRunning">
+										<td class="station_running">
 											<button class='manual ${'on' if sbit else 'off'}' id='${sid}'>Turn ${'off' if sbit else 'on'}</button> ${'in' if sbit else 'for'}
 									  		<input type='text' id='mm${sid}' size='2' maxlength='3' value='${twodigits(rem/60)}'/>: 
 									  		<input type='text' id='ss${sid}' size='2' maxlength='2' value='${twodigits(rem%60)}'/> (mm:ss)
@@ -280,43 +319,16 @@ $code:
 						<button id="pRunOnce" class="start icon">Run-Once Program</button>
 					</div>
 					<p><b>Station Status</b>:</p>
-					<table id="stations">
-					$# Program display formatting
+					<table id="stations" class="station_list">
 					$for bid in range(0, gv.sd['nbrd']):
 						$for s in range(0,8):
 							$ sid = bid*8 + s;
 							$ sn = sid + 1
-							$ sbit = (gv.sbits[bid]>>s)&1
 							$ show = (gv.sd['show'][bid]>>s)&1
 				 			$if show == 1:
-				 				$ irbit = (gv.sd['ir'][bid]>>s)&1
-				 				$if gv.sd['en'] == 1:
-				 					$ off = (gv.sd['rd']!=0 or (gv.sd['urs']!=0 and gv.sd['rs']!=0)) and not(gv.sd['ir'][bid]&1<<s)
-								<tr>
-									<td class='station'>${snames[sid]}:&nbsp;&nbsp;</td>
-									$if sn == gv.sd['mas']:
-										$if sbit:
-											<td class="master stationOn ${'strike' if off else ''}">On (Master)</td>
-										$else:
-											<td class="master stationOff ${'strike' if off else ''}">Off (Master)</td>
-									$else:
-										$ rem = gv.ps[sid][1]
-										$if rem > 65536:
-											$ rem = 0
-										$ remString = twodigits(rem/60) + ":" + twodigits(rem%60)
-										$ pname = programName(gv.ps[sid][0]);
-										$if sbit:
-											<td class="stationOn"><b>Running ${pname}</b> (${remString} remaining)</td>
-											$if gv.ps[sid][0] == 0:
-												$if not irbit and (gv.sd['rd'] or gv.sd['rs']):
-													<td class="stationDisabled">(rain hold)</td>
-												$else:
-													<td class="stationClosed">(closed)</td>
-										$else:
-											$if gv.ps[sid][0] == 0:
-												<td class="stationClosed">(closed)</td>
-											$else:
-												<td class="stationWaiting">Waiting ${pname} (${remString} scheduled)</td>
+				 				<tr>
+									<td class='station_name'>${snames[sid]}</td>
+									<td id='status${sid}' class="station_loading">loading...</td>
 								</tr>
 					</table>
 				</div>	

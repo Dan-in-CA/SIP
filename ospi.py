@@ -53,6 +53,7 @@ urls = [
     '/rp', 'run_now',
     '/ttu', 'toggle_temp',
     '/rev', 'show_revision',
+    '/api/status', 'api_status'
     ]
 
   #### Import ospi_addon module (ospi_addon.py) if it exists. ####
@@ -954,6 +955,61 @@ class toggle_temp:
             gv.sd['tu'] = "C"
         jsave(gv.sd, 'sd')    
         raise web.seeother('/')
+
+class api_status:
+    """Simple Status API"""
+    def GET(self):
+        statuslist = []
+        for bid in range(0, gv.sd['nbrd']):
+            for s in range(0,8):
+                if (gv.sd['show'][bid]>>s)&1 == 1:
+                    sid = bid*8 + s
+                    sn = sid + 1
+                    sbit = (gv.sbits[bid]>>s)&1
+                    irbit = (gv.sd['ir'][bid]>>s)&1
+                    status = {'station' : sid, 'status' : 'disabled', 'reason' : '', 'master' : 0, 'programName' : '', 'remaining' : 0}
+                    if gv.sd['en'] == 1:
+                        if sbit:
+                            status['status'] = 'on'
+                        if irbit:
+                            if gv.sd['rd'] != 0:
+                                status['reason'] = 'rain_delay'
+                            if gv.sd['urs'] != 0 and gv.sd['rs'] != 0:
+                                status['reason'] = 'rain_sensed'
+                        if sn == gv.sd['mas']:
+                            status['master'] = 1
+                            status['reason'] = 'master'
+                        else:
+                            rem = gv.ps[sid][1]
+                            if rem > 65536:
+                                rem = 0
+                            
+                            id = gv.ps[sid][0]
+                            pname = 'P' + str(id)
+                            if (id == 255 or id == 99):
+                                pname = 'Manual Mode'
+                            if (id == 254 or id == 98):
+                                pname = 'Run-once Program'
+                            
+                            if sbit:
+                                status['status'] = 'on'
+                                status['reason'] = 'program'
+                            	status['programName'] = pname
+                                status['remaining'] = rem
+                            else:
+                                if gv.ps[sid][0] == 0:
+                                    status['status'] = 'off'
+                                else:
+                                    status['status'] = 'waiting'
+                                    status['reason'] = 'program'
+                                    status['programName'] = pname
+                                    status['remaining'] = rem
+                    else:
+                        status['reason'] = 'system_off'
+                    statuslist.append(status)
+        web.header('Content-Type', 'application/json')
+        return json.dumps(statuslist)
+
 
 class OSPi_app(web.application):
     """Allow program to select HTTP port."""
