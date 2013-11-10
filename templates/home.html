@@ -218,7 +218,7 @@ $code:
 			});
 			
 			jQuery("button.manual").click(function () {
-				sid = jQuery(this).attr("id");
+				sid = parseInt(jQuery(this).attr("id"));
 				sbit = jQuery(this).hasClass("on");
 				if (sbit) {
 					window.location = "/sn"+(sid+1)+"=0"; // turn off station
