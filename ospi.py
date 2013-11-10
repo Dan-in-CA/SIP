@@ -487,7 +487,8 @@ def disableShiftRegisterOutput():
 try:
     GPIO.cleanup()
   #### setup GPIO pins to interface with shift register ####
-    GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
+    if gv.platform == 'pi':
+        GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
     GPIO.setup(pin_sr_clk, GPIO.OUT)
     GPIO.setup(pin_sr_noe, GPIO.OUT)
     disableShiftRegisterOutput()
