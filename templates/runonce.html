@@ -37,8 +37,8 @@ $code:
 					}
 					strmm = jQuery("input[name='mm" + sid + "']").val();
 					strss = jQuery("input[name='ss" + sid + "']").val();
-					mm = (strmm=="" ? 0 : parseInt(strmm));
-					ss = (strss=="" ? 0 : parseInt(strss));
+					mm = (strmm=="" || strmm==undefined ? 0 : parseInt(strmm));
+					ss = (strss=="" || strss==undefined ? 0 : parseInt(strss));
 					if (!(mm >= 0 && ss >= 0 && ss < 60)) {
 						alert("Timer values wrong: " + strmm + ":" + strss);
 						return;

@@ -56,6 +56,13 @@ button.stations		{background-image: url('icons/svc_edit.png');}
 button.stop			{background-image: url('icons/svc_stop.png');}
 button.submit		{background-image: url('icons/svc_submit.png');}
 
+table.station_list, td {border:1px solid black;}
+td.station_name {background-color:#E4E4E4;}
+td.station_on {background-color:#CCCCFF; color:green;}
+td.station_off, td.station_loading {background-color:#FFCCCC;}
+td.station_waiting {background-color:#FFCCCC;}
+td.station_disabled {background-color:#CCC;}
+
 #overlay {
 	 display:none;
 	 position: absolute;

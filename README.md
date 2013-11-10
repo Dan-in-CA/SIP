@@ -12,6 +12,12 @@ UPDATES
 ===========
 ***********
 
+November 9 2013
+--------------
+(Jonathan)<br/>
+1. Made home page station status dynamic
+2. Added simple status API.
+
 November 3 2013
 --------------
 (Jonathan)<br/>
