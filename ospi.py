@@ -17,7 +17,7 @@ try:
     gv.platform = 'pi'
 except ImportError:
     try:
-        import Adafruit_BBIO.GPIO as GPIO
+        import Adafruit_BBIO.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Beagle Bone Black
         gv.platform = 'bo'
     except ImportError:
         print 'No GPIO module was loaded'
@@ -76,6 +76,18 @@ def baseurl():
     """Return URL app is running under.""" 
     baseurl = web.ctx['home']
     return baseurl
+
+def check_rain():
+    if gv.sd['rst'] == 0:
+        if GPIO.input(pin_rain_sense):
+            gv.sd['rs'] = 1
+        else:
+            gv.sd['rs'] = 0  
+    elif gv.sd['rst'] == 1:
+        if not GPIO.input(pin_rain_sense):
+            gv.sd['rs'] = 1
+        else:
+            gv.sd['rs'] = 0       
 
 def clear_mm():
     """Clear manual mode settings."""
@@ -323,6 +335,9 @@ def timing_loop():
                 if not mval:
                     gv.rs[gv.sd['mas']-1][1] = gv.now # turn off master
                     
+        if gv.sd['urs']:
+            check_rain()
+            
         if gv.sd['rd'] and gv.now>= gv.sd['rdst']: # Check of rain delay time is up          
             gv.sd['rd'] = 0
             gv.sd['rdst'] = 0 # Rain delay stop time
@@ -408,7 +423,7 @@ def to_sec(d=0, h=0, m=0, s=0):
   #### Global vars #####
   
 #Settings Dictionary. A set of vars kept in memory and persisted in a file.
-#Edit this default dictionary definition to add or remove key-value pairs or change defaults.
+#Edit this default dictionary definition to add or remove "key": "value" pairs or change defaults.
 gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
             "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
             "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
@@ -470,6 +485,8 @@ try:
         pin_sr_clk = "P9_13"
         pin_sr_noe = "P9_14"
         pin_sr_lat = "P9_12"
+        pin_rain_sense = "P9_15"
+        pin_relay = "P9_16"
 except AttributeError:
     pass    
 
@@ -487,13 +504,16 @@ def disableShiftRegisterOutput():
         pass
 try:
     GPIO.cleanup()
-  #### setup GPIO pins to interface with shift register ####
-    GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
+  #### setup GPIO pins as output or input ####
+    if gv.platform == 'pi':
+        GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
     GPIO.setup(pin_sr_clk, GPIO.OUT)
     GPIO.setup(pin_sr_noe, GPIO.OUT)
     disableShiftRegisterOutput()
     GPIO.setup(pin_sr_dat, GPIO.OUT)
     GPIO.setup(pin_sr_lat, GPIO.OUT)
+    GPIO.setup(pin_relay, GPIO.OUT)
+    GPIO.setup(pin_rain_sense, GPIO.IN)
 except NameError:
     pass     
 

@@ -12,10 +12,17 @@ UPDATES
 ===========
 ***********
 
+November 11 2013
+--------------
+(Dan)
+1. Fixed a bug in manual mode.<br/>
+2. Updated ospi.py to allow it to run on both RasPi and BBB platforms.<br/>
+3. Added Rain sensor functionality for BBB.
+
 November 9 2013
 --------------
 (Jonathan)<br/>
-1. Made home page station status dynamic
+1. Made home page station status dynamic<br/>
 2. Added simple status API.
 
 November 3 2013

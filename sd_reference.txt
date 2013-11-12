@@ -15,7 +15,7 @@ mtoff:0	master off delay
 nbrd:1	number of boards
 tz:16	time zone
 urs:0	use rain sensor (bool)
-rst:1	Rain sensor type (normaly open=1 (dafault), or normaly closed=0) - not used
+rst:1	Rain sensor type (normaly open=1 (dafault), or normaly closed=0)
 wl:100	water level (percent adjustment of watering time)
 mas:0	master station index
 ipas:1	ignore passwprd (bool)
