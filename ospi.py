@@ -1,20 +1,36 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
-import re, os, json, time, base64, thread # standard Python modules
+import re, os, time, base64, thread, sys # standard Python modules
+try:
+    import json
+except ImportError:
+    import simplejson as json
+except:
+    print "Error: json module not found"
+    sys.exit()
+
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
 
 try:
     import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
+    gv.platform = 'pi'
 except ImportError:
-    pass
+    try:
+        import Adafruit_BBIO.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Beagle Bone Black
+        gv.platform = 'bo'
+    except ImportError:
+        print 'No GPIO module was loaded'
+        pass
+    
+web.config.debug = False      
 
  #### Revision information ####
 gv.ver = 183
-gv.rev = 140
-gv.rev_date = '21/October/2013'
+gv.rev = 141
+gv.rev_date = '30/October/2013'
 
- #### urls is a feature of web.py. When a GET request is received , the corresponding class is executed.
+ #### urls is a feature of web.py. When a GET request is received, the corresponding class is executed.
 urls = [
     '/',  'home',
     '/cv', 'change_values',
@@ -59,6 +75,18 @@ def baseurl():
     """Return URL app is running under.""" 
     baseurl = web.ctx['home']
     return baseurl
+
+def check_rain():
+    if gv.sd['rst'] == 0:
+        if GPIO.input(pin_rain_sense):
+            gv.sd['rs'] = 1
+        else:
+            gv.sd['rs'] = 0  
+    elif gv.sd['rst'] == 1:
+        if not GPIO.input(pin_rain_sense):
+            gv.sd['rs'] = 1
+        else:
+            gv.sd['rs'] = 0       
 
 def clear_mm():
     """Clear manual mode settings."""
@@ -166,6 +194,7 @@ def schedule_stations(stations):
     return
 
 def stop_onrain():
+    """Stop stations that do not ignore rain."""
     for b in range(gv.sd['nbrd']):
         for s in range(8):
             sid = b*8 + s # station index
@@ -180,6 +209,7 @@ def stop_onrain():
     return
 
 def stop_stations():
+        """Stop all running stations, clear schedules."""
         gv.srvals = [0]*(gv.sd['nst'])
         set_output()            
         gv.ps = []
@@ -192,8 +222,8 @@ def stop_stations():
         gv.sd['bsy'] = 0
         return
 
-def timing_loop(): # Runs in a separate thread
-    """ ***** Main timing algorithm.***** """
+def timing_loop():
+    """ ***** Main timing algorithm. Runs in a separate thread.***** """
     print 'Starting timing loop \n'
     last_min = 0
     while True: # infinite loop
@@ -304,6 +334,9 @@ def timing_loop(): # Runs in a separate thread
                 if not mval:
                     gv.rs[gv.sd['mas']-1][1] = gv.now # turn off master
                     
+        if gv.sd['urs']:
+            check_rain()
+            
         if gv.sd['rd'] and gv.now>= gv.sd['rdst']: # Check of rain delay time is up          
             gv.sd['rd'] = 0
             gv.sd['rdst'] = 0 # Rain delay stop time
@@ -341,7 +374,7 @@ def jsave(data, fname):
     f.close()
 
 def load_programs():
-    """Load program data from json file if it exists into memory, otherwise create an empty programs var."""
+    """Load program data from json file, if it exists, into memory, otherwise create an empty programs var."""
     try:
         pf = open('./data/programs.json', 'r')
         gv.pd = json.load(pf)
@@ -389,7 +422,7 @@ def to_sec(d=0, h=0, m=0, s=0):
   #### Global vars #####
   
 #Settings Dictionary. A set of vars kept in memory and persisted in a file.
-#Edit this default dictionary definition to add or remove key-value pairs or change defaults.
+#Edit this default dictionary definition to add or remove "key": "value" pairs or change defaults.
 gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
             "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
             "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
@@ -404,10 +437,9 @@ try:
         if key in sd_temp:
             gv.sd[key] = sd_temp[key]
 except IOError: # If file does not exist, it will be created created using defaults.
-    pass
-sdf = open('./data/sd.json', 'w') # save file
-json.dump(gv.sd, sdf)
-sdf.close()
+    sdf = open('./data/sd.json', 'w') # save file
+    json.dump(gv.sd, sdf)
+    sdf.close()
 
 gv.now = time.time()+((gv.sd['tz']/4)-12)*3600
 
@@ -441,10 +473,21 @@ except NameError:
     pass
 
   #### pin defines ####
-pin_sr_dat = 13
-pin_sr_clk = 7
-pin_sr_noe = 11
-pin_sr_lat = 15
+try:
+    if gv.platform == 'pi':
+        pin_sr_dat = 13
+        pin_sr_clk = 7
+        pin_sr_noe = 11
+        pin_sr_lat = 15
+    elif gv.platform == 'bo':
+        pin_sr_dat = "P9_11"
+        pin_sr_clk = "P9_13"
+        pin_sr_noe = "P9_14"
+        pin_sr_lat = "P9_12"
+        pin_rain_sense = "P9_15"
+        pin_relay = "P9_16"
+except AttributeError:
+    pass    
 
 def enableShiftRegisterOutput():
     try:
@@ -460,13 +503,16 @@ def disableShiftRegisterOutput():
         pass
 try:
     GPIO.cleanup()
-  #### setup GPIO pins to interface with shift register ####
-    GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
+  #### setup GPIO pins as output or input ####
+    if gv.platform == 'pi':
+        GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
     GPIO.setup(pin_sr_clk, GPIO.OUT)
     GPIO.setup(pin_sr_noe, GPIO.OUT)
     disableShiftRegisterOutput()
     GPIO.setup(pin_sr_dat, GPIO.OUT)
     GPIO.setup(pin_sr_lat, GPIO.OUT)
+    GPIO.setup(pin_relay, GPIO.OUT)
+    GPIO.setup(pin_rain_sense, GPIO.IN)
 except NameError:
     pass     
 
@@ -476,7 +522,10 @@ def setShiftRegister(srvals):
         GPIO.output(pin_sr_lat, GPIO.LOW)
         for s in range(gv.sd['nst']):
             GPIO.output(pin_sr_clk, GPIO.LOW)
-            GPIO.output(pin_sr_dat, srvals[gv.sd['nst']-1-s])
+            if srvals[gv.sd['nst']-1-s]:
+                GPIO.output(pin_sr_dat, GPIO.HIGH)
+            else:
+                GPIO.output(pin_sr_dat, GPIO.LOW)
             GPIO.output(pin_sr_clk, GPIO.HIGH)
         GPIO.output(pin_sr_lat, GPIO.HIGH)
     except NameError:
@@ -608,7 +657,7 @@ class change_options:
         if qdict.has_key('owl'):
             gv.sd['wl'] = int(qdict['owl'])
                 
-        if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == '1'):
+        if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == ''):
           gv.sd['urs'] = 1
         else:
           gv.sd['urs'] = 0
@@ -636,17 +685,15 @@ class change_options:
         jsave(gv.sd, 'sd')
         
         raise web.seeother('/')
-        #alert = '<script>alert("Options values saved.");window.location="/";</script>'
-        return #alert # -- Alerts are not considered good interface progrmming. Use sparingly!
+        return
 
     def update_scount(self, qdict):
-        """Increase or decrease the number of stations shown when expansion boards are added in options."""
+        """Increase or decrease the number of stations displayed when number of expansion boards is changed options."""
         if int(qdict['onbrd'])+1 > gv.sd['nbrd']: # Lengthen lists
             incr = int(qdict['onbrd']) - (gv.sd['nbrd']-1)
             for i in range(incr):
                 gv.sd['mo'].append(0)
-            for i in range(incr):
-                gv.sd['ir'].append(0)    
+                gv.sd['ir'].append(0)
             snames = data('snames')
             nlst = re.findall('[\'"].*?[\'"]', snames)
             ln = len(nlst)
@@ -690,7 +737,7 @@ class view_stations:
         return stationpg
 
 class change_stations:
-    """Save changes to station names and master associations."""
+    """Save changes to station names, ignore rain and master associations."""
     def GET(self):
         qdict = web.input()
         approve_pwd(qdict)
@@ -707,11 +754,11 @@ class change_stations:
                     gv.sd['ir'][i] = 0        
         names = '['
         for i in range(gv.sd['nst']):
-            if qdict.has_key('s'+str(i)): # This is to work around a bug introduced during UI changes 10/13
+            if qdict.has_key('s'+str(i)):
                 names += "'" + qdict['s'+str(i)] + "',"
             else:
                 names += "'S0"+str(i+1) + "',"   
-        names += ']'             
+        names += ']'
         save('snames', names.encode('ascii', 'backslashreplace'))
         jsave(gv.sd, 'sd')
         raise web.seeother('/')
@@ -869,7 +916,7 @@ class delete_program:
         return
                           
 class graph_programs:
-    """Open page to display program schedule"""
+    """Open page to display program schedule."""
     def GET(self):
         qdict = web.input()
         t = gv.now
