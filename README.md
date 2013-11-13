@@ -12,6 +12,11 @@ UPDATES
 ===========
 ***********
 
+November 12 2013
+--------------
+(Dan)<br/>
+Modified program to run on either OSPi or OSBo 
+
 October 16 2013
 --------------
 (Dan)<br/>
