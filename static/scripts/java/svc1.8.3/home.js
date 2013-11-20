@@ -32,8 +32,10 @@ if(ver>=100) w("<b>Firmware version</b>: "+(ver/100>>0)+"."+((ver/10>>0)%10)+"."
 else w("<b>Firmware version</b>: "+(ver/10>>0)+"."+(ver%10)+"<br>");
 w("<b>Device time</b>: "+datestr(devt*1000)+"<br>");
 
-if (typeof cputemp === 'undefined') cputemp="";
+//if (typeof cputemp === 'undefined') cputemp="";
+if ((typeof cputemp !== 'undefined') && cputemp !== 0.0) {
 w("<b>CPU Temp</b>: <span id='heat' onmouseover='bluebg(this)' onmouseout='nobg(this)' style='cursor:pointer' onclick='toggle(tt)' title='Click to toggle Celsius <> Fahrenheit'>"+cputemp+"&deg;"+tempunit+"</span><hr>");
+}
 w("<script type=\"text/javascript\" src=\""+baseurl+"/static/scripts/java/svc1.8.3/"+((sd['mm'])?"manualmode.js":"progmode.js")+"\"></script>");
 // print status and other information
 w("<br><b>Operation</b>: "+(sd['en']?("on").fontcolor("green"):("OFF").fontcolor("red")));
