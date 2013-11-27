@@ -77,16 +77,19 @@ def baseurl():
     return baseurl
 
 def check_rain():
-    if gv.sd['rst'] == 0:
-        if GPIO.input(pin_rain_sense):
-            gv.sd['rs'] = 1
-        else:
-            gv.sd['rs'] = 0  
-    elif gv.sd['rst'] == 1:
-        if not GPIO.input(pin_rain_sense):
-            gv.sd['rs'] = 1
-        else:
-            gv.sd['rs'] = 0       
+    try:
+        if gv.sd['rst'] == 0:
+            if GPIO.input(pin_rain_sense):
+                gv.sd['rs'] = 1
+            else:
+                gv.sd['rs'] = 0  
+        elif gv.sd['rst'] == 1:
+            if not GPIO.input(pin_rain_sense):
+                gv.sd['rs'] = 1
+            else:
+                gv.sd['rs'] = 0
+    except NameError:
+        pass                 
 
 def clear_mm():
     """Clear manual mode settings."""
