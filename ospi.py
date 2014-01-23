@@ -23,10 +23,10 @@ except ImportError:
         print 'No GPIO module was loaded'
         pass
     
-web.config.debug = False      
+web.config.debug = True      
 
  #### Revision information ####
-gv.ver = 183
+gv.ver = 190
 gv.rev = 141
 gv.rev_date = '30/October/2013'
 
@@ -46,14 +46,15 @@ urls = [
     '/mp', 'modify_program',
     '/cp', 'change_program',
     '/dp', 'delete_program',
-    '/gp', 'graph_programs',
     '/vl', 'view_log',
     '/cl', 'clear_log',
     '/lo', 'log_options',
     '/rp', 'run_now',
     '/ttu', 'toggle_temp',
     '/rev', 'show_revision',
-    '/api/status', 'api_status'
+    '/wl', 'water_log',
+    '/api/status', 'api_status',
+    '/api/log', 'api_log'
     ]
 
   #### Import ospi_addon module (ospi_addon.py) if it exists. ####
@@ -111,29 +112,34 @@ def CPU_temperature():
     except:
         pass
 
+def timestr(t):
+     return str((t/60>>0)/10>>0) + str((t/60>>0)%10) + ":" + str((t%60>>0)/10>>0) + str((t%60>>0)%10)
+
 def log_run():
     """add run data to csv file - most recent first."""
     if gv.sd['lg']:
-        snames = data('snames')
-        zones=re.findall(r"\'(.+?)\'",snames)
         if gv.lrun[1] == 98:
             pgr = 'Run-once'
         elif gv.lrun[1] == 99:
             pgr = 'Manual'
         else:
             pgr = str(gv.lrun[1])
-        datastr = (pgr +', '+str(zones[gv.lrun[0]])+', '+str(gv.lrun[2]/60)+'m'+str(gv.lrun[2]%60)+
-                   's, '+time.strftime("%H:%M:%S, %a. %d %b %Y", time.gmtime(gv.now))+'\n')
-        f = open('./static/log/water_log.csv', 'r')
-        log = f.readlines()
-        f.close()
-        log.insert(1, datastr)
-        f = open('./static/log/water_log.csv', 'w') 
+        
+        start = time.gmtime(gv.now - gv.lrun[2])
+        logline = '{"program":"' + pgr + '","station":' + str(gv.lrun[0]) + ',"duration":"' + timestr(gv.lrun[2]) + '","start":"' + time.strftime('%H:%M:%S","date":"%Y-%m-%d"', start) + '}\n'
+        try:
+            f = open('./data/log.json', 'r')
+            log = f.readlines()
+            f.close()
+            log.insert(0, logline)
+        except IOError:
+            log = [logline]
+        f = open('./data/log.json', 'w')
         if gv.sd['lr']:
-            f.writelines(log[:gv.sd['lr']+1])
+            f.writelines(log[:gv.sd['lr']])
         else:
             f.writelines(log)
-        f.close  
+        f.close()
     return  
 
 def prog_match(prog):
@@ -159,7 +165,7 @@ def prog_match(prog):
 
 def schedule_stations(stations):
     """Schedule stattions/valves/zones to run."""
-    if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']): # If rain delay or rain detected by sensor
+    if gv.sd['rd']!=0 or (gv.sd['urs'] and gv.sd['rs']): # If rain delay or rain detected by sensor
         rain = True
     else:
         rain = False
@@ -338,7 +344,7 @@ def timing_loop():
         if gv.sd['urs']:
             check_rain()
             
-        if gv.sd['rd'] and gv.now>= gv.sd['rdst']: # Check of rain delay time is up          
+        if gv.sd['rd'] > 0 and gv.now >= gv.sd['rdst']: # Check of rain delay time is up          
             gv.sd['rd'] = 0
             gv.sd['rdst'] = 0 # Rain delay stop time
             jsave(gv.sd, 'sd')
@@ -429,7 +435,7 @@ gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst":
             "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
             "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
             "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
-            "snlen":32, "name":u"OpenSprinkler Pi","theme":"original","show":[255]})
+            "snlen":32, "name":u"OpenSprinkler Pi","theme":"basic","show":[255]})
 try:
     sdf = open('./data/sd.json', 'r') ## A config file ##
     sd_temp = json.load(sdf) 
@@ -539,8 +545,9 @@ class home:
     """Open Home page."""
     def GET(self):
         gv.baseurl = baseurl()
+        gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
-        return render.home(CPU_temperature())
+        return render.home()
 
 class change_values:
     """Save controller values, return browser to home page."""
@@ -556,11 +563,14 @@ class change_values:
         elif qdict.has_key('en') and qdict['en'] == '0':
             gv.srvals = [0]*(gv.sd['nst']) # turn off all stations
             set_output()
-        if qdict.has_key('mm') and qdict['mm'] == '0': clear_mm()
+        if qdict.has_key('mm') and qdict['mm'] == '0':
+        	clear_mm()
         if qdict.has_key('rd') and qdict['rd'] != '0' and qdict['rd'] != '':
-            gv.sd['rdst'] = (gv.now+(int(qdict['rd'])*3600))
+            gv.sd['rd'] = float(qdict['rd'])
+            gv.sd['rdst'] = gv.now + gv.sd['rd']*3600 + 1 # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
             stop_onrain()
-        elif qdict.has_key('rd') and qdict['rd'] == '0': gv.sd['rdst'] = 0   
+        elif qdict.has_key('rd') and qdict['rd'] == '0':
+        	gv.sd['rdst'] = 0   
         if qdict.has_key('rbt') and qdict['rbt'] == '1':
             jsave(gv.sd, 'sd')
             gv.srvals = [0]*(gv.sd['nst'])
@@ -580,7 +590,8 @@ class view_options:
     """Open the options page for viewing and editing."""
     def GET(self):
         gv.baseurl = baseurl()
-        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
+        gv.cputemp = CPU_temperature()
+        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data})
         return render.options()
 
 class change_options:
@@ -700,6 +711,7 @@ class view_stations:
     """Open a page to view and edit a run once program."""
     def GET(self):
         gv.baseurl = baseurl()
+        gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
         return render.stations()
 
@@ -777,6 +789,7 @@ class view_runonce:
     """Open a page to view and edit a run once program."""
     def GET(self):
         gv.baseurl = baseurl()
+        gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
         return render.runonce()
 
@@ -809,6 +822,7 @@ class view_programs:
     """Open programs page."""
     def GET(self):
         gv.baseurl = baseurl()
+        gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
         return render.programs()
                 
@@ -828,6 +842,7 @@ class modify_program:
             prog = str(mp).replace(' ', '')
         
         gv.baseurl = baseurl()
+        gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
         return render.modify(pid, prog)
         
@@ -878,47 +893,33 @@ class delete_program:
         raise web.seeother('/vp')
         return
                           
-class graph_programs:
-    """Open page to display program schedule."""
-    def GET(self):
-        qdict = web.input()
-        t = gv.now
-        lt = time.gmtime(t)
-        if qdict['d'] == '0': dd = str(lt.tm_mday)
-        else: dd = str(qdict['d'])
-        if qdict.has_key('m'): mm = str(qdict['m'])
-        else: mm = str(lt.tm_mon)
-        if qdict.has_key('y'): yy = str(qdict['y'])
-        else: yy = str(lt.tm_year)
-        devday = int(t/86400)
-        devmin = (lt.tm_hour*60) + lt.tm_min
-        gv.baseurl = baseurl()
-        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
-        return render.schedule(yy, mm, dd, devday, devmin)
-
 class view_log:
-    def __init__(self):
-        gv.baseurl = baseurl()
-        self.render = web.template.render('templates', globals={'gv': gv})
- 
+    """View Log"""
     def GET(self):
-        logf = open('static/log/water_log.csv')
+        logf = open('data/log.json')
         records = logf.readlines()
         logf.close()
-        data = []
+        snames = data('snames')
+        zones = re.findall(r"\'(.+?)\'",snames)
+
         for r in records:
-            t = r.split(', ')
-            t[1] = t[1].decode('unicode-escape')
-            data.append(t)    
-        return self.render.log(data)
+            event = json.loads(r)
+            try:
+                event["program"] = zones[int(event["program"])].decode('unicode-escape')
+            except ValueError:
+                pass
+        gv.baseurl = baseurl()
+        gv.cputemp = CPU_temperature()
+        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data, 'json': json })
+        return render.log(records)
 
 class clear_log:
     """Delete all log records"""
     def GET(self):
         qdict = web.input()
         approve_pwd(qdict)
-        f = open('./static/log/water_log.csv', 'w')
-        f.write('Program, Zone, Duration, Finish Time, Date'+'\n')
+        f = open('./data/log.json', 'w')
+        f.write('')
         f.close
         raise web.seeother('/vl')
 
@@ -1030,6 +1031,41 @@ class api_status:
         web.header('Content-Type', 'application/json')
         return json.dumps(statuslist)
 
+class api_log:
+    """Simple Log API"""
+    def GET(self):
+        qdict = web.input()
+
+        try:
+            logf = open('data/log.json')
+            records = logf.readlines()
+            logf.close()
+        except IOError:
+            records = []
+        data = []
+        
+        for r in records:
+            event = json.loads(r)
+            if not(qdict.has_key('date')) or event["date"] == qdict['date']:
+                data.append(event)
+ 
+        web.header('Content-Type', 'application/json')
+        return json.dumps(data)
+
+class water_log:
+    """Simple Log API"""
+    def GET(self):
+        logf = open('data/log.json')
+        records = logf.readlines()
+        logf.close()
+
+        data = "Program, Zone, Start Time, Duration, Date\n"
+        for r in records:
+            event = json.loads(r)
+            data += event["program"] + ", " + str(event["station"]) + ", " + event["start"] + ", " + event["duration"] + ", " + event["date"] + "\n"
+ 
+        web.header('Content-Type', 'text/csv')
+        return data
 
 class OSPi_app(web.application):
     """Allow program to select HTTP port."""

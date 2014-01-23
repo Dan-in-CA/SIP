@@ -1,39 +1,41 @@
+/* color palette:
+ - green: #32A620
+ - darkgreen: #397F19
+ - tan: #F7F1CD
+ - rust: #7D1921
+ - navy: #2E3959
+*/
+@import url(http://fonts.googleapis.com/css?family=Quicksand:300,400,700);
+
 body {
 	margin:0px;
-	background-color:#8A8;
-	font-family: sans-serif;
-	font-size:11pt;
+	padding:0px;
+	background-color:#397F19;
+	font-family: 'Helvetica', sans-serif;
+	font-size:12pt;
 }
+div, p {
+	margin:0px;
+}
+
+/******** Overall Layout Styles **********/
 
 div.header {
 	background-image: url('logo.png');
-	background-color: #484;
 	background-repeat: no-repeat;
-	background-position: 450px center;
-	height:72px;
+	background-position: 42px 20px;
+	background-color: #32A620;
+	height:80px;
 }
-
-div.footer {
-	background-color: #484;
-	height: 36px;
-}
-
-div.content {
-	width:640px;
-	margin:auto;
-	background-color:white;
-}
-
-div.body {
-	margin:0.5em;
-}
-
 
 div.header div.title {
-	font-size: 16pt;
+	font-family: 'Quicksand', sans-serif;
+	font-size: 24pt;
+	text-transform:uppercase;
+	text-align:right;
 	color:white;
-	padding-top:30px;
-	padding-left:8px;
+	padding-top:35px;
+	padding-right:16px;
 }
 
 div.header div.titlenote {
@@ -42,42 +44,424 @@ div.header div.titlenote {
 	padding-left:8px;
 }
 
-button.icon {
-	padding: 3px 6px 3px 30px;
-	background-color: #EEE;
+div.footer {
+	background-image: url(grass.png);
+	background-position: top right -200px;
 	background-repeat: no-repeat;
-	background-position: 4px center;
-	background-size: 20px;
+	background-color: #32A620;
+	color:white;
+	text-align: right;
+	padding: 16px 170px;
+	font-size:9pt;
+	clear: both;
 }
 
-#nav button {height:24px;}
-#controls button {height:36px;}
+div.content {
+	background-color: #FCFAEB;
+	color:black;
+}
 
-button.add			{background-image: url('icons/svc_addall.png');}
-button.auto			{background-image: url('icons/svc_auto.png');}
-button.back			{background-image: url('icons/svc_back.png');}
-button.cancel		{background-image: url('icons/svc_delall.png');}
-button.delete		{background-image: url('icons/svc_del.png');}
-button.deleteAll	{background-image: url('icons/svc_delall.png');}
-button.log			{background-image: url('icons/svc_log.png');}
-button.man			{background-image: url('icons/svc_manual.png');}
-button.preview		{background-image: url('icons/svc_preview.png');}
-button.programs		{background-image: url('icons/svc_cal.png');}
-button.options		{background-image: url('icons/svc_options.png');}
-button.rain			{background-image: url('icons/svc_rain.png');}
-button.reboot		{background-image: url('icons/svc_reboot.png');}
-button.refresh		{background-image: url('icons/svc_reset.png');}
-button.start		{background-image: url('icons/svc_start.png');}
-button.stations		{background-image: url('icons/svc_edit.png');}
-button.stop			{background-image: url('icons/svc_stop.png');}
-button.submit		{background-image: url('icons/svc_submit.png');}
+div.body {
+	margin:0px;
+	padding:0px;
+	background-image: url(grass.png);
+}
 
-table.station_list {width:100%; border:1px solid #AAA;}
-td.station_name {width:30%; text-align:right; padding-right:1em; background-color:#E4E4E4;}
-td.station_on {background-color:#CCFFCC;}
-td.station_off, td.station_loading {background-color:#FFCCCC;}
-td.station_waiting {background-color:#EEEEBB;}
-td.station_disabled {background-color:#CCC;}
+div.panel {
+	margin-left: 240px;
+	padding:12px;
+	background-color: white;
+}
+
+div.panel div.title {
+	font-weight: 700;
+	font-size: 20pt;
+	margin-bottom: 8px;
+}
+
+div.controlblock {
+	border:3px solid #2E3959;
+	border-radius: 12px;
+	margin: 8px 0px;
+}
+div.controlblock p, div.controlblock div {
+	padding: 2px 24px;
+}
+
+span.stationName:after {
+	content: ",";
+}
+span.stationName:last-child:after {
+	content: "";
+}
+
+.program {
+	width:50%;
+}
+
+.program p:first-child {
+	background-color: #2E3959;
+	color: white
+}
+
+.program.disabled {
+	border-color: #7D1921;
+}
+.program.disabled p:first-child {
+	background-color: #7D1921;
+	color: white
+}
+/******** General Global Styles **********/
+
+#errorHint {
+	color: #7D1921;
+}
+.showInterval {
+	text-align:center;
+}
+
+.program p:first-child .val {
+	color: white;
+}
+.val {
+	font-weight: 700;
+	color: #397F19;
+}
+
+/******** Clock Styles **********/
+
+div#status {
+	float:left;
+	width: 240px;
+	text-align:center;
+	color:white;
+	font-family: 'Quicksand', sans-serif;
+	font-weight: 300;
+	padding-top: 23px;
+	padding-bottom: 12px;
+	background-color: #397F19;
+	opacity: .85;
+}
+#deviceTime {
+	font-size: 24pt;
+}
+#deviceTime span {
+	display:inline-block;
+	position:relative;
+	top: 6px;
+	font-size:42pt;
+	width: 60px;
+	text-align:center;
+	letter-spacing: -3px;
+}
+#deviceTime span.sep {
+	text-align: center;
+	width: 8px;
+	font-size: 24pt;
+	top: -4px;
+}
+#deviceTime span.hour {
+	text-align:right;
+}
+#deviceTime span.second {
+	text-align:left;
+	font-size:18pt;
+	letter-spacing: -1px;
+	top: -16px;
+	left: 6px;
+	width: 36px;
+}
+#deviceTime span.ampm {
+	position:relative;
+	top:6px;
+	left: -32px;
+	font-size:18pt;
+	width: 36px;
+	text-transform:uppercase;
+	letter-spacing: 0px;
+	text-align: right;
+}
+#deviceDate {
+	margin-top:16px;
+	font-weight:400;
+}
+
+.countdown, .rainsense {
+	color: #7D1921;
+	font-family: Quicksand, sans-serif;
+	font-size: 12pt;
+	font-weight: 700;
+	text-transform:uppercase;
+}
+
+
+/******** Navigation Button Styles **********/
+
+#nav {
+	margin-bottom:16px;
+}
+#nav button {
+	padding:9px 18px;
+	margin-right: 8px;
+	font-family: Quicksand, sans-serif;
+	text-transform: uppercase;
+	font-size: 16pt;
+	font-weight: 400;
+	color:white;
+	background-color:#2E3959;
+	border:0px;
+	border-radius: 8px;
+	cursor: pointer;
+}
+#nav button.here {
+	background-color: #32A620;
+	height: 54px;
+}
+#nav button.home {
+	background-image: url('home.png');
+	background-repeat: no-repeat;
+	background-position: center center;
+	text-indent:-99999em;
+    overflow:hidden;
+    width: 40px;
+}
+
+/******** Button Styles **********/
+
+button {
+	padding: 4px 12px;
+	font-family: Quicksand, sans-serif;
+	font-size: 12pt;
+	font-weight: 400;
+	text-transform: uppercase;
+	text-align: center;
+	line-height: 14pt;
+	color: white;
+	background-color: #397F19;
+	border: 0px;
+	border-radius: 12px;
+	cursor: pointer;
+}
+button:hover {
+	color: #F7F1CD;
+}
+button.on {
+	background-color: #397F19;
+}
+button.off {
+	background-color: #7D1921;
+}
+button.execute {
+	background-color: #2E3959;
+}
+
+button.toggle {
+	background-repeat: no-repeat;
+	background-position: center center;
+	width: 300px;
+	padding: 4px;
+	text-align: center;
+	color: #DDD;
+}
+button.toggle.on {
+	background-color: #397F19;
+	background-image: url('on.png');
+}
+button.toggle.on:hover {
+	color: #F7F1CD;
+	background-image: url('off.png');
+}
+button.toggle.off {
+	background-color: #7D1921;
+	background-image: url('off.png');
+}
+button.toggle.off.choice {
+	background-color: #397F19;
+	background-image: url('off.png');
+}
+button.toggle.off:hover {
+	color: #F7F1CD;
+	background-image: url('on.png');
+}
+button.toggle span.togglesep {
+	display: inline-block;
+	width: 50px;
+}
+button.toggle span.toggleleft {
+	display: inline-block;
+	text-align: right;
+	width: 120px;
+}
+button.toggle span.toggleright {
+	display: inline-block;
+	text-align:left;
+	width: 120px;
+}
+button.toggle.on span.toggleright, button.toggle.off span.toggleleft {
+	font-weight: 400;
+}
+button.toggle.off span.toggleright, button.toggle.on span.toggleleft {
+	font-weight: 700;
+	color: white;
+}
+
+#controls button#cSubmit {
+	background-color: #397F19;
+}
+#controls button#cSubmit:disabled {
+	background-color: #AAA;
+}
+button.danger {
+	background-color: #7D1921;
+}
+
+button.toggle.narrow {
+	width: 140px;
+}
+button.toggle.narrow span.toggleright, button.toggle.narrow span.toggleleft {
+	width: 36px;
+}
+
+#options button, #controls button {
+	margin: 4px 0px;
+}
+
+button.weekday {
+	width:100%;
+}
+button.pushon.on {
+	font-weight: 700;
+}
+
+input.timeInput {
+	font-size:12pt;
+}
+/******** Station Table Styles **********/
+
+table.stationList {
+	border:3px solid #2E3959;
+	border-radius: 12px;
+	padding: 4px;
+	border-spacing: 0px;
+}
+td.station_name {
+	text-align: right; 
+	padding: 0px 12px; 
+	color: #2E3959;
+	font-weight: 700;
+	width: 12em;
+	height: 30px;
+	white-space: nowrap;
+}
+table.stationList td {
+	text-transform: uppercase;
+	margin-bottom: 1px;
+}
+table.stationList td.station_name {
+	text-transform: none;
+}
+tr.even {
+	background-color: #DDD;
+}
+td.stationStatus {
+	color: white;
+	background-color: #7D1921;
+	padding: 0px 12px;
+	border-bottom: 2px solid white;
+}
+td.stationStatus.station_on {
+	background-color: #32A620;
+}
+td.stationStatus.station_off {
+	background-color: #7D1921;
+}
+td.stationStatus.station_waiting {
+	background-color: #397F19;
+}
+td.stationStatus.station_disabled {
+	background-color: #AAA;
+}
+
+td.stationOn.dayOn {
+	background-color: #32A620;
+	text-align:center;
+	color:white;
+	border-radius: 6px;
+	background-image: url('checkmark.png');
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+td.stationOn {
+	background-color: #F7F1CD;
+	border-radius: 8px;
+}
+td.dayOn {
+	background-color: #F7F1CD;
+	border-radius: 8px;
+}
+
+
+table.logList {
+	padding: 4px;
+	margin: 1em 0em;
+}
+table.logList td {
+	padding: 0px 12px;
+}
+table.logList th {
+	padding: 0px 12px;
+	border-bottom: 2px solid #2E3959;
+}
+
+/******** Interval Selector Styles **********/
+
+.animatedSelector {
+	font-size: 26px;
+	text-align:center;
+	width: 500px;
+}
+.intervalSelect {
+	line-height: 60px;
+	border-radius: 12pt;
+	padding: 3px;	
+	cursor: pointer;
+}
+.intervalSelect.distance0 {
+	background-color: #32A620;
+	color: white;
+}
+.intervalSelect:hover {
+	border: 2px solid #32A620;
+}	
+.intervalSelect.distance1 {
+}
+.intervalSelect.distance2 {
+}
+
+
+/******** Collapsible Styles **********/
+.collapsible h4 {
+	color:white;
+	background-color: #2E3959;
+	background-repeat: no-repeat;
+	background-position: 3px center;
+	padding: 4px 4px 4px 24px;
+	margin: 3px;
+}
+.collapsible.collapsed h4 {
+	background-image:url(collapsed.png)
+}
+.collapsible.expanded h4 {
+	background-image:url(expanded.png)
+}
+
+.collapsible.collapsed div {
+	display:none;
+}
+.collapsible.expanded div {
+}
+
+/******** Overlay Styles **********/
 
 #overlay {
 	 display:none;
@@ -88,7 +472,7 @@ td.station_disabled {background-color:#CCC;}
 	 height:100%;
 	 text-align:center;
 	 z-index: 1000;
-	 background-image:url(../static/images/BlueTile.png);
+	 background-image:url(BlueTile.png);
 }
 #overlay div {
 	 width:240px;
@@ -97,4 +481,83 @@ td.station_disabled {background-color:#CCC;}
 	 border:1px solid #000;
 	 padding:10px;
 	 text-align:left;	 
+}
+
+/******** Schedule graph Styles **********/
+
+td.stationSchedule {
+	position: relative;
+	padding: 0px;
+}
+.scheduleMarker {
+	position:absolute;
+	top: 0px;
+	height:100%;
+}
+.nowMarker {
+	position:absolute;
+	top: 0px;
+	background-color: #7D1921;
+	height:100%;
+}
+.nowMarker.on {
+	background-color: #397F19;	
+}
+.scheduleMarker .markerDetail {
+	display:none;
+}
+.scheduleTick {
+	position: relative;
+	font-size: 9px;
+	text-align:center;
+	color: #2E3959;
+
+	border-right:1px solid #2E3959;
+}
+.scheduleTick:last-child {
+	border-right: none;
+}
+
+.program0 {background-color: hsl(50,80%,40%)}
+.program1 {background-color: hsl(150,80%,40%)}
+.program2 {background-color: hsl(225,80%,40%)}
+.program3 {background-color: hsl(75,80%,40%)}
+.program4 {background-color: hsl(175,80%,40%)}
+.program5 {background-color: hsl(250,80%,40%)}
+.program6 {background-color: hsl(100,80%,40%)}
+.program7 {background-color: hsl(200,80%,40%)}
+.program8 {background-color: hsl(275,80%,40%)}
+.program9 {background-color: hsl(125,80%,40%)}
+.programManual {background-color: hsl(25,80%,40%)}
+.history {
+	background-image:url("whitestripes.png");
+}
+
+.showDetails {
+	position: absolute;
+	width: 90px;
+	top: 100%;
+	left:0px;
+	color:white;
+	z-index:100;
+	border-radius: 6px;
+	display: inline-block;
+	font-size: 10pt;
+	margin: 3px;
+	padding: 3px;
+}
+
+.scheduleMarker.showDetails {
+	border: 1px solid black;
+}
+
+#displayScheduleDate {
+	text-transform:none;	
+}
+
+#legend span {
+	padding:2px 6px;
+	color:white;
+	margin: 0px 4px;
+	font-size:9pt;
 }

@@ -1,5 +1,14 @@
 $def with (records)
 
+$code:
+    if gv.sd['lg'] == 1:
+        log_state = "Enabled"
+        log_option = "checked"
+    else:
+        log_state = "Disabled"
+        log_option = ""
+
+
 <!doctype html>
 
 <html>
@@ -27,13 +36,19 @@ $def with (records)
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>
+		// Variables set by ospi.py
+		var devt = ${gv.now}*1000;
+		var tz = ${gv.sd['tz']};
+		var timeFormat = 12;  //todo: make this a user-selectable option
+		var cputemp = "${gv.cputemp}";
+		var tempunit = "${gv.sd['tu']}";
+	</script>
+	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
+	<script>
 		// Initialize behaviors
 		jQuery(document).ready(function(){
 			var ipas = $gv.sd['ipas'];
 			
-			jQuery("button#nBack").click(function(){
-				window.location="/";
-			});
 			jQuery("button#nRefresh").click(function(){
 				window.location="/vl";
 			});
@@ -68,46 +83,71 @@ $def with (records)
 <body>
 	<div class="content">
 		<div class="header">
-			<div class="title">Activity Log</div>
+			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
 		</div>
-		
+			
 		<div class="body">
 		
-			<div id="nav">
-				<form method="get" action="cl" name="df">
-					<input id="pw" name="pw" type="hidden" />
-				</form>
-				<form method="get" action="mp" name="mf">
-					<input id="pid" name="pid" type="hidden" value="-1" />
-				</form>
-				
-				<button id="nBack" class="back icon">Back</button>
-				<button id="nRefresh" class="refresh icon">Refresh</button>
-				<button id="nDeleteAll" class="delete icon">Delete All</button>
-				<button id="nLogOptions" class="options icon">Log Options</button>
+			<div id="status">
+				<p id="deviceTime"><span class="hour"></span><span class="sep">:</span><span class="minute"></span><span class="second"></span><span class="ampm"></span></p>
+				<p id="deviceDate"></p>
 			</div>
+	
+			<div class="panel">
 			
-			<div id="log">
-				$code:
-				    if gv.sd['lg'] == 1:
-				        log_state = "Enabled"
-				        log_option = "checked"
-				    else:
-				        log_state = "Disabled"
-				        log_option = ""
-
-				<div>Logging $log_state</div>
-				<b>Total number of records: $(len(records)-1)</b>
-				<hr>
+				<div id="nav">
+					<button id="bHome" class="home" title="Home">Home</button>
+					<button id="bPrograms" class="programs" title="Define Programs">Programs</button>
+					<button id="bRunOnce" class="start" title="Define Run Once Program">Run Once</button>
+					<button id="bLog" class="log here" title="View Log">Log</button>
+					<button id="bOptions" class="options" title="Options">Options</button>
+					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
+				</div>
 				
-				<table>
-					$for r in records:
+				<div id="options">
+					<div class="title">Log $log_state</div>
+					<form method="get" action="cl" name="df">
+						<input id="pw" name="pw" type="hidden" />
+					</form>
+					<form method="get" action="mp" name="mf">
+						<input id="pid" name="pid" type="hidden" value="-1" />
+					</form>
+					
+				</div>
+				
+				<div id="log">
+					<p>Total number of records: $(len(records)-1)</p>
+					<p>Download log as <a href="/wl">csv</a>.</p>
+					
+					<table class="logList">
 						<tr class="log_rec">
-						$for d in r:
-							<td align='center'>$d</td>
+							<th>Date</th>
+							<th>Program</th>
+							<th>Zone</th>
+							<th>Start Time</th>
+							<th>Duration</th>
 						</tr>
-				</table>
-
+						$ odd = 1
+						$for r in records:
+							$ event = json.loads(r)
+							<tr class="log_rec ${'odd' if odd else 'even'}">
+								<td align='center'>${event["date"]}</td>
+								<td align='center'>${event["program"]}</td>
+								<td align='center'>${event["station"]}</td>
+								<td align='center'>${event["start"]}</td>
+								<td align='center'>${event["duration"]}</td>
+							</tr>
+							$ odd = 1 - odd
+					</table>
+	
+				</div>
+				
+				<div id="controls">
+					<button id="nRefresh" class="refresh">Refresh</button>
+					<button id="nDeleteAll" class="delete danger">Delete All</button>
+					<button id="nLogOptions" class="options">Log Options</button>
+				</div>
+				
 			</div>
 		</div>
 		
@@ -119,9 +159,10 @@ $def with (records)
 					<input type="checkbox" id="log" name="log" $log_option ><br>
 					<label for="nrecords">Maximum records to keep:</label>
 					<input type="text" size="4" value="$gv.sd['lr']" id="nrecords" name="nrecords">(0 = no limit)<br>
-					<span id='pwarea' class="pwspan">
-						<label for="pw">Password Required:</label> <input type="password" size="10" id="pw">
-					</span><br>
+					$if not(gv.sd['ipas']):
+						<span id='pwarea' class="pwspan">
+							<label for="pw">Password Required:</label> <input type="password" size="10" id="pw">
+						</span><br>
 					<button id="oSubmit" class="submit icon">Submit</button>
 					<button id="oCancel" class="cancel icon">Cancel</button>
 				</form>
@@ -129,6 +170,8 @@ $def with (records)
 		</div>
 		
 		<div class="footer">
+			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
+			<p><a href="https://github.com/jonathan-marsh/OSPi">Firmware</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
 		</div>
 	</div>
 </body>

@@ -12,22 +12,27 @@ $code:
 	snames = eval(data('snames'))
 	nprogs = len(gv.pd)
 	
-	def twodigits(n):
+	def twoDigits(n):
 		return str((n>>0)/10>>0) + str((n>>0)%10)
 	
-	def pdays(days):
+	def pdays(days, dayInterval):
 		output = ""
-		if (days[0]&0x80) and (days[1]>1): # this is an interval program 
-			days[0] = days[0]&0x7f
-			output += "Every " + str(days[1]) + " days, starting in " + str(days[0]) + " days."
+		if (days&0x80) and (dayInterval>1): # this is an interval program 
+			days = days&0x7f
+			output += "Every " + str(dayInterval) + " days"
+			if days > 0:
+				output += ", starting in " + str(days) + " days."
 		else: # this is a weekly program 
-			for d in range(0,7):
-				if days[0] & (1<<d):
-					output += " " + ["Mon","Tue","Wed","Thur","Fri","Sat","Sun"][d]
-		if (days[0]&0x80) and (days[1]==0):
-			output += "(Even days only)"
-		if (days[0]&0x80) and (days[1]==1):
-			output += "(Odd days only)"
+			if days == 127:
+				output += "Every Weekday"
+			else:
+				for d in range(0,7):
+					if days & (1<<d):
+						output += " " + ["Mon","Tue","Wed","Thur","Fri","Sat","Sun"][d]
+		if (days&0x80) and (dayInterval==0):
+			output += " (Even days only)"
+		if (days&0x80) and (dayInterval==1):
+			output += " (Odd days only)"
 		return output
 
 
@@ -48,18 +53,21 @@ $code:
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>		
 		// Variables set by ospi.py
+		var devt = ${gv.now}*1000;
+		var tz = ${gv.sd['tz']};
+		var timeFormat = 12;  //todo: make this a user-selectable option
+		var cputemp = "${gv.cputemp}";
+		var tempunit = "${gv.sd['tu']}";
+
 		var ipas = ${gv.sd['ipas']};
-		
+		var nbrd = ${gv.sd['nbrd']};
+		var mas = ${gv.sd['mas']};
+	</script>
+	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
+	<script>		
 		// Initialize behaviors
 		jQuery(document).ready(function(){
-			
-			jQuery("button#nBack").click(function(){
-				window.location = "/";
-			});
-			jQuery("button#nPreview").click(function(){
-				window.location = "/gp?d=0","_blank";
-			});
-			
+						
 			jQuery("button#nDelAll, button.cDelete").click(function(){
 				var p="";
 				if (!ipas) {
@@ -99,49 +107,55 @@ $code:
 <body>
 	<div class="content">
 		<div class="header">
-			<div class="title">Programs</div>
-			<div class="titlenote">Total number of programs: ${nprogs} (maximum is ${gv.sd['mnp']}).</div>
+			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
 		</div>
 		
 		<div class="body">
-			<div id="nav">
-				<button id="nBack" class="back icon">Back</button>
-				<button id="nAdd" class="add icon" data="-1">Add a New Program</button>
-				<button id="nDelAll" class="deleteAll icon" data="-1">Delete All</button>
-				<button id="nPreview" class="preview icon">Preview</button>
+			<div id="status">
+				<p id="deviceTime"><span class="hour"></span><span class="sep">:</span><span class="minute"></span><span class="second"></span><span class="ampm"></span></p>
+				<p id="deviceDate"></p>
 			</div>
+	
+			<div class="panel">
 			
-			<form name="df" id="df" action="dp" method="get">
-				<input type="hidden" name="pw">
-				<input type="hidden" name="pid">
-			</form>
-			<form name="rn" id="rn" action="rp" method="get">
-				<input type="hidden" name="pw">
-				<input type="hidden" name="pid">
-			</form>
-			<form name="mf" id="mf" action="mp" method="get">
-				<input type="hidden" name="pid">
-			</form>
-			
-			<div id="programs">
-				$for pid in range(0,nprogs):
-					$ prog = gv.pd[pid]
-					<hr>
-					<div id="p${pid}" class="program ${'strike' if prog[0] == 0 else ''}">
-						<b>Program ${pid+1}: ${pdays([prog[1], prog[2]])}</b>
-						$if prog[0]&0x01 == 0:
-							<font color=red>(Disabled)</font>
-						$ start = prog[3]
-						$ end = prog[4]
-						$ interval = prog[5]
-						$ duration = prog[6]
-						<br>
-						<b>Time</b>: ${twodigits(start/60)}:${twodigits(start%60)} - ${twodigits(end/60)}:${twodigits(end%60)},
-						<b>Every</b> ${(interval/60>>0)} hrs ${(interval%60)} mins,<br>
-						<b>Run</b>: ${(duration/60>>0)} mins ${(duration%60)} secs.<br>
+				<div id="nav">
+					<button id="bHome" class="home" title="Home">Home</button>
+					<button id="bPrograms" class="programs here" title="Define Programs">Programs</button>
+					<button id="bRunOnce" class="start" title="Define Run Once Program">Run Once</button>
+					<button id="bLog" class="log" title="View Log">Log</button>
+					<button id="bOptions" class="options" title="Options">Options</button>
+					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
+				</div>
 
-						<table border="1" cellpadding="3">
-							$ inRow = 4
+				<form name="df" id="df" action="dp" method="get">
+					<input type="hidden" name="pw">
+					<input type="hidden" name="pid">
+				</form>
+				<form name="rn" id="rn" action="rp" method="get">
+					<input type="hidden" name="pw">
+					<input type="hidden" name="pid">
+				</form>
+				<form name="mf" id="mf" action="mp" method="get">
+					<input type="hidden" name="pid">
+				</form>
+				
+				<div id="controls">
+					<button id="nAdd" class="add" data="-1">Add a New Program</button>
+					<button id="nDelAll" class="deleteAll danger" data="-1">Delete All</button>
+				</div>
+				
+				<div id="programs">
+					$for pid in range(0,nprogs):
+						$ prog = gv.pd[pid]
+						<div id="p${pid}" class="controlBlock program ${'disabled' if prog[0] == 0 else ''}">
+							<p>Program ${pid+1}: <span class="val">${pdays(prog[1], prog[2])}</span></b>
+							$ start = prog[3]
+							$ end = prog[4]
+							$ interval = prog[5]
+							$ duration = prog[6]
+							</p>
+							<p class="stationList">Run:
+							$ stationsOn = 0
 							$for bid in range(0,gv.sd['nbrd']):
 								$if len(prog) >= 8 + bid:
 									$ bits = prog[7 + bid]
@@ -149,27 +163,31 @@ $code:
 									$ bits = 0
 								$for s in range(0,8):
 									$ sid = bid*8 + s
-									$ show = (gv.sd['show'][bid]>>s)&1
-				 					$if show == 1:
-				 						$ inRow = inRow - 1
-				 						$if inRow < 0:
-											<tr>
-										<td class="${'progstation_on' if bits&(1<<s) else 'progstation_off'}">${snames[sid]}</td>
-										$if inRow < 0:
-											</tr>
-											$ inRow = 4
-						</table>
-	 					<button class="cDelete" data="${pid}">Delete</button>
-						<button class="cModify" data="${pid}">Modify</button>
-						<button class="cRunNow" data="${pid}">Run Now</button>
-					</div>
-			</div>
-			
-			<div id="controls">
+									$if (gv.sd['show'][bid]>>s)&1 and bits&(1<<s):
+					 					<span class="stationName val">${snames[sid]}</span>
+					 					$ stationsOn = stationsOn + 1
+		 					</p>
+		 					<p>Starting: <span class="val">${twoDigits(start/60)}:${twoDigits(start%60)}</span>
+							for <span class="val">${(duration/60>>0)}</span> mins<span class="val">${"" if (duration%60) == 0 else (" " + str(duration%60) + " secs")}</span></p>
+							$ recurring = start + duration/60*stationsOn < end
+		 					$if recurring:
+		 						<p>Recurring every</b> <span class="val">${(interval/60>>0)}</span> hrs <span class="val">${(interval%60)}</span> mins
+		 						until <span class="val">${twoDigits(end/60)}:${twoDigits(end%60)}</span></p>
+	
+							<p>
+		 						<button class="cRunNow" data="${pid}">Run Now</button>
+		 						<button class="cModify" data="${pid}">Edit</button>
+								<button class="cDelete danger" data="${pid}">Delete</button>
+							</p>
+						</div>
+				</div>
+				
 			</div>
 		</div>
 		
 		<div class="footer">
+			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
+			<p><a href="https://github.com/jonathan-marsh/OSPi">Firmware</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
 		</div>
 	</div>
 </body>

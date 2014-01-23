@@ -9,9 +9,28 @@ $def with (pid, prog)
  -->
 
 $code:
+	def twoDigits(n):
+		return str((n>>0)/10>>0) + str((n>>0)%10)
+	
 	snames = eval(data('snames'))
-	nprogs = len(gv.pd)
-		
+	if pid < 0:
+		program = [1, 127, 4, 360, 1080, 240, 900, 1]
+	else:
+		program = eval(prog)
+	weekly = not((program[1]&0x80) and (program[2]>1))
+	stationsShown = 0
+	stationsOn = 0
+	for bid in range(0, gv.sd['nbrd']):
+		boardShow = gv.sd['show'][bid]
+		for s in range(0,8):
+			stationsShown += (boardShow>>s) & 1
+			if program[bid+7]&(1<<s):
+				stationsOn = stationsOn + 1		 			
+	even = program[1]&0x80 and program[2]==0
+	odd = program[1]&0x80 and program[2]==1
+	recurring = program[3] + program[6]/60*stationsOn < program[4]
+
+	
 <html>
 <head>
 	<meta name="viewport" content="width=640">
@@ -20,19 +39,23 @@ $code:
 	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
 	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
-	<script>		
+	<script>
 		// Variables set by ospi.py
-		var pid = ${pid};
+		var devt = ${gv.now}*1000;
+		var tz = ${gv.sd['tz']};
+		var timeFormat = 12;  //todo: make this a user-selectable option
+		var cputemp = "${gv.cputemp}";
+		var tempunit = "${gv.sd['tu']}";
 		var prog = ${prog};
 		var nbrd = ${gv.sd['nbrd']};
 		var ipas = ${gv.sd['ipas']};
-		
+
+	</script>
+	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
+	<script src="${gv.baseurl}/static/scripts/intervalSelect.js"></script>
+	<script>		
 		// Helper functions
-		function twodigits(n) {
-			return ((n>>0)/10>>0).toString() + ((n>>0)%10).toString();
-		}
-		
-		function parse_time(prefix) {
+		function parseTime(prefix) {
 			var h = parseInt(jQuery("#"+prefix+"h").val());
 			var m = parseInt(jQuery("#"+prefix+"m").val());
 			if (!(h>=0 && h<24 && m>=0 && m<60)) {
@@ -42,94 +65,198 @@ $code:
 			return h*60 + m;
 		}
 		
-		function fill_time(prefix, idx) { // fill time
-			var t = prog[idx];
-			jQuery("#"+prefix+"h").val(twodigits(t/60));
-			jQuery("#"+prefix+"m").val(twodigits(t%60));
+		function checkConsistency() {
+			disableSubmit = false;
+			errorHint = "";
+			if (jQuery("button#cWeeklyInterval").hasClass("on") &&
+				jQuery(".weekday.on").length < 1) {
+				disableSubmit = true;
+				errorHint = "Please choose at least one weekday for the program to run.";
+			}
+			if (jQuery(".station.on").length < 1) {
+				disableSubmit = true;
+				errorHint = "Please choose at least one station to run in this program.";
+			}
+			jQuery("button#cSubmit").prop("disabled", disableSubmit);
+			jQuery("#errorHint").text(errorHint);
 		}
 		
-		function seldays(v) { // check/uncheck all days
-			for (var i=0; i<7; i++) {
-				jQuery("#d"+i).prop("checked", (v>0));
-			}
-		}
-
 		// Initialize behaviors
 		jQuery(document).ready(function(){
 			
+			jQuery("button#cProgramEnabled").click(function(){
+				jQuery(this).toggleClass("on").toggleClass("off");
+				return false;
+			});
+			jQuery("button#cRestrictions").click(function(){
+				jQuery(this).toggleClass("on").toggleClass("off");
+				jQuery("#evenodd").toggle(jQuery(this).hasClass("off"));
+				return false;
+			});
+			jQuery("button#cEvenOdd").click(function(){
+				jQuery(this).toggleClass("on").toggleClass("off");
+				return false;
+			});
+			jQuery("button#cWeeklyInterval").click(function(){
+				jQuery(this).toggleClass("on").toggleClass("off");
+				jQuery(".showInterval").toggle(jQuery(this).hasClass("off"));
+				jQuery(".showWeekly").toggle(jQuery(this).hasClass("on"));
+				if (jQuery(".distance0").length == 0) {
+					jQuery("#intervalSelector .intervalSelect:first-child").trigger("click");
+				}
+				checkConsistency();
+				return false;
+			});
+			jQuery("button#cRecurring").click(function(){
+				jQuery(this).toggleClass("on").toggleClass("off");
+				jQuery("#recurr").toggle();
+				return false;
+			});
+			jQuery("table.stationList button.weekday.pushon, table.stationList button.station.toggle").click(function(){
+				var id = jQuery(this).attr("id");
+				var state = jQuery(this).hasClass("on");
+				jQuery(this)
+					.addClass(state ? "off": "on")
+					.removeClass(state ? "on" : "off");
+				if (id.indexOf("station") == 0) {
+					jQuery("." + id).toggleClass("stationOn");
+				} else if (id.indexOf("day") == 0) {
+					jQuery("." + id).toggleClass("dayOn");
+				}
+				checkConsistency();
+				return false;
+			});
+			jQuery(".stationState").click(function(){
+				var classes = jQuery(this).attr("class");
+				var stationName = classes.match(/station\d+/)[0];
+				var dayName = classes.match(/day\d+/)[0];
+				var stationOn = jQuery(this).hasClass("stationOn");
+				var dayOn = jQuery(this).hasClass("dayOn");
+				if (stationOn && dayOn) {
+					jQuery("#" + stationName).trigger("click");
+				} else if (stationOn && !dayOn) {
+					jQuery("#" + dayName).trigger("click");
+				} else if (!stationOn && dayOn) {
+					jQuery("#" + stationName).trigger("click");		
+				} else {
+					jQuery("#" + stationName).trigger("click");
+					jQuery("#" + dayName).trigger("click");
+				}
+				return false;
+			});
+			jQuery("button#allWeekdays").click(function(){
+				jQuery(".weekday").addClass("on").removeClass("off");
+				jQuery(".day0, .day1, .day2, .day3, .day4, .day5, .day6").addClass("dayOn");
+				checkConsistency();
+				return false;
+			});
+			jQuery("button#noWeekdays").click(function(){
+				jQuery(".weekday").addClass("off").removeClass("on");
+				jQuery(".day0, .day1, .day2, .day3, .day4, .day5, .day6").removeClass("dayOn");
+				checkConsistency();
+				return false;
+			});
+			
+			jQuery(".numbersOnly").keyup(function () {
+				var newValue = this.value.replace(/[^0-9]/g, '');
+				if (this.value != newValue) {
+					this.value = newValue;
+				}
+			});
+			jQuery("#intervalSelector").click(function() {
+				var dayInterval = parseInt(jQuery("#intervalSelector .intervalSelect.distance0").text());
+				var delayInterval = parseInt(jQuery("#intervalDelaySelector .intervalSelect.distance0").text());
+				if (isNaN(delayInterval)) {
+					delayInterval = 0;
+				} else if (delayInterval > 1 && delayInterval >= dayInterval) {
+					delayInterval = dayInterval - 1;
+				}
+				jQuery("#intervalDelaySelector").html("");
+				for (var i=0; i<dayInterval; i++) {
+					jQuery("#intervalDelaySelector").append(
+							jQuery("<span class='intervalSelect'>" + i + "</span>")
+								.on("click", intervalSelectClick)
+								.on("mouseover", intervalSelectMouseover)
+								.on("mouseout", intervalSelectMouseout)
+					);
+					if (i == 16) {
+						jQuery("#intervalDelaySelector").append("<br/>");
+					}
+				}
+				jQuery("#intervalDelaySelector .intervalSelect").each(function() {
+					if (jQuery(this).text() == delayInterval) {
+						jQuery(this).trigger("click");
+					}
+				});
+			});
+			jQuery("#intervalSelector .intervalSelect").each(function() {
+				var thisValue = parseInt(jQuery(this).text());
+				if (thisValue == prog[2]) {
+					jQuery(this).trigger("click");
+					jQuery("#intervalSelector").trigger("click");
+				}
+			});
+			
 			jQuery("button#cSubmit").click(function(){
-				var errmsg = "", days = 0, dayInterval = 0, i, s, sid;
-				var en = jQuery("#en_on").is(":checked") ? 1 : 0;
+				var days = 0, dayInterval = 0, i, s, sid;
+				var en = jQuery("button#cProgramEnabled").hasClass("on") ? 1 : 0;
 				// process days
-				if (jQuery("#days_week").is(":checked")) {
+				if (jQuery("button#cWeeklyInterval").hasClass("on")) {
 					for (i=0; i<7; i++) {
-						if (jQuery("#d"+i).is(":checked")) {
+						if (jQuery("button#day"+i).hasClass("on")) {
 							days |= (1<<i);
 						}
 					}
-					if (jQuery("#days_odd").is(":checked")) {
-						days |= 0x80;
-						dayInterval = 1;
+					if (jQuery("#cRestrictions").hasClass("off")) {
+						if (jQuery("#cEvenOdd").hasClass("off")) {
+							days |= 0x80;
+							dayInterval = 1;
+						} else {
+							days |= 0x80;
+							dayInterval = 0;
+						}
 					}
-					else if (jQuery("#days_even").is(":checked")) {
-						days |= 0x80;
-						dayInterval = 0;
-					}
-				} else if (jQuery("#days_n").is(":checked")) {
-					dayInterval = parseInt(jQuery("#dn").val());
-					if (!(dayInterval>=2 && dayInterval<=128)) {
-						alert("Error: interval days must be between 2 and 128.");
-						return;
-					}
-					days = parseInt(jQuery("#drem").val());
-					if (!(days>=0 && days<dayInterval)) {
+				} else {
+					dayInterval = parseInt(jQuery("#intervalSelector .intervalSelect.distance0").text());
+					days = parseInt(jQuery("#intervalDelaySelector .intervalSelect.distance0").text());
+					
+					if (days < 0 || days >= dayInterval) {
 						alert("Error: starting in days wrong.");
 						return;
 					}
 					days|=0x80;
 				}
-				if (days==0 || (dayInterval<2 && (days&0x7f)==0)) {
-					alert("Error: You have not selected any day.");
-					return;
-				}
 				// process stations
-				var stations = [0], station_selected=0;
+				var stations = [0];
 				for (var bid=0; bid<nbrd; bid++) {
 					stations[bid] = 0;
 					for (var s=0; s<8; s++) {
 						sid = bid*8 + s;
-						if (jQuery("#s"+sid).is(":checked")) {
+						if (jQuery("button#station"+sid).hasClass("on")) {
 							stations[bid] |= 1<<s;
-							station_selected = 1;
 						}
 					}
 				}
-				if (station_selected == 0) {
-					alert("Error: You have not selected any station.");
-					return;
-				}
 				// process time
-				var start_time = parse_time("ts");
-				var end_time = parse_time("te");
-				if (start_time < 0 || end_time < 0) {
-					alert("Error: Start and end times must be positive.");
-					return;
-				}
-				if (start_time >= end_time) {
-					// Possible bug - can you run a program from 10PM to 2AM?
-					alert("Error: Start time must be prior to end time.");
-					return;
-				}
-				var interval = parse_time("ti");
-				if (interval < 0) {
-					alert("Error: Intervals must be positive.");
-					return;
-				}
 				var dm = parseInt(jQuery("#tdm").val());
 				var ds = parseInt(jQuery("#tds").val());
 				var duration = dm*60 + ds;
 				if (!(dm>=0 && ds>=0 && ds<60 && duration>0)) {
 					alert("Error: Incorrect duration.");
+					return;
+				}
+				
+				var startTime = parseTime("ts");
+				if (jQuery("button#cRecurring").hasClass("on")) {
+					var interval = jQuery(".station.on").length * duration/60;
+					var endTime = startTime + interval;
+				} else {
+					var endTime = parseTime("te");
+					var interval = parseTime("ti");
+				}
+				if (startTime >= endTime) {
+					// Possible bug - can you run a program from 10PM to 2AM?
+					alert("Error: Start time must be prior to end time.");
 					return;
 				}
 				// password
@@ -139,9 +266,7 @@ $code:
 				}
 				if (p != null) {
 					jQuery("form#mf input[name='pw']").val(p);
-					jQuery("form#mf input[name='pid']").val(pid);
-					var v = "[" + en + "," + days + "," + dayInterval + "," + start_time + 
-					                    "," + end_time + "," + interval + "," + duration;
+					var v = "[" + en + "," + days + "," + dayInterval + "," + startTime + "," + endTime + "," + interval + "," + duration;
 					for (var i=0; i<nbrd; i++) {
 						v += "," + stations[i];
 					}
@@ -153,65 +278,7 @@ $code:
 			jQuery("button#cCancel").click(function(){
 				window.location="/vp";
 			});
-
 			
-			// default values
-			jQuery("#en_on").prop("checked", true);
-			jQuery("#days_week").prop("checked", true);
-			jQuery("#days_norst").prop("checked", true);
-			jQuery("#dn").val("3");
-			jQuery("#drem").val("0");
-			jQuery("#tsh").val("06");
-			jQuery("#tsm").val("00");
-			jQuery("#teh").val("18");
-			jQuery("#tem").val("00");
-			jQuery("#tih").val("04");
-			jQuery("#tim").val("00");
-			jQuery("#tdm").val("15");
-			jQuery("#tds").val("00");
-			// fill in existing program values
-			if (pid > -1) {
-				if (prog[0]==0) {
-					jQuery("#en_off").prop("checked", true);
-				}
-				// process days
-				var days = prog[1];
-				var dayInterval = prog[2];
-				if ((days&0x80) && (dayInterval>1)) {
-					jQuery("#days_n").prop("checked", true);
-					jQuery("#dn").val(dayInterval);
-					jQuery("#drem").val(days&0x7f);
-				} else {
-					jQuery("#days_week").prop("checked", true);
-					for (var i=0; i<7; i++) {
-						if (days&(1<<i)) {
-							jQuery("#d"+i).prop("checked", true);}
-						}
-					if ((days&0x80) && (dayInterval==0))	{
-						jQuery("#days_even").prop("checked", true);
-					}
-					if ((days&0x80) && (dayInterval==1)) {
-						jQuery("#days_odd").prop("checked", true);
-					}
-				}
-				// process time
-				fill_time("ts",3);
-				fill_time("te",4);
-				fill_time("ti",5);
-				var t = prog[6];
-				jQuery("#tdm").val(twodigits(t/60));
-				jQuery("#tds").val(twodigits(t%60));
-				// process stations
-				var bits;
-				for (var bid=0; bid<nbrd; bid++) {
-					bits = prog[bid+7];
-					for (var s=0; s<8; s++) {
-						sid = bid*8+s;
-						jQuery("#s"+sid).prop("checked", bits&(1<<s));
-					}
-				}
-			}
-
 		});
 
 	</script>
@@ -219,89 +286,137 @@ $code:
 <body>
 	<div class="content">
 		<div class="header">
-			<div class="title">${"Modify Program" if (pid>-1) else "Add a New Program"}</div>
+			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
 		</div>
-		
+			
 		<div class="body">
-			<div id="nav">
+			<div id="status">
+				<p id="deviceTime"><span class="hour"></span><span class="sep">:</span><span class="minute"></span><span class="second"></span><span class="ampm"></span></p>
+				<p id="deviceDate"></p>
 			</div>
+	
+			<div class="panel">
 			
-			<div id="programs">
-				<form name="mf" id="mf" action="cp" method="get">
-					<input type="hidden" name="pw">
-					<input type="hidden" name="pid">
-					<input type="hidden" name="v">
-					<div style="padding-left:5px;padding-right:5px;">
-						<p><b>This program is: </b>
-							<input type="radio" name="rad_en" id="en_on"><b>On</b>
-							<input type="radio" name="rad_en" id="en_off"><b>Off</b>
-						</p>
-						<p><b>Select Days:</b></p>
-						<input type="radio" name="rad_day" id="days_week"><b><u>Weekly</u>:</b>
-						<input type="checkbox" id="d0">Mon
-						<input type="checkbox" id="d1">Tue
-						<input type="checkbox" id="d2">Wed
-						<input type="checkbox" id="d3">Thu
-						<input type="checkbox" id="d4">Fri
-						<input type="checkbox" id="d5">Sat
-						<input type="checkbox" id="d6">Sun
-						<br>
-						<div style="padding-left:80px;">
-							<button onclick="seldays(1);return false;">Select All</button>
-							<button onclick="seldays(0);return false;">Select None</button>
-						</div>
-						<div style="padding-left:20px;">
-							<p><b>Select Restrictions:</b><br>
-								<input type="radio" name="rad_rst" id="days_norst">No restriction<br>
-								<input type="radio" name="rad_rst" id="days_odd">Odd days only (except 31st and Feb 29th)<br>
-								<input type="radio" name="rad_rst" id="days_even">Even days only<br>
-							</p>
-						</div>
-						<input type="radio" name="rad_day" id="days_n"><b><u>Interval</u>:</b>
-						Every <input type="text" size="2" maxlength="2" id="dn"> days, starting in 
-						<input type="text" size="2" maxlength="2" id="drem"> days.
-						<hr>
-						<p><b>Select Stations:</b></p>
-							<table border="1" cellpadding="3">
-								$ inRow = 4
-								$for bid in range(0,gv.sd['nbrd']):
+				<div id="nav">
+					<button id="bHome" class="home" title="Home">Home</button>
+					<button id="bPrograms" class="programs here" title="Define Programs">Programs</button>
+					<button id="bRunOnce" class="start" title="Define Run Once Program">Run Once</button>
+					<button id="bLog" class="log" title="View Log">Log</button>
+					<button id="bOptions" class="options" title="Options">Options</button>
+					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
+				</div>
+		
+				<div id="programs">
+					<div class="title">${"Edit Program #" + str(pid+1) if (pid>-1) else "Add a New Program"}</div>
+					<form name="mf" id="mf" action="cp" method="get">
+						<input type="hidden" name="pw">
+						<input type="hidden" name="pid" value="${pid}">
+						<input type="hidden" name="v" value="$:{program}">
+						<div style="padding-left:5px;padding-right:5px;">
+							<p><button id="cProgramEnabled" class="toggle ${'on' if program[0] else 'off'}"><span class='toggleleft'>Program On</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Program Off</span></button></p>
+							<div class="controlBlock">
+								<p><b>Start Time:</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tsh" value="${twoDigits(program[3]/60)}"> : 
+								<input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tsm" value="${twoDigits(program[3]%60)}"> (hh:mm)</p>
+								<p><b>Duration:</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="3" id="tdm" value="${twoDigits(program[6]/60)}"> : 
+								<input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tds" value="${twoDigits(program[6]%60)}"> (mm:ss)</p>
+								<p><button id="cRecurring" class="toggle choice ${'off' if recurring else 'on'}"><span class='toggleleft'>Single pass</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Recurring</span></button></p>
+								<div id="recurr" $:{"" if recurring else "style='display:none'"}>
+									<p><b>Every:</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tih" value="${twoDigits(program[5]/60)}"> : 
+									<input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tim" value="${twoDigits(program[5]%60)}"> (hh:mm)</p>
+									<p><b>Until:</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="teh" value="${twoDigits(program[4]/60)}"> : 
+									<input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tem" value="${twoDigits(program[4]%60)}"></p>
+								</div>
+							</div>
+							<p><button id="cWeeklyInterval" class="toggle choice ${'on' if weekly else 'off'}"><span class='toggleleft'>Weekly</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Interval</span></button></p>
+							<table id="stations" class="stationList">
+								<tr class="showWeekly" $:{"" if weekly else "style='display:none'"}>
+									<td colspan="2"></td>
+									<td colspan="7" style="text-align:center">
+										<button id="allWeekdays" class="execute">Select All</button>
+										<button id="noWeekdays" class="execute">Clear All</button>
+									</td>
+								</tr>
+								<tr class="showWeekly" $:{"" if weekly else "style='display:none'"}>
+									<td colspan="2"></td>
+									<td><button id="day0" class="weekday pushon ${"on" if program[1]&(1<<0) else "off"}">Monday</button></td>
+									<td><button id="day1" class="weekday pushon ${"on" if program[1]&(1<<1) else "off"}">Tuesday</button></td>
+									<td><button id="day2" class="weekday pushon ${"on" if program[1]&(1<<2) else "off"}">Wednesday</button></td>
+									<td><button id="day3" class="weekday pushon ${"on" if program[1]&(1<<3) else "off"}">Thursday</button></td>
+									<td><button id="day4" class="weekday pushon ${"on" if program[1]&(1<<4) else "off"}">Friday</button></td>
+									<td><button id="day5" class="weekday pushon ${"on" if program[1]&(1<<5) else "off"}">Saturday</button></td>
+									<td><button id="day6" class="weekday pushon ${"on" if program[1]&(1<<6) else "off"}">Sunday</button></td>
+								</td>
+								$ firstTime = True
+								$for bid in range(0, gv.sd['nbrd']):
 									$for s in range(0,8):
-										$ sid = bid*8 + s
+										$ sid = bid*8 + s;
+										$ sn = sid + 1
 										$ show = (gv.sd['show'][bid]>>s)&1
-				 						$if show == 1:
-				 							$ inRow = inRow - 1
-				 							$if inRow < 0:
-												<tr>
-											<td><input type="checkbox" id="s${sid}">${snames[sid]}</td>
-				 							$if inRow < 0:
-												</tr>
-												$ inRow = 4
+							 			$if show == 1 and sn != gv.sd['mas']:
+							 				$ stationEnabled = program[bid+7]&(1<<s)
+							 				<tr>
+												<td class='station_name'>${snames[sid]}</td>
+												<td>
+													<button id="station${sid}" class='station toggle narrow ${'on' if stationEnabled else 'off'}'><span class='toggleleft'>On</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Off</span></button>
+												</td>
+												$for d in range(0,7):
+													$ status = ("stationOn" if stationEnabled else "") + (" dayOn" if program[1]&(1<<d) else "")
+													<td class="showWeekly stationState ${status} station${sid} day${d}" $:{"" if weekly else "style='display:none'"}></td>
+												$if firstTime:
+													<td class="showInterval" $:{"style='display:none'" if weekly else ""} rowspan="${stationsShown}">
+														<p>Water interval:</p>
+														<div id="intervalSelector" class="animatedSelector controlblock">
+															<!--  Customize this with any set of intervals you like up to 127 -->
+															<span class="intervalSelect ${"distance0" if weekly else ""}">2</span>
+															<span class="intervalSelect">3</span>
+															<span class="intervalSelect">4</span>
+															<span class="intervalSelect">5</span>
+															<span class="intervalSelect">6</span>
+															<span class="intervalSelect">7</span>
+															<span class="intervalSelect">10</span>
+															<span class="intervalSelect">12</span>
+															<span class="intervalSelect">14</span>
+															<span class="intervalSelect">15</span>
+															<span class="intervalSelect">21</span>
+															<span class="intervalSelect">30</span>
+														</div>
+														<p>Starting in:</p>
+														<div id="intervalDelaySelector" class="animatedSelector controlblock">
+															$if weekly:
+																<span class="intervalSelect distance0">0</span>
+																<span class="intervalSelect distance1">1</span>
+															$else:
+																<span class="intervalSelect distance0">${program[1]&0x7F}</span>
+														</div>
+													</td>
+													$ firstTime = False
+											</tr>
+								<tr class="showWeekly" $:{"" if weekly else "style='display:none'"}>
+									<td colspan="2"></td>
+									<td colspan="7">
+										<button id="cRestrictions" class="toggle choice ${'off' if even or odd else 'on'}"><span class='toggleleft'>Any Day</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Restrict Day</span></button>
+										<span id="evenodd" $:{"" if even or odd else "style='display:none'"}>
+											<button id="cEvenOdd" class="toggle narrow choice ${'on' if even else 'off'}" ><span class='toggleleft'>Even</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Odd</span></button>
+											(except 31st and Feb 29th)</span>
+									</td>
+								</tr>
 							</table>
-						</p>
-						<p></p>
-						<hr>
-						<p></p>
-						<b>Time:</b> <input type="text" size="2" maxlength="2" id="tsh"> : 
-						<input type="text" size="2" maxlength="2" id="tsm"> -> 
-						<input type="text" size="2" maxlength="2" id="teh"> : 
-						<input type="text" size="2" maxlength="2" id="tem"> (hh:mm)<br>
-						<b>Every:</b> <input type="text" size="2" maxlength="2" id="tih"> hours 
-						<input type="text" size="2" maxlength="2" id="tim"> minutes <br>
-						<b>Duration:</b> <input type="text" size="2" maxlength="3" id="tdm"> minutes 
-						<input type="text" size="2" maxlength="2" id="tds"> seconds
-						<p></p>
-						<hr>
-					</div>
-				</form>
-			</div>
-			
-			<div id="controls">
-				<button id="cSubmit" class="submit icon"><b>Submit</b></button>
-				<button id="cCancel" class="cancel icon">Cancel</button>
+						</div>
+					</form>
+				</div>
+				
+				<div id="controls">
+					<button id="cSubmit" class="submit"><b>Submit</b></button>
+					<button id="cCancel" class="cancel danger">Cancel</button>
+					<span id="errorHint"></span>
+				</div>
+				<div id="log"></div>
 			</div>
 		</div>
 		
 		<div class="footer">
+			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
+			<p><a href="https://github.com/jonathan-marsh/OSPi">Firmware</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
 		</div>
 	</div>
 </body>
