@@ -127,13 +127,8 @@ def log_run():
         
         start = time.gmtime(gv.now - gv.lrun[2])
         logline = '{"program":"' + pgr + '","station":' + str(gv.lrun[0]) + ',"duration":"' + timestr(gv.lrun[2]) + '","start":"' + time.strftime('%H:%M:%S","date":"%Y-%m-%d"', start) + '}\n'
-        try:
-            f = open('./data/log.json', 'r')
-            log = f.readlines()
-            f.close()
-            log.insert(0, logline)
-        except IOError:
-            log = [logline]
+        log = read_log()
+        log.insert(0, logline)
         f = open('./data/log.json', 'w')
         if gv.sd['lr']:
             f.writelines(log[:gv.sd['lr']])
@@ -374,6 +369,15 @@ def save(dataf, datastr):
     f.close()
     return
 
+def read_log():
+    try:
+        logf = open('./data/log.json')
+        records = logf.readlines()
+        logf.close()
+        return records
+    except IOError:
+        return []
+	
 def jsave(data, fname):
     """Save data to a json file."""
     f = open('./data/'+fname+'.json', 'w')
@@ -896,9 +900,7 @@ class delete_program:
 class view_log:
     """View Log"""
     def GET(self):
-        logf = open('data/log.json')
-        records = logf.readlines()
-        logf.close()
+        records = read_log()
         snames = data('snames')
         zones = re.findall(r"\'(.+?)\'",snames)
 
@@ -1036,12 +1038,7 @@ class api_log:
     def GET(self):
         qdict = web.input()
 
-        try:
-            logf = open('data/log.json')
-            records = logf.readlines()
-            logf.close()
-        except IOError:
-            records = []
+        records = read_log()
         data = []
         
         for r in records:
@@ -1055,10 +1052,7 @@ class api_log:
 class water_log:
     """Simple Log API"""
     def GET(self):
-        logf = open('data/log.json')
-        records = logf.readlines()
-        logf.close()
-
+        records = read_log()
         data = "Program, Zone, Start Time, Duration, Date\n"
         for r in records:
             event = json.loads(r)

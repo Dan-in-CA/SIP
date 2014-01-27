@@ -258,7 +258,7 @@ button.execute {
 button.toggle {
 	background-repeat: no-repeat;
 	background-position: center center;
-	width: 300px;
+	width: 304px;
 	padding: 4px;
 	text-align: center;
 	color: #DDD;
@@ -343,6 +343,8 @@ table.stationList {
 	border-radius: 12px;
 	padding: 4px;
 	border-spacing: 0px;
+	empty-cells: show;
+	border-collapse: separate;
 }
 td.station_name {
 	text-align: right; 
@@ -486,19 +488,24 @@ table.logList th {
 /******** Schedule graph Styles **********/
 
 td.stationSchedule {
-	position: relative;
 	padding: 0px;
+}
+.scheduleMarkerContainer {
+	margin:0px;
+	padding:0px;
+	height:28px;
+	position:relative;
 }
 .scheduleMarker {
 	position:absolute;
 	top: 0px;
-	height:100%;
+	height:28px;
 }
 .nowMarker {
 	position:absolute;
 	top: 0px;
 	background-color: #7D1921;
-	height:100%;
+	height:28px;
 }
 .nowMarker.on {
 	background-color: #397F19;	
@@ -511,7 +518,6 @@ td.stationSchedule {
 	font-size: 9px;
 	text-align:center;
 	color: #2E3959;
-
 	border-right:1px solid #2E3959;
 }
 .scheduleTick:last-child {

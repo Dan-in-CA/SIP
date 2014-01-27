@@ -108,13 +108,14 @@ function displaySchedule(schedule) {
 		jQuery(this).empty();
 		var sid = jQuery(this).parent().attr("data");
 		var slice = parseInt(jQuery(this).attr("data"))*60;
+		var boxes = jQuery("<div class='scheduleMarkerContainer'></div>");
 		for (var s in schedule) {
 			if (schedule[s].station == sid) {
 				if (!(isToday && schedule[s].date == undefined && schedule[s].start + schedule[s].duration/60 < nowMark)) {
 					var relativeStart = schedule[s].start - slice;
 					var relativeEnd = schedule[s].start + schedule[s].duration/60 - slice;
 					if (0 <= relativeStart && relativeStart < 60 ||
-						0 < relativeEnd && relativeEnd <= 60 ||
+						0.05 < relativeEnd && relativeEnd <= 60 ||
 						relativeStart < 0 && relativeEnd >= 60) {
 						var barStart = Math.max(0,relativeStart)/60;
 						var barWidth = Math.max(0.05,Math.min(relativeEnd, 60)/60 - barStart);
@@ -126,14 +127,17 @@ function displaySchedule(schedule) {
 						}
 						programClassesUsed[schedule[s].program] = programClass;
 						var markerClass = (schedule[s].date == undefined ? "schedule" : "history");
-						jQuery(this).append("<div class='scheduleMarker " + programClass + " " + markerClass + "' style='left:" + barStart*100 + "%;width:" + barWidth*100 + "%' title='" + programName(schedule[s].program) + ": " + toClock(schedule[s].start) + " for " + toClock(schedule[s].duration) + "'></div>");
+						boxes.append("<div class='scheduleMarker " + programClass + " " + markerClass + "' style='left:" + barStart*100 + "%;width:" + barWidth*100 + "%' title='" + programName(schedule[s].program) + ": " + toClock(schedule[s].start) + " for " + toClock(schedule[s].duration) + "'></div>");
 					}
 				}
 			}
 		}
 		if (isToday && slice <= nowMark && nowMark < slice+60) {
 			var stationOn = jQuery(this).parent().children(".stationStatus").hasClass("station_on");
-			jQuery(this).append("<div class='nowMarker" + (stationOn?" on":"")+ "' style='width:2px;left:"+ (nowMark-slice)/60*100 + "%;'>");
+			boxes.append("<div class='nowMarker" + (stationOn?" on":"")+ "' style='width:2px;left:"+ (nowMark-slice)/60*100 + "%;'>");
+		}
+		if (boxes.children().length > 0) {
+			jQuery(this).append(boxes);
 		}
 	});
 	jQuery("#legend").empty();
