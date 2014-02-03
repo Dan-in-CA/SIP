@@ -116,6 +116,9 @@ span.stationName:last-child:after {
 #errorHint {
 	color: #7D1921;
 }
+.inputError {
+	color: #7D1921;
+}
 .showInterval {
 	text-align:center;
 }

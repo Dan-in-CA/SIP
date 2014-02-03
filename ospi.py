@@ -10,7 +10,11 @@ except:
     sys.exit()
      
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
+from web import form
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
+
+import random
+from hashlib import sha1
 
 try:
     import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
@@ -54,7 +58,9 @@ urls = [
     '/rev', 'show_revision',
     '/wl', 'water_log',
     '/api/status', 'api_status',
-    '/api/log', 'api_log'
+    '/api/log', 'api_log',
+    '/login', 'login',
+    '/logout', 'logout'
     ]
 
   #### Import ospi_addon module (ospi_addon.py) if it exists. ####
@@ -65,13 +71,6 @@ urls = [
     
   #### Function Definitions ####
   
-def approve_pwd(qdict):
-    """Password checking"""
-    try:
-        if not gv.sd['ipas'] and not qdict['pw'] == base64.b64decode(gv.sd['pwd']):
-            raise web.unauthorized()
-    except KeyError:
-        pass
 
 def baseurl():
     """Return URL app is running under.""" 
@@ -412,6 +411,13 @@ def output_prog():
         progstr += 'pd['+str(i)+']='+str(pro).replace(' ', '')+';'
     return progstr      
 
+def passwordSalt():
+    return "".join(chr(random.randint(33,127)) for x in xrange(64))
+
+def passwordHash(password, salt):
+    return sha1(password + salt).hexdigest()
+
+
     #####  GPIO  #####
 def set_output():
     """Activate triacs according to shift register state."""
@@ -437,9 +443,14 @@ def to_sec(d=0, h=0, m=0, s=0):
 gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
             "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
             "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
-            "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
+            "urs": 0, "nopts": 13, "password": "", "salt": "", "ipas": 0, "rst": 1,
             "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
             "snlen":32, "name":u"OpenSprinkler Pi","theme":"basic","show":[255]})
+
+gv.sd['salt'] = passwordSalt()
+gv.sd['password'] = passwordHash('opendoor', gv.sd['salt'])
+# note old passwords stored in the "pwd" option will be lost - reverts to default password.
+
 try:
     sdf = open('./data/sd.json', 'r') ## A config file ##
     sd_temp = json.load(sdf) 
@@ -475,6 +486,7 @@ for i in range(gv.sd['nst']):
 gv.lrun=[0,0,0,0] #station index, program number, duration, end time (Used in UI)
 
 gv.scount = 0 # Station count, used in set station to track on stations with master association.
+
 
   ####  GPIO  #####
 
@@ -542,22 +554,68 @@ def setShiftRegister(srvals):
     except NameError:
         pass    
 
-  ##################
+  ########################
+  #### Login Handling ####
 
+def checkPassword(password, salt, hash):
+    return hash == sha1(password + salt).hexdigest()
+
+def checkLogin():
+    try:
+        if gv.sd['ipas'] == 0 and web.config._session.user != 'admin':
+            raise web.seeother('/login')
+    except KeyError:
+        pass
+        
+def verifyLogin():
+    try:
+        if gv.sd['ipas'] == 0 and web.config._session.user != 'admin':
+            raise web.unauthorized()
+    except KeyError:
+        pass
+
+signin_form = form.Form(form.Password('password',
+                                      description='Password:'),
+                        validators = [form.Validator("Incorrect password, please try again",
+                                      lambda x: checkPassword(x.password, gv.sd['salt'], gv.sd['password'])) ])
+
+class login:
+    """Login page"""
+    def GET(self):
+        render = web.template.render('templates', globals={'gv': gv, 'str': str, 'user': web.config._session.user})
+        return render.login(signin_form())
+
+    def POST(self): 
+        my_signin = signin_form() 
+        render = web.template.render('templates', globals={'gv': gv, 'str': str, 'user': web.config._session.user})
+        if not my_signin.validates(): 
+            return render.login(my_signin)
+        else:
+            web.config._session.user = 'admin'
+            raise web.seeother('/')
+
+class logout:
+    def GET(self):
+        web.config._session.user = 'anonymous'
+        raise web.seeother('/')
+
+
+  ###########################
   #### Class Definitions ####
 class home:
     """Open Home page."""
     def GET(self):
+        checkLogin()
         gv.baseurl = baseurl()
         gv.cputemp = CPU_temperature()
-        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
+        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data, 'user': web.config._session.user })
         return render.home()
 
 class change_values:
     """Save controller values, return browser to home page."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         if qdict.has_key('rsn') and qdict['rsn'] == '1':
             stop_stations()    
             raise web.seeother('/')
@@ -593,26 +651,40 @@ class change_values:
 class view_options:
     """Open the options page for viewing and editing."""
     def GET(self):
+        checkLogin()
+        qdict = web.input()
+        errorCode = "none"
+        if qdict.has_key('errorCode'):
+            errorCode = qdict['errorCode']
         gv.baseurl = baseurl()
         gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data})
-        return render.options()
+        return render.options(errorCode)
 
 class change_options:
     """Save changes to options made on the options page."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
+        if qdict['opw'] != "":
+            try:
+                if passwordHash(qdict['opw'], gv.sd['salt']) == gv.sd['password']:
+                    if qdict['npw'] == "":
+                        raise web.seeother('/vo?errorCode=pw_blank')
+                    elif qdict['cpw'] !='' and qdict['cpw'] == qdict['npw']:
+                        gv.sd['password'] = passwordHash(qdict['npw'], gv.sd['salt'])
+                    else:
+                        raise web.seeother('/vo?errorCode=pw_mismatch')
+                else:
+                    raise web.seeother('/vo?errorCode=pw_wrong')
+            except KeyError:
+                pass
+		
         try:
             if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == ''):
                 gv.sd['ipas'] = 1
             else:
                 gv.sd['ipas'] = 0
-        except KeyError:
-            pass
-        try:
-            if qdict['cpw'] !='' and qdict['cpw'] == qdict['npw']:
-                gv.sd['pwd'] = base64.b64encode(qdict['npw'])
         except KeyError:
             pass
         
@@ -714,6 +786,7 @@ class change_options:
 class view_stations:
     """Open a page to view and edit a run once program."""
     def GET(self):
+        checkLogin()
         gv.baseurl = baseurl()
         gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
@@ -722,8 +795,8 @@ class view_stations:
 class change_stations:
     """Save changes to station names, ignore rain and master associations."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         for i in range(gv.sd['nbrd']): # capture master associations
             if qdict.has_key('m'+str(i)):
                 try:
@@ -754,6 +827,7 @@ class change_stations:
 class get_station:
     """Return a page containing a number representing the state of a station or all stations if 0 is entered as statin number."""
     def GET(self, sn):
+        verifyLogin()
         if sn == '0':
             status = '<!DOCTYPE html>\n'
             status += ''.join(str(x) for x in gv.srvals)
@@ -768,6 +842,7 @@ class get_station:
 class set_station:
     """turn a station (valve/zone) on=1 or off=0 in manual mode."""
     def GET(self, nst, t=None): # nst = station number, status, optional duration
+        verifyLogin()
         nstlst = [int(i) for i in re.split('=|&t=', nst)]
         if len(nstlst) == 2:
             nstlst.append(0)
@@ -792,6 +867,7 @@ class set_station:
 class view_runonce:
     """Open a page to view and edit a run once program."""
     def GET(self):
+        checkLogin()
         gv.baseurl = baseurl()
         gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
@@ -800,8 +876,8 @@ class view_runonce:
 class change_runonce:
     """Start a Run Once program. This will override any running program."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         if not gv.sd['en']: return # check operation status
         gv.rovals = json.loads(qdict['t'])
         gv.rovals.pop()
@@ -825,6 +901,7 @@ class change_runonce:
 class view_programs:
     """Open programs page."""
     def GET(self):
+        checkLogin()
         gv.baseurl = baseurl()
         gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
@@ -834,6 +911,7 @@ class view_programs:
 class modify_program:
     """Open programs page."""
     def GET(self):
+        checkLogin()
         qdict = web.input()
         pid = int(qdict['pid'])
         prog = [];
@@ -853,8 +931,8 @@ class modify_program:
 class change_program:
     """Add a program or modify an existing one."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         pnum = int(qdict['pid'])+1 # program number
         cp = json.loads(qdict['v'])      
         if cp[0] == 0 and pnum == gv.pon: # if disabled and program is running
@@ -885,8 +963,8 @@ class change_program:
 class delete_program:
     """Delete one or all existing program(s)."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         if qdict['pid'] == '-1':
             del gv.pd[:]
             jsave(gv.pd, 'programs')
@@ -900,6 +978,7 @@ class delete_program:
 class view_log:
     """View Log"""
     def GET(self):
+        verifyLogin()
         records = read_log()
         snames = data('snames')
         zones = re.findall(r"\'(.+?)\'",snames)
@@ -918,8 +997,8 @@ class view_log:
 class clear_log:
     """Delete all log records"""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         f = open('./data/log.json', 'w')
         f.write('')
         f.close
@@ -928,8 +1007,8 @@ class clear_log:
 class log_options:
     """Set log options from dialog."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         if qdict.has_key('log'): gv.sd['lg'] = 1
         else: gv.sd['lg'] = 0      
         gv.sd['lr'] = int(qdict['nrecords'])
@@ -939,8 +1018,8 @@ class log_options:
 class run_now:
     """Run a scheduled program now. This will override any running programs."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         pid = int(qdict['pid'])
         p = gv.pd[int(qdict['pid'])] # program data
         if not p[0]: # if program is disabled
@@ -961,6 +1040,7 @@ class run_now:
 class show_revision:
     """Show revision info to the user. Use: [URL of Pi]/rev."""
     def GET(self):
+        checkLogin()
         revpg = '<!DOCTYPE html>\n'
         revpg += 'Python Interval Program for OpenSprinkler Pi<br/><br/>\n'
         revpg += 'Compatable with OpenSprinkler firmware 1.8.3.<br/><br/>\n'
@@ -971,6 +1051,7 @@ class show_revision:
 class toggle_temp:
     """Change units of Raspi's CPU temperature display on home page."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
         if qdict['tunit'] == "C":
             gv.sd['tu'] = "F"
@@ -982,6 +1063,7 @@ class toggle_temp:
 class api_status:
     """Simple Status API"""
     def GET(self):
+        verifyLogin()
         statuslist = []
         for bid in range(0, gv.sd['nbrd']):
             for s in range(0,8):
@@ -1036,6 +1118,7 @@ class api_status:
 class api_log:
     """Simple Log API"""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
 
         records = read_log()
@@ -1043,7 +1126,7 @@ class api_log:
         
         for r in records:
             event = json.loads(r)
-            if not(qdict.has_key('date')) or event["date"] == qdict['date']:
+            if not(qdict.has_key('date')) or event['date'] == qdict['date']:
                 data.append(event)
  
         web.header('Content-Type', 'application/json')
@@ -1052,6 +1135,7 @@ class api_log:
 class water_log:
     """Simple Log API"""
     def GET(self):
+        verifyLogin()
         records = read_log()
         data = "Program, Zone, Start Time, Duration, Date\n"
         for r in records:
@@ -1069,5 +1153,7 @@ class OSPi_app(web.application):
 
 if __name__ == '__main__':
     app = OSPi_app(urls, globals())
+    if web.config.get('_session') is None:
+        web.config._session = web.session.Session(app, web.session.DiskStore('sessions'), initializer={'user': 'anonymous'})
     thread.start_new_thread(timing_loop, ())
     app.run()

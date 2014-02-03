@@ -59,7 +59,6 @@ $code:
 		var cputemp = "${gv.cputemp}";
 		var tempunit = "${gv.sd['tu']}";
 
-		var ipas = ${gv.sd['ipas']};
 		var nbrd = ${gv.sd['nbrd']};
 		var mas = ${gv.sd['mas']};
 	</script>
@@ -69,16 +68,9 @@ $code:
 		jQuery(document).ready(function(){
 						
 			jQuery("button#nDelAll, button.cDelete").click(function(){
-				var p="";
-				if (!ipas) {
-					p = prompt("Please enter your password:","");
-				}
-				if (p != null) {
-					var pid = jQuery(this).attr("data");
-					jQuery("form#df input[name='pw']").val(p);
-					jQuery("form#df input[name='pid']").val(pid);
-					jQuery("form#df").submit();
-				}
+				var pid = jQuery(this).attr("data");
+				jQuery("form#df input[name='pid']").val(pid);
+				jQuery("form#df").submit();
 			});
 			
 			jQuery("button#nAdd, button.cModify").click(function(){
@@ -88,16 +80,9 @@ $code:
 			});
 			
 			jQuery("button.cRunNow").click(function(){
-				var p="";
-				if (!ipas) {
-					p = prompt("Please enter your password:","");
-				}
-				if (p != null) {
-					var pid = jQuery(this).attr("data");
-					jQuery("form#rn input[name='pw']").val(p);
-					jQuery("form#rn input[name='pid']").val(pid);
-					jQuery("form#rn").submit();
-				}
+				var pid = jQuery(this).attr("data");
+				jQuery("form#rn input[name='pid']").val(pid);
+				jQuery("form#rn").submit();
 			});
 
 		});
@@ -125,14 +110,14 @@ $code:
 					<button id="bLog" class="log" title="View Log">Log</button>
 					<button id="bOptions" class="options" title="Options">Options</button>
 					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
+					$if not(gv.sd['ipas']):
+						<button id="bLogout" class="logout" title="Logout">Logout</button>
 				</div>
 
 				<form name="df" id="df" action="dp" method="get">
-					<input type="hidden" name="pw">
-					<input type="hidden" name="pid">
+						<input type="hidden" name="pid">
 				</form>
 				<form name="rn" id="rn" action="rp" method="get">
-					<input type="hidden" name="pw">
 					<input type="hidden" name="pid">
 				</form>
 				<form name="mf" id="mf" action="mp" method="get">

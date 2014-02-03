@@ -1,4 +1,4 @@
-$def with ()
+$def with (errorCode)
 
 <!-- 
   2013-13-06: jonathanmarsh
@@ -34,6 +34,7 @@ $code:
 		var timeFormat = 12;  //todo: make this a user-selectable option
 		var cputemp = "${gv.cputemp}";
 		var tempunit = "${gv.sd['tu']}";
+		var errorCode = "${errorCode}";
 	</script>
 	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
 	<script>		
@@ -70,6 +71,21 @@ $code:
 					jQuery(this).toggleClass("expanded").toggleClass("collapsed");
 				}
 			});
+			
+			switch (errorCode) {
+				case "pw_wrong":
+					jQuery("#erroropw").text("The password given was incorrect.");
+					jQuery("#erroropw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
+					break;
+				case "pw_blank":
+					jQuery("#errornpw").text("Please enter a password.");
+					jQuery("#errornpw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
+					break;
+				case "pw_mismatch":
+					jQuery("#errorcpw").text("Passwords done't match, please re-enter.");
+					jQuery("#errorcpw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
+					break;
+			}
 
 		});
 
@@ -98,6 +114,8 @@ $code:
 					<button id="bLog" class="log" title="View Log">Log</button>
 					<button id="bOptions" class="options here" title="Options">Options</button>
 					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
+					$if not(gv.sd['ipas']):
+						<button id="bLogout" class="logout" title="Logout">Logout</button>
 				</div>
 
 				<div id="options">
@@ -111,7 +129,7 @@ $code:
 						for opt in opts:
 							label = opt[0]
 							datatype = opt[1]
-							if datatype != "":
+							if datatype != "password":
 								value = gv.sd[opt[2]]
 							name = opt[2]
 							tooltip = opt[3]
@@ -128,6 +146,8 @@ $code:
 								output += "<input name='o" + name + "' type='checkbox' " + ("checked" if value>0 else "") + ">\n"
 							elif datatype == "string":
 								output += "<input name='o" + name + "' type='text' size='31' maxlength='31' value='" + value + "'>\n"
+							elif datatype == "password":
+								output += "<input name='" + name + "' type='password' size='31' maxlength='31'><span class='inputError' id='error" + name + "'></span>\n"
 							elif name == "tz":
 								output += "<input name='otz' type='hidden' value='0'>\n"
 								tz = value - 48
@@ -145,9 +165,6 @@ $code:
 								output += "<input name='ohtp' type='text' size='5' maxlength='5' value='" + str(value) + "'>\n"
 							elif name == "nbrd":
 								output += "<input name='onbrd' type='text' size='3' maxlength='3' value='" + str(value - 1) + "'>\n"
-							elif name == "npw":
-								output += "<input type='password' " + ('disabled ' if gv.sd['ipas'] else '') + "size='10' id='pwd' name='pw'>\n"
-								output += "New Password: <input name='npw' type='password' size='10'>&nbsp;&nbsp;Confirm Password:&nbsp;<input name='cpw' type='password' size='10'>\n"
 							else:
 								output += "<input name='o" + name + "' type='text' size='3' maxlength='3' value='" + str(value) + "'>\n"
 										

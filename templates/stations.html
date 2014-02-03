@@ -121,6 +121,8 @@ $code:
 					<button id="bLog" class="log" title="View Log">Log</button>
 					<button id="bOptions" class="options" title="Options">Options</button>
 					<button id="bStations" class="stations here" title="Configure Stations">Stations</button>
+					$if not(gv.sd['ipas']):
+						<button id="bLogout" class="logout" title="Logout">Logout</button>
 				</div>
 				
 				<div id="stations">
@@ -158,9 +160,6 @@ $code:
 											</td>
 									</tr>
 						</table>
-						
-						$if not(gv.sd['ipas']):
-							<p>Password:<input type="password" size="10" id="pwd" name="pw"></p>
 						
 						<p></p>
 						

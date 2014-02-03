@@ -48,7 +48,6 @@ $code:
 		var tempunit = "${gv.sd['tu']}";
 		var prog = ${prog};
 		var nbrd = ${gv.sd['nbrd']};
-		var ipas = ${gv.sd['ipas']};
 
 	</script>
 	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
@@ -259,21 +258,14 @@ $code:
 					alert("Error: Start time must be prior to end time.");
 					return;
 				}
-				// password
-				var p = "";
-				if (!ipas) {
-					p = prompt("Please enter your password:","");
+				
+				var v = "[" + en + "," + days + "," + dayInterval + "," + startTime + "," + endTime + "," + interval + "," + duration;
+				for (var i=0; i<nbrd; i++) {
+					v += "," + stations[i];
 				}
-				if (p != null) {
-					jQuery("form#mf input[name='pw']").val(p);
-					var v = "[" + en + "," + days + "," + dayInterval + "," + startTime + "," + endTime + "," + interval + "," + duration;
-					for (var i=0; i<nbrd; i++) {
-						v += "," + stations[i];
-					}
-					v += "]";
-					jQuery("form#mf input[name='v']").val(v);
-					jQuery("form#mf").submit();
-				}
+				v += "]";
+				jQuery("form#mf input[name='v']").val(v);
+				jQuery("form#mf").submit();
 			});
 			jQuery("button#cCancel").click(function(){
 				window.location="/vp";
@@ -304,12 +296,13 @@ $code:
 					<button id="bLog" class="log" title="View Log">Log</button>
 					<button id="bOptions" class="options" title="Options">Options</button>
 					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
+					$if not(gv.sd['ipas']):
+						<button id="bLogout" class="logout" title="Logout">Logout</button>
 				</div>
 		
 				<div id="programs">
 					<div class="title">${"Edit Program #" + str(pid+1) if (pid>-1) else "Add a New Program"}</div>
 					<form name="mf" id="mf" action="cp" method="get">
-						<input type="hidden" name="pw">
 						<input type="hidden" name="pid" value="${pid}">
 						<input type="hidden" name="v" value="$:{program}">
 						<div style="padding-left:5px;padding-right:5px;">

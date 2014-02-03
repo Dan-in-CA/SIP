@@ -228,6 +228,8 @@ $code:
 					<button id="bLog" class="log" title="View Log">Log</button>
 					<button id="bOptions" class="options" title="Options">Options</button>
 					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
+					$if not(gv.sd['ipas']):
+						<button id="bLogout" class="logout" title="Logout">Logout</button>
 				</div>
 		
 				<div class="title">Today's Schedule</div>

@@ -25,14 +25,6 @@ $code:
 			text-align: center;
 			font-family: Sans-serif;
 		}
-		
-		.pwspan { 
-			float:left; 
-			border-style:none;
-			clear:both;
-			margin:10px 0px 10px 0px;
-		}
-	
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>
@@ -47,20 +39,11 @@ $code:
 	<script>
 		// Initialize behaviors
 		jQuery(document).ready(function(){
-			var ipas = $gv.sd['ipas'];
-			
 			jQuery("button#nRefresh").click(function(){
 				window.location="/vl";
 			});
 			jQuery("button#nDeleteAll").click(function(){
-				var p = "";
-				if (!ipas) {
-					p = prompt("Password Required","");
-				}
-				if (p != null) {
-					jQuery("#pw") = p;
-					jQuery("form#df").submit();
-				}
+				jQuery("form#df").submit();
 			});
 			jQuery("button#nLogOptions,button#oCancel").click(function(){
 				jQuery("#overlay").toggle();
@@ -69,12 +52,6 @@ $code:
 				jQuery("form#logopts").submit();
 				jQuery("#overlay").toggle();
 			});
-
-			if (ipas) {
-				jQuery("#pwarea").hide()
-			} else {
-				jQuery("#pwarea").show()
-			}
 		});
 
 	</script>
@@ -102,13 +79,13 @@ $code:
 					<button id="bLog" class="log here" title="View Log">Log</button>
 					<button id="bOptions" class="options" title="Options">Options</button>
 					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
+					$if not(gv.sd['ipas']):
+						<button id="bLogout" class="logout" title="Logout">Logout</button>
 				</div>
 				
 				<div id="options">
 					<div class="title">Log $log_state</div>
-					<form method="get" action="cl" name="df">
-						<input id="pw" name="pw" type="hidden" />
-					</form>
+					<form method="get" action="cl" name="df"></form>
 					<form method="get" action="mp" name="mf">
 						<input id="pid" name="pid" type="hidden" value="-1" />
 					</form>
@@ -159,10 +136,6 @@ $code:
 					<input type="checkbox" id="log" name="log" $log_option ><br>
 					<label for="nrecords">Maximum records to keep:</label>
 					<input type="text" size="4" value="$gv.sd['lr']" id="nrecords" name="nrecords">(0 = no limit)<br>
-					$if not(gv.sd['ipas']):
-						<span id='pwarea' class="pwspan">
-							<label for="pw">Password Required:</label> <input type="password" size="10" id="pw">
-						</span><br>
 					<button id="oSubmit" class="submit icon">Submit</button>
 					<button id="oCancel" class="cancel icon">Cancel</button>
 				</form>

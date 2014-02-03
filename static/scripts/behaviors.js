@@ -64,6 +64,9 @@ jQuery(document).ready(function(){
 	jQuery("button#bLog").click(function(){
 		window.location = "/vl";
 	});
+	jQuery("button#bLogout").click(function(){
+		window.location = "/logout";
+	});
 
 	// start the clock
 	updateClock();
