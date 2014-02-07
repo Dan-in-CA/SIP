@@ -12,6 +12,12 @@ UPDATES
 ===========
 ***********
 
+February 7 2014
+--------------
+(Dan)<br/>
+Added support for Rain sensor and partial support for relay on OSPi Rev. 1.3   
+
+
 November 12 2013
 --------------
 (Dan)<br/>
