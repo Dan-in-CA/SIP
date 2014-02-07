@@ -482,6 +482,8 @@ try:
         pin_sr_clk = 7
         pin_sr_noe = 11
         pin_sr_lat = 15
+        pin_relay = 10
+        pin_rain_sense = 8
     elif gv.platform == 'bo':
         pin_sr_dat = "P9_11"
         pin_sr_clk = "P9_13"
