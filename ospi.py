@@ -23,6 +23,15 @@ except ImportError:
         print 'No GPIO module was loaded'
         pass
     
+import plugins
+
+for name in plugins.__all__:
+    plugin = getattr(plugins, name)
+    try:
+        register_plugin = plugin.register # see if the plugin has a 'register' attribute (function)
+    except AttributeError:
+        pass # If no register function, move on.
+    
 web.config.debug = False      
 
  #### Revision information ####
