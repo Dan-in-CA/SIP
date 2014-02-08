@@ -14,7 +14,7 @@ basedir = dirname(__file__)
 __all__ = []
 for name in glob(join(basedir, '*.py')):
     module = splitext(split(name)[-1])[0]
-    print "module = ", module
+#    print "module = ", module
 #    if not module.startswith('_') and module.isidentifier() and not iskeyword(module):
     if not module.startswith('_') and isidentifier(module) and not keyword.iskeyword(module):
         try:
