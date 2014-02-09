@@ -23,21 +23,12 @@ except ImportError:
         print 'No GPIO module was loaded'
         pass
     
-import plugins
-
-for name in plugins.__all__:
-    plugin = getattr(plugins, name)
-    try:
-        register_plugin = plugin.register # see if the plugin has a 'register' attribute (function)
-    except AttributeError:
-        pass # If no register function, move on.
-    
 web.config.debug = False      
 
  #### Revision information ####
 gv.ver = 183
-gv.rev = 143
-gv.rev_date = '26/November/2013'
+gv.rev = 144
+gv.rev_date = '07/February/2014'
 
  #### urls is a feature of web.py. When a GET request is received, the corresponding class is executed.
 urls = [
