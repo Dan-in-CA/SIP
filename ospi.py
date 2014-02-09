@@ -30,7 +30,7 @@ gv.ver = 183
 gv.rev = 144
 gv.rev_date = '07/February/2014'
 
- #### urls is a feature of web.py. When a GET request is received, the corresponding class is executed.
+ #### urls is used by web.py. When a GET request is received, the corresponding class is executed.
 urls = [
     '/',  'home',
     '/cv', 'change_values',
