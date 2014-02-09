@@ -1,13 +1,24 @@
 $def with (records)
 
 $code:
-    if gv.sd['lg'] == 1:
-        log_state = "Enabled"
-        log_option = "checked"
-    else:
-        log_state = "Disabled"
-        log_option = ""
-
+	if gv.sd['lg'] == 1:
+		log_state = "Enabled"
+		log_option = "checked"
+	else:
+		log_state = "Disabled"
+		log_option = ""
+		
+	def formatTime(t):
+		if gv.sd['tf']:
+			return t
+		else:
+			hour = int(t[0:2])
+			newhour = hour
+			if hour == 0:
+				newhour = 12
+			if hour > 12:
+				newhour = hour-12
+			return str(newhour)  + t[2:] + (" am" if hour<12 else " pm")
 
 <!doctype html>
 
@@ -31,7 +42,7 @@ $code:
 		// Variables set by ospi.py
 		var devt = ${gv.now}*1000;
 		var tz = ${gv.sd['tz']};
-		var timeFormat = 12;  //todo: make this a user-selectable option
+		var timeFormat = ${gv.sd['tf']};
 		var cputemp = "${gv.cputemp}";
 		var tempunit = "${gv.sd['tu']}";
 	</script>
@@ -99,20 +110,20 @@ $code:
 					<table class="logList">
 						<tr class="log_rec">
 							<th>Date</th>
-							<th>Program</th>
-							<th>Zone</th>
 							<th>Start Time</th>
+							<th>Zone</th>
 							<th>Duration</th>
+							<th>Program</th>
 						</tr>
 						$ odd = 1
 						$for r in records:
 							$ event = json.loads(r)
 							<tr class="log_rec ${'odd' if odd else 'even'}">
 								<td align='center'>${event["date"]}</td>
-								<td align='center'>${event["program"]}</td>
+								<td align='center'>${formatTime(event["start"])}</td>
 								<td align='center'>${event["station"]}</td>
-								<td align='center'>${event["start"]}</td>
 								<td align='center'>${event["duration"]}</td>
+								<td align='center'>${event["program"]}</td>
 							</tr>
 							$ odd = 1 - odd
 					</table>

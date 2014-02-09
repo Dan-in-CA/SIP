@@ -441,7 +441,7 @@ def to_sec(d=0, h=0, m=0, s=0):
 #Settings Dictionary. A set of vars kept in memory and persisted in a file.
 #Edit this default dictionary definition to add or remove "key": "value" pairs or change defaults.
 gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
-            "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
+            "rdst": 0, "loc": "", "tz": 48, "tf": 1, "rs": 0, "rd": 0, "mton": 0,
             "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
             "urs": 0, "nopts": 13, "password": "", "salt": "", "ipas": 0, "rst": 1,
             "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
@@ -694,6 +694,13 @@ class change_options:
             gv.sd['loc'] = qdict['oloc']
         if qdict.has_key('otz'):
             gv.sd['tz'] = int(qdict['otz'])
+        try:
+            if qdict.has_key('otf') and (qdict['otf'] == 'on' or qdict['otf'] == ''):
+                gv.sd['tf'] = 1
+            else:
+                gv.sd['tf'] = 0
+        except KeyError:
+            pass
 
         if int(qdict['onbrd'])+1 != gv.sd['nbrd']: self.update_scount(qdict)
         gv.sd['nbrd'] = int(qdict['onbrd'])+1
@@ -1137,10 +1144,10 @@ class water_log:
     def GET(self):
         verifyLogin()
         records = read_log()
-        data = "Program, Zone, Start Time, Duration, Date\n"
+        data = "Date, Start Time, Zone, Duration, Program\n"
         for r in records:
             event = json.loads(r)
-            data += event["program"] + ", " + str(event["station"]) + ", " + event["start"] + ", " + event["duration"] + ", " + event["date"] + "\n"
+            data += event["date"] + ", " + event["start"] + ", " + str(event["station"]) + ", " + event["duration"] + ", " + event["program"] + "\n"
  
         web.header('Content-Type', 'text/csv')
         return data

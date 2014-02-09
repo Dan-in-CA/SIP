@@ -1,5 +1,6 @@
 $def with ()
 $code:
+	tf = gv.sd["tf"]
 	snames = eval(data('snames'))
 
 	def twodigits(n):
@@ -16,10 +17,10 @@ $code:
 
 <!-- 
   2013-10-06: jonathanmarsh
-    - Converted to web.py template, retaining 99% of older look and feel
-    - Moved inline styling to stylesheet
-    - Moved inline behaviors to jQuery.
-    Note that the normal jQuery use of the dollar sign conflicts with the templating syntax - used the longer jQuery() throughout.
+	- Converted to web.py template, retaining 99% of older look and feel
+	- Moved inline styling to stylesheet
+	- Moved inline behaviors to jQuery.
+	Note that the normal jQuery use of the dollar sign conflicts with the templating syntax - used the longer jQuery() throughout.
  -->
 <html>
 <head>
@@ -46,7 +47,7 @@ $code:
 		// Variables set by ospi.py
 		var devt = ${gv.now}*1000;
 		var tz = ${gv.sd['tz']};
-		var timeFormat = 12;  //todo: make this a user-selectable option
+		var timeFormat = ${tf};
 		var cputemp = "${gv.cputemp}";
 		var tempunit = "${gv.sd['tu']}";
 
@@ -97,9 +98,9 @@ $code:
 					case "program" :
 						var minutes = Math.floor(station.remaining/60);
 						var seconds = station.remaining - 60*minutes;
-					    if (minutes < 10) {minutes = "0"+minutes;}
-					    if (seconds < 10) {seconds = "0"+seconds;}
-					    if (station.status == "on") {
+						if (minutes < 10) {minutes = "0"+minutes;}
+						if (seconds < 10) {seconds = "0"+seconds;}
+						if (station.status == "on") {
 							display = minutes+":"+seconds;
 						} else {
 							display = "(" + minutes+":"+seconds + ")";
@@ -330,30 +331,30 @@ $code:
 								</td>
 							</tr>
 							<tr><td colspan="2">
-								<td class="scheduleTick">00:00</td>
-								<td class="scheduleTick">01:00</td>
-								<td class="scheduleTick">02:00</td>
-								<td class="scheduleTick">03:00</td>
-								<td class="scheduleTick">04:00</td>
-								<td class="scheduleTick">05:00</td>
-								<td class="scheduleTick">06:00</td>
-								<td class="scheduleTick">07:00</td>
-								<td class="scheduleTick">08:00</td>
-								<td class="scheduleTick">09:00</td>
-								<td class="scheduleTick">10:00</td>
-								<td class="scheduleTick">11:00</td>
-								<td class="scheduleTick">12:00</td>
-								<td class="scheduleTick">13:00</td>
-								<td class="scheduleTick">14:00</td>
-								<td class="scheduleTick">15:00</td>
-								<td class="scheduleTick">16:00</td>
-								<td class="scheduleTick">17:00</td>
-								<td class="scheduleTick">18:00</td>
-								<td class="scheduleTick">19:00</td>
-								<td class="scheduleTick">20:00</td>
-								<td class="scheduleTick">21:00</td>
-								<td class="scheduleTick">22:00</td>
-								<td class="scheduleTick">23:00</td>
+								<td class="scheduleTick">${'00:00' if tf else '12 AM'}</td>
+								<td class="scheduleTick">${'01:00' if tf else '1 AM'}</td>
+								<td class="scheduleTick">${'02:00' if tf else '2 AM'}</td>
+								<td class="scheduleTick">${'03:00' if tf else '3 AM'}</td>
+								<td class="scheduleTick">${'04:00' if tf else '4 AM'}</td>
+								<td class="scheduleTick">${'05:00' if tf else '5 AM'}</td>
+								<td class="scheduleTick">${'06:00' if tf else '6 AM'}</td>
+								<td class="scheduleTick">${'07:00' if tf else '7 AM'}</td>
+								<td class="scheduleTick">${'08:00' if tf else '8 AM'}</td>
+								<td class="scheduleTick">${'09:00' if tf else '9 AM'}</td>
+								<td class="scheduleTick">${'10:00' if tf else '10 AM'}</td>
+								<td class="scheduleTick">${'11:00' if tf else '11 AM'}</td>
+								<td class="scheduleTick">${'12:00' if tf else '12 PM'}</td>
+								<td class="scheduleTick">${'13:00' if tf else '1 PM'}</td>
+								<td class="scheduleTick">${'14:00' if tf else '2 PM'}</td>
+								<td class="scheduleTick">${'15:00' if tf else '3 PM'}</td>
+								<td class="scheduleTick">${'16:00' if tf else '4 PM'}</td>
+								<td class="scheduleTick">${'17:00' if tf else '5 PM'}</td>
+								<td class="scheduleTick">${'18:00' if tf else '6 PM'}</td>
+								<td class="scheduleTick">${'19:00' if tf else '7 PM'}</td>
+								<td class="scheduleTick">${'20:00' if tf else '8 PM'}</td>
+								<td class="scheduleTick">${'21:00' if tf else '9 PM'}</td>
+								<td class="scheduleTick">${'22:00' if tf else '10 PM'}</td>
+								<td class="scheduleTick">${'23:00' if tf else '11 PM'}</td>
 							</tr>
 							$ odd = 1
 							$for bid in range(0, gv.sd['nbrd']):

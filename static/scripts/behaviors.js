@@ -11,12 +11,12 @@ function dateString(d) {
 
 function updateClock() {
 	var now = new Date(Date.now() + deviceTimeOffset);
-	if (timeFormat == 12) {
-		jQuery("#deviceTime span.hour").text(now.getHours()%12 == 0 ? "12" : now.getHours() % 12);
-		jQuery("#deviceTime span.ampm").text((now.getHours() > 12 ? "pm" : "am"));
-	} else {
+	if (timeFormat) {
 		jQuery("#deviceTime span.hour").text((now.getHours() < 10 ? "0" : "") + now.getHours());
 		jQuery("#deviceTime span.ampm").text("");
+	} else {
+		jQuery("#deviceTime span.hour").text(now.getHours()%12 == 0 ? "12" : now.getHours() % 12);
+		jQuery("#deviceTime span.ampm").text((now.getHours() > 12 ? "pm" : "am"));
 	}
 	jQuery("#deviceTime span.minute").text((now.getMinutes() < 10 ? "0" : "") + now.getMinutes());
 	jQuery("#deviceTime span.second").text(":" + (now.getSeconds() < 10 ? "0" : "") + now.getSeconds());

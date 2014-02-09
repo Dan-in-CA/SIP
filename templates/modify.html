@@ -2,10 +2,10 @@ $def with (pid, prog)
 
 <!-- 
   2013-10-22: jonathanmarsh
-    - Converted to web.py template, retaining 99% of older look and feel
-    - Moved inline styling to stylesheet
-    - Moved inline behaviors to jQuery.
-    Note that the normal jQuery use of the dollar sign conflicts with the templating syntax - used the longer jQuery() throughout.
+	- Converted to web.py template, retaining 99% of older look and feel
+	- Moved inline styling to stylesheet
+	- Moved inline behaviors to jQuery.
+	Note that the normal jQuery use of the dollar sign conflicts with the templating syntax - used the longer jQuery() throughout.
  -->
 
 $code:
@@ -29,7 +29,18 @@ $code:
 	even = program[1]&0x80 and program[2]==0
 	odd = program[1]&0x80 and program[2]==1
 	recurring = program[3] + program[6]/60*stationsOn < program[4]
-
+	tf = gv.sd['tf']
+	def formatTime(t):
+		if gv.sd['tf']:
+			return t
+		else:
+			hour = int(t[0:2])
+			newhour = hour
+			if hour == 0:
+				newhour = 12
+			if hour > 12:
+				newhour = hour-12
+			return str(newhour)  + t[2:] + (" am" if hour<12 else " pm")
 	
 <html>
 <head>
@@ -43,7 +54,7 @@ $code:
 		// Variables set by ospi.py
 		var devt = ${gv.now}*1000;
 		var tz = ${gv.sd['tz']};
-		var timeFormat = 12;  //todo: make this a user-selectable option
+		var timeFormat = ${gv.sd['tf']};
 		var cputemp = "${gv.cputemp}";
 		var tempunit = "${gv.sd['tu']}";
 		var prog = ${prog};
@@ -57,6 +68,18 @@ $code:
 		function parseTime(prefix) {
 			var h = parseInt(jQuery("#"+prefix+"h").val());
 			var m = parseInt(jQuery("#"+prefix+"m").val());
+			if (prefix.indexOf("i") < 0 && !timeFormat) {
+				var f = jQuery("#"+prefix+"f").val();
+				if (f == "PM") {
+					if (h != 12) {
+						h += 12;
+					}
+				} else {
+					if (h == 12) {
+						h = 0;
+					}
+				}
+			}
 			if (!(h>=0 && h<24 && m>=0 && m<60)) {
 				alert("Error: Incorrect time input " + prefix + ".");
 				return -1;
@@ -308,16 +331,36 @@ $code:
 						<div style="padding-left:5px;padding-right:5px;">
 							<p><button id="cProgramEnabled" class="toggle ${'on' if program[0] else 'off'}"><span class='toggleleft'>Program On</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Program Off</span></button></p>
 							<div class="controlBlock">
-								<p><b>Start Time:</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tsh" value="${twoDigits(program[3]/60)}"> : 
-								<input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tsm" value="${twoDigits(program[3]%60)}"> (hh:mm)</p>
+								<p>
+								$ t = formatTime(twoDigits(program[3]/60) + ":" + twoDigits(program[3]%60))
+									<b>Start Time:</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tsh" value="${t.split(":")[0]}"> : 
+									<input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tsm" value="${t.split(":")[1][0:2]}">
+								$if tf:
+									(hh:mm)
+								$else:
+									<select id='tsf'>
+										<option ${"selected" if t.find("am")>=0 else ""}>AM</option>
+										<option ${"selected" if t.find("pm")>=0 else ""}>PM</option>
+									</select>
+								</p>
 								<p><b>Duration:</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="3" id="tdm" value="${twoDigits(program[6]/60)}"> : 
 								<input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tds" value="${twoDigits(program[6]%60)}"> (mm:ss)</p>
 								<p><button id="cRecurring" class="toggle choice ${'off' if recurring else 'on'}"><span class='toggleleft'>Single pass</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Recurring</span></button></p>
 								<div id="recurr" $:{"" if recurring else "style='display:none'"}>
 									<p><b>Every:</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tih" value="${twoDigits(program[5]/60)}"> : 
 									<input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tim" value="${twoDigits(program[5]%60)}"> (hh:mm)</p>
-									<p><b>Until:</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="teh" value="${twoDigits(program[4]/60)}"> : 
-									<input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tem" value="${twoDigits(program[4]%60)}"></p>
+									<p>
+									$ t = formatTime(twoDigits(program[4]/60) + ":" + twoDigits(program[4]%60))
+										<b>Until:</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="teh" value="${t.split(":")[0]}"> : 
+										<input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tem" value="${t.split(":")[1][0:2]}">
+									$if tf:
+										(hh:mm)
+									$else:
+										<select id='tef'>
+											<option ${"selected" if t.find("am")>=0 else ""}>AM</option>
+											<option ${"selected" if t.find("pm")>=0 else ""}>PM</option>
+										</select>
+									</p>
 								</div>
 							</div>
 							<p><button id="cWeeklyInterval" class="toggle choice ${'on' if weekly else 'off'}"><span class='toggleleft'>Weekly</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Interval</span></button></p>
@@ -399,7 +442,7 @@ $code:
 				</div>
 				
 				<div id="controls">
-					<button id="cSubmit" class="submit"><b>Submit</b></button>
+					<button id="cSubmit" class="submit"><b>Save</b></button>
 					<button id="cCancel" class="cancel danger">Cancel</button>
 					<span id="errorHint"></span>
 				</div>
