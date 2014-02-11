@@ -48,7 +48,7 @@ function checkMatch(programs, simdate) {
 					if (mas == (sid+1)) continue; // skip master station
 					if (prog[7+bid]&(1<<s)) {
 						run.push({
-							program: parseInt(p),
+							program: (parseInt(p) + 1).toString(),
 							station: sid,
 							start: programTimer,
 							duration: duration
@@ -89,7 +89,7 @@ function programName(p) {
 	if (p == "Manual" || p == "Run-once") {
 		return p + " Program";
 	} else {
-		return "Program " + (parseInt(p) + 1);
+		return "Program " + p;
 	}
 }
 
@@ -123,7 +123,7 @@ function displaySchedule(schedule) {
 						if (schedule[s].program == "Manual" || schedule[s].program == "Run-once") {
 							programClass = "programManual";
 						} else {
-							programClass = "program" + (schedule[s].program+1)%10;
+							programClass = "program" + (parseInt(schedule[s].program)+1)%10;
 						}
 						programClassesUsed[schedule[s].program] = programClass;
 						var markerClass = (schedule[s].date == undefined ? "schedule" : "history");
