@@ -1,4 +1,4 @@
-$def with ()
+$def with (errorCode)
 
 <!-- 
   2013-13-06: jonathanmarsh
@@ -11,44 +11,7 @@ $def with ()
 $code:
 	opts = eval(data('options'))
 	snames = eval(data('snames'))
-	def renderoptions():
-		output = ""
-		for opt in opts:
-			label = opt[0]
-			datatype = opt[1]
-			value = gv.sd[opt[2]]
-			name = opt[2]
-			tooltip = opt[3]
-			
-			output += "<div class='option' title='" + tooltip + "'><span class='label'>" + label + ":</span>\n"
-			if datatype == "boolean":
-				output += "<input name='o" + name + "' type='checkbox' " + ("checked" if value>0 else "") + ">\n"
-			elif datatype == "string":
-				output += "<input name='o" + name + "' type='text' size='31' maxlength='31' value='" + value + "'>\n"
-			elif name == "tz":
-				output += "<input name='otz' type='hidden' value='0'>\n"
-				tz = value - 48
-				th = ("+" if tz>=0 else "-") + str(abs(tz)/4>>0)
-				tq = str((abs(tz)%4)*15/10>>0) + str((abs(tz)%4)*15%10)
-				output += "<input name='th' type='text' size='3' maxlength='3' value='"+ th +"'>:<input name='tq' type='text' size='3' maxlength='3' value='" + tq + "'>\n"
-			elif name == "mas":
-				output += "<select name='omas'>\n"
-				output += "<option " + ("selected " if value==0 else "") + "value='0'>None</option>\n"
-				for i in range(0,8):
-					if (gv.sd['show'][0]>>i)&1 == 1:
-						output += "<option " + ("selected " if value==i+1 else "") + "value='" + str(i+1) + "'>" + snames[i] + "  (Station " + str(i+1) + ")</option>\n"
-				output += "</select>\n"
-			elif name == "htp":
-				output += "<input name='ohtp' type='text' size='5' maxlength='5' value='" + str(value) + "'>\n"
-			elif name == "nbrd":
-				output += "<input name='onbrd' type='text' size='3' maxlength='3' value='" + str(value - 1) + "'>\n"
-			else:
-				output += "<input name='o" + name + "' type='text' size='3' maxlength='3' value='" + str(value) + "'>\n"
-						
-			output += "<span class='tooltip'>" + tooltip + "</span>\n"
-			output += "</div>\n\n"
-		return output
-	
+
 
 <html>
 <head>
@@ -64,6 +27,16 @@ $code:
 		.option {margin: 6px 0px; clear:both;}
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+	<script>
+		// Variables set by ospi.py
+		var devt = ${gv.now}*1000;
+		var tz = ${gv.sd['tz']};
+		var timeFormat = ${gv.sd['tf']};
+		var cputemp = "${gv.cputemp}";
+		var tempunit = "${gv.sd['tu']}";
+		var errorCode = "${errorCode}";
+	</script>
+	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
 	<script>		
 		// Initialize behaviors
 		jQuery(document).ready(function(){
@@ -74,6 +47,11 @@ $code:
 				jQuery(".tooltip").toggle();
 			});
 			
+			jQuery("button#cReboot").click(function(){
+				jQuery("form[name='hf'] input[name='rbt']").val(1);
+				jQuery("form[name='hf']").submit();
+			});
+			
 			jQuery("button#cSubmit").click(function(){
 				// process time zone value
 				var th = parseInt(jQuery("input[name='th']").val(),10);
@@ -81,12 +59,33 @@ $code:
 				tq = (tq/15>>0)/4.0;
 				th = th+(th>=0?tq:-tq);
 				jQuery("input[name='otz']").val(((th+12)*4)>>0);
-				jQuery("form").submit();
+				jQuery("form[name='of']").submit();
 			});
 			
 			jQuery("button#cCancel").click(function(){
 				window.location="/";
 			});
+			
+			jQuery(".collapsible").click(function(){
+				if (event.srcElement.nodeName == "H4") {
+					jQuery(this).toggleClass("expanded").toggleClass("collapsed");
+				}
+			});
+			
+			switch (errorCode) {
+				case "pw_wrong":
+					jQuery("#erroropw").text("The password given was incorrect.");
+					jQuery("#erroropw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
+					break;
+				case "pw_blank":
+					jQuery("#errornpw").text("Please enter a password.");
+					jQuery("#errornpw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
+					break;
+				case "pw_mismatch":
+					jQuery("#errorcpw").text("Passwords done't match, please re-enter.");
+					jQuery("#errorcpw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
+					break;
+			}
 
 		});
 
@@ -94,32 +93,99 @@ $code:
 </head>
 <body>
 	<div class="content">
-		<div class="header">
-			<div class="title">Set Options</div>
-			<div class="titlenote">Hover on each option to see tooltip.</div>
-		</div>
-		
-		<div class="body">
-			<div id="nav">
-				<button id="tooltips">Show Tooltips</button>
-			</div>
-			
-			<div id="options">
-				<form name="of" action="co" method="get">
-					$:{renderoptions()}
 
-					<h4>Password:<input name='pw' type='password' size='10' ${"disabled" if gv.sd['ipas'] else ""}/></h4>
-					<h4>Change password: <input name='npw' type='password' size='10'>&nbsp;&nbsp;Confirm:&nbsp;<input name='cpw' type='password' size='10'/></h4>
-				</form>
-			</div>
+		<div class="header">
+			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
+		</div>
 			
-			<div id="controls">
-				<button id='cSubmit' class="submit icon">Submit Changes</button>
-				<button id='cCancel' class="cancel icon">Cancel</button>
+		<div class="body">
+		
+			<div id="status">
+				<p id="deviceTime"><span class="hour"></span><span class="sep">:</span><span class="minute"></span><span class="second"></span><span class="ampm"></span></p>
+				<p id="deviceDate"></p>
+			</div>
+	
+			<div class="panel">
+			
+				<div id="nav">
+					<button id="bHome" class="home" title="Home">Home</button>
+					<button id="bPrograms" class="programs" title="Define Programs">Programs</button>
+					<button id="bRunOnce" class="start" title="Define Run Once Program">Run Once</button>
+					<button id="bLog" class="log" title="View Log">Log</button>
+					<button id="bOptions" class="options here" title="Options">Options</button>
+					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
+					$if not(gv.sd['ipas']):
+						<button id="bLogout" class="logout" title="Logout">Logout</button>
+				</div>
+
+				<div id="options">
+					<div class="title">Edit Options</div>
+					<button id="tooltips">Show Tooltips</button>
+					<form name="of" action="co" method="get">
+					$code:
+						output = ""
+						oldcategory = ""
+						categoryCloser = ""
+						for opt in opts:
+							label = opt[0]
+							datatype = opt[1]
+							if datatype != "password":
+								value = gv.sd[opt[2]]
+							name = opt[2]
+							tooltip = opt[3]
+							category = opt[4]
+							
+							if category != oldcategory:
+								if oldcategory == "System":
+									output += "<div class='option' title='Reboot system'><span class='label'>&nbsp;</span>\n<button id='cReboot' class='reboot danger'>Reboot</button></div>\n"
+								output += categoryCloser + "<div class='category collapsible collapsed'><h4>" + category + "</h4>"
+								categoryCloser = "</div>"
+							oldcategory = category
+							output += "<div class='option' title='" + tooltip + "'><span class='label'>" + label + ":</span>\n"
+							if datatype == "boolean":
+								output += "<input name='o" + name + "' type='checkbox' " + ("checked" if value>0 else "") + ">\n"
+							elif datatype == "string":
+								output += "<input name='o" + name + "' type='text' size='31' maxlength='31' value='" + value + "'>\n"
+							elif datatype == "password":
+								output += "<input name='" + name + "' type='password' size='31' maxlength='31'><span class='inputError' id='error" + name + "'></span>\n"
+							elif name == "tz":
+								output += "<input name='otz' type='hidden' value='0'>\n"
+								tz = value - 48
+								th = ("+" if tz>=0 else "-") + str(abs(tz)/4>>0)
+								tq = str((abs(tz)%4)*15/10>>0) + str((abs(tz)%4)*15%10)
+								output += "<input name='th' type='text' size='3' maxlength='3' value='"+ th +"'>:<input name='tq' type='text' size='3' maxlength='3' value='" + tq + "'>\n"
+							elif name == "mas":
+								output += "<select name='omas'>\n"
+								output += "<option " + ("selected " if value==0 else "") + "value='0'>None</option>\n"
+								for i in range(0,8):
+									if (gv.sd['show'][0]>>i)&1 == 1:
+										output += "<option " + ("selected " if value==i+1 else "") + "value='" + str(i+1) + "'>" + snames[i] + "  (Station " + str(i+1) + ")</option>\n"
+								output += "</select>\n"
+							elif name == "htp":
+								output += "<input name='ohtp' type='text' size='5' maxlength='5' value='" + str(value) + "'>\n"
+							elif name == "nbrd":
+								output += "<input name='onbrd' type='text' size='3' maxlength='3' value='" + str(value - 1) + "'>\n"
+							else:
+								output += "<input name='o" + name + "' type='text' size='3' maxlength='3' value='" + str(value) + "'>\n"
+										
+							output += "<span class='tooltip'>" + tooltip + "</span>\n"
+							output += "</div>\n\n"
+						output += categoryCloser
+					$:{output}
+						<input type="hidden" name="rbt" value="0">
+					</form>
+				</div>
+				
+				<div id="controls">
+					<button id='cSubmit' class="submit">Submit Changes</button>
+					<button id='cCancel' class="cancel danger">Cancel</button>
+				</div>
 			</div>
 		</div>
 		
 		<div class="footer">
+			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
+			<p><a href="https://github.com/jonathan-marsh/OSPi">Firmware</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
 		</div>
 	</div>
 </body>

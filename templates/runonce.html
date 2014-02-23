@@ -20,15 +20,24 @@ $code:
 	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>		
-		var ipas = ${gv.sd['ipas']};
+		// Variables set by ospi.py
+		var devt = ${gv.now}*1000;
+		var tz = ${gv.sd['tz']};
+		var timeFormat = ${gv.sd['tf']};
+		var cputemp = "${gv.cputemp}";
+		var tempunit = "${gv.sd['tu']}";
+
 		var nbrd = ${gv.sd['nbrd']};
 		var mas = ${gv.sd['mas']};
+	</script>
+	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
+	<script>		
 
 		// Initialize behaviors
 		jQuery(document).ready(function(){
 			
 			jQuery("button#cRunNow").click(function(){
-				var comm="/cr?pw=" + (ipas ? "" : jQuery("input[name='pw']").val()) + "&t=[";
+				var comm="/cr?&t=[";
 				var sid,strmm,strss,mm,ss,matchfound=0;
 				for (sid=0; sid<nbrd*8; sid++) {
 					if (sid+1 == mas) {
@@ -71,46 +80,60 @@ $code:
 <body>
 	<div class="content">
 		<div class="header">
-			<div class="title">Run Once Program</div>
+			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
 		</div>
 		
 		<div class="body">
-			<div id="nav">
+			<div id="status">
+				<p id="deviceTime"><span class="hour"></span><span class="sep">:</span><span class="minute"></span><span class="second"></span><span class="ampm"></span></p>
+				<p id="deviceDate"></p>
 			</div>
+	
+			<div class="panel">
 			
-			<div id="runonce">
-				<form name="rf" action="cr" method="get">
-					<table border=1>
-						$for bid in range(0, gv.sd['nbrd']):
-							$for s in range(0,8):
-							$ sid = bid*8 + s;
-							$ show = (gv.sd['show'][bid]>>s)&1
-				 			$if show == 1:
-					 			<tr>
-									<td bgcolor="#E4E4E4">${snames[sid]}&nbsp;&nbsp;</td>
-									<td>
-									$if sid+1 == gv.sd['mas']:
-										(<b>Master</b>)
-									$else:
-										<input type="text" size="3" maxlength="3" value="0" name="mm${sid}">:
-										<input type="text" size="2" maxlength="2" value="0" name="ss${sid}"> (mm:ss)
-									</td>
-								</tr>
-					
-					</table>
-					<hr><font size=3><b>Password:</b><input type=password size=10 ${"disabled" if gv.sd['ipas'] else ""} name="pw"></font>
-					<p></p>
-				</form>	
-			</div>
-			
-			<div id="controls">
-				<button id="cRunNow" class="submit icon"><b>Run Now</b></button>
-				<button id="cResetTime" class="refresh icon">Reset Time</button>
-				<button id="cCancel" class="cancel icon">Cancel</button>
+				<div id="nav">
+					<button id="bHome" class="home" title="Home">Home</button>
+					<button id="bPrograms" class="programs" title="Define Programs">Programs</button>
+					<button id="bRunOnce" class="start here" title="Define Run Once Program">Run Once</button>
+					<button id="bLog" class="log" title="View Log">Log</button>
+					<button id="bOptions" class="options" title="Options">Options</button>
+					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
+					$if not(gv.sd['ipas']):
+						<button id="bLogout" class="logout" title="Logout">Logout</button>
+				</div>
+								
+				<div id="runonce">
+					<div class="title">Run Once Program</div>
+					<form name="rf" action="cr" method="get">
+						<table class="stationList"
+							$for bid in range(0, gv.sd['nbrd']):
+								$for s in range(0,8):
+								$ sid = bid*8 + s;
+								$ show = (gv.sd['show'][bid]>>s)&1
+					 			$if show == 1 and sid+1 != gv.sd['mas']:
+						 			<tr>
+										<td class='station_name'>${snames[sid]}</td>
+										<td>
+											<input type="text" size="3" maxlength="3" value="0" name="mm${sid}">:
+											<input type="text" size="2" maxlength="2" value="0" name="ss${sid}"> (mm:ss)
+										</td>
+									</tr>
+						
+						</table>
+					</form>	
+				</div>
+				
+				<div id="controls">
+					<button id="cRunNow" class="submit"><b>Run Now</b></button>
+					<button id="cResetTime" class="refresh">Reset Time</button>
+					<button id="cCancel" class="cancel danger">Cancel</button>
+				</div>
 			</div>
 		</div>
 		
 		<div class="footer">
+			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
+			<p><a href="https://github.com/jonathan-marsh/OSPi">Firmware</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
 		</div>
 	</div>
 </body>

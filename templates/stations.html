@@ -19,18 +19,23 @@ $code:
 	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
 	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
 	<style type="text/css">
-		table {width:100%}
 		td.stationNumber, td.stationShow, td.stationIgnore, td.stationMaster {text-align:center}
-		th.stationShow, th.stationIgnore, th.stationMaster {text-align:center; border-left: 2px solid black}
 		td.stationName {text-align:left; padding-left:1em;}
-		th.stationName {text-align:left; padding-left:1em; border-left: 2px solid black}
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>		
 		// Variables set by ospi.py
-		var mas = ${gv.sd['mas']};
+		var devt = ${gv.now}*1000;
+		var tz = ${gv.sd['tz']};
+		var timeFormat = ${gv.sd['tf']};
+		var cputemp = "${gv.cputemp}";
+		var tempunit = "${gv.sd['tu']}";
+	
 		var nbrd = ${gv.sd['nbrd']};
-		
+		var mas = ${gv.sd['mas']};
+	</script>
+	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
+	<script>		
 		// Initialize behaviors
 		jQuery(document).ready(function(){
 			
@@ -98,67 +103,84 @@ $code:
 <body>
 	<div class="content">
 		<div class="header">
-			<div class="title">Configure Stations:</div>
-			<div class="titlenote">Maximum name length is ${gv.sd['snlen']} characters.</div>
+			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
 		</div>
 		
 		<div class="body">
-			<div id="nav">
+			<div id="status">
+				<p id="deviceTime"><span class="hour"></span><span class="sep">:</span><span class="minute"></span><span class="second"></span><span class="ampm"></span></p>
+				<p id="deviceDate"></p>
 			</div>
+	
+			<div class="panel">
 			
-			<div id="stations">
-				<form id="sf" name="sf" action="cs" method="get">
-					<table>
-						<tr>
-							<th class="stationNumber">Station</th>
-							<th class="stationName">Name</th>
-							<th class="stationShow">Connected?</th>
-							<th class="stationIgnore">Ignore Rain?</th>
-							$if gv.sd['mas'] > 0:
-								<th class="stationMaster">Activate Master?</th>
-						</tr>
-						$for bid in range(0,gv.sd['nbrd']):
-							$for s in range(0,8):
-								$ sid = bid*8 + s;
-								<tr>
-									<td class="stationNumber">${sid + 1}</td>
-									$if sid == gv.sd['mas'] - 1:
-										<td class="stationMaster" colspan="3">- - - - - - - Master - - - - - - </td>
-									$else:
+				<div id="nav">
+					<button id="bHome" class="home" title="Home">Home</button>
+					<button id="bPrograms" class="programs" title="Define Programs">Programs</button>
+					<button id="bRunOnce" class="start" title="Define Run Once Program">Run Once</button>
+					<button id="bLog" class="log" title="View Log">Log</button>
+					<button id="bOptions" class="options" title="Options">Options</button>
+					<button id="bStations" class="stations here" title="Configure Stations">Stations</button>
+					$if not(gv.sd['ipas']):
+						<button id="bLogout" class="logout" title="Logout">Logout</button>
+				</div>
+				
+				<div id="stations">
+					<div class="title">Configure Stations</div>
+					<form id="sf" name="sf" action="cs" method="get">
+						<table class="stationList">
+							<tr>
+								<th class="stationNumber">Station</th>
+								<th class="stationName">Name</th>
+								<th class="stationShow">Connected?</th>
+								<th class="stationIgnore">Ignore Rain?</th>
+								$if gv.sd['mas'] > 0:
+									<th class="stationMaster">Activate Master?</th>
+							</tr>
+							$for bid in range(0,gv.sd['nbrd']):
+								$for s in range(0,8):
+									$ sid = bid*8 + s;
+									<tr>
+										<td class="stationNumber">${sid + 1}</td>
 										<td class="stationName">
 											<input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid}" id="n${sid}">
 										</td>
-										<td class="stationShow">
-											<input type="checkbox" ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}">
-										</td>
-										<td class="stationIgnore">
-											<input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">
-										</td>
-									$if gv.sd['mas'] > 0 and gv.sd['mas'] != sid+1:
-										<td class="stationMaster">
-											<input type="checkbox" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}">
-										</td>
-								</tr>
-					</table>
-					
-					<hr><font size=3><b>Password:</b><input type=password size=10 ${"disabled" if gv.sd['ipas'] else ""} name="pw"></font>
-					<p></p>
-					
-					$for bid in range(gv.sd['nbrd']):
-						<input type="hidden" id="i${bid}" name="i${bid}"/>
-						<input type="hidden" id="sh${bid}" name="sh${bid}"/>
-						<input type="hidden" id="m${bid}" name="m${bid}"/>
-				</form>
-			</div>
-			
-			<div id="controls">
-				<button id="cSubmit" class="submit icon">Submit Changes</button>
-				<button id="cResetNames" class="refresh icon">Reset Names</button>
-				<button id="cCancel" class="cancel icon">Cancel</button>
+										$if sid == gv.sd['mas'] - 1:
+											<td class="stationMaster" colspan="3">(Master valve)</td>
+										$else:
+											<td class="stationShow">
+												<input type="checkbox" ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}">
+											</td>
+											<td class="stationIgnore">
+												<input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">
+											</td>
+										$if gv.sd['mas'] > 0 and gv.sd['mas'] != sid+1:
+											<td class="stationMaster">
+												<input type="checkbox" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}">
+											</td>
+									</tr>
+						</table>
+						
+						<p></p>
+						
+						$for bid in range(gv.sd['nbrd']):
+							<input type="hidden" id="i${bid}" name="i${bid}"/>
+							<input type="hidden" id="sh${bid}" name="sh${bid}"/>
+							<input type="hidden" id="m${bid}" name="m${bid}"/>
+					</form>
+				</div>
+				
+				<div id="controls">
+					<button id="cSubmit" class="submit">Submit Changes</button>
+					<button id="cResetNames" class="refresh">Reset Names</button>
+					<button id="cCancel" class="cancel danger">Cancel</button>
+				</div>
 			</div>
 		</div>
 		
 		<div class="footer">
+			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
+			<p><a href="https://github.com/jonathan-marsh/OSPi">Firmware</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
 		</div>
 	</div>
 </body>

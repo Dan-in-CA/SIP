@@ -42,4 +42,4 @@ lr:30 limit number of log records to keep, 0 = no limit
 
 UI related:
 name: u"OpenSprinkler Pi" System name. can be used to manage multiple controllers
-theme: "original" files used to style the UI
+theme: "original" files used to style the UItyle the UI

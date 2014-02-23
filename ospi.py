@@ -10,7 +10,11 @@ except:
     sys.exit()
      
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
+from web import form
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
+
+import random
+from hashlib import sha1
 
 try:
     import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
@@ -23,10 +27,10 @@ except ImportError:
         print 'No GPIO module was loaded'
         pass
     
-web.config.debug = False      
+web.config.debug = True      
 
  #### Revision information ####
-gv.ver = 183
+gv.ver = 190
 gv.rev = 141
 gv.rev_date = '30/October/2013'
 
@@ -46,14 +50,17 @@ urls = [
     '/mp', 'modify_program',
     '/cp', 'change_program',
     '/dp', 'delete_program',
-    '/gp', 'graph_programs',
     '/vl', 'view_log',
     '/cl', 'clear_log',
     '/lo', 'log_options',
     '/rp', 'run_now',
     '/ttu', 'toggle_temp',
     '/rev', 'show_revision',
-    '/api/status', 'api_status'
+    '/wl', 'water_log',
+    '/api/status', 'api_status',
+    '/api/log', 'api_log',
+    '/login', 'login',
+    '/logout', 'logout'
     ]
 
   #### Import ospi_addon module (ospi_addon.py) if it exists. ####
@@ -64,13 +71,6 @@ urls = [
     
   #### Function Definitions ####
   
-def approve_pwd(qdict):
-    """Password checking"""
-    try:
-        if not gv.sd['ipas'] and not qdict['pw'] == base64.b64decode(gv.sd['pwd']):
-            raise web.unauthorized()
-    except KeyError:
-        pass
 
 def baseurl():
     """Return URL app is running under.""" 
@@ -111,29 +111,29 @@ def CPU_temperature():
     except:
         pass
 
+def timestr(t):
+     return str((t/60>>0)/10>>0) + str((t/60>>0)%10) + ":" + str((t%60>>0)/10>>0) + str((t%60>>0)%10)
+
 def log_run():
     """add run data to csv file - most recent first."""
     if gv.sd['lg']:
-        snames = data('snames')
-        zones=re.findall(r"\'(.+?)\'",snames)
         if gv.lrun[1] == 98:
             pgr = 'Run-once'
         elif gv.lrun[1] == 99:
             pgr = 'Manual'
         else:
             pgr = str(gv.lrun[1])
-        datastr = (pgr +', '+str(zones[gv.lrun[0]])+', '+str(gv.lrun[2]/60)+'m'+str(gv.lrun[2]%60)+
-                   's, '+time.strftime("%H:%M:%S, %a. %d %b %Y", time.gmtime(gv.now))+'\n')
-        f = open('./static/log/water_log.csv', 'r')
-        log = f.readlines()
-        f.close()
-        log.insert(1, datastr)
-        f = open('./static/log/water_log.csv', 'w') 
+        
+        start = time.gmtime(gv.now - gv.lrun[2])
+        logline = '{"program":"' + pgr + '","station":' + str(gv.lrun[0]) + ',"duration":"' + timestr(gv.lrun[2]) + '","start":"' + time.strftime('%H:%M:%S","date":"%Y-%m-%d"', start) + '}\n'
+        log = read_log()
+        log.insert(0, logline)
+        f = open('./data/log.json', 'w')
         if gv.sd['lr']:
-            f.writelines(log[:gv.sd['lr']+1])
+            f.writelines(log[:gv.sd['lr']])
         else:
             f.writelines(log)
-        f.close  
+        f.close()
     return  
 
 def prog_match(prog):
@@ -159,7 +159,7 @@ def prog_match(prog):
 
 def schedule_stations(stations):
     """Schedule stattions/valves/zones to run."""
-    if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']): # If rain delay or rain detected by sensor
+    if gv.sd['rd']!=0 or (gv.sd['urs'] and gv.sd['rs']): # If rain delay or rain detected by sensor
         rain = True
     else:
         rain = False
@@ -338,7 +338,7 @@ def timing_loop():
         if gv.sd['urs']:
             check_rain()
             
-        if gv.sd['rd'] and gv.now>= gv.sd['rdst']: # Check of rain delay time is up          
+        if gv.sd['rd'] > 0 and gv.now >= gv.sd['rdst']: # Check of rain delay time is up          
             gv.sd['rd'] = 0
             gv.sd['rdst'] = 0 # Rain delay stop time
             jsave(gv.sd, 'sd')
@@ -368,6 +368,15 @@ def save(dataf, datastr):
     f.close()
     return
 
+def read_log():
+    try:
+        logf = open('./data/log.json')
+        records = logf.readlines()
+        logf.close()
+        return records
+    except IOError:
+        return []
+	
 def jsave(data, fname):
     """Save data to a json file."""
     f = open('./data/'+fname+'.json', 'w')
@@ -402,6 +411,13 @@ def output_prog():
         progstr += 'pd['+str(i)+']='+str(pro).replace(' ', '')+';'
     return progstr      
 
+def passwordSalt():
+    return "".join(chr(random.randint(33,127)) for x in xrange(64))
+
+def passwordHash(password, salt):
+    return sha1(password + salt).hexdigest()
+
+
     #####  GPIO  #####
 def set_output():
     """Activate triacs according to shift register state."""
@@ -425,11 +441,16 @@ def to_sec(d=0, h=0, m=0, s=0):
 #Settings Dictionary. A set of vars kept in memory and persisted in a file.
 #Edit this default dictionary definition to add or remove "key": "value" pairs or change defaults.
 gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
-            "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
+            "rdst": 0, "loc": "", "tz": 48, "tf": 1, "rs": 0, "rd": 0, "mton": 0,
             "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
-            "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
+            "urs": 0, "nopts": 13, "password": "", "salt": "", "ipas": 0, "rst": 1,
             "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
-            "snlen":32, "name":u"OpenSprinkler Pi","theme":"original","show":[255]})
+            "snlen":32, "name":u"OpenSprinkler Pi","theme":"basic","show":[255]})
+
+gv.sd['salt'] = passwordSalt()
+gv.sd['password'] = passwordHash('opendoor', gv.sd['salt'])
+# note old passwords stored in the "pwd" option will be lost - reverts to default password.
+
 try:
     sdf = open('./data/sd.json', 'r') ## A config file ##
     sd_temp = json.load(sdf) 
@@ -465,6 +486,7 @@ for i in range(gv.sd['nst']):
 gv.lrun=[0,0,0,0] #station index, program number, duration, end time (Used in UI)
 
 gv.scount = 0 # Station count, used in set station to track on stations with master association.
+
 
   ####  GPIO  #####
 
@@ -532,21 +554,68 @@ def setShiftRegister(srvals):
     except NameError:
         pass    
 
-  ##################
+  ########################
+  #### Login Handling ####
 
+def checkPassword(password, salt, hash):
+    return hash == sha1(password + salt).hexdigest()
+
+def checkLogin():
+    try:
+        if gv.sd['ipas'] == 0 and web.config._session.user != 'admin':
+            raise web.seeother('/login')
+    except KeyError:
+        pass
+        
+def verifyLogin():
+    try:
+        if gv.sd['ipas'] == 0 and web.config._session.user != 'admin':
+            raise web.unauthorized()
+    except KeyError:
+        pass
+
+signin_form = form.Form(form.Password('password',
+                                      description='Password:'),
+                        validators = [form.Validator("Incorrect password, please try again",
+                                      lambda x: checkPassword(x.password, gv.sd['salt'], gv.sd['password'])) ])
+
+class login:
+    """Login page"""
+    def GET(self):
+        render = web.template.render('templates', globals={'gv': gv, 'str': str, 'user': web.config._session.user})
+        return render.login(signin_form())
+
+    def POST(self): 
+        my_signin = signin_form() 
+        render = web.template.render('templates', globals={'gv': gv, 'str': str, 'user': web.config._session.user})
+        if not my_signin.validates(): 
+            return render.login(my_signin)
+        else:
+            web.config._session.user = 'admin'
+            raise web.seeother('/')
+
+class logout:
+    def GET(self):
+        web.config._session.user = 'anonymous'
+        raise web.seeother('/')
+
+
+  ###########################
   #### Class Definitions ####
 class home:
     """Open Home page."""
     def GET(self):
+        checkLogin()
         gv.baseurl = baseurl()
-        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
-        return render.home(CPU_temperature())
+        gv.cputemp = CPU_temperature()
+        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data, 'user': web.config._session.user })
+        return render.home()
 
 class change_values:
     """Save controller values, return browser to home page."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         if qdict.has_key('rsn') and qdict['rsn'] == '1':
             stop_stations()    
             raise web.seeother('/')
@@ -556,11 +625,14 @@ class change_values:
         elif qdict.has_key('en') and qdict['en'] == '0':
             gv.srvals = [0]*(gv.sd['nst']) # turn off all stations
             set_output()
-        if qdict.has_key('mm') and qdict['mm'] == '0': clear_mm()
+        if qdict.has_key('mm') and qdict['mm'] == '0':
+        	clear_mm()
         if qdict.has_key('rd') and qdict['rd'] != '0' and qdict['rd'] != '':
-            gv.sd['rdst'] = (gv.now+(int(qdict['rd'])*3600))
+            gv.sd['rd'] = float(qdict['rd'])
+            gv.sd['rdst'] = gv.now + gv.sd['rd']*3600 + 1 # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
             stop_onrain()
-        elif qdict.has_key('rd') and qdict['rd'] == '0': gv.sd['rdst'] = 0   
+        elif qdict.has_key('rd') and qdict['rd'] == '0':
+        	gv.sd['rdst'] = 0   
         if qdict.has_key('rbt') and qdict['rbt'] == '1':
             jsave(gv.sd, 'sd')
             gv.srvals = [0]*(gv.sd['nst'])
@@ -579,25 +651,40 @@ class change_values:
 class view_options:
     """Open the options page for viewing and editing."""
     def GET(self):
+        checkLogin()
+        qdict = web.input()
+        errorCode = "none"
+        if qdict.has_key('errorCode'):
+            errorCode = qdict['errorCode']
         gv.baseurl = baseurl()
-        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
-        return render.options()
+        gv.cputemp = CPU_temperature()
+        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data})
+        return render.options(errorCode)
 
 class change_options:
     """Save changes to options made on the options page."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
+        if qdict['opw'] != "":
+            try:
+                if passwordHash(qdict['opw'], gv.sd['salt']) == gv.sd['password']:
+                    if qdict['npw'] == "":
+                        raise web.seeother('/vo?errorCode=pw_blank')
+                    elif qdict['cpw'] !='' and qdict['cpw'] == qdict['npw']:
+                        gv.sd['password'] = passwordHash(qdict['npw'], gv.sd['salt'])
+                    else:
+                        raise web.seeother('/vo?errorCode=pw_mismatch')
+                else:
+                    raise web.seeother('/vo?errorCode=pw_wrong')
+            except KeyError:
+                pass
+		
         try:
             if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == ''):
                 gv.sd['ipas'] = 1
             else:
                 gv.sd['ipas'] = 0
-        except KeyError:
-            pass
-        try:
-            if qdict['cpw'] !='' and qdict['cpw'] == qdict['npw']:
-                gv.sd['pwd'] = base64.b64encode(qdict['npw'])
         except KeyError:
             pass
         
@@ -607,6 +694,13 @@ class change_options:
             gv.sd['loc'] = qdict['oloc']
         if qdict.has_key('otz'):
             gv.sd['tz'] = int(qdict['otz'])
+        try:
+            if qdict.has_key('otf') and (qdict['otf'] == 'on' or qdict['otf'] == ''):
+                gv.sd['tf'] = 1
+            else:
+                gv.sd['tf'] = 0
+        except KeyError:
+            pass
 
         if int(qdict['onbrd'])+1 != gv.sd['nbrd']: self.update_scount(qdict)
         gv.sd['nbrd'] = int(qdict['onbrd'])+1
@@ -699,15 +793,17 @@ class change_options:
 class view_stations:
     """Open a page to view and edit a run once program."""
     def GET(self):
+        checkLogin()
         gv.baseurl = baseurl()
+        gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
         return render.stations()
 
 class change_stations:
     """Save changes to station names, ignore rain and master associations."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         for i in range(gv.sd['nbrd']): # capture master associations
             if qdict.has_key('m'+str(i)):
                 try:
@@ -738,6 +834,7 @@ class change_stations:
 class get_station:
     """Return a page containing a number representing the state of a station or all stations if 0 is entered as statin number."""
     def GET(self, sn):
+        verifyLogin()
         if sn == '0':
             status = '<!DOCTYPE html>\n'
             status += ''.join(str(x) for x in gv.srvals)
@@ -752,6 +849,7 @@ class get_station:
 class set_station:
     """turn a station (valve/zone) on=1 or off=0 in manual mode."""
     def GET(self, nst, t=None): # nst = station number, status, optional duration
+        verifyLogin()
         nstlst = [int(i) for i in re.split('=|&t=', nst)]
         if len(nstlst) == 2:
             nstlst.append(0)
@@ -776,15 +874,17 @@ class set_station:
 class view_runonce:
     """Open a page to view and edit a run once program."""
     def GET(self):
+        checkLogin()
         gv.baseurl = baseurl()
+        gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
         return render.runonce()
 
 class change_runonce:
     """Start a Run Once program. This will override any running program."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         if not gv.sd['en']: return # check operation status
         gv.rovals = json.loads(qdict['t'])
         gv.rovals.pop()
@@ -808,7 +908,9 @@ class change_runonce:
 class view_programs:
     """Open programs page."""
     def GET(self):
+        checkLogin()
         gv.baseurl = baseurl()
+        gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
         return render.programs()
                 
@@ -816,6 +918,7 @@ class view_programs:
 class modify_program:
     """Open programs page."""
     def GET(self):
+        checkLogin()
         qdict = web.input()
         pid = int(qdict['pid'])
         prog = [];
@@ -828,14 +931,15 @@ class modify_program:
             prog = str(mp).replace(' ', '')
         
         gv.baseurl = baseurl()
+        gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
         return render.modify(pid, prog)
         
 class change_program:
     """Add a program or modify an existing one."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         pnum = int(qdict['pid'])+1 # program number
         cp = json.loads(qdict['v'])      
         if cp[0] == 0 and pnum == gv.pon: # if disabled and program is running
@@ -866,8 +970,8 @@ class change_program:
 class delete_program:
     """Delete one or all existing program(s)."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         if qdict['pid'] == '-1':
             del gv.pd[:]
             jsave(gv.pd, 'programs')
@@ -878,55 +982,40 @@ class delete_program:
         raise web.seeother('/vp')
         return
                           
-class graph_programs:
-    """Open page to display program schedule."""
-    def GET(self):
-        qdict = web.input()
-        t = gv.now
-        lt = time.gmtime(t)
-        if qdict['d'] == '0': dd = str(lt.tm_mday)
-        else: dd = str(qdict['d'])
-        if qdict.has_key('m'): mm = str(qdict['m'])
-        else: mm = str(lt.tm_mon)
-        if qdict.has_key('y'): yy = str(qdict['y'])
-        else: yy = str(lt.tm_year)
-        devday = int(t/86400)
-        devmin = (lt.tm_hour*60) + lt.tm_min
-        gv.baseurl = baseurl()
-        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data })
-        return render.schedule(yy, mm, dd, devday, devmin)
-
 class view_log:
-    def __init__(self):
-        gv.baseurl = baseurl()
-        self.render = web.template.render('templates', globals={'gv': gv})
- 
+    """View Log"""
     def GET(self):
-        logf = open('static/log/water_log.csv')
-        records = logf.readlines()
-        logf.close()
-        data = []
+        verifyLogin()
+        records = read_log()
+        snames = data('snames')
+        zones = re.findall(r"\'(.+?)\'",snames)
+
         for r in records:
-            t = r.split(', ')
-            t[1] = t[1].decode('unicode-escape')
-            data.append(t)    
-        return self.render.log(data)
+            event = json.loads(r)
+            try:
+                event["program"] = zones[int(event["program"])].decode('unicode-escape')
+            except ValueError:
+                pass
+        gv.baseurl = baseurl()
+        gv.cputemp = CPU_temperature()
+        render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data, 'json': json })
+        return render.log(records)
 
 class clear_log:
     """Delete all log records"""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
-        f = open('./static/log/water_log.csv', 'w')
-        f.write('Program, Zone, Duration, Finish Time, Date'+'\n')
+        f = open('./data/log.json', 'w')
+        f.write('')
         f.close
         raise web.seeother('/vl')
 
 class log_options:
     """Set log options from dialog."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         if qdict.has_key('log'): gv.sd['lg'] = 1
         else: gv.sd['lg'] = 0      
         gv.sd['lr'] = int(qdict['nrecords'])
@@ -936,8 +1025,8 @@ class log_options:
 class run_now:
     """Run a scheduled program now. This will override any running programs."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
-        approve_pwd(qdict)
         pid = int(qdict['pid'])
         p = gv.pd[int(qdict['pid'])] # program data
         if not p[0]: # if program is disabled
@@ -958,6 +1047,7 @@ class run_now:
 class show_revision:
     """Show revision info to the user. Use: [URL of Pi]/rev."""
     def GET(self):
+        checkLogin()
         revpg = '<!DOCTYPE html>\n'
         revpg += 'Python Interval Program for OpenSprinkler Pi<br/><br/>\n'
         revpg += 'Compatable with OpenSprinkler firmware 1.8.3.<br/><br/>\n'
@@ -968,6 +1058,7 @@ class show_revision:
 class toggle_temp:
     """Change units of Raspi's CPU temperature display on home page."""
     def GET(self):
+        verifyLogin()
         qdict = web.input()
         if qdict['tunit'] == "C":
             gv.sd['tu'] = "F"
@@ -979,6 +1070,7 @@ class toggle_temp:
 class api_status:
     """Simple Status API"""
     def GET(self):
+        verifyLogin()
         statuslist = []
         for bid in range(0, gv.sd['nbrd']):
             for s in range(0,8):
@@ -1030,6 +1122,35 @@ class api_status:
         web.header('Content-Type', 'application/json')
         return json.dumps(statuslist)
 
+class api_log:
+    """Simple Log API"""
+    def GET(self):
+        verifyLogin()
+        qdict = web.input()
+
+        records = read_log()
+        data = []
+        
+        for r in records:
+            event = json.loads(r)
+            if not(qdict.has_key('date')) or event['date'] == qdict['date']:
+                data.append(event)
+ 
+        web.header('Content-Type', 'application/json')
+        return json.dumps(data)
+
+class water_log:
+    """Simple Log API"""
+    def GET(self):
+        verifyLogin()
+        records = read_log()
+        data = "Date, Start Time, Zone, Duration, Program\n"
+        for r in records:
+            event = json.loads(r)
+            data += event["date"] + ", " + event["start"] + ", " + str(event["station"]) + ", " + event["duration"] + ", " + event["program"] + "\n"
+ 
+        web.header('Content-Type', 'text/csv')
+        return data
 
 class OSPi_app(web.application):
     """Allow program to select HTTP port."""
@@ -1039,5 +1160,7 @@ class OSPi_app(web.application):
 
 if __name__ == '__main__':
     app = OSPi_app(urls, globals())
+    if web.config.get('_session') is None:
+        web.config._session = web.session.Session(app, web.session.DiskStore('sessions'), initializer={'user': 'anonymous'})
     thread.start_new_thread(timing_loop, ())
     app.run()
