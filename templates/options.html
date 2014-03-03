@@ -66,10 +66,8 @@ $code:
 				window.location="/";
 			});
 			
-			jQuery(".collapsible").click(function(){
-				if (event.srcElement.nodeName == "H4") {
-					jQuery(this).toggleClass("expanded").toggleClass("collapsed");
-				}
+			jQuery(".collapsible h4").click(function(event){
+				jQuery(this).parent(".category").toggleClass("expanded").toggleClass("collapsed");
 			});
 			
 			switch (errorCode) {
