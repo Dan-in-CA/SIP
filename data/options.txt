@@ -17,5 +17,5 @@
 	["Use rain sensor","boolean","urs", "Use rain sensor","Rain Sensor"],
 	["Normally open","boolean","rst", "Rain sensor type","Rain Sensor"],
 	["Enable logging","boolean","lg", "Log all events - note that repetitive writing to an SD card can shorten its lifespan.","Logging"],
-	["Maximum log entries","int","lr", "Length of log to keep, 0=no limits.","Logging"]
+	["Max log entries","int","lr", "Length of log to keep, 0=no limits.","Logging"]
 ]

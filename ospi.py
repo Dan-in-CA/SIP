@@ -582,6 +582,8 @@ signin_form = form.Form(form.Password('password',
 class login:
     """Login page"""
     def GET(self):
+        gv.baseurl = baseurl()
+        gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={'gv': gv, 'str': str, 'user': web.config._session.user})
         return render.login(signin_form())
 

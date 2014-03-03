@@ -136,8 +136,6 @@ $code:
 							category = opt[4]
 							
 							if category != oldcategory:
-								if oldcategory == "System":
-									output += "<div class='option' title='Reboot system'><span class='label'>&nbsp;</span>\n<button id='cReboot' class='reboot danger'>Reboot</button></div>\n"
 								output += categoryCloser + "<div class='category collapsible collapsed'><h4>" + category + "</h4>"
 								categoryCloser = "</div>"
 							oldcategory = category
@@ -170,7 +168,9 @@ $code:
 										
 							output += "<span class='tooltip'>" + tooltip + "</span>\n"
 							output += "</div>\n\n"
-						output += categoryCloser
+						output += categoryCloser + "<div class='category collapsible collapsed'><h4>System Reboot</h4>"
+						output += "<div class='option' title='Reboot system'><button id='cReboot' class='reboot danger'>Reboot</button></div>\n"
+						output += categoryCloser					
 					$:{output}
 						<input type="hidden" name="rbt" value="0">
 					</form>
