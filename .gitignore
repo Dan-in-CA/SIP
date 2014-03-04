@@ -1,6 +1,7 @@
 web/
+/sessions/*
 /data/programs.json
 /data/sd.json
 /data/snames.txt
 *.pyc
-water_log.csv
+*.csv

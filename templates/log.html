@@ -1,136 +1,163 @@
 $def with (records)
 
+$code:
+	if gv.sd['lg'] == 1:
+		log_state = "Enabled"
+		log_option = "checked"
+	else:
+		log_state = "Disabled"
+		log_option = ""
+		
+	def formatTime(t):
+		if gv.sd['tf']:
+			return t
+		else:
+			hour = int(t[0:2])
+			newhour = hour
+			if hour == 0:
+				newhour = 12
+			if hour > 12:
+				newhour = hour-12
+			return str(newhour)  + t[2:] + (" am" if hour<12 else " pm")
+
 <!doctype html>
 
 <html>
 
+<html>
 <head>
-<title>Water Log</title>
-<meta content="width=640" name="viewport">
-<link href="./static/images/icons/favicon.ico" rel="icon" type="image/x-icon" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<style>
-#overlay {
-	 visibility: hidden;
-	 position: absolute;
-	 left: 0px;
-	 top: 0px;
-	 width: 100%;
-	 height:100%;
-	 text-align:center;
-	 z-index: 1000;
-	 background-image:url(../static/images/misc/BlueTile.png);
-}
-#overlay div {
-	 width:200px;
-	 margin: 100px auto;
-	 background-color: #fff;
-	 border:1px solid #000;
-	 padding:10px;
-	 text-align:left;	 
-}
-h2 {
-	text-align: center;
-	font-family: Sans-serif;
-}
-
-.pwspan { 
-	float:left; 
-	border-style:none;
-	clear:both;
-	margin:10px 0px 10px 0px;
-}
-
-</style>
-
-<script>
-function fcancel() {window.location="/";}
-function ocancel() {window.location="/vl";}
-function link(s) {window.location=s;}
-function del(form) {
-  var p="";
-  if(!$sd['ipas']) p=prompt("Password Required","");
-  if(p!=null){form.elements[0].value=p;form.submit();}
- }
-function subm(form) {
-  form.submit();
-}
-function hidepw(){
-	if ($sd['ipas']) {
-		document.getElementById("pwarea").style.display = "none";
+	<meta name="viewport" content="width=640">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>OpenSprinkler Pi Log${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
+	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
+	<style>
+		h2 {
+			text-align: center;
+			font-family: Sans-serif;
 		}
-	else {
-		document.getElementById("pwarea").style.display = "block";
-		}
-}
-function overlay() {
-	el = document.getElementById("overlay");
-	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-}
-</script>
+	</style>
+	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+	<script>
+		// Variables set by ospi.py
+		var devt = ${gv.now}*1000;
+		var tz = ${gv.sd['tz']};
+		var timeFormat = ${gv.sd['tf']};
+		var cputemp = "${gv.cputemp}";
+		var tempunit = "${gv.sd['tu']}";
+	</script>
+	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
+	<script>
+		// Initialize behaviors
+		jQuery(document).ready(function(){
+			jQuery("button#nRefresh").click(function(){
+				window.location="/vl";
+			});
+			jQuery("button#nDeleteAll").click(function(){
+				jQuery("form#df").submit();
+			});
+			jQuery("button#nLogOptions,button#oCancel").click(function(){
+				jQuery("#overlay").toggle();
+			});
+			jQuery("button#oSubmit").click(function(){
+				jQuery("form#logopts").submit();
+				jQuery("#overlay").toggle();
+			});
+		});
+
+	</script>
 </head>
 	
-<body onload="hidepw()">
-
-<form method="get" action="cl" name="df">
-<input type="hidden" name="pw">
-</form>
-<form method="get" action="mp" name="mf">
-<input type="hidden" name="pid" value="-1">
-</form>
-<button onclick="fcancel()" style="height:44">
-<img align="absmiddle" height="20" src="../static/images/icons/svc_back.png">
- Back
-</button>
-<button onclick="link('/vl')" style="height:44">
-<img align="absmiddle" height="20" src="../static/images/icons/svc_refresh.png">
-<b>Refresh</b>
-</button>
-<button onclick="del(df, 0)" style="height:44">
-<img align="absmiddle" height="20" src="../static/images/icons/svc_delall.png">
- Delete All
-</button>
-<button onclick="overlay()" style="height:44">
-<img align="absmiddle" height="20" src="../static/images/icons/svc_options.png">
- Log Options
-</button>
-
-$code:
-    if sd['lg'] == 1:
-        log_state = "Enabled"
-        log_option = "checked"
-    else:
-        log_state = "Disabled"
-        log_option = ""
-
-<br><br>	
-Logging $log_state
-<br>
-<b>Total number of records: $(len(records)-1)</b>
-<hr>
-
-<table>
-$for r in records:
-	    <tr class="log_rec">
-		$for d in r:
-	        <td align='center'>$d</td>
-	    </tr>
-</table>
-
-<div id="overlay">
-     <div>
-		<form name="logopts" action="/lo" method="get">
-		  <p><h2>Log Options</h2></p>
-		  	<label for="log">Enable Logging</label> <input type="checkbox" id="log" name="log" $log_option ><br>
-		  <label for="max">Maximum records to keep:</label> <input type="text" size="4" value="$sd['lr']" id="max" name="nrecords">(0 = no limit)<br>
-		  <span id='pwarea' style='display:block'; class="pwspan">
-			<label for="pw">Password Required:</label> <input type="password" size="10"id="pw">
-		  </span><br>
-		  <input type="submit" value="Submit">
-		  <button type="button" onclick="overlay()"; return false;>Cancel</button>
-		</form>
-     </div>
-</div>
-
+<body>
+	<div class="content">
+		<div class="header">
+			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
+		</div>
+			
+		<div class="body">
+		
+			<div id="status">
+				<p id="deviceTime"><span class="hour"></span><span class="sep">:</span><span class="minute"></span><span class="second"></span><span class="ampm"></span></p>
+				<p id="deviceDate"></p>
+			</div>
+	
+			<div class="panel">
+			
+				<div id="nav">
+					<button id="bHome" class="home" title="Home">Home</button>
+					<button id="bPrograms" class="programs" title="Define Programs">Programs</button>
+					<button id="bRunOnce" class="start" title="Define Run Once Program">Run Once</button>
+					<button id="bLog" class="log here" title="View Log">Log</button>
+					<button id="bOptions" class="options" title="Options">Options</button>
+					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
+					$if not(gv.sd['ipas']):
+						<button id="bLogout" class="logout" title="Logout">Logout</button>
+				</div>
+				
+				<div id="options">
+					<div class="title">Log $log_state</div>
+					<form method="get" action="cl" name="df"></form>
+					<form method="get" action="mp" name="mf">
+						<input id="pid" name="pid" type="hidden" value="-1" />
+					</form>
+					
+				</div>
+				
+				<div id="log">
+					<p>Total number of records: $(len(records)-1)</p>
+					<p>Download log as <a href="/wl">csv</a>.</p>
+					
+					<table class="logList">
+						<tr class="log_rec">
+							<th>Date</th>
+							<th>Start Time</th>
+							<th>Zone</th>
+							<th>Duration</th>
+							<th>Program</th>
+						</tr>
+						$ odd = 1
+						$for r in records:
+							$ event = json.loads(r)
+							<tr class="log_rec ${'odd' if odd else 'even'}">
+								<td align='center'>${event["date"]}</td>
+								<td align='center'>${formatTime(event["start"])}</td>
+								<td align='center'>${event["station"]}</td>
+								<td align='center'>${event["duration"]}</td>
+								<td align='center'>${event["program"]}</td>
+							</tr>
+							$ odd = 1 - odd
+					</table>
+	
+				</div>
+				
+				<div id="controls">
+					<button id="nRefresh" class="refresh">Refresh</button>
+					<button id="nDeleteAll" class="delete danger">Delete All</button>
+					<button id="nLogOptions" class="options">Log Options</button>
+				</div>
+				
+			</div>
+		</div>
+		
+		<div id="overlay">
+			<div>
+				<form id="logopts" action="/lo" method="get">
+					<h2>Log Options</h2>
+					<label for="log">Enable Logging</label>
+					<input type="checkbox" id="log" name="log" $log_option ><br>
+					<label for="nrecords">Maximum records to keep:</label>
+					<input type="text" size="4" value="$gv.sd['lr']" id="nrecords" name="nrecords">(0 = no limit)<br>
+					<button id="oSubmit" class="submit icon">Submit</button>
+					<button id="oCancel" class="cancel icon">Cancel</button>
+				</form>
+			</div>
+		</div>
+		
+		<div class="footer">
+			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
+			<p><a href="https://github.com/jonathan-marsh/OSPi">Firmware</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
+		</div>
+	</div>
 </body>
+
 </html>
