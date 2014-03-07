@@ -1,5 +1,6 @@
 web/
 static/
+sessions/
 /data/programs.json
 /data/sd.json
 /data/snames.txt
