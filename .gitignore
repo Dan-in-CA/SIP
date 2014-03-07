@@ -1,6 +1,8 @@
 web/
+static/
 /data/programs.json
 /data/sd.json
 /data/snames.txt
+/data/meta.txt
 *.pyc
 water_log.csv
