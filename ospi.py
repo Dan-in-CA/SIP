@@ -463,7 +463,7 @@ def to_sec(d=0, h=0, m=0, s=0):
 gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
             "rdst": 0, "loc": "", "tz": 48, "tf": 1, "rs": 0, "rd": 0, "mton": 0,
             "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
-            "urs": 0, "nopts": 13, "password": "", "salt": "", "ipas": 0, "rst": 1,
+            "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "password": "", "salt": "", "ipas": 0, "rst": 1,
             "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
             "snlen":32, "name":u"OpenSprinkler Pi","theme":"basic","show":[255]})
 
