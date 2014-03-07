@@ -27,7 +27,7 @@ except ImportError:
         print 'No GPIO module was loaded'
         pass
 
-web.config.debug = True # Making this false improves UI responsiveness 
+web.config.debug = False # Making this false improves UI responsiveness 
 
  #### Revision information ####
 gv.ver = 190
