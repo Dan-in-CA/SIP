@@ -64,10 +64,10 @@ urls = [
     ]
 
   #### Import ospi_addon module (ospi_addon.py) if it exists. ####
-# try:
-#     import ospi_addon #This provides a stub for adding custom features to ospi.py as external modules.
-# except ImportError:
-#     print 'add_on not imported'
+try:
+    import ospi_addon #This provides a stub for adding custom features to ospi.py as external modules.
+except ImportError:
+    print 'add_on not imported'
     
   #### Function Definitions ####
   
@@ -1153,6 +1153,11 @@ class water_log:
  
         web.header('Content-Type', 'text/csv')
         return data
+
+
+  ########################
+  #### Main           ####
+
 
 class OSPi_app(web.application):
     """Allow program to select HTTP port."""
