@@ -13,25 +13,7 @@ import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web int
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes
 
 
-# try:
-#     import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
-#     gv.platform = 'pi'
-# except ImportError:
-#     try:
-#         import Adafruit_BBIO.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Beagle Bone Black
-#         gv.platform = 'bo'
-#     except ImportError:
-#         print 'No GPIO module was loaded'
-#         pass
 from gpio_pins import *   
-# import plugins
-# 
-# for name in plugins.__all__:
-#     plugin = getattr(plugins, name)
-#     try:
-#         register_plugin = plugin.register # see if the plugin has a 'register' attribute (function)
-#     except AttributeError:
-#         pass # If no register function, move on.
 
 from urls import *
     
@@ -41,31 +23,6 @@ web.config.debug = False
 gv.ver = 183
 gv.rev = 143
 gv.rev_date = '26/November/2013'
-
- #### urls is used by web.py. When a GET request is received, the corresponding class is executed.
-# urls = [
-#     '/',  'home',
-#     '/cv', 'change_values',
-#     '/vo', 'view_options',
-#     '/co', 'change_options',
-#     '/vs', 'view_stations',
-#     '/cs', 'change_stations',
-#     '/sn(\d+?\Z)', 'get_station', # regular expression, accepts any station number
-#     '/sn(\d+?=\d(&t=\d+?\Z)?)', 'set_station', # regular expression, accepts any digits
-#     '/vr', 'view_runonce',
-#     '/cr', 'change_runonce',
-#     '/vp', 'view_programs',
-#     '/mp', 'modify_program',
-#     '/cp', 'change_program',
-#     '/dp', 'delete_program',
-#     '/gp', 'graph_programs',
-#     '/vl', 'view_log',
-#     '/cl', 'clear_log',
-#     '/lo', 'log_options',
-#     '/rp', 'run_now',
-#     '/ttu', 'toggle_temp',
-#     '/rev', 'show_revision',
-#     ]
 
   #### Import ospi_addon module (ospi_addon.py) if it exists. ####
 # try:
