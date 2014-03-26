@@ -10,56 +10,68 @@ except:
     sys.exit()
 
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
-import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
+import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes
 
-try:
-    import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
-    gv.platform = 'pi'
-except ImportError:
-    try:
-        import Adafruit_BBIO.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Beagle Bone Black
-        gv.platform = 'bo'
-    except ImportError:
-        print 'No GPIO module was loaded'
-        pass
+
+# try:
+#     import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
+#     gv.platform = 'pi'
+# except ImportError:
+#     try:
+#         import Adafruit_BBIO.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Beagle Bone Black
+#         gv.platform = 'bo'
+#     except ImportError:
+#         print 'No GPIO module was loaded'
+#         pass
+from gpio_pins import *   
+# import plugins
+# 
+# for name in plugins.__all__:
+#     plugin = getattr(plugins, name)
+#     try:
+#         register_plugin = plugin.register # see if the plugin has a 'register' attribute (function)
+#     except AttributeError:
+#         pass # If no register function, move on.
+
+from urls import *
     
 web.config.debug = False      
 
  #### Revision information ####
 gv.ver = 183
-gv.rev = 144
-gv.rev_date = '07/February/2014'
+gv.rev = 143
+gv.rev_date = '26/November/2013'
 
  #### urls is used by web.py. When a GET request is received, the corresponding class is executed.
-urls = [
-    '/',  'home',
-    '/cv', 'change_values',
-    '/vo', 'view_options',
-    '/co', 'change_options',
-    '/vs', 'view_stations',
-    '/cs', 'change_stations',
-    '/sn(\d+?\Z)', 'get_station', # regular expression, accepts any station number
-    '/sn(\d+?=\d(&t=\d+?\Z)?)', 'set_station', # regular expression, accepts any digits
-    '/vr', 'view_runonce',
-    '/cr', 'change_runonce',
-    '/vp', 'view_programs',
-    '/mp', 'modify_program',
-    '/cp', 'change_program',
-    '/dp', 'delete_program',
-    '/gp', 'graph_programs',
-    '/vl', 'view_log',
-    '/cl', 'clear_log',
-    '/lo', 'log_options',
-    '/rp', 'run_now',
-    '/ttu', 'toggle_temp',
-    '/rev', 'show_revision',
-    ]
+# urls = [
+#     '/',  'home',
+#     '/cv', 'change_values',
+#     '/vo', 'view_options',
+#     '/co', 'change_options',
+#     '/vs', 'view_stations',
+#     '/cs', 'change_stations',
+#     '/sn(\d+?\Z)', 'get_station', # regular expression, accepts any station number
+#     '/sn(\d+?=\d(&t=\d+?\Z)?)', 'set_station', # regular expression, accepts any digits
+#     '/vr', 'view_runonce',
+#     '/cr', 'change_runonce',
+#     '/vp', 'view_programs',
+#     '/mp', 'modify_program',
+#     '/cp', 'change_program',
+#     '/dp', 'delete_program',
+#     '/gp', 'graph_programs',
+#     '/vl', 'view_log',
+#     '/cl', 'clear_log',
+#     '/lo', 'log_options',
+#     '/rp', 'run_now',
+#     '/ttu', 'toggle_temp',
+#     '/rev', 'show_revision',
+#     ]
 
   #### Import ospi_addon module (ospi_addon.py) if it exists. ####
-try:
-    import ospi_addon #This provides a stub for adding custom features to ospi.py as external modules.
-except ImportError:
-    print 'add_on not imported'
+# try:
+#     import ospi_addon #This provides a stub for adding custom features to ospi.py as external modules.
+# except ImportError:
+#     print 'add_on not imported'
     
   #### Function Definitions ####
   
@@ -468,59 +480,22 @@ gv.lrun=[0,0,0,0] #station index, program number, duration, end time (Used in UI
 
 gv.scount = 0 # Station count, used in set station to track on stations with master association.
 
-  ####  GPIO  #####
-
-try:
-    GPIO.setwarnings(False)
-except NameError:
-    pass
-
-  #### pin defines ####
-try:
-    if gv.platform == 'pi':
-        pin_sr_dat = 13
-        pin_sr_clk = 7
-        pin_sr_noe = 11
-        pin_sr_lat = 15
-        pin_relay = 10
-        pin_rain_sense = 8
-    elif gv.platform == 'bo':
-        pin_sr_dat = "P9_11"
-        pin_sr_clk = "P9_13"
-        pin_sr_noe = "P9_14"
-        pin_sr_lat = "P9_12"
-        pin_rain_sense = "P9_15"
-        pin_relay = "P9_16"
-except AttributeError:
-    pass    
-
+gv.snames = data('snames')
+   
+ 
 def enableShiftRegisterOutput():
     try:
         GPIO.output(pin_sr_noe, GPIO.LOW)
     except NameError:
         pass
-    
-
+     
+ 
 def disableShiftRegisterOutput():
     try:
         GPIO.output(pin_sr_noe, GPIO.HIGH)
     except NameError:
-        pass
-try:
-    GPIO.cleanup()
-  #### setup GPIO pins as output or input ####
-    if gv.platform == 'pi':
-        GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
-    GPIO.setup(pin_sr_clk, GPIO.OUT)
-    GPIO.setup(pin_sr_noe, GPIO.OUT)
-    disableShiftRegisterOutput()
-    GPIO.setup(pin_sr_dat, GPIO.OUT)
-    GPIO.setup(pin_sr_lat, GPIO.OUT)
-    GPIO.setup(pin_relay, GPIO.OUT)
-    GPIO.setup(pin_rain_sense, GPIO.IN)
-except NameError:
-    pass     
-
+        pass    
+ 
 def setShiftRegister(srvals):
     try:
         GPIO.output(pin_sr_clk, GPIO.LOW)
@@ -535,7 +510,7 @@ def setShiftRegister(srvals):
         GPIO.output(pin_sr_lat, GPIO.HIGH)
     except NameError:
         pass    
-
+ 
   ##################
 
 def pass_options(opts):
@@ -1018,6 +993,18 @@ class toggle_temp:
             gv.sd['tu'] = "C"
         jsave(gv.sd, 'sd')    
         raise web.seeother('/')
+    
+import plugins
+print 'plugins loaded:'
+print plugins.__all__
+#print urls
+
+for name in plugins.__all__:
+    plugin = getattr(plugins, name)
+    try:
+        register_plugin = plugin.register # see if the plugin has a 'register' attribute (function)
+    except AttributeError:
+        pass # If no register function, move on.
 
 class OSPi_app(web.application):
     """Allow program to select HTTP port."""
