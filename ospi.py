@@ -954,7 +954,6 @@ class toggle_temp:
 import plugins
 print 'plugins loaded:'
 print plugins.__all__
-#print urls
 
 for name in plugins.__all__:
     plugin = getattr(plugins, name)

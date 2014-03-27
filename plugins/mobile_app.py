@@ -1,6 +1,6 @@
 import web, json
-import gv # Get access to ospi's settings
-from urls import urls
+import gv # Gain access to ospi's settings
+from urls import urls # Gain access to URL list
 
 ##############
 ## New URLs ##
@@ -15,7 +15,7 @@ class options: # /jo
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        jopts = {"fwv":203,"tz":gv.sd['tz'],"ntp":1,"dhcp":1,"ip1":192,"ip2":168,"ip3":1,"ip4":22,"gw1":192,"gw2":168,"gw3":1,"gw4":1,"hp0":gv.sd['htp'],"hp1":0,"ar":1,"ext":1,"seq":gv.sd['seq'],"sdt":gv.sd['sdt'],"mas":gv.sd['mas'],"mton":gv.sd['mton'],"mtof":gv.sd['mtoff'],"urs":gv.sd['urs'],"rso":0,"wl":gv.sd['wl'],"stt":10,"ipas":gv.sd['ipas'],"devid":0,"con":110,"lit":100,"ntp1":204,"ntp2":9,"ntp3":54,"ntp4":119,"reset":gv.sd['rbt']}
+        jopts = {"fwv":'1.8.3-OSPi',"tz":gv.sd['tz'], "ext":gv.sd['nbrd']-1,"seq":gv.sd['seq'],"sdt":gv.sd['sdt'],"mas":gv.sd['mas'],"mton":gv.sd['mton'],"mtof":gv.sd['mtoff'],"urs":gv.sd['urs'],"rso":gv.sd['rst'],"wl":gv.sd['wl'],"ipas":gv.sd['ipas'],"reset":gv.sd['rbt']}
         return json.dumps(jopts)
     
 class cur_settings: # /jc
@@ -40,7 +40,7 @@ class program_info: # /jp
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        jpinfo = {"nprogs":gv.sd['nprogs'],"nboards":gv.sd['nbrd'],"mnp":gv.sd['mnp'],"pd":gv.pd}
+        jpinfo = {"nprogs":gv.sd['nprogs']-1,"nboards":gv.sd['nbrd'],"mnp":gv.sd['mnp'],"pd":gv.pd}
         return json.dumps(jpinfo)
     
 class station_info: # /jn
@@ -48,5 +48,8 @@ class station_info: # /jn
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        jpinfo = {"snames":gv.snames,"masop":[255,255],"maxlen":gv.sd['snlen']}
+        f = open('./data/snames.txt', 'r')
+        names = f.read()
+        f.close()
+        jpinfo = {"snames":names,"masop":gv.sd['mo'],"maxlen":gv.sd['snlen']}
         return json.dumps(jpinfo)
