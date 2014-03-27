@@ -1,4 +1,4 @@
-import web, json
+import web, json, re
 import gv # Gain access to ospi's settings
 from urls import urls # Gain access to URL list
 
@@ -17,15 +17,15 @@ class options: # /jo
         web.header('Content-Type', 'application/json')
         jopts = {"fwv":'1.8.3-OSPi',"tz":gv.sd['tz'], "ext":gv.sd['nbrd']-1,"seq":gv.sd['seq'],"sdt":gv.sd['sdt'],"mas":gv.sd['mas'],"mton":gv.sd['mton'],"mtof":gv.sd['mtoff'],"urs":gv.sd['urs'],"rso":gv.sd['rst'],"wl":gv.sd['wl'],"ipas":gv.sd['ipas'],"reset":gv.sd['rbt']}
         return json.dumps(jopts)
-    
+
 class cur_settings: # /jc
     """Returns current settings as json."""
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         jsettings = {"devt":gv.now,"nbrd":gv.sd['nbrd'],"en":gv.sd['en'],"rd":gv.sd['rd'],"rs":gv.sd['rs'],"mm":gv.sd['mm'],"rdst":gv.sd['rdst'],"loc":gv.sd['loc'],"sbits":gv.sbits,"ps":gv.ps,"lrun":gv.lrun}
-        return json.dumps(jsettings)    
-    
+        return json.dumps(jsettings)
+
 class station_state: # /js
     """Returns station status and total number of stations as json."""
     def GET(self):
@@ -33,7 +33,7 @@ class station_state: # /js
         web.header('Content-Type', 'application/json')
         jstate = {"sn":gv.srvals, "nstations":gv.sd['nst']}
         return json.dumps(jstate)
-    
+
 
 class program_info: # /jp
     """Returns program data as json."""
@@ -42,7 +42,7 @@ class program_info: # /jp
         web.header('Content-Type', 'application/json')
         jpinfo = {"nprogs":gv.sd['nprogs']-1,"nboards":gv.sd['nbrd'],"mnp":gv.sd['mnp'],"pd":gv.pd}
         return json.dumps(jpinfo)
-    
+
 class station_info: # /jn
     """Returns station information as json."""
     def GET(self):
@@ -51,5 +51,6 @@ class station_info: # /jn
         f = open('./data/snames.txt', 'r')
         names = f.read()
         f.close()
-        jpinfo = {"snames":names,"masop":gv.sd['mo'],"maxlen":gv.sd['snlen']}
+        nlst = re.findall('[\'|"](.*?)[\'|"]', names)
+        jpinfo = {"snames":nlst,"masop":gv.sd['mo'],"maxlen":gv.sd['snlen']}
         return json.dumps(jpinfo)
