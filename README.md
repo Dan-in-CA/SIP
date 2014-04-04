@@ -12,6 +12,11 @@ UPDATES
 ===========
 ***********
 
+April 4 2014
+-------------
+(Dan)<br/>
+New plugin architecture including a plugin to support Samer's new JavaScript app
+
 February 7 2014
 --------------
 (Dan)<br/>

@@ -10,27 +10,27 @@ except:
     sys.exit()
 
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
+web.config.debug = False # Improves page load speed
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes
-
-
-from gpio_pins import *   
-
-from urls import *
-    
-web.config.debug = False      
+from gpio_pins import *
+from urls import *     
 
  #### Revision information ####
 gv.ver = 183
-gv.rev = 143
-gv.rev_date = '26/November/2013'
+gv.rev = 145
+gv.rev_date = '04/April/2014'
 
-  #### Import ospi_addon module (ospi_addon.py) if it exists. ####
+#!!! Note: This add-on feature is now deprecated. Code is left in place for backward compatibility.
+################################################################
+#### Import ospi_addon module (ospi_addon.py) if it exists. ####
 # try:
 #     import ospi_addon #This provides a stub for adding custom features to ospi.py as external modules.
 # except ImportError:
 #     print 'add_on not imported'
-    
-  #### Function Definitions ####
+
+  
+##############################
+#### Function Definitions ####
   
 def approve_pwd(qdict):
     """Password checking"""
@@ -373,7 +373,9 @@ def output_prog():
         progstr += 'pd['+str(i)+']='+str(pro).replace(' ', '')+';'
     return progstr      
 
-    #####  GPIO  #####
+
+#######################
+####  GPIO related ####
 def set_output():
     """Activate triacs according to shift register state."""
     disableShiftRegisterOutput()
@@ -387,11 +389,10 @@ def to_sec(d=0, h=0, m=0, s=0):
     secs += m*60
     secs += s
     return secs
-            
-    ##################
     
 
-  #### Global vars #####
+#####################
+#### Global vars ####
   
 #Settings Dictionary. A set of vars kept in memory and persisted in a file.
 #Edit this default dictionary definition to add or remove "key": "value" pairs or change defaults.
@@ -467,8 +468,6 @@ def setShiftRegister(srvals):
         GPIO.output(pin_sr_lat, GPIO.HIGH)
     except NameError:
         pass    
- 
-  ##################
 
 def pass_options(opts):
     optstring = "var sd = {\n"
@@ -482,7 +481,9 @@ def pass_options(opts):
     optstring = optstring[:-2] + "\n}\n"
     return optstring
     
-  #### Class Definitions ####
+
+###########################
+#### Class Definitions ####
 class home:
     """Open Home page."""
     def GET(self):
@@ -951,16 +952,13 @@ class toggle_temp:
         jsave(gv.sd, 'sd')    
         raise web.seeother('/')
     
+################################
+#### Code to import plugins ####
 import plugins
 print 'plugins loaded:'
 print plugins.__all__
-
 for name in plugins.__all__:
     plugin = getattr(plugins, name)
-    try:
-        register_plugin = plugin.register # see if the plugin has a 'register' attribute (function)
-    except AttributeError:
-        pass # If no register function, move on.
 
 class OSPi_app(web.application):
     """Allow program to select HTTP port."""
