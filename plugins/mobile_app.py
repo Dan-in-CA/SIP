@@ -1,7 +1,7 @@
 import web, json, re
-#import ast
+import ast
 import gv # Gain access to ospi's settings
-from urls import urls # Gain access to URL list
+from urls import urls # Gain access to ospi's URL list
 
 ##############
 ## New URLs ##
@@ -52,7 +52,7 @@ class station_info: # /jn
         f = open('./data/snames.txt', 'r')
         names = f.read()
         f.close()
-#        nlst = ast.literal_eval(names)
-        nlst = re.findall('[\'|"](.*?)[\'|"]', names)
+#        nlst = ast.literal_eval(names) # Convert names var to string (alternative method)
+        nlst = re.findall('[\'|"](.*?)[\'|"]', names) # Convert names var to string
         jpinfo = {"snames":nlst,"masop":gv.sd['mo'],"maxlen":gv.sd['snlen']}
         return json.dumps(jpinfo)

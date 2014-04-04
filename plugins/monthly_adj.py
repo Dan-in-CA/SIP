@@ -1,7 +1,10 @@
 import web, json, time
 import gv # Get access to ospi's settings
-from urls import urls
-from apscheduler.scheduler import Scheduler #This is a non-standard module. 
+from urls import urls # Get access to ospi's URLs
+try:
+    from apscheduler.scheduler import Scheduler #This is a non-standard module. Needs to be installed in order for this feature to work.
+except:
+    pass    
 
 urls.extend(['/ma', 'plugins.monthly_adj.monthly_percent', '/uma', 'plugins.monthly_adj.update_percents']) # Add a new url to open the data entry page.
 sched = Scheduler()

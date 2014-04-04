@@ -2,7 +2,7 @@ from gpio_pins import *
 from urls import *
 import time
 
-urls.extend(['/tr', 'toggle_relay']) # Add a new url for this plugin.
+urls.extend(['/tr', 'plugins.relay.toggle_relay']) # Add a new url for this plugin.
 
 class toggle_relay:
     """Test by turning relay on for a short time, then off."""
