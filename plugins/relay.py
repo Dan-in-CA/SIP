@@ -1,15 +1,16 @@
 from gpio_pins import *
 from urls import *
-import time
+import web, time
 
 urls.extend(['/tr', 'plugins.relay.toggle_relay']) # Add a new url for this plugin.
 
 class toggle_relay:
-    """Test by turning relay on for a short time, then off."""
+    """Test relay by turning it on for a short time, then off."""
     def GET(self):
         try:
-            GPIO.output(pin_relay, GPIO.HIGH)
+            GPIO.output(pin_relay, GPIO.HIGH) # turn relay on
             time.sleep(3)
-            GPIO.output(pin_relay, GPIO.LOW)
+            GPIO.output(pin_relay, GPIO.LOW) #Turn relay off
         except:
             pass
+        raise web.seeother('/') # return to home page
