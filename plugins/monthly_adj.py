@@ -45,4 +45,7 @@ class update_percents:
         raise web.seeother('/')
 
 set_wl() # Runs the function once at load.
-sched.add_cron_job(set_wl, day=1) # Run the plugin's function the first day of each month.
+try:
+    sched.add_cron_job(set_wl, day=1) # Run the plugin's function the first day of each month.
+except:
+    pass    
