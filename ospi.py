@@ -666,7 +666,7 @@ class change_options:
     def GET(self):
         verifyLogin()
         qdict = web.input()
-        if qdict['opw'] != "":
+        if qdict.has_key('opw') and qdict['opw'] != "":
             try:
                 if passwordHash(qdict['opw'], gv.sd['salt']) == gv.sd['password']:
                     if qdict['npw'] == "":
