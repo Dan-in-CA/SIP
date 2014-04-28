@@ -54,5 +54,5 @@ class station_info: # /jn
         f.close()
 #        nlst = ast.literal_eval(names) # Convert names var to string (alternative method)
         nlst = re.findall('[\'|"](.*?)[\'|"]', names) # Convert names var to string
-        jpinfo = {"snames":nlst,"masop":gv.sd['mo'],"maxlen":gv.sd['snlen']}
+        jpinfo = {"snames":nlst,"ignore_rain":gv.sd['ir'],"masop":gv.sd['mo'],"maxlen":gv.sd['snlen']}
         return json.dumps(jpinfo)
