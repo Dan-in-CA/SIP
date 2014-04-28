@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
 import re, os, time, base64, thread, sys # standard Python modules
+from calendar import timegm
 try:
     import json
 except ImportError:
     import simplejson as json
-except:
+except ImportError:
     print "Error: json module not found"
     sys.exit()
 
@@ -199,7 +200,7 @@ def timing_loop():
     print 'Starting timing loop \n'
     last_min = 0
     while True: # infinite loop
-        gv.now = time.time()+((gv.sd['tz']/4)-12)*3600 # Current time based on UTC time from the Pi adjusted by the Time Zone setting from options. updated once per second.
+        gv.now = timegm(time.localtime()) #time.time()+((gv.sd['tz']/4)-12)*3600 # Current time based on UTC time from the Pi adjusted by the Time Zone setting from options. updated once per second.
         if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']): # and not gv.sd['rd']:
             lt = time.gmtime(gv.now)
             if (lt[3]*60)+lt[4] != last_min: # only check programs once a minute
@@ -376,11 +377,11 @@ def output_prog():
 
 #######################
 ####  GPIO related ####
-def set_output():
-    """Activate triacs according to shift register state."""
-    disableShiftRegisterOutput()
-    setShiftRegister(gv.srvals) # gv.srvals stores shift register state
-    enableShiftRegisterOutput()
+# def set_output():
+#     """Activate triacs according to shift register state."""
+#     disableShiftRegisterOutput()
+#     setShiftRegister(gv.srvals) # gv.srvals stores shift register state
+#     enableShiftRegisterOutput()
 
 def to_sec(d=0, h=0, m=0, s=0):
     """Convert Day, Hour, minute, seconds to number of seconds."""
@@ -414,7 +415,7 @@ except IOError: # If file does not exist, it will be created created using defau
     json.dump(gv.sd, sdf)
     sdf.close()
 
-gv.now = time.time()+((gv.sd['tz']/4)-12)*3600
+gv.now = timegm(time.localtime()) #time.time()+((gv.sd['tz']/4)-12)*3600
 
 gv.srvals = [0]*(gv.sd['nst']) #Shift Register values
 
@@ -440,34 +441,36 @@ gv.scount = 0 # Station count, used in set station to track on stations with mas
 
 gv.snames = data('snames')
    
- 
-def enableShiftRegisterOutput():
-    try:
-        GPIO.output(pin_sr_noe, GPIO.LOW)
-    except NameError:
-        pass
-     
- 
-def disableShiftRegisterOutput():
-    try:
-        GPIO.output(pin_sr_noe, GPIO.HIGH)
-    except NameError:
-        pass    
- 
-def setShiftRegister(srvals):
-    try:
-        GPIO.output(pin_sr_clk, GPIO.LOW)
-        GPIO.output(pin_sr_lat, GPIO.LOW)
-        for s in range(gv.sd['nst']):
-            GPIO.output(pin_sr_clk, GPIO.LOW)
-            if srvals[gv.sd['nst']-1-s]:
-                GPIO.output(pin_sr_dat, GPIO.HIGH)
-            else:
-                GPIO.output(pin_sr_dat, GPIO.LOW)
-            GPIO.output(pin_sr_clk, GPIO.HIGH)
-        GPIO.output(pin_sr_lat, GPIO.HIGH)
-    except NameError:
-        pass    
+################## 
+## GPIO Related ##
+
+# def enableShiftRegisterOutput():
+#     try:
+#         GPIO.output(pin_sr_noe, GPIO.LOW)
+#     except NameError:
+#         pass
+#      
+#  
+# def disableShiftRegisterOutput():
+#     try:
+#         GPIO.output(pin_sr_noe, GPIO.HIGH)
+#     except NameError:
+#         pass    
+#  
+# def setShiftRegister(srvals):
+#     try:
+#         GPIO.output(pin_sr_clk, GPIO.LOW)
+#         GPIO.output(pin_sr_lat, GPIO.LOW)
+#         for s in range(gv.sd['nst']):
+#             GPIO.output(pin_sr_clk, GPIO.LOW)
+#             if srvals[gv.sd['nst']-1-s]:
+#                 GPIO.output(pin_sr_dat, GPIO.HIGH)
+#             else:
+#                 GPIO.output(pin_sr_dat, GPIO.LOW)
+#             GPIO.output(pin_sr_clk, GPIO.HIGH)
+#         GPIO.output(pin_sr_lat, GPIO.HIGH)
+#     except NameError:
+#         pass    
 
 def pass_options(opts):
     optstring = "var sd = {\n"
@@ -968,5 +971,6 @@ class OSPi_app(web.application):
 
 if __name__ == '__main__':
     app = OSPi_app(urls, globals())
+    set_output()
     thread.start_new_thread(timing_loop, ())
     app.run()

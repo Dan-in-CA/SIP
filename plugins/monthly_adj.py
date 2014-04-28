@@ -1,14 +1,19 @@
+#!/usr/bin/env python
+
 import web, json, time
 import gv # Get access to ospi's settings
 from urls import urls # Get access to ospi's URLs
 try:
     from apscheduler.scheduler import Scheduler #This is a non-standard module. Needs to be installed in order for this feature to work.
-except:
-    pass    
+except ImportError:
+    pass
 
 urls.extend(['/ma', 'plugins.monthly_adj.monthly_percent', '/uma', 'plugins.monthly_adj.update_percents']) # Add a new url to open the data entry page.
-sched = Scheduler()
-sched.start() # Start the scheduler
+try:
+    sched = Scheduler()
+    sched.start() # Start the scheduler
+except NameError:
+    pass    
  
 def set_wl():
     """Adjust irrigation time by percent based on historical climate data.""" 
@@ -47,5 +52,5 @@ class update_percents:
 set_wl() # Runs the function once at load.
 try:
     sched.add_cron_job(set_wl, day=1) # Run the plugin's function the first day of each month.
-except:
+except NameError:
     pass    

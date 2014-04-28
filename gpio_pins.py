@@ -45,3 +45,37 @@ try:
     GPIO.setup(pin_relay, GPIO.OUT)
 except NameError:
     pass
+
+def enableShiftRegisterOutput():
+    try:
+        GPIO.output(pin_sr_noe, GPIO.LOW)
+    except NameError:
+        pass
+     
+ 
+def disableShiftRegisterOutput():
+    try:
+        GPIO.output(pin_sr_noe, GPIO.HIGH)
+    except NameError:
+        pass    
+ 
+def setShiftRegister(srvals):
+    try:
+        GPIO.output(pin_sr_clk, GPIO.LOW)
+        GPIO.output(pin_sr_lat, GPIO.LOW)
+        for s in range(gv.sd['nst']):
+            GPIO.output(pin_sr_clk, GPIO.LOW)
+            if srvals[gv.sd['nst']-1-s]:
+                GPIO.output(pin_sr_dat, GPIO.HIGH)
+            else:
+                GPIO.output(pin_sr_dat, GPIO.LOW)
+            GPIO.output(pin_sr_clk, GPIO.HIGH)
+        GPIO.output(pin_sr_lat, GPIO.HIGH)
+    except NameError:
+        pass 
+
+def set_output():
+    """Activate triacs according to shift register state."""
+    disableShiftRegisterOutput()
+    setShiftRegister(gv.srvals) # gv.srvals stores shift register state
+    enableShiftRegisterOutput()

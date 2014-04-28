@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from gpio_pins import *
 from urls import *
 import web, time
