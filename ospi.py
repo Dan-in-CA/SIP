@@ -971,6 +971,7 @@ class OSPi_app(web.application):
 
 if __name__ == '__main__':
     app = OSPi_app(urls, globals())
+    gv.srvals = [0]*(gv.sd['nst'])
     set_output()
     thread.start_new_thread(timing_loop, ())
     app.run()
