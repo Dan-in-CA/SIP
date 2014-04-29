@@ -1170,6 +1170,7 @@ if __name__ == '__main__':
     app = OSPi_app(urls, globals())
     if web.config.get('_session') is None:
         web.config._session = web.session.Session(app, web.session.DiskStore('sessions'), initializer={'user': 'anonymous'})
+    gv.srvals = [0]*(gv.sd['nst'])
     set_output()
     thread.start_new_thread(timing_loop, ())
     app.run()
