@@ -47,6 +47,7 @@ except NameError:
     pass
 
 def enableShiftRegisterOutput():
+    """Enable output from shift register."""
     try:
         GPIO.output(pin_sr_noe, GPIO.LOW)
     except NameError:
@@ -54,12 +55,14 @@ def enableShiftRegisterOutput():
      
  
 def disableShiftRegisterOutput():
+    """Disable output from shift register."""
     try:
         GPIO.output(pin_sr_noe, GPIO.HIGH)
     except NameError:
         pass    
  
 def setShiftRegister(srvals):
+    """Set the state of each output pin on the shift register from the srvals list."""
     try:
         GPIO.output(pin_sr_clk, GPIO.LOW)
         GPIO.output(pin_sr_lat, GPIO.LOW)
