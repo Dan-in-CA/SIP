@@ -1,0 +1,77 @@
+$def with(data)
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Auto Program</title>
+		<style>
+			table, h1, h2, h3, p {
+				padding: 5px;
+			}
+			.names li{
+				padding:5px; 
+				position:relative;
+				width:750px;
+				list-style-type:none;
+				list-style-position:outside;
+				margin:0px;
+			}
+			.data table {
+				border-spacing: 0px;
+				padding: 5px;
+			}
+			.data table th {
+				border: 0px;
+			}
+			.data table td {
+				text-align: center;
+				width: 20%;
+				border: 0px;
+			}
+			.data table tr:nth-child(odd) {
+				background-color: #fff;
+			}
+			.data table tr:nth-child(even) td{
+				background-color: #9AFA9A;
+			}			
+			.names label {
+				width:100%;
+				margin-top: 3px;
+				display:inline-block;
+				float:left;
+				padding:3px;
+			}
+			button.submit {
+				height:30px;
+				width:120px;
+				background-color: #68b12f;
+				border: 1px solid #509111;
+				border-bottom: 1px solid #5b992b;
+				border-radius: 8px;
+			}		
+			button.submit:hover {
+				opacity:.85;
+				cursor: pointer; 
+			}
+			button.submit:active {
+				border: 1px solid #20911e;
+				box-shadow: 0 0 10px 5px #356b0b inset;
+			}
+		</style>
+	</head>
+	<body>
+	<button style="height:32px" onclick=window.location="/zone";>Zone Settings</button>
+	<button style="height:32px" onclick=window.location="/wx";>Weather Data Settings</button>
+	<h1>Auto Program Settings</h1>
+	<p>Enter the basic parameters that will control the automatic program.  This assumes that Zone data and Weather data have been entered appropriately.
+	</p>
+	<form class="names" action="/uap" method="get">
+		<table class="input" width=500px>
+		<tr>
+		<tr><td align=left>Start Time: <input type="text" name="startTimeHour" id="startTimeHour" size=2 maxlength=2 value=$data['startTimeHour']> : 
+		<input type="text" name="startTimeMin" id="startTimeMin" size=2 maxlength=2 value=$data['startTimeMin']></td></tr>
+		<tr><td></td><td align=right><button class="submit" type="submit">Submit Values</button></td>
+		</table>
+
+	</body>
+</html>
