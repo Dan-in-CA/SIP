@@ -87,6 +87,7 @@ def log_run():
     """add run data to csv file - most recent first."""
     if gv.sd['lg']:
         zones=re.findall(r"\'(.*?)\'",gv.snames)
+        print 'gv.snames: ', gv.snames
         if gv.lrun[1] == 98:
             pgr = 'Run-once'
         elif gv.lrun[1] == 99:
@@ -699,6 +700,7 @@ class change_stations:
             else:
                 names += "'S0"+str(i+1) + "',"   
         names += ']'
+        gv.snames = names
         save('snames', names.encode('ascii', 'backslashreplace'))
         jsave(gv.sd, 'sd')
         raise web.seeother('/')
