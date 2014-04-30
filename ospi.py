@@ -86,8 +86,7 @@ def CPU_temperature():
 def log_run():
     """add run data to csv file - most recent first."""
     if gv.sd['lg']:
-        zones=re.findall(r"\'(.*?)\'",gv.snames) # bugg here !!!
-        print 'zones: ',zones
+        zones=re.findall(r"\'(.*?)\'",gv.snames)
         if gv.lrun[1] == 98:
             pgr = 'Run-once'
         elif gv.lrun[1] == 99:
@@ -380,12 +379,12 @@ def output_prog():
   
 #Settings Dictionary. A set of vars kept in memory and persisted in a file.
 #Edit this default dictionary definition to add or remove "key": "value" pairs or change defaults.
-gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
-            "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
-            "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
-            "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
-            "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
-            "snlen":32, "name": "OpenSprinkler Pi",})
+gv.sd = ({u"en": 1, u"seq": 1, u"mnp": 32, u"ir": [0], u"rsn": 0, u"htp": 8080, u"nst": 8,
+            u"rdst": 0, u"loc": u"", u"tz": 48, u"rs": 0, u"rd": 0, u"mton": 0,
+            u"lr": u"100", u"sdt": 0, u"mas": 0, u"wl": 100, u"bsy": 0, u"lg": u"",
+            u"urs": 0, u"nopts": 13, u"pwd": u"b3BlbmRvb3I=", u"ipas": 0, u"rst": 1,
+            u"mm": 0, u"mo": [0], u"rbt": 0, u"mtoff": 0, u"nprogs": 1, u"nbrd": 1, u"tu": u"C",
+            u"snlen":32, u"name": u"OpenSprinkler Pi"})
 try:
     sdf = open('./data/sd.json', 'r') ## A config file ##
     sd_temp = json.load(sdf) 
