@@ -86,8 +86,8 @@ def CPU_temperature():
 def log_run():
     """add run data to csv file - most recent first."""
     if gv.sd['lg']:
-        zones=re.findall(r"\'(.*?)\'",gv.snames)
-        print 'gv.snames: ', gv.snames
+        zones=re.findall(r"\'(.*?)\'",gv.snames) # bugg here !!!
+        print 'zones: ',zones
         if gv.lrun[1] == 98:
             pgr = 'Run-once'
         elif gv.lrun[1] == 99:
@@ -373,23 +373,6 @@ def output_prog():
     for i, pro in enumerate(lpd): #gets both index and object
         progstr += 'pd['+str(i)+']='+str(pro).replace(' ', '')+';'
     return progstr      
-
-
-#######################
-####  GPIO related ####
-# def set_output():
-#     """Activate triacs according to shift register state."""
-#     disableShiftRegisterOutput()
-#     setShiftRegister(gv.srvals) # gv.srvals stores shift register state
-#     enableShiftRegisterOutput()
-
-def to_sec(d=0, h=0, m=0, s=0):
-    """Convert Day, Hour, minute, seconds to number of seconds."""
-    secs = d*86400
-    secs += h*3600
-    secs += m*60
-    secs += s
-    return secs
     
 
 #####################
@@ -402,7 +385,7 @@ gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst":
             "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
             "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
             "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
-            "snlen":32, "name":u"OpenSprinkler Pi",})
+            "snlen":32, "name": "OpenSprinkler Pi",})
 try:
     sdf = open('./data/sd.json', 'r') ## A config file ##
     sd_temp = json.load(sdf) 
@@ -439,38 +422,7 @@ gv.lrun=[0,0,0,0] #station index, program number, duration, end time (Used in UI
 
 gv.scount = 0 # Station count, used in set station to track on stations with master association.
 
-gv.snames = data('snames')
-   
-################## 
-## GPIO Related ##
-
-# def enableShiftRegisterOutput():
-#     try:
-#         GPIO.output(pin_sr_noe, GPIO.LOW)
-#     except NameError:
-#         pass
-#      
-#  
-# def disableShiftRegisterOutput():
-#     try:
-#         GPIO.output(pin_sr_noe, GPIO.HIGH)
-#     except NameError:
-#         pass    
-#  
-# def setShiftRegister(srvals):
-#     try:
-#         GPIO.output(pin_sr_clk, GPIO.LOW)
-#         GPIO.output(pin_sr_lat, GPIO.LOW)
-#         for s in range(gv.sd['nst']):
-#             GPIO.output(pin_sr_clk, GPIO.LOW)
-#             if srvals[gv.sd['nst']-1-s]:
-#                 GPIO.output(pin_sr_dat, GPIO.HIGH)
-#             else:
-#                 GPIO.output(pin_sr_dat, GPIO.LOW)
-#             GPIO.output(pin_sr_clk, GPIO.HIGH)
-#         GPIO.output(pin_sr_lat, GPIO.HIGH)
-#     except NameError:
-#         pass    
+gv.snames = data('snames')    
 
 def pass_options(opts):
     optstring = "var sd = {\n"
