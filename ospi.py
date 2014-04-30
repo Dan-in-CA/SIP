@@ -86,17 +86,14 @@ def CPU_temperature():
 def log_run():
     """add run data to csv file - most recent first."""
     if gv.sd['lg']:
-#        snames = data('snames')
-#        zones=re.findall(r"\'(.+?)\'",snames)
-#        print 'zones line 91: ', zones
-#        print len(zones)
+        zones=re.findall(r"\'(.*?)\'",gv.snames)
         if gv.lrun[1] == 98:
             pgr = 'Run-once'
         elif gv.lrun[1] == 99:
             pgr = 'Manual'
         else:
             pgr = str(gv.lrun[1])
-        datastr = (pgr +', '+str(gv.snames[gv.lrun[0]])+', '+str(gv.lrun[2]/60)+'m'+str(gv.lrun[2]%60)+
+        datastr = (pgr +', '+str(zones[gv.lrun[0]])+', '+str(gv.lrun[2]/60)+'m'+str(gv.lrun[2]%60)+
                    's, '+time.strftime("%H:%M:%S, %a. %d %b %Y", time.gmtime(gv.now))+'\n')
         f = open('./static/log/water_log.csv', 'r')
         log = f.readlines()
