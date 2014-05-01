@@ -1,0 +1,60 @@
+$def with(data)
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Monthly irrigation adjustments</title>
+		<style>
+			.names li{
+				padding:5px; 
+				position:relative;
+				width:750px;
+				list-style-type:none;
+				list-style-position:outside;
+				margin:0px;
+			}			
+			.names label {
+				width:100%;
+				margin-top: 3px;
+				display:inline-block;
+				float:left;
+				padding:3px;
+			}
+			.names input {
+				height:10px; 
+				width:25px; 
+				padding:5px 5px;
+				border-radius: 3px;
+			}		
+			button.submit {
+				height:30px;
+				width:120px;
+				background-color: #68b12f;
+				border: 1px solid #509111;
+				border-bottom: 1px solid #5b992b;
+				border-radius: 8px;
+			}		
+			button.submit:hover {
+				opacity:.85;
+				cursor: pointer; 
+			}
+			button.submit:active {
+				border: 1px solid #20911e;
+				box-shadow: 0 0 10px 5px #356b0b inset;
+			}
+		</style>
+	</head>
+	<body>
+	<h1>Zone Settings</h1>
+	<h3>Enter the zone-specific data for Precipitation Rate (Pr) and water needed (ET)</h2>
+	$#$json.dumps(data, indent=4, sort_keys=True)
+		<form class="names" action="/uzone" method="get">
+			<table>
+			<tr><th width=300>Station Name</th><th>Precipitation Rate (in/hour)</th><th>Water Needed (in/week)</th></tr>
+			$for x in range(0,data['station_count']):
+				<tr><td width=300><label for="s$x">$data['station'][x]['name']</label></td><td><input type="text" name="Pr$x" value=$data['station'][x]['Pr']></td><td><input type="text" name="ET$x" value=$data['station'][x]['ET']></td></tr>
+			</table>
+			<button class="submit" type="submit">Submit Values</button>
+		</form>
+	</body>
+</html>
