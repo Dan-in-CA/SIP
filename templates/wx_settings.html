@@ -2,6 +2,7 @@ $def with(data)
 
 <!DOCTYPE html>
 <html>
+<<<<<<< HEAD
 <script>
 function active()
 {
@@ -20,6 +21,11 @@ function active()
 			table, h1, h2, h3, p {
 				padding: 5px;
 			}
+=======
+	<head>
+		<title>Monthly irrigation adjustments</title>
+		<style>
+>>>>>>> added wx settings pages
 			.names li{
 				padding:5px; 
 				position:relative;
@@ -27,6 +33,7 @@ function active()
 				list-style-type:none;
 				list-style-position:outside;
 				margin:0px;
+<<<<<<< HEAD
 			}
 			.data table {
 				border-spacing: 0px;
@@ -45,6 +52,8 @@ function active()
 			}
 			.data table tr:nth-child(even) td{
 				background-color: #9AFA9A;
+=======
+>>>>>>> added wx settings pages
 			}			
 			.names label {
 				width:100%;
@@ -53,6 +62,7 @@ function active()
 				float:left;
 				padding:3px;
 			}
+<<<<<<< HEAD
 			.names input[type=text] {
 				height:10px; 
 				width:150px; 
@@ -60,6 +70,13 @@ function active()
 				border-radius: 3px;
 				text-align: right;
 				background-color: #9AFA9A;
+=======
+			.names input {
+				height:10px; 
+				width:25px; 
+				padding:5px 5px;
+				border-radius: 3px;
+>>>>>>> added wx settings pages
 			}		
 			button.submit {
 				height:30px;
@@ -79,6 +96,7 @@ function active()
 			}
 		</style>
 	</head>
+<<<<<<< HEAD
 	<body onload="javascript:active();">
 	<button style="height:32px" onclick=window.location="/auto";>Automatic Program</button>
 	<button style="height:32px" onclick=window.location="/zone";>Zone Settings</button>
@@ -114,5 +132,19 @@ function active()
 		<tr><td>$k</td><td align=center>$data['rainfall'][k]</td></tr>
 	</table>
 	</div>
+=======
+	<body>
+	<h1>Zone Settings</h1>
+	<h3>Enter the zone-specific data for Precipitation Rate (Pr) and water needed (ET)</h2>
+	$#$json.dumps(data, indent=4, sort_keys=True)
+		<form class="names" action="/uzone" method="get">
+			<table>
+			<tr><th width=300>Station Name</th><th>Precipitation Rate (in/hour)</th><th>Water Needed (in/week)</th></tr>
+			$for x in range(0,data['station_count']):
+				<tr><td width=300><label for="s$x">$data['station'][x]['name']</label></td><td><input type="text" name="Pr$x" value=$data['station'][x]['Pr']></td><td><input type="text" name="ET$x" value=$data['station'][x]['ET']></td></tr>
+			</table>
+			<button class="submit" type="submit">Submit Values</button>
+		</form>
+>>>>>>> added wx settings pages
 	</body>
 </html>
