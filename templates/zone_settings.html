@@ -2,6 +2,7 @@ $def with(data)
 
 <!DOCTYPE html>
 <html>
+<<<<<<< HEAD
 </script>
 	<head>
 		<title>Zone Settings</title>
@@ -28,11 +29,26 @@ $def with(data)
 				background-color: #9AFA9A;
 			}
 /*			.names label {
+=======
+	<head>
+		<title>Monthly irrigation adjustments</title>
+		<style>
+			.names li{
+				padding:5px; 
+				position:relative;
+				width:750px;
+				list-style-type:none;
+				list-style-position:outside;
+				margin:0px;
+			}			
+			.names label {
+>>>>>>> first commit
 				width:100%;
 				margin-top: 3px;
 				display:inline-block;
 				float:left;
 				padding:3px;
+<<<<<<< HEAD
 			} */
 /*			.names input[type=radio] {
 				height: 15px;
@@ -41,14 +57,25 @@ $def with(data)
 				border-radius: 3px;
 			} */
 			.names input[type=text] {
+=======
+			}
+			.names input {
+>>>>>>> first commit
 				height:10px; 
 				width:25px; 
 				padding:5px 5px;
 				border-radius: 3px;
+<<<<<<< HEAD
 			}
 			button.submit {
 				height:30px;
 				width:130px;
+=======
+			}		
+			button.submit {
+				height:30px;
+				width:120px;
+>>>>>>> first commit
 				background-color: #68b12f;
 				border: 1px solid #509111;
 				border-bottom: 1px solid #5b992b;
@@ -62,6 +89,7 @@ $def with(data)
 				border: 1px solid #20911e;
 				box-shadow: 0 0 10px 5px #356b0b inset;
 			}
+<<<<<<< HEAD
 			input[type=radio] {
 				display:none;
 			}
@@ -140,5 +168,21 @@ $def with(data)
 	it usually takes in terms of watering per week to keep your plants looking good, then calculate it yourself and use that as a starting metric.
 	<p><b>Max runoff</b> is also something you can get from various agricultural sources but it is probably best to test it yourself.
 	</p>
+=======
+		</style>
+	</head>
+	<body>
+	<h1>Zone Settings</h1>
+	<h3>Enter the zone-specific data for Precipitation Rate (Pr) and water needed (ET)</h2>
+	$#$json.dumps(data, indent=4, sort_keys=True)
+		<form class="names" action="/uzone" method="get">
+			<table>
+			<tr><th width=300>Station Name</th><th>Precipitation Rate (in/hour)</th><th>Water Needed (in/week)</th></tr>
+			$for x in range(0,data['station_count']):
+				<tr><td width=300><label for="s$x">$data['station'][x]['name']</label></td><td><input type="text" name="Pr$x" value=$data['station'][x]['Pr']></td><td><input type="text" name="ET$x" value=$data['station'][x]['ET']></td></tr>
+			</table>
+			<button class="submit" type="submit">Submit Values</button>
+		</form>
+>>>>>>> first commit
 	</body>
 </html>
