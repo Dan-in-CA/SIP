@@ -3,6 +3,9 @@ $def with(data)
 <!DOCTYPE html>
 <html>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Fixed wx pages to pull from WU
 <script>
 function active()
 {
@@ -15,6 +18,7 @@ function active()
 	}
 }
 </script>
+<<<<<<< HEAD
 	<head>
 		<title>Weather Settings</title>
 		<style>
@@ -22,8 +26,10 @@ function active()
 				padding: 5px;
 			}
 =======
+=======
+>>>>>>> Fixed wx pages to pull from WU
 	<head>
-		<title>Monthly irrigation adjustments</title>
+		<title>Weather Settings</title>
 		<style>
 >>>>>>> added wx settings pages
 			.names li{
@@ -63,6 +69,7 @@ function active()
 				padding:3px;
 			}
 <<<<<<< HEAD
+<<<<<<< HEAD
 			.names input[type=text] {
 				height:10px; 
 				width:150px; 
@@ -72,8 +79,11 @@ function active()
 				background-color: #9AFA9A;
 =======
 			.names input {
+=======
+			.names input[type=text] {
+>>>>>>> Fixed wx pages to pull from WU
 				height:10px; 
-				width:25px; 
+				width:150px; 
 				padding:5px 5px;
 				border-radius: 3px;
 >>>>>>> added wx settings pages
@@ -96,6 +106,7 @@ function active()
 			}
 		</style>
 	</head>
+<<<<<<< HEAD
 <<<<<<< HEAD
 	<body onload="javascript:active();">
 	<button style="height:32px" onclick=window.location="/auto";>Automatic Program</button>
@@ -143,6 +154,29 @@ function active()
 			$for x in range(0,data['station_count']):
 				<tr><td width=300><label for="s$x">$data['station'][x]['name']</label></td><td><input type="text" name="Pr$x" value=$data['station'][x]['Pr']></td><td><input type="text" name="ET$x" value=$data['station'][x]['ET']></td></tr>
 			</table>
+=======
+	<body onload="javascript:active();">
+	<h1>WX Settings</h1>
+	<h2>Yesterday rainfall total: $data['rainfall']</h2>
+	<p />
+	<h3>Enter weather settings</h2>
+	<p>OSPi can acquire historical weather data from wunderground.com in order to adjust the automatic watering schedule based on actual weather data. In order to 
+	acquire this data, OSPi needs an API key.  These keys are available from wunderground.com for free for developers.  Enter that ID below.</p>
+	<p>Also, OSPi needs to know the name of a personal
+	weather station near you.  The best way to find these stations is to search for your residence and use the wundermap to find a local station.  Selecting this station
+	on the map will give you the ID of that station.  Enter that ID below.
+	</p>
+		<form class="names" action="/uwx" method="get">
+		<ul>
+		<li>Use Wunderground.com for data: <input type="checkbox" onclick="javascript:active();" id="useWU" name="useWU" value=useWU
+		$if data['wx'][0]['useWU']: checked
+		/></li>
+<script>active();</script>
+		<li>Wunderground API Key: <input type="text" name="apikey" id="apikey" value=$data['wx'][0]['apikey']></li>
+		<li>Personal Weather Station ID: <input type="text" name="pws" id="pws" value=$data['wx'][0]['pws']></li>
+		</ul>
+
+>>>>>>> Fixed wx pages to pull from WU
 			<button class="submit" type="submit">Submit Values</button>
 		</form>
 >>>>>>> added wx settings pages
