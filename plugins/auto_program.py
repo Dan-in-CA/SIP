@@ -68,7 +68,11 @@ class update_auto_program:
         except IOError:
             return
 
+<<<<<<< HEAD
         raise web.seeother('/auto')
+=======
+        raise web.seeother('/')
+>>>>>>> created auto program module
 
 
 
