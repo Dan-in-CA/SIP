@@ -18,8 +18,8 @@ from urls import *
 
  #### Revision information ####
 gv.ver = 183
-gv.rev = 146
-gv.rev_date = '04/May/2014'
+gv.rev = 145
+gv.rev_date = '04/April/2014'
 
 #!!! Note: This add-on feature is now deprecated. Code is left in place for backward compatibility.
 ################################################################
@@ -86,14 +86,17 @@ def CPU_temperature():
 def log_run():
     """add run data to csv file - most recent first."""
     if gv.sd['lg']:
-        zones=re.findall(r"\'(.*?)\'",gv.snames)
+#        snames = data('snames')
+#        zones=re.findall(r"\'(.+?)\'",snames)
+#        print 'zones line 91: ', zones
+#        print len(zones)
         if gv.lrun[1] == 98:
             pgr = 'Run-once'
         elif gv.lrun[1] == 99:
             pgr = 'Manual'
         else:
             pgr = str(gv.lrun[1])
-        datastr = (pgr +', '+str(zones[gv.lrun[0]])+', '+str(gv.lrun[2]/60)+'m'+str(gv.lrun[2]%60)+
+        datastr = (pgr +', '+str(gv.snames[gv.lrun[0]])+', '+str(gv.lrun[2]/60)+'m'+str(gv.lrun[2]%60)+
                    's, '+time.strftime("%H:%M:%S, %a. %d %b %Y", time.gmtime(gv.now))+'\n')
         f = open('./static/log/water_log.csv', 'r')
         log = f.readlines()
@@ -129,7 +132,7 @@ def prog_match(prog):
     return 0
 
 def schedule_stations(stations):
-    """Schedule stations/valves/zones to run."""
+    """Schedule stattions/valves/zones to run."""
     if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']): # If rain delay or rain detected by sensor
         rain = True
     else:
@@ -200,7 +203,7 @@ def timing_loop():
     last_min = 0
     while True: # infinite loop
         gv.now = timegm(time.localtime()) #time.time()+((gv.sd['tz']/4)-12)*3600 # Current time based on UTC time from the Pi adjusted by the Time Zone setting from options. updated once per second.
-        if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']):
+        if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']): # and not gv.sd['rd']:
             lt = time.gmtime(gv.now)
             if (lt[3]*60)+lt[4] != last_min: # only check programs once a minute
                 last_min = (lt[3]*60)+lt[4]
@@ -372,6 +375,23 @@ def output_prog():
     for i, pro in enumerate(lpd): #gets both index and object
         progstr += 'pd['+str(i)+']='+str(pro).replace(' ', '')+';'
     return progstr      
+
+
+#######################
+####  GPIO related ####
+# def set_output():
+#     """Activate triacs according to shift register state."""
+#     disableShiftRegisterOutput()
+#     setShiftRegister(gv.srvals) # gv.srvals stores shift register state
+#     enableShiftRegisterOutput()
+
+def to_sec(d=0, h=0, m=0, s=0):
+    """Convert Day, Hour, minute, seconds to number of seconds."""
+    secs = d*86400
+    secs += h*3600
+    secs += m*60
+    secs += s
+    return secs
     
 
 #####################
@@ -379,12 +399,12 @@ def output_prog():
   
 #Settings Dictionary. A set of vars kept in memory and persisted in a file.
 #Edit this default dictionary definition to add or remove "key": "value" pairs or change defaults.
-gv.sd = ({u"en": 1, u"seq": 1, u"mnp": 32, u"ir": [0], u"rsn": 0, u"htp": 8080, u"nst": 8,
-            u"rdst": 0, u"loc": u"", u"tz": 48, u"rs": 0, u"rd": 0, u"mton": 0,
-            u"lr": u"100", u"sdt": 0, u"mas": 0, u"wl": 100, u"bsy": 0, u"lg": u"",
-            u"urs": 0, u"nopts": 13, u"pwd": u"b3BlbmRvb3I=", u"ipas": 0, u"rst": 1,
-            u"mm": 0, u"mo": [0], u"rbt": 0, u"mtoff": 0, u"nprogs": 1, u"nbrd": 1, u"tu": u"C",
-            u"snlen":32, u"name": u"OpenSprinkler Pi"})
+gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
+            "rdst": 0, "loc": "", "tz": 48, "rs": 0, "rd": 0, "mton": 0,
+            "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
+            "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "ipas": 0, "rst": 1,
+            "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
+            "snlen":32, "name":u"OpenSprinkler Pi",})
 try:
     sdf = open('./data/sd.json', 'r') ## A config file ##
     sd_temp = json.load(sdf) 
@@ -421,7 +441,38 @@ gv.lrun=[0,0,0,0] #station index, program number, duration, end time (Used in UI
 
 gv.scount = 0 # Station count, used in set station to track on stations with master association.
 
-gv.snames = data('snames')    
+gv.snames = data('snames')
+   
+################## 
+## GPIO Related ##
+
+# def enableShiftRegisterOutput():
+#     try:
+#         GPIO.output(pin_sr_noe, GPIO.LOW)
+#     except NameError:
+#         pass
+#      
+#  
+# def disableShiftRegisterOutput():
+#     try:
+#         GPIO.output(pin_sr_noe, GPIO.HIGH)
+#     except NameError:
+#         pass    
+#  
+# def setShiftRegister(srvals):
+#     try:
+#         GPIO.output(pin_sr_clk, GPIO.LOW)
+#         GPIO.output(pin_sr_lat, GPIO.LOW)
+#         for s in range(gv.sd['nst']):
+#             GPIO.output(pin_sr_clk, GPIO.LOW)
+#             if srvals[gv.sd['nst']-1-s]:
+#                 GPIO.output(pin_sr_dat, GPIO.HIGH)
+#             else:
+#                 GPIO.output(pin_sr_dat, GPIO.LOW)
+#             GPIO.output(pin_sr_clk, GPIO.HIGH)
+#         GPIO.output(pin_sr_lat, GPIO.HIGH)
+#     except NameError:
+#         pass    
 
 def pass_options(opts):
     optstring = "var sd = {\n"
@@ -618,7 +669,7 @@ class change_options:
         return
 
 class view_stations:
-    """Open a page to view and edit station names, ignore rain settings, and master associations."""
+    """Open a page to view and edit station names and master associations."""
     def GET(self):
         stationpg = '<!DOCTYPE html>\n'
         stationpg += data('meta')
@@ -629,7 +680,7 @@ class view_stations:
         return stationpg
 
 class change_stations:
-    """Save changes to station names, ignore rainsettings, and master associations."""
+    """Save changes to station names, ignore rain and master associations."""
     def GET(self):
         qdict = web.input()
         approve_pwd(qdict)
@@ -651,13 +702,12 @@ class change_stations:
             else:
                 names += "'S0"+str(i+1) + "',"   
         names += ']'
-        gv.snames = names
         save('snames', names.encode('ascii', 'backslashreplace'))
         jsave(gv.sd, 'sd')
         raise web.seeother('/')
 
 class get_station:
-    """Return a page containing a number representing the state of a station or all stations if 0 is entered as station number."""
+    """Return a page containing a number representing the state of a station or all stations if 0 is entered as statin number."""
     def GET(self, sn):
         if sn == '0':
             status = '<!DOCTYPE html>\n'
@@ -742,7 +792,7 @@ class view_programs:
         return programpg
     
 class modify_program:
-    """Open page to allow program modification."""
+    """Open page to allow program modification"""
     def GET(self):
         qdict = web.input()
         modprogpg = '<!DOCTYPE html>\n'
@@ -809,7 +859,7 @@ class delete_program:
         return
                           
 class graph_programs:
-    """Open page to display program schedule as a graph."""
+    """Open page to display program schedule."""
     def GET(self):
         qdict = web.input()
         t = gv.now
@@ -829,7 +879,6 @@ class graph_programs:
         return graphpg
 
 class view_log:
-    """Open page displaying log data."""
     def __init__(self):
         self.render = web.template.render('templates/', globals={'sd':gv.sd})
  
@@ -893,7 +942,6 @@ class show_revision:
         revpg = '<!DOCTYPE html>\n'
         revpg += 'Python Interval Program for OpenSprinkler Pi<br/><br/>\n'
         revpg += 'Compatable with OpenSprinkler firmware 1.8.3.<br/><br/>\n'
-        revpg += 'Includes plugin archetecture\n'
         revpg += 'ospi.py revision: '+str(gv.rev) +'<br/><br/>\n'
         revpg += 'updated ' + gv.rev_date +'\n'
         return revpg
