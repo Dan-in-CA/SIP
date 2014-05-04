@@ -1,4 +1,4 @@
-import sys, gv
+import gv
 
 try:
     import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
@@ -9,7 +9,6 @@ except ImportError:
         gv.platform = 'bo'
     except ImportError:
         print 'No GPIO module was loaded from GPIO Pins module'
-        #sys.exit(1)
 
 try:
     GPIO.setwarnings(False)

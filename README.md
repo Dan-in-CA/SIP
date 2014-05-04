@@ -12,6 +12,17 @@ UPDATES
 ===========
 ***********
 
+May 4 2114
+-----------
+(Dan)<br/>
+Changes, bug fixes:<br/>
+1. Program now explicitly sets all valves to off at startup. Fixes a bug that sometimes valves were on at program load.<br/>
+2. Fixed a bug that could freeze the program under certain conditions if a station name was blank.<br/>
+3. Changing station names would not be updated properly - Fixed.<br/>
+4. Changed how ospi.py handles time and date. Changes such as to or from daylight time are now automatic. Time zone setting it options no longer has an effect.<br/>
+5. Plugins must now have group permission set to executable in order to load. Allows plugins to be selectively enabled/disabled.<br/>
+6. Removed deprecated "ospi_addon.py" file from program directory. 
+
 April 4 2014
 -------------
 (Dan)<br/>
@@ -20,20 +31,19 @@ New plugin architecture including a plugin to support Samer's new JavaScript app
 February 7 2014
 --------------
 (Dan)<br/>
-Added support for Rain sensor and partial support for relay on OSPi Rev. 1.3   
-
+Added support for Rain sensor and partial support for relay on OSPi Rev. 1.3.<br/> 
 
 November 12 2013
 --------------
 (Dan)<br/>
-Modified program to run on either OSPi or OSBo 
+Modified program to run on either OSPi or OSBo<br/> 
 
 October 16 2013
 --------------
 (Dan)<br/>
 Additions, bug fixes:<br/>
 1. Fixed a bug that would cause an error in program preview when a master was enabled.<br/>
-2. Changing to manual mode would clear rain delay setting, Setting rain delay in manual mode would switch to program mode - fixed.
+2. Changing to manual mode would clear rain delay setting, Setting rain delay in manual mode would switch to program mode - fixed.<br/>
 
 October 11 2013
 --------------
