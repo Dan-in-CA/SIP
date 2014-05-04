@@ -68,17 +68,7 @@ class update_auto_program:
         except IOError:
             return
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         raise web.seeother('/auto')
-=======
-        raise web.seeother('/')
->>>>>>> created auto program module
-=======
-        raise web.seeother('/auto')
->>>>>>> added support for zones to opt in/out of being automated
-
-
 
 # call once on load
 setAutoProgram()
