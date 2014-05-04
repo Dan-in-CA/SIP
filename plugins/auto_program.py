@@ -68,7 +68,7 @@ class update_auto_program:
         except IOError:
             return
 
-        raise web.seeother('/')
+        raise web.seeother('/auto')
 
 
 

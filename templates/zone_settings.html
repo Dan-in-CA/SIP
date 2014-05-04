@@ -2,33 +2,53 @@ $def with(data)
 
 <!DOCTYPE html>
 <html>
+</script>
 	<head>
 		<title>Zone Settings</title>
 		<style>
-			.names li{
-				padding:5px; 
-				position:relative;
-				width:750px;
-				list-style-type:none;
-				list-style-position:outside;
-				margin:0px;
-			}			
-			.names label {
+			table {
+				border-spacing: 0px;
+			}
+			table th {
+				border: 0px;
+			}
+			table td {
+				text-align: center;
+				width: 20%;
+				border: 0px;
+			}
+			table tr:last-child td {
+				text-align: right;
+				background-color: #fff;
+			}
+			table tr:nth-child(odd) {
+				background-color: #fff;
+			}
+			table tr:nth-child(even) {
+				background-color: #9AFA9A;
+			}
+/*			.names label {
 				width:100%;
 				margin-top: 3px;
 				display:inline-block;
 				float:left;
 				padding:3px;
-			}
-			.names input {
+			} */
+/*			.names input[type=radio] {
+				height: 15px;
+				width: 25px;
+			    padding: 5px 5px;
+				border-radius: 3px;
+			} */
+			.names input[type=text] {
 				height:10px; 
 				width:25px; 
 				padding:5px 5px;
 				border-radius: 3px;
-			}		
+			}
 			button.submit {
 				height:30px;
-				width:120px;
+				width:130px;
 				background-color: #68b12f;
 				border: 1px solid #509111;
 				border-bottom: 1px solid #5b992b;
@@ -42,19 +62,83 @@ $def with(data)
 				border: 1px solid #20911e;
 				box-shadow: 0 0 10px 5px #356b0b inset;
 			}
+			input[type=radio] {
+				display:none;
+			}
+			input[type=radio] + label, input[type=checkbox] + label {
+				display:inline-block;
+				margin:-2px;
+				padding: 4px 12px;
+				margin-bottom: 0;
+				font-size: 14px;
+				line-height: 20px;
+				color: #333;
+				text-align: center;
+				text-shadow: 0 1px 1px rgba(255,255,255,0.75);
+				vertical-align: middle;
+				cursor: pointer;
+				background-color: #f5f5f5;
+				background-image: -moz-linear-gradient(top,#fff,#e6e6e6);
+				background-image: -webkit-gradient(linear,0 0,0 100%,from(#fff),to(#e6e6e6));
+				background-image: -webkit-linear-gradient(top,#fff,#e6e6e6);
+				background-image: -o-linear-gradient(top,#fff,#e6e6e6);
+				background-image: linear-gradient(to bottom,#fff,#e6e6e6);
+				background-repeat: repeat-x;
+				border: 1px solid #ccc;
+				border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+				border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+				border-bottom-color: #b3b3b3;
+				filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff',endColorstr='#ffe6e6e6',GradientType=0);
+				filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+				-webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.05);
+				-moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.05);
+				box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.05);
+			}
+  
+			input[type=radio]:checked + label, input[type=checkbox]:checked + label {
+				background-image: none;
+				outline: 0;
+				-webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,0.15),0 1px 2px rgba(0,0,0,0.05);
+				-moz-box-shadow: inset 0 2px 4px rgba(0,0,0,0.15),0 1px 2px rgba(0,0,0,0.05);
+				box-shadow: inset 0 2px 4px rgba(0,0,0,0.15),0 1px 2px rgba(0,0,0,0.05);
+				background-color:#e0e0e0;
+			}
 		</style>
 	</head>
-	<body>
+	<body onload="javascript:active();">
+	<button style="height:32px" onclick=window.location="/auto";>Automatic Program</button>
+	<button style="height:32px" onclick=window.location="/wx";>Weather Settings</button>
 	<h1>Zone Settings</h1>
-	<h3>Enter the zone-specific data for Precipitation Rate (Pr) and water needed (ET)</h2>
+	<h3>Enter the zone-specific data for Precipitation Rate, water needed, and maximum amount of water.</h2>
 	$#$json.dumps(data, indent=4, sort_keys=True)
 		<form class="names" action="/uzone" method="get">
 			<table>
-			<tr><th width=300>Station Name</th><th>Precipitation Rate (in/hour)</th><th>Water Needed (in/week)</th></tr>
+			<tr><th width=300>Station Name</th><th>Automated</th><th>Irrigation Type</th><th>Precipitation Rate<br>Rotor/Spray=(inches/hour)<br>Drip=(gallons/hour)</th><th>Water Needed<br>(inches/week)</th><th>Max water before runoff<br>(inches)</th></tr>
 			$for x in range(0,data['station_count']):
-				<tr><td width=300><label for="s$x">$data['station'][x]['name']</label></td><td><input type="text" name="Pr$x" value=$data['station'][x]['Pr']></td><td><input type="text" name="ET$x" value=$data['station'][x]['ET']></td></tr>
+				<tr><td width=300><label for="s$x">$data['station'][x]['name']</label></td>
+				<td style="width: 100px;"><input type="checkbox" id="check$x" name="auto$x" 
+				$if data['station'][x]['auto']: checked
+				/></td>
+				<td><input type="radio" id="radio1$x" name="type$x" value="rotor" 
+				$if data['station'][x]['type']=='rotor':checked
+				><label for="radio1$x">Rotor</label><input type="radio" id="radio2$x" name="type$x" value="spray" 
+				$if data['station'][x]['type']=='spray':checked
+				><label for="radio2$x">Spray</label><input type="radio" id="radio3$x" name="type$x" value="drip" 
+				$if data['station'][x]['type']=='drip':checked
+				><label for="radio3$x">Drip</label></td>
+				<td><input type="text" name="Pr$x" value=$data['station'][x]['Pr']></td>
+				<td><input type="text" name="ET$x" value=$data['station'][x]['ET']></td>
+				<td><input type="text" name="max$x" value=$data['station'][x]['max']></td></tr>
+			<tr><td colspan=5><button class="submit" type="submit">Submit Settings</button></td></tr>
 			</table>
-			<button class="submit" type="submit">Submit Values</button>
 		</form>
+	<p><b>Precipitation Rate</b> is best measured by by running each zone and collecting the amount of water dispersed by the irrigaion system. See this video titled
+	<a href='http://www.youtube.com/watch?v=W_wn-hwLNtg'>How to Calibrate Your Sprinklers</a> by Dr. Laurie Trenholm for one way to accomplish this.  
+	</p><p><b>Water needed</b> can be determined in several ways.  One way is to contact your county extension service and see what information they have on the topic.  Also, often the agricultural
+	departments of local universities have this information (check their web sites or give them a call!)  If none of that is easy to come by, you can perform some soil moisture samples after watering
+	and determine yourself how much water is needed to get water to the depth needed (6 inches for most grasses.)  And finally, you can guess - if you know how much time 
+	it usually takes in terms of watering per week to keep your plants looking good, then calculate it yourself and use that as a starting metric.
+	<p><b>Max runoff</b> is also something you can get from various agricultural sources but it is probably best to test it yourself.
+	</p>
 	</body>
 </html>
