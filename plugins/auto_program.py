@@ -69,10 +69,14 @@ class update_auto_program:
             return
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         raise web.seeother('/auto')
 =======
         raise web.seeother('/')
 >>>>>>> created auto program module
+=======
+        raise web.seeother('/auto')
+>>>>>>> added support for zones to opt in/out of being automated
 
 
 

@@ -25,6 +25,7 @@ function active()
 			table, h1, h2, h3, p {
 				padding: 5px;
 			}
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Fixed wx pages to pull from WU
@@ -32,6 +33,8 @@ function active()
 		<title>Weather Settings</title>
 		<style>
 >>>>>>> added wx settings pages
+=======
+>>>>>>> added support for zones to opt in/out of being automated
 			.names li{
 				padding:5px; 
 				position:relative;
@@ -40,6 +43,9 @@ function active()
 				list-style-position:outside;
 				margin:0px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> added support for zones to opt in/out of being automated
 			}
 			.data table {
 				border-spacing: 0px;
@@ -58,8 +64,11 @@ function active()
 			}
 			.data table tr:nth-child(even) td{
 				background-color: #9AFA9A;
+<<<<<<< HEAD
 =======
 >>>>>>> added wx settings pages
+=======
+>>>>>>> added support for zones to opt in/out of being automated
 			}			
 			.names label {
 				width:100%;
@@ -77,6 +86,7 @@ function active()
 				border-radius: 3px;
 				text-align: right;
 				background-color: #9AFA9A;
+<<<<<<< HEAD
 =======
 			.names input {
 =======
@@ -87,6 +97,8 @@ function active()
 				padding:5px 5px;
 				border-radius: 3px;
 >>>>>>> added wx settings pages
+=======
+>>>>>>> added support for zones to opt in/out of being automated
 			}		
 			button.submit {
 				height:30px;
@@ -156,29 +168,46 @@ function active()
 			</table>
 =======
 	<body onload="javascript:active();">
+	<button style="height:32px" onclick=window.location="/auto";>Automatic Program</button>
+	<button style="height:32px" onclick=window.location="/zone";>Zone Settings</button>
 	<h1>WX Settings</h1>
-	<h2>Yesterday rainfall total: $data['rainfall']</h2>
-	<p />
 	<h3>Enter weather settings</h2>
-	<p>OSPi can acquire historical weather data from wunderground.com in order to adjust the automatic watering schedule based on actual weather data. In order to 
-	acquire this data, OSPi needs an API key.  These keys are available from wunderground.com for free for developers.  Enter that ID below.</p>
+	<img align=right width="25%" src='./static/images/misc/wustation.png' />
+	<p>OSPi can acquire historical weather data from <a href='http://www.wunderground.com/?apiref=ee54d39c36a8cadb'>wunderground.com</a> in order to adjust the automatic watering schedule based on actual weather data. In order to 
+	acquire this data, OSPi needs an API key.  These keys are available from <a href='http://www.wunderground.com/?apiref=ee54d39c36a8cadb'>wunderground.com</a> for free for developers.  Enter that ID below.</p>
 	<p>Also, OSPi needs to know the name of a personal
-	weather station near you.  The best way to find these stations is to search for your residence and use the wundermap to find a local station.  Selecting this station
-	on the map will give you the ID of that station.  Enter that ID below.
+	weather station near you.  The best way to find these stations is to use the <a href='http://www.wunderground.com/wundermap/?apiref=ee54d39c36a8cadb'>Wundermap</a>, search for your residence and find a local station near you.  Selecting this station
+	on the map will give you the ID of that station.  The photo at the right shows where that information can be found.  Enter that ID below.
 	</p>
 		<form class="names" action="/uwx" method="get">
-		<ul>
-		<li>Use Wunderground.com for data: <input type="checkbox" onclick="javascript:active();" id="useWU" name="useWU" value=useWU
-		$if data['wx'][0]['useWU']: checked
-		/></li>
-<script>active();</script>
-		<li>Wunderground API Key: <input type="text" name="apikey" id="apikey" value=$data['wx'][0]['apikey']></li>
-		<li>Personal Weather Station ID: <input type="text" name="pws" id="pws" value=$data['wx'][0]['pws']></li>
-		</ul>
+		<table class="input" width=500px>
+		<tr>
+		<td align=left>Use Wunderground.com for data:</td><td align=right> <input type="checkbox" onclick="javascript:active();" id="useWU" name="useWU" value=useWU
+		$if data['wx']['useWU']: checked
+		/></td></tr>
+		<tr><td align=left>Wunderground API Key:</td><td align=right><input type="text" name="apikey" id="apikey" value=$data['wx']['apikey']></td></tr>
+		<tr><td align=left>Personal Weather Station ID: </td><td align=right><input type="text" name="pws" id="pws" value=$data['wx']['pws']></td></tr>
+		<tr><td></td><td align=right><button class="submit" type="submit">Submit Values</button></td>
+		</table>
 
+
+<<<<<<< HEAD
 >>>>>>> Fixed wx pages to pull from WU
 			<button class="submit" type="submit">Submit Values</button>
 		</form>
 >>>>>>> added wx settings pages
+=======
+		</form>
+	<hr>
+	<h1>Weather Data</h1>
+	<h3>Rainfall data</h3>
+	<div class="data">
+	<table>
+		<tr><th>Date</th><th align=center>Rainfall (inches)</th></tr>
+		$for k in sorted(data['rainfall'], reverse=1):
+		<tr><td>$k</td><td align=center>$data['rainfall'][k]</td></tr>
+	</table>
+	</div>
+>>>>>>> added support for zones to opt in/out of being automated
 	</body>
 </html>

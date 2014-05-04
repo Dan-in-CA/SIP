@@ -2,6 +2,7 @@ import web, json, time, io, re
 import gv # Get access to ospi's settings
 from urls import urls # Get access to ospi's URLs
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 urls.extend(['/zone', 'plugins.zone_settings.zone_settings', '/uzone', 'plugins.zone_settings.update_zone_settings']) # Add a new url to open the data entry page
 
@@ -15,6 +16,11 @@ urls.extend(['/zone', 'plugins.zone_settings.zone_settings', '/uzone', 'plugins.
 #sched = Scheduler()
 #sched.start() # Start the scheduler
 >>>>>>> first commit
+=======
+
+urls.extend(['/zone', 'plugins.zone_settings.zone_settings', '/uzone', 'plugins.zone_settings.update_zone_settings']) # Add a new url to open the data entry page
+
+>>>>>>> added support for zones to opt in/out of being automated
 def zone_names(snames):
 	# station name string contains ['name','name2',]
 	zones=re.findall(r"\'(.*?)\'",gv.snames)										
@@ -27,6 +33,7 @@ class zone_settings:
     
     def GET(self):
 		# start by setting up our json dictionary with blank station data
+<<<<<<< HEAD
 <<<<<<< HEAD
         # if we ever see 'bad station' we know there was an error somewhere
 		data = json.loads(u'{"station": [{"auto": 0, "Pr": 0.0, "ET": 0.0, "type": "rotor", "max": 0.0, "name": "bad station"}], "station_count": 1}')
@@ -41,36 +48,51 @@ class zone_settings:
 =======
 		#raw_data = u'{"station": [{"Pr": 0.0, "ET": 0.0, "name": "bad station"}], "station_count": 1}'
 		data = json.loads(u'{"station": [{"Pr": 0.0, "ET": 0.0, "name": "bad station"}], "station_count": 1}')
+=======
+        # if we ever see 'bad station' we know there was an error somewhere
+		data = json.loads(u'{"station": [{"auto": 0, "Pr": 0.0, "ET": 0.0, "type": "rotor", "max": 0.0, "name": "bad station"}], "station_count": 1}')
+>>>>>>> added support for zones to opt in/out of being automated
 		try:
-		# read station settings from the file, if it exists
+            # read station settings from the file, if it exists
 			with io.open(r'./data/zone_settings.json', 'r') as data_file: # read zone data
 				data = json.load(data_file)
 			data_file.close()
-			# update station names from global in case they have changed
-			# data['station_count']=gv.sd['nbrd']*8+8  ## we don't want to use this, we want to use the value from the file here
+			
+            # update station names from global variables assuming they have changed
 			station_names = zone_names(gv.snames)
+<<<<<<< HEAD
 			print "station_count=", data['station_count']
 			print station_names
 >>>>>>> first commit
+=======
+>>>>>>> added support for zones to opt in/out of being automated
 			for i in range(0,data['station_count']):
 				data['station'][i]['name']=station_names[i]
 			
 			# has the number of expansion boards changed, and thus the number of stations changed?
 			# Note: this doesn't seem well written - I feel there is some way to integrate setting the names with 
 <<<<<<< HEAD
+<<<<<<< HEAD
 			# increasing or decreasing the station count but I'm not feeling clever enough
 =======
 			# increasing or decreasing the station count
 >>>>>>> first commit
+=======
+			# increasing or decreasing the station count but I'm not feeling clever enough
+>>>>>>> added support for zones to opt in/out of being automated
 			diff = (gv.sd['nbrd']*8)-data['station_count']
 			if diff>0:
 			# we need to add stations from data dictionary
 				for i in range(0,diff):
 <<<<<<< HEAD
+<<<<<<< HEAD
 					dict = {"auto": 0, "Pr": 0.0, "ET": 0.0, "max": 0.0, "type": "rotor", "name": station_names[i+data['station_count']]}
 =======
 					dict = {"Pr": 0.0, "ET": 0.0, "name": station_names[i+data['station_count']]}
 >>>>>>> first commit
+=======
+					dict = {"auto": 0, "Pr": 0.0, "ET": 0.0, "max": 0.0, "type": "rotor", "name": station_names[i+data['station_count']]}
+>>>>>>> added support for zones to opt in/out of being automated
 					data['station'].append(dict)
 			elif diff<0:
 			# we need to remove stations from data dictionary
@@ -84,6 +106,7 @@ class zone_settings:
 			data['station_count']=gv.sd['nbrd']*8
 			data['station'][0]['name']=station_names[0]
 <<<<<<< HEAD
+<<<<<<< HEAD
 			# current station names are written to the file but not used when read in (instead they are updated from the global variable)
 			# an optimization could to remove station names to save disk space and memory
 			for i in range(1,data['station_count']):
@@ -94,6 +117,12 @@ class zone_settings:
 			for i in range(1,data['station_count']):
 				dict = {"Pr": 0.0, "ET": 0.0, "name": station_names[i]}
 >>>>>>> first commit
+=======
+			# current station names are written to the file but not used when read in (instead they are updated from the global variable)
+			# an optimization could to remove station names to save disk space and memory
+			for i in range(1,data['station_count']):
+				dict = {"auto": 0, "Pr": 0.0, "ET": 0.0, "max": 0.0, "type": "rotor", "name": station_names[i]}
+>>>>>>> added support for zones to opt in/out of being automated
 				#print "dict=",i,dict
 				data['station'].append(dict)
 			#print "data=", data['station']
@@ -106,11 +135,15 @@ class update_zone_settings:
     def GET(self):
         qdict=web.input()
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
         #print qdict
         #print qdict["ET1"]
 >>>>>>> first commit
+=======
+
+>>>>>>> added support for zones to opt in/out of being automated
         try:
             #read existing station settings from the file, if it exists
             with io.open(r'./data/zone_settings.json', 'r') as data_file: # read zone data
@@ -118,6 +151,7 @@ class update_zone_settings:
             data_file.close()
         
             for i in range(0,data['station_count']):
+<<<<<<< HEAD
 <<<<<<< HEAD
                 if ('auto'+str(i)) in qdict: data['station'][i]['auto']=qdict["auto"+str(i)]
                 else: data['station'][i]['auto']=0
@@ -129,6 +163,14 @@ class update_zone_settings:
                 data['station'][i]['ET']=qdict["ET"+str(i)]
                 data['station'][i]['Pr']=qdict["Pr"+str(i)]
 >>>>>>> first commit
+=======
+                if ('auto'+str(i)) in qdict: data['station'][i]['auto']=qdict["auto"+str(i)]
+                else: data['station'][i]['auto']=0
+                data['station'][i]['ET']=qdict["ET"+str(i)]
+                data['station'][i]['Pr']=qdict["Pr"+str(i)]
+                data['station'][i]['max']=qdict["max"+str(i)]
+                data['station'][i]['type']=qdict["type"+str(i)]
+>>>>>>> added support for zones to opt in/out of being automated
 		
             #write file back out with updated data
             with io.open('./data/zone_settings.json', 'w', encoding='utf-8') as data_file:
@@ -137,6 +179,7 @@ class update_zone_settings:
         except IOError:
             return
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         raise web.seeother('/auto')
 =======
@@ -148,3 +191,6 @@ class update_zone_settings:
 #except:
 #    pass    
 >>>>>>> first commit
+=======
+        raise web.seeother('/auto')
+>>>>>>> added support for zones to opt in/out of being automated
