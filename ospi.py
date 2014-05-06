@@ -93,7 +93,7 @@ def log_run():
             pgr = 'Manual'
         else:
             pgr = str(gv.lrun[1])
-        datastr = (pgr +', '+str(zones[gv.lrun[0]])+', '+str(gv.lrun[2]/60)+'m'+str(gv.lrun[2]%60)+
+        datastr = (pgr +', '+str(gv.lrun[0])+', '+str(zones[gv.lrun[0]])+', '+str(gv.lrun[2]/60)+'m'+str(gv.lrun[2]%60)+
                    's, '+time.strftime("%H:%M:%S, %a. %d %b %Y", time.gmtime(gv.now))+'\n')
         f = open('./static/log/water_log.csv', 'r')
         log = f.readlines()
@@ -849,7 +849,7 @@ class clear_log:
         qdict = web.input()
         approve_pwd(qdict)
         f = open('./static/log/water_log.csv', 'w')
-        f.write('Program, Zone, Duration, Finish Time, Date'+'\n')
+        f.write('Program, Zone, Name, Duration, Finish Time, Date'+'\n')
         f.close
         raise web.seeother('/vl')
 
