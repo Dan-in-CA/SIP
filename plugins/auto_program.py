@@ -243,5 +243,4 @@ def getZoneHistory(limit):
 #    data_file.write(unicode(json.dumps(gv.rs, ensure_ascii=False)))
 #    data_file.write(unicode(json.dumps(gv.ps, ensure_ascii=False)))
 #data_file.close()
-
-setAutoProgram()
+#setAutoProgram()
