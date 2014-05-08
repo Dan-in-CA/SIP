@@ -115,11 +115,11 @@ $def with(data)
 		<br><br><h3>Debug Options</h3>
 		<p><font color=red>WARNING:</font> This will prevent the OSPi from controlling your sprinkler system, but allow the software to THINK it is working. It impacts allow
 		ALL program/manual/run-once operations, not just Auto-Program.</p>
-		Simulate operation:<input type="radio" id"simulate" name="simulate" value="1" 
+		<p>Simulate operation:<input type="radio" id"simulate" name="simulate" value="1" 
 		$if data['simulate']=="1": checked
 		/>On<input type="radio" id="simulate" name="simulate" value="0"
 		$if data['simulate']=="0": checked
-		/>Off
+		/>Off</p>
 	</form><form class="names" action="/rap" method="get">
 		<p><button class="submit" type="submit">Run Auto-Program Now</button></p>
 	</form>
