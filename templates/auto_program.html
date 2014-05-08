@@ -52,7 +52,7 @@ $def with(data)
 			}
 			button.submit {
 				height:30px;
-				width:120px;
+				width:150px;
 				background-color: #68b12f;
 				border: 1px solid #509111;
 				border-bottom: 1px solid #5b992b;
@@ -66,12 +66,16 @@ $def with(data)
 				border: 1px solid #20911e;
 				box-shadow: 0 0 10px 5px #356b0b inset;
 			}
+			.menu button {
+				height: 30px;
+				padding: 2px 6px;
+			}
 		</style>
 	</head>
 	<body>
 	<img src="./static/images/misc/ospi-auto.png"><br>
-	<button style="height:32px" onclick=window.location="/zone";>Zone Settings</button>
-	<button style="height:32px" onclick=window.location="/wx";>Weather Data Settings</button>
+	<button class="menu" onclick=window.location="/zone";><img height=20 align=absmiddle src="./static/images/icons/svc_options.png" /> Zone Settings</button>
+	<button class="menu" onclick=window.location="/wx";><img height=20 align=absmiddle src="./static/images/icons/svc_rain.png" /> Weather Data Settings</button>
 	<h1>Auto-Program Settings</h1>
 	<p>Enter the basic parameters that will control the automatic program.  This assumes that Zone data and Weather data have been entered appropriately.
 	</p>
@@ -108,13 +112,16 @@ $def with(data)
 		<input type="text" name="startTimeMin" id="startTimeMin" size=2 maxlength=2 value=$data['startTimeMin']></td></tr>
 		</table><br>
 		<button class="submit" type="submit">Submit Values</button>
-		<br><br>
+		<br><br><h3>Debug Options</h3>
 		<p><font color=red>WARNING:</font> This will prevent the OSPi from controlling your sprinkler system, but allow the software to THINK it is working. It impacts allow
 		ALL program/manual/run-once operations, not just Auto-Program.</p>
-		<table><tr><td>Simulate operation:</td><td><input type="radio" id"simulate" name="simulate" value="1" 
+		Simulate operation:<input type="radio" id"simulate" name="simulate" value="1" 
 		$if data['simulate']=="1": checked
 		/>On<input type="radio" id="simulate" name="simulate" value="0"
 		$if data['simulate']=="0": checked
-		/>Off</td></tr></table>
+		/>Off
+	</form><form class="names" action="/rap" method="get">
+		<p><button class="submit" type="submit">Run Auto-Program Now</button></p>
+	</form>
 	</body>
 </html>

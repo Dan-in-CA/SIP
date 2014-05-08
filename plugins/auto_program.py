@@ -27,10 +27,9 @@ try:
 except NameError:
     pass    
 
-urls.extend(['/auto', 'plugins.auto_program.auto_program', '/uap', 'plugins.auto_program.update_auto_program']) # Add a new url to open the data entry page
+urls.extend(['/auto', 'plugins.auto_program.auto_program', '/uap', 'plugins.auto_program.update_auto_program', '/rap', 'plugins.auto_program.start_auto_program']) # Add a new url to open the data entry page
     
-@sched.cron_schedule(hour=2)
-def setAutoProgram():
+def runAutoProgram():
     days=[0,0]
     zone_history=[]
     
@@ -111,12 +110,12 @@ def setAutoProgram():
         for z in range(0, zonedata['station_count']):
             if z+1 == gv.sd['mas']: continue            # skip master station
             if zonedata['station'][z]['auto']:          # only work on zones that are automated
-                print "ap - zone", str(z)," auto state=", str(zonedata['station'][z]['auto'])
+                #print "ap - zone", str(z)," auto state=", str(zonedata['station'][z]['auto'])
                 # Pr = in/hour; zone_history = time in seconds zone was on last 7 days
                 # Pr / 60 = in/minute; zone_history/60 = time in minutes
                 # water_placed  = (Pr/60 in/min) * (history/60 in/min) + rainfall_total (as long as rainfall doesn't exceed the runoff limit!)
                 water_placed = ((float(zonedata['station'][z]['Pr'])/60) * (zone_history[z]/60)) + min(rainfall_total, zonedata['station'][z]['max'])
-                print "ap - zone", str(z)," water_placed = ", water_placed
+                #print "ap - zone", str(z)," water_placed = ", water_placed
                 # print "auto_program: ", z, water_placed, "in placed", zonedata['station'][z]['ET'], 'in needed per week'
                 if water_placed > float(zonedata['station'][z]['ET']): continue     # zone has enough water, so skip
                 water_needed= float(zonedata['station'][z]['ET'])-water_placed      # water_needed in inches
@@ -127,7 +126,7 @@ def setAutoProgram():
                     duration = (water_needed / float(zonedata['station'][z]['Pr'])) * 3600 # (in_needed / in/hour) * 3600 = duration in seconds
                 else:
                     duration = 0
-                print "ap zone", str(z)," needs ", water_needed, " - duration ", duration,"s"
+                #print "ap zone", str(z)," needs ", water_needed, " - duration ", duration,"s"
                 if duration < MIN_DURATION: continue            # don't water too little
                 duration *= gv.sd['wl']/100                     # modify duration by water level if set
                 if gv.sd['seq']: # sequential mode
@@ -182,6 +181,12 @@ class auto_program:
 
         return self.render.auto_program(data)
 
+class start_auto_program:
+    def GET(self):
+        qdict=web.input()
+        runAutoProgram()
+        raise web.seeother('/')
+        
 class update_auto_program:
     """Save user input to wx_settings.json file """
     def GET(self):
@@ -210,6 +215,14 @@ class update_auto_program:
         except IOError:
             return
 
+        try:
+            if job: 
+                sched.unschedule_job(job)
+                job=0
+            job=sched.add_cron_job(runAutoProgram, hour=data['startTimeHour'], minute=data['startTimeMin']) # Run the plugin's function daily per setting
+        except NameError:
+            pass
+            
         raise web.seeother('/auto')
 
 def getZoneHistory(limit):
@@ -243,4 +256,12 @@ def getZoneHistory(limit):
 #    data_file.write(unicode(json.dumps(gv.rs, ensure_ascii=False)))
 #    data_file.write(unicode(json.dumps(gv.ps, ensure_ascii=False)))
 #data_file.close()
-#setAutoProgram()
+#runAutoProgram()
+try:
+    if job: 
+        sched.unschedule_job(job)
+        job=0
+    job=sched.add_cron_job(runAutoProgram, hour=data['startTimeHour'], minute=data['startTimeMin']) # Run the plugin's function daily per setting
+except NameError:
+    pass
+    

@@ -77,12 +77,16 @@ function active()
 				border: 1px solid #20911e;
 				box-shadow: 0 0 10px 5px #356b0b inset;
 			}
+			.menu button {
+				height: 30px;
+				padding: 2px 6px;
+			}			
 		</style>
 	</head>
 	<body onload="javascript:active();">
 	<img src="./static/images/misc/ospi-auto.png"><br>	
-	<button style="height:32px" onclick=window.location="/auto";>Auto-Program Home</button>
-	<button style="height:32px" onclick=window.location="/zone";>Zone Settings</button>
+	<button class="menu" onclick=window.location="/auto";><img height=20 align=absmiddle src="./static/images/icons/svc_back.png" /> Auto-Program Home</button>
+	<button class="menu" onclick=window.location="/zone";><img height=20 align=absmiddle src="./static/images/icons/svc_options.png" /> Zone Settings</button>
 	<h1>WX Settings</h1>
 	<h3>Enter weather settings</h2>
 	<img align=right width="25%" src='./static/images/misc/wustation.png' />
