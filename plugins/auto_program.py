@@ -107,6 +107,7 @@ def setAutoProgram():
             zonedata = json.load(zonedata_file)
         zonedata_file.close()
         print "auto_program starting automatic program loop"
+        accumulate_time = gv.now
         for z in range(0, zonedata['station_count']):
             if z+1 == gv.sd['mas']: continue            # skip master station
             if zonedata['station'][z]['auto']:          # only work on zones that are automated
@@ -122,7 +123,7 @@ def setAutoProgram():
                 # cap water_needed at max before runoff
                 if water_needed>float(zonedata['station'][z]['max']): water_needed = float(zonedata['station'][z]['max'])
                 if water_needed<0: water_needed = 0
-                if fload(zonedata['station'][z]['Pr']):           # if Pr set, then use it
+                if float(zonedata['station'][z]['Pr']):           # if Pr set, then use it
                     duration = (water_needed / float(zonedata['station'][z]['Pr'])) * 3600 # (in_needed / in/hour) * 3600 = duration in seconds
                 else:
                     duration = 0
@@ -130,14 +131,16 @@ def setAutoProgram():
                 if duration < MIN_DURATION: continue            # don't water too little
                 duration *= gv.sd['wl']/100                     # modify duration by water level if set
                 if gv.sd['seq']: # sequential mode
-                    gv.rs[z][RS_STARTTIME] = gv.now
-                    gv.rs[z][RS_DURATION] = int(duration) # store duration scaled by water level
-                    gv.rs[z][RS_STOPTIME] = (gv.now+int(duration))
-                    gv.rs[z][RS_PROGID] = autoPid # store program number for scheduling                                 
-                    gv.ps[z][PS_PROGID] = autoPid # store program number for display
+                    gv.rs[z][RS_STARTTIME] = accumulate_time
+                    gv.rs[z][RS_DURATION] = int(duration)   # store duration scaled by water level
+                    accumulate_time += int(duration)
+                    gv.rs[z][RS_STOPTIME] = accumulate_time
+                    accumulate_time += gv.sd['sdt']         # add station delay
+                    gv.rs[z][RS_PROGID] = autoPid           # store program number for scheduling                                 
+                    gv.ps[z][PS_PROGID] = autoPid           # store program number for display
                     gv.ps[z][PS_DURATION] = int(duration)
                 else: # concurrent mode
-                    if duration < gv.rs[z][RS_DURATION]: # If duration is shorter than any already set for this station
+                    if duration < gv.rs[z][RS_DURATION]:    # If duration is shorter than any already set for this station
                         continue
                     else:    
                         gv.rs[z][RS_DURATION] = int(duration)
