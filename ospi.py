@@ -28,7 +28,7 @@ gv.rev_date = '04/April/2014'
 #     import ospi_addon #This provides a stub for adding custom features to ospi.py as external modules.
 # except ImportError:
 #     print 'add_on not imported'
-
+gv.simulate = False
   
 ##############################
 #### Function Definitions ####

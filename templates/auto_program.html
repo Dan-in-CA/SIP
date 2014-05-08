@@ -5,7 +5,7 @@ $def with(data)
 	<head>
 		<title>Auto Program</title>
 		<style>
-			table, h1, h2, h3, p {
+			h1, h2, h3, p {
 				padding: 5px;
 			}
 			.names li{
@@ -16,10 +16,19 @@ $def with(data)
 				list-style-position:outside;
 				margin:0px;
 			}
-			.data table {
-				border-spacing: 0px;
+			table {
+				border-spacing: 1px;
+				border: 1px solid #ddd;
+				padding: 5px;
+				border-collapse: collapse; 
+			}
+			
+			tr {
+				border-spacing: 1px;
+				border: 1px solid #ddd;
 				padding: 5px;
 			}
+			
 			.data table th {
 				border: 0px;
 			}
@@ -66,11 +75,42 @@ $def with(data)
 	<p>Enter the basic parameters that will control the automatic program.  This assumes that Zone data and Weather data have been entered appropriately.
 	</p>
 	<form class="names" action="/uap" method="get">
-		<table class="input" width=500px>
-		<tr>
-		<tr><td align=left>Start Time: <input type="text" name="startTimeHour" id="startTimeHour" size=2 maxlength=2 value=$data['startTimeHour']> : 
+		<table class="input" >
+		<tr><td>Enable Auto Programming:</td><td><input type="radio" id="enabled" name="enabled" value="1"
+		$if data['enabled']: checked
+		/>On<input type="radio" id="enabled" name="enabled" value="0"
+		$if not data['enabled']: checked
+		/>Off</td></tr>
+		<tr><td>Select Days:</td><td><input type=checkbox name=Mon id=Mon 
+		$if 'Mon' in data['days']: checked
+		>Mon<input type=checkbox name=Tue id=Tue
+		$if 'Tue' in data['days']: checked
+		>Tue<input type=checkbox name=Wed id=Wed
+		$if 'Wed' in data['days']: checked
+		>Wed<input type=checkbox name=Thu id=Thu		
+		$if 'Thu' in data['days']: checked
+		>Thu<input type=checkbox name=Fri id=Fri
+		$if 'Fri' in data['days']: checked
+		>Fri<input type=checkbox name=Sat id=Sat
+		$if 'Sat' in data['days']: checked
+		>Sat<input type=checkbox name=Sun id=Sun
+		$if 'Sun' in data['days']: checked
+		>Sun<br></td></tr>
+		<tr><td>Select Restrictions:</td><td><input type=radio name=restrict value="none" id=none 
+		$if data['restrict']=="none": checked
+		>No restriction<br><input type=radio value="odd" name=restrict id=odd 
+		$if data['restrict']=="odd": checked
+		>Odd days only (except 31st and Feb 29th)<br><input type=radio value="even" name=restrict id=even 
+		$if data['restrict']=='even': checked
+		>Even days only</td></tr>
+		<tr><td align=left>Start Time:</td><td><input type="text" name="startTimeHour" id="startTimeHour" size=2 maxlength=2 value=$data['startTimeHour']> : 
 		<input type="text" name="startTimeMin" id="startTimeMin" size=2 maxlength=2 value=$data['startTimeMin']></td></tr>
-		<tr><td></td><td align=right><button class="submit" type="submit">Submit Values</button></td>
-		</table>
+		<tr><td>Simulate operation:</td><td><input type="radio" id"simulate" name="simulate" value="1" 
+		$if data['simulate']=="1": checked
+		/>On<input type="radio" id="simulate" name="simulate" value="0"
+		$if data['simulate']=="0": checked
+		/>Off</td></tr>
+		</table><br>
+		<button class="submit" type="submit">Submit Values</button>
 	</body>
 </html>

@@ -78,6 +78,7 @@ def setShiftRegister(srvals):
 
 def set_output():
     """Activate triacs according to shift register state."""
-    disableShiftRegisterOutput()
-    setShiftRegister(gv.srvals) # gv.srvals stores shift register state
-    enableShiftRegisterOutput()
+    if not gv.simulate:
+        disableShiftRegisterOutput()
+        setShiftRegister(gv.srvals) # gv.srvals stores shift register state
+        enableShiftRegisterOutput()

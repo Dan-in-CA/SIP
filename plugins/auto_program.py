@@ -2,6 +2,20 @@ import web, json, time, io, re, urllib2, datetime
 import gv # Get access to ospi's settings
 from urls import urls # Get access to ospi's URLs
 
+DAY_ODDEVEN = 0x80
+DAYS_OFWEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+DAYS_INWEEK = 7   # number of days to consider when calculating water usage and rainfall data
+ZONE_SLOP = .10   # consolidate zones into a single program if they need within ZONE_SLOP inches/week of water
+MIN_DURATION = 60  # minimum duration to run a zone, in seconds
+
+# GV.xx - indices for program definition (rs = run schedule - drives the actual valves; ps = program scheduled, used for UI display)
+RS_STARTTIME = 0
+RS_STOPTIME  = 1
+RS_DURATION = 2
+RS_PROGID   = 3
+PS_PROGID   = 0
+PS_DURATION = 1
+
 try:
     from apscheduler.scheduler import Scheduler #This is a non-standard module. Needs to be installed in order for this feature to work.
 except ImportError:
@@ -17,19 +31,129 @@ urls.extend(['/auto', 'plugins.auto_program.auto_program', '/uap', 'plugins.auto
     
 @sched.cron_schedule(hour=2)
 def setAutoProgram():
+    days=[0,0]
+    zone_history=[]
+    
+    if not gv.sd['en']: return # check operation status
+    if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']): # If rain delay or rain detected by sensor then exit
+        return
+
     # this routine will create a new program for today based on historical rainfall total and last 7 day watering
     try:
-        # read data from the file, if it exists - if not stop!
-        with io.open(r'./data/wx_settings.json', 'r') as data_file: 
+        # read data from the file, if it exists
+        with io.open(r'./data/auto_settings.json', 'r') as data_file: 
             data = json.load(data_file)
         data_file.close()  
     except IOError:
+        # if the data file doesn't exist, then create it with the blank data
+        print "auto_program: no auto_settings.json file found, creating defaults"
+        data = json.loads(u'{"days": ["Mon"], "restrict": "none", "startTimeHour": 0, "startTimeMin": 0, "enabled": 0}')
+        with io.open('./data/auto_settings.json', 'w', encoding='utf-8') as data_file:
+            data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
+        pass
+        
+    #only execute if auto_programming is enabled
+    if data['enabled']==0: 
+        "auto_program: disabled, exiting"
         return
 
-    # the program will be created with pid (program ID) of one more than the maximum # of programs
-    autoPid = gv.sd['mnp']+1
+    # get rainfall total for past 7 days
+    rainfall_total = 0
+    try:
+        # read data from the file, if it exists
+        with io.open(r'./data/wx_settings.json', 'r') as wxdata_file: 
+            wxdata = json.load(wxdata_file)
+        wxdata_file.close()  
+        for k in sorted(wxdata['rainfall'], reverse=1):
+            rainfall_total += wxdata['rainfall'][str(k)]
+    except IOError:
+    # if no rainfall total, skip and keep going (assuming 0 rainfall)
+        "ERROR: auto_program: unable to access wx_settings.json file"
+        pass
 
+    zone_history = getZoneHistory(DAYS_INWEEK)
     
+    # the program will be created with pid (program ID) of one more than the maximum # of programs
+    #autoPid = gv.sd['mnp']+1
+    autoPid=97  # probably should be a constant?
+
+    t=datetime.date.today()
+
+    # do we water today?
+    if data['restrict'] != 'none':
+        if (t.day()%2)==0:
+        # even day
+            if data['odd']: return
+            elif data['even']: return
+    if not t.strftime("%a") in data['days']: return
+
+#    if t.strftime("%a") == "Mon": days[0] |= 1
+#    elif t.strftime("%a") == "Tue": days[0] |= 2
+#    elif t.strftime("%a") == "Wed": days[0] |= 4
+#    elif t.strftime("%a") == "Thu": days[0] |= 8
+#    elif t.strftime("%a") == "Fri": days[0] |= 16
+#    elif t.strftime("%a") == "Sat": days[0] |= 32
+#    elif t.strftime("%a") == "Sun": days[0] |= 64
+
+    gv.ps = [] # program schedule (for display)
+    gv.rs = [] # run schedule
+    for i in range(gv.sd['nst']):
+        gv.ps.append([0,0])
+        gv.rs.append([0,0,0,0])   
+    
+    try:
+        #read existing station settings from the file, if it exists
+        with io.open(r'./data/zone_settings.json', 'r') as zonedata_file: # read zone data
+            zonedata = json.load(zonedata_file)
+        zonedata_file.close()
+        print "auto_program starting automatic program loop"
+        for z in range(0, zonedata['station_count']):
+            if z+1 == gv.sd['mas']: continue            # skip master station
+            if zonedata['station'][z]['auto']:          # only work on zones that are automated
+                print "ap - zone", str(z)," auto state=", str(zonedata['station'][z]['auto'])
+                # Pr = in/hour; zone_history = time in seconds zone was on last 7 days
+                # Pr / 60 = in/minute; zone_history/60 = time in minutes
+                # water_placed  = (Pr/60 in/min) * (history/60 in/min) + rainfall_total (as long as rainfall doesn't exceed the runoff limit!)
+                water_placed = ((float(zonedata['station'][z]['Pr'])/60) * (zone_history[z]/60)) + min(rainfall_total, zonedata['station'][z]['max'])
+                print "ap - zone", str(z)," water_placed = ", water_placed
+                # print "auto_program: ", z, water_placed, "in placed", zonedata['station'][z]['ET'], 'in needed per week'
+                if water_placed > float(zonedata['station'][z]['ET']): continue     # zone has enough water, so skip
+                water_needed= float(zonedata['station'][z]['ET'])-water_placed      # water_needed in inches
+                # cap water_needed at max before runoff
+                if water_needed>float(zonedata['station'][z]['max']): water_needed = float(zonedata['station'][z]['max'])
+                if water_needed<0: water_needed = 0
+                if fload(zonedata['station'][z]['Pr']):           # if Pr set, then use it
+                    duration = (water_needed / float(zonedata['station'][z]['Pr'])) * 3600 # (in_needed / in/hour) * 3600 = duration in seconds
+                else:
+                    duration = 0
+                print "ap zone", str(z)," needs ", water_needed, " - duration ", duration,"s"
+                if duration < MIN_DURATION: continue            # don't water too little
+                duration *= gv.sd['wl']/100                     # modify duration by water level if set
+                if gv.sd['seq']: # sequential mode
+                    gv.rs[z][RS_STARTTIME] = gv.now
+                    gv.rs[z][RS_DURATION] = int(duration) # store duration scaled by water level
+                    gv.rs[z][RS_STOPTIME] = (gv.now+int(duration))
+                    gv.rs[z][RS_PROGID] = autoPid # store program number for scheduling                                 
+                    gv.ps[z][PS_PROGID] = autoPid # store program number for display
+                    gv.ps[z][PS_DURATION] = int(duration)
+                else: # concurrent mode
+                    if duration < gv.rs[z][RS_DURATION]: # If duration is shorter than any already set for this station
+                        continue
+                    else:    
+                        gv.rs[z][RS_DURATION] = int(duration)
+                        gv.rs[z][RS_PROGID] = autoPid # store program number
+                        gv.ps[z][PS_PROGID] = autoPid # store program number for display
+                        gv.ps[z][PS_DURATION] = int(duration)
+
+            #else: print "auto_program: zone ", x, " not automated"
+
+        gv.sd['bsy'] = 1
+            
+    except IOError:
+        # if we can't find the zone file, get out!
+        # FIXME: need to write an error or something?
+        print "ERROR: auto_program: unable to load zone_settings.json file"
+        return
     #
     #jsave(gv.pd, 'programs') # save programs file
     #gv.sd['nprogs'] = len(gv.pd) # set the length correctly
@@ -42,12 +166,16 @@ class auto_program:
     
     def GET(self):
         try:
-        # read data from the file, if it exists
-            with io.open(r'./data/wx_settings.json', 'r') as data_file: 
+            # read data from the file, if it exists
+            with io.open(r'./data/auto_settings.json', 'r') as data_file: 
                 data = json.load(data_file)
             data_file.close()  
+    #        print data
         except IOError:
-            return
+        # if the data file doesn't exist, then create it with the blank data
+            data = json.loads(u'{"days": ["Mon, "Tue"], "startTimeHour": 0, "startTimeMin": 0, "enabled": 0}, "restrict": "none", "simulate": 0')
+            with io.open('./data/auto_settings.json', 'w', encoding='utf-8') as data_file:
+                data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
 
         return self.render.auto_program(data)
 
@@ -55,20 +183,62 @@ class update_auto_program:
     """Save user input to wx_settings.json file """
     def GET(self):
         qdict=web.input()
+#        print qdict
         try:
             # read data from the file, if it exists
-            with io.open(r'./data/wx_settings.json', 'r') as data_file: 
+            with io.open(r'./data/auto_settings.json', 'r') as data_file: 
                 data = json.load(data_file)
             data_file.close()  
             data['startTimeHour']=qdict['startTimeHour']
             data['startTimeMin']=qdict['startTimeMin']
-            with io.open('./data/wx_settings.json', 'w', encoding='utf-8') as data_file:
+            data['restrict']=qdict['restrict']
+            data['simulate']=qdict['simulate']
+            if qdict['enabled']=='1': data['enabled']= 1
+            else: data['enabled']= 0
+            data['days']=[]
+            for x in DAYS_OFWEEK:
+                if x in qdict: data['days'].append(x)
+            with io.open('./data/auto_settings.json', 'w', encoding='utf-8') as data_file:
                 data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
-
+            data_file.close()
+            # if asked, turn on simulation mode which will stop all GPIO
+            if data['simulate']=='1': gv.simulate = True
+            else: gv.simulate = False
         except IOError:
             return
 
         raise web.seeother('/auto')
 
-# call once on load
+def getZoneHistory(limit):
+    zh = []
+    for x in range(0, gv.sd['nbrd']*8): zh.append(0) # setup zone history list to have 0 in all locations
+    try:
+        logf = open('static/log/water_log.csv')
+        for line in logf:
+            log_line = line.strip().split(',') # parse log entry line
+            
+            if log_line[0]=='Program': continue # skip first line
+            
+            #check date and break out if we're past our limit
+            end_date=log_line[5] # date program ended
+            delta = datetime.datetime.today()-datetime.datetime.strptime(end_date, " %a. %d %B %Y")
+            if delta.days > limit: break
+            z = int(log_line[1])-1 # zone number in log is 1-based
+            # otherwise, pull out the run duration and modify the zone list to include the seconds of run time
+            m= re.search(r'(\d+)(?=m)', log_line[3])
+            s= re.search(r'(\d+)(?=s)', log_line[3])
+            if m: zh[z]+=int(m.group())*60
+            if s: zh[z]+=int(s.group())
+        logf.close()
+    except IOError:
+        # return the list with all 0 - assume no usage
+        pass
+    return zh
+
+# call once on load for testing only
+#with io.open('./data/gv.json', 'w', encoding='utf-8') as data_file:
+#    data_file.write(unicode(json.dumps(gv.rs, ensure_ascii=False)))
+#    data_file.write(unicode(json.dumps(gv.ps, ensure_ascii=False)))
+#data_file.close()
+
 setAutoProgram()
