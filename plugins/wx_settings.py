@@ -25,7 +25,7 @@ def getDailyRainfall():
 #        print data
     except IOError:
     # if the data file doesn't exist, then create it with the blank data
-        data = json.loads(u'{"wx": {"apikey": "1234", "useWU": 0, "pws":"KTXSPRIN55"}, "rainfall": {"2000-01-01": 0.0}, "startTimeHour": 0, "startTimeMin": 0}')
+        data = json.loads(u'{"wx": {"apikey": "1234", "useWU": 0, "pws":"KTXSPRIN55"}, "rainfall": {"2000-01-01": 0.0}, "startTimeHour": 0, "startTimeMin": 0, "enabled": 0}')
         for i in range(1,8):
             d = datetime.date.today() - datetime.timedelta(days=i)
             if data['wx']['useWU']:
@@ -68,9 +68,10 @@ class wx_settings:
                 data = json.load(data_file)
             data_file.close()  
         except IOError:
-        # if the file doesn't exist, then create it with the blank data
+        # if the file doesn't exist, then create it with the blank data - this should never happen!
+            data = json.loads(u'{"wx": {"apikey": "1234", "useWU": 0, "pws":"KTXSPRIN55"}, "rainfall": {"2000-01-01": 0.0}, "startTimeHour": 0, "startTimeMin": 0, "enabled": 0}')
             with io.open('./data/wx_settings.json', 'w', encoding='utf-8') as data_file:
-                data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
+                    data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
         
         return self.render.wx_settings(data)
 

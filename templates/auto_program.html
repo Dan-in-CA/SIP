@@ -69,9 +69,10 @@ $def with(data)
 		</style>
 	</head>
 	<body>
+	<img src="./static/images/misc/ospi-auto.png"><br>
 	<button style="height:32px" onclick=window.location="/zone";>Zone Settings</button>
 	<button style="height:32px" onclick=window.location="/wx";>Weather Data Settings</button>
-	<h1>Auto Program Settings</h1>
+	<h1>Auto-Program Settings</h1>
 	<p>Enter the basic parameters that will control the automatic program.  This assumes that Zone data and Weather data have been entered appropriately.
 	</p>
 	<form class="names" action="/uap" method="get">
@@ -105,12 +106,15 @@ $def with(data)
 		>Even days only</td></tr>
 		<tr><td align=left>Start Time:</td><td><input type="text" name="startTimeHour" id="startTimeHour" size=2 maxlength=2 value=$data['startTimeHour']> : 
 		<input type="text" name="startTimeMin" id="startTimeMin" size=2 maxlength=2 value=$data['startTimeMin']></td></tr>
-		<tr><td>Simulate operation:</td><td><input type="radio" id"simulate" name="simulate" value="1" 
+		</table><br>
+		<button class="submit" type="submit">Submit Values</button>
+		<br><br>
+		<p><font color=red>WARNING:</font> This will prevent the OSPi from controlling your sprinkler system, but allow the software to THINK it is working. It impacts allow
+		ALL program/manual/run-once operations, not just Auto-Program.</p>
+		<table><tr><td>Simulate operation:</td><td><input type="radio" id"simulate" name="simulate" value="1" 
 		$if data['simulate']=="1": checked
 		/>On<input type="radio" id="simulate" name="simulate" value="0"
 		$if data['simulate']=="0": checked
-		/>Off</td></tr>
-		</table><br>
-		<button class="submit" type="submit">Submit Values</button>
+		/>Off</td></tr></table>
 	</body>
 </html>
