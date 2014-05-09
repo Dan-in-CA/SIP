@@ -41,8 +41,9 @@ def getDailyRainfall():
         # if not, recreate past 7 days rainfall data
         for i in range(1,8):
             d = datetime.date.today() - datetime.timedelta(days=i)
+            dstr = d.strftime("%Y%m%d")
             if data['wx']['useWU']:
-                data['rainfall'][str(d)] = getWUHistoryRain(d, data['wx']['apikey'],data['wx']['pws'])
+                data['rainfall'][str(d)] = getWUHistoryRain(dstr, data['wx']['apikey'],data['wx']['pws'])
             else: data['rainfall'][str(d)]=0.0
         with io.open('./data/wx_settings.json', 'w', encoding='utf-8') as data_file:
             data_file.write(unicode(json.dumps(data, ensure_ascii=False)))

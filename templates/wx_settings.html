@@ -114,7 +114,8 @@ function active()
 	<table>
 		<tr><th>Date</th><th align=center>Rainfall (inches)</th></tr>
 		$for k in sorted(data['rainfall'], reverse=1):
-		<tr><td>$k</td><td align=center>$data['rainfall'][k]</td></tr>
+		$ rf = "%.2f" % data['rainfall'][k]
+		<tr><td>$k</td><td align=center>$rf</td></tr>
 	</table>
 	</div>
 	</body>
