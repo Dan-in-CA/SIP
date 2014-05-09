@@ -46,7 +46,7 @@ def runAutoProgram():
     except IOError:
         # if the data file doesn't exist, then create it with the blank data
         print "auto_program: no auto_settings.json file found, creating defaults"
-        data = json.loads(u'{"days": ["Mon"], "restrict": "none", "startTimeHour": 0, "startTimeMin": 0, "enabled": 0}')
+        data = json.loads(u'{"days": ["Mon"], "restrict": "none", "startTimeHour": 0, "startTimeMin": 0, "enabled": 0, "simulate": 0}')
         with io.open('./data/auto_settings.json', 'w', encoding='utf-8') as data_file:
             data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
         pass
@@ -175,7 +175,7 @@ class auto_program:
     #        print data
         except IOError:
         # if the data file doesn't exist, then create it with the blank data
-            data = json.loads(u'{"days": ["Mon, "Tue"], "startTimeHour": 0, "startTimeMin": 0, "enabled": 0}, "restrict": "none", "simulate": 0')
+            data = json.loads(u'{"days": ["Mon"], "restrict": "none", "startTimeHour": 0, "startTimeMin": 0, "enabled": 0, "simulate": 0}')
             with io.open('./data/auto_settings.json', 'w', encoding='utf-8') as data_file:
                 data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
 

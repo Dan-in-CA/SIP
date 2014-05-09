@@ -27,19 +27,6 @@ $def with(data, zone_history, rainfall_total)
 			table tr:nth-child(even) {
 				background-color: #9AFA9A;
 			}
-/*			.names label {
-				width:100%;
-				margin-top: 3px;
-				display:inline-block;
-				float:left;
-				padding:3px;
-			} */
-/*			.names input[type=radio] {
-				height: 15px;
-				width: 25px;
-			    padding: 5px 5px;
-				border-radius: 3px;
-			} */
 			.names input[type=text] {
 				height:10px; 
 				width:25px; 
@@ -110,7 +97,7 @@ $def with(data, zone_history, rainfall_total)
 		</style>
 	</head>
 	<body onload="javascript:active();">
-	<img src="./static/images/misc/ospi-auto.png"><br>
+	<img src="./static/images/misc/ospi-auto.png"><br />
 	<button class="menu" onclick=window.location="/auto";><img height=20 align=absmiddle src="./static/images/icons/svc_back.png" /> Auto-Program Home</button>
 	<button class="menu" onclick=window.location="/wx";><img height=20 align=absmiddle src="./static/images/icons/svc_rain.png" /> Weather Data Settings</button>
 	<h1>Zone Settings</h1>
@@ -118,8 +105,10 @@ $def with(data, zone_history, rainfall_total)
 	$#$json.dumps(data, indent=4, sort_keys=True)
 		<form class="names" action="/uzone" method="get">
 			<table>
-			<tr><th>#</th><th width=300>Station Name</th><th>Automated</th><th>Irrigation Type</th><th>Precipitation Rate<br>Rotor/Spray=(inches/hour)<br>Drip=(gallons/hour)</th>
-			<th>Water Needed<br>(inches/week)</th><th>Max water before runoff<br>(inches)</th><th>Duration Active<br>(minutes)</th><th>Amount Irrigated<br>(inches)</th><th>Amount Needed<br>(inches)</td><th>Duration Needed<br>(minutes)</th></tr>
+			<tr><th colspan=7></th><th colspan=5>H I S T O R Y</th></tr>
+			<tr><th>#</th><th width=300>Station Name</th><th>Automated</th><th>Irrigation Type</th><th>Precipitation Rate<br />Rotor/Spray=(inches/hour)<br />Drip=(gallons/hour)</th>
+			<th>Water Needed<br />(inches/week)</th><th>Max water before runoff<br />(inches)</th><th>Run Time<br />(minutes)</th><th>Amount Irrigated<br />(inches)</th>
+			<th>Amount Needed<br />(inches)</td><th>Duration Needed<br />(minutes)</th><th>Duration next run<br />(minutes)</th></tr>
 			$for x in range(0,data['station_count']):
 				<tr><td style="width: 20px;">$(x+1)</td><td width=300><label for="s$x">$data['station'][x]['name']</label></td>
 				<td style="width: 100px;"><input type="checkbox" id="check$x" name="auto$x" 
@@ -140,12 +129,16 @@ $def with(data, zone_history, rainfall_total)
 				$ water_needed = (float(data['station'][x]['ET'])-((float(data['station'][x]['Pr'])/60)*(zone_history[x]/60)))
 				$if (water_needed<0): $ water_needed=0
 				$ buf2='%.2f' % water_needed
+				$ water_allowed = min(water_needed,float(data['station'][x]['max']))
 				$if float(data['station'][x]['Pr']):
 					$ duration = (water_needed / float(data['station'][x]['Pr'])) * 60
+					$ dur_next = (water_allowed / float(data['station'][x]['Pr'])) * 60
 				$else: 
 					$ duration = 0
+					$ dur_next = 0
 				$ buf3='%.2f' % duration
-				<td>$(zone_history[x]/60)</td><td>$buf</td><td>$buf2</td><td>$buf3</td>
+				$ buf4='%.2f' % dur_next
+				<td>$(zone_history[x]/60)</td><td>$buf</td><td>$buf2</td><td>$buf3</td><td>$buf4</td>
 				</tr>
 			<tr><td colspan=5><button class="submit" type="submit">Submit Settings</button></td></tr>
 			</table>
