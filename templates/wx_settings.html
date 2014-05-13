@@ -1,4 +1,4 @@
-$def with(data)
+$def with(data, daysWatched, metric)
 
 <!DOCTYPE html>
 <html>
@@ -89,6 +89,14 @@ function active()
 	<button class="menu" onclick=window.location="/zone";><img height=20 align=absmiddle src="./static/images/icons/svc_options.png" /> Zone Settings</button>
 	<h1>WX Settings</h1>
 	<h3>Enter weather settings</h2>
+	<form class="names" action="/uwx" method="get">
+	<table class="input" width=500px>
+	<tr><td align=left>Number of days per cycle:</td><td align=right><input type="text" name="daysWatched" id="daysWatched" value=$daysWatched></td>
+	<tr><td align=left>Data presented in:</td><td align=right> <input type="radio" name="metric" id="metric" value="english"  
+	$if metric=='english': checked
+	/>Imperial<input type="radio" name="metric" id="metric" value="metric" 
+	$if metric=='metric': checked
+	/>Metric</td></tr></table>
 	<img align=right width="25%" src='./static/images/misc/wustation.png' />
 	<p>OSPi can acquire historical weather data from <a href='http://www.wunderground.com/?apiref=ee54d39c36a8cadb'>wunderground.com</a> in order to adjust the automatic watering schedule based on actual weather data. In order to 
 	acquire this data, OSPi needs an API key.  These keys are available from <a href='http://www.wunderground.com/?apiref=ee54d39c36a8cadb'>wunderground.com</a> for free for developers.  Enter that ID below.</p>
@@ -96,7 +104,6 @@ function active()
 	weather station near you.  The best way to find these stations is to use the <a href='http://www.wunderground.com/wundermap/?apiref=ee54d39c36a8cadb'>Wundermap</a>, search for your residence and find a local station near you.  Selecting this station
 	on the map will give you the ID of that station.  The photo at the right shows where that information can be found.  Enter that ID below.
 	</p>
-		<form class="names" action="/uwx" method="get">
 		<table class="input" width=500px>
 		<tr>
 		<td align=left>Use Wunderground.com for data:</td><td align=right> <input type="checkbox" onclick="javascript:active();" id="useWU" name="useWU" value=useWU

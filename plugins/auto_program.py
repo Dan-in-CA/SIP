@@ -1,6 +1,9 @@
+import sys
+sys.path.insert(0, './plugins')
 import web, json, time, io, re, urllib2, datetime
 import gv # Get access to ospi's settings
 from urls import urls # Get access to ospi's URLs
+import wx_settings 
 
 DAY_ODDEVEN = 0x80
 DAYS_OFWEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -16,6 +19,17 @@ RS_PROGID   = 3
 PS_PROGID   = 0
 PS_DURATION = 1
 
+englishmetrics=['in/hr', 'gal/hr', 'inches']
+metricmetrics=['mm/hr', 'l/hr', 'mm']
+metrics=englishmetrics
+
+# allows other modules to update settings
+def updateSettings(d, m):
+#    print "updateSettings:", d, m
+    DAYS_INWEEK = d
+    metrics = m
+    return
+    
 try:
     from apscheduler.scheduler import Scheduler #This is a non-standard module. Needs to be installed in order for this feature to work.
 except ImportError:
@@ -32,7 +46,8 @@ urls.extend(['/auto', 'plugins.auto_program.auto_program', '/uap', 'plugins.auto
 def runAutoProgram():
     days=[0,0]
     zone_history=[]
-    
+
+    wx_settings.checkRain()
     if not gv.sd['en']: return # check operation status
     if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']): # If rain delay or rain detected by sensor then exit
         return
@@ -43,10 +58,16 @@ def runAutoProgram():
         with io.open(r'./data/auto_settings.json', 'r') as data_file: 
             data = json.load(data_file)
         data_file.close()  
+        DAYS_INWEEK = data['daysWatched']
+        if data['metrics'] == 'english': metrics=englishmetrics
+        elif data['metrics'] == 'metric': metrics=metricmetrics       
     except IOError:
         # if the data file doesn't exist, then create it with the blank data
         print "auto_program: no auto_settings.json file found, creating defaults"
         data = json.loads(u'{"days": ["Mon"], "restrict": "none", "startTimeHour": 0, "startTimeMin": 0, "enabled": 0, "simulate": "0"}')
+        data['daysWatched'] = DAYS_INWEEK
+        if metrics==englishmetrics: data['metrics']="english"
+        elif metrics==metricmetrics: data['metrics']="metric"
         with io.open('./data/auto_settings.json', 'w', encoding='utf-8') as data_file:
             data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
         pass
@@ -201,6 +222,8 @@ class update_auto_program:
             data['startTimeMin']=qdict['startTimeMin']
             data['restrict']=qdict['restrict']
             data['simulate']=qdict['simulate']
+            data['daysWatch'] = DAYS_INWEEK
+            data['metrics'] = metrics
             if qdict['enabled']=='1': data['enabled']= 1
             else: data['enabled']= 0
             data['days']=[]
@@ -215,13 +238,10 @@ class update_auto_program:
         except IOError:
             return
 
-        try:
-            if job: 
-                sched.unschedule_job(job)
-                job=0
-            job=sched.add_cron_job(runAutoProgram, hour=data['startTimeHour'], minute=data['startTimeMin']) # Run the plugin's function daily per setting
-        except NameError:
-            pass
+        if job: 
+            sched.unschedule_job(job)
+            job=0
+        job=sched.add_cron_job(runAutoProgram, hour=data['startTimeHour'], minute=data['startTimeMin']) # Run the plugin's function daily per setting
             
         raise web.seeother('/auto')
 
@@ -257,11 +277,7 @@ def getZoneHistory(limit):
 #    data_file.write(unicode(json.dumps(gv.ps, ensure_ascii=False)))
 #data_file.close()
 #runAutoProgram()
-try:
-    if job: 
-        sched.unschedule_job(job)
-        job=0
-    job=sched.add_cron_job(runAutoProgram, hour=data['startTimeHour'], minute=data['startTimeMin']) # Run the plugin's function daily per setting
-except NameError:
-    pass
-    
+with io.open(r'./data/auto_settings.json', 'r') as apdata_file: 
+    apdata = json.load(apdata_file)
+apdata_file.close()  
+job=sched.add_cron_job(runAutoProgram, hour=apdata['startTimeHour'], minute=apdata['startTimeMin']) # Run the plugin's function daily per setting

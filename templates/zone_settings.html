@@ -1,4 +1,4 @@
-$def with(data, zone_history, rainfall_total)
+$def with(data, zone_history, rainfall_total, metrics, daysWatched)
 
 <!DOCTYPE html>
 <html>
@@ -102,13 +102,14 @@ $def with(data, zone_history, rainfall_total)
 	<button class="menu" onclick=window.location="/wx";><img height=20 align=absmiddle src="./static/images/icons/svc_rain.png" /> Weather Data Settings</button>
 	<h1>Zone Settings</h1>
 	<h3>Enter the zone-specific data for Precipitation Rate, water needed, and maximum amount of water.</h2>
+	<p>Rainfall total (last $daysWatched days): $rainfall_total $metrics[2]</p>
 	$#$json.dumps(data, indent=4, sort_keys=True)
 		<form class="names" action="/uzone" method="get">
 			<table>
 			<tr><th colspan=7></th><th colspan=5>H I S T O R Y</th></tr>
-			<tr><th>#</th><th width=300>Station Name</th><th>Automated</th><th>Irrigation Type</th><th>Precipitation Rate<br />Rotor/Spray=(inches/hour)<br />Drip=(gallons/hour)</th>
-			<th>Water Needed<br />(inches/week)</th><th>Max water before runoff<br />(inches)</th><th>Run Time<br />(minutes)</th><th>Amount Irrigated<br />(inches)</th>
-			<th>Amount Needed<br />(inches)</td><th>Duration Needed<br />(minutes)</th><th>Duration next run<br />(minutes)</th></tr>
+			<tr><th>#</th><th width=300>Station Name</th><th>Automated</th><th>Irrigation Type</th><th>Precipitation Rate</th>
+			<th>Water Needed<br />(per $daysWatched days)</th><th>Max water before runoff</th><th>Run Time<br />(minutes)</th><th>Amount Irrigated<br />($metrics[2])</th>
+			<th>Amount Needed<br />($metrics[2])</td><th>Duration Needed<br />(minutes)</th><th>Duration next run<br />(minutes)</th></tr>
 			$for x in range(0,data['station_count']):
 				<tr><td style="width: 20px;">$(x+1)</td><td width=300><label for="s$x">$data['station'][x]['name']</label></td>
 				<td style="width: 100px;"><input type="checkbox" id="check$x" name="auto$x" 
@@ -121,14 +122,17 @@ $def with(data, zone_history, rainfall_total)
 				><label for="radio2$x">Spray</label><input type="radio" id="radio3$x" name="type$x" value="drip" 
 				$if data['station'][x]['type']=='drip':checked
 				><label for="radio3$x">Drip</label></td>
-				<td><input type="text" name="Pr$x" value=$data['station'][x]['Pr']></td>
-				<td><input type="text" name="ET$x" value=$data['station'][x]['ET']></td>
-				<td><input type="text" name="max$x" value=$data['station'][x]['max']></td>
+				<td><input type="text" name="Pr$x" value=$data['station'][x]['Pr']>
+				$if data['station'][x]['type']=='drip': $metrics[1]
+				$else:$metrics[0]
+				</td>
+				<td><input type="text" name="ET$x" value=$data['station'][x]['ET']> $metrics[2]</td>
+				<td><input type="text" name="max$x" value=$data['station'][x]['max']> $metrics[2]</td>
 				$ water_placed = ((float(data['station'][x]['Pr'])/60)*(zone_history[x]/60))
-				$ buf='%.2f' % water_placed
-				$ water_needed = (float(data['station'][x]['ET'])-((float(data['station'][x]['Pr'])/60)*(zone_history[x]/60)))
+				$ buf='%.2f ' % water_placed
+				$ water_needed = (float(data['station'][x]['ET'])-((float(data['station'][x]['Pr'])/60)*(zone_history[x]/60)))-rainfall_total
 				$if (water_needed<0): $ water_needed=0
-				$ buf2='%.2f' % water_needed
+				$ buf2='%.2f ' % water_needed
 				$ water_allowed = min(water_needed,float(data['station'][x]['max']))
 				$if float(data['station'][x]['Pr']):
 					$ duration = (water_needed / float(data['station'][x]['Pr'])) * 60

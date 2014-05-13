@@ -1,6 +1,10 @@
+import sys
+sys.path.insert(0, './plugins')
 import web, json, time, io, re, urllib2, datetime
 import gv # Get access to ospi's settings
 from urls import urls # Get access to ospi's URLs
+import auto_program 
+
 try:
     from apscheduler.scheduler import Scheduler #This is a non-standard module. Needs to be installed in order for this feature to work.
 except ImportError:
@@ -12,6 +16,21 @@ try:
     sched.start() # Start the scheduler
 except NameError:
     pass    
+
+#if it has rained today, then set rain to true
+def checkRain():
+    rtoday=0
+    with io.open(r'./data/wx_settings.json', 'r') as data_file: 
+        data = json.load(data_file)
+    data_file.close()  
+    rtoday=getWUTodayRain(data['wx']['apikey'],data['wx']['pws'])
+    print "rain today=", rtoday
+    if rtoday and not gv.sd['urs']:
+        gv.sd['rs'] = 1
+    else:
+        gv.sd['rs'] = 0  
+
+    return    
     
 @sched.cron_schedule(hour=1)
 def getDailyRainfall():
@@ -38,8 +57,8 @@ def getDailyRainfall():
     y = t-datetime.timedelta(days=1)
 
     if str(y) not in data['rainfall']: 
-        # if not, recreate past 7 days rainfall data
-        for i in range(1,8):
+        # if not, recreate past n days rainfall data
+        for i in range(1,DAYS_INWEEK+1):
             d = datetime.date.today() - datetime.timedelta(days=i)
             dstr = d.strftime("%Y%m%d")
             if data['wx']['useWU']:
@@ -53,6 +72,7 @@ def getDailyRainfall():
     for k, val in data['rainfall'].items():
         if datetime.datetime.strptime(k,"%Y-%m-%d").date() < oldest:
             del data['rainfall'][k]
+    
     return
 
 class wx_settings:
@@ -73,8 +93,10 @@ class wx_settings:
             data = json.loads(u'{"wx": {"apikey": "1234", "useWU": 0, "pws":"KTXSPRIN55"}, "rainfall": {"2000-01-01": 0.0}, "startTimeHour": 0, "startTimeMin": 0, "enabled": 0}')
             with io.open('./data/wx_settings.json', 'w', encoding='utf-8') as data_file:
                     data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
-        
-        return self.render.wx_settings(data)
+        if auto_program.metrics==auto_program.englishmetrics: m="english"
+        elif auto_program.metrics==auto_program.metricmetrics: m="metric"
+        print "wx_settings:", auto_program.DAYS_INWEEK, m
+        return self.render.wx_settings(data, auto_program.DAYS_INWEEK, m)
 
 class update_wx_settings:
     """Save user input to wx_settings.json file """
@@ -94,7 +116,8 @@ class update_wx_settings:
             else: data['wx']['useWU'] = 0
             with io.open('./data/wx_settings.json', 'w', encoding='utf-8') as data_file:
                 data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
-
+            if qdict['metric']=='english': auto_program.updateSettings(auto_program.englishmetrics, int(qdict['daysWatched']))
+            elif qdict['metric']=='metric': auto_program.updateSettings(auto_program.metricmetrics, int(qdict['daysWatched']))
         except IOError:
             return
 
@@ -125,6 +148,23 @@ def getWUHistoryRain(d, apikey, pws):
     else: return 0.0
 
     return float(data['history']['dailysummary'][0]['precipi'])
+
+# ------------------------------------------------------------------
+# getYesterdayRain
+#  - returns a floating point value that represents the total rainfall from yesterday
+#
+def getWUTodayRain(apikey, pws):
+
+    # if we are using wunderground.com as a data source, then pull from their api using the configured key
+    url = r'http://api.wunderground.com/api/' + apikey + r'/conditions/q/pws:' + pws + r'.json'
+    json_data = wget(url)
+    if (json_data): data = json.load(json_data)
+    else: return 0.0
+    print "precip_today_in", data['current_observation']['precip_today_in']
+#	day = parseDay(data['history']['observations'][23]['date']['pretty'])
+#	print day, ':', rainfall, 'in'
+	
+    return float(data['current_observation']['precip_today_in'])
 
 # ------------------------------------------------------------------
 # getYesterdayRain
