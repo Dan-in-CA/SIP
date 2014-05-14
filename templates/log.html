@@ -96,15 +96,11 @@ $code:
 				
 				<div id="options">
 					<div class="title">Log $log_state</div>
-					<form method="get" action="cl" name="df"></form>
-					<form method="get" action="mp" name="mf">
-						<input id="pid" name="pid" type="hidden" value="-1" />
-					</form>
-					
+					<form method="get" action="cl" name="df" id="df"></form>
 				</div>
 				
 				<div id="log">
-					<p>Total number of records: $(len(records))</p>
+					<p>Total number of records: ${len(records)}</p>
 					<p>Download log as <a href="/wl">csv</a>.</p>
 					
 					<table class="logList">

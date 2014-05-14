@@ -276,8 +276,8 @@ $code:
 					<button id="cRainDelay" class="toggle ${'off' if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']) else 'on'}"><span class='toggleleft'>Active</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Rain Delay</span></button>
 					$if gv.sd['rd']:
 						$:{'<span class="countdown" id="rainDelayCountdown" data="' + str(gv.sd['rdst']*1000) + '"></span>' if gv.sd['rd'] else ''}
-					$elif gv.sd['urs'] and gv.sd['rs']:
-						<span class="rainsense">rain sensor activated</span>
+					$if gv.sd['urs']:
+						<span class="rainsense">${'' if gv.sd['rs'] else 'no'} rain sensed</span>
 					<br>
 					<button id="cManual" class="toggle choice ${'off' if gv.sd['mm'] else 'on'}"><span class='toggleleft'>Auto</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Manual</span></button>
 				</div>

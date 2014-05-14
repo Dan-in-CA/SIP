@@ -54,21 +54,6 @@ def baseurl():
     return baseurl
 
 def check_rain():
-# <<<<<<< HEAD >>> Kept temporarily for testing
-#     try:
-#         if gv.sd['rst'] == 0:
-#             if GPIO.input(pin_rain_sense):
-#                 gv.sd['rs'] = 1
-#             else:
-#                 gv.sd['rs'] = 0
-#         elif gv.sd['rst'] == 1:
-#             if not GPIO.input(pin_rain_sense):
-#                 gv.sd['rs'] = 1
-#             else:
-#                 gv.sd['rs'] = 0
-#     except NameError:
-#         pass
-# =======
     if gv.sd['rst'] == 0:
         if GPIO.input(pin_rain_sense):
             gv.sd['rs'] = 1
@@ -79,7 +64,6 @@ def check_rain():
             gv.sd['rs'] = 1
         else:
             gv.sd['rs'] = 0
-#>>>>>>> 68eb430962d91235cc9eaa8eaeaafbf4b9ef22fc
 
 def clear_mm():
     """Clear manual mode settings."""
@@ -330,11 +314,7 @@ def timing_loop():
         if gv.sd['urs']:
             check_rain()
 
-#<<<<<<< HEAD
-        if gv.sd['rd'] and gv.now>= gv.sd['rdst']: # Check of rain delay time is up (this statement is idiomatic Python.)
-# =======
-#         if gv.sd['rd'] > 0 and gv.now >= gv.sd['rdst']: # Check of rain delay time is up
-# >>>>>>> 68eb430962d91235cc9eaa8eaeaafbf4b9ef22fc
+        if gv.sd['rd'] > 0 and gv.now >= gv.sd['rdst']: # Check of rain delay time is up          
             gv.sd['rd'] = 0
             gv.sd['rdst'] = 0 # Rain delay stop time
             jsave(gv.sd, 'sd')
@@ -666,7 +646,7 @@ class change_options:
     def GET(self):
         verifyLogin()
         qdict = web.input()
-        if qdict.has_key('opw') and qdict['opw'] != "":
+        if qdict['opw'] != "":
             try:
                 if passwordHash(qdict['opw'], gv.sd['salt']) == gv.sd['password']:
                     if qdict['npw'] == "":
