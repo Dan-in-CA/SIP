@@ -387,7 +387,8 @@ def load_programs():
 def output_prog():
     """Converts program data to text string and outputs JavaScript vars used to display program page."""
     lpd = []
-    dse = int((time.time()+((gv.sd['tz']/4)-12)*3600)/86400) # days since epoch
+#     dse = int((time.time()+((gv.sd['tz']/4)-12)*3600)/86400) # days since epoch
+    dse = int(gv.now/86400) # days since epoch
     for p in gv.pd:
         op = p[:] # Make local copy of each program
         if op[1] >= 128 and op[2] > 1:
