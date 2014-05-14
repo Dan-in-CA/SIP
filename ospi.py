@@ -6,15 +6,14 @@ try:
     import json
 except ImportError:
     import simplejson as json
-except ImportError:
+except:
     print "Error: json module not found"
     sys.exit()
 
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 from web import form
-web.config.debug = False # Improves page load speed
-import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes
-from gpio_pins import *
+import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
+
 from urls import *
 
 import random
@@ -31,10 +30,12 @@ except ImportError:
         print 'No GPIO module was loaded'
         pass
 
+web.config.debug = False # Making this false improves UI responsiveness
+
  #### Revision information ####
-gv.ver = 183
-gv.rev = 146
-gv.rev_date = '04/May/2014'
+gv.ver = 190
+gv.rev = 145
+gv.rev_date = '30/October/2013'
 
 #!!! Note: This add-on feature is now deprecated. Code is left in place for backward compatibility.
 ################################################################
@@ -45,16 +46,8 @@ gv.rev_date = '04/May/2014'
 #     print 'add_on not imported'
 
 
-##############################
-#### Function Definitions ####
-  
-def approve_pwd(qdict):
-    """Password checking"""
-    try:
-        if not gv.sd['ipas'] and not qdict['pw'] == base64.b64decode(gv.sd['pwd']):
-            raise web.unauthorized()
-    except KeyError:
-        pass
+  #### Function Definitions ####
+
 
 def baseurl():
     """Return URL app is running under."""
@@ -62,19 +55,16 @@ def baseurl():
     return baseurl
 
 def check_rain():
-    try:
-        if gv.sd['rst'] == 0:
-            if GPIO.input(pin_rain_sense):
-                gv.sd['rs'] = 1
-            else:
-                gv.sd['rs'] = 0
-        elif gv.sd['rst'] == 1:
-            if not GPIO.input(pin_rain_sense):
-                gv.sd['rs'] = 1
-            else:
-                gv.sd['rs'] = 0
-    except NameError:
-        pass                 
+    if gv.sd['rst'] == 0:
+        if GPIO.input(pin_rain_sense):
+            gv.sd['rs'] = 1
+        else:
+            gv.sd['rs'] = 0
+    elif gv.sd['rst'] == 1:
+        if not GPIO.input(pin_rain_sense):
+            gv.sd['rs'] = 1
+        else:
+            gv.sd['rs'] = 0
 
 def clear_mm():
     """Clear manual mode settings."""
@@ -104,7 +94,6 @@ def timestr(t):
 def log_run():
     """add run data to csv file - most recent first."""
     if gv.sd['lg']:
-        zones=re.findall(r"\'(.*?)\'",gv.snames)
         if gv.lrun[1] == 98:
             pgr = 'Run-once'
         elif gv.lrun[1] == 99:
@@ -146,8 +135,8 @@ def prog_match(prog):
     return 0
 
 def schedule_stations(stations):
-    """Schedule stations/valves/zones to run."""
-    if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']): # If rain delay or rain detected by sensor
+    """Schedule stattions/valves/zones to run."""
+    if gv.sd['rd']!=0 or (gv.sd['urs'] and gv.sd['rs']): # If rain delay or rain detected by sensor
         rain = True
     else:
         rain = False
@@ -216,8 +205,8 @@ def timing_loop():
     print 'Starting timing loop \n'
     last_min = 0
     while True: # infinite loop
-        gv.now = timegm(time.localtime())
-        if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']):
+        gv.now = timegm(time.localtime()) #time.time()+((gv.sd['tz']/4)-12)*3600 # Current time based on UTC time from the Pi adjusted by the Time Zone setting from options. updated once per second.
+        if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']): # and not gv.sd['rd']:
             lt = time.gmtime(gv.now)
             if (lt[3]*60)+lt[4] != last_min: # only check programs once a minute
                 last_min = (lt[3]*60)+lt[4]
@@ -326,7 +315,7 @@ def timing_loop():
         if gv.sd['urs']:
             check_rain()
 
-        if gv.sd['rd'] and gv.now >= gv.sd['rdst']: # Check of rain delay time is up          
+        if gv.sd['rd'] > 0 and gv.now >= gv.sd['rdst']: # Check of rain delay time is up          
             gv.sd['rd'] = 0
             gv.sd['rdst'] = 0 # Rain delay stop time
             jsave(gv.sd, 'sd')
@@ -388,7 +377,7 @@ def output_prog():
     """Converts program data to text string and outputs JavaScript vars used to display program page."""
     lpd = []
 #     dse = int((time.time()+((gv.sd['tz']/4)-12)*3600)/86400) # days since epoch
-    dse = int(gv.now/86400) # days since epoch
+    dse = int((timegm(time.localtime()))/86400) # days since epoch
     for p in gv.pd:
         op = p[:] # Make local copy of each program
         if op[1] >= 128 and op[2] > 1:
@@ -406,17 +395,35 @@ def passwordSalt():
 def passwordHash(password, salt):
     return sha1(password + salt).hexdigest()
 
-#####################
-#### Global vars ####
+
+    #####  GPIO  #####
+def set_output():
+    """Activate triacs according to shift register state."""
+    disableShiftRegisterOutput()
+    setShiftRegister(gv.srvals) # gv.srvals stores shift register state
+    enableShiftRegisterOutput()
+
+def to_sec(d=0, h=0, m=0, s=0):
+    """Convert Day, Hour, minute, seconds to number of seconds."""
+    secs = d*86400
+    secs += h*3600
+    secs += m*60
+    secs += s
+    return secs
+
+    ##################
+
+
+  #### Global vars #####
 
 #Settings Dictionary. A set of vars kept in memory and persisted in a file.
 #Edit this default dictionary definition to add or remove "key": "value" pairs or change defaults.
-gv.sd = ({u"en": 1, u"seq": 1, u"mnp": 32, u"ir": [0], u"rsn": 0, u"htp": 8080, u"nst": 8,
-           u"rdst": 0, u"loc": "", u"tz": 48, u"tf": 1, u"rs": 0, u"rd": 0, u"mton": 0,
-            u"lr": "100", u"sdt": 0, u"mas": 0, u"wl": 100, u"bsy": 0, u"lg": u"",
-            u"urs": 0, u"nopts": 13, u"pwd": "b3BlbmRvb3I=", u"password": u"", u"salt": u"", u"ipas": 0, u"rst": 1,
-            u"mm": 0, u"mo": [0], u"rbt": 0, u"mtoff": 0, u"nprogs": 1, u"nbrd": 1, u"tu": u"C",
-            u"snlen":32, u"name":u"OpenSprinkler Pi", u"theme":u"basic", u"show":[255]})
+gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
+            "rdst": 0, "loc": "", "tz": 48, "tf": 1, "rs": 0, "rd": 0, "mton": 0,
+            "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
+            "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "password": "", "salt": "", "ipas": 0, "rst": 1,
+            "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
+            "snlen":32, "name":u"OpenSprinkler Pi","theme":"basic","show":[255]})
 
 gv.sd['salt'] = passwordSalt()
 gv.sd['password'] = passwordHash('opendoor', gv.sd['salt'])
@@ -434,7 +441,7 @@ except IOError: # If file does not exist, it will be created created using defau
     json.dump(gv.sd, sdf)
     sdf.close()
 
-gv.now = timegm(time.localtime())
+gv.now = timegm(time.localtime()) #time.time()+((gv.sd['tz']/4)-12)*3600
 
 gv.srvals = [0]*(gv.sd['nst']) #Shift Register values
 
@@ -442,11 +449,11 @@ gv.rovals = [0]* gv.sd['nbrd']*7 #Run Once durations
 
 gv.pd = load_programs() # Load program data from file
 
-gv.ps = [] #Program schedule (used for UI display)
+gv.ps = [] #Program schedule (used for UI diaplay)
 for i in range(gv.sd['nst']):
     gv.ps.append([0,0])
 
-gv.pon = None #Program on (Holds program number of a running program)
+gv.pon = None #Program on (Holds program number of a running program
 
 gv.sbits = [0] * (gv.sd['nbrd'] +1) # Used to display stations that are on in UI
 
@@ -456,19 +463,76 @@ for i in range(gv.sd['nst']):
 
 gv.lrun=[0,0,0,0] #station index, program number, duration, end time (Used in UI)
 
+gv.scount = 0 # Station count, used in set station to track on stations with master association.
 
 
-def pass_options(opts):
-    optstring = "var sd = {\n"
-    for o in opts:
-        optstring += "\t" + o + " : "
-        if (type(gv.sd[o]) == unicode):
-            optstring += "'" + gv.sd[o] + "'"
-        else:
-            optstring += str(gv.sd[o])
-        optstring += ",\n" 
-    optstring = optstring[:-2] + "\n}\n"
-    return optstring
+  ####  GPIO  #####
+
+try:
+    GPIO.setwarnings(False)
+except NameError:
+    pass
+
+  #### pin defines ####
+try:
+    if gv.platform == 'pi':
+        pin_sr_dat = 13
+        pin_sr_clk = 7
+        pin_sr_noe = 11
+        pin_sr_lat = 15
+        pin_relay = 10
+        pin_rain_sense = 8
+    elif gv.platform == 'bo':
+        pin_sr_dat = "P9_11"
+        pin_sr_clk = "P9_13"
+        pin_sr_noe = "P9_14"
+        pin_sr_lat = "P9_12"
+        pin_rain_sense = "P9_15"
+        pin_relay = "P9_16"
+except AttributeError:
+    pass
+
+def enableShiftRegisterOutput():
+    try:
+        GPIO.output(pin_sr_noe, GPIO.LOW)
+    except NameError:
+        pass
+
+
+def disableShiftRegisterOutput():
+    try:
+        GPIO.output(pin_sr_noe, GPIO.HIGH)
+    except NameError:
+        pass
+try:
+    GPIO.cleanup()
+  #### setup GPIO pins as output or input ####
+    if gv.platform == 'pi':
+        GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
+    GPIO.setup(pin_sr_clk, GPIO.OUT)
+    GPIO.setup(pin_sr_noe, GPIO.OUT)
+    disableShiftRegisterOutput()
+    GPIO.setup(pin_sr_dat, GPIO.OUT)
+    GPIO.setup(pin_sr_lat, GPIO.OUT)
+    GPIO.setup(pin_relay, GPIO.OUT)
+    GPIO.setup(pin_rain_sense, GPIO.IN)
+except NameError:
+    pass
+
+def setShiftRegister(srvals):
+    try:
+        GPIO.output(pin_sr_clk, GPIO.LOW)
+        GPIO.output(pin_sr_lat, GPIO.LOW)
+        for s in range(gv.sd['nst']):
+            GPIO.output(pin_sr_clk, GPIO.LOW)
+            if srvals[gv.sd['nst']-1-s]:
+                GPIO.output(pin_sr_dat, GPIO.HIGH)
+            else:
+                GPIO.output(pin_sr_dat, GPIO.LOW)
+            GPIO.output(pin_sr_clk, GPIO.HIGH)
+        GPIO.output(pin_sr_lat, GPIO.HIGH)
+    except NameError:
+        pass
 
   ########################
   #### Login Handling ####
@@ -518,8 +582,8 @@ class logout:
         raise web.seeother('/')
 
 
-###########################
-#### Class Definitions ####
+  ###########################
+  #### Class Definitions ####
 class home:
     """Open Home page."""
     def GET(self):
@@ -534,7 +598,6 @@ class change_values:
     def GET(self):
         verifyLogin()
         qdict = web.input()
-#        approve_pwd(qdict)
         if qdict.has_key('rsn') and qdict['rsn'] == '1':
             stop_stations()
             raise web.seeother('/')
@@ -585,8 +648,8 @@ class change_options:
     def GET(self):
         verifyLogin()
         qdict = web.input()
-#        approve_pwd(qdict)
-        try:
+        if qdict['opw'] != "":
+            try:
                 if passwordHash(qdict['opw'], gv.sd['salt']) == gv.sd['password']:
                     if qdict['npw'] == "":
                         raise web.seeother('/vo?errorCode=pw_blank')
@@ -596,8 +659,9 @@ class change_options:
                         raise web.seeother('/vo?errorCode=pw_mismatch')
                 else:
                     raise web.seeother('/vo?errorCode=pw_wrong')
-        except KeyError:
-            pass
+            except KeyError:
+                pass
+
         try:
             if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == ''):
                 gv.sd['ipas'] = 1
@@ -745,7 +809,6 @@ class change_stations:
             else:
                 names += "'S"+str(i+1) + "',"
         names += ']'
-        gv.snames = names
         save('snames', names.encode('ascii', 'backslashreplace'))
         jsave(gv.sd, 'sd')
         raise web.seeother('/')
@@ -804,7 +867,6 @@ class change_runonce:
     def GET(self):
         verifyLogin()
         qdict = web.input()
-#        approve_pwd(qdict)
         if not gv.sd['en']: return # check operation status
         gv.rovals = json.loads(qdict['t'])
         gv.rovals.pop()
@@ -860,7 +922,6 @@ class change_program:
     def GET(self):
         verifyLogin()
         qdict = web.input()
-#        approve_pwd(qdict)
         pnum = int(qdict['pid'])+1 # program number
         cp = json.loads(qdict['v'])
         if cp[0] == 0 and pnum == gv.pon: # if disabled and program is running
@@ -893,7 +954,6 @@ class delete_program:
     def GET(self):
         verifyLogin()
         qdict = web.input()
-#        approve_pwd(qdict)
         if qdict['pid'] == '-1':
             del gv.pd[:]
             jsave(gv.pd, 'programs')
@@ -938,7 +998,6 @@ class log_options:
     def GET(self):
         verifyLogin()
         qdict = web.input()
-#        approve_pwd(qdict)
         if qdict.has_key('log'): gv.sd['lg'] = 1
         else: gv.sd['lg'] = 0
         gv.sd['lr'] = int(qdict['nrecords'])
@@ -950,7 +1009,6 @@ class run_now:
     def GET(self):
         verifyLogin()
         qdict = web.input()
-#        approve_pwd(qdict)
         pid = int(qdict['pid'])
         p = gv.pd[int(qdict['pid'])] # program data
         if not p[0]: # if program is disabled
@@ -975,7 +1033,6 @@ class show_revision:
         revpg = '<!DOCTYPE html>\n'
         revpg += 'Python Interval Program for OpenSprinkler Pi<br/><br/>\n'
         revpg += 'Compatable with OpenSprinkler firmware 1.8.3.<br/><br/>\n'
-        revpg += 'Includes plugin archetecture\n'
         revpg += 'ospi.py revision: '+str(gv.rev) +'<br/><br/>\n'
         revpg += 'updated ' + gv.rev_date +'\n'
         return revpg

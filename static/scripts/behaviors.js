@@ -10,7 +10,7 @@ function dateString(d) {
 }
 
 function updateClock() {
-	var now = new Date(Date.now() + deviceTimeOffset);
+	var now = new Date(Date.now()); //+ deviceTimeOffset);
 	if (timeFormat) {
 		jQuery("#deviceTime span.hour").text((now.getHours() < 10 ? "0" : "") + now.getHours());
 		jQuery("#deviceTime span.ampm").text("");
