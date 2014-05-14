@@ -35,7 +35,8 @@ def checkRain():
 @sched.cron_schedule(hour=1)
 def getDailyRainfall():
     #do we have yesterdays rainfall data already?
-    print "Getting rainfall history..."
+    t = datetime.date.today()
+    print t, "Getting rainfall history..."
     try:
         # read data from the file, if it exists
         with io.open(r'./data/wx_settings.json', 'r') as data_file: 
@@ -58,7 +59,7 @@ def getDailyRainfall():
 
     if str(y) not in data['rainfall']: 
         # if not, recreate past n days rainfall data
-        for i in range(1,DAYS_INWEEK+1):
+        for i in range(1,auto_program.daysWatched+1):
             d = datetime.date.today() - datetime.timedelta(days=i)
             dstr = d.strftime("%Y%m%d")
             if data['wx']['useWU']:
@@ -68,7 +69,7 @@ def getDailyRainfall():
             data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
     
     # delete entries older than 14 days from memory, we're only using 2nd week for display
-    oldest = t-datetime.timedelta(days=14)
+    oldest = t-datetime.timedelta(days=auto_program.daysWatched)
     for k, val in data['rainfall'].items():
         if datetime.datetime.strptime(k,"%Y-%m-%d").date() < oldest:
             del data['rainfall'][k]
@@ -95,8 +96,8 @@ class wx_settings:
                     data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
         if auto_program.metrics==auto_program.englishmetrics: m="english"
         elif auto_program.metrics==auto_program.metricmetrics: m="metric"
-        print "wx_settings:", auto_program.DAYS_INWEEK, m
-        return self.render.wx_settings(data, auto_program.DAYS_INWEEK, m)
+        print "wx_settings:", auto_program.daysWatched, m
+        return self.render.wx_settings(data, auto_program.daysWatched, m)
 
 class update_wx_settings:
     """Save user input to wx_settings.json file """

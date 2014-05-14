@@ -3,7 +3,7 @@ sys.path.insert(0, './plugins')
 import web, json, time, io, re
 import gv # Get access to ospi's settings
 from urls import urls # Get access to ospi's URLs
-from auto_program import getZoneHistory, DAYS_INWEEK, metrics
+import auto_program 
 
 urls.extend(['/zone', 'plugins.zone_settings.zone_settings', '/uzone', 'plugins.zone_settings.update_zone_settings']) # Add a new url to open the data entry page
 
@@ -62,7 +62,7 @@ class zone_settings:
             #print "data=", data['station']
             with io.open('./data/zone_settings.json', 'w', encoding='utf-8') as data_file:
                 data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
-        zone_history = getZoneHistory(DAYS_INWEEK)
+        zone_history = auto_program.getZoneHistory(auto_program.daysWatched)
         # get rainfall total for past 7 days
         rainfall_total = 0
         try:
@@ -77,7 +77,7 @@ class zone_settings:
         # if no rainfall total, skip and keep going (assuming 0 rainfall)
             "ERROR: auto_program: unable to access wx_settings.json file"
             pass        
-        return self.render.zone_settings(data,zone_history, rainfall_total, metrics, DAYS_INWEEK)
+        return self.render.zone_settings(data,zone_history, rainfall_total, auto_program.metrics, auto_program.daysWatched)
 
 class update_zone_settings:
     """Save user input to zone_settings.json file """
