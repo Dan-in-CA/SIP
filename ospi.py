@@ -11,6 +11,7 @@ except ImportError:
     sys.exit()
 
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
+from web import form
 web.config.debug = False # Improves page load speed
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes
 from gpio_pins import *
