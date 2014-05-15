@@ -523,13 +523,13 @@ class change_values:
             gv.srvals = [0]*(gv.sd['nst']) # turn off all stations
             set_output()
         if qdict.has_key('mm') and qdict['mm'] == '0':
-        	clear_mm()
+            clear_mm()
         if qdict.has_key('rd') and qdict['rd'] != '0' and qdict['rd'] != '':
             gv.sd['rd'] = float(qdict['rd'])
             gv.sd['rdst'] = gv.now + gv.sd['rd']*3600 + 1 # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
             stop_onrain()
         elif qdict.has_key('rd') and qdict['rd'] == '0':
-        	gv.sd['rdst'] = 0
+            gv.sd['rdst'] = 0
         if qdict.has_key('rbt') and qdict['rbt'] == '1':
             jsave(gv.sd, 'sd')
             gv.srvals = [0]*(gv.sd['nst'])
@@ -1005,7 +1005,7 @@ class api_status:
                             if sbit:
                                 status['status'] = 'on'
                                 status['reason'] = 'program'
-                            	status['programName'] = pname
+                                status['programName'] = pname
                                 status['remaining'] = rem
                             else:
                                 if gv.ps[sid][0] == 0:
