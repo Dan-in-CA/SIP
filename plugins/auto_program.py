@@ -27,12 +27,12 @@ daysWatched = 7     # number of days to consider when calculating water usage an
 metrics=englishmetrics
 
 # allows other modules to update settings
-def updateSettings(d, m):
+def updateSettings(m, d):
     global daysWatched
     global metrics
-#    print "updateSettings:", d, m
+    # print "updateSettings:", d, m
     daysWatched = d
-    metrics = m
+    metrics=m
     return
     
 try:

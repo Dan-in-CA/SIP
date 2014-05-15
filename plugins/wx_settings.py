@@ -24,7 +24,7 @@ def checkRain():
         data = json.load(data_file)
     data_file.close()  
     rtoday=getWUTodayRain(data['wx']['apikey'],data['wx']['pws'])
-    print "rain today=", rtoday
+    # print "rain today=", rtoday
     if rtoday and not gv.sd['urs']:
         gv.sd['rs'] = 1
     else:
@@ -94,15 +94,18 @@ class wx_settings:
             data = json.loads(u'{"wx": {"apikey": "1234", "useWU": 0, "pws":"KTXSPRIN55"}, "rainfall": {"2000-01-01": 0.0}, "startTimeHour": 0, "startTimeMin": 0, "enabled": 0}')
             with io.open('./data/wx_settings.json', 'w', encoding='utf-8') as data_file:
                     data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
+        m=0
         if auto_program.metrics==auto_program.englishmetrics: m="english"
         elif auto_program.metrics==auto_program.metricmetrics: m="metric"
-        print "wx_settings:", auto_program.daysWatched, m
+#        print "wx_settings:", auto_program.daysWatched, m
+#        print "wx_settings: auto_program.metrics=", auto_program.metrics
         return self.render.wx_settings(data, auto_program.daysWatched, m)
 
 class update_wx_settings:
     """Save user input to wx_settings.json file """
     def GET(self):
         qdict=web.input()
+        #print "update_wx_settings:", int(qdict['daysWatched']), qdict['metric']
         try:
             #write file back out with updated data
             #data = json.loads(u'{"wx": {"apikey": "1234", "useWU": 0, "pws": "KTXSPRING55"}, "rainfall": {"05/01/14": 0.0}}')

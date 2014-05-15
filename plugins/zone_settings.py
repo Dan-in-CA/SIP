@@ -72,7 +72,7 @@ class zone_settings:
             wxdata_file.close()  
             for k in sorted(wxdata['rainfall'], reverse=1):
                 rainfall_total += wxdata['rainfall'][str(k)]
-            print "rainfall_total=", rainfall_total
+            # print "rainfall_total=", rainfall_total
         except IOError:
         # if no rainfall total, skip and keep going (assuming 0 rainfall)
             "ERROR: auto_program: unable to access wx_settings.json file"
