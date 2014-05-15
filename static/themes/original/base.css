@@ -1,0 +1,85 @@
+body {
+	margin:0px;
+}
+
+div.body {
+	margin:.5em;
+}
+
+
+div.header {
+	font-weight:bold;
+	text-align:center;
+	background-color:#EEEEEE;
+	border:2px solid gray;
+	padding:5px 10px;
+	width:480px;
+	border-radius:10px;
+	box-shadow:3px 3px 2px #888888;
+}
+
+div.header div.title {
+	font-size: 16pt;
+}
+
+div.header div.titlenote {
+	font-size: 10pt;
+}
+
+button.icon {
+	padding: 3px 6px 3px 30px;
+	background-color: #EEE;
+	background-repeat: no-repeat;
+	background-position: 4px center;
+	background-size: 20px;
+}
+
+#nav button {height:24px;}
+#controls button {height:36px;}
+
+button.add			{background-image: url('icons/svc_addall.png');}
+button.auto			{background-image: url('icons/svc_auto.png');}
+button.back			{background-image: url('icons/svc_back.png');}
+button.cancel		{background-image: url('icons/svc_delall.png');}
+button.delete		{background-image: url('icons/svc_del.png');}
+button.deleteAll	{background-image: url('icons/svc_delall.png');}
+button.log			{background-image: url('icons/svc_log.png');}
+button.man			{background-image: url('icons/svc_manual.png');}
+button.preview		{background-image: url('icons/svc_preview.png');}
+button.programs		{background-image: url('icons/svc_cal.png');}
+button.options		{background-image: url('icons/svc_options.png');}
+button.rain			{background-image: url('icons/svc_rain.png');}
+button.reboot		{background-image: url('icons/svc_reboot.png');}
+button.refresh		{background-image: url('icons/svc_reset.png');}
+button.start		{background-image: url('icons/svc_start.png');}
+button.stations		{background-image: url('icons/svc_edit.png');}
+button.stop			{background-image: url('icons/svc_stop.png');}
+button.submit		{background-image: url('icons/svc_submit.png');}
+
+table.station_list, td {border:1px solid black;}
+td.station_name {background-color:#E4E4E4;}
+td.station_on {background-color:#CCCCFF; color:green;}
+td.station_off, td.station_loading {background-color:#FFCCCC;}
+td.station_waiting {background-color:#FFCCCC;}
+td.station_disabled {background-color:#CCC;}
+
+#overlay {
+	 display:none;
+	 position: absolute;
+	 left: 0px;
+	 top: 0px;
+	 width: 100%;
+	 height:100%;
+	 text-align:center;
+	 z-index: 1000;
+	 background-image:url(../static/images/BlueTile.png);
+}
+#overlay div {
+	 width:240px;
+	 margin: 100px auto;
+	 background-color: #fff;
+	 border:1px solid #000;
+	 padding:10px;
+	 text-align:left;	 
+}
+
