@@ -52,7 +52,6 @@ urls = [
     '/dp', 'delete_program',
     '/vl', 'view_log',
     '/cl', 'clear_log',
-    '/lo', 'log_options',
     '/rp', 'run_now',
     '/ttu', 'toggle_temp',
     '/rev', 'show_revision',
@@ -1011,17 +1010,6 @@ class clear_log:
         f = open('./data/log.json', 'w')
         f.write('')
         f.close
-        raise web.seeother('/vl')
-
-class log_options:
-    """Set log options from dialog."""
-    def GET(self):
-        verifyLogin()
-        qdict = web.input()
-        if qdict.has_key('log'): gv.sd['lg'] = 1
-        else: gv.sd['lg'] = 0      
-        gv.sd['lr'] = int(qdict['nrecords'])
-        jsave(gv.sd, 'sd')
         raise web.seeother('/vl')
 
 class run_now:

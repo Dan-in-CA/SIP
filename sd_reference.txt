@@ -14,6 +14,7 @@ mton:0	master on delay
 mtoff:0	master off delay
 nbrd:1	number of boards
 tz:16	time zone
+tf:1	time format (24 hour clock == 1)
 urs:0	use rain sensor (bool)
 rst:1	Rain sensor type (normaly open=1 (dafault), or normaly closed=0)
 wl:100	water level (percent adjustment of watering time)

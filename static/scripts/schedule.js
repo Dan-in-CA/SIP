@@ -127,7 +127,7 @@ function displaySchedule(schedule) {
 						}
 						programClassesUsed[schedule[s].program] = programClass;
 						var markerClass = (schedule[s].date == undefined ? "schedule" : "history");
-						boxes.append("<div class='scheduleMarker " + programClass + " " + markerClass + "' style='left:" + barStart*100 + "%;width:" + barWidth*100 + "%' title='" + programName(schedule[s].program) + ": " + toClock(schedule[s].start) + " for " + toClock(schedule[s].duration) + "'></div>");
+						boxes.append("<div class='scheduleMarker " + programClass + " " + markerClass + "' style='left:" + barStart*100 + "%;width:" + barWidth*100 + "%' data='" + programName(schedule[s].program) + ": " + toClock(schedule[s].start) + " for " + toClock(schedule[s].duration) + "'></div>");
 					}
 				}
 			}
@@ -176,7 +176,7 @@ function displayProgram() {
 jQuery(document).ready(displayProgram);
 
 function scheduleMarkerMouseover() {
-	var description = jQuery(this).attr("title");
+	var description = jQuery(this).attr("data");
 	var markerClass = jQuery(this).attr("class");
 	markerClass = markerClass.substring(markerClass.indexOf("program"));
 	markerClass = markerClass.substring(0,markerClass.indexOf(" "));
