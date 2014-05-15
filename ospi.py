@@ -6,14 +6,14 @@ try:
     import json
 except ImportError:
     import simplejson as json
-except:
+except ImportError:
     print "Error: json module not found"
     sys.exit()
 
 import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
 from web import form
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
-
+from gpio_pins import *
 from urls import *
 
 import random
@@ -33,9 +33,9 @@ except ImportError:
 web.config.debug = False # Making this false improves UI responsiveness
 
  #### Revision information ####
-gv.ver = 190
-gv.rev = 145
-gv.rev_date = '30/October/2013'
+gv.ver = 183
+gv.rev = 146
+gv.rev_date = '04/May/2014'
 
 #!!! Note: This add-on feature is now deprecated. Code is left in place for backward compatibility.
 ################################################################
@@ -46,8 +46,9 @@ gv.rev_date = '30/October/2013'
 #     print 'add_on not imported'
 
 
-  #### Function Definitions ####
-
+##############################
+#### Function Definitions ####
+  
 
 def baseurl():
     """Return URL app is running under."""
@@ -55,16 +56,19 @@ def baseurl():
     return baseurl
 
 def check_rain():
-    if gv.sd['rst'] == 0:
-        if GPIO.input(pin_rain_sense):
-            gv.sd['rs'] = 1
-        else:
-            gv.sd['rs'] = 0
-    elif gv.sd['rst'] == 1:
-        if not GPIO.input(pin_rain_sense):
-            gv.sd['rs'] = 1
-        else:
-            gv.sd['rs'] = 0
+    try:
+        if gv.sd['rst'] == 0:
+            if GPIO.input(pin_rain_sense):
+                gv.sd['rs'] = 1
+            else:
+                gv.sd['rs'] = 0
+        elif gv.sd['rst'] == 1:
+            if not GPIO.input(pin_rain_sense):
+                gv.sd['rs'] = 1
+            else:
+                gv.sd['rs'] = 0
+    except NameError:
+        pass
 
 def clear_mm():
     """Clear manual mode settings."""
@@ -135,8 +139,8 @@ def prog_match(prog):
     return 0
 
 def schedule_stations(stations):
-    """Schedule stattions/valves/zones to run."""
-    if gv.sd['rd']!=0 or (gv.sd['urs'] and gv.sd['rs']): # If rain delay or rain detected by sensor
+    """Schedule stations/valves/zones to run."""
+    if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']): # If rain delay or rain detected by sensor
         rain = True
     else:
         rain = False
@@ -206,7 +210,7 @@ def timing_loop():
     last_min = 0
     while True: # infinite loop
         gv.now = timegm(time.localtime()) #time.time()+((gv.sd['tz']/4)-12)*3600 # Current time based on UTC time from the Pi adjusted by the Time Zone setting from options. updated once per second.
-        if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']): # and not gv.sd['rd']:
+        if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']):
             lt = time.gmtime(gv.now)
             if (lt[3]*60)+lt[4] != last_min: # only check programs once a minute
                 last_min = (lt[3]*60)+lt[4]
@@ -315,7 +319,7 @@ def timing_loop():
         if gv.sd['urs']:
             check_rain()
 
-        if gv.sd['rd'] > 0 and gv.now >= gv.sd['rdst']: # Check of rain delay time is up          
+        if gv.sd['rd'] and gv.now>= gv.sd['rdst']: # Check of rain delay time is up
             gv.sd['rd'] = 0
             gv.sd['rdst'] = 0 # Rain delay stop time
             jsave(gv.sd, 'sd')
@@ -376,7 +380,6 @@ def load_programs():
 def output_prog():
     """Converts program data to text string and outputs JavaScript vars used to display program page."""
     lpd = []
-#     dse = int((time.time()+((gv.sd['tz']/4)-12)*3600)/86400) # days since epoch
     dse = int((timegm(time.localtime()))/86400) # days since epoch
     for p in gv.pd:
         op = p[:] # Make local copy of each program
@@ -395,39 +398,21 @@ def passwordSalt():
 def passwordHash(password, salt):
     return sha1(password + salt).hexdigest()
 
-
-    #####  GPIO  #####
-def set_output():
-    """Activate triacs according to shift register state."""
-    disableShiftRegisterOutput()
-    setShiftRegister(gv.srvals) # gv.srvals stores shift register state
-    enableShiftRegisterOutput()
-
-def to_sec(d=0, h=0, m=0, s=0):
-    """Convert Day, Hour, minute, seconds to number of seconds."""
-    secs = d*86400
-    secs += h*3600
-    secs += m*60
-    secs += s
-    return secs
-
-    ##################
-
-
-  #### Global vars #####
+#####################
+#### Global vars ####
 
 #Settings Dictionary. A set of vars kept in memory and persisted in a file.
 #Edit this default dictionary definition to add or remove "key": "value" pairs or change defaults.
-gv.sd = ({"en": 1, "seq": 1, "mnp": 32, "ir": [0], "rsn": 0, "htp": 8080, "nst": 8,
-            "rdst": 0, "loc": "", "tz": 48, "tf": 1, "rs": 0, "rd": 0, "mton": 0,
-            "lr": "100", "sdt": 0, "mas": 0, "wl": 100, "bsy": 0, "lg": "",
-            "urs": 0, "nopts": 13, "pwd": "b3BlbmRvb3I=", "password": "", "salt": "", "ipas": 0, "rst": 1,
-            "mm": 0, "mo": [0], "rbt": 0, "mtoff": 0, "nprogs": 1, "nbrd": 1, "tu": "C",
-            "snlen":32, "name":u"OpenSprinkler Pi","theme":"basic","show":[255]})
+gv.sd = ({u"en": 1, u"seq": 1, u"mnp": 32, u"ir": [0], u"rsn": 0, u"htp": 8080, u"nst": 8,
+            u"rdst": 0, u"loc": u"", u"tz": 48, u"tf": 1,  u"rs": 0, u"rd": 0, u"mton": 0,
+            u"lr": u"100", u"sdt": 0, u"mas": 0, u"wl": 100, u"bsy": 0, u"lg": u"",
+            u"urs": 0, u"nopts": 13, u"pwd": u"b3BlbmRvb3I=", u"password": u"", u"salt": u"", u"ipas": 0, u"rst": 1,
+            u"mm": 0, u"mo": [0], u"rbt": 0, u"mtoff": 0, u"nprogs": 1, u"nbrd": 1, u"tu": u"C",
+            u"snlen":32, u"name": u"OpenSprinkler Pi",u"theme": u"basic","show":[255]})
 
 gv.sd['salt'] = passwordSalt()
 gv.sd['password'] = passwordHash('opendoor', gv.sd['salt'])
-# note old passwords stored in the "pwd" option will be lost - reverts to default password.
+# note old passwords stored in the "pwd" option will be lost - reverts to default password
 
 try:
     sdf = open('./data/sd.json', 'r') ## A config file ##
@@ -449,11 +434,11 @@ gv.rovals = [0]* gv.sd['nbrd']*7 #Run Once durations
 
 gv.pd = load_programs() # Load program data from file
 
-gv.ps = [] #Program schedule (used for UI diaplay)
+gv.ps = [] #Program schedule (used for UI display)
 for i in range(gv.sd['nst']):
     gv.ps.append([0,0])
 
-gv.pon = None #Program on (Holds program number of a running program
+gv.pon = None #Program on (Holds program number of a running program)
 
 gv.sbits = [0] * (gv.sd['nbrd'] +1) # Used to display stations that are on in UI
 
@@ -462,77 +447,6 @@ for i in range(gv.sd['nst']):
     gv.rs.append([0,0,0,0]) #scheduled start time, scheduled stop time, duration, program index
 
 gv.lrun=[0,0,0,0] #station index, program number, duration, end time (Used in UI)
-
-gv.scount = 0 # Station count, used in set station to track on stations with master association.
-
-
-  ####  GPIO  #####
-
-try:
-    GPIO.setwarnings(False)
-except NameError:
-    pass
-
-  #### pin defines ####
-try:
-    if gv.platform == 'pi':
-        pin_sr_dat = 13
-        pin_sr_clk = 7
-        pin_sr_noe = 11
-        pin_sr_lat = 15
-        pin_relay = 10
-        pin_rain_sense = 8
-    elif gv.platform == 'bo':
-        pin_sr_dat = "P9_11"
-        pin_sr_clk = "P9_13"
-        pin_sr_noe = "P9_14"
-        pin_sr_lat = "P9_12"
-        pin_rain_sense = "P9_15"
-        pin_relay = "P9_16"
-except AttributeError:
-    pass
-
-def enableShiftRegisterOutput():
-    try:
-        GPIO.output(pin_sr_noe, GPIO.LOW)
-    except NameError:
-        pass
-
-
-def disableShiftRegisterOutput():
-    try:
-        GPIO.output(pin_sr_noe, GPIO.HIGH)
-    except NameError:
-        pass
-try:
-    GPIO.cleanup()
-  #### setup GPIO pins as output or input ####
-    if gv.platform == 'pi':
-        GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
-    GPIO.setup(pin_sr_clk, GPIO.OUT)
-    GPIO.setup(pin_sr_noe, GPIO.OUT)
-    disableShiftRegisterOutput()
-    GPIO.setup(pin_sr_dat, GPIO.OUT)
-    GPIO.setup(pin_sr_lat, GPIO.OUT)
-    GPIO.setup(pin_relay, GPIO.OUT)
-    GPIO.setup(pin_rain_sense, GPIO.IN)
-except NameError:
-    pass
-
-def setShiftRegister(srvals):
-    try:
-        GPIO.output(pin_sr_clk, GPIO.LOW)
-        GPIO.output(pin_sr_lat, GPIO.LOW)
-        for s in range(gv.sd['nst']):
-            GPIO.output(pin_sr_clk, GPIO.LOW)
-            if srvals[gv.sd['nst']-1-s]:
-                GPIO.output(pin_sr_dat, GPIO.HIGH)
-            else:
-                GPIO.output(pin_sr_dat, GPIO.LOW)
-            GPIO.output(pin_sr_clk, GPIO.HIGH)
-        GPIO.output(pin_sr_lat, GPIO.HIGH)
-    except NameError:
-        pass
 
   ########################
   #### Login Handling ####
@@ -559,6 +473,7 @@ signin_form = form.Form(form.Password('password',
                         validators = [form.Validator("Incorrect password, please try again",
                                       lambda x: checkPassword(x.password, gv.sd['salt'], gv.sd['password'])) ])
 
+
 class login:
     """Login page"""
     def GET(self):
@@ -582,8 +497,8 @@ class logout:
         raise web.seeother('/')
 
 
-  ###########################
-  #### Class Definitions ####
+###########################
+#### Class Definitions ####
 class home:
     """Open Home page."""
     def GET(self):
@@ -809,12 +724,13 @@ class change_stations:
             else:
                 names += "'S"+str(i+1) + "',"
         names += ']'
+        gv.snames = names
         save('snames', names.encode('ascii', 'backslashreplace'))
         jsave(gv.sd, 'sd')
         raise web.seeother('/')
 
 class get_station:
-    """Return a page containing a number representing the state of a station or all stations if 0 is entered as statin number."""
+    """Return a page containing a number representing the state of a station or all stations if 0 is entered as station number."""
     def GET(self, sn):
         verifyLogin()
         if sn == '0':
@@ -898,7 +814,7 @@ class view_programs:
 
 
 class modify_program:
-    """Open programs page."""
+    """Open page to allow program modification."""
     def GET(self):
         checkLogin()
         qdict = web.input()
@@ -1033,6 +949,7 @@ class show_revision:
         revpg = '<!DOCTYPE html>\n'
         revpg += 'Python Interval Program for OpenSprinkler Pi<br/><br/>\n'
         revpg += 'Compatable with OpenSprinkler firmware 1.8.3.<br/><br/>\n'
+        revpg += 'Includes plugin archetecture\n'
         revpg += 'ospi.py revision: '+str(gv.rev) +'<br/><br/>\n'
         revpg += 'updated ' + gv.rev_date +'\n'
         return revpg
