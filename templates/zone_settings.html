@@ -119,7 +119,7 @@ $def with(data, zone_history, rainfall_total, metrics, daysWatched)
 				$if data['station'][x]['type']=='rotor':checked
 				><label for="radio1$x">Rotor</label><input type="radio" id="radio2$x" name="type$x" value="spray" 
 				$if data['station'][x]['type']=='spray':checked
-				><label for="radio2$x">Spray</label><input type="radio" id="radio3$x" name="type$x" value="drip" 
+				><label for="radio2$x">Spray</label><input type="radio" id="radio3$x" name="type$x" value="drip" disabled 
 				$if data['station'][x]['type']=='drip':checked
 				><label for="radio3$x">Drip</label></td>
 				<td><input type="text" name="Pr$x" value=$data['station'][x]['Pr']>
