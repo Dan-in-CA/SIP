@@ -1,6 +1,6 @@
 import web, json, re
 import ast
-import gv # Gain access to ospi's settings
+import gv, time # Gain access to ospi's settings
 from urls import urls # Gain access to ospi's URL list
 
 ##############
@@ -39,11 +39,19 @@ class station_state: # /js
 class program_info: # /jp
     """Returns program data as json."""
     def GET(self):
+        lpd = [] # Local program data
+        dse = int((time.time()+((gv.sd['tz']/4)-12)*3600)/86400) # days since epoch
+        for p in gv.pd:
+            op = p[:] # Make local copy of each program
+            if op[1] >= 128 and op[2] > 1:
+                rel_rem = (((op[1]-128) + op[2])-(dse%op[2]))%op[2]
+                op[1] = rel_rem + 128
+            lpd.append(op)
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        jpinfo = {"nprogs":gv.sd['nprogs']-1,"nboards":gv.sd['nbrd'],"mnp":gv.sd['mnp'],"pd":gv.pd}
+        jpinfo = {"nprogs":gv.sd['nprogs']-1,"nboards":gv.sd['nbrd'],"mnp":gv.sd['mnp'], 'pd': lpd}
         return json.dumps(jpinfo)
-    
+        
 class station_info: # /jn
     """Returns station information as json."""
     def GET(self):
