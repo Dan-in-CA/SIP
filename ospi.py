@@ -122,7 +122,7 @@ def prog_match(prog):
             if lt[2]==31 or (lt[1]==2 and lt[2]==29): return 0
             elif lt[2]%2 !=1: return 0   
     this_minute = (lt[3]*60)+lt[4] # Check time match
-    if this_minute < prog[3] or this_minute > prog[4]: return 0
+    if this_minute < prog[3] or this_minute >= prog[4]: return 0
     if prog[5] == 0: return 0
     if ((this_minute - prog[3]) / prog[5]) * prog[5] == this_minute - prog[3]:
         return 1 # Program matched
