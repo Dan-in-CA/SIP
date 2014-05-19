@@ -132,7 +132,7 @@ def prog_match(prog):
             if lt[2]==31 or (lt[1]==2 and lt[2]==29): return 0
             elif lt[2]%2 !=1: return 0
     this_minute = (lt[3]*60)+lt[4] # Check time match
-    if this_minute < prog[3] or this_minute > prog[4]: return 0
+    if this_minute < prog[3] or this_minute >= prog[4]: return 0
     if prog[5] == 0: return 0
     if ((this_minute - prog[3]) / prog[5]) * prog[5] == this_minute - prog[3]:
         return 1 # Program matched
@@ -379,13 +379,13 @@ def load_programs():
 
 def output_prog():
     """Converts program data to text string and outputs JavaScript vars used to display program page."""
-    lpd = []
-    dse = int((timegm(time.localtime()))/86400) # days since epoch
+    lpd = [] # Local program data
+    dse = int(gv.now/86400) # days since epoch
     for p in gv.pd:
         op = p[:] # Make local copy of each program
         if op[1] >= 128 and op[2] > 1:
-            rel_rem = (((op[1]-128) + op[2])-(dse%op[2]))%op[2]
-            op[1] = rel_rem + 128
+            rel_rem = (((op[1]-128) + op[2])-(dse % op[2])) % op[2] # Convert absolute days to relative remaining (rel_rem) days
+            op[1] = rel_rem + 128 # Update from saved value based on current date
         lpd.append(op)
     progstr = 'var nprogs='+str(len(lpd))+',nboards='+str(gv.sd['nbrd'])+',ipas='+str(gv.sd['ipas'])+',mnp='+str(gv.sd['mnp'])+',pd=[];'
     for i, pro in enumerate(lpd): #gets both index and object
@@ -821,11 +821,11 @@ class modify_program:
         pid = int(qdict['pid'])
         prog = [];
         if pid != -1:
-            mp = gv.pd[pid][:]
+            mp = gv.pd[pid][:] # Modified program
             if mp[1] >= 128 and mp[2] > 1: # If this is an interval program
                 dse = int(gv.now/86400)
                 rel_rem = (((mp[1]-128) + mp[2])-(dse%mp[2]))%mp[2] # Convert absolute to relative days remaining for display
-                mp[1] = rel_rem + 128
+                mp[1] = rel_rem + 128 # Update from saved value.
             prog = str(mp).replace(' ', '')
 
         gv.baseurl = baseurl()
