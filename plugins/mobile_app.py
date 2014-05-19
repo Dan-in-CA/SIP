@@ -39,9 +39,20 @@ class station_state: # /js
 class program_info: # /jp
     """Returns program data as json."""
     def GET(self):
+        lpd = [] # Local program data
+        dse = int(gv.now/86400) # days since epoch
+        for p in gv.pd:
+            op = p[:] # Make local copy of each program
+            if op[1] >= 128 and op[2] > 1:
+                rel_rem = (((op[1]-128) + op[2])-(dse % op[2])) % op[2] # Convert absolute days to relative remaining (rel_rem) days
+                op[1] = rel_rem + 128 # Update from saved value based on current date
+            lpd.append(op)
+        progstr = ''
+        for i, pro in enumerate(lpd): #gets both index and object
+            progstr += 'pd['+str(i)+']='+str(pro).replace(' ', '')+';'       
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        jpinfo = {"nprogs":gv.sd['nprogs']-1,"nboards":gv.sd['nbrd'],"mnp":gv.sd['mnp'],"pd":gv.pd}
+        jpinfo = {"nprogs":gv.sd['nprogs']-1,"nboards":gv.sd['nbrd'],"mnp":gv.sd['mnp'], 'pd': progstr} 
         return json.dumps(jpinfo)
 
 class station_info: # /jn
