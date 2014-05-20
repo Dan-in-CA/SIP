@@ -1,0 +1,57 @@
+??Vars held in the settings dict (gv.sd), default values shown
+
+from controller values (cvalues):
+en:1	enabled (system operation)
+rd:0	rain delay (hours)
+mm:0	manual mode (bool)
+rbt:0	reboot (bool) 
+
+from options:
+htp:8080 http port the program will use
+seq:1	sequential/concurrent operation (bool)
+sdt:0	station delay time
+mton:0	master on delay
+mtoff:0	master off delay
+nbrd:1	number of boards (includes base unit and expansion boards)
+tz:16	time zone
+urs:0	use rain sensor (bool)
+rst:1	Rain sensor type (normaly open=1 (dafault), or normaly closed=0)
+wl:100	water level (percent adjustment of watering time)
+mas:0	master station index
+ipas:1	ignore password (bool)
+pwd:"b3BlbmRvb3I=" encoded password (default 'opendoor' shown here)
+loc:""	location (for weather) - not used
+rdst:0	rain delay stop time (unix time stamp)
+rs:0	rain sensed (bool)
+nopts:14 Number of optiions to be displayed
+name:"OpenSprinkler Pi"	configurable name for system
+snlen:32 max size of station names
+
+for scheduling:
+bsy:0	program buisy
+mnp:32	maximum number of programs (disregard on OSPi)
+nprogs:0 number of programs (can be calculated form length of prog array)
+mo:[0] master operation bytes - contains bits per board for stations with master set
+ir:[0] ignore rain bytes - contains bits per board for stations to ignore rain delay and rain sensor
+rsn:0 Reset all stations
+nst:8 number of stations
+
+for logging:
+lg:0 log runs if = "checked"
+lr:100 limit number of log records to keep, 0 = no limit
+
+other gv attributes:
+gv.ver	firmware rev number (int, based on firmware version this program was ported from)
+gv.rev	release number of this program (int)
+gv.revdate	date of release (string)
+gv.now	current time, updated once per second at top of timing loop
+gv.srvals	shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
+gv.rovals	run once values - list of duration times in seconds for a run once program (list, length = number of statons)
+gv.pd	program data - loaded from file at startup (list of lists)
+gv.ps	program schedule used for UI display (list of 2 element lists i.e. [program number, duration])
+gv.pon	program on (Holds program number of currently running program)
+gv.sbits	station bits, used to display stations that are on in UI (list of bytes, one byte per board)
+gv.rs	run schedule (list [scheduled start time, scheduled stop time, duration, program index])
+gv.lrun	last run, used to display log line on home page (list [station index, program number, duration, end time]) 
+gv.scount	station count (not used -- dead code ????)
+gv.snames	station names, loaded from 'snames.txt' file (string)
