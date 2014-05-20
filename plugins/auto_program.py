@@ -72,7 +72,7 @@ def runAutoProgram():
         # if the data file doesn't exist, then create it with the blank data
         print "auto_program: no auto_settings.json file found, creating defaults"
         data = json.loads(u'{"days": ["Mon"], "restrict": "none", "startTimeHour": 0, "startTimeMin": 0, "enabled": 0, "simulate": "0"}')
-        data['daysWatched'] = daysWatched
+        data['daysWatched'] = 7
         if metrics==englishmetrics: data['metrics']="english"
         elif metrics==metricmetrics: data['metrics']="metric"
         with io.open('./data/auto_settings.json', 'w', encoding='utf-8') as data_file:
@@ -260,7 +260,6 @@ def getZoneHistory(limit):
         logf = open('static/log/water_log.csv')
         for line in logf:
             log_line = line.strip().split(',') # parse log entry line
-            
             if log_line[0]=='Program': continue # skip first line
             
             #check date and break out if we're past our limit
@@ -268,6 +267,7 @@ def getZoneHistory(limit):
             delta = datetime.datetime.today()-datetime.datetime.strptime(end_date, " %a. %d %B %Y")
             if delta.days > limit: break
             z = int(log_line[1])-1 # zone number in log is 1-based
+            if z>gv.sd['nbrd']*8: continue      # skip log entry if zone # is bigger than the number of zones we have
             # otherwise, pull out the run duration and modify the zone list to include the seconds of run time
             m= re.search(r'(\d+)(?=m)', log_line[3])
             s= re.search(r'(\d+)(?=s)', log_line[3])
@@ -281,14 +281,18 @@ def getZoneHistory(limit):
 
 import wx_settings
     
-# call once on load for testing only
-#with io.open('./data/gv.json', 'w', encoding='utf-8') as data_file:
-#    data_file.write(unicode(json.dumps(gv.rs, ensure_ascii=False)))
-#    data_file.write(unicode(json.dumps(gv.ps, ensure_ascii=False)))
-#data_file.close()
-#runAutoProgram()
-with io.open(r'./data/auto_settings.json', 'r') as apdata_file: 
-    apdata = json.load(apdata_file)
-apdata_file.close()  
+try:
+    with io.open(r'./data/auto_settings.json', 'r') as apdata_file: 
+        apdata = json.load(apdata_file)
+    apdata_file.close()  
+except IOError:
+# if the data file doesn't exist, then create it with the blank data
+    apdata = json.loads(u'{"days": ["Mon"], "restrict": "none", "startTimeHour": 0, "startTimeMin": 0, "enabled": 0, "simulate": "0"}')
+    apdata['daysWatched'] = 7
+    if metrics==englishmetrics: apdata['metrics']="english"
+    elif metrics==metricmetrics: apdata['metrics']="metric"
+    with io.open('./data/auto_settings.json', 'w', encoding='utf-8') as apdata_file:
+        apdata_file.write(unicode(json.dumps(apdata, ensure_ascii=False)))
+        
 auto_job=sched.add_cron_job(runAutoProgram, hour=apdata['startTimeHour'], minute=apdata['startTimeMin']) # Run the plugin's function daily per setting
 print "auto_program: job scheduled", auto_job
