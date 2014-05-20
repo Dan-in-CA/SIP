@@ -10,11 +10,11 @@ except ImportError:
     print "Error: json module not found"
     sys.exit()
 
-import web # the Web.py module. See webpy.org (Enables the OpenSprinkler web interface)
+import web # the Web.py module. See webpy.org (Enables the Python OpenSprinkler web interface)
 from web import form
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
-from gpio_pins import *
-from urls import *
+from gpio_pins import * # provides access to Raspi GPIO pins
+from urls import * # Provides access to URLs for UI pages
 
 import random
 from hashlib import sha1
@@ -32,7 +32,8 @@ except ImportError:
 
 web.config.debug = False # Making this false improves UI responsiveness
 
- #### Revision information ####
+##############################
+#### Revision information ####
 gv.ver = 183
 gv.rev = 146
 gv.rev_date = '04/May/2014'
@@ -57,8 +58,8 @@ def baseurl():
 
 def check_rain():
     try:
-        if gv.sd['rst'] == 0:
-            if GPIO.input(pin_rain_sense):
+        if gv.sd['rst'] == 0: 
+            if GPIO.input(pin_rain_sense): # Rain detected
                 gv.sd['rs'] = 1
             else:
                 gv.sd['rs'] = 0
