@@ -74,7 +74,7 @@ class zone_settings:
             # print 'zone_settings: n=', n
             for k in sorted(wxdata['rainfall'], reverse=1):
                 n = n-1
-                if n==0: break
+                if n<0: break
                 rainfall_total += wxdata['rainfall'][str(k)]
             # print "rainfall_total=", rainfall_total
         except IOError:
