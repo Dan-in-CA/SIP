@@ -91,7 +91,10 @@ def runAutoProgram():
         with io.open(r'./data/wx_settings.json', 'r') as wxdata_file: 
             wxdata = json.load(wxdata_file)
         wxdata_file.close()  
+        n=daysWatched
         for k in sorted(wxdata['rainfall'], reverse=1):
+            n = n-1
+            if n==0: break
             rainfall_total += wxdata['rainfall'][str(k)]
     except IOError:
     # if no rainfall total, skip and keep going (assuming 0 rainfall)

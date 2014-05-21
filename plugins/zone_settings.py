@@ -63,14 +63,18 @@ class zone_settings:
             with io.open('./data/zone_settings.json', 'w', encoding='utf-8') as data_file:
                 data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
         zone_history = auto_program.getZoneHistory(auto_program.daysWatched)
-        # get rainfall total for past 7 days
+        # get rainfall total for past n days
         rainfall_total = 0
         try:
             # read data from the file, if it exists
             with io.open(r'./data/wx_settings.json', 'r') as wxdata_file: 
                 wxdata = json.load(wxdata_file)
             wxdata_file.close()  
+            n=auto_program.daysWatched
+            # print 'zone_settings: n=', n
             for k in sorted(wxdata['rainfall'], reverse=1):
+                n = n-1
+                if n==0: break
                 rainfall_total += wxdata['rainfall'][str(k)]
             # print "rainfall_total=", rainfall_total
         except IOError:
