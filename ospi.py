@@ -11,6 +11,7 @@ except ImportError:
     sys.exit()
 
 import web # the Web.py module. See webpy.org (Enables the Python OpenSprinkler web interface)
+web.config.debug = False # Improves page load speed
 from web import form
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
 from gpio_pins import * # provides access to Raspi GPIO pins
@@ -474,7 +475,6 @@ signin_form = form.Form(form.Password('password',
                         validators = [form.Validator("Incorrect password, please try again",
                                       lambda x: checkPassword(x.password, gv.sd['salt'], gv.sd['password'])) ])
 
-
 class login:
     """Login page"""
     def GET(self):
@@ -496,7 +496,6 @@ class logout:
     def GET(self):
         web.config._session.user = 'anonymous'
         raise web.seeother('/')
-
 
 ###########################
 #### Class Definitions ####
