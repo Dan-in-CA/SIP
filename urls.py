@@ -27,4 +27,4 @@ urls = [
     '/api/log', 'api_log',
     '/login', 'login',
     '/logout', 'logout'
-    ]
+]
