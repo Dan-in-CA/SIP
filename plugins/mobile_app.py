@@ -35,7 +35,6 @@ class station_state: # /js
         jstate = {"sn":gv.srvals, "nstations":gv.sd['nst']}
         return json.dumps(jstate)
 
-
 class program_info: # /jp
     """Returns program data as json."""
     def GET(self):
@@ -49,10 +48,10 @@ class program_info: # /jp
             lpd.append(op)
         progstr = ''
         for i, pro in enumerate(lpd): #gets both index and object
-            progstr += 'pd['+str(i)+']='+str(pro).replace(' ', '')+';'       
+            progstr += 'pd['+str(i)+']='+str(pro).replace(' ', '')+';'
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        jpinfo = {"nprogs":gv.sd['nprogs']-1,"nboards":gv.sd['nbrd'],"mnp":gv.sd['mnp'], 'pd': progstr} 
+        jpinfo = {"nprogs":gv.sd['nprogs']-1,"nboards":gv.sd['nbrd'],"mnp":gv.sd['mnp'], 'pd': progstr}
         return json.dumps(jpinfo)
 
 class station_info: # /jn

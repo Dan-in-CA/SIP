@@ -32,5 +32,5 @@ for name in glob(join(basedir, '*.py')):
                 print 'Ignoring exception while loading the {} plug-in.'.format(module)
                 print e # Provide feedback for plugin development
             else:
-                __all__.append(module)                     
+                __all__.append(module)
 __all__.sort()
