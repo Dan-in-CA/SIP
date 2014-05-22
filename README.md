@@ -12,42 +12,31 @@ UPDATES
 ===========
 ***********
 
+May 4 2014
+-----------
+(Dan)<br/>
+Changes, bug fixes:<br/>
+1. Program now explicitly sets all valves to off at startup. Fixes a bug that sometimes valves were on at program load.<br/>
+2. Fixed a bug that could freeze the program under certain conditions if a station name was blank.<br/>
+3. Changing station names would not be updated properly - Fixed.<br/>
+4. Changed how ospi.py handles time and date. Changes such as to or from daylight time are now automatic. Time zone setting it options no longer has an effect.<br/>
+5. Plugins must now have group permission set to executable in order to load. Allows plugins to be selectively enabled/disabled.<br/>
+6. Removed deprecated "ospi_addon.py" file from program directory. 
+
+April 4 2014
+-------------
+(Dan)<br/>
+New plugin architecture including a plugin to support Samer's new JavaScript app
+
 February 7 2014
 --------------
 (Dan)<br/>
-Added support for Rain sensor and partial support for relay on OSPi Rev. 1.3   
-
+Added support for Rain sensor and partial support for relay on OSPi Rev. 1.3.<br/> 
 
 November 12 2013
 --------------
 (Dan)<br/>
-Modified program to run on either OSPi or OSBo 
-
-November 11 2013
---------------
-(Dan)
-1. Fixed a bug in manual mode.<br/>
-2. Updated ospi.py to allow it to run on both RasPi and BBB platforms.<br/>
-3. Added Rain sensor functionality for BBB.
-
-November 9 2013
---------------
-(Jonathan)<br/>
-1. Made home page station status dynamic<br/>
-2. Added simple status API.
-
-November 3 2013
---------------
-(Jonathan)<br/>
-Added "Connected?" option to suppress unused stations from the display. 
-
-October 25 2013
---------------
-(Jonathan)<br/>
-1. Rewrote HTML generation to use web.py templates, for 1) easier readability and maintenance; 2) properly separate structure, style, 
-and behavior (jQuery); 3) add rudimentary theme capability to encourage UI variety an experimentation; and 4) reduce leakage between
-server-side details to client code.<br/>
-2. Set "theme" option to "basic" in sd.json and reboot to use an experimental theme.
+Modified program to run on either OSPi or OSBo<br/> 
 
 October 16 2013
 --------------
@@ -66,14 +55,14 @@ Additions, bug fixes:<br/>
 
 October 4 2013
 --------------
-(Jonathan)<br/>
+(jonathanmarsh)<br/>
 Additions, bug fixes:<br/>
 1. Improved options handling and passing logic<br/>
 2. Added a "System Name" option to help users distinguish between multiple systems<br/>
 3. Configurable station name length (increased default to 32)<br/>
 4. Added logging options to options page<br/>
 
-(Dan)
+(Dan)<br/>
 Additions, bug fixes:<br/>
 1. Moved RasPi specific code into try-except blocks allowing program to run on multiple platforms<br/>
 2. Added "write_options" function to create/update new style options.txt file in data directory.<br/>
