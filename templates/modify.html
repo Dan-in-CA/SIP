@@ -218,7 +218,13 @@ $code:
 					jQuery("#intervalSelector").trigger("click");
 				}
 			});
-			
+			jQuery("#tem,#teh,#tef").change(function(){
+				if (parseTime("te") < parseTime("ts")) {
+					jQuery("#nextday").show();
+				} else {
+					jQuery("#nextday").hide();
+				}
+			});
 			jQuery("button#cSubmit").click(function(){
 				var days = 0, dayInterval = 0, i, s, sid;
 				var en = jQuery("button#cProgramEnabled").hasClass("on") ? 1 : 0;
@@ -277,9 +283,7 @@ $code:
 					var interval = parseTime("ti");
 				}
 				if (startTime >= endTime) {
-					// Possible bug - can you run a program from 10PM to 2AM?
-					alert("Error: Start time must be prior to end time.");
-					return;
+					endTime += 24*60;  // Values over 24 hours indicate programs extending into following day.
 				}
 				
 				var v = "[" + en + "," + days + "," + dayInterval + "," + startTime + "," + endTime + "," + interval + "," + duration;
@@ -350,7 +354,8 @@ $code:
 									<p><b>Every:</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tih" value="${twoDigits(program[5]/60)}"> : 
 									<input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tim" value="${twoDigits(program[5]%60)}"> (hh:mm)</p>
 									<p>
-									$ t = formatTime(twoDigits(program[4]/60) + ":" + twoDigits(program[4]%60))
+									$ e = program[4] if program[4]<24*60 else program[4]-24*60
+									$ t = formatTime(twoDigits(e/60) + ":" + twoDigits(e%60))
 										<b>Until:</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="teh" value="${t.split(":")[0]}"> : 
 										<input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tem" value="${t.split(":")[1][0:2]}">
 									$if tf:
@@ -360,7 +365,7 @@ $code:
 											<option ${"selected" if t.find("am")>=0 else ""}>AM</option>
 											<option ${"selected" if t.find("pm")>=0 else ""}>PM</option>
 										</select>
-									</p>
+									<span id="nextday" $:{"style='display:none'" if program[4]<24*60 else ""}> (next day)</span></p>
 								</div>
 							</div>
 							<p><button id="cWeeklyInterval" class="toggle choice ${'on' if weekly else 'off'}"><span class='toggleleft'>Weekly</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Interval</span></button></p>

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import re, os, time, base64, thread, sys # standard Python modules
+import re, os, time, datetime, base64, thread, sys # standard Python modules
 try:
     import json
 except ImportError:
@@ -1109,15 +1109,26 @@ class api_log:
     def GET(self):
         verifyLogin()
         qdict = web.input()
+        thedate = qdict['date']
+        # date parameter filters the log values returned; "yyyy-mm-dd" format
+        theday = datetime.date(*map(int, thedate.split('-')))
+        prevday = theday - datetime.timedelta(days=1)
+        prevdate = prevday.strftime('%Y-%m-%d')
 
         records = read_log()
         data = []
         
         for r in records:
             event = json.loads(r)
-            if not(qdict.has_key('date')) or event['date'] == qdict['date']:
+            
+            # return any records starting on this date
+            if not(qdict.has_key('date')) or event['date'] == thedate:
                 data.append(event)
- 
+            # also return any records starting the day before and completing after midnight
+            if event['date'] == prevdate:
+            	if int(event['start'].split(":")[0])*60 + int(event['start'].split(":")[1]) + int(event['duration'].split(":")[0]) > 24*60:
+                	data.append(event)
+            
         web.header('Content-Type', 'application/json')
         return json.dumps(data)
 
