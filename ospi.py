@@ -988,15 +988,7 @@ class view_log:
     def GET(self):
         verifyLogin()
         records = read_log()
-        snames = data('snames')
-        zones = re.findall(r"\'(.+?)\'",snames)
 
-        for r in records:
-            event = json.loads(r)
-            try:
-                event["program"] = zones[int(event["program"])].decode('unicode-escape')
-            except ValueError:
-                pass
         gv.baseurl = baseurl()
         gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data, 'json': json })
