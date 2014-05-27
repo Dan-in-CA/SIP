@@ -8,6 +8,7 @@ except ImportError:
         import Adafruit_BBIO.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Beagle Bone Black
         gv.platform = 'bo'
     except ImportError:
+        gv.platform = '' # if no platform, allows program to still run.
         print 'No GPIO module was loaded from GPIO Pins module'
 
 try:

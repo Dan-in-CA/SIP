@@ -89,8 +89,12 @@ def clear_mm():
 def CPU_temperature():
     """Returns the temperature of the Raspberry Pi's CPU."""
     try:
-        res = os.popen('vcgencmd measure_temp').readline()
-        return(res.replace("temp=","").replace("'C\n",""))
+        if gv.platform == 'bo':
+            res = os.popen('cat /sys/class/hwmon/hwmon0/device/temp1_input').readline()
+            return (str(int(float(res)/1000)))
+        else:
+            res = os.popen('vcgencmd measure_temp').readline()
+            return(res.replace("temp=","").replace("'C\n",""))
     except:
         pass
 
