@@ -50,6 +50,7 @@ urls = [
     '/mp', 'modify_program',
     '/cp', 'change_program',
     '/dp', 'delete_program',
+    '/ep', 'enable_program',
     '/vl', 'view_log',
     '/cl', 'clear_log',
     '/rp', 'run_now',
@@ -975,11 +976,20 @@ class delete_program:
         qdict = web.input()
         if qdict['pid'] == '-1':
             del gv.pd[:]
-            jsave(gv.pd, 'programs')
         else:    
             del gv.pd[int(qdict['pid'])]
         jsave(gv.pd, 'programs')
         gv.sd['nprogs'] = len(gv.pd)
+        raise web.seeother('/vp')
+        return
+                          
+class enable_program:
+    """Activate an existing program(s)."""
+    def GET(self):
+        verifyLogin()
+        qdict = web.input()
+        gv.pd[int(qdict['pid'])][0] = int(qdict['enable'])
+        jsave(gv.pd, 'programs')
         raise web.seeother('/vp')
         return
                           
