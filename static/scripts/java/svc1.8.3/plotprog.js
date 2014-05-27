@@ -32,7 +32,7 @@ function check_match(prog,simminutes,simdate,simday) {
       else if ((dt%2)!=1) return 0;
     }
   }
-  if(simminutes<prog[3] || simminutes>prog[4])  return 0; // start and end time checking
+  if(simminutes<prog[3] || simminutes>=prog[4])  return 0; // start and end time checking
   if(prog[5]==0)  return 0;
   if(((simminutes-prog[3])/prog[5]>>0)*prog[5] == (simminutes-prog[3])) { // interval checking
     return 1;
