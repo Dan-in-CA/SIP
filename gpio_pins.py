@@ -8,6 +8,7 @@ except ImportError:
         import Adafruit_BBIO.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Beagle Bone Black
         gv.platform = 'bo'
     except ImportError:
+        gv.platform = '' # if no platform, allows program to run.
         print 'No GPIO module was loaded from GPIO Pins module'
 
 try:
@@ -31,7 +32,7 @@ try:
         pin_sr_noe = "P9_14"
         pin_sr_lat = "P9_12"
         pin_rain_sense = "P9_15"
-        pin_relay = "P9_16"   
+        pin_relay = "P9_16"
 except AttributeError:
     pass
 #### setup GPIO pins as output or input ####
@@ -52,14 +53,14 @@ def enableShiftRegisterOutput():
     except NameError:
         pass
      
- 
+
 def disableShiftRegisterOutput():
     """Disable output from shift register."""
     try:
         GPIO.output(pin_sr_noe, GPIO.HIGH)
     except NameError:
-        pass    
- 
+        pass
+
 def setShiftRegister(srvals):
     """Set the state of each output pin on the shift register from the srvals list."""
     try:
@@ -74,7 +75,7 @@ def setShiftRegister(srvals):
             GPIO.output(pin_sr_clk, GPIO.HIGH)
         GPIO.output(pin_sr_lat, GPIO.HIGH)
     except NameError:
-        pass 
+        pass
 
 def set_output():
     """Activate triacs according to shift register state."""
