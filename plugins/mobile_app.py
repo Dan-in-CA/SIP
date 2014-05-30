@@ -112,6 +112,9 @@ class login: # /mlogin
     def POST(self):
         qdict = web.input()
 
+        web.header('Access-Control-Allow-Origin', '*')
+        web.header('Content-Type', 'application/json')
+
         if not(qdict.has_key('password')):
             return []
 
