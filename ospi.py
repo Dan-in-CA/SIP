@@ -548,6 +548,7 @@ def checkLogin():
 
 def verifyLogin():
     qdict = web.input()
+    true = True
 
     try:
         if gv.sd['ipas'] == 1:
