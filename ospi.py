@@ -550,15 +550,14 @@ def verifyLogin():
     qdict = web.input()
     true = True
 
-    try:
-        if gv.sd['ipas'] == 1:
-            return true
-        if web.config._session.user == 'admin':
-            return true
-        if qdict.has_key('password') and gv.sd['password'] == sha1(qdict['password'] + gv.sd['salt']).hexdigest():
-            return true
-    except KeyError:
-        raise web.unauthorized()
+    if gv.sd['ipas'] == 1:
+        return True
+    if web.config._session.user == 'admin':
+        return True
+    if qdict.has_key('pw') and gv.sd['password'] == sha1(qdict['pw'] + gv.sd['salt']).hexdigest():
+        return True
+
+    raise web.unauthorized()
 
 signin_form = form.Form(form.Password('password',
                                       description='Password:'),
