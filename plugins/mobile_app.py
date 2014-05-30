@@ -2,12 +2,11 @@ import web, json, re
 import ast, time, datetime, string
 import gv # Gain access to ospi's settings
 from urls import urls # Gain access to ospi's URL list
-from hashlib import sha1
 
 ##############
 ## New URLs ##
 
-urls.extend(['/jo', 'plugins.mobile_app.options', '/jc', 'plugins.mobile_app.cur_settings', '/js', 'plugins.mobile_app.station_state','/jp', 'plugins.mobile_app.program_info', '/jn', 'plugins.mobile_app.station_info', '/jl', 'plugins.mobile_app.get_logs', '/mlogin', 'plugins.mobile_app.login'])
+urls.extend(['/jo', 'plugins.mobile_app.options', '/jc', 'plugins.mobile_app.cur_settings', '/js', 'plugins.mobile_app.station_state','/jp', 'plugins.mobile_app.program_info', '/jn', 'plugins.mobile_app.station_info', '/jl', 'plugins.mobile_app.get_logs'])
 
 #######################
 ## Class definitions ##
