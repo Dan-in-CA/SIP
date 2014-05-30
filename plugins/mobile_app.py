@@ -104,25 +104,6 @@ class get_logs: # /jl
         except IOError:
             return []
 
-class login: # /mlogin
-    """Logs the user in and returns the session ID"""
-    def POST(self):
-        qdict = web.input()
-
-        web.header('Access-Control-Allow-Origin', '*')
-        web.header('Content-Type', 'application/json')
-
-        if not(qdict.has_key('password')):
-            return []
-
-        if gv.sd['password'] == sha1(qdict['password'] + gv.sd['salt']).hexdigest():
-            web.config._session.user = 'admin'
-            data = {"id":web.config._session.session_id}
-        else:
-            data = {"error":401}
-
-        return json.dumps(data)
-
 def data(dataf):
     """Return contents of requested text file as string or create file if a missing config file."""
     try:

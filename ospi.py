@@ -547,11 +547,17 @@ def checkLogin():
         pass
 
 def verifyLogin():
+    qdict = web.input()
+
     try:
-        if gv.sd['ipas'] == 0 and web.config._session.user != 'admin':
-            raise web.unauthorized()
+        if gv.sd['ipas'] == 1:
+            return true
+        if web.config._session.user == 'admin':
+            return true
+        if qdict.has_key('password') and gv.sd['password'] == sha1(qdict['password'] + gv.sd['salt']).hexdigest():
+            return true
     except KeyError:
-        pass
+        raise web.unauthorized()
 
 signin_form = form.Form(form.Password('password',
                                       description='Password:'),
