@@ -14,7 +14,9 @@ $code:
 	
 	snames = eval(data('snames'))
 	if pid < 0:
-		program = [1, 127, 4, 360, 1080, 240, 900, 1]
+		program = [1, 127, 4, 360, 1080, 240, 900] # does not include station bytes(program[7+].
+		for brd in range(gv.sd['nbrd']):
+			program.extend([0]) # add bytes per number of boards.
 	else:
 		program = eval(prog)
 	weekly = not((program[1]&0x80) and (program[2]>1))
