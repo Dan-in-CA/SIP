@@ -57,10 +57,7 @@ class station_info: # /jn
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        f = open('./data/snames.txt', 'r')
-        names = f.read()
-        f.close()
-#        nlst = ast.literal_eval(names) # Convert names var to string (alternative method)
+        names = data('snames')
         nlst = re.findall('[\'|"](.*?)[\'|"]', names) # Convert names var to string
         jpinfo = {"snames":nlst,"ignore_rain":gv.sd['ir'],"masop":gv.sd['mo'],"maxlen":gv.sd['snlen']}
         return json.dumps(jpinfo)
@@ -105,3 +102,19 @@ class get_logs: # /jl
             return records
         except IOError:
             return []
+
+def data(dataf):
+    """Return contents of requested text file as string or create file if a missing config file."""
+    try:
+        f = open('./data/'+dataf+'.txt', 'r')
+        data = f.read()
+        f.close()
+    except IOError:
+        if dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
+            data = "['S1','S2','S3','S4','S5','S6','S7','S8',]"
+            f = open('./data/'+dataf+'.txt', 'w')
+            f.write(data)
+            f.close()
+        else:
+            return None
+    return data
