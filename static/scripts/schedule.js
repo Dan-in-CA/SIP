@@ -110,7 +110,7 @@ function toClock(duration, tf) {
 	var h = Math.floor(duration/60);
 	var m = Math.floor(duration - (h*60));
 	if (tf == 0) {
-		return (h>12 ? h-12 : h) + ":" + (m<10 ? "0" : "") + m + (h>12 ? "pm" : "am");
+		return (h>12 ? h-12 : h) + ":" + (m<10 ? "0" : "") + m + (h<12 ? "am" : "pm");
 	} else {
 		return (h<10 ? "0" : "") + h + ":" + (m<10 ? "0" : "") + m;
 	}
