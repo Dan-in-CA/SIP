@@ -106,7 +106,7 @@ $def with(data, zone_history, rainfall_total, metrics, daysWatched)
 	$#$json.dumps(data, indent=4, sort_keys=True)
 		<form class="names" action="/uzone" method="get">
 			<table>
-			<tr><th colspan=7></th><th colspan=5>H I S T O R Y</th></tr>
+			<tr><th colspan=7></th><th colspan=5>$daysWatched D A Y &nbsp;  H I S T O R Y</th></tr>
 			<tr><th>#</th><th width=300>Station Name</th><th>Automated</th><th>Irrigation Type</th><th>Precipitation Rate</th>
 			<th>Water Needed<br />(per $daysWatched days)</th><th>Max water before runoff</th><th>Run Time<br />(minutes)</th><th>Amount Irrigated<br />($metrics[2])</th>
 			<th>Amount Needed<br />($metrics[2])</td><th>Duration Needed<br />(minutes)</th><th>Duration next run<br />(minutes)</th></tr>

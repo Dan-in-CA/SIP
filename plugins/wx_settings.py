@@ -65,14 +65,15 @@ def getDailyRainfall():
             if data['wx']['useWU']:
                 data['rainfall'][str(d)] = getWUHistoryRain(dstr, data['wx']['apikey'],data['wx']['pws'])
             else: data['rainfall'][str(d)]=0.0
-        with io.open('./data/wx_settings.json', 'w', encoding='utf-8') as data_file:
-            data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
     
     # delete entries older than 14 days from memory, we're only using 2nd week for display
     oldest = t-datetime.timedelta(days=auto_program.daysWatched)
+    # print "getDailyRainfall: oldest=", oldest
     for k, val in data['rainfall'].items():
         if datetime.datetime.strptime(k,"%Y-%m-%d").date() < oldest:
             del data['rainfall'][k]
+    with io.open('./data/wx_settings.json', 'w', encoding='utf-8') as data_file:
+        data_file.write(unicode(json.dumps(data, ensure_ascii=False)))
     
     return
 
