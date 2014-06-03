@@ -17,11 +17,13 @@ $code:
 	
 	def pdays(days, dayInterval):
 		output = ""
-		if (days&0x80) and (dayInterval>1): # this is an interval program 
+		if (days&0x80) and (dayInterval>1): # this is an interval program
 			days = days&0x7f
+			dse = int(gv.now/86400) # days since epoc
+			daysRemaining = ((days + dayInterval)-(dse % dayInterval)) % dayInterval
 			output += "Every " + str(dayInterval) + " days"
 			if days > 0:
-				output += ", starting in " + str(days) + " days."
+				output += ", starting in " + str(daysRemaining) + " days."
 		else: # this is a weekly program 
 			if days == 127:
 				output += "Every Weekday"
