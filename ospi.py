@@ -215,7 +215,7 @@ def timing_loop():
     print 'Starting timing loop \n'
     last_min = 0
     while True: # infinite loop
-        gv.now = timegm(time.localtime()) #time.time()+((gv.sd['tz']/4)-12)*3600 # Current time based on UTC time from the Pi adjusted by the Time Zone setting from options. updated once per second.
+        gv.now = timegm(time.localtime()) # Current time based on local time from the Pi. updated once per second.
         if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']):
             lt = time.gmtime(gv.now)
             if (lt[3]*60)+lt[4] != last_min: # only check programs once a minute
@@ -418,7 +418,7 @@ gv.sd = ({u"en": 1, u"seq": 1, u"mnp": 32, u"ir": [0], u"rsn": 0, u"htp": 8080, 
 
 gv.sd['salt'] = passwordSalt()
 gv.sd['password'] = passwordHash('opendoor', gv.sd['salt'])
-# note old passwords stored in the "pwd" option will be lost - reverts to default password
+# note old passwords stored in the "pwd" option will be lost - reverts to default password.
 
 try:
     sdf = open('./data/sd.json', 'r') ## A config file ##
@@ -432,7 +432,7 @@ except IOError: # If file does not exist, it will be created created using defau
     json.dump(gv.sd, sdf)
     sdf.close()
 
-gv.now = timegm(time.localtime()) #time.time()+((gv.sd['tz']/4)-12)*3600
+gv.now = timegm(time.localtime())
 
 gv.srvals = [0]*(gv.sd['nst']) #Shift Register values
 
@@ -892,12 +892,6 @@ class view_log:
         snames = data('snames')
         zones = re.findall(r"\'(.+?)\'",snames)
 
-        for r in records:
-            event = json.loads(r)
-            try:
-                event["program"] = zones[int(event["program"])].decode('unicode-escape')
-            except ValueError:
-                pass
         gv.baseurl = baseurl()
         gv.cputemp = CPU_temperature()
         render = web.template.render('templates', globals={ 'gv': gv, 'str': str, 'eval': eval, 'data': data, 'json': json })
@@ -911,17 +905,6 @@ class clear_log:
         f = open('./data/log.json', 'w')
         f.write('')
         f.close
-        raise web.seeother('/vl')
-
-class log_options:
-    """Set log options from dialog."""
-    def GET(self):
-        verifyLogin()
-        qdict = web.input()
-        if qdict.has_key('log'): gv.sd['lg'] = 1
-        else: gv.sd['lg'] = 0
-        gv.sd['lr'] = int(qdict['nrecords'])
-        jsave(gv.sd, 'sd')
         raise web.seeother('/vl')
 
 class run_now:
@@ -1030,13 +1013,24 @@ class api_log:
     def GET(self):
         verifyLogin()
         qdict = web.input()
+		thedate = qdict['date']
+		# date parameter filters the log values returned; "yyyy-mm-dd" format
+		theday = datetime.date(*map(int, thedate.split('-')))
+		prevday = theday - datetime.timedelta(days=1)
+		prevdate = prevday.strftime('%Y-%m-%d')
 
         records = read_log()
         data = []
 
         for r in records:
             event = json.loads(r)
-            if not(qdict.has_key('date')) or event['date'] == qdict['date']:
+			
+			# return any records starting on this date
+			if not(qdict.has_key('date')) or event['date'] == thedate:
+				data.append(event)
+			# also return any records starting the day before and completing after midnight
+			if event['date'] == prevdate:
+				if int(event['start'].split(":")[0])*60 + int(event['start'].split(":")[1]) + int(event['duration'].split(":")[0]) > 24*60:
                 data.append(event)
 
         web.header('Content-Type', 'application/json')
