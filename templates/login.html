@@ -19,6 +19,10 @@ $def with (form)
 		var timeFormat = ${gv.sd['tf']};
 		var cputemp = "${gv.cputemp}";
 		var tempunit = "${gv.sd['tu']}";
+		
+		jQuery(document).ready(function(){
+			jQuery("#password").focus();
+		});
 	</script>
 	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
 </head>

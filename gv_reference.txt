@@ -14,6 +14,7 @@ mton:0	master on delay
 mtoff:0	master off delay
 nbrd:1	number of boards (includes base unit and expansion boards)
 tz:16	time zone
+tf:1	time format (24 hour clock == 1)
 urs:0	use rain sensor (bool)
 rst:1	Rain sensor type (normaly open=1 (dafault), or normaly closed=0)
 wl:100	water level (percent adjustment of watering time)
@@ -39,6 +40,10 @@ nst:8 number of stations
 for logging:
 lg:0 log runs if = "checked"
 lr:100 limit number of log records to keep, 0 = no limit
+
+UI related:
+name: u"OpenSprinkler Pi" System name. can be used to manage multiple controllers
+theme: "original" files used to style the UItyle the UI
 
 other gv attributes:
 gv.ver	firmware rev number (int, based on firmware version this program was ported from)

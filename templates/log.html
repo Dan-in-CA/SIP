@@ -1,6 +1,7 @@
 $def with (records)
 
 $code:
+	snames = eval(data('snames'))
 	if gv.sd['lg'] == 1:
 		log_state = "Enabled"
 		log_option = "checked"
@@ -56,13 +57,6 @@ $code:
 			jQuery("button#nDeleteAll").click(function(){
 				jQuery("form#df").submit();
 			});
-			jQuery("button#nLogOptions,button#oCancel").click(function(){
-				jQuery("#overlay").toggle();
-			});
-			jQuery("button#oSubmit").click(function(){
-				jQuery("form#logopts").submit();
-				jQuery("#overlay").toggle();
-			});
 		});
 
 	</script>
@@ -100,14 +94,14 @@ $code:
 				</div>
 				
 				<div id="log">
-					<p>Total number of records: ${len(records)}</p>
+					<p>Total number of records: ${len(records)} (${"no" if gv.sd['lr']==0 else gv.sd['lr']} limit)</p>
 					<p>Download log as <a href="/wl">csv</a>.</p>
 					
 					<table class="logList">
 						<tr class="log_rec">
 							<th>Date</th>
 							<th>Start Time</th>
-							<th>Zone</th>
+							<th>Station</th>
 							<th>Duration</th>
 							<th>Program</th>
 						</tr>
@@ -117,7 +111,7 @@ $code:
 							<tr class="log_rec ${'odd' if odd else 'even'}">
 								<td align='center'>${event["date"]}</td>
 								<td align='center'>${formatTime(event["start"])}</td>
-								<td align='center'>${event["station"]}</td>
+								<td align='center'>${snames[event["station"]]}</td>
 								<td align='center'>${event["duration"]}</td>
 								<td align='center'>${event["program"]}</td>
 							</tr>
@@ -128,24 +122,9 @@ $code:
 				
 				<div id="controls">
 					<button id="nRefresh" class="refresh">Refresh</button>
-					<button id="nDeleteAll" class="delete danger">Delete All</button>
-					<button id="nLogOptions" class="options">Log Options</button>
+					<button id="nDeleteAll" class="delete danger">Clear Log</button>
 				</div>
 				
-			</div>
-		</div>
-		
-		<div id="overlay">
-			<div>
-				<form id="logopts" action="/lo" method="get">
-					<h2>Log Options</h2>
-					<label for="log">Enable Logging</label>
-					<input type="checkbox" id="log" name="log" $log_option ><br>
-					<label for="nrecords">Maximum records to keep:</label>
-					<input type="text" size="4" value="$gv.sd['lr']" id="nrecords" name="nrecords">(0 = no limit)<br>
-					<button id="oSubmit" class="submit icon">Submit</button>
-					<button id="oCancel" class="cancel icon">Cancel</button>
-				</form>
 			</div>
 		</div>
 		
