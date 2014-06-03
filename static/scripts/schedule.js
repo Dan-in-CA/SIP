@@ -1,3 +1,33 @@
+function checkDay(days, dayInterval, simdate) {
+	if ((days&0x80) && (dayInterval>1)) {	// inverval checking
+		var simday = Math.floor(simdate/(24*60*60*1000));
+		if ((simday % dayInterval) != (days&0x7f))  {
+			return false; // remainder checking
+		}
+	} else {
+		var weekday = (simdate.getDay()+6)%7; // getDay assumes sunday is 0, converts to Monday 0
+		if ((days & (1<<weekday)) == 0) {
+			return false; // weekday checking
+		}
+		var date = simdate.getDate(); // day of the month
+		if ((days&0x80) && (dayInterval == 0)) { // even day checking
+			if ((date%2) !=0)	{
+				return false;
+			}
+		}
+		if ((days&0x80) && (dayInterval == 1)) { // odd day checking
+			if (date==31) {
+				return false;
+			} else if (date==29 && simdate.getUTCMonth()==1) {
+				return false;
+			} else if ((date%2)==1) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 function checkMatch(programs, simdate) {
 	// simdate is Java date object, simday is the #days since 1970 01-01
 	var run = [];
@@ -13,31 +43,36 @@ function checkMatch(programs, simdate) {
 		if (enabled == 0 || duration == 0) {
 			continue;
 		}
-		if ((days&0x80) && (dayInterval>1)) {	// inverval checking
-			var simday = Math.floor(simdate/(24*60*60*1000));
-			if ((simday % dayInterval) != (days&0x7f))  {
-				continue; // remainder checking
+		// Catch programs starting the previous day and spilling over into today
+		if (endTime > 24*60) {
+			if (checkDay(days, dayInterval, new Date(simdate.getTime() - 24*60*60*1000))) {
+				var timer = startTime;
+				do {
+					var programTimer = timer;
+					for (bid=0; bid<nbrd; bid++) {
+						for (s=0; s<8; s++) {
+							var sid = bid*8 + s;
+							if (mas == (sid+1)) continue; // skip master station
+							if (prog[7+bid]&(1<<s)) {
+								if (programTimer + duration/60 >= 24*60) {
+									run.push({
+										program: (parseInt(p) + 1).toString(),
+										station: sid,
+										start: programTimer-24*60,
+										duration: duration,
+										label: toClock(startTime, timeFormat) + " for " + toClock(duration, 1)
+									});
+								}
+								programTimer += duration/60;
+							}
+						}
+					}
+					timer += interval;
+				} while (timer < endTime);				
 			}
-		} else {
-			var weekday = (simdate.getDay()+6)%7; // getDay assumes sunday is 0, converts to Monday 0
-			if ((days & (1<<weekday)) == 0) {
-				continue; // weekday checking
-			}
-			var date = simdate.getDate(); // day of the month
-			if ((days&0x80) && (dayInterval == 0)) { // even day checking
-				if ((date%2) !=0)	{
-					continue;
-				}
-			}
-			if ((days&0x80) && (dayInterval == 1)) { // odd day checking
-				if (date==31) {
-					continue;
-				} else if (date==29 && simdate.getUTCMonth()==1) {
-					continue;
-				} else if ((date%2)==1) {
-					continue;
-				}
-			}
+		}
+		if (!checkDay(days, dayInterval, simdate)) {
+			continue;
 		}
 		var timer = startTime;
 		do {
@@ -51,7 +86,8 @@ function checkMatch(programs, simdate) {
 							program: (parseInt(p) + 1).toString(),
 							station: sid,
 							start: programTimer,
-							duration: duration
+							duration: duration,
+							label: toClock(startTime, timeFormat) + " for " + toClock(duration, 1)
 						});
 						programTimer += duration/60;
 					}
@@ -70,10 +106,14 @@ function toXSDate(d) {
 	return r;
 }
 
-function toClock(duration) {
+function toClock(duration, tf) {
 	var h = Math.floor(duration/60);
 	var m = Math.floor(duration - (h*60));
-	return (h<10 ? "0" : "") + h + ":" + (m<10 ? "0" : "") + m;
+	if (tf == 0) {
+		return (h>12 ? h-12 : h) + ":" + (m<10 ? "0" : "") + m + (h<12 ? "am" : "pm");
+	} else {
+		return (h<10 ? "0" : "") + h + ":" + (m<10 ? "0" : "") + m;
+	}
 }
 
 function fromClock(clock) {
@@ -127,7 +167,7 @@ function displaySchedule(schedule) {
 						}
 						programClassesUsed[schedule[s].program] = programClass;
 						var markerClass = (schedule[s].date == undefined ? "schedule" : "history");
-						boxes.append("<div class='scheduleMarker " + programClass + " " + markerClass + "' style='left:" + barStart*100 + "%;width:" + barWidth*100 + "%' title='" + programName(schedule[s].program) + ": " + toClock(schedule[s].start) + " for " + toClock(schedule[s].duration) + "'></div>");
+						boxes.append("<div class='scheduleMarker " + programClass + " " + markerClass + "' style='left:" + barStart*100 + "%;width:" + barWidth*100 + "%' data='" + programName(schedule[s].program) + ": " + schedule[s].label + "'></div>");
 					}
 				}
 			}
@@ -158,10 +198,15 @@ function displayProgram() {
 		var schedule = checkMatch(prog, displayScheduleDate);
 		displaySchedule(schedule);
 	} else {
-		jQuery.getJSON("/api/log?date=" + toXSDate(displayScheduleDate), function(log) {
+		var visibleDate = toXSDate(displayScheduleDate);
+		jQuery.getJSON("/api/log?date=" + visibleDate, function(log) {
 			for (var l in log) {
 				log[l].duration = fromClock(log[l].duration);
 				log[l].start = fromClock(log[l].start)/60;
+				if (log[l].date != visibleDate) {
+					log[l].start -= 24*60;
+				}
+				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
 			}
 			if (toXSDate(displayScheduleDate) == toXSDate(new Date())) {
 				var schedule = checkMatch(prog, displayScheduleDate);
@@ -176,7 +221,7 @@ function displayProgram() {
 jQuery(document).ready(displayProgram);
 
 function scheduleMarkerMouseover() {
-	var description = jQuery(this).attr("title");
+	var description = jQuery(this).attr("data");
 	var markerClass = jQuery(this).attr("class");
 	markerClass = markerClass.substring(markerClass.indexOf("program"));
 	markerClass = markerClass.substring(0,markerClass.indexOf(" "));
