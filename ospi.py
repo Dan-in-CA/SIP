@@ -322,7 +322,7 @@ def data(dataf):
     """Return contents of requested text file as string or create file if a missing config file."""
     try:
         f = open('./data/'+dataf+'.txt', 'r')
-        data = f.read()
+        data = f.read().strip()
         f.close()
     except IOError:
         if dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
