@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import re, os, time, datetime, thread, sys # standard Python modules # base64,
+import re, os, time, datetime, thread, pickle, sys # standard Python modules # base64,
 from calendar import timegm
 try:
     import json
@@ -20,16 +20,16 @@ from urls import * # Provides access to URLs for UI pages
 import random
 from hashlib import sha1
 
-try:
-    import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
-    gv.platform = 'pi'
-except ImportError:
-    try:
-        import Adafruit_BBIO.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Beagle Bone Black
-        gv.platform = 'bo'
-    except ImportError:
-        print 'No GPIO module was loaded'
-        pass
+# try:
+#     import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
+#     gv.platform = 'pi'
+# except ImportError:
+#     try:
+#         import Adafruit_BBIO.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Beagle Bone Black
+#         gv.platform = 'bo'
+#     except ImportError:
+#         print 'No GPIO module was loaded'
+#         pass
 
 web.config.debug = False # Making this false improves UI responsiveness
 
