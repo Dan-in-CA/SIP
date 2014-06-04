@@ -14,7 +14,7 @@ import web # the Web.py module. See webpy.org (Enables the Python OpenSprinkler 
 web.config.debug = False # Improves page load speed
 from web import form
 import gv # 'global vars' An empty module, used for storing vars (as attributes), that need to be 'global' across threads and between functions and classes.
-from gpio_pins import * # provides access to Raspi GPIO pins
+from gpio_pins import * # provides access to GPIO pins
 from urls import * # Provides access to URLs for UI pages
 
 import random
@@ -39,7 +39,6 @@ gv.rev_date = '03/June/2014'
 
 ##############################
 #### Function Definitions ####
-  
 
 def baseurl():
     """Return URL app is running under."""
