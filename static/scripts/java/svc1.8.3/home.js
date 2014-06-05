@@ -12,7 +12,7 @@ function setrd(form,idx) {var h=prompt("Enter hours to delay","0");if(h!=null){f
 function imgstr(s) {return "<img src=\""+baseurl+"/static/images/icons/svc_"+s+".png\" height=20 align=absmiddle>&nbsp;";}
 function datestr(t) {var _t=sd['tz']-48; return (new Date(t)).toUTCString()+((_t>=0)?"+":"-")+(Math.abs(_t)/4>>0)+":"+((Math.abs(_t)%4)*15/10>>0)+((Math.abs(_t)%4)*15%10);}
 // raspi CPU temp unit
-function toggle(form) {form.elements[0].value=tempunit;form.submit();}
+function toggle(form) {form.elements[0].value=sd['tu'];form.submit();}
 w("<form name=tt action=ttu method=get><input type=hidden name=tunit></form>");
 function bluebg(heat){
 heat.style.backgroundColor='lightblue';}
@@ -32,8 +32,8 @@ if(ver>=100) w("<b>Firmware version</b>: "+(ver/100>>0)+"."+((ver/10>>0)%10)+"."
 else w("<b>Firmware version</b>: "+(ver/10>>0)+"."+(ver%10)+"<br>");
 w("<b>Device time</b>: "+datestr(devt*1000)+"<br>");
 
-if ((typeof cputemp !== 'undefined') && cputemp !== 0.0) {
-w("<b>CPU Temp</b>: <span id='heat' onmouseover='bluebg(this)' onmouseout='nobg(this)' style='cursor:pointer' onclick='toggle(tt)' title='Click to toggle Celsius <> Fahrenheit'>"+cputemp+"&deg;"+tempunit+"</span><hr>");
+if ((typeof ct !== 'undefined') && ct !== 0.0) {
+w("<b>CPU Temp</b>: <span id='heat' onmouseover='bluebg(this)' onmouseout='nobg(this)' style='cursor:pointer' onclick='toggle(tt)' title='Click to toggle Celsius <> Fahrenheit'>"+ct+"&deg;"+sd['tu']+"</span><hr>");
 }
 w("<script type=\"text/javascript\" src=\""+baseurl+"/static/scripts/java/svc1.8.3/"+((sd['mm'])?"manualmode.js":"progmode.js")+"\"></script>");
 // print status and other information

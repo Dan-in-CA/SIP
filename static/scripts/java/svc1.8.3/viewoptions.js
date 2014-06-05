@@ -69,6 +69,9 @@ for(oid=0;oid<opts.length;oid++){
     case "nbrd":
       w("<p title=\""+tooltip+"\"><b>"+label+":</b> <input type=text size=3 maxlength=3 value="+(value-1)+" name=o"+name+">");
       break;
+    case "tu":
+      w("<label title=\""+tooltip+"\">"+label+": <select name=o"+name+"><option value=C"+(value=='C'?" selected":"")+">Celsius</option><option value=F"+(value=='F'?" selected":"")+">Fahrenheit</option></select></label>");
+      break;
     default:
       w("<p title=\""+tooltip+"\"><b>"+label+":</b> <input type=text size=3 maxlength=3 value="+value+" name=o"+name+">");
     }
