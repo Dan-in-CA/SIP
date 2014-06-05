@@ -267,7 +267,7 @@ def getZoneHistory(limit):
             
             #check date and break out if we're past our limit
             end_date=log_line[5] # date program ended
-            delta = datetime.datetime.today()-datetime.datetime.strptime(end_date, " %a. %d %B %Y")
+            delta = datetime.datetime.today()-datetime.datetime.strptime(end_date, " %a. %d %b %Y")
             if delta.days > limit: break
             z = int(log_line[1])-1 # zone number in log is 1-based
             if z>gv.sd['nbrd']*8: continue      # skip log entry if zone # is bigger than the number of zones we have
