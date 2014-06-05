@@ -1,6 +1,6 @@
 // Set up a live clock based on device time
 
-var deviceTimeOffset = devt - (tz/4-12)*3600000 - Date.now();
+//var deviceTimeOffset = devt - (tz/4-12)*3600000 - Date.now();
 
 function dateString(d) {
 	var dateString = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][d.getDay()];

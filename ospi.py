@@ -442,6 +442,9 @@ for i in range(gv.sd['nst']):
 
 gv.lrun=[0,0,0,0] #station index, program number, duration, end time (Used in UI)
 
+gv.scount = 0 # Station count, used in set station to track on stations with master association.
+
+
   ########################
   #### Login Handling ####
 

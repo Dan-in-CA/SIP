@@ -46,7 +46,7 @@ $code:
 	<script>
 		// Variables set by ospi.py
 		var devt = ${gv.now}*1000;
-		var tz = ${gv.sd['tz']};
+		//var tz = ${gv.sd['tz']};
 		var timeFormat = ${tf};
 		var cputemp = "${gv.cputemp}";
 		var tempunit = "${gv.sd['tu']}";
@@ -67,11 +67,11 @@ $code:
 	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
 	<script>
 		// date/time formating helpers
-		var timezoneSuffix =
-			((tz-48>=0) ? "+" : "-") +
-			(Math.abs(tz-48)/4>>0) + ":" +
-			((Math.abs(tz-48)%4)*15/10>>0) +
-			((Math.abs(tz-48)%4)*15%10);
+		//var timezoneSuffix =
+			//((tz-48>=0) ? "+" : "-") +
+			//(Math.abs(tz-48)/4>>0) + ":" +
+			//((Math.abs(tz-48)%4)*15/10>>0) +
+			//((Math.abs(tz-48)%4)*15%10);
 		
 		function formatLogline(log) {
 			var lrsid = lrun[0], lrpid = lrun[1], lrdur = lrun[2], lret = lrun[3];
@@ -85,7 +85,7 @@ $code:
 			if (lrpid == 254 || lrpid == 98) {
 				pname = "Run Once Program";
 			}
-			var runDate = (new Date(lret*1000)).toUTCString() + timezoneSuffix;
+			var runDate = (new Date(lret*1000)).toUTCString()// + timezoneSuffix;
 			return snames[lrsid] + " ran " + pname + " for " + (lrdur/60>>0) + "m" + (lrdur%60) + "s on " + runDate;
 		}
 
@@ -226,7 +226,7 @@ $code:
 		function countdownTimer(timerId) {
 			var timerElement = jQuery("#" + timerId);
 			var timerValue = parseFloat(timerElement.attr("data"));
-			var remaining = timerValue - Date.now();
+			var remaining = timerValue - devt; //Date.now(); ######################
 			var rHours = Math.floor(remaining/3600000);
 			var rMinutes = Math.floor((remaining%3600000)/60000);
 			if (rHours <=0 && rMinutes <=0) {
