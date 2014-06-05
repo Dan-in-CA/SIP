@@ -85,7 +85,7 @@ $code:
 			if (lrpid == 254 || lrpid == 98) {
 				pname = "Run Once Program";
 			}
-			var runDate = (new Date(lret*1000)).toUTCString()// + timezoneSuffix;
+			var runDate = (new Date(lret*1000)).toUTCString()// + timezoneSuffix; //DK change
 			return snames[lrsid] + " ran " + pname + " for " + (lrdur/60>>0) + "m" + (lrdur%60) + "s on " + runDate;
 		}
 
@@ -226,7 +226,7 @@ $code:
 		function countdownTimer(timerId) {
 			var timerElement = jQuery("#" + timerId);
 			var timerValue = parseFloat(timerElement.attr("data"));
-			var remaining = timerValue - devt; //Date.now(); ######################
+			var remaining = timerValue - devt; //Date.now(); // DK change
 			var rHours = Math.floor(remaining/3600000);
 			var rMinutes = Math.floor((remaining%3600000)/60000);
 			if (rHours <=0 && rMinutes <=0) {
