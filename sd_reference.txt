@@ -26,6 +26,7 @@ rs:0	rain sensed
 nopts:14 Number of optiions to be displayed
 name:"OpenSprinkler Pi"	configurable name for system
 snlen:32 max size of station names
+tu:C    temperature C or F
 
 for scheduling:
 bsy:0	program buisy

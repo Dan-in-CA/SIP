@@ -322,7 +322,7 @@ def data(dataf):
     """Return contents of requested text file as string or create file if a missing config file."""
     try:
         f = open('./data/'+dataf+'.txt', 'r')
-        data = f.read()
+        data = f.read().strip()
         f.close()
     except IOError:
         if dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
@@ -442,25 +442,21 @@ def pass_options(opts):
 class home:
     """Open Home page."""
     def GET(self):
+        temp = float(CPU_temperature())
+        if gv.sd['tu'] == "F":
+            temp = 9.0/5.0*temp+32
         homepg = '<!DOCTYPE html>\n'
         homepg += data('meta')
         homepg += '<script>var baseurl=\"'+baseurl()+'\"</script>\n'
         homepg += '<script>var ver='+str(gv.ver)+',devt='+str(gv.now)+';</script>\n'
-        homepg += '<script>' + pass_options(["nbrd","tz","en","rd","mm","rdst","mas","urs","rs","wl","ipas","nopts","loc","name","ir"]) + '</script>\n'
+        homepg += '<script>' + pass_options(["nbrd","tz","en","rd","mm","rdst","mas","urs","rs","wl","ipas","nopts","loc","name","ir","tu"]) + '</script>\n'
         homepg += '<script>var sbits='+str(gv.sbits).replace(' ', '')+',ps='+str(gv.ps).replace(' ', '')+';</script>\n'
         homepg += '<script>var lrun='+str(gv.lrun).replace(' ', '')+';</script>\n'
         homepg += '<script>var snames='+data('snames')+';</script>\n'
-        homepg += '<script>var tempunit="'+str(gv.sd['tu'])+'";</script>\n'
-        if gv.sd['tu'] == "F":
-            try:
-              homepg += '<script>var cputemp='+str(9.0/5.0*int(float(CPU_temperature()))+32)+'; var tempunit="F";</script>\n'
-            except ValueError:
-               pass
-        else:
-            try:
-                homepg += '<script>var cputemp='+str(float(CPU_temperature()))+'; var tempunit="C";</script>\n'
-            except ValueError:
-                pass
+        try:
+            homepg += '<script>var ct='+str(temp)+';</script>\n'
+        except ValueError:
+            pass
         homepg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/home.js\"></script>'
         return homepg
 
@@ -503,7 +499,7 @@ class view_options:
     def GET(self):
         optpg = '<!DOCTYPE html>\n'
         optpg += data('meta')
-        optpg += '<script>var baseurl=\"'+baseurl()+'\";\n' + pass_options(["tz","htp","nbrd","sdt","seq","mas","mton","mtoff","urs","wl","ipas","rst","loc","name","lr","lg"]) + data('options')+ '</script>\n'
+        optpg += '<script>var baseurl=\"'+baseurl()+'\";\n' + pass_options(["tz","htp","nbrd","sdt","seq","mas","mton","mtoff","urs","wl","ipas","rst","loc","name","lr","lg","tu"]) + data('options')+ '</script>\n'
         optpg += '<script src=\"'+baseurl()+'/static/scripts/java/svc1.8.3/viewoptions.js\"></script>'
         return optpg
 
@@ -572,6 +568,9 @@ class change_options:
 
         if qdict.has_key('olr'):
             gv.sd['lr'] = int(qdict['olr'])
+
+        if qdict.has_key('otu'):
+            gv.sd['tu'] = qdict['otu']
 
         srvals = [0]*(gv.sd['nst']) # Shift Register values
         rovals = [0]*(gv.sd['nst']) # Run Once Durations
@@ -905,9 +904,9 @@ class toggle_temp:
     def GET(self):
         qdict = web.input()
         if qdict['tunit'] == "C":
-            gv.sd['tu'] = "F"
+            gv.sd['tu'] = unicode("F")
         else:
-            gv.sd['tu'] = "C"
+            gv.sd['tu'] = unicode("C")
         jsave(gv.sd, 'sd')    
         raise web.seeother('/')
     

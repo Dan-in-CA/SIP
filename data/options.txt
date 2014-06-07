@@ -14,5 +14,6 @@ var opts=[
 ["Water level (%)","int","wl", "Water level, between 0% and 250%."],
 ["Enable logging","boolean","lg", "Log all events - note that repetitive writing to an SD card can shorten its lifespan."],
 ["Maximum log entries","int","lr", "Length of log to keep, 0=no limits."],
-["Ignore password","boolean","ipas", "Ignore web password"]
+["Ignore password","boolean","ipas", "Ignore web password"],
+["Temperature unit","char","tu", "Celsius or Fahrenheit"]
 ];

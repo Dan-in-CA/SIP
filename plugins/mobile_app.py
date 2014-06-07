@@ -1,4 +1,4 @@
-import web, json, re
+import web, json, re, os
 import ast
 import gv, time # Gain access to ospi's settings
 from urls import urls # Gain access to ospi's URL list
@@ -7,6 +7,25 @@ from urls import urls # Gain access to ospi's URL list
 ## New URLs ##
 
 urls.extend(['/jo', 'plugins.mobile_app.options', '/jc', 'plugins.mobile_app.cur_settings', '/js', 'plugins.mobile_app.station_state','/jp', 'plugins.mobile_app.program_info', '/jn', 'plugins.mobile_app.station_info'])
+
+##############################
+#### Function Definitions ####
+
+def CPU_temperature(format):
+    """Returns the temperature of the Raspberry Pi's CPU."""
+    try:       
+        if gv.platform == 'bo':       
+            res = os.popen('cat /sys/class/hwmon/hwmon0/device/temp1_input').readline()
+            temp = (str(int(float(res)/1000)))
+        else:
+            res = os.popen('vcgencmd measure_temp').readline()
+            temp =(res.replace("temp=","").replace("'C\n",""))
+        if format == 'F':
+            return str(9.0/5.0*float(temp)+32)
+        else:
+            return str(float(temp))
+    except:
+        pass
 
 #######################
 ## Class definitions ##
@@ -24,7 +43,7 @@ class cur_settings: # /jc
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        jsettings = {"devt":gv.now,"nbrd":gv.sd['nbrd'],"en":gv.sd['en'],"rd":gv.sd['rd'],"rs":gv.sd['rs'],"mm":gv.sd['mm'],"rdst":gv.sd['rdst'],"loc":gv.sd['loc'],"sbits":gv.sbits,"ps":gv.ps,"lrun":gv.lrun}
+        jsettings = {"devt":gv.now,"nbrd":gv.sd['nbrd'],"en":gv.sd['en'],"rd":gv.sd['rd'],"rs":gv.sd['rs'],"mm":gv.sd['mm'],"rdst":gv.sd['rdst'],"loc":gv.sd['loc'],"sbits":gv.sbits,"ps":gv.ps,"lrun":gv.lrun,"ct":CPU_temperature(gv.sd['tu']),"tu":gv.sd['tu']}
         return json.dumps(jsettings)    
     
 class station_state: # /js
