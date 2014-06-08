@@ -164,7 +164,7 @@ def schedule_stations(stations):
                             gv.rs[sid][0] = gv.now #accumulate_time # set start time
                             gv.rs[sid][1] = (gv.now + gv.rs[sid][2]) # set stop time
                         else: # if rain and station does not ignore, clear station from display
-                            gv.sbits[b] = gv.sbits[b]&~2**s
+                            gv.sbits[b] = gv.sbits[b]&~1<<s
                             gv.ps[s] = [0,0]
     gv.sd['bsy'] = 1
     return
@@ -179,7 +179,7 @@ def stop_onrain():
             elif not all(v == 0 for v in gv.rs[sid]):
                 gv.srvals[sid] = 0
                 set_output()
-                gv.sbits[b] = gv.sbits[b]&~2**s # Clears stopped stations from display
+                gv.sbits[b] = gv.sbits[b]&~1<<s # Clears stopped stations from display
                 gv.ps[sid] = [0,0]
                 gv.rs[sid] = [0,0,0,0]
     return
@@ -242,7 +242,7 @@ def timing_loop():
                         if gv.now >= gv.rs[sid][1]: # check if time is up
                             gv.srvals[sid] = 0
                             set_output()
-                            gv.sbits[b] = gv.sbits[b]&~2**s
+                            gv.sbits[b] = gv.sbits[b]&~1<<s
                             if gv.sd['mas']-1 != sid: # if not master, fill out log
                                 gv.ps[sid] = [0,0]
                                 gv.lrun[0] = sid
@@ -316,7 +316,7 @@ def timing_loop():
         if gv.sd['rd'] and gv.now>= gv.sd['rdst']: # Check of rain delay time is up
             gv.sd['rd'] = 0
             gv.sd['rdst'] = 0 # Rain delay stop time
-            jsave(gv.sd, 'sd')
+            jsave(gv.sd, 'sd') 
         time.sleep(1)
         #### End of timing loop ####
 

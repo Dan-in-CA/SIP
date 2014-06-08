@@ -1,5 +1,4 @@
 import gv
-from time import sleep
 
 try:
     import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
@@ -82,5 +81,4 @@ def set_output():
     """Activate triacs according to shift register state."""
     disableShiftRegisterOutput()
     setShiftRegister(gv.srvals) # gv.srvals stores shift register state
-    sleep(0.1)
     enableShiftRegisterOutput()
