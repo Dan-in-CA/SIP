@@ -13,13 +13,16 @@ urls.extend(['/jo', 'plugins.mobile_app.options', '/jc', 'plugins.mobile_app.cur
 
 def CPU_temperature(format):
     """Returns the temperature of the Raspberry Pi's CPU."""
-    try:       
-        if gv.platform == 'bo':       
+    try:
+        if gv.platform == '':
+            return str(0)
+        if gv.platform == 'bo':
             res = os.popen('cat /sys/class/hwmon/hwmon0/device/temp1_input').readline()
             temp = (str(int(float(res)/1000)))
-        else:
+        if gv.platform == 'pi':
             res = os.popen('vcgencmd measure_temp').readline()
             temp =(res.replace("temp=","").replace("'C\n",""))
+
         if format == 'F':
             return str(9.0/5.0*float(temp)+32)
         else:
