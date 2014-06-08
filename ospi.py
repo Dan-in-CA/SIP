@@ -24,9 +24,9 @@ web.config.debug = False # Making this false improves UI responsiveness
 
 ##############################
 #### Revision information ####
-gv.ver = 183
-gv.rev = 147
-gv.rev_date = '03/June/2014'
+gv.ver = 20
+gv.rev = 149
+gv.rev_date = '09/June/2014'
 
 #!!! Note: This add-on feature is now deprecated. Code is left in place for backward compatibility.
 ################################################################
