@@ -75,7 +75,7 @@ def clear_mm():
     return
 
 def CPU_temperature():
-    """Returns the temperature of the Raspberry Pi's CPU."""
+    """Returns the temperature of the CPU."""
     try:
         if gv.platform == 'bo':
             res = os.popen('cat /sys/class/hwmon/hwmon0/device/temp1_input').readline()
