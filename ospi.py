@@ -964,9 +964,7 @@ class api_status:
                             if gv.sd['rd'] != 0:
                                 status['reason'] = 'rain_delay'
                             if gv.sd['urs'] != 0 and gv.sd['rs'] != 0:
-                                status['reason'] = 'rain_sensed'
-                            else:
-                                status['status'] = 'off'    
+                                status['reason'] = 'rain_sensed' 
                         if sn == gv.sd['mas']:
                             status['master'] = 1
                             status['reason'] = 'master'
