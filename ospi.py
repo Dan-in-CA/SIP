@@ -75,12 +75,14 @@ def clear_mm():
     return
 
 def CPU_temperature():
-    """Returns the temperature of the CPU."""
+    """Returns the temperature of the CPU if available."""
     try:
+        if gv.platform == '':
+            return str(0)
         if gv.platform == 'bo':
             res = os.popen('cat /sys/class/hwmon/hwmon0/device/temp1_input').readline()
             return (str(int(float(res)/1000)))
-        else:
+        if gv.platform == 'pi':
             res = os.popen('vcgencmd measure_temp').readline()
             return(res.replace("temp=","").replace("'C\n",""))
     except:
