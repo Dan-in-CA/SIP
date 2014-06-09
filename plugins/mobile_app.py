@@ -87,7 +87,8 @@ class get_logs: # /jl
 
                 pid = int(pid)
                 station = int(event["station"])
-                duration = int(string.split(event["duration"],":")[0])
+                duration = string.split(event["duration"],":")
+                duration = (int(duration[0]) * 60) + int(duration[1])
                 timestamp = int(time.mktime(datetime.datetime.strptime(event["date"] + " " + event["start"], "%Y-%m-%d %H:%M:%S").timetuple()))
 
                 data.append([pid,station,duration,timestamp])
