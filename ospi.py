@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import re, os, time, datetime, thread, pickle, sys # standard Python modules # base64,
+import re, os, time, datetime, thread, sys # standard Python modules # base64,
 from calendar import timegm
 try:
     import json
@@ -19,8 +19,6 @@ from urls import * # Provides access to URLs for UI pages
 
 import random
 from hashlib import sha1
-
-web.config.debug = False # Making this false improves UI responsiveness
 
 ##############################
 #### Revision information ####
@@ -760,10 +758,10 @@ class set_station:
             gv.rs[sid][3] = 99 # set program index
             gv.ps[sid][1] = nstlst[2]
             gv.sd['bsy']=1
-            #time.sleep(1.5)
+            time.sleep(1)
         if nstlst[1] == 0 and gv.sd['mm']: # If status is off
             gv.rs[sid][1] = gv.now
-            #time.sleep(1.5)
+            time.sleep(1)
         raise web.seeother('/')
 
 class view_runonce:
