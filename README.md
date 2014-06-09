@@ -12,6 +12,15 @@ UPDATES
 ===========
 ***********
 
+June 9 2014
+-----------
+(Dan)<br/>
+Changes:<br/>
+Software version 2.0
+Jonathan Marsh's UI is now default under the master branch.
+A version based on the original UI derived from OpenSprinkler firmware 1.8.3 is still availabel iunder the branch named "firmware_bassed.
+This revision also includes several bug fixes.
+
 May 4 2014
 -----------
 (Dan)<br/>
