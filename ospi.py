@@ -459,12 +459,17 @@ def checkLogin():
         pass
 
 def verifyLogin():
-    try:
-        if gv.sd['ipas'] == 0 and web.config._session.user != 'admin':
-            raise web.unauthorized()
-    except KeyError:
-        pass
+    qdict = web.input()
 
+    if gv.sd['ipas'] == 1:
+        return True
+    if web.config._session.user == 'admin':
+        return True
+    if qdict.has_key('pw') and gv.sd['password'] == sha1(qdict['pw'] + gv.sd['salt']).hexdigest():
+        return True
+
+    raise web.unauthorized()
+    
 signin_form = form.Form(form.Password('password',
                                       description='Password:'),
                         validators = [form.Validator("Incorrect password, please try again",
