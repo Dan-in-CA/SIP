@@ -747,7 +747,6 @@ class get_station:
 class set_station:
     """turn a station (valve/zone) on=1 or off=0 in manual mode."""
     def GET(self, nst, t=None): # nst = station number, status, optional duration
-        verifyLogin()
         nstlst = [int(i) for i in re.split('=|&t=', nst)]
         if len(nstlst) == 2:
             nstlst.append(0)
