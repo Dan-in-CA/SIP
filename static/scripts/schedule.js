@@ -31,15 +31,18 @@ function checkDay(days, dayInterval, simdate) {
 function checkMatch(programs, simdate) {
 	// simdate is Java date object, simday is the #days since 1970 01-01
 	var run = [];
+	var startOffset = 0 //dk
 	for (var p in programs) {
 		var prog = programs[p];
 		var enabled = prog[0];
 		var days = prog[1];
 		var dayInterval = prog[2];
-		var startTime = prog[3];
+		var startTime = prog[3]; // minutes
 		var endTime = prog[4];
 		var interval = prog[5];
-		var duration = prog[6] * wl/100;
+		var duration = prog[6] * wl/100; // seconds
+		var timer = startTime; // minutes since midnight, DK change 
+		//var programTimer = timer; // DK change
 		if (enabled == 0 || duration == 0) {
 			continue;
 		}
@@ -64,6 +67,7 @@ function checkMatch(programs, simdate) {
 									});
 								}
 								programTimer += duration/60;
+
 							}
 						}
 					}
@@ -71,12 +75,14 @@ function checkMatch(programs, simdate) {
 				} while (timer < endTime);				
 			}
 		}
+		// programs not spanning midnight
 		if (!checkDay(days, dayInterval, simdate)) {
 			continue;
 		}
-		var timer = startTime;
+		var timer = startTime; //  reset timer
 		do {
-			var programTimer = timer;
+			var programMinutes = 0; //DK
+			var programTimer = timer + startOffset;
 			for (bid=0; bid<nbrd; bid++) {
 				for (s=0; s<8; s++) {
 					var sid = bid*8 + s;
@@ -90,10 +96,13 @@ function checkMatch(programs, simdate) {
 							label: toClock(startTime, timeFormat) + " for " + toClock(duration, 1)
 						});
 						programTimer += duration/60;
+						programMinutes += duration/60; //DK
 					}
 				}
 			}
 			timer += interval;
+			startOffset += programMinutes
+			//console.log(startOffset); //DK
 		} while (timer < endTime);
 	}
 	return run;
