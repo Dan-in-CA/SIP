@@ -6,3 +6,4 @@ web/
 /data/snames.txt
 *.pyc
 *.csv
+/python
