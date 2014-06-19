@@ -42,7 +42,7 @@ $code:
 		#stations {width:100%;}
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
-	<script src="${gv.baseurl}/static/scripts/schedule.js"></script>
+
 	<script>
 		// Variables set by ospi.py
 		var devt = ${gv.now}*1000;
@@ -61,10 +61,12 @@ $code:
 		var wl = ${gv.sd['wl']};
 		var mas = ${gv.sd['mas']};
 		var nbrd = ${gv.sd['nbrd']};
-		var prog = $:{gv.pd};
+		var prog = $:{gv.pd}; // sb 'progs' because it is a list
+		var sdt = ${gv.sd['sdt']};
 		var seq = ${gv.sd['seq']};
 		
 	</script>
+	<script src="${gv.baseurl}/static/scripts/schedule.js"></script>
 	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
 	<script>
 		// date/time formating helpers

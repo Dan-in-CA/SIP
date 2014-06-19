@@ -648,7 +648,7 @@ class change_options:
         return
 
     def update_scount(self, qdict):
-        """Increase or decrease the number of stations displayed when number of expansion boards is changed options."""
+        """Increase or decrease the number of stations displayed when number of expansion boards is changed in options."""
         if int(qdict['onbrd'])+1 > gv.sd['nbrd']: # Lengthen lists
             incr = int(qdict['onbrd']) - (gv.sd['nbrd']-1)
             for i in range(incr):
