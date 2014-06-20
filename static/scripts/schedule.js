@@ -90,10 +90,6 @@ function doSimulation(simstart) { // Create schedule by a full program simulatio
         }//for(sid)
       }//else(seq)
     }//if(match_found)
-  // console.log(prog)
-  // console.log(st_array)
-  // console.log(pid_array)
-  // console.log(et_array)
 	// add to schedule
 	for(sid=0;sid<nst;sid++) { // for each station
 	  if(pid_array[sid]) { // if this station is included...
@@ -107,8 +103,6 @@ function doSimulation(simstart) { // Create schedule by a full program simulatio
 	  }
     }	  
     if (busy) { // if system buisy...
-  // var endminutes=run_sched(simminutes*60,st_array,pid_array,et_array)/60>>0; // set endminutes to result of run_sched function (line ~67)
-//  console.log("endmin: " + endmin);
       if(seq&&simminutes!=endmin) simminutes=endmin; // move to end of system busy state.
       else simminutes++; // increment simulation time
       for(sid=0;sid<nst;sid++)  {st_array[sid]=0;pid_array[sid]=0;et_array[sid]=0;} // set all elements of arrays to zero
@@ -118,116 +112,6 @@ function doSimulation(simstart) { // Create schedule by a full program simulatio
   } while(simminutes<24*60); // simulation ends at 24 hours
   return schedule
 }
-
-/*function checkDay(days, dayInterval, simdate) {
-	if ((days&0x80) && (dayInterval>1)) {	// inverval checking
-		var simday = Math.floor(simdate/(24*60*60*1000));
-		if ((simday % dayInterval) != (days&0x7f))  {
-			return false; // remainder checking
-		}
-	} else {
-		var weekday = (simdate.getDay()+6)%7; // getDay assumes sunday is 0, converts to Monday 0
-		if ((days & (1<<weekday)) == 0) {
-			return false; // weekday checking
-		}
-		var date = simdate.getDate(); // day of the month
-		if ((days&0x80) && (dayInterval == 0)) { // even day checking
-			if ((date%2) !=0)	{
-				return false;
-			}
-		}
-		if ((days&0x80) && (dayInterval == 1)) { // odd day checking
-			if (date==31) {
-				return false;
-			} else if (date==29 && simdate.getUTCMonth()==1) {
-				return false;
-			} else if ((date%2)==1) {
-				return false;
-			}
-		}
-	}
-	return true;
-}*/
-
-/*function checkMatch(programs, simdate) {
-	// simdate is Java date object, simday is the #days since 1970 01-01
-	var run = [];
-	var startOffset = 0 //dk
-	for (var p in programs) {
-		var prog = programs[p];
-		var enabled = prog[0];
-		var days = prog[1];
-		var dayInterval = prog[2];
-		var startTime = prog[3]; // minutes
-		var endTime = prog[4];
-		var interval = prog[5];
-		var duration = prog[6] * wl/100; // seconds
-		var timer = startTime; // minutes since midnight, DK change 
-		//var programTimer = timer; // DK change
-		if (enabled == 0 || duration == 0) {
-			continue;
-		}
-		// Catch programs starting the previous day and spilling over into today
-		if (endTime > 24*60) {
-			if (checkDay(days, dayInterval, new Date(simdate.getTime() - 24*60*60*1000))) {
-				var timer = startTime;
-				do {
-					var programTimer = timer;
-					for (bid=0; bid<nbrd; bid++) {
-						for (s=0; s<8; s++) {
-							var sid = bid*8 + s;
-							if (mas == (sid+1)) continue; // skip master station
-							if (prog[7+bid]&(1<<s)) {
-								if (programTimer + duration/60 >= 24*60) {
-									run.push({
-										program: (parseInt(p) + 1).toString(),
-										station: sid,
-										start: programTimer-24*60,
-										duration: duration,
-										label: toClock(startTime, timeFormat) + " for " + toClock(duration, 1)
-									});
-								}
-								programTimer += duration/60;
-
-							}
-						}
-					}
-					timer += interval;
-				} while (timer < endTime);				
-			}
-		}
-		// programs not spanning midnight
-		if (!checkDay(days, dayInterval, simdate)) {
-			continue;
-		}
-		var timer = startTime; //  reset timer
-		do {
-			var programMinutes = 0; //DK
-			var programTimer = timer + startOffset;
-			for (bid=0; bid<nbrd; bid++) {
-				for (s=0; s<8; s++) {
-					var sid = bid*8 + s;
-					if (mas == (sid+1)) continue; // skip master station
-					if (prog[7+bid]&(1<<s)) {
-						run.push({
-							program: (parseInt(p) + 1).toString(),
-							station: sid,
-							start: programTimer,
-							duration: duration,
-							label: toClock(startTime, timeFormat) + " for " + toClock(duration, 1)
-						});
-						programTimer += duration/60;
-						programMinutes += duration/60; //DK
-					}
-				}
-			}
-			timer += interval;
-			startOffset += programMinutes
-			//console.log(startOffset); //DK
-		} while (timer < endTime);
-	}
-	return run;
-}*/
 
 function toXSDate(d) {
 	var r = d.getFullYear() + "-" +
@@ -262,9 +146,6 @@ function programName(p) {
 		return "Program " + p;
 	}
 }
-
-//var displayScheduleDate = new Date();
-//var displayScheduleTimeout;
 
 function displaySchedule(schedule) {
 	if (displayScheduleTimeout != null) {
@@ -325,7 +206,6 @@ function displaySchedule(schedule) {
 
 function displayProgram() {
 	if (displayScheduleDate > new Date()) {
-//		var schedule = checkMatch(prog, displayScheduleDate);
 		var schedule = doSimulation(0); //dk
 		displaySchedule(schedule);
 	} else {
@@ -340,15 +220,13 @@ function displayProgram() {
 				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
 			}
 			if (toXSDate(displayScheduleDate) == toXSDate(new Date())) {
-//				var schedule = checkMatch(prog, displayScheduleDate);
-				var schedule = doSimulation(0); //dk -- need to give cuttent time
+				var schedule = doSimulation(); //dk
 				log = log.concat(schedule);
 			}
 			displaySchedule(log);
 		})
 	}
 }
-
 
 jQuery(document).ready(displayProgram);
 
