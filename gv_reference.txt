@@ -13,7 +13,7 @@ sdt:0	station delay time
 mton:0	master on delay
 mtoff:0	master off delay
 nbrd:1	number of boards (includes base unit and expansion boards)
-tz:16	time zone
+tz:16	time zone -- no longer used by the program as of v2.0
 tf:1	time format (24 hour clock == 1)
 urs:0	use rain sensor (bool)
 rst:1	Rain sensor type (normaly open=1 (dafault), or normaly closed=0)
@@ -29,7 +29,7 @@ name:"OpenSprinkler Pi"	configurable name for system
 snlen:32 max size of station names
 
 for scheduling:
-bsy:0	program buisy
+bsy:0	program busy
 mnp:32	maximum number of programs (disregard on OSPi)
 nprogs:0 number of programs (can be calculated form length of prog array)
 mo:[0] master operation bytes - contains bits per board for stations with master set
@@ -46,8 +46,8 @@ name: u"OpenSprinkler Pi" System name. can be used to manage multiple controller
 theme: "original" files used to style the UItyle the UI
 
 other gv attributes:
-gv.ver	firmware rev number (int, based on firmware version this program was ported from)
-gv.rev	release number of this program (int)
+gv.ver	software rev number (int, converted to dot separated digets in UI)
+gv.rev	release number of this program (int)  - no longer used as of v2.0
 gv.revdate	date of release (string)
 gv.now	current time, updated once per second at top of timing loop
 gv.srvals	shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
@@ -60,3 +60,4 @@ gv.rs	run schedule (list [scheduled start time, scheduled stop time, duration, p
 gv.lrun	last run, used to display log line on home page (list [station index, program number, duration, end time]) 
 gv.scount	station count (not used -- dead code ????)
 gv.snames	station names, loaded from 'snames.txt' file (string)
+gv.plugin_menu list to hold a 2 element list for each plugin to be added to menu on home page (['menu text', 'url'])
