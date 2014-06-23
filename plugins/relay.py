@@ -6,6 +6,8 @@ import web, time
 
 urls.extend(['/tr', 'plugins.relay.toggle_relay']) # Add a new url for this plugin.
 
+gv.plugin_menu.append(['Toggle Relay', '/tr']) # Add this plugin to the home page plugins menu
+
 class toggle_relay:
     """Test relay by turning it on for a short time, then off."""
     def GET(self):

@@ -23,7 +23,7 @@ from hashlib import sha1
 ##############################
 #### Revision information ####
 gv.ver = 20
-gv.rev = 149
+gv.rev = 'XXX'
 gv.rev_date = '09/June/2014'
 
 #!!! Note: This add-on feature is now deprecated. Code is left in place for backward compatibility.
@@ -421,6 +421,8 @@ except IOError: # If file does not exist, it will be created created using defau
     sdf.close()
 
 gv.now = timegm(time.localtime())
+
+gv.plugin_menu = [] #Empty list of lists for plugin links (e.g. ['name', 'URL']) 
 
 gv.srvals = [0]*(gv.sd['nst']) #Shift Register values
 

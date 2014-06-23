@@ -40,6 +40,7 @@ $code:
 
 		#lastRun {color:gray;}
 		#stations {width:100%;}
+		#pluginMenu{display: none;}
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script src="${gv.baseurl}/static/scripts/schedule.js"></script>
@@ -62,6 +63,7 @@ $code:
 		var mas = ${gv.sd['mas']};
 		var nbrd = ${gv.sd['nbrd']};
 		var prog = $:{gv.pd};
+		var plugins = $:{gv.plugin_menu}
 		
 	</script>
 	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
@@ -148,6 +150,25 @@ $code:
 		jQuery(document).ready(function(){
 			$if gv.sd['mm'] == 0:
 				statusTimer();
+			
+			jQuery.each(plugins, function() {
+			    jQuery('#pluginLinks').append('<li><a href='+this[1]+'>'+this[0]+'</a></li>');
+			});
+			
+			jQuery("#bPlugins").click(function(e) {
+			    var btn = jQuery("#bPlugins");
+			    jQuery("#pluginMenu").css({
+			        position: 'absolute',
+			        top: btn.offset().top + btn.outerHeight(),
+			        left: btn.offset().left
+			    }).slideToggle();
+			    e.stopPropagation();
+			});
+			
+			jQuery(document).click(function(){                   
+				  jQuery("#pluginMenu").slideUp();
+				});
+			
 
 			jQuery("button#cStartStop").click(function(){
 				jQuery("form[name='hf'] input[name='en']").val(1-en);
@@ -244,6 +265,11 @@ $code:
 			<input type="hidden" name="tunit">
 		</form>
 		
+		<div id="pluginMenu">
+				<ul id="pluginLinks">
+				</ul>
+	    </div>
+		
 		<div class="header">
 			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
 		</div>
@@ -261,6 +287,7 @@ $code:
 					<button id="bHome" class="home here" title="Home">Home</button>
 					<button id="bPrograms" class="programs" title="Define Programs">Programs</button>
 					<button id="bRunOnce" class="start" title="Define Run Once Program">Run Once</button>
+					<button id="bPlugins" class="Plugins" title="Acces Plugins">Plugins</button>					
 					<button id="bLog" class="log" title="View Log">Log</button>
 					<button id="bOptions" class="options" title="Options">Options</button>
 					<button id="bStations" class="stations" title="Configure Stations">Stations</button>

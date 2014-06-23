@@ -548,3 +548,9 @@ td.stationSchedule {
 	margin: 0px 4px;
 	font-size:9pt;
 }
+
+#pluginLinks
+{
+    list-style-type: none;
+    padding:0;
+}
