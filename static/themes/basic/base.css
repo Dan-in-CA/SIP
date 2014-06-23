@@ -45,7 +45,7 @@ div.header div.titlenote {
 }
 
 div.footer {
-	background-image: url(grass.png);
+	background-image: url(grass.jpg);
 	background-position: top right -200px;
 	background-repeat: no-repeat;
 	background-color: #32A620;
@@ -64,7 +64,7 @@ div.content {
 div.body {
 	margin:0px;
 	padding:0px;
-	background-image: url(grass.png);
+	background-image: url(grass.jpg);
 }
 
 div.panel {
