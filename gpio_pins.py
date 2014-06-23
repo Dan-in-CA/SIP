@@ -13,6 +13,7 @@ except ImportError:
 
 try:
     GPIO.setwarnings(False)
+    GPIO.cleanup()
 except:
     pass
 
