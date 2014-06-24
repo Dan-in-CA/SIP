@@ -65,8 +65,8 @@ def getDailyRainfall():
             if data['wx']['useWU']:
                 data['rainfall'][str(d)] = getWUHistoryRain(dstr, data['wx']['apikey'],data['wx']['pws'])
             else: data['rainfall'][str(d)]=0.0
-    
-    # delete entries older than 14 days from memory, we're only using 2nd week for display
+#            print "getDailyRainfall: ", str(d), "=", data['rainfall'][str(d)]
+    # delete entries older than daysWatched from memory
     oldest = t-datetime.timedelta(days=auto_program.daysWatched)
     # print "getDailyRainfall: oldest=", oldest
     for k, val in data['rainfall'].items():
@@ -151,8 +151,9 @@ def getWUHistoryRain(d, apikey, pws):
     json_data = wget(url)
     if (json_data): data = json.load(json_data)
     else: return 0.0
-
-    return float(data['history']['dailysummary'][0]['precipi'])
+    # print "getWUHistoryRain precipi=", data['history']['dailysummary'][0]['precipi']
+    if data['history']['dailysummary'][0]['precipi']: return float(data['history']['dailysummary'][0]['precipi'])
+    else: return 0.0
 
 # ------------------------------------------------------------------
 # getYesterdayRain
