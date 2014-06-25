@@ -17,10 +17,10 @@ function scheduledThisDate(pd,simminutes,simdate,simday) { // check if progrm is
     dn=pd[2];drem=pd[1]&0x7f; // Set vars
     if((simday%dn)!=((simday+drem)%dn)) return 0; // remainder checking
   } else {
-    wd=(simdate.getUTCDay()+6)%7; // getDay assumes sunday is 0, converts to Monday 0 (wd=weekday)
+    wd=(simdate.getUTCDay()+6)%7; // getDay assumes sunday is 1, converts to Monday 1
     if((pd[1]&(1<<wd))==0)  return 0; // weekday checking
     dt=simdate.getUTCDate(); // set dt = day of the month
-    if((pd[1]&0x80)&&(pd[2]==0)) { // even day checking...
+    if((pd[1]&0x80)&&(pd[2]==0)) { // even day checking... ######### Not returning correct value
 	    if(dt%2) return 0; // if odd day (dt%2 == 1), no not match
 	 }
     if((pd[1]&0x80)&&(pd[2]==1))  { // odd day checking...
@@ -29,7 +29,7 @@ function scheduledThisDate(pd,simminutes,simdate,simday) { // check if progrm is
       else if (!(dt%2)) return 0; // if even day, do not match
     }
   }
-  if(simminutes<pd[3] || simminutes>pd[4])  return 0; // if simulated time is before start time or after stop time, do not match
+  if(simminutes<pd[3] || simminutes>=pd[4])  return 0; // if simulated time is before start time or after stop time, do not match
   if(pd[5]==0)  return 0; // repeat time missing, do not match
   if(((simminutes-pd[3])/pd[5]>>0)*pd[5] == (simminutes-pd[3])) { // if programmed to run now...
     return 1; // scheduled for displayScheduleDate

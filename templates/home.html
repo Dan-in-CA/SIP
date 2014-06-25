@@ -234,7 +234,7 @@ $code:
 				displayProgram();
 			});
 			jQuery("button#pToday").click(function() {
-				displayScheduleDate = new Date();
+				displayScheduleDate.setDate(new Date().getDate());
 				displayProgram();
 			});
 			jQuery("button#pNext").click(function() {
