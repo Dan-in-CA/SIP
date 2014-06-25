@@ -20,7 +20,7 @@ function scheduledThisDate(pd,simminutes,simdate,simday) { // check if progrm is
     wd=(simdate.getUTCDay()+6)%7; // getDay assumes sunday is 1, converts to Monday 1
     if((pd[1]&(1<<wd))==0)  return 0; // weekday checking
     dt=simdate.getUTCDate(); // set dt = day of the month
-    if((pd[1]&0x80)&&(pd[2]==0)) { // even day checking... ######### Not returning correct value
+    if((pd[1]&0x80)&&(pd[2]==0)) { // even day checking...
 	    if(dt%2) return 0; // if odd day (dt%2 == 1), no not match
 	 }
     if((pd[1]&0x80)&&(pd[2]==1))  { // odd day checking...
