@@ -2,22 +2,21 @@
 var displayScheduleDate = new Date();
 var displayScheduleTimeout;
 var sid,sn,t;
-var simt = displayScheduleDate.valueOf(); // miliseconds since epoc
+//var simt = displayScheduleDate.valueOf(); // miliseconds since epoc
 var simdate = displayScheduleDate; // date for simulation
-var simday = (simt/1000/3600/24)>>0; // days since epoc (int)
 var nprogs = prog.length; // number of progrms
 var nst = nbrd*8; // number of stations
 
-function scheduledThisDate(pd,simminutes,simdate,simday) { // check if progrm is scheduled for this date (displayScheduleDate) called from doSimulation
+function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is scheduled for this date (displayScheduleDate) called from doSimulation
   // simminutes is minute count generated in doSimulation()
   // simdate is a JavaScript date object, simday is the number of days since epoc
+  simday = (simdate.valueOf()/1000/3600/24)>>0; 	
   var wd,dn,drem; // week day, Interval days, days remaining
   if(pd[0]==0)  return 0; // program not enabled, do not match
-  if ((pd[1]&0x80)&&(pd[2]>1)) {  // if interval program...
-    dn=pd[2];drem=pd[1]&0x7f; // Set vars
-    if((simday%dn)!=((simday+drem)%dn)) return 0; // remainder checking
+  if ((pd[1]&0x80)&&(pd[2]>1)) {  // if interval program...  
+    if((simday%pd[2])!=(pd[1]&0x7f)) return 0; // remainder checking	
   } else {
-    wd=(simdate.getUTCDay()+6)%7; // getDay assumes sunday is 1, converts to Monday 1
+    wd=(simdate.getUTCDay()+6)%7; // getDay assumes sunday is 0, converts to Monday to 0 (weekday index)
     if((pd[1]&(1<<wd))==0)  return 0; // weekday checking
     dt=simdate.getUTCDate(); // set dt = day of the month
     if((pd[1]&0x80)&&(pd[2]==0)) { // even day checking...
@@ -37,9 +36,10 @@ function scheduledThisDate(pd,simminutes,simdate,simday) { // check if progrm is
   return 0;  // no match found
 }
 
-function doSimulation(simstart) { // Create schedule by a full program simulation, was draw_program()
-  if(typeof(simstart)==='undefined') simstart = 0; // set parameter default
-  var simminutes=simstart; // start at time set by calling function or 0 as default
+function doSimulation() { // Create schedule by a full program simulation, was draw_program()
+  //if(typeof(simstart)==='undefined') simstart = 0; // set parameter default
+//  var simminutes=simstart; // start at time set by calling function or 0 as default
+  var simminutes=0;
   var busy=0,match_found=0,endmin=0,bid,s,sid,pid;
   var st_array=new Array(nst); //start time per station in seconds (minutes since midnight)?
   var pid_array=new Array(nst); // program index per station
@@ -54,7 +54,7 @@ function doSimulation(simstart) { // Create schedule by a full program simulatio
     match_found=0;
     for(pid=0;pid<nprogs;pid++) { //for each program
       var pd=prog[pid]; //prog=program array, pd=program element at this index (program data)
-      if(scheduledThisDate(pd,simminutes,simdate,simday)) { //call scheduledThisDate function, if scheduled...
+      if(scheduledThisDate(pd,simminutes,simdate)) { //call scheduledThisDate function, if scheduled...
         for(sid=0;sid<nst;sid++) { //for each station...
           bid=sid>>3;s=sid%8; //set board index (bid) and station number per board (s) from station index (sid) 
           if(mas==(sid+1)) continue; // skip master station
@@ -206,7 +206,7 @@ function displaySchedule(schedule) {
 
 function displayProgram() {
 	if (displayScheduleDate > new Date()) {
-		var schedule = doSimulation(0); //dk
+		var schedule = doSimulation(); //dk
 		displaySchedule(schedule);
 	} else {
 		var visibleDate = toXSDate(displayScheduleDate);
