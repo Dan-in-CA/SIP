@@ -234,7 +234,9 @@ $code:
 				displayProgram();
 			});
 			jQuery("button#pToday").click(function() {
-				displayScheduleDate.setDate(new Date().getDate());
+				var day = new Date()//dk
+				displayScheduleDate.setDate(day.getDate());
+				displayScheduleDate.setMonth(day.getMonth()); //dk
 				displayProgram();
 			});
 			jQuery("button#pNext").click(function() {
