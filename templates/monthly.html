@@ -42,7 +42,20 @@ $def with(m_vals)
 				border: 1px solid #20911e;
 				box-shadow: 0 0 10px 5px #356b0b inset;
 			}
+			button.cCancel {
+				height:30px;
+				width:120px;
+				background-color: #F7F1CD;
+				border: 1px solid black;
+				border-bottom: 1px solid black;
+				border-radius: 8px;
+			}	
 		</style>
+		<script>
+		jQuery("button#cCancel").click(function(){
+			window.location="/";
+		});
+		</script>
 	</head>
 	<body>
 	<h1>Monthly Irrigatin Adjustments</h1>
@@ -61,7 +74,7 @@ $def with(m_vals)
 				<li><label for="oct">October:</label> <input type="text" name="oct" value=$m_vals[9]><br></li>
 				<li><label for="nov">November:</label> <input type="text" name="nov" value=$m_vals[10]><br></li>
 				<li><label for="dec">December:</label> <input type="text" name="dec" value=$m_vals[11]><br></li>
-				<li><button class="submit" type="submit">Submit Values</button></li>
+				<li><button class="submit" type="submit">Submit Values</button><button class="cCancel">Cancel</button></li>
 			</ul>
 		</form>
 		Note: In order for this plugin to actually work, The <b>apscheduler</b> Python module must be installed.
