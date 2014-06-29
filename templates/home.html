@@ -90,7 +90,7 @@ $code:
 			if (lrpid == 254 || lrpid == 98) {
 				pname = "Run Once Program";
 			}
-			var runDate = (new Date(lret*1000)).toUTCString()// + timezoneSuffix; //DK change
+			var runDate = (new Date(lret*1000)).toUTCString(); // + timezoneSuffix; //DK change
 			return snames[lrsid] + " ran " + pname + " for " + (lrdur/60>>0) + "m" + (lrdur%60) + "s on " + runDate;
 		}
 
