@@ -35,7 +35,7 @@ $code:
 		var cputemp = "${gv.cputemp}";
 		var tempunit = "${gv.sd['tu']}";
 		var errorCode = "${errorCode}";
-		var rbt = "${gv.sd['rbt']}";
+		//var rbt = "${gv.sd['rbt']}";
 	</script>
 	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
 	<script>		
@@ -49,8 +49,8 @@ $code:
 			});
 			
 			jQuery("button#cReboot").click(function(){
-				jQuery("form[name='hf'] input[name='rbt']").val(1);
-				jQuery("form[name='hf']").submit();				
+				jQuery("input[name='rbt']").val(1);
+				jQuery("form[name='of']").submit();				
 			});
 			
 			jQuery("button#cSubmit").click(function(){

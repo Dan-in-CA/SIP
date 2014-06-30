@@ -532,12 +532,6 @@ class change_values:
             stop_onrain()
         elif qdict.has_key('rd') and qdict['rd'] == '0':
             gv.sd['rdst'] = 0
-        if qdict.has_key('rbt') and qdict['rbt'] == '1':
-            jsave(gv.sd, 'sd')
-            gv.srvals = [0]*(gv.sd['nst'])
-            set_output()
-            os.system('reboot')
-            raise web.seeother('/')
         for key in qdict.keys():
             try:
                 gv.sd[key] = int(qdict[key])
@@ -545,7 +539,6 @@ class change_values:
                 pass
         jsave(gv.sd, 'sd')
         raise web.seeother('/')# Send browser back to home page
-        return
 
 class view_options:
     """Open the options page for viewing and editing."""
@@ -645,9 +638,11 @@ class change_options:
         srvals = [0]*(gv.sd['nst']) # Shift Register values
         rovals = [0]*(gv.sd['nst']) # Run Once Durations
         jsave(gv.sd, 'sd')
-
+        if qdict.has_key('rbt') and qdict['rbt'] == '1':
+            gv.srvals = [0]*(gv.sd['nst'])
+            set_output()
+            os.system('reboot')
         raise web.seeother('/')
-        return
 
     def update_scount(self, qdict):
         """Increase or decrease the number of stations displayed when number of expansion boards is changed in options."""
