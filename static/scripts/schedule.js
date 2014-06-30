@@ -16,9 +16,9 @@ function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is schedu
   if ((pd[1]&0x80)&&(pd[2]>1)) {  // if interval program...  
     if((simday%pd[2])!=(pd[1]&0x7f)) return 0; // remainder checking	
   } else {
-    wd=(simdate.getUTCDay()+6)%7; // getDay assumes sunday is 0, converts to Monday to 0 (weekday index)
+    wd=(simdate.getDay()+6)%7; // getDay assumes sunday is 0, converts to Monday to 0 (weekday index)
     if((pd[1]&(1<<wd))==0)  return 0; // weekday checking
-    dt=simdate.getUTCDate(); // set dt = day of the month
+    dt=simdate.getDate(); // set dt = day of the month
     if((pd[1]&0x80)&&(pd[2]==0)) { // even day checking...
 	    if(dt%2) return 0; // if odd day (dt%2 == 1), no not match
 	 }
