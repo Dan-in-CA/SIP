@@ -2,7 +2,7 @@
 
 import web, json, time, re
 import gv # Get access to ospi's settings
-import urllib2
+import urllib, urllib2
 from urls import urls # Get access to ospi's URLs
 try:
     from apscheduler.scheduler import Scheduler #This is a non-standard module. Needs to be installed in order for this feature to work.
@@ -24,7 +24,8 @@ def weather_to_delay():
     data = get_weather_options()
     weather = get_weather_data() if data['weather_provider'] == "yahoo" else get_wunderground_weather_data()
     delay = code_to_delay(weather["code"])
-    if delay === False return;
+    if delay == False:
+        return
     gv.sd['rd'] = float(delay)
     gv.sd['rdst'] = gv.now + gv.sd['rd']*3600 + 1 # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
     stop_onrain()
@@ -53,16 +54,16 @@ def get_wunderground_lid():
     return lid
 
 def get_woeid():
-    data = opener.open("http://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.placefinder%20where%20text=%22".urlencode($options["loc"])."%22").read()
+    data = opener.open("http://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.placefinder%20where%20text=%22"+urllib.urlencode(gv.sd["loc"])+"%22").read()
     woeid = re.search("/<woeid>(\d+)<\/woeid>/", data)
     if woeid == None:
         return 0
     return int(woeid[1])
 
-
 def get_weather_data():
     woeid = get_woeid()
-    if (!$woeid) return []
+    if woeid == 0:
+        return []
     data = opener.open("http://weather.yahooapis.com/forecastrss?w="+woeid).read();
     if data == None:
         return []
@@ -70,7 +71,7 @@ def get_weather_data():
     loc = re.search("/<title>Yahoo! Weather - (.*)<\/title>/",data)
     region = re.search("/<yweather:location .*?country=\"(.*?)\"\/>/",data)
     region = region[1];
-    if region == "United States" or $region == "Bermuda" or $region == "Palau":
+    if region == "United States" or region == "Bermuda" or region == "Palau":
         temp = str(newdata[3])+"&#176;F"
     else:
         temp = str(int(round((newdata[3]-32)*(5/9))))+"&#176;C"
@@ -106,8 +107,8 @@ def get_wunderground_weather_data():
 def code_to_delay(code):
     data = get_weather_options()
     if data['weather_provider'] == "yahoo":
-        adverse_codes = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,35,37,38,39,40,41,42,43,44,45,46,47];
-        $reset_codes = [36];
+        adverse_codes = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,35,37,38,39,40,41,42,43,44,45,46,47]
+        reset_codes = [36]
     else:
         adverse_codes = ["flurries","sleet","rain","sleet","snow","tstorms","nt_flurries","nt_sleet","nt_rain","nt_sleet","nt_snow","nt_tstorms"]
         reset_codes = ["sunny","nt_sunny"]
@@ -115,7 +116,7 @@ def code_to_delay(code):
         return data['delay_duration']
     if code in reset_codes:
         return 0
-    return false
+    return False
 
 def stop_onrain():
     """Stop stations that do not ignore rain."""
