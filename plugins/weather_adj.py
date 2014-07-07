@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-import web, json, time
+import web, json, time, re
 import gv # Get access to ospi's settings
+import urllib2
 from urls import urls # Get access to ospi's URLs
 try:
     from apscheduler.scheduler import Scheduler #This is a non-standard module. Needs to be installed in order for this feature to work.
@@ -21,10 +22,12 @@ except NameError:
 
 def weather_to_delay():
     data = get_weather_options()
-    weather = get_weather_data() if weather_provider == "yahoo" else get_wunderground_weather_data()
+    weather = get_weather_data() if data['weather_provider'] == "yahoo" else get_wunderground_weather_data()
     delay = code_to_delay(weather["code"])
     if delay === False return;
-#    send_to_os("/cv?pw=&rd=".$delay); <-- convert to variable change in gv
+    gv.sd['rd'] = float(delay)
+    gv.sd['rdst'] = gv.now + gv.sd['rd']*3600 + 1 # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
+    stop_onrain()
 
 def get_weather_options():
     try:
@@ -38,67 +41,96 @@ def get_weather_options():
 
 #Resolve location to LID
 def get_wunderground_lid():
-    $options = get_options();
-    if (preg_match("/pws:/",$options["loc"]) == 1) {
-        $lid = $options["loc"];
-    } else {
-        $data = file_get_contents("http://autocomplete.wunderground.com/aq?h=0&query=".urlencode($options["loc"]));
-        $data = json_decode($data);
-        if (empty($data)) return "";
-        $lid = "zmw:".$data->{'RESULTS'}[0]->{'zmw'};
-    }
-    return $lid;
+    if preg_match("/pws:/",gv.sd['loc']) == 1:
+        lid = gv.sd['loc'];
+    else:
+        data = opener.open("http://autocomplete.wunderground.com/aq?h=0&query=".urlencode(gv.sd['loc']))
+        data = simplejson.load(data)
+        if data is None:
+            return ""
+        lid = "zmw:" + data['RESULTS'][0]['zmw']
+
+    return lid
+
+def get_woeid():
+    data = opener.open("http://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.placefinder%20where%20text=%22".urlencode($options["loc"])."%22").read()
+    woeid = re.search("/<woeid>(\d+)<\/woeid>/", data)
+    if woeid == None:
+        return 0
+    return int(woeid[1])
+
 
 def get_weather_data():
-    global $woeid;
-    if (!$woeid) return array();
-    $data = file_get_contents("http://weather.yahooapis.com/forecastrss?w=".$woeid);
-    if ($data === false) return array();
-    preg_match("/<yweather:condition\s+text=\"([\w|\s]+)\"\s+code=\"(\d+)\"\s+temp=\"(\d+)\"\s+date=\"(.*)\"/", $data, $newdata);
-    preg_match("/<title>Yahoo! Weather - (.*)<\/title>/",$data,$loc);
-    preg_match("/<yweather:location .*?country=\"(.*?)\"\/>/",$data,$region);
-    $region = $region[1];
-    if ($region == "United States" || $region == "Bermuda" || $region == "Palau") {
-        $temp = $newdata[3]."&#176;F";
-    } else {
-        $temp = intval(round(($newdata[3]-32)*(5/9)))."&#176;C";
-    }
-    $weather = array("text"=>$newdata[1],"code"=>$newdata[2],"temp"=>$temp,"date"=>$newdata[4],"location"=>$loc[1]);
-    return $weather;
+    woeid = get_woeid()
+    if (!$woeid) return []
+    data = opener.open("http://weather.yahooapis.com/forecastrss?w="+woeid).read();
+    if data == None:
+        return []
+    newdata = re.search("/<yweather:condition\s+text=\"([\w|\s]+)\"\s+code=\"(\d+)\"\s+temp=\"(\d+)\"\s+date=\"(.*)\"/", data)
+    loc = re.search("/<title>Yahoo! Weather - (.*)<\/title>/",data)
+    region = re.search("/<yweather:location .*?country=\"(.*?)\"\/>/",data)
+    region = region[1];
+    if region == "United States" or $region == "Bermuda" or $region == "Palau":
+        temp = str(newdata[3])+"&#176;F"
+    else:
+        temp = str(int(round((newdata[3]-32)*(5/9))))+"&#176;C"
+    weather = {"text": newdata[1], "code": newdata[2], "temp": temp, "date": newdata[4], "location": loc[1]}
+    return weather;
 
 def get_wunderground_weather_data():
-    global $lang, $lid, $wapikey;
-    if ($lid == "") return array();
-    $data = file_get_contents("http://api.wunderground.com/api/".$wapikey."/conditions/q/".$lid.".json");
-    if ($data === false) return array();
-    $data = json_decode($data);
-    if (isset($data->{'response'}->{'error'}->{'type'})) return array();
-    $region = $data->{'current_observation'}->{'display_location'}->{'country_iso3166'};
-    $temp_c = $data->{'current_observation'}->{'temp_c'};
-    $temp_f = $data->{'current_observation'}->{'temp_f'};
-    if ($region == "US" || $region == "BM" || $region == "PW") {
-        $temp = round($temp_f)."&#176;F";
-    } else {
-        $temp = $temp_c."&#176;C";
-    }
-    if (strpos($data->{'current_observation'}->{'icon_url'},"nt_") !== false) { $code = "nt_".$data->{'current_observation'}->{'icon'}; }
-    else $code = $data->{'current_observation'}->{'icon'};
-    $weather = array("text"=>$data->{'current_observation'}->{'weather'}, "code"=>$code, "temp"=>$temp,"date"=>$data->{'current_observation'}->{'observation_time'}, "location"=>$data->{'current_observation'}->{'display_location'}->{'full'});
-    return $weather;
+    options = get_weather_options()
+    lid = get_wunderground_lid()
+    if lid == "":
+        return []
+    data = opener.open("http://api.wunderground.com/api/"+options['wapikey']+"/conditions/q/"+lid+".json")
+    data = simplejson.load(data)
+    if data == None:
+        return []
+    if 'type' in data['response']['error']:
+        return []
+    region = data['current_observation']['display_location']['country_iso3166']
+    temp_c = data['current_observation']['temp_c']
+    temp_f = data['current_observation']['temp_f']
+    if region == "US" or region == "BM" or region == "PW":
+        temp = round(temp_f)+"&#176;F"
+    else:
+        temp = temp_c+"&#176;C"
+    if data['current_observation']['icon_url'].find("nt_") >= 0:
+        code = "nt_"+data['current_observation']['icon']
+    else:
+        code = data['current_observation']['icon']
+    weather = {"text": data['current_observation']['weather'], "code": code, "temp": temp, "date": data['current_observation']['observation_time'], "location": data['current_observation']['display_location']['full']}
+    return weather;
 
 #Lookup code and get the set delay
 def code_to_delay(code):
-    global $auto_delay_duration, $weather_provider;
-    if ($weather_provider == "yahoo") {
-        $adverse_codes = array(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,35,37,38,39,40,41,42,43,44,45,46,47);
-        $reset_codes = array(36);
-    } else {
-        $adverse_codes = array("flurries","sleet","rain","sleet","snow","tstorms","nt_flurries","nt_sleet","nt_rain","nt_sleet","nt_snow","nt_tstorms");
-        $reset_codes = array("sunny","nt_sunny");
-    }
-    if (in_array($code, $adverse_codes)) return $auto_delay_duration;
-    if (in_array($code, $reset_codes)) return 0;
-    return false;
+    data = get_weather_options()
+    if data['weather_provider'] == "yahoo":
+        adverse_codes = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,35,37,38,39,40,41,42,43,44,45,46,47];
+        $reset_codes = [36];
+    else:
+        adverse_codes = ["flurries","sleet","rain","sleet","snow","tstorms","nt_flurries","nt_sleet","nt_rain","nt_sleet","nt_snow","nt_tstorms"]
+        reset_codes = ["sunny","nt_sunny"]
+    if code in adverse_codes:
+        return data['delay_duration']
+    if code in reset_codes:
+        return 0
+    return false
+
+def stop_onrain():
+    """Stop stations that do not ignore rain."""
+    for b in range(gv.sd['nbrd']):
+        for s in range(8):
+            sid = b*8 + s # station index
+            if gv.sd['ir'][b]&1<<s: # if station ignores rain...
+                continue
+            elif not all(v == 0 for v in gv.rs[sid]):
+                gv.srvals[sid] = 0
+                set_output()
+                gv.sbits[b] = gv.sbits[b]&~1<<s # Clears stopped stations from display
+                gv.ps[sid] = [0,0]
+                gv.rs[sid] = [0,0,0,0]
+    return
 
 class settings:
     """Load an html page for entering weather-based irrigation adjustments"""
