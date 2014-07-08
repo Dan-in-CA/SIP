@@ -24,7 +24,7 @@ function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is schedu
 	 }
     if((pd[1]&0x80)&&(pd[2]==1))  { // odd day checking...
       if(dt==31) return 0; // if 31st of month, do not match
-      else if (dt==29 && simdate.getUTCMonth()==1) return 0; // if leap year day, do not match
+      else if (dt==29 && simdate.getMonth()==1) return 0; // if leap year day, do not match
       else if (!(dt%2)) return 0; // if even day, do not match
     }
   }
