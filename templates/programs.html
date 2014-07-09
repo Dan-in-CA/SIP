@@ -22,7 +22,7 @@ $code:
 			dse = int(gv.now/86400) # days since epoc
 			daysRemaining = ((days + dayInterval)-(dse % dayInterval)) % dayInterval
 			output += "Every " + str(dayInterval) + " days"
-			if days > 0:
+			if daysRemaining:
 				output += ", starting in " + str(daysRemaining) + " days."
 		else: # this is a weekly program 
 			if days == 127:
@@ -68,11 +68,10 @@ $code:
 	<script>		
 		// Variables set by ospi.py
 		var devt = ${gv.now}*1000;
-		var tz = ${gv.sd['tz']};
+		//var tz = ${gv.sd['tz']};
 		var timeFormat = ${gv.sd['tf']};
 		var cputemp = "${gv.cputemp}";
 		var tempunit = "${gv.sd['tu']}";
-
 		var nbrd = ${gv.sd['nbrd']};
 		var mas = ${gv.sd['mas']};
 	</script>
