@@ -81,19 +81,34 @@ $code:
 		jQuery(document).ready(function(){
 						
 			jQuery("button#nDelAll, button.cDelete").click(function(){
-				var pid = jQuery(this).attr("data");
+				try{
+					var pid = jQuery(this).attr("data")
+					}
+				catch(err) {
+					var pid = 0
+				}
 				jQuery("form#df input[name='pid']").val(pid);
 				jQuery("form#df").submit();
 			});
 			
 			jQuery("button#nAdd, button.cModify").click(function(){
-				var pid = jQuery(this).attr("data");
+				try{
+					var pid = jQuery(this).attr("data")
+					}
+				catch(err) {
+					var pid = 0
+				}
 				jQuery("form#mf input[name='pid']").val(pid);
 				jQuery("form#mf").submit();
 			});
 			
 			jQuery("button.cRunNow").click(function(){
-				var pid = jQuery(this).attr("data");
+				try{
+					var pid = jQuery(this).attr("data")
+					}
+				catch(err) {
+					var pid = 0
+				}
 				jQuery("form#rn input[name='pid']").val(pid);
 				jQuery("form#rn").submit();
 			});
