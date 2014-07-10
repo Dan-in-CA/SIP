@@ -12,6 +12,20 @@ UPDATES
 ===========
 ***********
 
+July 11 2014
+-----------
+(Dan)<br/>
+Changes:<br/>
+1. Fixed reported bugs in the Home Page timeline.
+2. Added error checking to Programs page to try and fix "server error".
+
+June 23 2014
+-----------
+(Dan)<br/>
+Changes:<br/>
+1. A fix for the irrigation timeline on the Home page<br/>
+2. The addidion of a "Plugins" button to the Home page<br/>
+
 June 9 2014
 -----------
 (Dan)<br/>
