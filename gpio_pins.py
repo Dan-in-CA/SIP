@@ -39,9 +39,13 @@ except AttributeError:
 #### setup GPIO pins as output or input ####
 try:
     GPIO.setup(pin_sr_clk, GPIO.OUT)
+    GPIO.output(pin_sr_clk, GPIO.LOW)
     GPIO.setup(pin_sr_noe, GPIO.OUT)
+    GPIO.output(pin_sr_noe, GPIO.HIGH) # Test fix of momentary 
     GPIO.setup(pin_sr_dat, GPIO.OUT)
+    GPIO.output(pin_sr_dat, GPIO.LOW)
     GPIO.setup(pin_sr_lat, GPIO.OUT)
+    GPIO.output(pin_sr_lat, GPIO.LOW)
     GPIO.setup(pin_rain_sense, GPIO.IN)
     GPIO.setup(pin_relay, GPIO.OUT)
 except NameError:
