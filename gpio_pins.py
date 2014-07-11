@@ -39,7 +39,7 @@ except AttributeError:
 #### setup GPIO pins as output or input ####
 try:
     GPIO.setup(pin_sr_noe, GPIO.OUT)
-    GPIO.output(pin_sr_noe, GPIO.LOW)
+    GPIO.output(pin_sr_noe, GPIO.HIGH)
     GPIO.setup(pin_sr_clk, GPIO.OUT)
     GPIO.output(pin_sr_clk, GPIO.LOW)
     GPIO.setup(pin_sr_dat, GPIO.OUT)
