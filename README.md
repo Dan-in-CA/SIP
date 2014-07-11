@@ -16,9 +16,9 @@ July 11 2014
 -----------
 (Dan)<br/>
 Changes:<br/>
-1. Fixed reported bugs in the Home page irrigation timeline.
-2. Fixed a bug that caused a momentary power pulse to stations during a cold boot.
-3. Added error checking to Programs page to try and fix "server error".
+1. Fixed reported bugs in the Home page irrigation timeline.<br/>
+2. Fixed a bug that caused a momentary power pulse to stations during a cold boot.<br/>
+3. Added error checking to Programs page to try and fix "server error".<br/>
 
 June 23 2014
 -----------
