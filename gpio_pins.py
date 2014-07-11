@@ -38,10 +38,10 @@ except AttributeError:
     pass
 #### setup GPIO pins as output or input ####
 try:
+    GPIO.setup(pin_sr_noe, GPIO.OUT)
+    GPIO.output(pin_sr_noe, GPIO.HIGH)
     GPIO.setup(pin_sr_clk, GPIO.OUT)
     GPIO.output(pin_sr_clk, GPIO.LOW)
-    GPIO.setup(pin_sr_noe, GPIO.OUT)
-    GPIO.output(pin_sr_noe, GPIO.HIGH) # Test fix of momentary 
     GPIO.setup(pin_sr_dat, GPIO.OUT)
     GPIO.output(pin_sr_dat, GPIO.LOW)
     GPIO.setup(pin_sr_lat, GPIO.OUT)
