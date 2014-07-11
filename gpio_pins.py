@@ -39,7 +39,7 @@ except AttributeError:
 #### setup GPIO pins as output or input ####
 try:
     GPIO.setup(pin_sr_noe, GPIO.OUT)
-    GPIO.output(pin_sr_noe, GPIO.HIGH)
+    GPIO.output(pin_sr_noe, GPIO.LOW)
     GPIO.setup(pin_sr_clk, GPIO.OUT)
     GPIO.output(pin_sr_clk, GPIO.LOW)
     GPIO.setup(pin_sr_dat, GPIO.OUT)
@@ -51,18 +51,17 @@ try:
 except NameError:
     pass
 
-def enableShiftRegisterOutput():
-    """Enable output from shift register."""
-    try:
-        GPIO.output(pin_sr_noe, GPIO.LOW)
-    except NameError:
-        pass
-     
-
 def disableShiftRegisterOutput():
     """Disable output from shift register."""
     try:
         GPIO.output(pin_sr_noe, GPIO.HIGH)
+    except NameError:
+        pass
+
+def enableShiftRegisterOutput():
+    """Enable output from shift register."""
+    try:
+        GPIO.output(pin_sr_noe, GPIO.LOW)
     except NameError:
         pass
 
