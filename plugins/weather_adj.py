@@ -5,27 +5,23 @@ import gv # Get access to ospi's settings
 import urllib, urllib2
 from urls import urls # Get access to ospi's URLs
 try:
-    from apscheduler.scheduler import Scheduler #This is a non-standard module. Needs to be installed in order for this feature to work.
+    import schedule
 except ImportError:
-    print "The Python module apscheduler could not be found."
+    print "The Python module schedule could not be found."
     pass
 
 urls.extend(['/wa', 'plugins.weather_adj.settings', '/uwa', 'plugins.weather_adj.update']) # Add a new url to open the data entry page.
 
 gv.plugin_menu.append(['Weather Adjust Settings', '/wa']) # Add this plugin to the home page plugins menu
 
-try:
-    sched = Scheduler()
-    sched.start() # Start the scheduler
-except NameError:
-    pass
-
 def weather_to_delay():
+    print("Checking rain status...")
     data = get_weather_options()
     weather = get_weather_data() if data['weather_provider'] == "yahoo" else get_wunderground_weather_data()
     delay = code_to_delay(weather["code"])
     if delay == False:
         return
+    print("Rain detected. Adding delay of "+delay)
     gv.sd['rd'] = float(delay)
     gv.sd['rdst'] = gv.now + gv.sd['rd']*3600 + 1 # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
     stop_onrain()
@@ -42,11 +38,11 @@ def get_weather_options():
 
 #Resolve location to LID
 def get_wunderground_lid():
-    if preg_match("/pws:/",gv.sd['loc']) == 1:
+    if re.search("pws:",gv.sd['loc']):
         lid = gv.sd['loc'];
     else:
-        data = opener.open("http://autocomplete.wunderground.com/aq?h=0&query=".urlencode(gv.sd['loc']))
-        data = simplejson.load(data)
+        data = urllib2.urlopen("http://autocomplete.wunderground.com/aq?h=0&query="+urllib.quote_plus(gv.sd['loc']))
+        data = json.load(data)
         if data is None:
             return ""
         lid = "zmw:" + data['RESULTS'][0]['zmw']
@@ -54,28 +50,28 @@ def get_wunderground_lid():
     return lid
 
 def get_woeid():
-    data = opener.open("http://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.placefinder%20where%20text=%22"+urllib.urlencode(gv.sd["loc"])+"%22").read()
-    woeid = re.search("/<woeid>(\d+)<\/woeid>/", data)
+    data = urllib2.urlopen("http://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.placefinder%20where%20text=%22"+urllib.quote_plus(gv.sd["loc"])+"%22").read()
+    woeid = re.search("<woeid>(\d+)<\/woeid>", data)
     if woeid == None:
         return 0
-    return int(woeid[1])
+    return woeid.group(1)
 
 def get_weather_data():
     woeid = get_woeid()
     if woeid == 0:
         return []
-    data = opener.open("http://weather.yahooapis.com/forecastrss?w="+woeid).read();
+    data = urllib2.urlopen("http://weather.yahooapis.com/forecastrss?w="+woeid).read();
     if data == None:
         return []
-    newdata = re.search("/<yweather:condition\s+text=\"([\w|\s]+)\"\s+code=\"(\d+)\"\s+temp=\"(\d+)\"\s+date=\"(.*)\"/", data)
-    loc = re.search("/<title>Yahoo! Weather - (.*)<\/title>/",data)
-    region = re.search("/<yweather:location .*?country=\"(.*?)\"\/>/",data)
-    region = region[1];
+    newdata = re.search("<yweather:condition\s+text=\"([\w|\s]+)\"\s+code=\"(\d+)\"\s+temp=\"(\d+)\"\s+date=\"(.*)\"", data)
+    loc = re.search("<title>Yahoo! Weather - (.*)<\/title>",data)
+    region = re.search("<yweather:location .*?country=\"(.*?)\"\/>",data)
+    region = region.group(1);
     if region == "United States" or region == "Bermuda" or region == "Palau":
-        temp = str(newdata[3])+"&#176;F"
+        temp = str(newdata.group(3))+"&#176;F"
     else:
-        temp = str(int(round((newdata[3]-32)*(5/9))))+"&#176;C"
-    weather = {"text": newdata[1], "code": newdata[2], "temp": temp, "date": newdata[4], "location": loc[1]}
+        temp = str(int(round((newdata.group(3)-32)*(5/9))))+"&#176;C"
+    weather = {"text": newdata.group(1), "code": newdata.group(2), "temp": temp, "date": newdata.group(4), "location": loc.group(1)}
     return weather;
 
 def get_wunderground_weather_data():
@@ -83,8 +79,8 @@ def get_wunderground_weather_data():
     lid = get_wunderground_lid()
     if lid == "":
         return []
-    data = opener.open("http://api.wunderground.com/api/"+options['wapikey']+"/conditions/q/"+lid+".json")
-    data = simplejson.load(data)
+    data = urllib2.urlopen("http://api.wunderground.com/api/"+options['wapikey']+"/conditions/q/"+lid+".json")
+    data = json.load(data)
     if data == None:
         return []
     if 'type' in data['response']['error']:
@@ -152,7 +148,7 @@ class update:
         f.close()
         raise web.seeother('/')
 
-try:
-    sched.add_cron_job(set_wl, hour=1) # Run the plugin's function the every hour
-except NameError:
-    pass
+schedule.every(1).second.do(weather_to_delay)
+while True:
+    schedule.run_pending()
+    time.sleep(1)
