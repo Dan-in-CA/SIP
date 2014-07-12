@@ -5,14 +5,20 @@ import gv # Get access to ospi's settings
 import urllib, urllib2
 from urls import urls # Get access to ospi's URLs
 try:
-    import schedule
+    from apscheduler.scheduler import Scheduler #Depends on APScheduler 2.x (does not work with 1.x or 3.x)
 except ImportError:
-    print "The Python module schedule could not be found."
+    print "The Python module apscheduler could not be found."
     pass
 
 urls.extend(['/wa', 'plugins.weather_adj.settings', '/uwa', 'plugins.weather_adj.update']) # Add a new url to open the data entry page.
 
 gv.plugin_menu.append(['Weather Adjust Settings', '/wa']) # Add this plugin to the home page plugins menu
+
+try:
+    sched = Scheduler()
+    sched.start() # Start the scheduler
+except NameError:
+    pass
 
 def weather_to_delay():
     print("Checking rain status...")
@@ -149,7 +155,7 @@ class update:
         f.close()
         raise web.seeother('/')
 
-schedule.every(1).hour.do(weather_to_delay)
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+try:
+    sched.add_cron_job(weather_to_delay, hour=1) # Run the plugin's function every hour
+except NameError:
+    pass
