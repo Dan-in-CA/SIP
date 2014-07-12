@@ -21,8 +21,10 @@ except NameError:
     pass
 
 def weather_to_delay():
-    print("Checking rain status...")
     data = get_weather_options()
+    if data["auto_delay"] == "off":
+        return
+    print("Checking rain status...")
     weather = get_weather_data() if data['weather_provider'] == "yahoo" else get_wunderground_weather_data()
     delay = code_to_delay(weather["code"])
     if delay == False:
@@ -155,6 +157,7 @@ class update:
         f.close()
         raise web.seeother('/')
 
+weather_to_delay() # Run the plugin on program launch
 try:
     sched.add_cron_job(weather_to_delay, hour=1) # Run the plugin's function every hour
 except NameError:
