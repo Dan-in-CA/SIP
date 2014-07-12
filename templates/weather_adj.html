@@ -33,6 +33,12 @@ $def with(m_vals)
 				output += "<span>Use Automatic Rain Delay: </span><input name='auto_delay' type='checkbox' " + ("checked" if m_vals['auto_delay'] == "on" else "") + ">\n"
 			$:{output}
 			<br><span>Delay Duration (hours): </span><input name='delay_duration' type='number' min="0" max="96" value=$m_vals["delay_duration"]>
+			<br><span>Weather Provider: </span>
+			<select name="weather_provider">
+				<option value="yahoo" ${"selected" if m_vals["weather_provider"]=="yahoo" else ""}>Yahoo!</option>
+				<option value="wunderground" ${"selected" if m_vals["weather_provider"]=="wunderground" else ""}>Wunderground</option>
+			</select>
+			<br><span>Wunderground API Key: </span><input name='wapikey' type='text' value=$m_vals["wapikey"]>
 			<br><button class="submit" type="submit">Submit</button>
 		</form>
 	</body>

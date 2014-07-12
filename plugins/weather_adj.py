@@ -20,6 +20,7 @@ def weather_to_delay():
     weather = get_weather_data() if data['weather_provider'] == "yahoo" else get_wunderground_weather_data()
     delay = code_to_delay(weather["code"])
     if delay == False:
+        print("No rain detected")
         return
     print("Rain detected. Adding delay of "+delay)
     gv.sd['rd'] = float(delay)
@@ -83,15 +84,15 @@ def get_wunderground_weather_data():
     data = json.load(data)
     if data == None:
         return []
-    if 'type' in data['response']['error']:
+    if 'error' in data['response']:
         return []
     region = data['current_observation']['display_location']['country_iso3166']
     temp_c = data['current_observation']['temp_c']
     temp_f = data['current_observation']['temp_f']
     if region == "US" or region == "BM" or region == "PW":
-        temp = round(temp_f)+"&#176;F"
+        temp = str(round(temp_f))+"&#176;F"
     else:
-        temp = temp_c+"&#176;C"
+        temp = str(temp_c)+"&#176;C"
     if data['current_observation']['icon_url'].find("nt_") >= 0:
         code = "nt_"+data['current_observation']['icon']
     else:
@@ -148,7 +149,7 @@ class update:
         f.close()
         raise web.seeother('/')
 
-schedule.every(1).second.do(weather_to_delay)
+schedule.every(1).hour.do(weather_to_delay)
 while True:
     schedule.run_pending()
     time.sleep(1)
