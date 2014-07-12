@@ -150,6 +150,8 @@ class settings_json:
     """Returns plugin settings in JSON format"""
 
     def GET(self):
+        web.header('Access-Control-Allow-Origin', '*')
+        web.header('Content-Type', 'application/json')
         return json.dumps(get_weather_options())
 
 class update:
