@@ -10,7 +10,7 @@ except ImportError:
     print "The Python module apscheduler could not be found."
     pass
 
-urls.extend(['/wa', 'plugins.weather_adj.settings', '/uwa', 'plugins.weather_adj.update']) # Add a new url to open the data entry page.
+urls.extend(['/wa', 'plugins.weather_adj.settings', '/wj', 'plugins.weather_adj.settings_json', '/uwa', 'plugins.weather_adj.update']) # Add a new url to open the data entry page.
 
 gv.plugin_menu.append(['Weather Adjust Settings', '/wa']) # Add this plugin to the home page plugins menu
 
@@ -145,6 +145,12 @@ class settings:
 
     def GET(self):
         return self.render.weather_adj(get_weather_options())
+
+class settings_json:
+    """Returns plugin settings in JSON format"""
+
+    def GET(self):
+        return json.dumps(get_weather_options())
 
 class update:
     """Save user input to weather_adj.json file"""
