@@ -612,7 +612,7 @@ class change_options:
         if qdict.has_key('owl'):
             gv.sd['wl'] = int(qdict['owl'])
 
-        if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == ''):
+        if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == '1'):
           gv.sd['urs'] = 1
         else:
           gv.sd['urs'] = 0
