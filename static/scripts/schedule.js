@@ -83,7 +83,7 @@ function doSimulation() { // Create schedule by a full program simulation, was d
           if(et_array[sid]) { // if an end time is set...
             st_array[sid]=simminutes*60; // set start time for this station to simminutes converted to seconds
             et_array[sid]=simminutes*60+et_array[sid]; // set end time for this station to end time shifted by start time
-			  if ((et_array[sid]/60)>endmin) {endmin = Math.ceil((et_array[sid]/60))} // update end time
+			  if ((et_array[sid]/60)>endmin) {endmin = Math.ceil((et_array[sid]/60))} // update endmin to whole minute
             busy=1; // set system busy flag - prevents new scheduleing until current schedule is complete
           }//if(et_array)
         }//for(sid)
