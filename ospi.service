@@ -1,0 +1,10 @@
+﻿[Unit]
+Description=Start Python Interval program
+
+[Service]
+WorkingDirectory=/home/root/OSPi
+ExecStart=/usr/bin/python ospi.py
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

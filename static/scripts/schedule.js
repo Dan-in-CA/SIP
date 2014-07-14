@@ -1,102 +1,116 @@
-function checkDay(days, dayInterval, simdate) {
-	if ((days&0x80) && (dayInterval>1)) {	// inverval checking
-		var simday = Math.floor(simdate/(24*60*60*1000));
-		if ((simday % dayInterval) != (days&0x7f))  {
-			return false; // remainder checking
-		}
-	} else {
-		var weekday = (simdate.getDay()+6)%7; // getDay assumes sunday is 0, converts to Monday 0
-		if ((days & (1<<weekday)) == 0) {
-			return false; // weekday checking
-		}
-		var date = simdate.getDate(); // day of the month
-		if ((days&0x80) && (dayInterval == 0)) { // even day checking
-			if ((date%2) !=0)	{
-				return false;
-			}
-		}
-		if ((days&0x80) && (dayInterval == 1)) { // odd day checking
-			if (date==31) {
-				return false;
-			} else if (date==29 && simdate.getUTCMonth()==1) {
-				return false;
-			} else if ((date%2)==1) {
-				return false;
-			}
-		}
-	}
-	return true;
+// Global vars
+var displayScheduleDate = new Date(devt); // dk 
+var displayScheduleTimeout;
+var sid,sn,t;
+var simdate = displayScheduleDate; // date for simulation
+var nprogs = prog.length; // number of progrms
+var nst = nbrd*8; // number of stations
+
+function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is scheduled for this date (displayScheduleDate) called from doSimulation
+  // simminutes is minute count generated in doSimulation()
+  // simdate is a JavaScript date object
+  simday = Math.floor(simdate/(1000*3600*24)) // The number of days since epoc
+  var wd,dn,drem; // week day, Interval days, days remaining
+  if(pd[0]==0)  return 0; // program not enabled, do not match
+  if ((pd[1]&0x80)&&(pd[2]>1)) {  // if interval program...  
+    if(((simday)%pd[2])!=(pd[1]&0x7f)) return 0; // remainder checking ##############	
+  } else {
+    wd=(simdate.getDay()+6)%7; // getDay assumes sunday is 0, converts to Monday to 0 (weekday index)
+    if((pd[1]&(1<<wd))==0)  return 0; // weekday checking
+    dt=simdate.getDate(); // set dt = day of the month
+    if((pd[1]&0x80)&&(pd[2]==0)) { // even day checking...
+	    if(dt%2) return 0; // if odd day (dt%2 == 1), no not match
+	 }
+    if((pd[1]&0x80)&&(pd[2]==1))  { // odd day checking...
+      if(dt==31) return 0; // if 31st of month, do not match
+      else if (dt==29 && simdate.getMonth()==1) return 0; // if leap year day, do not match
+      else if (!(dt%2)) return 0; // if even day, do not match
+    }
+  }
+  if(simminutes<pd[3] || simminutes>=pd[4])  return 0; // if simulated time is before start time or after stop time, do not match
+  if(pd[5]==0)  return 0; // repeat time missing, do not match
+  if(((simminutes-pd[3])/pd[5]>>0)*pd[5] == (simminutes-pd[3])) { // if programmed to run now...
+    return 1; // scheduled for displayScheduleDate
+  }
+  return 0;  // no match found
 }
 
-function checkMatch(programs, simdate) {
-	// simdate is Java date object, simday is the #days since 1970 01-01
-	var run = [];
-	for (var p in programs) {
-		var prog = programs[p];
-		var enabled = prog[0];
-		var days = prog[1];
-		var dayInterval = prog[2];
-		var startTime = prog[3];
-		var endTime = prog[4];
-		var interval = prog[5];
-		var duration = prog[6] * wl/100;
-		if (enabled == 0 || duration == 0) {
-			continue;
-		}
-		// Catch programs starting the previous day and spilling over into today
-		if (endTime > 24*60) {
-			if (checkDay(days, dayInterval, new Date(simdate.getTime() - 24*60*60*1000))) {
-				var timer = startTime;
-				do {
-					var programTimer = timer;
-					for (bid=0; bid<nbrd; bid++) {
-						for (s=0; s<8; s++) {
-							var sid = bid*8 + s;
-							if (mas == (sid+1)) continue; // skip master station
-							if (prog[7+bid]&(1<<s)) {
-								if (programTimer + duration/60 >= 24*60) {
-									run.push({
-										program: (parseInt(p) + 1).toString(),
-										station: sid,
-										start: programTimer-24*60,
-										duration: duration,
-										label: toClock(startTime, timeFormat) + " for " + toClock(duration, 1)
-									});
-								}
-								programTimer += duration/60;
-							}
-						}
-					}
-					timer += interval;
-				} while (timer < endTime);				
-			}
-		}
-		if (!checkDay(days, dayInterval, simdate)) {
-			continue;
-		}
-		var timer = startTime;
-		do {
-			var programTimer = timer;
-			for (bid=0; bid<nbrd; bid++) {
-				for (s=0; s<8; s++) {
-					var sid = bid*8 + s;
-					if (mas == (sid+1)) continue; // skip master station
-					if (prog[7+bid]&(1<<s)) {
-						run.push({
-							program: (parseInt(p) + 1).toString(),
-							station: sid,
-							start: programTimer,
-							duration: duration,
-							label: toClock(startTime, timeFormat) + " for " + toClock(duration, 1)
-						});
-						programTimer += duration/60;
-					}
-				}
-			}
-			timer += interval;
-		} while (timer < endTime);
-	}
-	return run;
+function doSimulation() { // Create schedule by a full program simulation, was draw_program()
+  //if(typeof(simstart)==='undefined') simstart = 0; // set parameter default
+//  var simminutes=simstart; // start at time set by calling function or 0 as default
+  var simminutes=0;
+  var busy=0,match_found=0,endmin=0,bid,s,sid,pid;
+  var st_array=new Array(nst); //start time per station in seconds (minutes since midnight)?
+  var pid_array=new Array(nst); // program index per station
+  var et_array=new Array(nst); // end time per station (duration in seconds adjusted by water level - and station delay??)
+  var schedule=[]; // shedule will hold data to display
+  for(sid=0;sid<nst;sid++)  { // for for each station...
+    st_array[sid]=0;pid_array[sid]=0;et_array[sid]=0; // initilize element[station index]=0 for start time, program, end time 
+  }
+  do { // check through every program
+    busy=0;
+	 endmin=0;
+    match_found=0;
+    for(pid=0;pid<nprogs;pid++) { //for each program
+      var pd=prog[pid]; //prog=program array, pd=program element at this index (program data)
+      if(scheduledThisDate(pd,simminutes,simdate)) { //call scheduledThisDate function, if scheduled...
+        for(sid=0;sid<nst;sid++) { //for each station...
+          bid=sid>>3;s=sid%8; //set board index (bid) and station number per board (s) from station index (sid) 
+          if(mas==(sid+1)) continue; // skip master station
+          if(pd[7+bid]&(1<<s)) { // if this station is selected in this program...
+				et_array[sid]=pd[6]*wl/100>>0; // Set end time for this station to duration adjusted by water level
+				pid_array[sid]=pid+1; // Set station element in pid array to program number (pid+1)
+            match_found=1;
+          }
+        }
+      }
+    }	
+    if(match_found) { // when a match is found...
+      var acctime=simminutes*60; // accumulate time (acctime) set to simminutes converted to seconds
+      if(seq) { // if operation is sequential...
+        for(sid=0;sid<nst;sid++) { // for each station...
+          if(et_array[sid]) { // if an end time is set...
+            st_array[sid]=acctime; // set start time for this station to accumulated time 
+			  acctime+=et_array[sid]; //increment accumulated time by end time (adjusted duration) for this station
+            et_array[sid]=acctime; // set end time for this station to updated accumulated time
+			  endmin = Math.ceil(et_array[sid]/60); // update end time
+			  acctime+=sdt; // increment accumulated time by station delay time
+            busy=1; // set system busy flag - prevents new scheduleing until current schedule is finished
+          }//if
+        }//for
+      } else { // if operation is concurrent...
+        for(sid=0;sid<nst;sid++) { // for each station...
+          if(et_array[sid]) { // if an end time is set...
+            st_array[sid]=simminutes*60; // set start time for this station to simminutes converted to seconds
+            et_array[sid]=simminutes*60+et_array[sid]; // set end time for this station to end time shifted by start time
+			  if ((et_array[sid]/60)>endmin) {endmin = Math.ceil((et_array[sid]/60))} // update endmin to whole minute
+            busy=1; // set system busy flag - prevents new scheduleing until current schedule is complete
+          }//if(et_array)
+        }//for(sid)
+      }//else(seq)
+    }//if(match_found)
+	// add to schedule
+	for(sid=0;sid<nst;sid++) { // for each station
+	  if(pid_array[sid]) { // if this station is included...
+	    schedule.push({ // data for creating home page program display
+			program: pid_array[sid], // program number
+			station: sid, // station index
+			start: st_array[sid]/60, // start time, minutes since midnight
+			duration: et_array[sid]-st_array[sid], // duration in seconds
+			label: toClock(st_array[sid]/60, timeFormat) + " for " + toClock(((et_array[sid]/60)-(st_array[sid]/60)), 1) // ***not the same as log data date element
+		});
+	  }
+    }	  
+    if (busy) { // if system buisy...
+      if(seq&&simminutes!=endmin) simminutes=endmin; // move to end of system busy state.
+      else simminutes++; // increment simulation time
+      for(sid=0;sid<nst;sid++)  {st_array[sid]=0;pid_array[sid]=0;et_array[sid]=0;} // set all elements of arrays to zero
+      busy=0;
+    } else { // if system not buisy...
+      simminutes++; // increment simulation time
+    }
+  } while(simminutes<=24*60); // simulation ends at 24 hours
+  return schedule
 }
 
 function toXSDate(d) {
@@ -132,9 +146,6 @@ function programName(p) {
 		return "Program " + p;
 	}
 }
-
-var displayScheduleDate = new Date();
-var displayScheduleTimeout;
 
 function displaySchedule(schedule) {
 	if (displayScheduleTimeout != null) {
@@ -194,8 +205,8 @@ function displaySchedule(schedule) {
 }
 
 function displayProgram() {
-	if (displayScheduleDate > new Date()) {
-		var schedule = checkMatch(prog, displayScheduleDate);
+	if (displayScheduleDate > devt) { //dk 7-13-14 << new Date()
+		var schedule = doSimulation(); //dk
 		displaySchedule(schedule);
 	} else {
 		var visibleDate = toXSDate(displayScheduleDate);
@@ -209,14 +220,13 @@ function displayProgram() {
 				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
 			}
 			if (toXSDate(displayScheduleDate) == toXSDate(new Date())) {
-				var schedule = checkMatch(prog, displayScheduleDate);
+				var schedule = doSimulation(); //dk
 				log = log.concat(schedule);
 			}
 			displaySchedule(log);
 		})
 	}
 }
-
 
 jQuery(document).ready(displayProgram);
 
