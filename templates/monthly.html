@@ -1,0 +1,84 @@
+$def with(m_vals)
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Monthly irrigation adjustments</title>
+		<style>
+			.percents li{
+				padding:5px; 
+				position:relative;
+				width:750px;
+				list-style-type:none;
+				list-style-position:outside;
+				margin:0px;
+			}			
+			.percents label {
+				width:75px;
+				margin-top: 3px;
+				display:inline-block;
+				float:left;
+				padding:3px;
+			}
+			.percents input {
+				height:10px; 
+				width:25px; 
+				padding:5px 5px;
+				border-radius: 3px;
+			}		
+			button.submit {
+				height:30px;
+				width:120px;
+				background-color: #68b12f;
+				border: 1px solid #509111;
+				border-bottom: 1px solid #5b992b;
+				border-radius: 8px;
+			}		
+			button.submit:hover {
+				opacity:.85;
+				cursor: pointer; 
+			}
+			button.submit:active {
+				border: 1px solid #20911e;
+				box-shadow: 0 0 10px 5px #356b0b inset;
+			}
+			button.cCancel {
+				height:30px;
+				width:120px;
+				background-color: #F7F1CD;
+				border: 1px solid black;
+				border-bottom: 1px solid black;
+				border-radius: 8px;
+			}	
+		</style>
+		<script>
+		jQuery("button#cCancel").click(function(){
+			window.location="/";
+		});
+		</script>
+	</head>
+	<body>
+	<h1>Monthly Irrigatin Adjustments</h1>
+	<h3>Enter an adjustment for each month (% irrigation time)</h2>
+		<form class="percents" action="/uma" method="get">
+			<ul>
+				<li><label for="jan">January:</label> <input type="text" name="jan" value=$m_vals[0]><br></li>
+				<li><label for="feb">February:</label> <input type="text" name="feb" value=$m_vals[1]><br></li>
+				<li><label for="mar">March:</label>	<input type="text" name="mar" value=$m_vals[2]><br></li>
+				<li><label for="apr">April:</label> <input type="text" name="apr" value=$m_vals[3]><br></li>
+				<li><label for="may">May:</label> <input type="text" name="may" value=$m_vals[4]><br></li>
+				<li><label for="jun">June:</label> <input type="text" name="jun" value=$m_vals[5]><br></li>
+				<li><label for="jul">July:</label> <input type="text" name="jul" value=$m_vals[6]><br></li>
+				<li><label for="aug">August:</label> <input type="text" name="aug" value=$m_vals[7]><br></li>
+				<li><label for="sep">September:</label> <input type="text" name="sep" value=$m_vals[8]><br></li>
+				<li><label for="oct">October:</label> <input type="text" name="oct" value=$m_vals[9]><br></li>
+				<li><label for="nov">November:</label> <input type="text" name="nov" value=$m_vals[10]><br></li>
+				<li><label for="dec">December:</label> <input type="text" name="dec" value=$m_vals[11]><br></li>
+				<li><button class="submit" type="submit">Submit Values</button><button class="cCancel">Cancel</button></li>
+			</ul>
+		</form>
+		Note: In order for this plugin to actually work, The <b>apscheduler</b> Python module must be installed.</br>
+		Visit the <a href="http://rayshobby.net/mediawiki/index.php?title=Python_Interval_Program_for_OSPi#Adding_Python_Modules" target="_blank">Wiki</a> for instructions.
+		
+	</body>
+</html>

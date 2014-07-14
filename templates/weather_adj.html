@@ -1,0 +1,45 @@
+$def with(m_vals)
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Weather-based adjustments</title>
+		<style>
+			button.submit {
+				height:30px;
+				width:120px;
+				background-color: #68b12f;
+				border: 1px solid #509111;
+				border-bottom: 1px solid #5b992b;
+				border-radius: 8px;
+			}
+			button.submit:hover {
+				opacity:.85;
+				cursor: pointer;
+			}
+			button.submit:active {
+				border: 1px solid #20911e;
+				box-shadow: 0 0 10px 5px #356b0b inset;
+			}
+		</style>
+	</head>
+	<body>
+	<h1>Weather-based adjustments</h1>
+	<h2>Enable/Disable weather based adjustments</h2>
+	<h3>When weather-based rain delay is enabled, the weather will be checked for rain every hour. If the weather reports any condition suggesting rain, a rain delay is automatically issued using the below set delay duration.</h3>
+		<form action="/uwa" method="get">
+			$code:
+				output = ""
+				output += "<span>Use Automatic Rain Delay: </span><input name='auto_delay' type='checkbox' " + ("checked" if m_vals['auto_delay'] == "on" else "") + ">\n"
+			$:{output}
+			<br><span>Delay Duration (hours): </span><input name='delay_duration' type='number' min="0" max="96" value=$m_vals["delay_duration"]>
+			<br><span>Weather Provider: </span>
+			<select name="weather_provider">
+				<option value="yahoo" ${"selected" if m_vals["weather_provider"]=="yahoo" else ""}>Yahoo!</option>
+				<option value="wunderground" ${"selected" if m_vals["weather_provider"]=="wunderground" else ""}>Wunderground</option>
+			</select>
+			<br><span>Wunderground API Key: </span><input name='wapikey' type='text' value=$m_vals["wapikey"]>
+			<br><button class="submit" type="submit">Submit</button>
+		</form>
+	</body>
+</html>

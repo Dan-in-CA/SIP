@@ -40,13 +40,14 @@ $code:
 
 		#lastRun {color:gray;}
 		#stations {width:100%;}
+		#pluginMenu{display: none;}
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
-	<script src="${gv.baseurl}/static/scripts/schedule.js"></script>
+
 	<script>
 		// Variables set by ospi.py
 		var devt = ${gv.now}*1000;
-		var tz = ${gv.sd['tz']};
+		//var tz = ${gv.sd['tz']};
 		var timeFormat = ${tf};
 		var cputemp = "${gv.cputemp}";
 		var tempunit = "${gv.sd['tu']}";
@@ -61,17 +62,21 @@ $code:
 		var wl = ${gv.sd['wl']};
 		var mas = ${gv.sd['mas']};
 		var nbrd = ${gv.sd['nbrd']};
-		var prog = $:{gv.pd};
+		var plugins = $:{gv.plugin_menu}
+		var prog = $:{gv.pd}; // sb 'progs' because it is a list
+		var sdt = ${gv.sd['sdt']};
+		var seq = ${gv.sd['seq']};
 		
 	</script>
+	<script src="${gv.baseurl}/static/scripts/schedule.js"></script>
 	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
 	<script>
 		// date/time formating helpers
-		var timezoneSuffix =
-			((tz-48>=0) ? "+" : "-") +
-			(Math.abs(tz-48)/4>>0) + ":" +
-			((Math.abs(tz-48)%4)*15/10>>0) +
-			((Math.abs(tz-48)%4)*15%10);
+		//var timezoneSuffix =
+			//((tz-48>=0) ? "+" : "-") +
+			//(Math.abs(tz-48)/4>>0) + ":" +
+			//((Math.abs(tz-48)%4)*15/10>>0) +
+			//((Math.abs(tz-48)%4)*15%10);
 		
 		function formatLogline(log) {
 			var lrsid = lrun[0], lrpid = lrun[1], lrdur = lrun[2], lret = lrun[3];
@@ -85,7 +90,7 @@ $code:
 			if (lrpid == 254 || lrpid == 98) {
 				pname = "Run Once Program";
 			}
-			var runDate = (new Date(lret*1000)).toUTCString() + timezoneSuffix;
+			var runDate = (new Date(lret*1000)).toString(); // + timezoneSuffix; //dk
 			return snames[lrsid] + " ran " + pname + " for " + (lrdur/60>>0) + "m" + (lrdur%60) + "s on " + runDate;
 		}
 
@@ -148,6 +153,25 @@ $code:
 		jQuery(document).ready(function(){
 			$if gv.sd['mm'] == 0:
 				statusTimer();
+			
+			jQuery.each(plugins, function() {
+			    jQuery('#pluginLinks').append('<li><a href='+this[1]+'>'+this[0]+'</a></li>');
+			});
+			
+			jQuery("#bPlugins").click(function(e) {
+			    var btn = jQuery("#bPlugins");
+			    jQuery("#pluginMenu").css({
+			        position: 'absolute',
+			        top: btn.offset().top + btn.outerHeight(),
+			        left: btn.offset().left
+			    }).slideToggle();
+			    e.stopPropagation();
+			});
+			
+			jQuery(document).click(function(){                   
+				  jQuery("#pluginMenu").slideUp();
+				});
+			
 
 			jQuery("button#cStartStop").click(function(){
 				jQuery("form[name='hf'] input[name='en']").val(1-en);
@@ -210,7 +234,9 @@ $code:
 				displayProgram();
 			});
 			jQuery("button#pToday").click(function() {
-				displayScheduleDate = new Date();
+				var day = new Date()//dk
+				displayScheduleDate.setDate(day.getDate());
+				displayScheduleDate.setMonth(day.getMonth()); //dk
 				displayProgram();
 			});
 			jQuery("button#pNext").click(function() {
@@ -226,7 +252,7 @@ $code:
 		function countdownTimer(timerId) {
 			var timerElement = jQuery("#" + timerId);
 			var timerValue = parseFloat(timerElement.attr("data"));
-			var remaining = timerValue - Date.now();
+			var remaining = timerValue - devt; //Date.now(); // DK change
 			var rHours = Math.floor(remaining/3600000);
 			var rMinutes = Math.floor((remaining%3600000)/60000);
 			if (rHours <=0 && rMinutes <=0) {
@@ -243,6 +269,11 @@ $code:
 		<form name="tt" action="ttu" method="get">
 			<input type="hidden" name="tunit">
 		</form>
+		
+		<div id="pluginMenu">
+				<ul id="pluginLinks">
+				</ul>
+	    </div>
 		
 		<div class="header">
 			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
@@ -261,6 +292,7 @@ $code:
 					<button id="bHome" class="home here" title="Home">Home</button>
 					<button id="bPrograms" class="programs" title="Define Programs">Programs</button>
 					<button id="bRunOnce" class="start" title="Define Run Once Program">Run Once</button>
+					<button id="bPlugins" class="Plugins" title="Acces Plugins">Plugins</button>					
 					<button id="bLog" class="log" title="View Log">Log</button>
 					<button id="bOptions" class="options" title="Options">Options</button>
 					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
@@ -419,7 +451,7 @@ $code:
 		
 		<div class="footer">
 			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
-			<p><a href="https://github.com/jonathan-marsh/OSPi">Firmware</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
+			<p><a href="https://github.com/Dan-in-CA/OSPi">Software</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
 		</div>
 	</div>
 </body>

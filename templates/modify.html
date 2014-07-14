@@ -14,9 +14,15 @@ $code:
 	
 	snames = eval(data('snames'))
 	if pid < 0:
-		program = [1, 127, 4, 360, 1080, 240, 900, 1]
+		program = [1, 127, 4, 360, 1080, 240, 900] # does not include station bytes(program[7+]. #dk
+		for brd in range(gv.sd['nbrd']): #dk
+			program.extend([0]) # add bytes per number of boards. #dk
 	else:
 		program = eval(prog)
+		full_len = 7 + gv.sd['nbrd'] #dk
+		if len(program) < full_len: #dk
+		    for brd in range(full_len - len(program)): #dk
+		        program.extend([0]) # add bytes per number of boards. #dk
 	weekly = not((program[1]&0x80) and (program[2]>1))
 	stationsShown = 0
 	stationsOn = 0
@@ -218,13 +224,7 @@ $code:
 					jQuery("#intervalSelector").trigger("click");
 				}
 			});
-			jQuery("#tem,#teh,#tef").change(function(){
-				if (parseTime("te") < parseTime("ts")) {
-					jQuery("#nextday").show();
-				} else {
-					jQuery("#nextday").hide();
-				}
-			});
+			
 			jQuery("button#cSubmit").click(function(){
 				var days = 0, dayInterval = 0, i, s, sid;
 				var en = jQuery("button#cProgramEnabled").hasClass("on") ? 1 : 0;
@@ -283,7 +283,9 @@ $code:
 					var interval = parseTime("ti");
 				}
 				if (startTime >= endTime) {
-					endTime += 24*60;  // Values over 24 hours indicate programs extending into following day.
+					// Possible bug - can you run a program from 10PM to 2AM?
+					alert("Error: Start time must be prior to end time.");
+					return;
 				}
 				
 				var v = "[" + en + "," + days + "," + dayInterval + "," + startTime + "," + endTime + "," + interval + "," + duration;
@@ -354,8 +356,7 @@ $code:
 									<p><b>Every:</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tih" value="${twoDigits(program[5]/60)}"> : 
 									<input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tim" value="${twoDigits(program[5]%60)}"> (hh:mm)</p>
 									<p>
-									$ e = program[4] if program[4]<24*60 else program[4]-24*60
-									$ t = formatTime(twoDigits(e/60) + ":" + twoDigits(e%60))
+									$ t = formatTime(twoDigits(program[4]/60) + ":" + twoDigits(program[4]%60))
 										<b>Until:</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="teh" value="${t.split(":")[0]}"> : 
 										<input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tem" value="${t.split(":")[1][0:2]}">
 									$if tf:
@@ -365,7 +366,7 @@ $code:
 											<option ${"selected" if t.find("am")>=0 else ""}>AM</option>
 											<option ${"selected" if t.find("pm")>=0 else ""}>PM</option>
 										</select>
-									<span id="nextday" $:{"style='display:none'" if program[4]<24*60 else ""}> (next day)</span></p>
+									</p>
 								</div>
 							</div>
 							<p><button id="cWeeklyInterval" class="toggle choice ${'on' if weekly else 'off'}"><span class='toggleleft'>Weekly</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Interval</span></button></p>
@@ -457,7 +458,7 @@ $code:
 		
 		<div class="footer">
 			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
-			<p><a href="https://github.com/jonathan-marsh/OSPi">Firmware</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
+			<p><a href="https://github.com/Dan-in-CA/OSPi">Software</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
 		</div>
 	</div>
 </body>

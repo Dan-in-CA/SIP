@@ -17,11 +17,13 @@ $code:
 	
 	def pdays(days, dayInterval):
 		output = ""
-		if (days&0x80) and (dayInterval>1): # this is an interval program 
+		if (days&0x80) and (dayInterval>1): # this is an interval program
 			days = days&0x7f
+			dse = int(gv.now/86400) # days since epoc
+			daysRemaining = ((days + dayInterval)-(dse % dayInterval)) % dayInterval
 			output += "Every " + str(dayInterval) + " days"
-			if days > 0:
-				output += ", starting in " + str(days) + " days."
+			if daysRemaining:
+				output += ", starting in " + str(daysRemaining) + " days."
 		else: # this is a weekly program 
 			if days == 127:
 				output += "Every Weekday"
@@ -60,20 +62,16 @@ $code:
 		.strike {text-decoration:line-through;}
 		
 		.progstation_on {background-color:#9AFA9A; color:black; font-size:10pt}
-		.progstation_off {background-color:white; color:lightgray; font-size:10pt}
-		button.cDisable.toggle {float:right; width:130px; margin:0px; padding:0px; background-color:transparent}
-		button.cDisable.toggle span.toggleleft {width: 30px;}
-		button.cDisable.toggle span.toggleright {width: 30px;}
+		.progstation_off {background-color:white; color:lightgray; font-size:10pt}						
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>		
 		// Variables set by ospi.py
 		var devt = ${gv.now}*1000;
-		var tz = ${gv.sd['tz']};
+		//var tz = ${gv.sd['tz']};
 		var timeFormat = ${gv.sd['tf']};
 		var cputemp = "${gv.cputemp}";
 		var tempunit = "${gv.sd['tu']}";
-
 		var nbrd = ${gv.sd['nbrd']};
 		var mas = ${gv.sd['mas']};
 	</script>
@@ -83,30 +81,38 @@ $code:
 		jQuery(document).ready(function(){
 						
 			jQuery("button#nDelAll, button.cDelete").click(function(){
-				var pid = jQuery(this).attr("data");
+				try{
+					var pid = jQuery(this).attr("data")
+					}
+				catch(err) {
+					var pid = 0
+				}
 				jQuery("form#df input[name='pid']").val(pid);
 				jQuery("form#df").submit();
 			});
 			
 			jQuery("button#nAdd, button.cModify").click(function(){
-				var pid = jQuery(this).attr("data");
+				try{
+					var pid = jQuery(this).attr("data")
+					}
+				catch(err) {
+					var pid = 0
+				}
 				jQuery("form#mf input[name='pid']").val(pid);
 				jQuery("form#mf").submit();
 			});
 			
 			jQuery("button.cRunNow").click(function(){
-				var pid = jQuery(this).attr("data");
+				try{
+					var pid = jQuery(this).attr("data")
+					}
+				catch(err) {
+					var pid = 0
+				}
 				jQuery("form#rn input[name='pid']").val(pid);
 				jQuery("form#rn").submit();
 			});
 
-			jQuery("button.cDisable").click(function(){
-				var pid = jQuery(this).attr("data");
-				var enable = jQuery(this).hasClass("off");
-				jQuery("form#ep input[name='pid']").val(pid);
-				jQuery("form#ep input[name='enable']").val(enable ? 1 : 0);
-				jQuery("form#ep").submit();
-			});
 		});
 
 	</script>
@@ -145,10 +151,6 @@ $code:
 				<form name="mf" id="mf" action="mp" method="get">
 					<input type="hidden" name="pid">
 				</form>
-				<form name="ep" id="ep" action="ep" method="get">
-					<input type="hidden" name="pid">
-					<input type="hidden" name="enable">
-				</form>
 				
 				<div id="controls">
 					<button id="nAdd" class="add" data="-1">Add a New Program</button>
@@ -159,18 +161,12 @@ $code:
 					$for pid in range(0,nprogs):
 						$ prog = gv.pd[pid]
 						<div id="p${pid}" class="controlBlock program ${'disabled' if prog[0] == 0 else ''}">
-							<p>
-								<button class="cDisable toggle ${'off' if prog[0] == 0 else 'on'}" data="${pid}">
-									<span class='toggleleft'>On</span>
-									<span class='togglesep'>&nbsp;</span>
-									<span class='toggleright'>Off</span>
-								</button>
-								Program ${pid+1}: <span class="val">${pdays(prog[1], prog[2])}</span></b>
-							</p>
+							<p>Program ${pid+1}: <span class="val">${pdays(prog[1], prog[2])}</span></b>
 							$ start = prog[3]
 							$ end = prog[4]
 							$ interval = prog[5]
 							$ duration = prog[6]
+							</p>
 							<p class="stationList">Run:
 							$ stationsOn = 0
 							$for bid in range(0,gv.sd['nbrd']):
@@ -204,7 +200,7 @@ $code:
 		
 		<div class="footer">
 			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
-			<p><a href="https://github.com/jonathan-marsh/OSPi">Firmware</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
+			<p><a href="https://github.com/Dan-in-CA/OSPi">Software</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
 		</div>
 	</div>
 </body>
