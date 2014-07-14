@@ -62,7 +62,10 @@ $code:
 		.strike {text-decoration:line-through;}
 		
 		.progstation_on {background-color:#9AFA9A; color:black; font-size:10pt}
-		.progstation_off {background-color:white; color:lightgray; font-size:10pt}						
+		.progstation_off {background-color:white; color:lightgray; font-size:10pt}
+		button.cDisable.toggle {float:right; width:130px; margin:0px; padding:0px; background-color:transparent}
+		button.cDisable.toggle span.toggleleft {width: 30px;}
+		button.cDisable.toggle span.toggleright {width: 30px;}
 	</style>
 	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
 	<script>		
@@ -113,6 +116,13 @@ $code:
 				jQuery("form#rn").submit();
 			});
 
+			jQuery("button.cDisable").click(function(){
+				var pid = jQuery(this).attr("data");
+				var enable = jQuery(this).hasClass("off");
+				jQuery("form#ep input[name='pid']").val(pid);
+				jQuery("form#ep input[name='enable']").val(enable ? 1 : 0);
+				jQuery("form#ep").submit();
+			});
 		});
 
 	</script>
@@ -151,6 +161,10 @@ $code:
 				<form name="mf" id="mf" action="mp" method="get">
 					<input type="hidden" name="pid">
 				</form>
+				<form name="ep" id="ep" action="ep" method="get">
+					<input type="hidden" name="pid">
+					<input type="hidden" name="enable">
+				</form>
 				
 				<div id="controls">
 					<button id="nAdd" class="add" data="-1">Add a New Program</button>
@@ -161,12 +175,18 @@ $code:
 					$for pid in range(0,nprogs):
 						$ prog = gv.pd[pid]
 						<div id="p${pid}" class="controlBlock program ${'disabled' if prog[0] == 0 else ''}">
-							<p>Program ${pid+1}: <span class="val">${pdays(prog[1], prog[2])}</span></b>
+							<p>
+								<button class="cDisable toggle ${'off' if prog[0] == 0 else 'on'}" data="${pid}">
+									<span class='toggleleft'>On</span>
+									<span class='togglesep'>&nbsp;</span>
+									<span class='toggleright'>Off</span>
+								</button>
+								Program ${pid+1}: <span class="val">${pdays(prog[1], prog[2])}</span></b>
+							</p>
 							$ start = prog[3]
 							$ end = prog[4]
 							$ interval = prog[5]
 							$ duration = prog[6]
-							</p>
 							<p class="stationList">Run:
 							$ stationsOn = 0
 							$for bid in range(0,gv.sd['nbrd']):
