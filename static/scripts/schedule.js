@@ -1,5 +1,5 @@
 // Global vars
-var displayScheduleDate = new Date(devt + (new Date(devt).getTimezoneOffset()*60000)); //new Date(devt); //dk 
+var displayScheduleDate = new Date(devt); // dk 
 var displayScheduleTimeout;
 var sid,sn,t;
 var simdate = displayScheduleDate; // date for simulation
