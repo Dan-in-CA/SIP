@@ -1,16 +1,15 @@
 // Global vars
-var displayScheduleDate = new Date(devt); //dk
+var displayScheduleDate = new Date(devt); // dk 
 var displayScheduleTimeout;
 var sid,sn,t;
-//var simt = displayScheduleDate.valueOf(); // miliseconds since epoc
 var simdate = displayScheduleDate; // date for simulation
 var nprogs = prog.length; // number of progrms
 var nst = nbrd*8; // number of stations
 
 function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is scheduled for this date (displayScheduleDate) called from doSimulation
   // simminutes is minute count generated in doSimulation()
-  // simdate is a JavaScript date object, simday is the number of days since epoc
-  simday = Math.floor(simdate/(1000*3600*24))
+  // simdate is a JavaScript date object
+  simday = Math.floor(simdate/(1000*3600*24)) // The number of days since epoc
   var wd,dn,drem; // week day, Interval days, days remaining
   if(pd[0]==0)  return 0; // program not enabled, do not match
   if ((pd[1]&0x80)&&(pd[2]>1)) {  // if interval program...  
@@ -74,7 +73,7 @@ function doSimulation() { // Create schedule by a full program simulation, was d
             st_array[sid]=acctime; // set start time for this station to accumulated time 
 			  acctime+=et_array[sid]; //increment accumulated time by end time (adjusted duration) for this station
             et_array[sid]=acctime; // set end time for this station to updated accumulated time
-			  endmin = et_array[sid]/60; // update end time
+			  endmin = Math.ceil(et_array[sid]/60); // update end time
 			  acctime+=sdt; // increment accumulated time by station delay time
             busy=1; // set system busy flag - prevents new scheduleing until current schedule is finished
           }//if
@@ -84,7 +83,7 @@ function doSimulation() { // Create schedule by a full program simulation, was d
           if(et_array[sid]) { // if an end time is set...
             st_array[sid]=simminutes*60; // set start time for this station to simminutes converted to seconds
             et_array[sid]=simminutes*60+et_array[sid]; // set end time for this station to end time shifted by start time
-			  if ((et_array[sid]/60)>endmin) {endmin = (et_array[sid]/60)} // update end time
+			  if ((et_array[sid]/60)>endmin) {endmin = Math.ceil((et_array[sid]/60))} // update endmin to whole minute
             busy=1; // set system busy flag - prevents new scheduleing until current schedule is complete
           }//if(et_array)
         }//for(sid)
@@ -106,10 +105,11 @@ function doSimulation() { // Create schedule by a full program simulation, was d
       if(seq&&simminutes!=endmin) simminutes=endmin; // move to end of system busy state.
       else simminutes++; // increment simulation time
       for(sid=0;sid<nst;sid++)  {st_array[sid]=0;pid_array[sid]=0;et_array[sid]=0;} // set all elements of arrays to zero
+      busy=0;
     } else { // if system not buisy...
       simminutes++; // increment simulation time
     }
-  } while(simminutes<24*60); // simulation ends at 24 hours
+  } while(simminutes<=24*60); // simulation ends at 24 hours
   return schedule
 }
 
@@ -205,7 +205,7 @@ function displaySchedule(schedule) {
 }
 
 function displayProgram() {
-	if (displayScheduleDate > new Date()) {
+	if (displayScheduleDate > devt) { //dk 7-13-14 << new Date()
 		var schedule = doSimulation(); //dk
 		displaySchedule(schedule);
 	} else {
