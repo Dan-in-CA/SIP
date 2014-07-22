@@ -1,7 +1,8 @@
+from helpers import checkLogin, CPU_temperature
 import web, json, re, os
 import ast, time, datetime, string
-import gv # Gain access to ospi's settings
-from urls import urls # Gain access to ospi's URL list
+import gv # Gain access to ospy's settings
+from urls import urls # Gain access to ospy's URL list
 
 ##############
 ## New URLs ##
@@ -11,33 +12,37 @@ urls.extend(['/jo', 'plugins.mobile_app.options', '/jc', 'plugins.mobile_app.cur
 #######################
 ## Class definitions ##
 
-class options: # /jo
+class options(object): # /jo
     """Returns device options as json."""
     def GET(self):
+        checkLogin()
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        jopts = {"fwv":'1.9.0-OSPi',"tz":gv.sd['tz'], "ext":gv.sd['nbrd']-1,"seq":gv.sd['seq'],"sdt":gv.sd['sdt'],"mas":gv.sd['mas'],"mton":gv.sd['mton'],"mtof":gv.sd['mtoff'],"urs":gv.sd['urs'],"rso":gv.sd['rst'],"wl":gv.sd['wl'],"ipas":gv.sd['ipas'],"reset":gv.sd['rbt']}
+        jopts = {"fwv":'1.9.0-OSPy',"tz":gv.sd['tz'], "ext":gv.sd['nbrd']-1,"seq":gv.sd['seq'],"sdt":gv.sd['sdt'],"mas":gv.sd['mas'],"mton":gv.sd['mton'],"mtof":gv.sd['mtoff'],"urs":gv.sd['urs'],"rso":gv.sd['rst'],"wl":gv.sd['wl'],"ipas":gv.sd['ipas'],"reset":gv.sd['rbt']}
         return json.dumps(jopts)
 
-class cur_settings: # /jc
+class cur_settings(object): # /jc
     """Returns current settings as json."""
     def GET(self):
+        checkLogin()
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         jsettings = {"devt":gv.now,"nbrd":gv.sd['nbrd'],"en":gv.sd['en'],"rd":gv.sd['rd'],"rs":gv.sd['rs'],"mm":gv.sd['mm'],"rdst":gv.sd['rdst'],"loc":gv.sd['loc'],"sbits":gv.sbits,"ps":gv.ps,"lrun":gv.lrun,"ct":CPU_temperature(gv.sd['tu']),"tu":gv.sd['tu']}
         return json.dumps(jsettings)
 
-class station_state: # /js
+class station_state(object): # /js
     """Returns station status and total number of stations as json."""
     def GET(self):
+        checkLogin()
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         jstate = {"sn":gv.srvals, "nstations":gv.sd['nst']}
         return json.dumps(jstate)
 
-class program_info: # /jp
+class program_info(object): # /jp
     """Returns program data as json."""
     def GET(self):
+        checkLogin()
         lpd = [] # Local program data
         dse = int((time.time()+((gv.sd['tz']/4)-12)*3600)/86400) # days since epoch
         for p in gv.pd:
@@ -48,12 +53,13 @@ class program_info: # /jp
             lpd.append(op)
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        jpinfo = {"nprogs":gv.sd['nprogs']-1,"nboards":gv.sd['nbrd'],"mnp":gv.sd['mnp'], 'pd': lpd}
+        jpinfo = {"nprogs":gv.sd['nprogs']-1,"nboards":gv.sd['nbrd'],"mnp":9999, 'pd': lpd}
         return json.dumps(jpinfo)
 
-class station_info: # /jn
+class station_info(object): # /jn
     """Returns station information as json."""
     def GET(self):
+        checkLogin()
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         names = data('snames')
@@ -61,9 +67,10 @@ class station_info: # /jn
         jpinfo = {"snames":nlst,"ignore_rain":gv.sd['ir'],"masop":gv.sd['mo'],"maxlen":gv.sd['snlen']}
         return json.dumps(jpinfo)
 
-class get_logs: # /jl
+class get_logs(object): # /jl
     """Returns log information for specified date range."""
     def GET(self):
+        checkLogin()
         records = self.read_log()
         data = []
         qdict = web.input()
@@ -79,9 +86,9 @@ class get_logs: # /jl
             date = time.mktime(datetime.datetime.strptime(event["date"], "%Y-%m-%d").timetuple())
             if int(qdict["start"]) <= int(date) <= int(qdict["end"]):
                 pid = event["program"]
-                if (pid == "Run-once"):
+                if pid == "Run-once":
                     pid = 98
-                if (pid == "Manual"):
+                if pid == "Manual":
                     pid = 99
 
                 pid = int(pid)
@@ -96,46 +103,24 @@ class get_logs: # /jl
 
     def read_log(self):
         try:
-            logf = open('./data/log.json')
-            records = logf.readlines()
-            logf.close()
+            with open('./data/log.json') as logf:
+                records = logf.readlines()
             return records
         except IOError:
             return []
 ##############################
 #### Function Definitions ####
 
-def CPU_temperature(format):
-    """Returns the temperature of the Raspberry Pi's CPU."""
-    try:
-        if gv.platform == '':
-            return str(0)
-        if gv.platform == 'bo':
-            res = os.popen('cat /sys/class/hwmon/hwmon0/device/temp1_input').readline()
-            temp = (str(int(float(res)/1000)))
-        if gv.platform == 'pi':
-            res = os.popen('vcgencmd measure_temp').readline()
-            temp =(res.replace("temp=","").replace("'C\n",""))
-
-        if format == 'F':
-            return str(9.0/5.0*float(temp)+32)
-        else:
-            return str(float(temp))
-    except:
-        pass
-
 def data(dataf):
     """Return contents of requested text file as string or create file if a missing config file."""
     try:
-        f = open('./data/'+dataf+'.txt', 'r')
-        data = f.read()
-        f.close()
+        with open('./data/'+dataf+'.txt', 'r') as f:
+            data = f.read()
     except IOError:
         if dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
             data = "['S1','S2','S3','S4','S5','S6','S7','S8',]"
-            f = open('./data/'+dataf+'.txt', 'w')
-            f.write(data)
-            f.close()
+            with open('./data/'+dataf+'.txt', 'w') as f:
+                f.write(data)
         else:
             return None
     return data

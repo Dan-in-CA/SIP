@@ -14,13 +14,13 @@ except ImportError:
 try:
     GPIO.setwarnings(False)
     GPIO.cleanup()
-except:
+except Exception:
     pass
 
   #### pin defines ####
 try:
     if gv.platform == 'pi': # If this will run on Raspberry Pi:
-        GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
+        GPIO.setmode(GPIO.BOARD) # IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
         pin_sr_dat = 13
         pin_sr_clk = 7
         pin_sr_noe = 11

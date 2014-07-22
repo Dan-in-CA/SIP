@@ -20,7 +20,7 @@ for name in glob(join(basedir, '*.py')):
             if bool(st.st_mode & stat.S_IXGRP) or module == 'mobile_app': # Load plugin if group permission is executable.
                 try:
                     __import__(__name__+'.'+module)
-                except Exception, e:
+                except Exception as e:
                     print 'Ignoring exception while loading the {} plug-in.'.format(module)
                     print e # Provide feedback for plugin development
                 else:
@@ -28,7 +28,7 @@ for name in glob(join(basedir, '*.py')):
         elif os_name == "nt":
             try:
                 __import__(__name__+'.'+module)
-            except Exception, e:
+            except Exception as e:
                 print 'Ignoring exception while loading the {} plug-in.'.format(module)
                 print e # Provide feedback for plugin development
             else:

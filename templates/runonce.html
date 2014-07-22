@@ -1,140 +1,76 @@
 $def with ()
 
-<!-- 
-  2013-13-06: jonathanmarsh
-    - Converted to web.py template, retaining 99% of older look and feel
-    - Moved inline styling to stylesheet
-    - Moved inline behaviors to jQuery.
-    Note that the normal jQuery use of the dollar sign conflicts with the templating syntax - used the longer jQuery() throughout.
- -->
-
+$var title: OpenSprinkler Pi Run-Once
+$var page: runonce
 $code:
 	snames = eval(data('snames'))
+<script>
+    // Initialize behaviors
+    jQuery(document).ready(function(){
 
-<html>
-<head>
-	<meta name="viewport" content="width=640">
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>OpenSprinkler Pi Run-Once ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
-	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
-	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
-	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
-	<script>		
-		// Variables set by ospi.py
-		var devt = ${gv.now}*1000;
-		var tz = ${gv.sd['tz']};
-		var timeFormat = ${gv.sd['tf']};
-		var cputemp = "${gv.cputemp}";
-		var tempunit = "${gv.sd['tu']}";
+        jQuery("button#cRunNow").click(function(){
+            var comm="/cr?&t=[";
+            var sid,strmm,strss,mm,ss,matchfound=0;
+            for (sid=0; sid<nbrd*8; sid++) {
+                if (sid+1 == mas) {
+                    comm+="0,";
+                    continue;
+                }
+                strmm = jQuery("input[name='mm" + sid + "']").val();
+                strss = jQuery("input[name='ss" + sid + "']").val();
+                mm = (strmm=="" || strmm==undefined ? 0 : parseInt(strmm));
+                ss = (strss=="" || strss==undefined ? 0 : parseInt(strss));
+                if (!(mm >= 0 && ss >= 0 && ss < 60)) {
+                    alert("Timer values wrong: " + strmm + ":" + strss);
+                    return;
+                }
+                if (mm*60+ss > 0) {
+                    matchfound=1;
+                }
+                comm += (mm*60+ss) + ",";
+            }
+            comm += "0]";
+            if (!matchfound) {
+                alert("No station is scheduled to run");
+                return;
+            }
+            window.location = comm;
+        });
 
-		var nbrd = ${gv.sd['nbrd']};
-		var mas = ${gv.sd['mas']};
-	</script>
-	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
-	<script>		
+        jQuery("button#cResetTime").click(function(){
+            jQuery("input[type='text']").val(0);
+        });
 
-		// Initialize behaviors
-		jQuery(document).ready(function(){
-			
-			jQuery("button#cRunNow").click(function(){
-				var comm="/cr?&t=[";
-				var sid,strmm,strss,mm,ss,matchfound=0;
-				for (sid=0; sid<nbrd*8; sid++) {
-					if (sid+1 == mas) {
-						comm+="0,";
-						continue;
-					}
-					strmm = jQuery("input[name='mm" + sid + "']").val();
-					strss = jQuery("input[name='ss" + sid + "']").val();
-					mm = (strmm=="" || strmm==undefined ? 0 : parseInt(strmm));
-					ss = (strss=="" || strss==undefined ? 0 : parseInt(strss));
-					if (!(mm >= 0 && ss >= 0 && ss < 60)) {
-						alert("Timer values wrong: " + strmm + ":" + strss);
-						return;
-					}
-			    	if (mm*60+ss > 0) {
-			    		matchfound=1;
-			    	}
-					comm += (mm*60+ss) + ",";
-				}
-				comm += "0]";
-				if (!matchfound) {
-					alert("No station is scheduled to run");
-					return;
-				}
-				window.location = comm;
-			});
-			
-			jQuery("button#cResetTime").click(function(){
-				jQuery("input[type='text']").val(0);
-			});
-			
-			jQuery("button#cCancel").click(function(){
-				window.location="/";
-			});
+        jQuery("button#cCancel").click(function(){
+            window.location="/";
+        });
 
-		});
+    });
+</script>
 
-	</script>
-</head>
-<body>
-	<div class="content">
-		<div class="header">
-			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
-		</div>
-		
-		<div class="body">
-			<div id="status">
-				<p id="deviceTime"><span class="hour"></span><span class="sep">:</span><span class="minute"></span><span class="second"></span><span class="ampm"></span></p>
-				<p id="deviceDate"></p>
-			</div>
-	
-			<div class="panel">
-			
-				<div id="nav">
-					<button id="bHome" class="home" title="Home">Home</button>
-					<button id="bPrograms" class="programs" title="Define Programs">Programs</button>
-					<button id="bRunOnce" class="start here" title="Define Run Once Program">Run Once</button>
-					<button id="bLog" class="log" title="View Log">Log</button>
-					<button id="bOptions" class="options" title="Options">Options</button>
-					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
-					$if not(gv.sd['ipas']):
-						<button id="bLogout" class="logout" title="Logout">Logout</button>
-				</div>
-								
-				<div id="runonce">
-					<div class="title">Run Once Program</div>
-					<form name="rf" action="cr" method="get">
-						<table class="stationList"
-							$for bid in range(0, gv.sd['nbrd']):
-								$for s in range(0,8):
-								$ sid = bid*8 + s;
-								$ show = (gv.sd['show'][bid]>>s)&1
-					 			$if show == 1 and sid+1 != gv.sd['mas']:
-						 			<tr>
-										<td class='station_name'>${snames[sid]}</td>
-										<td>
-											<input type="text" size="3" maxlength="3" value="0" name="mm${sid}">:
-											<input type="text" size="2" maxlength="2" value="0" name="ss${sid}"> (mm:ss)
-										</td>
-									</tr>
-						
-						</table>
-					</form>	
-				</div>
-				
-				<div id="controls">
-					<button id="cRunNow" class="submit"><b>Run Now</b></button>
-					<button id="cResetTime" class="refresh">Reset Time</button>
-					<button id="cCancel" class="cancel danger">Cancel</button>
-				</div>
-			</div>
-		</div>
-		
-		<div class="footer">
-			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
-			<p><a href="https://github.com/Dan-in-CA/OSPi">Software</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
-		</div>
-	</div>
-</body>
-</html>
+<div id="runonce">
+    <div class="title">Run Once Program</div>
+    <form name="rf" action="cr" method="get">
+        <table class="stationList">
+            $for bid in range(0, gv.sd['nbrd']):
+                $for s in range(0,8):
+                    $ sid = bid*8 + s
+                    $ show = (gv.sd['show'][bid]>>s)&1
+                    $if show == 1 and sid+1 != gv.sd['mas']:
+                        <tr>
+                            <td class='station_name'>${snames[sid]}</td>
+                            <td>
+                                <input type="text" size="3" maxlength="3" value="0" name="mm${sid}">:
+                                <input type="text" size="2" maxlength="2" value="0" name="ss${sid}"> (mm:ss)
+                            </td>
+                        </tr>
+
+        </table>
+    </form>
+</div>
+
+<div id="controls">
+    <button id="cRunNow" class="submit"><b>Run Now</b></button>
+    <button id="cResetTime" class="refresh">Reset Time</button>
+    <button id="cCancel" class="cancel danger">Cancel</button>
+</div>

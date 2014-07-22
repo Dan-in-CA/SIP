@@ -1,6 +1,7 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 
 from gpio_pins import *
+from helpers import checkLogin
 from urls import *
 import web, time
 
@@ -8,13 +9,14 @@ urls.extend(['/tr', 'plugins.relay.toggle_relay']) # Add a new url for this plug
 
 gv.plugin_menu.append(['Test Relay', '/tr']) # Add this plugin to the home page plugins menu
 
-class toggle_relay:
+class toggle_relay(object):
     """Test relay by turning it on for a short time, then off."""
     def GET(self):
+        checkLogin()
         try:
             GPIO.output(pin_relay, GPIO.HIGH) # turn relay on
             time.sleep(3)
-            GPIO.output(pin_relay, GPIO.LOW) #Turn relay off
-        except:
+            GPIO.output(pin_relay, GPIO.LOW) # Turn relay off
+        except Exception:
             pass
         raise web.seeother('/') # return to home page

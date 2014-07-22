@@ -3,7 +3,7 @@ var displayScheduleDate = new Date(devt); // dk
 var displayScheduleTimeout;
 var sid,sn,t;
 var simdate = displayScheduleDate; // date for simulation
-var nprogs = prog.length; // number of progrms
+var nprogs = progs.length; // number of progrms
 var nst = nbrd*8; // number of stations
 
 function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is scheduled for this date (displayScheduleDate) called from doSimulation
@@ -52,13 +52,13 @@ function doSimulation() { // Create schedule by a full program simulation, was d
 	 endmin=0;
     match_found=0;
     for(pid=0;pid<nprogs;pid++) { //for each program
-      var pd=prog[pid]; //prog=program array, pd=program element at this index (program data)
+      var pd=progs[pid]; //prog=program array, pd=program element at this index (program data)
       if(scheduledThisDate(pd,simminutes,simdate)) { //call scheduledThisDate function, if scheduled...
         for(sid=0;sid<nst;sid++) { //for each station...
           bid=sid>>3;s=sid%8; //set board index (bid) and station number per board (s) from station index (sid) 
           if(mas==(sid+1)) continue; // skip master station
           if(pd[7+bid]&(1<<s)) { // if this station is selected in this program...
-				et_array[sid]=pd[6]*wl/100>>0; // Set end time for this station to duration adjusted by water level
+				et_array[sid]=pd[6]*wl/100*wlx/100>>0; // Set end time for this station to duration adjusted by water level
 				pid_array[sid]=pid+1; // Set station element in pid array to program number (pid+1)
             match_found=1;
           }

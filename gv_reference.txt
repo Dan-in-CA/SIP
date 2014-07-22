@@ -30,7 +30,6 @@ snlen:32 max size of station names
 
 for scheduling:
 bsy:0	program busy
-mnp:32	maximum number of programs (disregard on OSPi)
 nprogs:0 number of programs (can be calculated form length of prog array)
 mo:[0] master operation bytes - contains bits per board for stations with master set
 ir:[0] ignore rain bytes - contains bits per board for stations to ignore rain delay and rain sensor

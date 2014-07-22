@@ -2,8 +2,8 @@
 Description=Start Python Interval program
 
 [Service]
-WorkingDirectory=/home/root/OSPi
-ExecStart=/usr/bin/python ospi.py
+WorkingDirectory=/home/root/OSPy
+ExecStart=/usr/bin/python ospy.py
 KillMode=process
 
 [Install]

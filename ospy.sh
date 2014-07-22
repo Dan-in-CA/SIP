@@ -1,6 +1,6 @@
 #! /bin/sh
 ### BEGIN INIT INFO
-# Provides:          ospi
+# Provides:          ospy
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
@@ -13,11 +13,11 @@
 #
 # To auto start on boot execute (once) as root
 #
-# update-rc.d ospi defaults
+# update-rc.d ospy defaults
 #
 # To stop auto start on boot execute
 #
-# update-rc.d ospi remove
+# update-rc.d ospy remove
 #
 
 # Author: Denny Fox <dennyf at dfox.us>
@@ -30,10 +30,10 @@
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="OpenSprinkler Raspberry Pi"
-NAME=ospi.py
+NAME=ospy.py
 DAEMON=/usr/bin/python
-DAEMON_ARGS="ospi.py"
-HOMEDIR=/home/pi/OSPi/ # Edit if different on your Raspberry Pi
+DAEMON_ARGS="ospy.py"
+HOMEDIR=/home/pi/OSPy/ # Edit if different on your Raspberry Pi
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 

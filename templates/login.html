@@ -1,63 +1,12 @@
 $def with (form)
 
-<!doctype html>
+$var title: OpenSprinkler Pi Login
+$var page: login
 
-<html>
-
-<html>
-<head>
-	<meta name="viewport" content="width=640">
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>OpenSprinkler Pi Log${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
-	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
-	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
-	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
-	<script>
-		// Variables set by ospi.py
-		var devt = ${gv.now}*1000;
-		var tz = ${gv.sd['tz']};
-		var timeFormat = ${gv.sd['tf']};
-		var cputemp = "${gv.cputemp}";
-		var tempunit = "${gv.sd['tu']}";
-		
-		jQuery(document).ready(function(){
-			jQuery("#password").focus();
-		});
-	</script>
-	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
-</head>
-	
-<body>
-	<div class="content">
-		<div class="header">
-			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
-		</div>
-			
-		<div class="body">
-		
-			<div id="status">
-				<p id="deviceTime"><span class="hour"></span><span class="sep">:</span><span class="minute"></span><span class="second"></span><span class="ampm"></span></p>
-				<p id="deviceDate"></p>
-			</div>
-	
-			<div class="panel" style="height:300px; padding-top:100px; padding-left: 50px">
-				<h1>Login</h1>
-				$if user == 'anonymous':
-    				<form name="test" method="POST"> 
-			    		$:form.render()
-			      		<button id="cSubmit" class="submit"><b>Login</b></button>
-			    	</form>
-			    $else:
-			    	<p>You are already logged in.  Log out to login as another user.</p>
-			    	<button id="bHome" class="home" title="Home">Home</button>
-			    	<button id="bLogout" class="logout" title="Logout">Logout</button>
-			</div>
-		</div>
-		
-		<div class="footer">
-			<p><a href="https://github.com/Dan-in-CA/OSPi">Software</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
-		</div>
-	</div>
-</body>
-
-</html>
+<div class="panel" style="height:300px; padding-top:100px; padding-left: 50px">
+    <div class="title">Login</div>
+    <form name="test" method="POST">
+        $:form.render()
+        <button id="cSubmit" class="submit"><b>Login</b></button>
+    </form>
+</div>

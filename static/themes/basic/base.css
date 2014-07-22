@@ -341,6 +341,15 @@ input.timeInput {
 }
 /******** Station Table Styles **********/
 
+table.optionList {
+	border:3px solid #2E3959;
+	border-radius: 12px;
+	padding: 4px;
+	border-spacing: 0px;
+	empty-cells: show;
+	border-collapse: separate;
+}
+
 table.stationList {
 	border:3px solid #2E3959;
 	border-radius: 12px;
@@ -553,4 +562,13 @@ td.stationSchedule {
 {
     list-style-type: none;
     padding:0;
+}
+
+#pluginMenu
+{
+    border:3px solid #2E3959;
+	border-radius: 12px;
+	padding: 4px;
+	border-spacing: 0px;
+    background-color: white;
 }

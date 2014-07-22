@@ -1,458 +1,357 @@
 $def with ()
+
+$var title: OpenSprinkler Pi
+$var page: home
 $code:
 	tf = gv.sd["tf"]
 	snames = eval(data('snames'))
 
+$code:
 	def twodigits(n):
-		return str((n>>0)/10>>0) + str((n>>0)%10)
+		return '%02d' % int(n)
 
-	def programName(id):
-		pname = "P" + str(id)
-		if (id == 255 or id == 99):
-			pname = "Manual Mode"
-		if (id == 254 or id == 98):
-			pname = "Run Once Program"
-		return pname
+$code:
+    def plugin_adjustment():
+        duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith('wl_')]
+        result = 100.0
+        for entry in duration_adjustments:
+            result *= entry/100.0
+        return '%.0f' % result
 
+$code:
+    def plugin_adjustment_list():
+        duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith('wl_')]
+        result = []
+        for entry in duration_adjustments:
+            result.append('%.0f%%' % entry)
+        return ' * '.join(result)
 
-<!-- 
-  2013-10-06: jonathanmarsh
-	- Converted to web.py template, retaining 99% of older look and feel
-	- Moved inline styling to stylesheet
-	- Moved inline behaviors to jQuery.
-	Note that the normal jQuery use of the dollar sign conflicts with the templating syntax - used the longer jQuery() throughout.
- -->
-<html>
-<head>
-	<meta name="viewport" content="width=640">
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>OpenSprinkler Pi${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
-	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
-	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
-	<style type="text/css">
-		.bluebg {background-color:lightblue;}
-		.opOn, .wlOn, .rsOff {color:green;}
-		.opOff, .wlOff, .rsOn {color:red;}
-		.rdOff {color:black;}
-		.rdOn {color:red;}
-		.rsNA, station_waiting {color:gray;}
-		.station_disabled {color:gray;}
+$code:
+    def total_adjustment():
+        duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith('wl_')]
+        result = float(gv.sd["wl"])
+        for entry in duration_adjustments:
+            result *= entry/100.0
+        return '%.0f' % result
 
-		#lastRun {color:gray;}
-		#stations {width:100%;}
-		#pluginMenu{display: none;}
-	</style>
-	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+<script>
+    // date/time formating helpers
+    //var timezoneSuffix =
+        //((tz-48>=0) ? "+" : "-") +
+        //(Math.abs(tz-48)/4>>0) + ":" +
+        //((Math.abs(tz-48)%4)*15/10>>0) +
+        //((Math.abs(tz-48)%4)*15%10);
 
-	<script>
-		// Variables set by ospi.py
-		var devt = ${gv.now}*1000;
-		//var tz = ${gv.sd['tz']};
-		var timeFormat = ${tf};
-		var cputemp = "${gv.cputemp}";
-		var tempunit = "${gv.sd['tu']}";
+    function formatLogline(log) {
+        var lrsid = lrun[0], lrpid = lrun[1], lrdur = lrun[2], lret = lrun[3];
+        if (lrpid == 0) {
+            return "n/a";
+        }
+        var pname = "P" + lrpid;
+        if (lrpid == 255 || lrpid == 99) {
+            pname = "Manual Mode";
+        }
+        if (lrpid == 254 || lrpid == 98) {
+            pname = "Run Once Program";
+        }
+        var runDate = (new Date(lret*1000)).toString(); // + timezoneSuffix; //dk
+        return snames[lrsid] + " ran " + pname + " for " + (lrdur/60>>0) + "m" + (lrdur%60) + "s on " + runDate;
+    }
 
-		var snames = $:{snames};
-		var lrun = ${gv.lrun};
-		var rdst = ${gv.sd['rdst']}*1000;
-		var ipas = ${gv.sd['ipas']};
-		var en = ${gv.sd['en']};
-		var mm = ${gv.sd['mm']};
-		var rd = ${gv.sd['rd']};
-		var wl = ${gv.sd['wl']};
-		var mas = ${gv.sd['mas']};
-		var nbrd = ${gv.sd['nbrd']};
-		var plugins = $:{gv.plugin_menu}
-		var prog = $:{gv.pd}; // sb 'progs' because it is a list
-		var sdt = ${gv.sd['sdt']};
-		var seq = ${gv.sd['seq']};
-		
-	</script>
-	<script src="${gv.baseurl}/static/scripts/schedule.js"></script>
-	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
-	<script>
-		// date/time formating helpers
-		//var timezoneSuffix =
-			//((tz-48>=0) ? "+" : "-") +
-			//(Math.abs(tz-48)/4>>0) + ":" +
-			//((Math.abs(tz-48)%4)*15/10>>0) +
-			//((Math.abs(tz-48)%4)*15%10);
-		
-		function formatLogline(log) {
-			var lrsid = lrun[0], lrpid = lrun[1], lrdur = lrun[2], lret = lrun[3];
-			if (lrpid == 0) {
-				return "n/a";
-			}
-			var pname = "P" + lrpid;
-			if (lrpid == 255 || lrpid == 99) {
-				pname = "Manual Mode";
-			}
-			if (lrpid == 254 || lrpid == 98) {
-				pname = "Run Once Program";
-			}
-			var runDate = (new Date(lret*1000)).toString(); // + timezoneSuffix; //dk
-			return snames[lrsid] + " ran " + pname + " for " + (lrdur/60>>0) + "m" + (lrdur%60) + "s on " + runDate;
-		}
+    function updateStatus(status) {
+        var display, updateInterval = 30000;
+        for (var s=0; s<status.length; s++) {
+            var station = status[s];
+            var classes = "stationStatus station_" + station.status;
+            switch (station.reason) {
+                case "program" :
+                    var minutes = Math.floor(station.remaining/60);
+                    var seconds = Math.floor(station.remaining - 60*minutes);
+                    if (minutes < 10) {minutes = "0"+minutes;}
+                    if (seconds < 10) {seconds = "0"+seconds;}
+                    if (station.status == "on") {
+                        display = minutes+":"+seconds;
+                    } else {
+                        display = "(" + minutes+":"+seconds + ")";
+                    }
+                    updateInterval = 1000;
+                    break;
+                case "master" :
+                    classes += " master";
+                    if (station.status == "on") {
+                        display = "Master On";
+                    } else {
+                        display = "Master Off";
+                        classes += " strike";
+                    }
+                    break;
+                case "rain_delay" :
+                    display = "Suppressed by Rain Delay";
+                    break;
+                case "rain_sensed" :
+                    display = "Suppressed by Rain Sensor";
+                    break;
+                default:
+                    display = "Off";
+            }
+            jQuery("td#status" + station.station)
+                .text(display)
+                .removeClass()
+                .addClass(classes);
+        }
+        setTimeout(statusTimer,updateInterval);
+        if (updateInterval > 1000) {
 
-		function updateStatus(status) {
-			var display, updateInterval = 30000;
-			for (var s=0; s<status.length; s++) {
-				var station = status[s];
-				var classes = "stationStatus station_" + station.status;
-				switch (station.reason) {
-					case "program" :
-						var minutes = Math.floor(station.remaining/60);
-						var seconds = station.remaining - 60*minutes;
-						if (minutes < 10) {minutes = "0"+minutes;}
-						if (seconds < 10) {seconds = "0"+seconds;}
-						if (station.status == "on") {
-							display = minutes+":"+seconds;
-						} else {
-							display = "(" + minutes+":"+seconds + ")";
-						}
-						updateInterval = 1000;
-						break;
-					case "master" :
-						classes += " master";
-						if (station.status == "on") {
-							display = "Master On";
-						} else {
-							display = "Master Off"; 
-							classes += " strike";
-						}
-						break;
-					case "rain_delay" :
-						display = "Suppressed by Rain Delay";
-						break;
-					case "rain_sensed" :
-						display = "Suppressed by Rain Sensor";
-						break;
-					default:
-						display = "Off";
-				}
-				jQuery("td#status" + station.station)
-					.text(display)
-					.removeClass()
-					.addClass(classes);
-			}
-			setTimeout(statusTimer,updateInterval);
-			if (updateInterval > 1000) {
-				
-				displayProgram();
-			}
-		}
-		function statusTimer() {
-			jQuery.getJSON("/api/status", updateStatus)
-		}
-		
-		function countdownTimer(el) {
-			alert(jQuery(el).html());
-		}
-				
-		// Initialize behaviors
-		jQuery(document).ready(function(){
-			$if gv.sd['mm'] == 0:
-				statusTimer();
-			
-			jQuery.each(plugins, function() {
-			    jQuery('#pluginLinks').append('<li><a href='+this[1]+'>'+this[0]+'</a></li>');
-			});
-			
-			jQuery("#bPlugins").click(function(e) {
-			    var btn = jQuery("#bPlugins");
-			    jQuery("#pluginMenu").css({
-			        position: 'absolute',
-			        top: btn.offset().top + btn.outerHeight(),
-			        left: btn.offset().left
-			    }).slideToggle();
-			    e.stopPropagation();
-			});
-			
-			jQuery(document).click(function(){                   
-				  jQuery("#pluginMenu").slideUp();
-				});
-			
+            displayProgram();
+        }
+    }
+    function statusTimer() {
+        jQuery.getJSON("/api/status", updateStatus)
+    }
 
-			jQuery("button#cStartStop").click(function(){
-				jQuery("form[name='hf'] input[name='en']").val(1-en);
-				jQuery("form[name='hf']").submit();
-			});
-			
-			jQuery("button#cManual").click(function(){
-				jQuery("form[name='hf'] input[name='mm']").val(1-mm);
-				jQuery("form[name='hf']").submit();
-			});
-			
-			jQuery("button#cRainDelay").click(function(){
-				if (rd != 0) {
-					var h = 0;
-				} else {
-					var h = prompt("Enter hours to delay","0");
-				}
-				if (h != null){
-					jQuery("form[name='hf'] input[name='rd']").val(h);
-					jQuery("form[name='hf']").submit();
-				}
-			});
-			
-			jQuery("button#cWaterLevel").click(function(){
-				if (wl != 100) {
-					var w = 100;
-				} else {
-					var w = prompt("Enter percentage adjustment",wl);
-				}
-				if (w != null){
-					jQuery("form[name='hf'] input[name='wl']").val(w);
-					jQuery("form[name='hf']").submit();
-				}
-			});
-			
-			jQuery("button.manual").click(function () {
-				sid = parseInt(jQuery(this).attr("id"));
-				sbit = jQuery(this).hasClass("on");
-				if (sbit) {
-					window.location = "/sn"+(sid+1)+"=0"; // turn off station
-				} else {
-					var strmm = jQuery("#mm"+sid).val();
-					var strss = jQuery("#ss"+sid).val();
-					var mm = (strmm == "" ? 0 : parseInt(strmm));
-					var ss = (strss == "" ? 0 : parseInt(strss));
-					if (!(mm >= 0 && ss >= 0 && ss < 60)) {
-						alert("Timer values wrong: " + strmm + ":" + strss);
-						return;
-					}
-					window.location = "/sn" + (sid+1) + "=1" + "&t=" + (mm*60+ss);  // turn it off with timer
-				}
-			});
-			
-			jQuery("button#pStopAll").click(function(){
-				window.location="/cv?rsn=1";
-			});
-									
-			jQuery("button#pPrev").click(function() {
-				displayScheduleDate.setDate(displayScheduleDate.getDate() - 1);
-				displayProgram();
-			});
-			jQuery("button#pToday").click(function() {
-				var day = new Date()//dk
-				displayScheduleDate.setDate(day.getDate());
-				displayScheduleDate.setMonth(day.getMonth()); //dk
-				displayProgram();
-			});
-			jQuery("button#pNext").click(function() {
-				displayScheduleDate.setDate(displayScheduleDate.getDate() + 1);
-				displayProgram();
-			});
-			
-			jQuery(".countdown").each(function() {
-				countdownTimer(jQuery(this).attr('id'));
-			});	
-		});
+    function countdownTimer(el) {
+        alert(jQuery(el).html());
+    }
 
-		function countdownTimer(timerId) {
-			var timerElement = jQuery("#" + timerId);
-			var timerValue = parseFloat(timerElement.attr("data"));
-			var remaining = timerValue - devt; //Date.now(); // DK change
-			var rHours = Math.floor(remaining/3600000);
-			var rMinutes = Math.floor((remaining%3600000)/60000);
-			if (rHours <=0 && rMinutes <=0) {
-				window.location = "/";
-			} else {
-				timerElement.text((rHours<10 ? "0" : "") + rHours + ":" + (rMinutes<10 ? "0" : "") + rMinutes);
-				setTimeout("countdownTimer('" + timerId + "')", 2000);
-			}
-		}
-	</script>
-</head>
-<body>
-	<div class="content">
-		<form name="tt" action="ttu" method="get">
-			<input type="hidden" name="tunit">
-		</form>
-		
-		<div id="pluginMenu">
-				<ul id="pluginLinks">
-				</ul>
-	    </div>
-		
-		<div class="header">
-			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
-		</div>
-			
-		<div class="body">
-		
-			<div id="status">
-				<p id="deviceTime"><span class="hour"></span><span class="sep">:</span><span class="minute"></span><span class="second"></span><span class="ampm"></span></p>
-				<p id="deviceDate"></p>
-			</div>
-	
-			<div class="panel">
+    // Initialize behaviors
+    jQuery(document).ready(function(){
+        $if gv.sd['mm'] == 0:
+            statusTimer();
 
-				<div id="nav">
-					<button id="bHome" class="home here" title="Home">Home</button>
-					<button id="bPrograms" class="programs" title="Define Programs">Programs</button>
-					<button id="bRunOnce" class="start" title="Define Run Once Program">Run Once</button>
-					<button id="bPlugins" class="Plugins" title="Acces Plugins">Plugins</button>					
-					<button id="bLog" class="log" title="View Log">Log</button>
-					<button id="bOptions" class="options" title="Options">Options</button>
-					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
-					$if not(gv.sd['ipas']):
-						<button id="bLogout" class="logout" title="Logout">Logout</button>
-				</div>
-				
-				<div id="options">	
-					<button id="cStartStop" class="toggle ${'on' if gv.sd['en'] else 'off'}"><span class='toggleleft'>System On</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>System Off</span></button>
-					<br>
-					<button id="cWaterLevel" class="toggle choice ${'on' if gv.sd['wl']==100 else 'off'}"><span class='toggleleft'>Normal</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>${'Water Level' if gv.sd['wl']==100 else str(gv.sd['wl']) + '% Level'}</span></button>
-					<br>
-					<button id="cRainDelay" class="toggle ${'off' if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']) else 'on'}"><span class='toggleleft'>Active</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Rain Delay</span></button>
-					$if gv.sd['rd']:
-						$:{'<span class="countdown" id="rainDelayCountdown" data="' + str(gv.sd['rdst']*1000) + '"></span>' if gv.sd['rd'] else ''}
-					$if gv.sd['urs']:
-						<span class="rainsense">${'' if gv.sd['rs'] else 'no'} rain sensed</span>
-					<br>
-					<button id="cManual" class="toggle choice ${'off' if gv.sd['mm'] else 'on'}"><span class='toggleleft'>Auto</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Manual</span></button>
-				</div>
-				
-				<div id="stations">
-				
-				$if gv.sd['mm']:			
-					<div id="manualmode">
-						<table id="stations" class="stationList">
-						$# Manual program control formatting
-						$for bid in range(0, gv.sd['nbrd']):
-							$for s in range(0,8):
-								$ sid = bid*8 + s;
-								$ sn = sid + 1
-								$ sbit = (gv.sbits[bid]>>s)&1
-								$ show = (gv.sd['show'][bid]>>s)&1
-					 			$if show == 1:
-									<tr>
-										<td class='station_name'>${snames[sid]}</td>
-										$if sn == gv.sd['mas']:
-											$if sbit:
-												<td class="master station_on">On (Master)</td>
-											$else:
-												<td class="master station_off">Off (Master)</td>
-										$else:
-											$ rem = gv.ps[sid][1]
-											$if rem > 65536:
-												$ rem = 0
-											<td class="station_running">
-												<button class='toggle manual narrow ${'on' if sbit else 'off'}' id='${sid}'><span class='toggleleft'>On</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Off</span></button>
-													${'in' if sbit else 'for'}
-										  		<input type='text' id='mm${sid}' size='2' maxlength='3' value='${twodigits(rem/60)}'/>: 
-										  		<input type='text' id='ss${sid}' size='2' maxlength='2' value='${twodigits(rem%60)}'/> (mm:ss)
-										  	</td>
-									</tr>
-						</table>
-					</div>	
-	
-				$else:
-					<div id="programmode">
-						<table id="stations" class="stationList">
-							<tr>
-								<td colspan="2"></td>
-								<td colspan="8">
-									<span id="displayScheduleDate"></span>
-								</td>
-								<td colspan="16" style="text-align:right">
-									<button id="pPrev" class="execute">&lt;&lt; Prev Day</button>
-									<button id="pToday" class="execute">Today</button>
-									<button id="pNext" class="execute">Next Day &gt;&gt;</button>
-								</td>
-							</tr>
-							<tr><td colspan="2">
-								<td class="scheduleTick">${'00:00' if tf else '12 AM'}</td>
-								<td class="scheduleTick">${'01:00' if tf else '1 AM'}</td>
-								<td class="scheduleTick">${'02:00' if tf else '2 AM'}</td>
-								<td class="scheduleTick">${'03:00' if tf else '3 AM'}</td>
-								<td class="scheduleTick">${'04:00' if tf else '4 AM'}</td>
-								<td class="scheduleTick">${'05:00' if tf else '5 AM'}</td>
-								<td class="scheduleTick">${'06:00' if tf else '6 AM'}</td>
-								<td class="scheduleTick">${'07:00' if tf else '7 AM'}</td>
-								<td class="scheduleTick">${'08:00' if tf else '8 AM'}</td>
-								<td class="scheduleTick">${'09:00' if tf else '9 AM'}</td>
-								<td class="scheduleTick">${'10:00' if tf else '10 AM'}</td>
-								<td class="scheduleTick">${'11:00' if tf else '11 AM'}</td>
-								<td class="scheduleTick">${'12:00' if tf else '12 PM'}</td>
-								<td class="scheduleTick">${'13:00' if tf else '1 PM'}</td>
-								<td class="scheduleTick">${'14:00' if tf else '2 PM'}</td>
-								<td class="scheduleTick">${'15:00' if tf else '3 PM'}</td>
-								<td class="scheduleTick">${'16:00' if tf else '4 PM'}</td>
-								<td class="scheduleTick">${'17:00' if tf else '5 PM'}</td>
-								<td class="scheduleTick">${'18:00' if tf else '6 PM'}</td>
-								<td class="scheduleTick">${'19:00' if tf else '7 PM'}</td>
-								<td class="scheduleTick">${'20:00' if tf else '8 PM'}</td>
-								<td class="scheduleTick">${'21:00' if tf else '9 PM'}</td>
-								<td class="scheduleTick">${'22:00' if tf else '10 PM'}</td>
-								<td class="scheduleTick">${'23:00' if tf else '11 PM'}</td>
-							</tr>
-							$ odd = 1
-							$for bid in range(0, gv.sd['nbrd']):
-								$for s in range(0,8):
-									$ sid = bid*8 + s;
-									$ sn = sid + 1
-									$ show = (gv.sd['show'][bid]>>s)&1
-						 			$if show == 1:
-						 				<tr class="stationSchedule ${'odd' if odd else 'even'}" id='schedule${sid}' data="${sid}">
-											<td class='station_name'>${snames[sid]}</td>
-											<td id='status${sid}' class="stationStatus">loading...</td>
-											<td class="scheduleTick" data="0"></td>
-											<td class="scheduleTick" data="1"></td>
-											<td class="scheduleTick" data="2"></td>
-											<td class="scheduleTick" data="3"></td>
-											<td class="scheduleTick" data="4"></td>
-											<td class="scheduleTick" data="5"></td>
-											<td class="scheduleTick" data="6"></td>
-											<td class="scheduleTick" data="7"></td>
-											<td class="scheduleTick" data="8"></td>
-											<td class="scheduleTick" data="9"></td>
-											<td class="scheduleTick" data="10"></td>
-											<td class="scheduleTick" data="11"></td>
-											<td class="scheduleTick" data="12"></td>
-											<td class="scheduleTick" data="13"></td>
-											<td class="scheduleTick" data="14"></td>
-											<td class="scheduleTick" data="15"></td>
-											<td class="scheduleTick" data="16"></td>
-											<td class="scheduleTick" data="17"></td>
-											<td class="scheduleTick" data="18"></td>
-											<td class="scheduleTick" data="19"></td>
-											<td class="scheduleTick" data="20"></td>
-											<td class="scheduleTick" data="21"></td>
-											<td class="scheduleTick" data="22"></td>
-											<td class="scheduleTick" data="23"></td>
-										</tr>
-									$ odd = 1 - odd
-							<tr>
-								<td colspan="2" style="text-align:right">
-									<button id="pStopAll" class="execute delete">Stop All Stations</button>
-								</td>
-								<td colspan="24" id="legend" style="text-align:center">
-									<span class='program1'>Program 1</span>
-								</td>
-							</tr>
-						</table>
-					</div>	
-					
-				</div>
-				
-				<div id="controls">
-					<form name="hf" action="cv" method="get">
-						<input type="hidden" name="en">
-						<input type="hidden" name="mm">
-						<input type="hidden" name="rd">
-						<input type="hidden" name="wl">
-						<input type="hidden" name="rbt" value="0">
-					</form>
-				</div>
-			</div>
-		</div>
-		
-		<div class="footer">
-			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
-			<p><a href="https://github.com/Dan-in-CA/OSPi">Software</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
-		</div>
-	</div>
-</body>
-</html>
+        jQuery("button#cStartStop").click(function(){
+            jQuery("form[name='hf'] input[name='en']").val(1-en);
+            jQuery("form[name='hf']").submit();
+        });
+
+        jQuery("button#cManual").click(function(){
+            jQuery("form[name='hf'] input[name='mm']").val(1-mm);
+            jQuery("form[name='hf']").submit();
+        });
+
+        jQuery("button#cRainDelay").click(function(){
+            if (rd != 0) {
+                var h = 0;
+            } else {
+                var h = prompt("Enter hours to delay","0");
+            }
+            if (h != null){
+                jQuery("form[name='hf'] input[name='rd']").val(h);
+                jQuery("form[name='hf']").submit();
+            }
+        });
+
+        jQuery("button#cWaterLevel").click(function(){
+            if (wl != 100) {
+                var w = 100;
+            } else {
+                var w = prompt("Enter percentage adjustment",wl);
+            }
+            if (w != null){
+                jQuery("form[name='hf'] input[name='wl']").val(w);
+                jQuery("form[name='hf']").submit();
+            }
+        });
+
+        jQuery("button.manual").click(function () {
+            sid = parseInt(jQuery(this).attr("id"));
+            sbit = jQuery(this).hasClass("on");
+            if (sbit) {
+                window.location = "/sn"+(sid+1)+"=0"; // turn off station
+            } else {
+                var strmm = jQuery("#mm"+sid).val();
+                var strss = jQuery("#ss"+sid).val();
+                var mm = (strmm == "" ? 0 : parseInt(strmm));
+                var ss = (strss == "" ? 0 : parseInt(strss));
+                if (!(mm >= 0 && ss >= 0 && ss < 60)) {
+                    alert("Timer values wrong: " + strmm + ":" + strss);
+                    return;
+                }
+                window.location = "/sn" + (sid+1) + "=1" + "&t=" + (mm*60+ss);  // turn it off with timer
+            }
+        });
+
+        jQuery("button#pStopAll").click(function(){
+            window.location="/cv?rsn=1";
+        });
+
+        jQuery("button#pPrev").click(function() {
+            displayScheduleDate.setDate(displayScheduleDate.getDate() - 1);
+            displayProgram();
+        });
+        jQuery("button#pToday").click(function() {
+            var day = new Date()//dk
+            displayScheduleDate.setDate(day.getDate());
+            displayScheduleDate.setMonth(day.getMonth()); //dk
+            displayProgram();
+        });
+        jQuery("button#pNext").click(function() {
+            displayScheduleDate.setDate(displayScheduleDate.getDate() + 1);
+            displayProgram();
+        });
+
+        jQuery(".countdown").each(function() {
+            countdownTimer(jQuery(this).attr('id'));
+        });
+    });
+
+    function countdownTimer(timerId) {
+        var timerElement = jQuery("#" + timerId);
+        var timerValue = parseFloat(timerElement.attr("data"));
+        var remaining = timerValue - devt; //Date.now(); // DK change
+        var rHours = Math.floor(remaining/3600000);
+        var rMinutes = Math.floor((remaining%3600000)/60000);
+        if (rHours <=0 && rMinutes <=0) {
+            window.location = "/";
+        } else {
+            timerElement.text((rHours<10 ? "0" : "") + rHours + ":" + (rMinutes<10 ? "0" : "") + rMinutes);
+            setTimeout("countdownTimer('" + timerId + "')", 2000);
+        }
+    }
+</script>
+<div id="options">
+    <button id="cStartStop" class="toggle ${'on' if gv.sd['en'] else 'off'}"><span class='toggleleft'>System On</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>System Off</span></button>
+    <br>
+    <button id="cWaterLevel" class="toggle choice ${'on' if gv.sd['wl']==100 else 'off'}"><span class='toggleleft'>Normal</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>${'Water Level' if gv.sd['wl']==100 else str(gv.sd['wl']) + '% Level'}</span></button>${'' if int(plugin_adjustment()) == 100 else ' Plugin adjustments: ' + plugin_adjustment_list() + ('' if gv.sd['wl']==100 and '*' not in plugin_adjustment_list() else ' - Total adjustment: ' + total_adjustment() + '%')}
+    <br>
+    <button id="cRainDelay" class="toggle ${'off' if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']) else 'on'}"><span class='toggleleft'>Active</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Rain Delay</span></button>
+    $if gv.sd['rd']:
+        $:{'<span class="countdown" id="rainDelayCountdown" data="' + str(gv.sd['rdst']*1000) + '"></span>' if gv.sd['rd'] else ''}
+    $if gv.sd['urs']:
+        <span class="rainsense">${'' if gv.sd['rs'] else 'no'} rain sensed</span>
+    <br>
+    <button id="cManual" class="toggle choice ${'off' if gv.sd['mm'] else 'on'}"><span class='toggleleft'>Auto</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Manual</span></button>
+</div>
+
+<div id="stationsdiv">
+
+$if gv.sd['mm']:
+    <div id="manualmode">
+        <table id="stations" class="stationList">
+        $# Manual program control formatting
+        $for bid in range(0, gv.sd['nbrd']):
+            $for s in range(0,8):
+                $ sid = bid*8 + s;
+                $ sn = sid + 1
+                $ sbit = (gv.sbits[bid]>>s)&1
+                $ show = (gv.sd['show'][bid]>>s)&1
+                $if show == 1:
+                    <tr>
+                        <td class='station_name'>${snames[sid]}</td>
+                        $if sn == gv.sd['mas']:
+                            $if sbit:
+                                <td class="master station_on">On (Master)</td>
+                            $else:
+                                <td class="master station_off">Off (Master)</td>
+                        $else:
+                            $ rem = gv.ps[sid][1]
+                            $if rem > 65536:
+                                $ rem = 0
+                            <td class="station_running">
+                                <button class='toggle manual narrow ${'on' if sbit else 'off'}' id='${sid}'><span class='toggleleft'>On</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Off</span></button>
+                                    ${'in' if sbit else 'for'}
+                                <input type='text' id='mm${sid}' size='2' maxlength='3' value='${twodigits(rem/60)}'/>:
+                                <input type='text' id='ss${sid}' size='2' maxlength='2' value='${twodigits(rem%60)}'/> (mm:ss)
+                            </td>
+                    </tr>
+        </table>
+    </div>
+
+$else:
+    <div id="programmode">
+        <table id="stations" class="stationList">
+            <tr>
+                <td colspan="2"></td>
+                <td colspan="8">
+                    <span id="displayScheduleDate"></span>
+                </td>
+                <td colspan="16" style="text-align:right">
+                    <button id="pPrev" class="execute">&lt;&lt; Prev Day</button>
+                    <button id="pToday" class="execute">Today</button>
+                    <button id="pNext" class="execute">Next Day &gt;&gt;</button>
+                </td>
+            </tr>
+            <tr><td colspan="2">
+                <td class="scheduleTick">${'00:00' if tf else '12 AM'}</td>
+                <td class="scheduleTick">${'01:00' if tf else '1 AM'}</td>
+                <td class="scheduleTick">${'02:00' if tf else '2 AM'}</td>
+                <td class="scheduleTick">${'03:00' if tf else '3 AM'}</td>
+                <td class="scheduleTick">${'04:00' if tf else '4 AM'}</td>
+                <td class="scheduleTick">${'05:00' if tf else '5 AM'}</td>
+                <td class="scheduleTick">${'06:00' if tf else '6 AM'}</td>
+                <td class="scheduleTick">${'07:00' if tf else '7 AM'}</td>
+                <td class="scheduleTick">${'08:00' if tf else '8 AM'}</td>
+                <td class="scheduleTick">${'09:00' if tf else '9 AM'}</td>
+                <td class="scheduleTick">${'10:00' if tf else '10 AM'}</td>
+                <td class="scheduleTick">${'11:00' if tf else '11 AM'}</td>
+                <td class="scheduleTick">${'12:00' if tf else '12 PM'}</td>
+                <td class="scheduleTick">${'13:00' if tf else '1 PM'}</td>
+                <td class="scheduleTick">${'14:00' if tf else '2 PM'}</td>
+                <td class="scheduleTick">${'15:00' if tf else '3 PM'}</td>
+                <td class="scheduleTick">${'16:00' if tf else '4 PM'}</td>
+                <td class="scheduleTick">${'17:00' if tf else '5 PM'}</td>
+                <td class="scheduleTick">${'18:00' if tf else '6 PM'}</td>
+                <td class="scheduleTick">${'19:00' if tf else '7 PM'}</td>
+                <td class="scheduleTick">${'20:00' if tf else '8 PM'}</td>
+                <td class="scheduleTick">${'21:00' if tf else '9 PM'}</td>
+                <td class="scheduleTick">${'22:00' if tf else '10 PM'}</td>
+                <td class="scheduleTick">${'23:00' if tf else '11 PM'}</td>
+            </tr>
+            $ odd = 1
+            $for bid in range(0, gv.sd['nbrd']):
+                $for s in range(0,8):
+                    $ sid = bid*8 + s;
+                    $ sn = sid + 1
+                    $ show = (gv.sd['show'][bid]>>s)&1
+                    $if show == 1:
+                        <tr class="stationSchedule ${'odd' if odd else 'even'}" id='schedule${sid}' data="${sid}">
+                            <td class='station_name'>${snames[sid]}</td>
+                            <td id='status${sid}' class="stationStatus">loading...</td>
+                            <td class="scheduleTick" data="0"></td>
+                            <td class="scheduleTick" data="1"></td>
+                            <td class="scheduleTick" data="2"></td>
+                            <td class="scheduleTick" data="3"></td>
+                            <td class="scheduleTick" data="4"></td>
+                            <td class="scheduleTick" data="5"></td>
+                            <td class="scheduleTick" data="6"></td>
+                            <td class="scheduleTick" data="7"></td>
+                            <td class="scheduleTick" data="8"></td>
+                            <td class="scheduleTick" data="9"></td>
+                            <td class="scheduleTick" data="10"></td>
+                            <td class="scheduleTick" data="11"></td>
+                            <td class="scheduleTick" data="12"></td>
+                            <td class="scheduleTick" data="13"></td>
+                            <td class="scheduleTick" data="14"></td>
+                            <td class="scheduleTick" data="15"></td>
+                            <td class="scheduleTick" data="16"></td>
+                            <td class="scheduleTick" data="17"></td>
+                            <td class="scheduleTick" data="18"></td>
+                            <td class="scheduleTick" data="19"></td>
+                            <td class="scheduleTick" data="20"></td>
+                            <td class="scheduleTick" data="21"></td>
+                            <td class="scheduleTick" data="22"></td>
+                            <td class="scheduleTick" data="23"></td>
+                        </tr>
+                    $ odd = 1 - odd
+            <tr>
+                <td colspan="2" style="text-align:right">
+                    <button id="pStopAll" class="execute delete">Stop All Stations</button>
+                </td>
+                <td colspan="24" id="legend" style="text-align:center">
+                    <span class='program1'>Program 1</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<div id="controls">
+    <form name="hf" action="cv" method="get">
+        <input type="hidden" name="en">
+        <input type="hidden" name="mm">
+        <input type="hidden" name="rd">
+        <input type="hidden" name="wl">
+        <input type="hidden" name="rbt" value="0">
+    </form>
+</div>
+
