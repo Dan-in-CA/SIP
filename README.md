@@ -18,20 +18,19 @@ July 22 2014
 -----------
 (Rimco)<br/>
 Changes:<br/>
-1. Split contents of the original ospi.py file into blocks that are more logical. (Should be improved even more.)
-2. Removed numerous bugs regarding undeclared variables, unreachable code and misinterpretation of python classes. Tried to use python standards as much as possible.
-3. Improved the way that plug-ins can adjust the water level. Each plug-in can now provide a water level adjustment which are combined by the main program.
-4. Introduced template inheritance to solve many web-page inconsistencies and code duplication.
-5. Fixed security issues where login-credentials were not checked. Introduced a ProtectedPage class as base class to be used for each page that should only be reachable if logged in.
-6. Removed unused code, reduced code duplication.
-7. Removed gv class (was not used at all) and put all global variables in the gv module itself.
-8. Improved exception handling.
-9. Because of the introduced template inheritance, plug-ins are now also using the same base template and are integrated better.
-10. Improved page load speeds.
-11. Added new weather-based water level adjustment plug-in that can change the water level depending on the history+forecast. This plug-in caches the queries made to WUnderground to reduce the number of queries, but a clean-up action needs to be added.
-12. Removed files that should not committed to GitHub.
-13. Removed APScheduler dependency.
-
+1. Split contents of the original ospi.py file into blocks that are more logical. (Should be improved even more.)<br/>
+2. Removed numerous bugs regarding undeclared variables, unreachable code and misinterpretation of python classes. Tried to use python standards as much as possible.<br/>
+3. Improved the way that plug-ins can adjust the water level. Each plug-in can now provide a water level adjustment which are combined by the main program.<br/>
+4. Introduced template inheritance to solve many web-page inconsistencies and code duplication.<br/>
+5. Fixed security issues where login-credentials were not checked. Introduced a ProtectedPage class as base class to be used for each page that should only be reachable if logged in.<br/>
+6. Removed unused code, reduced code duplication.<br/>
+7. Removed gv class (was not used at all) and put all global variables in the gv module itself.<br/>
+8. Improved exception handling.<br/>
+9. Because of the introduced template inheritance, plug-ins are now also using the same base template and are integrated better.<br/>
+10. Improved page load speeds.<br/>
+11. Added new weather-based water level adjustment plug-in that can change the water level depending on the history+forecast. This plug-in caches the queries made to WUnderground to reduce the number of queries, but a clean-up action needs to be added.<br/>
+12. Removed files that should not committed to GitHub.<br/>
+13. Removed APScheduler dependency.<br/>
 
 July 11 2014
 -----------
