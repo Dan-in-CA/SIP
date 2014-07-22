@@ -114,6 +114,14 @@ def get_data(suffix, name=None, force=False):
     with file(path, 'r') as fh:
         data = json.load(fh)
 
+    if data is not None:
+        if 'error' in data['response']:
+            os.remove(path)
+            raise Exception(str(data['response']['error']))
+    else:
+        os.remove(path)
+        raise Exception('JSON decoding failed.')
+
     return data
 
 ################################################################################
@@ -127,7 +135,7 @@ def history_info():
 
     lid = get_wunderground_lid()
     if lid == "":
-        return {}
+        raise Exception('No Location ID found!')
 
     check_date = datetime.date.today()
     day_delta = datetime.timedelta(days=1)
@@ -140,11 +148,6 @@ def history_info():
         data = get_data(request)
 
         check_date -= day_delta
-
-        if data is None:
-            continue
-        if 'error' in data['response']:
-            continue
 
         if len(data['history']['dailysummary']) > 0:
             info[index] = data['history']['dailysummary'][0]
@@ -163,18 +166,13 @@ def history_info():
 def today_info():
     lid = get_wunderground_lid()
     if lid == "":
-        return {}
+        raise Exception('No Location ID found!')
 
     datestring = datetime.date.today().strftime('%Y%m%d')
 
     request = "conditions/q/"+lid+".json"
     name = "conditions_"+datestring+"/q/"+lid+".json"
     data = get_data(request, name, True)
-
-    if data is None:
-        return {}
-    if 'error' in data['response']:
-        return {}
 
     day_info = data['current_observation']
 
@@ -194,18 +192,13 @@ def forecast_info():
 
     lid = get_wunderground_lid()
     if lid == "":
-        return {}
+        raise Exception('No Location ID found!')
 
     datestring = datetime.date.today().strftime('%Y%m%d')
 
     request = "forecast10day/q/"+lid+".json"
     name = "forecast10day_"+datestring+"/q/"+lid+".json"
     data = get_data(request, name)
-
-    if data is None:
-        return {}
-    if 'error' in data['response']:
-        return {}
 
     info = {}
     for day_index, entry in enumerate(data['forecast']['simpleforecast']['forecastday']):
@@ -261,6 +254,12 @@ def check_weather(run_loop=False):
                     day_left = 1.0 - (day_time.hour * 60 + day_time.minute) / 24.0 / 60
                     info[0]['rain_mm'] = info[0]['rain_mm'] * day_left + today['rain_mm']
 
+                if not info:
+                    print history
+                    print forecast
+                    print today
+                    raise Exception('No information available!')
+
                 print 'Using', len(info), 'days of information.'
 
                 total_info = {
@@ -299,6 +298,8 @@ def check_weather(run_loop=False):
             time.sleep(3600)
         except Exception as err:
             print 'Weather-base water level encountered error:', err
+            if not run_loop:
+                break
             time.sleep(60)
 
 thread.start_new_thread(check_weather, (True,))
