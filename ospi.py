@@ -446,6 +446,7 @@ gv.lrun=[0,0,0,0] #station index, program number, duration, end time (Used in UI
 
 gv.scount = 0 # Station count, used in set station to track on stations with master association.
 
+gv.snames = data('snames') # initialize station names to be used by plugins
 
   ########################
   #### Login Handling ####
