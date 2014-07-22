@@ -69,6 +69,7 @@ except IOError: # If file does not exist, it will be created created using defau
 
 
 now = timegm(time.localtime())
+gmtnow = time.time()
 plugin_menu = [] # Empty list of lists for plugin links (e.g. ['name', 'URL'])
 
 srvals = [0] * (sd['nst']) # Shift Register values
