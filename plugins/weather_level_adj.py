@@ -235,7 +235,8 @@ def check_weather(run_loop=False):
         try:
             options = options_data()
             if options["auto_wl"] == "off":
-                del gv.sd['wl_weather']
+                if 'wl_weather' in gv.sd:
+                    del gv.sd['wl_weather']
             else:
 
                 print "Checking weather status..."
