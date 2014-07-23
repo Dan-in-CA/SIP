@@ -1,6 +1,6 @@
-from helpers import checkLogin, CPU_temperature
+from helpers import CPU_temperature
 import web, json, re, os
-import ast, time, datetime, string
+import time, datetime, string
 import gv # Gain access to ospy's settings
 from urls import urls # Gain access to ospy's URL list
 
@@ -15,7 +15,6 @@ urls.extend(['/jo', 'plugins.mobile_app.options', '/jc', 'plugins.mobile_app.cur
 class options(object): # /jo
     """Returns device options as json."""
     def GET(self):
-        checkLogin()
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         jopts = {"fwv":'1.9.0-OSPy',"tz":gv.sd['tz'], "ext":gv.sd['nbrd']-1,"seq":gv.sd['seq'],"sdt":gv.sd['sdt'],"mas":gv.sd['mas'],"mton":gv.sd['mton'],"mtof":gv.sd['mtoff'],"urs":gv.sd['urs'],"rso":gv.sd['rst'],"wl":gv.sd['wl'],"ipas":gv.sd['ipas'],"reset":gv.sd['rbt']}
@@ -24,7 +23,6 @@ class options(object): # /jo
 class cur_settings(object): # /jc
     """Returns current settings as json."""
     def GET(self):
-        checkLogin()
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         jsettings = {"devt":gv.now,"nbrd":gv.sd['nbrd'],"en":gv.sd['en'],"rd":gv.sd['rd'],"rs":gv.sd['rs'],"mm":gv.sd['mm'],"rdst":gv.sd['rdst'],"loc":gv.sd['loc'],"sbits":gv.sbits,"ps":gv.ps,"lrun":gv.lrun,"ct":CPU_temperature(gv.sd['tu']),"tu":gv.sd['tu']}
@@ -33,7 +31,6 @@ class cur_settings(object): # /jc
 class station_state(object): # /js
     """Returns station status and total number of stations as json."""
     def GET(self):
-        checkLogin()
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         jstate = {"sn":gv.srvals, "nstations":gv.sd['nst']}
@@ -42,7 +39,6 @@ class station_state(object): # /js
 class program_info(object): # /jp
     """Returns program data as json."""
     def GET(self):
-        checkLogin()
         lpd = [] # Local program data
         dse = int((time.time()+((gv.sd['tz']/4)-12)*3600)/86400) # days since epoch
         for p in gv.pd:
@@ -59,7 +55,6 @@ class program_info(object): # /jp
 class station_info(object): # /jn
     """Returns station information as json."""
     def GET(self):
-        checkLogin()
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         names = data('snames')
@@ -70,7 +65,6 @@ class station_info(object): # /jn
 class get_logs(object): # /jl
     """Returns log information for specified date range."""
     def GET(self):
-        checkLogin()
         records = self.read_log()
         data = []
         qdict = web.input()

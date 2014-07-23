@@ -7,7 +7,6 @@ import gv # Get access to ospy's settings
 import urllib, urllib2
 from urls import urls # Get access to ospy's URLs
 from gpio_pins import set_output
-from helpers import data, baseurl, CPU_temperature, checkLogin
 from ospy import template_render
 from webpages import ProtectedPage
 
@@ -143,21 +142,19 @@ class settings(ProtectedPage):
         return template_render.weather_adj(get_weather_options())
 
 
-class settings_json(object):
+class settings_json(ProtectedPage):
     """Returns plugin settings in JSON format"""
 
     def GET(self):
-        checkLogin()
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         return json.dumps(get_weather_options())
 
 
-class update(object):
+class update(ProtectedPage):
     """Save user input to weather_adj.json file"""
 
     def GET(self):
-        checkLogin()
         qdict = web.input()
         if not qdict.has_key('auto_delay'):
             qdict['auto_delay'] = 'off'

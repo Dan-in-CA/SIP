@@ -7,7 +7,7 @@ $code:
 	snames = eval(data('snames'))
 
 $code:
-	def twodigits(n):
+	def two_digits(n):
 		return '%02d' % int(n)
 
 $code:
@@ -38,8 +38,8 @@ $code:
     // date/time formating helpers
     //var timezoneSuffix =
         //((tz-48>=0) ? "+" : "-") +
-        //(Math.abs(tz-48)/4>>0) + ":" +
-        //((Math.abs(tz-48)%4)*15/10>>0) +
+        //(Math.abs(tz-48)/4) + ":" +
+        //((Math.abs(tz-48)%4)*15/10) +
         //((Math.abs(tz-48)%4)*15%10);
 
     function formatLogline(log) {
@@ -55,7 +55,7 @@ $code:
             pname = "Run Once Program";
         }
         var runDate = (new Date(lret*1000)).toString(); // + timezoneSuffix; //dk
-        return snames[lrsid] + " ran " + pname + " for " + (lrdur/60>>0) + "m" + (lrdur%60) + "s on " + runDate;
+        return snames[lrsid] + " ran " + pname + " for " + (lrdur/60) + "m" + (lrdur%60) + "s on " + runDate;
     }
 
     function updateStatus(status) {
@@ -249,8 +249,8 @@ $if gv.sd['mm']:
                             <td class="station_running">
                                 <button class='toggle manual narrow ${'on' if sbit else 'off'}' id='${sid}'><span class='toggleleft'>On</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Off</span></button>
                                     ${'in' if sbit else 'for'}
-                                <input type='text' id='mm${sid}' size='2' maxlength='3' value='${twodigits(rem/60)}'/>:
-                                <input type='text' id='ss${sid}' size='2' maxlength='2' value='${twodigits(rem%60)}'/> (mm:ss)
+                                <input type='text' id='mm${sid}' size='2' maxlength='3' value='${two_digits(rem/60)}'/>:
+                                <input type='text' id='ss${sid}' size='2' maxlength='2' value='${two_digits(rem%60)}'/> (mm:ss)
                             </td>
                     </tr>
         </table>

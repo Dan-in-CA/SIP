@@ -37,7 +37,7 @@ class login(WebPage):
             raise web.seeother('/')
 
 
-class logout(object):
+class logout(WebPage):
     def GET(self):
         web.config._session.user = 'anonymous'
         raise web.seeother('/')
@@ -51,11 +51,10 @@ class home(ProtectedPage):
         return template_render.home()
 
 
-class change_values(object):
+class change_values(ProtectedPage):
     """Save controller values, return browser to home page."""
 
     def GET(self):
-        checkLogin()
         qdict = web.input()
         if qdict.has_key('rsn') and qdict['rsn'] == '1':
             stop_stations()
@@ -69,8 +68,7 @@ class change_values(object):
             clear_mm()
         if qdict.has_key('rd') and qdict['rd'] != '0' and qdict['rd'] != '':
             gv.sd['rd'] = float(qdict['rd'])
-            gv.sd['rdst'] = gv.now + gv.sd[
-                                         'rd'] * 3600 + 1 # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
+            gv.sd['rdst'] = gv.now + gv.sd['rd'] * 3600 + 1 # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
             stop_onrain()
         elif qdict.has_key('rd') and qdict['rd'] == '0':
             gv.sd['rdst'] = 0
@@ -95,11 +93,10 @@ class view_options(ProtectedPage):
         return template_render.options(errorCode)
 
 
-class change_options(object):
+class change_options(ProtectedPage):
     """Save changes to options made on the options page."""
 
     def GET(self):
-        checkLogin()
         qdict = web.input()
         if qdict.has_key('opw') and qdict['opw'] != "":
             try:
@@ -234,11 +231,10 @@ class view_stations(ProtectedPage):
         return template_render.stations()
 
 
-class change_stations(object):
+class change_stations(ProtectedPage):
     """Save changes to station names, ignore rain and master associations."""
 
     def GET(self):
-        checkLogin()
         qdict = web.input()
         for i in range(gv.sd['nbrd']): # capture master associations
             if qdict.has_key('m' + str(i)):
@@ -269,11 +265,10 @@ class change_stations(object):
         raise web.seeother('/')
 
 
-class get_station(object):
+class get_station(ProtectedPage):
     """Return a page containing a number representing the state of a station or all stations if 0 is entered as station number."""
 
     def GET(self, sn):
-        checkLogin()
         if sn == '0':
             status = '<!DOCTYPE html>\n'
             status += ''.join(str(x) for x in gv.srvals)
@@ -286,7 +281,7 @@ class get_station(object):
             return 'Station ' + sn + ' not found.'
 
 
-class set_station(object):
+class set_station(ProtectedPage):
     """turn a station (valve/zone) on=1 or off=0 in manual mode."""
 
     def GET(self, nst, t=None): # nst = station number, status, optional duration
@@ -319,11 +314,10 @@ class view_runonce(ProtectedPage):
         return template_render.runonce()
 
 
-class change_runonce(object):
+class change_runonce(ProtectedPage):
     """Start a Run Once program. This will override any running program."""
 
     def GET(self):
-        checkLogin()
         qdict = web.input()
         if not gv.sd['en']: return # check operation status
         gv.rovals = json.loads(qdict['t'])
@@ -371,11 +365,10 @@ class modify_program(ProtectedPage):
         return template_render.modify(pid, prog)
 
 
-class change_program(object):
+class change_program(ProtectedPage):
     """Add a program or modify an existing one."""
 
     def GET(self):
-        checkLogin()
         qdict = web.input()
         pnum = int(qdict['pid']) + 1 # program number
         cp = json.loads(qdict['v'])
@@ -401,11 +394,10 @@ class change_program(object):
         raise web.seeother('/vp')
 
 
-class delete_program(object):
+class delete_program(ProtectedPage):
     """Delete one or all existing program(s)."""
 
     def GET(self):
-        checkLogin()
         qdict = web.input()
         if qdict['pid'] == '-1':
             del gv.pd[:]
@@ -425,22 +417,20 @@ class view_log(ProtectedPage):
         return template_render.log(records)
 
 
-class clear_log(object):
+class clear_log(ProtectedPage):
     """Delete all log records"""
 
     def GET(self):
-        checkLogin()
         qdict = web.input()
         with open('./data/log.json', 'w') as f:
             f.write('')
         raise web.seeother('/vl')
 
 
-class run_now(object):
+class run_now(ProtectedPage):
     """Run a scheduled program now. This will override any running programs."""
 
     def GET(self):
-        checkLogin()
         qdict = web.input()
         pid = int(qdict['pid'])
         p = gv.pd[int(qdict['pid'])] # program data
@@ -461,11 +451,10 @@ class run_now(object):
         raise web.seeother('/')
 
 
-class show_revision(object):
+class show_revision(ProtectedPage):
     """Show revision info to the user. Use: [URL of Pi]/rev."""
 
     def GET(self):
-        checkLogin()
         revpg = '<!DOCTYPE html>\n'
         revpg += 'Python Interval Program for OpenSprinkler Pi<br/><br/>\n'
         revpg += 'Compatable with OpenSprinkler firmware 1.8.3.<br/><br/>\n'
@@ -475,11 +464,10 @@ class show_revision(object):
         return revpg
 
 
-class toggle_temp(object):
+class toggle_temp(ProtectedPage):
     """Change units of Raspi's CPU temperature display on home page."""
 
     def GET(self):
-        checkLogin()
         qdict = web.input()
         if qdict['tunit'] == "C":
             gv.sd['tu'] = "F"
@@ -489,11 +477,10 @@ class toggle_temp(object):
         raise web.seeother('/')
 
 
-class api_status(object):
+class api_status(ProtectedPage):
     """Simple Status API"""
 
     def GET(self):
-        checkLogin()
         statuslist = []
         for bid in range(0, gv.sd['nbrd']):
             for s in range(0, 8):
@@ -547,11 +534,10 @@ class api_status(object):
         return json.dumps(statuslist)
 
 
-class api_log(object):
+class api_log(ProtectedPage):
     """Simple Log API"""
 
     def GET(self):
-        checkLogin()
         qdict = web.input()
         thedate = qdict['date']
         # date parameter filters the log values returned; "yyyy-mm-dd" format
@@ -578,11 +564,10 @@ class api_log(object):
         return json.dumps(data)
 
 
-class water_log(object):
+class water_log(ProtectedPage):
     """Simple Log API"""
 
     def GET(self):
-        checkLogin()
         records = read_log()
         data = "Date, Start Time, Zone, Duration, Program\n"
         for r in records:

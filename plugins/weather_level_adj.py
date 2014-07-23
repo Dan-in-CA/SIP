@@ -1,7 +1,6 @@
 # !/usr/bin/env python
 import datetime
 from random import randint
-from helpers import baseurl, CPU_temperature, data, checkLogin
 
 import web, json, time, re
 import os
@@ -36,19 +35,17 @@ class settings(ProtectedPage):
     def GET(self):
         return template_render.weather_level_adj(options_data())
 
-class settings_json(object):
+class settings_json(ProtectedPage):
     """Returns plugin settings in JSON format"""
 
     def GET(self):
-        checkLogin()
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         return json.dumps(options_data())
 
-class update(object):
+class update(ProtectedPage):
     """Save user input to weather_level_adj.json file"""
     def GET(self):
-        checkLogin()
         qdict = web.input()
         if not qdict.has_key('auto_wl'):
             qdict['auto_wl'] = 'off'

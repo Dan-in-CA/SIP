@@ -29,7 +29,7 @@ function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is schedu
   }
   if(simminutes<pd[3] || simminutes>=pd[4])  return 0; // if simulated time is before start time or after stop time, do not match
   if(pd[5]==0)  return 0; // repeat time missing, do not match
-  if(((simminutes-pd[3])/pd[5]>>0)*pd[5] == (simminutes-pd[3])) { // if programmed to run now...
+  if(((simminutes-pd[3])/pd[5])*pd[5] == (simminutes-pd[3])) { // if programmed to run now...
     return 1; // scheduled for displayScheduleDate
   }
   return 0;  // no match found
@@ -58,7 +58,7 @@ function doSimulation() { // Create schedule by a full program simulation, was d
           bid=sid>>3;s=sid%8; //set board index (bid) and station number per board (s) from station index (sid) 
           if(mas==(sid+1)) continue; // skip master station
           if(pd[7+bid]&(1<<s)) { // if this station is selected in this program...
-				et_array[sid]=pd[6]*wl/100*wlx/100>>0; // Set end time for this station to duration adjusted by water level
+				et_array[sid]=pd[6]*wl/100*wlx/100; // Set end time for this station to duration adjusted by water level
 				pid_array[sid]=pid+1; // Set station element in pid array to program number (pid+1)
             match_found=1;
           }

@@ -17,7 +17,8 @@ def timing_loop():
     print 'Starting timing loop \n'
     last_min = 0
     while True: # infinite loop
-        gv.now = timegm(time.localtime()) # Current time based on local time from the Pi. updated once per second.
+        gv.now = timegm(time.localtime())   # Current time based on local time from the Pi. updated once per second.
+        gv.gmtnow = time.time()             # Current gmt time (needed for client-side JS code).
         if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']):
             lt = time.gmtime(gv.now)
             if (lt[3] * 60) + lt[4] != last_min: # only check programs once a minute

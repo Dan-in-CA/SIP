@@ -12,7 +12,7 @@ import time
 
 platform = '' # must be done before the following import because gpio_pins will try to set it
 
-from helpers import passwordSalt, passwordHash, load_programs
+from helpers import passwordSalt, passwordHash, load_programs, data
 
 sd = {
     u"en": 1,
@@ -69,11 +69,12 @@ except IOError: # If file does not exist, it will be created created using defau
 
 
 now = timegm(time.localtime())
+gmtnow = time.time()
 plugin_menu = [] # Empty list of lists for plugin links (e.g. ['name', 'URL'])
 
 srvals = [0] * (sd['nst']) # Shift Register values
 rovals = [0] * sd['nbrd'] * 7 # Run Once durations
-
+snames = data('snames')
 pd = load_programs() # Load program data from file
 
 ps = [] # Program schedule (used for UI display)

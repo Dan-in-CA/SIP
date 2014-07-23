@@ -1,7 +1,6 @@
 # !/usr/bin/env python
 from random import randint
 import thread
-from helpers import baseurl, CPU_temperature, data, checkLogin
 
 import web, json, time
 import gv # Get access to ospy's settings
@@ -40,10 +39,9 @@ class monthly_percent(ProtectedPage):
         return template_render.monthly(levels)
 
 
-class update_percents(object):
+class update_percents(ProtectedPage):
     """Save user input to levels.json file"""
     def GET(self):
-        checkLogin()
         qdict = web.input()
         months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
         vals = []

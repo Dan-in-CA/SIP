@@ -58,5 +58,4 @@ gv.sbits	station bits, used to display stations that are on in UI (list of bytes
 gv.rs	run schedule (list [scheduled start time, scheduled stop time, duration, program index])
 gv.lrun	last run, used to display log line on home page (list [station index, program number, duration, end time]) 
 gv.scount	station count, used in set station to track on stations with master association
-gv.snames	station names, loaded from 'snames.txt' file (string)
 gv.plugin_menu list to hold a 2 element list for each plugin to be added to menu on home page (['menu text', 'url'])
