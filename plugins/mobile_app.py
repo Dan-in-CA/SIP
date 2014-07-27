@@ -76,7 +76,7 @@ class get_logs: # /jl
 
         for r in records:
             event = json.loads(r)
-            date = time.mktime(datetime.datetime.strptime(event["date"], "%Y-%m-%d").timetuple())
+            date = totimestamp(datetime.datetime.strptime(event["date"], "%Y-%m-%d"))
             if int(qdict["start"]) <= int(date) <= int(qdict["end"]):
                 pid = event["program"]
                 if (pid == "Run-once"):
@@ -88,7 +88,7 @@ class get_logs: # /jl
                 station = int(event["station"])
                 duration = string.split(event["duration"],":")
                 duration = (int(duration[0]) * 60) + int(duration[1])
-                timestamp = int(time.mktime(datetime.datetime.strptime(event["date"] + " " + event["start"], "%Y-%m-%d %H:%M:%S").timetuple()))
+                timestamp = int(totimestamp(datetime.datetime.strptime(event["date"] + " " + event["start"], "%Y-%m-%d %H:%M:%S")))
 
                 data.append([pid,station,duration,timestamp])
 
@@ -104,6 +104,10 @@ class get_logs: # /jl
             return []
 ##############################
 #### Function Definitions ####
+
+def totimestamp(dt, epoch=datetime.datetime(1970,1,1)):
+    td = dt - epoch
+    return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 1e6
 
 def CPU_temperature(format):
     """Returns the temperature of the Raspberry Pi's CPU."""
