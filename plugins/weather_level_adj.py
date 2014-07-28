@@ -1,6 +1,7 @@
 # !/usr/bin/env python
 import datetime
 from random import randint
+from threading import Thread
 
 import web, json, time, re
 import os
@@ -9,7 +10,6 @@ import urllib, urllib2
 from urls import urls # Get access to ospy's URLs
 import errno
 
-import thread
 from ospy import template_render
 from webpages import ProtectedPage
 
@@ -24,6 +24,116 @@ def mkdir_p(path):
 
 urls.extend(['/lwa', 'plugins.weather_level_adj.settings', '/lwj', 'plugins.weather_level_adj.settings_json', '/luwa', 'plugins.weather_level_adj.update']) # Add a new url to open the data entry page.
 gv.plugin_menu.append(['Weather-based Water Level', '/lwa']) # Add this plugin to the home page plugins menu
+
+################################################################################
+# Main function loop:                                                          #
+################################################################################
+
+class WeatherLevelChecker(Thread):
+    def __init__(self):
+        Thread.__init__(self)
+        self.daemon = True
+        self.start()
+        self.status = ''
+
+        self._sleep_time = 0
+
+    def add_status(self, msg):
+        if self.status:
+            self.status += '\n' + msg
+        else:
+            self.status = msg
+        print msg
+
+    def update(self):
+        self._sleep_time = 0
+
+    def _sleep(self, secs):
+        self._sleep_time = secs
+        while self._sleep_time > 0:
+            time.sleep(1)
+            self._sleep_time -= 1
+
+    def run(self):
+        time.sleep(randint(3, 10)) # Sleep some time to prevent printing before startup information
+
+        while True:
+            try:
+                self.status = ''
+                options = options_data()
+                if options["auto_wl"] == "off":
+                    if 'wl_weather' in gv.sd:
+                        del gv.sd['wl_weather']
+                else:
+
+                    print "Checking weather status..."
+                    history = history_info()
+                    forecast = forecast_info()
+                    today = today_info()
+
+                    info = {}
+
+                    for day in range(-20, 20):
+                        if day in history:
+                            day_info = history[day]
+                        elif day in forecast:
+                            day_info = forecast[day]
+                        else:
+                            continue
+
+                        info[day] = day_info
+
+                    if 0 in info and 'rain_mm' in today:
+                        day_time = datetime.datetime.now().time()
+                        day_left = 1.0 - (day_time.hour * 60 + day_time.minute) / 24.0 / 60
+                        info[0]['rain_mm'] = info[0]['rain_mm'] * day_left + today['rain_mm']
+
+                    if not info:
+                        self.add_status(str(history))
+                        self.add_status(str(today))
+                        self.add_status(str(forecast))
+                        raise Exception('No information available!')
+
+                    self.add_status('Using %d days of information.' % len(info))
+
+                    total_info = {
+                        'temp_c': sum([val['temp_c'] for val in info.values()])/len(info),
+                        'rain_mm': sum([val['rain_mm'] for val in info.values()]),
+                        'wind_ms': sum([val['wind_ms'] for val in info.values()])/len(info),
+                        'humidity': sum([val['humidity'] for val in info.values()])/len(info)
+                    }
+
+                    # We assume that the default 100% provides 4mm water per day (normal need)
+                    # We calculate what we will need to provide using the mean data of X days around today
+
+                    water_needed = 4 * len(info)                                # 4mm per day
+                    water_needed *= 1 + (total_info['temp_c'] - 20) / 15        # 5 => 0%, 35 => 200%
+                    water_needed *= 1 + (total_info['wind_ms'] / 100)           # 0 => 100%, 20 => 120%
+                    water_needed *= 1 - (total_info['humidity'] - 50) / 200     # 0 => 125%, 100 => 75%
+                    water_needed = round(water_needed, 1)
+
+                    water_left = water_needed - total_info['rain_mm']
+                    water_left = round(max(0, min(100, water_left)), 1)
+
+                    water_adjustment = round((water_left / (4 * len(info))) * 100, 1)
+
+                    water_adjustment = max(float(options['wl_min']), min(float(options['wl_max']), water_adjustment))
+
+                    self.add_status('Water needed (%d days): %.1fmm' % (len(info), water_needed))
+                    self.add_status('Total rainfall       : %.1fmm' % total_info['rain_mm'])
+                    self.add_status('_______________________________-')
+                    self.add_status('Irrigation needed    : %.1fmm' % water_left)
+                    self.add_status('Weather Adjustment   : %.1f%%' % water_adjustment)
+
+                    gv.sd['wl_weather'] = water_adjustment
+
+                    self._sleep(3600)
+
+            except Exception as err:
+                self.add_status('Weather-base water level encountered error: ' + str(err))
+                self._sleep(60)
+
+checker = WeatherLevelChecker()
 
 ################################################################################
 # Web pages:                                                                   #
@@ -51,7 +161,7 @@ class update(ProtectedPage):
             qdict['auto_wl'] = 'off'
         with open('./data/weather_level_adj.json', 'w') as f: # write the settings to file
             json.dump(qdict, f)
-        check_weather()
+        checker.update()
         raise web.seeother('/')
 
 ################################################################################
@@ -66,7 +176,8 @@ def options_data():
         'wl_max': 200,
         'days_history': 3,
         'days_forecast': 3,
-        'wapikey': ''
+        'wapikey': '',
+        'status': checker.status
     }
     try:
         with open('./data/weather_level_adj.json', 'r') as f: # Read the settings from file
@@ -184,8 +295,6 @@ def today_info():
 
 def forecast_info():
     options = options_data()
-    if int(options['days_forecast']) == 0:
-        return {}
 
     lid = get_wunderground_lid()
     if lid == "":
@@ -212,91 +321,3 @@ def forecast_info():
             }
 
     return result
-
-################################################################################
-# Main function loop:                                                          #
-################################################################################
-
-def check_weather(run_loop=False):
-    if run_loop:
-        time.sleep(randint(3, 10)) # Sleep some time to prevent printing before startup information
-
-    while True:
-        try:
-            options = options_data()
-            if options["auto_wl"] == "off":
-                if 'wl_weather' in gv.sd:
-                    del gv.sd['wl_weather']
-            else:
-
-                print "Checking weather status..."
-                history = history_info()
-                forecast = forecast_info()
-                today = today_info()
-
-                info = {}
-
-                for day in range(-20, 20):
-                    if day in history:
-                        day_info = history[day]
-                    elif day in forecast:
-                        day_info = forecast[day]
-                    else:
-                        continue
-
-                    info[day] = day_info
-
-                if 0 in info and 'rain_mm' in today:
-                    day_time = datetime.datetime.now().time()
-                    day_left = 1.0 - (day_time.hour * 60 + day_time.minute) / 24.0 / 60
-                    info[0]['rain_mm'] = info[0]['rain_mm'] * day_left + today['rain_mm']
-
-                if not info:
-                    print history
-                    print forecast
-                    print today
-                    raise Exception('No information available!')
-
-                print 'Using', len(info), 'days of information.'
-
-                total_info = {
-                    'temp_c': sum([val['temp_c'] for val in info.values()])/len(info),
-                    'rain_mm': sum([val['rain_mm'] for val in info.values()]),
-                    'wind_ms': sum([val['wind_ms'] for val in info.values()])/len(info),
-                    'humidity': sum([val['humidity'] for val in info.values()])/len(info)
-                }
-
-                # We assume that the default 100% provides 4mm water per day (normal need)
-                # We calculate what we will need to provide using the mean data of X days around today
-
-                water_needed = 4 * len(info)                                # 4mm per day
-                water_needed *= 1 + (total_info['temp_c'] - 20) / 15        # 5 => 0%, 35 => 200%
-                water_needed *= 1 + (total_info['wind_ms'] / 100)           # 0 => 100%, 20 => 120%
-                water_needed *= 1 - (total_info['humidity'] - 50) / 200     # 0 => 125%, 100 => 75%
-                water_needed = round(water_needed, 1)
-
-                water_left = water_needed - total_info['rain_mm']
-                water_left = round(max(0, min(100, water_left)), 1)
-
-                water_adjustment = round((water_left / (4 * len(info))) * 100, 1)
-
-                water_adjustment = max(float(options['wl_min']), min(float(options['wl_max']), water_adjustment))
-
-                print 'Water needed (%d days): %.1fmm' % (len(info), water_needed)
-                print 'Total rainfall       : %.1fmm' % total_info['rain_mm']
-                print '_______________________________-'
-                print 'Irrigation needed    : %.1fmm' % water_left
-                print 'Weather Adjustment   : %.1f%%' % water_adjustment
-
-                gv.sd['wl_weather'] = water_adjustment
-
-            if not run_loop:
-                break
-            time.sleep(3600)
-        except Exception as err:
-            print 'Weather-base water level encountered error:', err
-            if not run_loop:
-                break
-            time.sleep(60)
-
-thread.start_new_thread(check_weather, (True,))
