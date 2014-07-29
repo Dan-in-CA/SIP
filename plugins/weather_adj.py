@@ -167,6 +167,6 @@ class update:
 
 weather_to_delay() # Run the plugin on program launch
 try:
-    sched.add_cron_job(weather_to_delay, hour=1) # Run the plugin's function every hour
+    sched.add_interval_job(weather_to_delay, hours=1) # Run the plugin's function every hour
 except NameError:
     pass
