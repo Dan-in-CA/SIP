@@ -79,7 +79,7 @@ def get_weather_data():
     if region == "United States" or region == "Bermuda" or region == "Palau":
         temp = str(newdata.group(3))+"&#176;F"
     else:
-        temp = str(int(round((newdata.group(3)-32)*(5/9))))+"&#176;C"
+        temp = str(round((int(newdata.group(3))-32)*(5/9)))+"&#176;C"
     weather = {"text": newdata.group(1), "code": newdata.group(2), "temp": temp, "date": newdata.group(4), "location": loc.group(1)}
     return weather;
 
