@@ -72,6 +72,11 @@ def clear_mm():
         set_output()
     return
 
+def reboot():
+    gv.srvals = [0]*(gv.sd['nst'])
+    set_output()
+    os.system('reboot')
+
 def CPU_temperature():
     """Returns the temperature of the CPU if available."""
     try:
@@ -539,6 +544,8 @@ class change_values:
             except:
                 pass
         jsave(gv.sd, 'sd')
+        if qdict.has_key('rbt') and qdict['rbt'] == '1':
+            reboot()
         raise web.seeother('/')# Send browser back to home page
 
 class view_options:
@@ -640,9 +647,7 @@ class change_options:
         rovals = [0]*(gv.sd['nst']) # Run Once Durations
         jsave(gv.sd, 'sd')
         if qdict.has_key('rbt') and qdict['rbt'] == '1':
-            gv.srvals = [0]*(gv.sd['nst'])
-            set_output()
-            os.system('reboot')
+            reboot()
         raise web.seeother('/')
 
     def update_scount(self, qdict):
