@@ -73,7 +73,11 @@ function doSimulation() { // Create schedule by a full program simulation, was d
             st_array[sid]=acctime; // set start time for this station to accumulated time 
 			  acctime+=et_array[sid]; //increment accumulated time by end time (adjusted duration) for this station
             et_array[sid]=acctime; // set end time for this station to updated accumulated time
+<<<<<<< HEAD
 			  endmin = Math.ceil(et_array[sid]/60); // update endmin to whole minute
+=======
+			  endmin = Math.ceil(et_array[sid]/60); // update end time
+>>>>>>> branch 'master' of https://github.com/Dan-in-CA/OSPi
 			  acctime+=sdt; // increment accumulated time by station delay time
             busy=1; // set system busy flag - prevents new scheduleing until current schedule is finished
           }//if

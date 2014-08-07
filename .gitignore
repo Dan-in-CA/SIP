@@ -4,6 +4,8 @@ web/
 /data/sd.json
 /data/log.json
 /data/snames.txt
+/data/levels.json
+/data/weather_adj.json
 *.pyc
 *.csv
 /python

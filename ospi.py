@@ -45,7 +45,7 @@ def baseurl():
 
 def check_rain():
     try:
-        if gv.sd['rst'] == 0: 
+        if gv.sd['rst'] == 0:
             if GPIO.input(pin_rain_sense): # Rain detected
                 gv.sd['rs'] = 1
             else:
@@ -71,6 +71,11 @@ def clear_mm():
         gv.srvals = [0]*(gv.sd['nst'])
         set_output()
     return
+
+def reboot():
+    gv.srvals = [0]*(gv.sd['nst'])
+    set_output()
+    os.system('reboot')
 
 def CPU_temperature():
     """Returns the temperature of the CPU if available."""
@@ -317,7 +322,7 @@ def timing_loop():
         if gv.sd['rd'] and gv.now>= gv.sd['rdst']: # Check of rain delay time is up
             gv.sd['rd'] = 0
             gv.sd['rdst'] = 0 # Rain delay stop time
-            jsave(gv.sd, 'sd') 
+            jsave(gv.sd, 'sd')
         time.sleep(1)
         #### End of timing loop ####
 
@@ -423,7 +428,7 @@ except IOError: # If file does not exist, it will be created created using defau
 
 gv.now = timegm(time.localtime())
 
-gv.plugin_menu = [] #Empty list of lists for plugin links (e.g. ['name', 'URL']) 
+gv.plugin_menu = [] #Empty list of lists for plugin links (e.g. ['name', 'URL'])
 
 gv.srvals = [0]*(gv.sd['nst']) #Shift Register values
 
@@ -447,6 +452,7 @@ gv.lrun=[0,0,0,0] #station index, program number, duration, end time (Used in UI
 
 gv.scount = 0 # Station count, used in set station to track on stations with master association.
 
+gv.snames = data('snames') # initialize station names to be used by plugins
 
   ########################
   #### Login Handling ####
@@ -472,7 +478,7 @@ def verifyLogin():
         return True
 
     raise web.unauthorized()
-    
+
 signin_form = form.Form(form.Password('password',
                                       description='Password:'),
                         validators = [form.Validator("Incorrect password, please try again",
@@ -539,6 +545,8 @@ class change_values:
             except:
                 pass
         jsave(gv.sd, 'sd')
+        if qdict.has_key('rbt') and qdict['rbt'] == '1':
+            reboot()
         raise web.seeother('/')# Send browser back to home page
 
 class view_options:
@@ -559,7 +567,7 @@ class change_options:
     def GET(self):
         verifyLogin()
         qdict = web.input()
-        if qdict['opw'] != "":
+        if qdict.has_key('opw') and qdict['opw'] != "":
             try:
                 if passwordHash(qdict['opw'], gv.sd['salt']) == gv.sd['password']:
                     if qdict['npw'] == "":
@@ -574,7 +582,7 @@ class change_options:
                 pass
 
         try:
-            if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == ''):
+            if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == '1'):
                 gv.sd['ipas'] = 1
             else:
                 gv.sd['ipas'] = 0
@@ -588,7 +596,7 @@ class change_options:
         if qdict.has_key('otz'):
             gv.sd['tz'] = int(qdict['otz'])
         try:
-            if qdict.has_key('otf') and (qdict['otf'] == 'on' or qdict['otf'] == ''):
+            if qdict.has_key('otf') and (qdict['otf'] == 'on' or qdict['otf'] == '1'):
                 gv.sd['tf'] = 1
             else:
                 gv.sd['tf'] = 0
@@ -613,7 +621,7 @@ class change_options:
         if qdict.has_key('owl'):
             gv.sd['wl'] = int(qdict['owl'])
 
-        if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == ''):
+        if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == '1'):
           gv.sd['urs'] = 1
         else:
           gv.sd['urs'] = 0
@@ -640,9 +648,7 @@ class change_options:
         rovals = [0]*(gv.sd['nst']) # Run Once Durations
         jsave(gv.sd, 'sd')
         if qdict.has_key('rbt') and qdict['rbt'] == '1':
-            gv.srvals = [0]*(gv.sd['nst'])
-            set_output()
-            os.system('reboot')
+            reboot()
         raise web.seeother('/')
 
     def update_scount(self, qdict):
@@ -966,7 +972,7 @@ class api_status:
                             if gv.sd['rd'] != 0:
                                 status['reason'] = 'rain_delay'
                             if gv.sd['urs'] != 0 and gv.sd['rs'] != 0:
-                                status['reason'] = 'rain_sensed' 
+                                status['reason'] = 'rain_sensed'
                         if sn == gv.sd['mas']:
                             status['master'] = 1
                             status['reason'] = 'master'
@@ -1017,7 +1023,7 @@ class api_log:
 
         for r in records:
             event = json.loads(r)
-            
+
             # return any records starting on this date
             if not(qdict.has_key('date')) or event['date'] == thedate:
                 data.append(event)
