@@ -574,7 +574,7 @@ class change_options:
                 pass
 
         try:
-            if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == ''):
+            if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == '1'):
                 gv.sd['ipas'] = 1
             else:
                 gv.sd['ipas'] = 0
@@ -588,7 +588,7 @@ class change_options:
         if qdict.has_key('otz'):
             gv.sd['tz'] = int(qdict['otz'])
         try:
-            if qdict.has_key('otf') and (qdict['otf'] == 'on' or qdict['otf'] == ''):
+            if qdict.has_key('otf') and (qdict['otf'] == 'on' or qdict['otf'] == '1'):
                 gv.sd['tf'] = 1
             else:
                 gv.sd['tf'] = 0
