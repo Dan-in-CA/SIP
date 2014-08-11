@@ -2,11 +2,10 @@
 var displayScheduleDate = new Date(devt); // dk 
 var displayScheduleTimeout;
 var sid,sn,t;
-var simdate = displayScheduleDate; // date for simulation
 var nprogs = prog.length; // number of progrms
 var nst = nbrd*8; // number of stations
 
-function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is scheduled for this date (displayScheduleDate) called from doSimulation
+function scheduledThisDate(pd,simminutes,simdate) { // check if program is scheduled for this date (displayScheduleDate) called from doSimulation
   // simminutes is minute count generated in doSimulation()
   // simdate is a JavaScript date object
   simday = Math.floor(simdate/(1000*3600*24)) // The number of days since epoc
@@ -35,7 +34,7 @@ function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is schedu
   return 0;  // no match found
 }
 
-function doSimulation() { // Create schedule by a full program simulation, was draw_program()
+function doSimulation(simdate) { // Create schedule by a full program simulation, was draw_program()
   //if(typeof(simstart)==='undefined') simstart = 0; // set parameter default
 //  var simminutes=simstart; // start at time set by calling function or 0 as default
   var simminutes=0;
@@ -124,7 +123,9 @@ function toClock(duration, tf) {
 	var h = Math.floor(duration/60);
 	var m = Math.floor(duration - (h*60));
 	if (tf == 0) {
-		return (h>12 ? h-12 : h) + ":" + (m<10 ? "0" : "") + m + (h<12 ? "am" : "pm");
+		h = h % 24;
+		ret =  (h>12 ? h-12 : (h==0 ? 12 : h)) + ":" + (m<10 ? "0" : "") + m + (h==0 || h<12 ? "am" : "pm");
+		return ret;
 	} else {
 		return (h<10 ? "0" : "") + h + ":" + (m<10 ? "0" : "") + m;
 	}
@@ -206,7 +207,17 @@ function displaySchedule(schedule) {
 
 function displayProgram() {
 	if (displayScheduleDate > devt) { //dk 7-13-14 << new Date()
-		var schedule = doSimulation(); //dk
+		var schedule = doSimulation(displayScheduleDate);  // Get today's schedule
+		var prevDate = new Date(displayScheduleDate);
+		prevDate.setDate(prevDate.getDate() - 1);
+		var prevSchedule = doSimulation(prevDate);  // Get yesterday's schedule
+		for (var s in prevSchedule) {
+			if (prevSchedule[s].start + prevSchedule[s].duration/60 > 24*60) {  // Something still running past midnight?
+			    prevSchedule[s].duration = prevSchedule[s].duration - Math.max(0,24*60 - prevSchedule[s].start)*60;  // trim duration
+			    prevSchedule[s].start = Math.max(0,prevSchedule[s].start - 24*60);  // trim start
+			    schedule.push(prevSchedule[s]);  // add it to the schedule for display
+			}
+		}
 		displaySchedule(schedule);
 	} else {
 		var visibleDate = toXSDate(displayScheduleDate);
@@ -220,8 +231,8 @@ function displayProgram() {
 				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
 			}
 			if (toXSDate(displayScheduleDate) == toXSDate(new Date())) {
-				var schedule = doSimulation(); //dk
-				log = log.concat(schedule);
+				var schedule = doSimulation(displayScheduleDate);
+				log = log.concat(schedule);  // also show anything scheduled for the remainder of the day
 			}
 			displaySchedule(log);
 		})
