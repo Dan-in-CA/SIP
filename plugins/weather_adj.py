@@ -1,39 +1,42 @@
 #!/usr/bin/env python
+import thread
 
 import web, json, time, re
 import gv # Get access to ospi's settings
 import urllib, urllib2
 from urls import urls # Get access to ospi's URLs
-try:
-    from apscheduler.scheduler import Scheduler #Depends on APScheduler 2.x (does not work with 1.x or 3.x)
-except ImportError:
-    print "The Python module apscheduler could not be found."
-    pass
 
-urls.extend(['/wa', 'plugins.weather_adj.settings', '/wj', 'plugins.weather_adj.settings_json', '/uwa', 'plugins.weather_adj.update']) # Add a new url to open the data entry page.
+# Add a new url to open the data entry page.
+urls.extend(['/wa', 'plugins.weather_adj.settings', '/wj', 'plugins.weather_adj.settings_json', '/uwa', 'plugins.weather_adj.update'])
 
-gv.plugin_menu.append(['Weather Adjust Settings', '/wa']) # Add this plugin to the home page plugins menu
+# Add this plugin to the home page plugins menu
+gv.plugin_menu.append(['Weather Adjust Settings', '/wa'])
 
-try:
-    sched = Scheduler()
-    sched.start() # Start the scheduler
-except NameError:
-    pass
 
-def weather_to_delay():
-    data = get_weather_options()
-    if data["auto_delay"] == "off":
-        return
-    print("Checking rain status...")
-    weather = get_weather_data() if data['weather_provider'] == "yahoo" else get_wunderground_weather_data()
-    delay = code_to_delay(weather["code"])
-    if delay == False:
-        print("No rain detected")
-        return
-    print("Rain detected. Adding delay of "+delay)
-    gv.sd['rd'] = float(delay)
-    gv.sd['rdst'] = gv.now + gv.sd['rd']*3600 + 1 # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
-    stop_onrain()
+def weather_to_delay(run_loop=False):
+    if run_loop:
+        time.sleep(3) # Sleep some time to prevent printing before startup information
+
+    while True:
+        data = get_weather_options()
+        if data["auto_delay"] != "off":
+            print("Checking rain status...")
+            weather = get_weather_data() if data['weather_provider'] == "yahoo" else get_wunderground_weather_data()
+            delay = code_to_delay(weather["code"])
+            if delay > 0:
+                print("Rain detected: " + weather["text"] + ". Adding delay of " + str(delay))
+                gv.sd['rd'] = float(delay)
+                gv.sd['rdst'] = gv.now + gv.sd['rd'] * 3600 + 1 # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
+                stop_onrain()
+            elif delay == False:
+                print("No rain detected: " + weather["text"] + ". No action.")
+            elif delay == 0:
+                print("Good weather detected: " + weather["text"] + ". Removing rain delay.")
+                gv.sd['rdst'] = gv.now
+
+        if not run_loop:
+            break
+        time.sleep(3600)
 
 def get_weather_options():
     try:
@@ -79,7 +82,7 @@ def get_weather_data():
     if region == "United States" or region == "Bermuda" or region == "Palau":
         temp = str(newdata.group(3))+"&#176;F"
     else:
-        temp = str(int(round((newdata.group(3)-32)*(5/9))))+"&#176;C"
+        temp = str(round((int(newdata.group(3))-32)*(5/9)))+"&#176;C"
     weather = {"text": newdata.group(1), "code": newdata.group(2), "temp": temp, "date": newdata.group(4), "location": loc.group(1)}
     return weather;
 
@@ -116,7 +119,7 @@ def code_to_delay(code):
         reset_codes = [36]
     else:
         adverse_codes = ["flurries","sleet","rain","sleet","snow","tstorms","nt_flurries","nt_sleet","nt_rain","nt_sleet","nt_snow","nt_tstorms"]
-        reset_codes = ["sunny","nt_sunny"]
+        reset_codes = ["sunny", "clear", "mostlysunny", "partlycloudy"]
     if code in adverse_codes:
         return data['delay_duration']
     if code in reset_codes:
@@ -165,8 +168,4 @@ class update:
         f.close()
         raise web.seeother('/')
 
-weather_to_delay() # Run the plugin on program launch
-try:
-    sched.add_cron_job(weather_to_delay, hour=1) # Run the plugin's function every hour
-except NameError:
-    pass
+thread.start_new_thread(weather_to_delay, (True,))

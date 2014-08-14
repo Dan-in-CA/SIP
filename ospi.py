@@ -72,6 +72,11 @@ def clear_mm():
         set_output()
     return
 
+def reboot():
+    gv.srvals = [0]*(gv.sd['nst'])
+    set_output()
+    os.system('reboot')
+
 def CPU_temperature():
     """Returns the temperature of the CPU if available."""
     try:
@@ -539,6 +544,8 @@ class change_values:
             except:
                 pass
         jsave(gv.sd, 'sd')
+        if qdict.has_key('rbt') and qdict['rbt'] == '1':
+            reboot()
         raise web.seeother('/')# Send browser back to home page
 
 class view_options:
@@ -574,7 +581,7 @@ class change_options:
                 pass
 
         try:
-            if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == ''):
+            if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == '1'):
                 gv.sd['ipas'] = 1
             else:
                 gv.sd['ipas'] = 0
@@ -588,7 +595,7 @@ class change_options:
         if qdict.has_key('otz'):
             gv.sd['tz'] = int(qdict['otz'])
         try:
-            if qdict.has_key('otf') and (qdict['otf'] == 'on' or qdict['otf'] == ''):
+            if qdict.has_key('otf') and (qdict['otf'] == 'on' or qdict['otf'] == '1'):
                 gv.sd['tf'] = 1
             else:
                 gv.sd['tf'] = 0
@@ -640,9 +647,7 @@ class change_options:
         rovals = [0]*(gv.sd['nst']) # Run Once Durations
         jsave(gv.sd, 'sd')
         if qdict.has_key('rbt') and qdict['rbt'] == '1':
-            gv.srvals = [0]*(gv.sd['nst'])
-            set_output()
-            os.system('reboot')
+            reboot()
         raise web.seeother('/')
 
     def update_scount(self, qdict):
@@ -876,7 +881,17 @@ class delete_program:
         gv.sd['nprogs'] = len(gv.pd)
         raise web.seeother('/vp')
         return
-
+                          
+class enable_program:
+    """Activate an existing program(s)."""
+    def GET(self):
+        verifyLogin()
+        qdict = web.input()
+        gv.pd[int(qdict['pid'])][0] = int(qdict['enable'])
+        jsave(gv.pd, 'programs')
+        raise web.seeother('/vp')
+        return
+                          
 class view_log:
     """View Log"""
     def GET(self):

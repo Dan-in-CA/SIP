@@ -1,0 +1,981 @@
+#Translation template for OpenSprinkler Pi, Python Interval Program.
+# Copyright (C) 2014
+# Dan Kimberling dkimberling59@gmail.com, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 2.0.3\n"
+"POT-Creation-Date: 2014-07-30 11:31+Pacific Daylight Time\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: CZ <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UNICODE\n"
+"Content-Transfer-Encoding: utf-8\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: gv.py:96
+msgid "System name"
+msgstr ""
+
+#: gv.py:96
+msgid "Unique name of this OpenSprinkler system."
+msgstr ""
+
+#: gv.py:97
+msgid "City name or zip code. Use comma or + in place of space."
+msgstr ""
+
+#: gv.py:97
+msgid "Location"
+msgstr ""
+
+#: gv.py:98
+msgid "Example: GMT-4:00, GMT+5:30 (effective after reboot.)"
+msgstr ""
+
+#: gv.py:98
+msgid "Time zone"
+msgstr ""
+
+#: gv.py:99
+msgid "24-hour clock"
+msgstr ""
+
+#: gv.py:99
+msgid "Display times in 24 hour format (as opposed to AM/PM style.)"
+msgstr ""
+
+#: gv.py:100
+msgid "HTTP port"
+msgstr ""
+
+#: gv.py:100
+msgid "HTTP port (effective after reboot.)"
+msgstr ""
+
+#: gv.py:101
+msgid "Allow anonymous users to access the system without a password."
+msgstr ""
+
+#: gv.py:101
+msgid "Disable security"
+msgstr ""
+
+#: gv.py:102
+msgid "Current password"
+msgstr ""
+
+#: gv.py:102
+msgid "Re-enter the current password."
+msgstr ""
+
+#: gv.py:103
+msgid "Enter a new password."
+msgstr ""
+
+#: gv.py:103
+msgid "New password"
+msgstr ""
+
+#: gv.py:104
+msgid "Confirm password"
+msgstr ""
+
+#: gv.py:104
+msgid "Confirm the new password."
+msgstr ""
+
+#: gv.py:105
+msgid "Sequential"
+msgstr ""
+
+#: gv.py:105
+msgid "Sequential or concurrent running mode."
+msgstr ""
+
+#: gv.py:106
+msgid "Extension boards"
+msgstr ""
+
+#: gv.py:106
+msgid "Number of extension boards."
+msgstr ""
+
+#: gv.py:107
+msgid "Station delay"
+msgstr ""
+
+#: gv.py:107
+msgid "Station delay time (in seconds), between 0 and 240."
+msgstr ""
+
+#: gv.py:108
+msgid "Master station"
+msgstr ""
+
+#: gv.py:108
+msgid "Select master station."
+msgstr ""
+
+#: gv.py:109
+msgid "Master on adjust"
+msgstr ""
+
+#: gv.py:109
+msgid "Master on delay (in seconds), between +0 and +60."
+msgstr ""
+
+#: gv.py:110
+msgid "Master off adjust"
+msgstr ""
+
+#: gv.py:110
+msgid "Master off delay (in seconds), between -60 and +60."
+msgstr ""
+
+#: gv.py:111
+msgid "Use rain sensor"
+msgstr ""
+
+#: gv.py:111
+msgid "Use rain sensor."
+msgstr ""
+
+#: gv.py:112
+msgid "Normally open"
+msgstr ""
+
+#: gv.py:112
+msgid "Rain sensor type."
+msgstr ""
+
+#: gv.py:113
+msgid "Enable logging"
+msgstr ""
+
+#: gv.py:113
+msgid "Log all events - note that repetitive writing to an SD card can shorten its lifespan."
+msgstr ""
+
+#: gv.py:114
+msgid "Length of log to keep, 0=no limits."
+msgstr ""
+
+#: gv.py:114
+msgid "Max log entries"
+msgstr ""
+
+#: helpers.py:26
+msgid "Error: json module not found"
+msgstr ""
+
+#: helpers.py:106
+msgid "Run-once"
+msgstr ""
+
+#: helpers.py:108 templates\home.html:222
+msgid "Manual"
+msgstr ""
+
+#: helpers.py:298
+msgid "Password:"
+msgstr ""
+
+#: helpers.py:301
+msgid "Incorrect password, please try again"
+msgstr ""
+
+#: ospy.py:36
+msgid "Starting timing loop"
+msgstr ""
+
+#: ospy.py:197
+msgid "plugins loaded:"
+msgstr ""
+
+#: templates\base.html:13 templates\modify.html:333
+msgid "Monday"
+msgstr ""
+
+#: templates\base.html:13 templates\modify.html:334
+msgid "Tuesday"
+msgstr ""
+
+#: templates\base.html:13 templates\modify.html:335
+msgid "Wednesday"
+msgstr ""
+
+#: templates\base.html:13 templates\modify.html:336
+msgid "Thursday"
+msgstr ""
+
+#: templates\base.html:13 templates\modify.html:337
+msgid "Friday"
+msgstr ""
+
+#: templates\base.html:13 templates\modify.html:338
+msgid "Saturday"
+msgstr ""
+
+#: templates\base.html:13 templates\modify.html:339
+msgid "Sunday"
+msgstr ""
+
+#: templates\base.html:14
+msgid "April"
+msgstr ""
+
+#: templates\base.html:14
+msgid "August"
+msgstr ""
+
+#: templates\base.html:14
+msgid "December"
+msgstr ""
+
+#: templates\base.html:14
+msgid "February"
+msgstr ""
+
+#: templates\base.html:14
+msgid "January"
+msgstr ""
+
+#: templates\base.html:14
+msgid "July"
+msgstr ""
+
+#: templates\base.html:14
+msgid "June"
+msgstr ""
+
+#: templates\base.html:14
+msgid "March"
+msgstr ""
+
+#: templates\base.html:14
+msgid "May"
+msgstr ""
+
+#: templates\base.html:14
+msgid "November"
+msgstr ""
+
+#: templates\base.html:14
+msgid "October"
+msgstr ""
+
+#: templates\base.html:14
+msgid "September"
+msgstr ""
+
+#: templates\base.html:130
+msgid "Home"
+msgstr ""
+
+#: templates\base.html:131
+msgid "Define Programs"
+msgstr ""
+
+#: templates\base.html:131
+msgid "Programs"
+msgstr ""
+
+#: templates\base.html:132
+msgid "Define Run Once Program"
+msgstr ""
+
+#: templates\base.html:132
+msgid "Run Once"
+msgstr ""
+
+#: templates\base.html:133
+msgid "Access Plugins"
+msgstr ""
+
+#: templates\base.html:133
+msgid "Plugins"
+msgstr ""
+
+#: templates\base.html:134
+msgid "View Log"
+msgstr ""
+
+#: templates\base.html:134 templates\log.html:41
+msgid "Log"
+msgstr ""
+
+#: templates\base.html:135
+msgid "Options"
+msgstr ""
+
+#: templates\base.html:136
+msgid "Stations"
+msgstr ""
+
+#: templates\base.html:136 templates\stations.html:72
+msgid "Configure Stations"
+msgstr ""
+
+#: templates\base.html:138
+msgid "Logout"
+msgstr ""
+
+#: templates\base.html:147
+msgid "CPU Temp:"
+msgstr ""
+
+#: templates\base.html:147
+msgid "Click to toggle Celsius"
+msgstr ""
+
+#: templates\base.html:147
+msgid "Fahrenheit"
+msgstr ""
+
+#: templates\base.html:148
+msgid "Software"
+msgstr ""
+
+#: templates\base.html:148
+msgid "version:"
+msgstr ""
+
+#: templates\home.html:3
+msgid "OpenSprinkler Pi"
+msgstr ""
+
+#: templates\home.html:48
+msgid "n/a"
+msgstr ""
+
+#: templates\home.html:82
+msgid "Master On"
+msgstr ""
+
+#: templates\home.html:84
+msgid "Master Off"
+msgstr ""
+
+#: templates\home.html:89
+msgid "Suppressed by Rain Delay"
+msgstr ""
+
+#: templates\home.html:92
+msgid "Suppressed by Rain Sensor"
+msgstr ""
+
+#: templates\home.html:95 templates\home.html:250 templates\modify.html:352
+msgid "Off"
+msgstr ""
+
+#: templates\home.html:135
+msgid "Enter hours to delay"
+msgstr ""
+
+#: templates\home.html:147
+msgid "Enter percentage adjustment"
+msgstr ""
+
+#: templates\home.html:166
+msgid "Timer values wrong: "
+msgstr ""
+
+#: templates\home.html:212
+msgid "System Off"
+msgstr ""
+
+#: templates\home.html:212
+msgid "System On"
+msgstr ""
+
+#: templates\home.html:214
+msgid " - Total adjustment: "
+msgstr ""
+
+#: templates\home.html:214
+msgid " Plugin adjustments: "
+msgstr ""
+
+#: templates\home.html:214
+msgid "% Level"
+msgstr ""
+
+#: templates\home.html:214
+msgid "Normal"
+msgstr ""
+
+#: templates\home.html:214
+msgid "Water Level"
+msgstr ""
+
+#: templates\home.html:216
+msgid "Active"
+msgstr ""
+
+#: templates\home.html:216
+msgid "Rain Delay"
+msgstr ""
+
+#: templates\home.html:220
+msgid "no"
+msgstr ""
+
+#: templates\home.html:220
+msgid "rain sensed"
+msgstr ""
+
+#: templates\home.html:222
+msgid "Auto"
+msgstr ""
+
+#: templates\home.html:242
+msgid "On (Master)"
+msgstr ""
+
+#: templates\home.html:244
+msgid "Off (Master)"
+msgstr ""
+
+#: templates\home.html:250 templates\modify.html:352
+msgid "On"
+msgstr ""
+
+#: templates\home.html:251
+msgid "in"
+msgstr ""
+
+#: templates\home.html:251 templates\programs.html:125
+msgid "for"
+msgstr ""
+
+#: templates\home.html:268
+msgid "Prev Day"
+msgstr ""
+
+#: templates\home.html:269
+msgid "Today"
+msgstr ""
+
+#: templates\home.html:270
+msgid "Next Day"
+msgstr ""
+
+#: templates\home.html:308
+msgid "loading..."
+msgstr ""
+
+#: templates\home.html:337
+msgid "Stop All Stations"
+msgstr ""
+
+#: templates\home.html:340
+msgid "Program 1"
+msgstr ""
+
+#: templates\log.html:3
+msgid "OpenSprinkler Pi Log"
+msgstr ""
+
+#: templates\log.html:8
+msgid "Enabled"
+msgstr ""
+
+#: templates\log.html:11
+msgid "Disabled"
+msgstr ""
+
+#: templates\log.html:46
+msgid "Total number of records:"
+msgstr ""
+
+#: templates\log.html:46
+msgid "limit"
+msgstr ""
+
+#: templates\log.html:47
+msgid "Download log as"
+msgstr ""
+
+#: templates\log.html:51
+msgid "Date"
+msgstr ""
+
+#: templates\log.html:52
+msgid "Start Time"
+msgstr ""
+
+#: templates\log.html:53 templates\options.html:102 templates\stations.html:76
+msgid "Station"
+msgstr ""
+
+#: templates\log.html:54
+msgid "Duration"
+msgstr ""
+
+#: templates\log.html:55 templates\programs.html:105
+msgid "Program"
+msgstr ""
+
+#: templates\log.html:73
+msgid "Refresh"
+msgstr ""
+
+#: templates\log.html:74
+msgid "Clear Log"
+msgstr ""
+
+#: templates\login.html:3
+msgid "OpenSprinkler Pi Login"
+msgstr ""
+
+#: templates\login.html:7 templates\login.html:10
+msgid "Login"
+msgstr ""
+
+#: templates\modify.html:3
+msgid "OpenSprinkler Pi Modify Program"
+msgstr ""
+
+#: templates\modify.html:66
+msgid "Error: Incorrect time input "
+msgstr ""
+
+#: templates\modify.html:78
+msgid "Please choose at least one weekday for the program to run."
+msgstr ""
+
+#: templates\modify.html:82
+msgid "Please choose at least one station to run in this program."
+msgstr ""
+
+#: templates\modify.html:228
+msgid "Error: starting in days wrong."
+msgstr ""
+
+#: templates\modify.html:249
+msgid "Error: Incorrect duration."
+msgstr ""
+
+#: templates\modify.html:263
+msgid "Error: Start time must be prior to end time."
+msgstr ""
+
+#: templates\modify.html:283
+msgid "Edit Program #"
+msgstr ""
+
+#: templates\modify.html:283 templates\programs.html:97
+msgid "Add a New Program"
+msgstr ""
+
+#: templates\modify.html:288
+msgid "Program Off"
+msgstr ""
+
+#: templates\modify.html:288
+msgid "Program On"
+msgstr ""
+
+#: templates\modify.html:292
+msgid "Start Time:"
+msgstr ""
+
+#: templates\modify.html:302
+msgid "Duration:"
+msgstr ""
+
+#: templates\modify.html:304
+msgid "Recurring"
+msgstr ""
+
+#: templates\modify.html:304
+msgid "Single pass"
+msgstr ""
+
+#: templates\modify.html:306
+msgid "Every:"
+msgstr ""
+
+#: templates\modify.html:310
+msgid "Until:"
+msgstr ""
+
+#: templates\modify.html:322
+msgid "Interval"
+msgstr ""
+
+#: templates\modify.html:322
+msgid "Weekly"
+msgstr ""
+
+#: templates\modify.html:327
+msgid "Select All"
+msgstr ""
+
+#: templates\modify.html:328
+msgid "Clear All"
+msgstr ""
+
+#: templates\modify.html:359
+msgid "Water interval:"
+msgstr ""
+
+#: templates\modify.html:375
+msgid "Starting in:"
+msgstr ""
+
+#: templates\modify.html:389
+msgid "Any Day"
+msgstr ""
+
+#: templates\modify.html:389
+msgid "Restrict Day"
+msgstr ""
+
+#: templates\modify.html:391
+msgid "Even"
+msgstr ""
+
+#: templates\modify.html:391
+msgid "Odd"
+msgstr ""
+
+#: templates\modify.html:392
+msgid "(except 31st and Feb 29th)"
+msgstr ""
+
+#: templates\modify.html:401
+msgid "Save"
+msgstr ""
+
+#: templates\modify.html:402 templates\monthly.html:77
+#: templates\options.html:123 templates\runonce.html:75
+#: templates\stations.html:119 templates\weather_adj.html:56
+#: templates\weather_level_adj.html:71
+msgid "Cancel"
+msgstr ""
+
+#: templates\monthly.html:3 templates\weather_level_adj.html:3
+msgid "OpenSprinkler Pi Weather-based Water Level"
+msgstr ""
+
+#: templates\monthly.html:20
+msgid "Monthly Irrigation Adjustments"
+msgstr ""
+
+#: templates\monthly.html:21
+msgid "Enter an adjustment for each month (% irrigation time)"
+msgstr ""
+
+#: templates\monthly.html:25
+msgid "January:"
+msgstr ""
+
+#: templates\monthly.html:29
+msgid "February:"
+msgstr ""
+
+#: templates\monthly.html:33
+msgid "March:"
+msgstr ""
+
+#: templates\monthly.html:37
+msgid "April:"
+msgstr ""
+
+#: templates\monthly.html:41
+msgid "May:"
+msgstr ""
+
+#: templates\monthly.html:45
+msgid "June:"
+msgstr ""
+
+#: templates\monthly.html:49
+msgid "July:"
+msgstr ""
+
+#: templates\monthly.html:53
+msgid "August:"
+msgstr ""
+
+#: templates\monthly.html:57
+msgid "September:"
+msgstr ""
+
+#: templates\monthly.html:61
+msgid "October:"
+msgstr ""
+
+#: templates\monthly.html:65
+msgid "November:"
+msgstr ""
+
+#: templates\monthly.html:69
+msgid "December:"
+msgstr ""
+
+#: templates\monthly.html:76 templates\weather_adj.html:55
+#: templates\weather_level_adj.html:70
+msgid "Submit"
+msgstr ""
+
+#: templates\options.html:3
+msgid "OpenSprinkler Pi Options"
+msgstr ""
+
+#: templates\options.html:15 templates\options.html:16
+msgid "Hide Tooltips"
+msgstr ""
+
+#: templates\options.html:16 templates\options.html:65
+msgid "Show Tooltips"
+msgstr ""
+
+#: templates\options.html:45
+msgid "The password given was incorrect."
+msgstr ""
+
+#: templates\options.html:49
+msgid "Please enter a password."
+msgstr ""
+
+#: templates\options.html:53
+msgid "Passwords done't match, please re-enter."
+msgstr ""
+
+#: templates\options.html:64
+msgid "Edit Options"
+msgstr ""
+
+#: templates\options.html:99
+msgid "None"
+msgstr ""
+
+#: templates\options.html:113
+msgid "System Reboot"
+msgstr ""
+
+#: templates\options.html:114
+msgid "Reboot"
+msgstr ""
+
+#: templates\options.html:114
+msgid "Reboot system"
+msgstr ""
+
+#: templates\options.html:122 templates\stations.html:117
+msgid "Submit Changes"
+msgstr ""
+
+#: templates\programs.html:3
+msgid "OpenSprinkler Pi Programs"
+msgstr ""
+
+#: templates\programs.html:18
+msgid "Every"
+msgstr ""
+
+#: templates\programs.html:18
+msgid "days"
+msgstr ""
+
+#: templates\programs.html:20
+msgid "days."
+msgstr ""
+
+#: templates\programs.html:20
+msgid "starting in"
+msgstr ""
+
+#: templates\programs.html:23
+msgid "Every Weekday"
+msgstr ""
+
+#: templates\programs.html:27
+msgid "Fri"
+msgstr ""
+
+#: templates\programs.html:27
+msgid "Mon"
+msgstr ""
+
+#: templates\programs.html:27
+msgid "Sat"
+msgstr ""
+
+#: templates\programs.html:27
+msgid "Sun"
+msgstr ""
+
+#: templates\programs.html:27
+msgid "Thur"
+msgstr ""
+
+#: templates\programs.html:27
+msgid "Tue"
+msgstr ""
+
+#: templates\programs.html:27
+msgid "Wed"
+msgstr ""
+
+#: templates\programs.html:29
+msgid "Even days only"
+msgstr ""
+
+#: templates\programs.html:31
+msgid "Odd days only"
+msgstr ""
+
+#: templates\programs.html:98
+msgid "Delete All"
+msgstr ""
+
+#: templates\programs.html:124
+msgid "Starting:"
+msgstr ""
+
+#: templates\programs.html:128
+msgid "Recurring every"
+msgstr ""
+
+#: templates\programs.html:129
+msgid "until"
+msgstr ""
+
+#: templates\programs.html:132 templates\runonce.html:73
+msgid "Run Now"
+msgstr ""
+
+#: templates\programs.html:133
+msgid "Edit"
+msgstr ""
+
+#: templates\programs.html:134
+msgid "Delete"
+msgstr ""
+
+#: templates\runonce.html:3
+msgid "OpenSprinkler Pi Run-Once"
+msgstr ""
+
+#: templates\runonce.html:24
+msgid "Timer values wrong:"
+msgstr ""
+
+#: templates\runonce.html:34
+msgid "No station is scheduled to run"
+msgstr ""
+
+#: templates\runonce.html:52
+msgid "Run Once Program"
+msgstr ""
+
+#: templates\runonce.html:74
+msgid "Reset Time"
+msgstr ""
+
+#: templates\stations.html:3
+msgid "OpenSprinkler Pi Stations"
+msgstr ""
+
+#: templates\stations.html:77
+msgid "Name"
+msgstr ""
+
+#: templates\stations.html:78
+msgid "Connected?"
+msgstr ""
+
+#: templates\stations.html:79
+msgid "Ignore Rain?"
+msgstr ""
+
+#: templates\stations.html:81
+msgid "Activate Master?"
+msgstr ""
+
+#: templates\stations.html:92
+msgid "(Master valve)"
+msgstr ""
+
+#: templates\stations.html:118
+msgid "Reset Names"
+msgstr ""
+
+#: templates\weather_adj.html:3
+msgid "OpenSprinkler Pi Weather-based Rain Delay"
+msgstr ""
+
+#: templates\weather_adj.html:20
+msgid "Weather-based Rain Delay"
+msgstr ""
+
+#: templates\weather_adj.html:21
+msgid "When weather-based rain delay is enabled, the weather will be checked for rain every hour. If the weather reports any condition suggesting rain, a rain delay is automatically issued using the below set delay duration."
+msgstr ""
+
+#: templates\weather_adj.html:25
+msgid "Use Automatic Rain Delay:"
+msgstr ""
+
+#: templates\weather_adj.html:31
+msgid "Delay Duration (hours):"
+msgstr ""
+
+#: templates\weather_adj.html:37
+msgid "Weather Provider:"
+msgstr ""
+
+#: templates\weather_adj.html:40
+msgid "Yahoo!"
+msgstr ""
+
+#: templates\weather_adj.html:41
+msgid "Wunderground"
+msgstr ""
+
+#: templates\weather_adj.html:46 templates\weather_level_adj.html:55
+msgid "Wunderground API Key:"
+msgstr ""
+
+#: templates\weather_level_adj.html:20
+msgid "Weather-based Water Level"
+msgstr ""
+
+#: templates\weather_level_adj.html:21
+msgid "When weather-based water level is enabled, the weather will be checked every hour and the water level will be adjusted accordingly."
+msgstr ""
+
+#: templates\weather_level_adj.html:25
+msgid "Use Automatic Water Level Adjustment:"
+msgstr ""
+
+#: templates\weather_level_adj.html:31
+msgid "Min percentage:"
+msgstr ""
+
+#: templates\weather_level_adj.html:37
+msgid "Max percentage:"
+msgstr ""
+
+#: templates\weather_level_adj.html:43
+msgid "History days used:"
+msgstr ""
+
+#: templates\weather_level_adj.html:49
+msgid "Forecast days used:"
+msgstr ""
+
+#: webpages.py:281
+msgid " not found."
+msgstr ""
+
+#: webpages.py:281
+msgid "Station "
+msgstr ""
+
