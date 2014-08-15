@@ -856,9 +856,6 @@ class change_program:
             dse = int(gv.now/86400)
             ref = dse + cp[1]-128
             cp[1] = (ref%cp[2])+128
-        if int(qdict['pid']) > gv.sd['mnp']:
-            alert = '<script>alert("Maximum number of programs\n has been reached.");window.location="/";</script>'
-            return alert
         elif qdict['pid'] == '-1': #add new program
             gv.pd.append(cp)
         else:
