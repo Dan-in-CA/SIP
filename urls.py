@@ -16,6 +16,7 @@ urls = [
     '/mp', 'modify_program',
     '/cp', 'change_program',
     '/dp', 'delete_program',
+    '/ep', 'enable_program',
     '/vl', 'view_log',
     '/cl', 'clear_log',
     '/lo', 'log_options',
