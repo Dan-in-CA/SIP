@@ -409,6 +409,16 @@ class delete_program(ProtectedPage):
         raise web.seeother('/vp')
 
 
+class enable_program:
+ """Activate an existing program(s)."""
+ def GET(self):
+     qdict = web.input()
+     gv.pd[int(qdict['pid'])][0] = int(qdict['enable'])
+     jsave(gv.pd, 'programs')
+     raise web.seeother('/vp')
+     return
+ 
+
 class view_log(ProtectedPage):
     """View Log"""
 

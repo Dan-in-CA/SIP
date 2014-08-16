@@ -16,6 +16,7 @@ urls = [
     '/mp', 'webpages.modify_program',
     '/cp', 'webpages.change_program',
     '/dp', 'webpages.delete_program',
+    '/ep', 'enable_program',
     '/vl', 'webpages.view_log',
     '/cl', 'webpages.clear_log',
     '/lo', 'webpages.log_options',
