@@ -387,7 +387,7 @@ def output_prog():
             rel_rem = (((op[1]-128) + op[2])-(dse % op[2])) % op[2] # Convert absolute days to relative remaining (rel_rem) days
             op[1] = rel_rem + 128 # Update from saved value based on current date
         lpd.append(op)
-    progstr = 'var nprogs='+str(len(lpd))+',nboards='+str(gv.sd['nbrd'])+',ipas='+str(gv.sd['ipas'])+',mnp='+str(gv.sd['mnp'])+',pd=[];'
+    progstr = 'var nprogs='+str(len(lpd))+',nboards='+str(gv.sd['nbrd'])+',ipas='+str(gv.sd['ipas'])+',pd=[];'
     for i, pro in enumerate(lpd): #gets both index and object
         progstr += 'pd['+str(i)+']='+str(pro).replace(' ', '')+';'
     return progstr
