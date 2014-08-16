@@ -2,7 +2,13 @@ import os
 import random
 import sys
 import time
-from gpio_pins import pin_rain_sense, GPIO, set_output
+from gpio_pins import set_output
+
+try:
+    from gpio_pins import pin_rain_sense, GPIO
+except ImportError:
+    pass
+
 import web
 from web import form
 
