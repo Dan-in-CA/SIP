@@ -878,17 +878,18 @@ class delete_program:
         jsave(gv.pd, 'programs')
         gv.sd['nprogs'] = len(gv.pd)
         raise web.seeother('/vp')
-        return
+
                           
 class enable_program:
     """Activate an existing program(s)."""
     def GET(self):
         verifyLogin()
         qdict = web.input()
+        print 'qdict', qdict
         gv.pd[int(qdict['pid'])][0] = int(qdict['enable'])
         jsave(gv.pd, 'programs')
         raise web.seeother('/vp')
-        return
+
                           
 class view_log:
     """View Log"""
