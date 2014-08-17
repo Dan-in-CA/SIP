@@ -16,7 +16,7 @@ class options: # /jo
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        jopts = {"fwv":".".join(list(str(gv.ver)))+"-OSPi","tz":gv.sd['tz'], "ext":gv.sd['nbrd']-1,"seq":gv.sd['seq'],"sdt":gv.sd['sdt'],"mas":gv.sd['mas'],"mton":gv.sd['mton'],"mtof":gv.sd['mtoff'],"urs":gv.sd['urs'],"rso":gv.sd['rst'],"wl":gv.sd['wl'],"ipas":gv.sd['ipas'],"reset":gv.sd['rbt']}
+        jopts = {"fwv":'1.9.0-OSPi',"tz":gv.sd['tz'], "ext":gv.sd['nbrd']-1,"seq":gv.sd['seq'],"sdt":gv.sd['sdt'],"mas":gv.sd['mas'],"mton":gv.sd['mton'],"mtof":gv.sd['mtoff'],"urs":gv.sd['urs'],"rso":gv.sd['rst'],"wl":gv.sd['wl'],"ipas":gv.sd['ipas'],"reset":gv.sd['rbt']}
         return json.dumps(jopts)
 
 class cur_settings: # /jc
@@ -76,7 +76,7 @@ class get_logs: # /jl
 
         for r in records:
             event = json.loads(r)
-            date = totimestamp(datetime.datetime.strptime(event["date"], "%Y-%m-%d"))
+            date = time.mktime(datetime.datetime.strptime(event["date"], "%Y-%m-%d").timetuple())
             if int(qdict["start"]) <= int(date) <= int(qdict["end"]):
                 pid = event["program"]
                 if (pid == "Run-once"):
@@ -88,7 +88,7 @@ class get_logs: # /jl
                 station = int(event["station"])
                 duration = string.split(event["duration"],":")
                 duration = (int(duration[0]) * 60) + int(duration[1])
-                timestamp = int(totimestamp(datetime.datetime.strptime(event["date"] + " " + event["start"], "%Y-%m-%d %H:%M:%S")))
+                timestamp = int(time.mktime(datetime.datetime.strptime(event["date"] + " " + event["start"], "%Y-%m-%d %H:%M:%S").timetuple()))
 
                 data.append([pid,station,duration,timestamp])
 
@@ -104,10 +104,6 @@ class get_logs: # /jl
             return []
 ##############################
 #### Function Definitions ####
-
-def totimestamp(dt, epoch=datetime.datetime(1970,1,1)):
-    td = dt - epoch
-    return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 1e6
 
 def CPU_temperature(format):
     """Returns the temperature of the Raspberry Pi's CPU."""

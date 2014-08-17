@@ -45,7 +45,7 @@ def baseurl():
 
 def check_rain():
     try:
-        if gv.sd['rst'] == 0:
+        if gv.sd['rst'] == 0: 
             if GPIO.input(pin_rain_sense): # Rain detected
                 gv.sd['rs'] = 1
             else:
@@ -71,11 +71,6 @@ def clear_mm():
         gv.srvals = [0]*(gv.sd['nst'])
         set_output()
     return
-
-def reboot():
-    gv.srvals = [0]*(gv.sd['nst'])
-    set_output()
-    os.system('reboot')
 
 def CPU_temperature():
     """Returns the temperature of the CPU if available."""
@@ -208,10 +203,9 @@ def timing_loop():
     print 'Starting timing loop \n'
     last_min = 0
     while True: # infinite loop
-        lt = time.localtime()
-        gv.now = timegm(lt) #time.localtime()) # Current time as unix time stamp based on local time from the Pi. updated once per second.
+        gv.now = timegm(time.localtime()) # Current time based on local time from the Pi. updated once per second.
         if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']):
-            #lt = time.gmtime(gv.now)
+            lt = time.gmtime(gv.now)
             if (lt[3]*60)+lt[4] != last_min: # only check programs once a minute
                 last_min = (lt[3]*60)+lt[4]
                 for i, p in enumerate(gv.pd): # get both index and prog item
@@ -322,7 +316,7 @@ def timing_loop():
         if gv.sd['rd'] and gv.now>= gv.sd['rdst']: # Check of rain delay time is up
             gv.sd['rd'] = 0
             gv.sd['rdst'] = 0 # Rain delay stop time
-            jsave(gv.sd, 'sd')
+            jsave(gv.sd, 'sd') 
         time.sleep(1)
         #### End of timing loop ####
 
@@ -387,7 +381,7 @@ def output_prog():
             rel_rem = (((op[1]-128) + op[2])-(dse % op[2])) % op[2] # Convert absolute days to relative remaining (rel_rem) days
             op[1] = rel_rem + 128 # Update from saved value based on current date
         lpd.append(op)
-    progstr = 'var nprogs='+str(len(lpd))+',nboards='+str(gv.sd['nbrd'])+',ipas='+str(gv.sd['ipas'])+',pd=[];'
+    progstr = 'var nprogs='+str(len(lpd))+',nboards='+str(gv.sd['nbrd'])+',ipas='+str(gv.sd['ipas'])+',mnp='+str(gv.sd['mnp'])+',pd=[];'
     for i, pro in enumerate(lpd): #gets both index and object
         progstr += 'pd['+str(i)+']='+str(pro).replace(' ', '')+';'
     return progstr
@@ -403,7 +397,7 @@ def passwordHash(password, salt):
 
 #Settings Dictionary. A set of vars kept in memory and persisted in a file.
 #Edit this default dictionary definition to add or remove "key": "value" pairs or change defaults.
-gv.sd = ({u"en": 1, u"seq": 1, u"mnp": 64, u"ir": [0], u"rsn": 0, u"htp": 8080, u"nst": 8,
+gv.sd = ({u"en": 1, u"seq": 1, u"mnp": 32, u"ir": [0], u"rsn": 0, u"htp": 8080, u"nst": 8,
             u"rdst": 0, u"loc": u"", u"tz": 48, u"tf": 1,  u"rs": 0, u"rd": 0, u"mton": 0,
             u"lr": u"100", u"sdt": 0, u"mas": 0, u"wl": 100, u"bsy": 0, u"lg": u"",
             u"urs": 0, u"nopts": 13, u"pwd": u"b3BlbmRvb3I=", u"password": u"", u"salt": u"", u"ipas": 0, u"rst": 1,
@@ -428,7 +422,7 @@ except IOError: # If file does not exist, it will be created created using defau
 
 gv.now = timegm(time.localtime())
 
-gv.plugin_menu = [] #Empty list of lists for plugin links (e.g. ['name', 'URL'])
+gv.plugin_menu = [] #Empty list of lists for plugin links (e.g. ['name', 'URL']) 
 
 gv.srvals = [0]*(gv.sd['nst']) #Shift Register values
 
@@ -452,7 +446,6 @@ gv.lrun=[0,0,0,0] #station index, program number, duration, end time (Used in UI
 
 gv.scount = 0 # Station count, used in set station to track on stations with master association.
 
-gv.snames = data('snames') # initialize station names to be used by plugins
 
   ########################
   #### Login Handling ####
@@ -478,7 +471,7 @@ def verifyLogin():
         return True
 
     raise web.unauthorized()
-
+    
 signin_form = form.Form(form.Password('password',
                                       description='Password:'),
                         validators = [form.Validator("Incorrect password, please try again",
@@ -545,8 +538,6 @@ class change_values:
             except:
                 pass
         jsave(gv.sd, 'sd')
-        if qdict.has_key('rbt') and qdict['rbt'] == '1':
-            reboot()
         raise web.seeother('/')# Send browser back to home page
 
 class view_options:
@@ -567,7 +558,7 @@ class change_options:
     def GET(self):
         verifyLogin()
         qdict = web.input()
-        if qdict.has_key('opw') and qdict['opw'] != "":
+        if qdict['opw'] != "":
             try:
                 if passwordHash(qdict['opw'], gv.sd['salt']) == gv.sd['password']:
                     if qdict['npw'] == "":
@@ -582,7 +573,7 @@ class change_options:
                 pass
 
         try:
-            if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == '1'):
+            if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == ''):
                 gv.sd['ipas'] = 1
             else:
                 gv.sd['ipas'] = 0
@@ -596,7 +587,7 @@ class change_options:
         if qdict.has_key('otz'):
             gv.sd['tz'] = int(qdict['otz'])
         try:
-            if qdict.has_key('otf') and (qdict['otf'] == 'on' or qdict['otf'] == '1'):
+            if qdict.has_key('otf') and (qdict['otf'] == 'on' or qdict['otf'] == ''):
                 gv.sd['tf'] = 1
             else:
                 gv.sd['tf'] = 0
@@ -621,7 +612,7 @@ class change_options:
         if qdict.has_key('owl'):
             gv.sd['wl'] = int(qdict['owl'])
 
-        if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == '1'):
+        if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == ''):
           gv.sd['urs'] = 1
         else:
           gv.sd['urs'] = 0
@@ -648,7 +639,9 @@ class change_options:
         rovals = [0]*(gv.sd['nst']) # Run Once Durations
         jsave(gv.sd, 'sd')
         if qdict.has_key('rbt') and qdict['rbt'] == '1':
-            reboot()
+            gv.srvals = [0]*(gv.sd['nst'])
+            set_output()
+            os.system('reboot')
         raise web.seeother('/')
 
     def update_scount(self, qdict):
@@ -856,6 +849,9 @@ class change_program:
             dse = int(gv.now/86400)
             ref = dse + cp[1]-128
             cp[1] = (ref%cp[2])+128
+        if int(qdict['pid']) > gv.sd['mnp']:
+            alert = '<script>alert("Maximum number of programs\n has been reached.");window.location="/";</script>'
+            return alert
         elif qdict['pid'] == '-1': #add new program
             gv.pd.append(cp)
         else:
@@ -979,7 +975,7 @@ class api_status:
                             if gv.sd['rd'] != 0:
                                 status['reason'] = 'rain_delay'
                             if gv.sd['urs'] != 0 and gv.sd['rs'] != 0:
-                                status['reason'] = 'rain_sensed'
+                                status['reason'] = 'rain_sensed' 
                         if sn == gv.sd['mas']:
                             status['master'] = 1
                             status['reason'] = 'master'
@@ -1030,7 +1026,7 @@ class api_log:
 
         for r in records:
             event = json.loads(r)
-
+            
             # return any records starting on this date
             if not(qdict.has_key('date')) or event['date'] == thedate:
                 data.append(event)
