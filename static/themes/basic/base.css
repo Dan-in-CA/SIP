@@ -244,6 +244,7 @@ button {
 	border: 0px;
 	border-radius: 12px;
 	cursor: pointer;
+	white-space: nowrap;
 }
 button:hover {
 	color: #F7F1CD;
@@ -261,7 +262,7 @@ button.execute {
 button.toggle {
 	background-repeat: no-repeat;
 	background-position: center center;
-	width: 304px;
+	width: 20em;
 	padding: 4px;
 	text-align: center;
 	color: #DDD;
@@ -293,12 +294,12 @@ button.toggle span.togglesep {
 button.toggle span.toggleleft {
 	display: inline-block;
 	text-align: right;
-	width: 120px;
+	width: 7em;
 }
 button.toggle span.toggleright {
 	display: inline-block;
 	text-align:left;
-	width: 120px;
+	width: 7em;
 }
 button.toggle.on span.toggleright, button.toggle.off span.toggleleft {
 	font-weight: 400;
@@ -354,7 +355,6 @@ td.station_name {
 	padding: 0px 12px; 
 	color: #2E3959;
 	font-weight: 700;
-	width: 12em;
 	height: 30px;
 	white-space: nowrap;
 }
@@ -553,4 +553,94 @@ td.stationSchedule {
 {
     list-style-type: none;
     padding:0;
+}
+
+@media only screen and (max-width: 1024px) {
+   body {
+      font-size: 10pt;
+   }
+   
+   div.panel {
+      margin-left: 0;
+   }
+   div.panel div.title {
+      font-size: 14pt;
+   }
+   div.header div.title {
+	  font-size: 16pt;
+   }
+   div#status {
+      float: none;
+      width: 100%;
+      padding: 0;
+      display: inline-block;
+   }
+   #deviceTime {
+      float: left;
+   }
+   #deviceTime span {
+      font-size: 21pt;
+      width: 35px;
+   }
+   #deviceTime span.sep {
+      font-size: 12pt;
+      top: 0;
+      width: 4px;
+   }
+   #deviceTime span.second, #deviceTime span.ampm {
+      font-size: 9pt;
+   }
+   #deviceTime span.second {
+      top: -5px;
+      left: auto;
+   }
+   #deviceTime span.ampm {
+      left: -55px;
+   }
+   #deviceDate {
+      float: right;
+      padding: 0 5px 5px 5px;
+   }
+
+   button {
+      font-size: 9pt;
+   }
+   
+   #nav button {
+      padding: 4px 12px;
+      margin: 4px 0;
+      font-size: 9pt;
+   }
+   #nav button.here {
+      height: 40px;
+   }
+
+   td.stationStatus {
+      padding: 0 6px;
+      font-size: 10pt;
+   }
+   td.station_name {
+      font-size: 10pt;
+   }
+
+   .program {
+      min-width: 400px;
+   }
+
+   #programs table tr:nth-child(2).showWeekly td {
+      height: 90px;
+      max-width: 26px;
+   }
+   #programs table tr:nth-child(2).showWeekly td button.weekday {
+      -webkit-transform: rotate(-90deg);
+      font-size: 8pt;
+      height: 26px;
+      width: 90px;
+      text-align: left;
+      margin-left: -24px;
+   }
+   .animatedSelector {
+      width: 100%;
+      max-width: 100%;
+   }
 }
