@@ -2,14 +2,37 @@ import web, json, re, os
 import ast, time, datetime, string
 import gv # Gain access to ospi's settings
 from urls import urls # Gain access to ospi's URL list
+from hashlib import sha1
 
 ##############
 ## New URLs ##
 
-urls.extend(['/jo', 'plugins.mobile_app.options', '/jc', 'plugins.mobile_app.cur_settings', '/js', 'plugins.mobile_app.station_state','/jp', 'plugins.mobile_app.program_info', '/jn', 'plugins.mobile_app.station_info', '/jl', 'plugins.mobile_app.get_logs'])
+urls.extend(['/jo', 'plugins.mobile_app.options', '/jc', 'plugins.mobile_app.cur_settings', '/js', 'plugins.mobile_app.station_state','/jp', 'plugins.mobile_app.program_info', '/jn', 'plugins.mobile_app.station_info', '/jl', 'plugins.mobile_app.get_logs', '/sp', 'plugins.mobile_app.set_password'])
 
 #######################
 ## Class definitions ##
+
+class set_password:
+    """Save changes to device password"""
+    def GET(self):
+        qdict = web.input()
+        web.header('Access-Control-Allow-Origin', '*')
+        web.header('Content-Type', 'application/json')
+
+        if not(qdict.has_key('pw')) or not(qdict.has_key('npw')) or not(qdict.has_key('cpw')):
+            return json.dumps({"result":3})
+
+        if passwordHash(qdict['pw'], gv.sd['salt']) == gv.sd['password']:
+            if qdict['npw'] == "":
+                return json.dumps({"result":3})
+            elif qdict['cpw'] !='' and qdict['cpw'] == qdict['npw']:
+                gv.sd['password'] = passwordHash(qdict['npw'], gv.sd['salt'])
+            else:
+                return json.dumps({"result":4})
+        else:
+            return json.dumps({"result":2})
+
+        return json.dumps({"result":1})
 
 class options: # /jo
     """Returns device options as json."""
@@ -104,6 +127,9 @@ class get_logs: # /jl
             return []
 ##############################
 #### Function Definitions ####
+
+def passwordHash(password, salt):
+    return sha1(password + salt).hexdigest()
 
 def totimestamp(dt, epoch=datetime.datetime(1970,1,1)):
     td = dt - epoch
