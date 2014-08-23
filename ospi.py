@@ -852,11 +852,11 @@ class change_program:
             for i in range(len(gv.rs)):
                 if gv.rs[i][3] == pnum:
                     gv.rs[i] = [0,0,0,0]
-        if cp[1] >= 128 and cp[2] > 1:
+        if cp[1] >= 128 and cp[2] > 1: # Interval program
             dse = int(gv.now/86400)
             ref = dse + cp[1]-128
             cp[1] = (ref%cp[2])+128
-        elif qdict['pid'] == '-1': #add new program
+        if str(qdict['pid']) == '-1': #add new program
             gv.pd.append(cp)
         else:
             gv.pd[int(qdict['pid'])] = cp #replace program
