@@ -24,7 +24,7 @@ from hashlib import sha1
 #### Revision information ####
 gv.ver = 203
 gv.rev = 'XXX'
-gv.rev_date = '13/July/2014'
+gv.rev_date = '23/August/2014'
 
 #!!! Note: This add-on feature is now deprecated. Code is left in place for backward compatibility.
 ################################################################
