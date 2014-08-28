@@ -265,20 +265,6 @@ def station_names():
         stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08"]
         jsave(stations, 'snames')
         return stations
-        
-
-
-def station_names():
-    """Load station names from file if it exists otherwise create file with defaults."""
-    try:
-        with open('./data/snames.json', 'r') as snf:
-#             stations = json.load(snf)
-#             return stations
-            return json.load(snf)
-    except IOError:
-        stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08" ]
-        jsave(stations, 'snames')
-        return stations
 
 
 def load_programs():
