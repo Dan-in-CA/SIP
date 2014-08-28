@@ -12,7 +12,7 @@ import time
 
 platform = '' # must be done before the following import because gpio_pins will try to set it
 
-from helpers import passwordSalt, passwordHash, load_programs, data
+from helpers import passwordSalt, passwordHash, load_programs, station_names
 
 sd = {
     u"en": 1,

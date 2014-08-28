@@ -7,7 +7,7 @@ $code:
 	def two_digits(n):
 		return '%02d' % int(n)
 	
-	snames = eval(data('snames'))
+	snames = gv.snames
 	if pid < 0:
 		program = [1, 127, 4, 360, 1080, 240, 900] # does not include station bytes(program[7+]. #dk
 		for brd in range(gv.sd['nbrd']): #dk
