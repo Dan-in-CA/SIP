@@ -173,6 +173,7 @@ def schedule_stations(stations):
                         gv.sbits[b] &= ~1 << s
                         gv.ps[s] = [0, 0]
 
+
     else: # concurrent mode, stations allowed to run in parallel
         for b in range(len(stations)):
             for s in range(8):
