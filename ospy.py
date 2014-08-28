@@ -1,4 +1,5 @@
 # !/usr/bin/env python
+# -*- coding: utf-8 -*-
 import json
 
 import time
@@ -8,7 +9,7 @@ from calendar import timegm
 import web # the Web.py module. See webpy.org (Enables the Python OpenSprinkler web interface)
 import gv
 
-from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave, data
+from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave, data, station_names
 from gpio_pins import set_output # provides access to GPIO pins
 from urls import urls # Provides access to URLs for UI pages
 
@@ -156,6 +157,7 @@ if web.config.get('_session') is None:
 template_globals = {
     'gv': gv,
     'str': str,
+    'station_names': station_names,
     'eval': eval,
     'session': web.config._session,
     'data': data,
