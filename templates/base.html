@@ -1,6 +1,6 @@
 $def with (content)
 $code:
-	snames = eval(data('snames'))
+	snames = station_names()
 
 $code:
     def plugin_adjustment():
@@ -55,7 +55,7 @@ $code:
 		var tempunit = "${gv.sd['tu']}";
 
         $if content.page != 'login':
-            var snames = $:{snames};
+            var snames = $:{[s.encode('utf-8') for s in snames]};
             var lrun = ${gv.lrun};
             var rdst = ${gv.sd['rdst']}*1000;
             var ipas = ${gv.sd['ipas']};

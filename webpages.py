@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import re
 import time
@@ -192,15 +194,11 @@ class change_options(ProtectedPage):
                 gv.sd['mo'].append(0)
                 gv.sd['ir'].append(0)
                 gv.sd['show'].append(255)
-            snames = data('snames')
-            nlst = re.findall('[\'"].*?[\'"]', snames)
+            nlst = station_names()
             ln = len(nlst)
-            nlst.pop()
-            for i in range((incr * 8) + 1):
-                nlst.append("'S" + ('%d' % (i + ln)) + "'")
-            nstr = '[' + ','.join(nlst)
-            nstr = nstr.replace("', ", "',") + "]"
-            save('snames', nstr)
+            for i in range(incr*8):
+                nlst.append("S"+('%d'%(i+1+ln)))
+            jsave(nlst, 'snames')
             for i in range(incr * 8):
                 gv.srvals.append(0)
                 gv.ps.append([0, 0])
@@ -213,10 +211,8 @@ class change_options(ProtectedPage):
             gv.sd['mo'] = gv.sd['mo'][:(onbrd + 1)]
             gv.sd['ir'] = gv.sd['ir'][:(onbrd + 1)]
             gv.sd['show'] = gv.sd['show'][:(onbrd + 1)]
-            snames = data('snames')
-            nlst = re.findall('[\'"].*?[\'"]', snames)
-            nstr = '[' + ','.join(nlst[:8 + (onbrd * 8)]) + ']'
-            save('snames', nstr)
+            nlst = station_names()
+            nlst = nlst[:8+(onbrd*8)]
             newlen = gv.sd['nst'] - decr * 8
             gv.srvals = gv.srvals[:newlen]
             gv.ps = gv.ps[:newlen]
@@ -252,15 +248,14 @@ class change_stations(ProtectedPage):
                     gv.sd['show'][i] = int(qdict['sh' + str(i)])
                 except ValueError:
                     gv.sd['show'][i] = 255
-        names = '['
+        names = []
         for i in range(gv.sd['nst']):
             if qdict.has_key('s' + str(i)):
-                names += "'" + qdict['s' + str(i)] + "',"
+                 names.append(qdict['s'+str(i)])
             else:
-                names += "'S" + str(i + 1) + "',"
-        names += ']'
+                 names.append('S'+str(i+1))
         gv.snames = names
-        save('snames', names.encode('ascii', 'backslashreplace'))
+        jsave(names, 'snames')
         jsave(gv.sd, 'sd')
         raise web.seeother('/')
 

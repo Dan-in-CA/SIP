@@ -3,7 +3,7 @@ $def with ()
 $var title: OpenSprinkler Pi Stations
 $var page: stations
 $code:
-	snames = eval(data('snames'))
+	snames = station_names()
 <script>
     // Initialize behaviors
     jQuery(document).ready(function(){

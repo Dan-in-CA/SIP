@@ -1,4 +1,5 @@
 # !/usr/bin/env python
+# -*- coding: utf-8 -*-
 
  #### urls is used by web.py. When a GET request is received, the corresponding class is executed.
 urls = [

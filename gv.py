@@ -1,4 +1,5 @@
 # !/usr/bin/python
+# -*- coding: utf-8 -*-
 
 #####################
 #### Global vars ####
@@ -12,7 +13,7 @@ import time
 
 platform = '' # must be done before the following import because gpio_pins will try to set it
 
-from helpers import passwordSalt, passwordHash, load_programs, data
+from helpers import passwordSalt, passwordHash, load_programs, data, station_names
 
 sd = {
     u"en": 1,
@@ -51,8 +52,8 @@ sd = {
     u"snlen": 32,
     u"name": u"OpenSprinkler Pi",
     u"theme": u"basic",
-    "show": [255],
-    'salt': passwordSalt()
+    u"show": [255],
+    u"salt": passwordSalt()
 }
 
 sd['password'] = passwordHash('opendoor', sd['salt'])
@@ -63,7 +64,7 @@ try:
     for key in sd: # If file loaded, replce default values in sd with values from file
         if key in sd_temp:
             sd[key] = sd_temp[key]
-except IOError: # If file does not exist, it will be created created using defaults.
+except IOError: # If file does not exist, it will be created using defaults.
     with open('./data/sd.json', 'w') as sdf: # save file
         json.dump(sd, sdf)
 
@@ -74,7 +75,7 @@ plugin_menu = [] # Empty list of lists for plugin links (e.g. ['name', 'URL'])
 
 srvals = [0] * (sd['nst']) # Shift Register values
 rovals = [0] * sd['nbrd'] * 7 # Run Once durations
-snames = data('snames')
+snames = station_names()
 pd = load_programs() # Load program data from file
 
 ps = [] # Program schedule (used for UI display)

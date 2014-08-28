@@ -4,7 +4,7 @@ $var title: OpenSprinkler Pi
 $var page: home
 $code:
 	tf = gv.sd["tf"]
-	snames = eval(data('snames'))
+	snames = station_names()
 
 $code:
 	def two_digits(n):
