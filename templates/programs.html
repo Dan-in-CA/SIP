@@ -3,7 +3,7 @@ $def with ()
 $var title: OpenSprinkler Pi Programs
 $var page: programs
 $code:
-	snames = eval(data('snames'))
+	snames = gv.snames
 	nprogs = len(gv.pd)
 	
 	def two_digits(n):

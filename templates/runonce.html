@@ -3,7 +3,8 @@ $def with ()
 $var title: OpenSprinkler Pi Run-Once
 $var page: runonce
 $code:
-	snames = station_names()
+	snames = gv.snames
+	
 <script>
     // Initialize behaviors
     jQuery(document).ready(function(){

@@ -194,7 +194,7 @@ class change_options(ProtectedPage):
                 gv.sd['mo'].append(0)
                 gv.sd['ir'].append(0)
                 gv.sd['show'].append(255)
-            nlst = station_names()
+            nlst = gv.snames
             ln = len(nlst)
             for i in range(incr*8):
                 nlst.append("S"+('%d'%(i+1+ln)))
@@ -211,7 +211,7 @@ class change_options(ProtectedPage):
             gv.sd['mo'] = gv.sd['mo'][:(onbrd + 1)]
             gv.sd['ir'] = gv.sd['ir'][:(onbrd + 1)]
             gv.sd['show'] = gv.sd['show'][:(onbrd + 1)]
-            nlst = station_names()
+            nlst = gv.snames
             nlst = nlst[:8+(onbrd*8)]
             newlen = gv.sd['nst'] - decr * 8
             gv.srvals = gv.srvals[:newlen]
