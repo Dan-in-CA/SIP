@@ -3,7 +3,8 @@ $def with (errorCode)
 $var title: OpenSprinkler Pi Options
 $var page: options
 $code:
-	opts = eval(data('options'))
+
+	opts = gv.options
 	snames = gv.snames
 
 <script>
