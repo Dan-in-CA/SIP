@@ -157,7 +157,6 @@ if web.config.get('_session') is None:
 template_globals = {
     'gv': gv,
     'str': str,
-    'station_names': station_names,
     'eval': eval,
     'session': web.config._session,
     'data': data,
