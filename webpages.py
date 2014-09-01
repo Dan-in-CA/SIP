@@ -115,7 +115,7 @@ class change_options(ProtectedPage):
                 pass
 
         try:
-            if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == ''):
+            if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == '1'):
                 gv.sd['ipas'] = 1
             else:
                 gv.sd['ipas'] = 0
@@ -129,7 +129,7 @@ class change_options(ProtectedPage):
         if qdict.has_key('otz'):
             gv.sd['tz'] = int(qdict['otz'])
         try:
-            if qdict.has_key('otf') and (qdict['otf'] == 'on' or qdict['otf'] == ''):
+            if qdict.has_key('otf') and (qdict['otf'] == 'on' or qdict['otf'] == '1'):
                 gv.sd['tf'] = 1
             else:
                 gv.sd['tf'] = 0
@@ -276,7 +276,7 @@ class get_station(ProtectedPage):
             return 'Station ' + sn + ' not found.'
 
 
-class set_station(ProtectedPage):
+class set_station():
     """turn a station (valve/zone) on=1 or off=0 in manual mode."""
 
     def GET(self, nst, t=None): # nst = station number, status, optional duration
@@ -406,13 +406,13 @@ class delete_program(ProtectedPage):
 
 class enable_program(ProtectedPage):
     """Activate or deactivate an existing program(s)."""
- 
+
     def GET(self):
         qdict = web.input()
         gv.pd[int(qdict['pid'])][0] = int(qdict['enable'])
         jsave(gv.pd, 'programs')
         raise web.seeother('/vp')
-     
+
 
 class view_log(ProtectedPage):
     """View Log"""
