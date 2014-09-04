@@ -17,6 +17,7 @@ class options(object): # /jo
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
         jopts = {"fwv":'.'.join(list(str(gv.ver)))+'-OSPi',"tz":gv.sd['tz'], "ext":gv.sd['nbrd']-1,"seq":gv.sd['seq'],"sdt":gv.sd['sdt'],"mas":gv.sd['mas'],"mton":gv.sd['mton'],"mtof":gv.sd['mtoff'],"urs":gv.sd['urs'],"rso":gv.sd['rst'],"wl":gv.sd['wl'],"ipas":gv.sd['ipas'],"reset":gv.sd['rbt'],"lg":gv.sd['lg']}
         return json.dumps(jopts)
 
@@ -25,6 +26,7 @@ class cur_settings(object): # /jc
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
         jsettings = {"devt":gv.now,"nbrd":gv.sd['nbrd'],"en":gv.sd['en'],"rd":gv.sd['rd'],"rs":gv.sd['rs'],"mm":gv.sd['mm'],"rdst":gv.sd['rdst'],"loc":gv.sd['loc'],"sbits":gv.sbits,"ps":gv.ps,"lrun":gv.lrun,"ct":CPU_temperature(gv.sd['tu']),"tu":gv.sd['tu']}
         return json.dumps(jsettings)
 
@@ -33,6 +35,7 @@ class station_state(object): # /js
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
         jstate = {"sn":gv.srvals, "nstations":gv.sd['nst']}
         return json.dumps(jstate)
 
@@ -49,6 +52,7 @@ class program_info(object): # /jp
             lpd.append(op)
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
         jpinfo = {"nprogs":gv.sd['nprogs']-1,"nboards":gv.sd['nbrd'],"mnp":9999, 'pd': lpd}
         return json.dumps(jpinfo)
 
@@ -57,6 +61,7 @@ class station_info(object): # /jn
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
         jpinfo = {"snames":station_names(),"ignore_rain":gv.sd['ir'],"masop":gv.sd['mo'],"maxlen":gv.sd['snlen']}
         return json.dumps(jpinfo)
 
@@ -69,6 +74,7 @@ class get_logs(object): # /jl
 
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
 
         if not(qdict.has_key('start')) or not(qdict.has_key('end')):
             return []
@@ -107,6 +113,7 @@ class set_password():
         qdict = web.input()
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
 
         if not(qdict.has_key('pw')) or not(qdict.has_key('npw')) or not(qdict.has_key('cpw')):
             return json.dumps({"result":3})
