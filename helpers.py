@@ -1,8 +1,16 @@
+# -*- coding: utf-8 -*-
+
 import os
 import random
 import sys
 import time
-from gpio_pins import pin_rain_sense, GPIO, set_output
+from gpio_pins import set_output
+
+try:
+    from gpio_pins import pin_rain_sense, GPIO
+except ImportError:
+    pass
+
 import web
 from web import form
 
@@ -119,25 +127,30 @@ def log_run():
 
 def prog_match(prog):
     """Test a program for current date and time match."""
-    if not prog[0]: return 0 # Skip if program is not enabled
+    if not prog[0]: return 0  # Skip if program is not enabled
     devday = int(gv.now / 86400) # Check day match
     lt = time.gmtime(gv.now)
-    if (prog[1] >= 128) and (prog[2] > 1): # Inverval program
-        if (devday % prog[2]) != (prog[1] - 128): return 0
+    if (prog[1] >= 128) and (prog[2] > 1):  # Interval program
+        if (devday % prog[2]) != (prog[1] - 128):
+            return 0
     else: # Weekday program
-        if not prog[1] - 128 & 1 << lt[6]: return 0
-        if prog[1] >= 128 and prog[2] == 0: # even days
-            if lt[2] % 2 != 0: return 0
-        if prog[1] >= 128 and prog[2] == 1: # Odd days
+        if not prog[1] - 128 & 1 << lt[6]:
+            return 0
+        if prog[1] >= 128 and prog[2] == 0:  # even days
+            if lt[2] % 2 != 0:
+                return 0
+        if prog[1] >= 128 and prog[2] == 1:  # Odd days
             if lt[2] == 31 or (lt[1] == 2 and lt[2] == 29):
                 return 0
             elif lt[2] % 2 != 1:
                 return 0
     this_minute = (lt[3] * 60) + lt[4] # Check time match
-    if this_minute < prog[3] or this_minute >= prog[4]: return 0
-    if prog[5] == 0: return 0
+    if this_minute < prog[3] or this_minute >= prog[4]:
+        return 0
+    if prog[5] == 0:
+        return 0
     if ((this_minute - prog[3]) / prog[5]) * prog[5] == this_minute - prog[3]:
-        return 1 # Program matched
+        return 1  # Program matched
     return 0
 
 
@@ -161,6 +174,7 @@ def schedule_stations(stations):
                     else:
                         gv.sbits[b] &= ~1 << s
                         gv.ps[s] = [0, 0]
+
 
     else: # concurrent mode, stations allowed to run in parallel
         for b in range(len(stations)):
@@ -215,14 +229,9 @@ def data(dataf):
     try:
         with open('./data/' + dataf + '.txt', 'r') as f:
             data = f.read()
+            return data
     except IOError:
-        if dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
-            data = "['S1','S2','S3','S4','S5','S6','S7','S8',]"
-            with open('./data/' + dataf + '.txt', 'w') as f:
-                f.write(data)
-        else:
-            return None
-    return data
+        return None
 
 
 def save(dataf, datastr):
@@ -245,6 +254,17 @@ def jsave(data, fname):
     """Save data to a json file."""
     with open('./data/' + fname + '.json', 'w') as f:
         json.dump(data, f)
+        
+        
+def station_names():
+    """Load station names from file if it exists otherwise create file with defaults."""
+    try:
+        with open('./data/snames.json', 'r') as snf:
+            return json.load(snf)
+    except IOError:
+        stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08"]
+        jsave(stations, 'snames')
+        return stations
 
 
 def load_programs():
@@ -257,6 +277,7 @@ def load_programs():
         with open('./data/programs.json', 'w') as pf:
             json.dump(gv.pd, pf)
     return gv.pd
+
 
 def passwordSalt():
     return "".join(chr(random.randint(33, 127)) for _ in xrange(64))

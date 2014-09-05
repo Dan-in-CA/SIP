@@ -1,4 +1,5 @@
 # !/usr/bin/python
+# -*- coding: utf-8 -*-
 
 #####################
 #### Global vars ####
@@ -12,7 +13,7 @@ import time
 
 platform = '' # must be done before the following import because gpio_pins will try to set it
 
-from helpers import passwordSalt, passwordHash, load_programs, data
+from helpers import passwordSalt, passwordHash, load_programs, station_names
 
 sd = {
     u"en": 1,
@@ -51,8 +52,8 @@ sd = {
     u"snlen": 32,
     u"name": u"OpenSprinkler Pi",
     u"theme": u"basic",
-    "show": [255],
-    'salt': passwordSalt()
+    u"show": [255],
+    u"salt": passwordSalt()
 }
 
 sd['password'] = passwordHash('opendoor', sd['salt'])
@@ -63,7 +64,7 @@ try:
     for key in sd: # If file loaded, replce default values in sd with values from file
         if key in sd_temp:
             sd[key] = sd_temp[key]
-except IOError: # If file does not exist, it will be created created using defaults.
+except IOError: # If file does not exist, it will be created using defaults.
     with open('./data/sd.json', 'w') as sdf: # save file
         json.dump(sd, sdf)
 
@@ -74,7 +75,7 @@ plugin_menu = [] # Empty list of lists for plugin links (e.g. ['name', 'URL'])
 
 srvals = [0] * (sd['nst']) # Shift Register values
 rovals = [0] * sd['nbrd'] * 7 # Run Once durations
-snames = data('snames')
+snames = station_names()  # Load station names from file
 pd = load_programs() # Load program data from file
 
 ps = [] # Program schedule (used for UI display)
@@ -90,3 +91,26 @@ for _ in range(sd['nst']):
 
 lrun = [0, 0, 0, 0] # station index, program number, duration, end time (Used in UI)
 scount = 0 # Station count, used in set station to track on stations with master association.
+
+
+options = [
+	["System name","string","name","Unique name of this OpenSprinkler system.","System"],
+	["Location","string","loc", "City name or zip code. Use comma or + in place of space.","System"],
+	["Time zone","int","tz", "Example: GMT-4:00, GMT+5:30 (effective after reboot.)","System"],
+	["24-hour clock","boolean","tf", "Display times in 24 hour format (as opposed to AM/PM style.)","System"],
+	["HTTP port","int","htp", "HTTP port (effective after reboot.)","System"],
+	["Disable security","boolean","ipas", "Allow anonymous users to access the system without a password.","Change Password"],
+	["Current password","password","opw", "Re-enter the current password.","Change Password"],
+	["New password","password","npw", "Enter a new password.","Change Password"],
+	["Confirm password","password","cpw", "Confirm the new password.","Change Password"],
+	["Sequential","boolean","seq", "Sequential or concurrent running mode.","Station Handling"],
+	["Extension boards","int","nbrd", "Number of extension boards.","Station Handling"],
+	["Station delay","int","sdt", "Station delay time (in seconds), between 0 and 240.","Station Handling"],
+	["Master station","int","mas", "Select master station.","Configure Master"],
+	["Master on adjust","int","mton", "Master on delay (in seconds), between +0 and +60.","Configure Master"],
+	["Master off adjust","int","mtoff", "Master off delay (in seconds), between -60 and +60.","Configure Master"],
+	["Use rain sensor","boolean","urs", "Use rain sensor.","Rain Sensor"],
+	["Normally open","boolean","rst", "Rain sensor type.","Rain Sensor"],
+	["Enable logging","boolean","lg", "Log all events - note that repetitive writing to an SD card can shorten its lifespan.","Logging"],
+	["Max log entries","int","lr", "Length of log to keep, 0=no limits.","Logging"]
+]
