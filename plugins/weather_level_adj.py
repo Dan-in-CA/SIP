@@ -2,6 +2,9 @@
 import datetime
 from random import randint
 from threading import Thread
+import sys
+import traceback
+import shutil
 
 import web, json, time, re
 import os
@@ -67,6 +70,8 @@ class WeatherLevelChecker(Thread):
                 else:
 
                     print "Checking weather status..."
+                    remove_data(['history_', 'conditions_', 'forecast10day_'])
+
                     history = history_info()
                     forecast = forecast_info()
                     today = today_info()
@@ -129,8 +134,10 @@ class WeatherLevelChecker(Thread):
 
                     self._sleep(3600)
 
-            except Exception as err:
-                self.add_status('Weather-base water level encountered error: ' + str(err))
+            except Exception:
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                err_string = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+                self.add_status('Weather-base water level encountered error:\n' + err_string)
                 self._sleep(60)
 
 checker = WeatherLevelChecker()
@@ -208,29 +215,55 @@ def get_data(suffix, name=None, force=False):
         name = suffix
     options = options_data()
     path = os.path.join('.', 'data', 'weather_level_history', name)
-    directory = os.path.split(path)[0]
+    directory = os.path.dirname(path)
     mkdir_p(directory)
-    if not os.path.exists(path) or force:
-        with open(path, 'wb') as fh:
-            req = urllib2.urlopen("http://api.wunderground.com/api/"+options['wapikey']+"/" + suffix)
-            while True:
-                chunk = req.read(20480)
-                if not chunk:
-                    break
-                fh.write(chunk)
+    try_nr = 1
+    while try_nr <= 2:
+        try:
+            if not os.path.exists(path) or force:
+                with open(path, 'wb') as fh:
+                    req = urllib2.urlopen("http://api.wunderground.com/api/"+options['wapikey']+"/" + suffix)
+                    while True:
+                        chunk = req.read(20480)
+                        if not chunk:
+                            break
+                        fh.write(chunk)
 
-    with file(path, 'r') as fh:
-        data = json.load(fh)
+            try:
+                with file(path, 'r') as fh:
+                    data = json.load(fh)
+            except ValueError:
+                raise Exception('Failed to read ' + path + '.')
 
-    if data is not None:
-        if 'error' in data['response']:
-            os.remove(path)
-            raise Exception(str(data['response']['error']))
-    else:
-        os.remove(path)
-        raise Exception('JSON decoding failed.')
+            if data is not None:
+                if 'error' in data['response']:
+                    raise Exception(str(data['response']['error']))
+            else:
+                raise Exception('JSON decoding failed.')
+
+        except Exception as err:
+            if try_nr < 2:
+                print str(err), 'Retrying.'
+                os.remove(path)
+            else:
+                raise
+        try_nr += 1
 
     return data
+
+def remove_data(prefixes):
+    # Delete old files
+    for prefix in prefixes:
+        check_date = datetime.date.today()
+        start_delta = datetime.timedelta(days=14)
+        day_delta = datetime.timedelta(days=1)
+        check_date -= start_delta
+        for index in range(60):
+            datestring = check_date.strftime('%Y%m%d')
+            path = os.path.join('.', 'data', 'weather_level_history', prefix + datestring)
+            if os.path.isdir(path):
+                shutil.rmtree(path)
+            check_date -= day_delta
 
 ################################################################################
 # Info queries:                                                                #
@@ -247,17 +280,16 @@ def history_info():
 
     check_date = datetime.date.today()
     day_delta = datetime.timedelta(days=1)
-    check_date -= day_delta
 
     info = {}
     for index in range(-1, -1 - int(options['days_history']), -1):
+        check_date -= day_delta
         datestring = check_date.strftime('%Y%m%d')
         request = "history_"+datestring+"/q/"+lid+".json"
+
         data = get_data(request)
 
-        check_date -= day_delta
-
-        if len(data['history']['dailysummary']) > 0:
+        if data and len(data['history']['dailysummary']) > 0:
             info[index] = data['history']['dailysummary'][0]
 
     result = {}
