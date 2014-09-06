@@ -1,4 +1,4 @@
-from helpers import CPU_temperature
+from helpers import CPU_temperature, passwordHash, station_names
 import web, json, re, os
 import time, datetime, string
 import gv # Gain access to ospy's settings
@@ -14,7 +14,8 @@ urls.extend([
     '/js', 'plugins.mobile_app.station_state',
     '/jp', 'plugins.mobile_app.program_info',
     '/jn', 'plugins.mobile_app.station_info',
-    '/jl', 'plugins.mobile_app.get_logs'])
+    '/jl', 'plugins.mobile_app.get_logs',
+    '/sp', 'plugins.mobile_app.set_password'])
 
 #######################
 ## Class definitions ##
@@ -24,6 +25,7 @@ class options(object): # /jo
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
         jopts = {
             "fwv" : gv.ver_str+'-OSPi',
             "tz": gv.sd['tz'],
@@ -37,7 +39,8 @@ class options(object): # /jo
             "rso": gv.sd['rst'],
             "wl": gv.sd['wl'],
             "ipas": gv.sd['ipas'],
-            "reset": gv.sd['rbt']
+            "reset": gv.sd['rbt'],
+            "lg":gv.sd['lg']
         }
 
         return json.dumps(jopts)
@@ -47,6 +50,7 @@ class cur_settings(object): # /jc
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
         jsettings = {
             "devt":gv.now,
             "nbrd":gv.sd['nbrd'],
@@ -70,6 +74,7 @@ class station_state(object): # /js
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
         jstate = {
             "sn":gv.srvals,
             "nstations":gv.sd['nst']
@@ -90,6 +95,7 @@ class program_info(object): # /jp
             lpd.append(op)
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
         jpinfo = {
             "nprogs":gv.sd['nprogs']-1,
             "nboards":gv.sd['nbrd'],
@@ -104,6 +110,7 @@ class station_info(object): # /jn
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
         jpinfo = {
             "snames":gv.snames,
             "ignore_rain":gv.sd['ir'],
@@ -122,6 +129,7 @@ class get_logs(object): # /jl
 
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
 
         if not(qdict.has_key('start')) or not(qdict.has_key('end')):
             return []
@@ -153,3 +161,4 @@ class get_logs(object): # /jl
             return records
         except IOError:
             return []
+
