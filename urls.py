@@ -9,8 +9,7 @@ urls = [
     '/co', 'webpages.change_options',
     '/vs', 'webpages.view_stations',
     '/cs', 'webpages.change_stations',
-    '/sn(\d+?\Z)', 'webpages.get_station', # regular expression, accepts any station number
-    '/sn(\d+?=\d(&t=\d+?\Z)?)', 'webpages.set_station', # regular expression, accepts any digits
+    '/sn', 'webpages.get_set_station',
     '/vr', 'webpages.view_runonce',
     '/cr', 'webpages.change_runonce',
     '/vp', 'webpages.view_programs',

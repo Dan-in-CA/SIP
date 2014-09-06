@@ -3,11 +3,18 @@ import web, json, re, os
 import time, datetime, string
 import gv # Gain access to ospy's settings
 from urls import urls # Gain access to ospy's URL list
+from webpages import ProtectedPage
 
 ##############
 ## New URLs ##
 
-urls.extend(['/jo', 'plugins.mobile_app.options', '/jc', 'plugins.mobile_app.cur_settings', '/js', 'plugins.mobile_app.station_state','/jp', 'plugins.mobile_app.program_info', '/jn', 'plugins.mobile_app.station_info', '/jl', 'plugins.mobile_app.get_logs'])
+urls.extend([
+    '/jo', 'plugins.mobile_app.options',
+    '/jc', 'plugins.mobile_app.cur_settings',
+    '/js', 'plugins.mobile_app.station_state',
+    '/jp', 'plugins.mobile_app.program_info',
+    '/jn', 'plugins.mobile_app.station_info',
+    '/jl', 'plugins.mobile_app.get_logs'])
 
 #######################
 ## Class definitions ##
@@ -17,7 +24,22 @@ class options(object): # /jo
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        jopts = {"fwv":'1.9.0-OSPy',"tz":gv.sd['tz'], "ext":gv.sd['nbrd']-1,"seq":gv.sd['seq'],"sdt":gv.sd['sdt'],"mas":gv.sd['mas'],"mton":gv.sd['mton'],"mtof":gv.sd['mtoff'],"urs":gv.sd['urs'],"rso":gv.sd['rst'],"wl":gv.sd['wl'],"ipas":gv.sd['ipas'],"reset":gv.sd['rbt']}
+        jopts = {
+            "fwv" : gv.ver_str+'-OSPi',
+            "tz": gv.sd['tz'],
+            "ext": gv.sd['nbrd'] - 1,
+            "seq": gv.sd['seq'],
+            "sdt": gv.sd['sdt'],
+            "mas": gv.sd['mas'],
+            "mton": gv.sd['mton'],
+            "mtof": gv.sd['mtoff'],
+            "urs": gv.sd['urs'],
+            "rso": gv.sd['rst'],
+            "wl": gv.sd['wl'],
+            "ipas": gv.sd['ipas'],
+            "reset": gv.sd['rbt']
+        }
+
         return json.dumps(jopts)
 
 class cur_settings(object): # /jc
@@ -25,7 +47,22 @@ class cur_settings(object): # /jc
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        jsettings = {"devt":gv.now,"nbrd":gv.sd['nbrd'],"en":gv.sd['en'],"rd":gv.sd['rd'],"rs":gv.sd['rs'],"mm":gv.sd['mm'],"rdst":gv.sd['rdst'],"loc":gv.sd['loc'],"sbits":gv.sbits,"ps":gv.ps,"lrun":gv.lrun,"ct":CPU_temperature(gv.sd['tu']),"tu":gv.sd['tu']}
+        jsettings = {
+            "devt":gv.now,
+            "nbrd":gv.sd['nbrd'],
+            "en":gv.sd['en'],
+            "rd":gv.sd['rd'],
+            "rs":gv.sd['rs'],
+            "mm":gv.sd['mm'],
+            "rdst":gv.sd['rdst'],
+            "loc":gv.sd['loc'],
+            "sbits":gv.sbits,
+            "ps":gv.ps,
+            "lrun":gv.lrun,
+            "ct":CPU_temperature(gv.sd['tu']),
+            "tu":gv.sd['tu']
+        }
+
         return json.dumps(jsettings)
 
 class station_state(object): # /js
@@ -33,7 +70,11 @@ class station_state(object): # /js
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        jstate = {"sn":gv.srvals, "nstations":gv.sd['nst']}
+        jstate = {
+            "sn":gv.srvals,
+            "nstations":gv.sd['nst']
+        }
+
         return json.dumps(jstate)
 
 class program_info(object): # /jp
@@ -49,7 +90,13 @@ class program_info(object): # /jp
             lpd.append(op)
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        jpinfo = {"nprogs":gv.sd['nprogs']-1,"nboards":gv.sd['nbrd'],"mnp":9999, 'pd': lpd}
+        jpinfo = {
+            "nprogs":gv.sd['nprogs']-1,
+            "nboards":gv.sd['nbrd'],
+            "mnp":9999,
+            'pd': lpd
+        }
+
         return json.dumps(jpinfo)
 
 class station_info(object): # /jn
@@ -57,9 +104,13 @@ class station_info(object): # /jn
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
-        names = data('snames')
-        nlst = re.findall('[\'|"](.*?)[\'|"]', names) # Convert names var to string
-        jpinfo = {"snames":nlst,"ignore_rain":gv.sd['ir'],"masop":gv.sd['mo'],"maxlen":gv.sd['snlen']}
+        jpinfo = {
+            "snames":gv.snames,
+            "ignore_rain":gv.sd['ir'],
+            "masop":gv.sd['mo'],
+            "maxlen":gv.sd['snlen']
+        }
+
         return json.dumps(jpinfo)
 
 class get_logs(object): # /jl
@@ -102,19 +153,3 @@ class get_logs(object): # /jl
             return records
         except IOError:
             return []
-##############################
-#### Function Definitions ####
-
-def data(dataf):
-    """Return contents of requested text file as string or create file if a missing config file."""
-    try:
-        with open('./data/'+dataf+'.txt', 'r') as f:
-            data = f.read()
-    except IOError:
-        if dataf == 'snames': ## A config file -- return defaults and create file if not found. ##
-            data = "['S1','S2','S3','S4','S5','S6','S7','S8',]"
-            with open('./data/'+dataf+'.txt', 'w') as f:
-                f.write(data)
-        else:
-            return None
-    return data

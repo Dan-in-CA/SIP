@@ -106,6 +106,7 @@ class change_options(ProtectedPage):
                     if qdict['npw'] == "":
                         raise web.seeother('/vo?errorCode=pw_blank')
                     elif qdict['cpw'] != '' and qdict['cpw'] == qdict['npw']:
+                        gv.sd['salt'] = passwordSalt()  # Make a new salt
                         gv.sd['password'] = passwordHash(qdict['npw'], gv.sd['salt'])
                     else:
                         raise web.seeother('/vo?errorCode=pw_mismatch')
@@ -177,8 +178,6 @@ class change_options(ProtectedPage):
         if qdict.has_key('olr'):
             gv.sd['lr'] = int(qdict['olr'])
 
-        srvals = [0] * (gv.sd['nst']) # Shift Register values
-        rovals = [0] * (gv.sd['nst']) # Run Once Durations
         jsave(gv.sd, 'sd')
         if qdict.has_key('rbt') and qdict['rbt'] == '1':
             gv.srvals = [0] * (gv.sd['nst'])
@@ -260,46 +259,45 @@ class change_stations(ProtectedPage):
         raise web.seeother('/')
 
 
-class get_station(ProtectedPage):
+class get_set_station(ProtectedPage):
     """Return a page containing a number representing the state of a station or all stations if 0 is entered as station number."""
 
-    def GET(self, sn):
-        if sn == '0':
-            status = '<!DOCTYPE html>\n'
-            status += ''.join(str(x) for x in gv.srvals)
-            return status
-        elif int(sn) - 1 <= gv.sd['nbrd'] * 7:
-            status = '<!DOCTYPE html>\n'
-            status += str(gv.srvals[int(sn) - 1])
-            return status
-        else:
-            return 'Station ' + sn + ' not found.'
+    def GET(self):
+        qdict = web.input()
 
+        sid = get_input(qdict, 'sid', 0, int) - 1
+        set_to = get_input(qdict, 'set_to', None, int)
+        set_time = get_input(qdict, 'set_time', 0, int)
 
-class set_station(ProtectedPage):
-    """turn a station (valve/zone) on=1 or off=0 in manual mode."""
-
-    def GET(self, nst, t=None): # nst = station number, status, optional duration
-        nstlst = [int(i) for i in re.split('=|&t=', nst)]
-        if len(nstlst) == 2:
-            nstlst.append(0)
-        sid = int(nstlst[0]) - 1 # station index
-        b = sid / 8 # board index
-        if nstlst[1] == 1 and gv.sd['mm']: # if status is on and manual mode is set
-            gv.rs[sid][0] = gv.now # set start time to current time
-            if nstlst[2]: # if an optional duration time is given
-                gv.rs[sid][2] = nstlst[2]
-                gv.rs[sid][1] = gv.rs[sid][0] + nstlst[2] # stop time = start time + duration
+        if set_to is None:
+            if sid < 0:
+                status = '<!DOCTYPE html>\n'
+                status += ''.join(str(x) for x in gv.srvals)
+                return status
+            elif sid < gv.sd['nbrd'] * 8:
+                status = '<!DOCTYPE html>\n'
+                status += str(gv.srvals[sid])
+                return status
             else:
-                gv.rs[sid][1] = float('inf') # stop time = infinity
-            gv.rs[sid][3] = 99 # set program index
-            gv.ps[sid][1] = nstlst[2]
-            gv.sd['bsy'] = 1
-            time.sleep(1)
-        if nstlst[1] == 0 and gv.sd['mm']: # If status is off
-            gv.rs[sid][1] = gv.now
-            time.sleep(1)
-        raise web.seeother('/')
+                return 'Station ' + str(sid+1) + ' not found.'
+        elif gv.sd['mm']:
+            if set_to: # if status is
+                gv.rs[sid][0] = gv.now # set start time to current time
+                if set_time > 0: # if an optional duration time is given
+                    gv.rs[sid][2] = set_time
+                    gv.rs[sid][1] = gv.rs[sid][0] + set_time # stop time = start time + duration
+                else:
+                    gv.rs[sid][1] = float('inf') # stop time = infinity
+                gv.rs[sid][3] = 99 # set program index
+                gv.ps[sid][1] = set_time
+                gv.sd['bsy'] = 1
+                time.sleep(1)
+            else: # If status is off
+                gv.rs[sid][1] = gv.now
+                time.sleep(1)
+            raise web.seeother('/')
+        else:
+            return 'Manual mode not active.'
 
 
 class view_runonce(ProtectedPage):
@@ -464,8 +462,8 @@ class show_revision(ProtectedPage):
         revpg += 'Python Interval Program for OpenSprinkler Pi<br/><br/>\n'
         revpg += 'Compatable with OpenSprinkler firmware 1.8.3.<br/><br/>\n'
         revpg += 'Includes plugin architecture\n'
-        revpg += 'ospy.py revision: ' + str(gv.rev) + '<br/><br/>\n'
-        revpg += 'updated ' + gv.rev_date + '\n'
+        revpg += 'ospy.py version: v' + gv.ver_str + '<br/><br/>\n'
+        revpg += 'Updated ' + gv.ver_date + '\n'
         return revpg
 
 

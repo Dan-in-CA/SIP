@@ -46,8 +46,7 @@ theme: "original" files used to style the UItyle the UI
 
 other gv attributes:
 gv.ver	software rev number (int, converted to dot separated digets in UI)
-gv.rev	release number of this program (int)  - no longer used as of v2.0
-gv.revdate	date of release (string)
+gv.ver_date	date of release (string)
 gv.now	current time, updated once per second at top of timing loop
 gv.srvals	shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
 gv.rovals	run once values - list of duration times in seconds for a run once program (list, length = number of statons)

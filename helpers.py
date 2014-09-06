@@ -224,23 +224,6 @@ def stop_stations():
     return
 
 
-def data(dataf):
-    """Return contents of requested text file as string or create file if a missing config file."""
-    try:
-        with open('./data/' + dataf + '.txt', 'r') as f:
-            data = f.read()
-            return data
-    except IOError:
-        return None
-
-
-def save(dataf, datastr):
-    """Save data to text file. dataf = file to save to, datastr = data string to save."""
-    with open('./data/' + dataf + '.txt', 'w') as f:
-        f.write(datastr)
-    return
-
-
 def read_log():
     try:
         with open('./data/log.json') as logf:
@@ -320,3 +303,10 @@ signin_form = form.Form(
     ]
 )
 
+def get_input(qdict, key, default=None, cast=None):
+    result = default
+    if qdict.has_key(key):
+        result = qdict[key]
+        if cast is not None:
+            result = cast(result)
+    return result
