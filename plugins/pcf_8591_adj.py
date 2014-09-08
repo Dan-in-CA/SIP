@@ -65,9 +65,9 @@ class PCFSender(Thread):
             try:
                 datapcf = get_pcf_options()                          # load data from file
                 if datapcf['use_pcf'] != 'off':                      # if pcf plugin is enabled
-                    print "bb"
+                    print "test"
                     if datapcf['use_log'] != 'off':                  # if log is enabled
-                    print "cc"
+                    print "test"
                                         
                                       
                 else: # if not enabled plugin
