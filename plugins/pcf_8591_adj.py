@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# This plugin read data (temp or voltage) from I2C PCF8591.
+# This plugin read data (temp or voltage) from I2C PCF8591 on adress 0x48. For temperature probe use LM35D
 
 from threading import Thread
 from random import randint
@@ -12,6 +12,13 @@ from ospy import template_render
 from webpages import ProtectedPage
 
 import errno
+
+# I2C bus Rev Raspi RPI=1 rev1 RPI=0 rev0 
+try:
+   ADC = smbus.SMBus(1)
+except ImportError:
+   ADC = smbus.SMBus(0)
+   pass
 
 # Add a new url to open the data entry page.
 urls.extend(['/pcf', 'plugins.pcf_8591_adj.settings', '/pcfj', 'plugins.pcf_8591_adj.settings_json', '/pcfa', 'plugins.pcf_8591_adj.update'])
@@ -76,13 +83,19 @@ checker = PCFSender()
 # Helper functions:                                                            #
 ################################################################################
 
-def get_measure(inprobe):
+def get_measure(AD_pin):
+    """return voltage from A/D PCF8591"""
+    try:
+       ADC.write_byte_data(0x48, (0x40 + AD_pin),AD_pin)
+       involt = ADC.read_byte(0x48)
+       data = round(((involt*3.3)/255), 1)
+       return data
+    except:
+       return 0.0
+
+def get_write_DA(Y): # PCF8591 D/A converter Y=(0-255) for future use
+    ADC.write_byte_data(0x48, 0x40,Y)
      
-    unit = ''
-    unit = 10.3 # celsius
-     
-    return unit
-          
 
 def get_pcf_options():
     """Returns the data form file."""
