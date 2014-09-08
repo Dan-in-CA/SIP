@@ -13,6 +13,8 @@ from webpages import ProtectedPage
 
 import errno
 
+import smbus # for PCF 8591
+
 # I2C bus Rev Raspi RPI=1 rev1 RPI=0 rev0 
 try:
    ADC = smbus.SMBus(1)
