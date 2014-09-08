@@ -69,10 +69,6 @@ class PCFSender(Thread):
                     if datapcf['use_log'] != 'off':                  # if log is enabled
                     print "test"
                                         
-                                      
-                else: # if not enabled plugin
-                     self.status = '' 
-                     self.add_status('PCF plugin not enabled.')
 
                 self._sleep(4)   
 
