@@ -1,0 +1,94 @@
+$def with(m_vals)
+
+$var title: OpenSprinkler Pi SMS adjustments
+$var page: plugins
+
+<script>
+    // Initialize behaviors
+    jQuery(document).ready(function(){
+
+        jQuery("#cSubmit").click(function() {
+            jQuery("#pluginForm").submit();
+        });
+        jQuery("button#cCancel").click(function(){
+            window.location="/";
+        });
+
+    });
+</script>
+
+<div id="plugin">
+    <div class="title">SMS adjustments</div>
+    <p>For this plugin is needed to SMS modem with the telephone service provider.</p>
+    <p>For more information visit the www.pihrt.com/elektronika/259-moje-rapsberry-pi-sms-ovladani-rpi for instructions.</p>
+    <form id="pluginForm" action="/usmsa" method="get">
+        <table class="optionList">
+            <tr>
+                <td style='text-transform: none;'>Use SMS modem:</td>
+                <td>
+                    <input name='use_sms' type='checkbox'${" checked" if m_vals['use_sms'] == "on" else ""}>   
+                </td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>Number 1:</td>
+                <td>
+                    <input name='tel1' type='text' value=$m_vals["tel1"]>
+                </td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>Number 2:</td>
+                <td>
+                    <input name='tel2' type='text' value=$m_vals["tel2"]>
+                </td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>Command for info:</td>
+                <td>
+                    <input name='txt1' type='text' value=$m_vals["txt1"]>
+                </td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>Command for stop irrigation:</td>
+                <td>
+                    <input name='txt2' type='text' value=$m_vals["txt2"]>
+                </td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>Command for start irrigation:</td>
+                <td>
+                    <input name='txt3' type='text' value=$m_vals["txt3"]>
+                </td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>Command for reboot system:</td>
+                <td>
+                    <input name='txt4' type='text' value=$m_vals["txt4"]>
+                </td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>Command for poweroff system:</td>
+                <td>
+                    <input name='txt5' type='text' value=$m_vals["txt5"]>
+                </td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>Command for update OSPi from GITHUB:</td>
+                <td>
+                    <input name='txt6' type='text' value=$m_vals["txt6"]>
+                </td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>Status:</td>
+                <td>
+                    <textarea style="font-family: monospace;" rows="7" cols="35" readonly>$m_vals['status']</textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="controls">
+    <button id="cSubmit" class="submit"><b>Submit</b></button>
+    <button id="cCancel" class="cancel danger">Cancel</button>
+</div>
+                                  
+                     
