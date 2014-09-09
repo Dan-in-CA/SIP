@@ -29,7 +29,7 @@ function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is schedu
   }
   if(simminutes<pd[3] || simminutes>=pd[4])  return 0; // if simulated time is before start time or after stop time, do not match
   if(pd[5]==0)  return 0; // repeat time missing, do not match
-  if(((simminutes-pd[3])/pd[5])*pd[5] == (simminutes-pd[3])) { // if programmed to run now...
+  if(((simminutes-pd[3])/pd[5]>>0)*pd[5] == (simminutes-pd[3])) { // if programmed to run now...
     return 1; // scheduled for displayScheduleDate
   }
   return 0;  // no match found
