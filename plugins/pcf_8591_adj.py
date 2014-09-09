@@ -13,6 +13,7 @@ from webpages import ProtectedPage
 
 import errno
 
+from helpers import timestr
 import smbus # for PCF 8591
 
 # I2C bus Rev Raspi RPI=1 rev1 RPI=0 rev0 
@@ -69,12 +70,16 @@ class PCFSender(Thread):
             try:
                 datapcf = get_pcf_options()                          # load data from file
                 if datapcf['use_pcf'] != 'off':                      # if pcf plugin is enabled
-                    print "test"
+                    ad0 = get_measure(0)
+                    ad1 = get_measure(1)
+                    ad2 = get_measure(2)
+                    ad3 = get_measure(3)
                     if datapcf['use_log'] != 'off':                  # if log is enabled
-                    print "test"
-                                        
-
-                self._sleep(4)   
+                       actual_time = timestr(gv.now)                   
+                       print actual_time
+                       #write_log(ad0, ad1, ad2, ad3)
+                       
+                self._sleep(1)   
 
             except Exception as err:
                 self.status = '' 
@@ -110,6 +115,7 @@ def get_pcf_options():
               'use_pcf': 'off',
               'use_log': 'off',
               'time': '0',
+              'records': '0',
               'ad0': 'off',
               'ad1': 'off',
               'ad2': 'off',
@@ -144,16 +150,20 @@ def read_log():
     except IOError:
         return []    
         
-def write_log(): # not tested!!!!!!
+def write_log(ad0, ad1, ad2, ad3): 
     """Add run data to csv file - most recent first."""
     datapcf = get_pcf_options() 
+    print ad0, ad1, ad2, ad3
     logline = '{"Date":"' + time.strftime('"%Y-%m-%d"', gv.now) + '}\n'
     log = read_log()
     log.insert(0, logline)
     with open('./data/pcflog.json', 'w') as f:
-         f.writelines(log)
-    return        
-
+         if datapcf['records']:
+             f.writelines(log[:datapcf['records']])
+         else:
+             f.writelines(log)
+    return      
+ 
 ################################################################################
 # Web pages:                                                                   #
 ################################################################################
