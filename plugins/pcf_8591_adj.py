@@ -83,7 +83,7 @@ checker = PCFSender()
 # Helper functions:                                                            #
 ################################################################################
 
-def get_measure(AD_pin):
+def get_measure(AD_pin, self):
     """return voltage from A/D PCF8591"""
     try:
        ADC.write_byte_data(0x48, (0x40 + AD_pin),AD_pin)
@@ -91,6 +91,7 @@ def get_measure(AD_pin):
        data = round(((involt*3.3)/255), 1)
        return data
     except:
+       self.add_status('No detected PCF on I2C.')
        return 0.0
 
 def get_write_DA(Y): # PCF8591 D/A converter Y=(0-255) for future use
