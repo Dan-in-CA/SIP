@@ -27,7 +27,7 @@ class options(object): # /jo
         web.header('Content-Type', 'application/json')
         web.header('Cache-Control', 'no-cache')
         jopts = {
-            "fwv" : gv.ver_str+'-OSPi',
+            "fwv": gv.ver_str+'-OSPi',
             "tz": gv.sd['tz'],
             "ext": gv.sd['nbrd'] - 1,
             "seq": gv.sd['seq'],

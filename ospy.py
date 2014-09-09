@@ -165,11 +165,6 @@ template_globals = {
 template_render = web.template.render('templates', globals=template_globals, base='base')
 
 if __name__ == '__main__':
-    ##############################
-    #### Revision information ####
-    gv.ver = 204
-    gv.ver_str = '.'.join(list(str(gv.ver)))
-    gv.ver_date = '6/Sep/2014'
 
     #########################################################
     #### Code to import all webpages and plugin webpages ####
