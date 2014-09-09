@@ -127,11 +127,15 @@ class loading(ProtectedPage):
 class update(ProtectedPage):
     """Update OSPi from github and return text message from comm line."""
     def GET(self):
-        command = "git pull"
+        dataup = get_rev_data()
+        command = "git config core.filemode false" # http://superuser.com/questions/204757/git-chmod-problem-checkout-screws-exec-bit
+                                                   # ignore local chmod permission 
+        process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+        output = process.communicate()[0]
+        command = "git pull"                       
         process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
         output = process.communicate()[0]
         print "Update plugin reports: ",output
-        dataup = get_rev_data()
         dataup['status'] = output
         return template_render.system_update(dataup)
         raise web.seeother('/')
