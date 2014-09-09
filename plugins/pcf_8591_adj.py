@@ -23,7 +23,11 @@ except ImportError:
    pass
 
 # Add a new url to open the data entry page.
-urls.extend(['/pcf', 'plugins.pcf_8591_adj.settings', '/pcfj', 'plugins.pcf_8591_adj.settings_json', '/pcfa', 'plugins.pcf_8591_adj.update'])
+urls.extend(['/pcf', 'plugins.pcf_8591_adj.settings', 
+             '/pcfj', 'plugins.pcf_8591_adj.settings_json',
+             '/pcfa', 'plugins.pcf_8591_adj.update',
+             '/pcfl', 'plugins.pcf_8591_adj.pcf_log'
+             ])
 
 # Add this plugin to the home page plugins menu
 gv.plugin_menu.append(['PCF8591 voltage and temperature adjustments ', '/pcf'])
@@ -84,17 +88,19 @@ checker = PCFSender()
 ################################################################################
 
 def get_measure(AD_pin, self):
-    """return voltage from A/D PCF8591"""
+    """Return voltage from A/D PCF8591"""
     try:
        ADC.write_byte_data(0x48, (0x40 + AD_pin),AD_pin)
        involt = ADC.read_byte(0x48)
        data = round(((involt*3.3)/255), 1)
        return data
     except:
-       self.add_status('No detected PCF on I2C.')
+       self.status = '' 
+       self.add_status('No detected PCF8591 on I2C.')
        return 0.0
 
 def get_write_DA(Y): # PCF8591 D/A converter Y=(0-255) for future use
+    """Write analog voltage to output"""
     ADC.write_byte_data(0x48, 0x40,Y)
      
 
@@ -128,6 +134,25 @@ def get_pcf_options():
         pass
     
     return datapcf
+    
+def read_log():
+    """Read pcf log"""
+    try:
+        with open('./data/pcflog.json') as logf:
+            records = logf.readlines()
+        return records
+    except IOError:
+        return []    
+        
+def write_log(): # not tested!!!!!!
+    """Add run data to csv file - most recent first."""
+    datapcf = get_pcf_options() 
+    logline = '{"Date":"' + time.strftime('"%Y-%m-%d"', gv.now) + '}\n'
+    log = read_log()
+    log.insert(0, logline)
+    with open('./data/pcflog.json', 'w') as f:
+         f.writelines(log)
+    return        
 
 ################################################################################
 # Web pages:                                                                   #
@@ -166,16 +191,16 @@ class update(ProtectedPage):
         checker.update()
         raise web.seeother('/')
 
-class pcf_log(ProtectedPage):
+class pcf_log(ProtectedPage): # save log file on web as csv file type
     """Simple PCF Log API"""
 
     def GET(self):
         records = read_log()
-        data = "Date, Start Time, Zone, Duration, Program\n"
+        data = "Date, Time, AD0, AD1, AD2, AD3\n"
         for r in records:
             event = json.loads(r)
-            data += event["date"] + ", " + event["start"] + ", " + str(event["station"]) + ", " + event[
-                "duration"] + ", " + event["program"] + "\n"
+            data += event["Date"] + ", " + event["Time"] + ", " + str(event["AD0"]) + ", " +
+            str(event["AD1"]) + ", " + str(event["AD2"]) + ", " + str(event["AD3"]) + ", " + "\n"
 
         web.header('Content-Type', 'text/csv')
         return data
