@@ -26,9 +26,9 @@ $code:
             // process time zone value
             var th = parseInt(jQuery("input[name='th']").val(),10);
             var tq = parseInt(jQuery("input[name='tq']").val(),10);
-            tq = (tq/15)/4.0;
+            tq = (tq/15>>0)/4.0;
             th = th+(th>=0?tq:-tq);
-            jQuery("input[name='otz']").val(((th+12)*4));
+            jQuery("input[name='otz']").val(((th+12)*4)>>0);
             jQuery("form[name='of']").submit();
         });
 
@@ -91,8 +91,8 @@ $code:
             elif name == "tz":
                 output += "<input name='otz' type='hidden' value='0'>\n"
                 tz = value - 48
-                th = ("+" if tz>=0 else "-") + str(abs(tz)/4)
-                tq = str((abs(tz)%4)*15/10) + str((abs(tz)%4)*15%10)
+                th = ("+" if tz>=0 else "-") + str(abs(tz)/4>>0)
+                tq = str((abs(tz)%4)*15/10>>0) + str((abs(tz)%4)*15%10)
                 output += "<input name='th' type='text' size='3' maxlength='3' value='"+ th +"'>:<input name='tq' type='text' size='3' maxlength='3' value='" + tq + "'>\n"
             elif name == "mas":
                 output += "<select name='omas'>\n"
