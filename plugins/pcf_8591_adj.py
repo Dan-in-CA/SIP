@@ -71,10 +71,10 @@ class PCFSender(Thread):
             try:
                 datapcf = get_pcf_options()                          # load data from file
                 if datapcf['use_pcf'] != 'off':                      # if pcf plugin is enabled
-                    ad0 = get_measure(0)
-                    ad1 = get_measure(1)
-                    ad2 = get_measure(2)
-                    ad3 = get_measure(3)
+                    ad0 = get_measure(0, self)
+                    ad1 = get_measure(1, self)
+                    ad2 = get_measure(2, self)
+                    ad3 = get_measure(3, self)
                     if datapcf['use_log'] != 'off' and datapcf['time'] != '0':      # if log is enabled and time is not 0 min
                        actual_time = gv.now                   
                        if actual_time - last_time > (int(datapcf['time'])*60):       # if is time for save 
@@ -105,9 +105,9 @@ def get_now_measure(AD_pin):
        data = round(((involt*3.3)/255), 1)
        return data # volt in AD input range 0-255 
     except:
-       return 255
+       return 0.0
 
-def get_measure(AD_pin):
+def get_measure(AD_pin, self):
     """Return voltage from A/D PCF8591 to logline"""
     datapcf = get_pcf_options()
     try:
@@ -148,6 +148,8 @@ def get_measure(AD_pin):
              return data 
 
     except:
+       self.status = '' 
+       self.add_status('Error: Found PCF8591 at I2C adress 0x40!')  
        return 0.0
 
 def get_write_DA(Y): # PCF8591 D/A converter Y=(0-255) for future use
