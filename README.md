@@ -19,8 +19,9 @@ September 10 2014
 (martinpihrt)<br/>
 Changes:<br/>
 1. Add to helpers.py Function Definitions: reboot, poweroff, uptime, getIP, email.<br/>
-2. Add new plugins and template: system update, email adjust settings, sms adjust settings, lcd adjust settings, pressure adjust settings.<br/> 
+2. Add new plugins and template: system update, email adjust settings, sms adjust settings, lcd adjust settings, pressure adjust settings, PCF8591 A/D converter plugin.<br/> 
 3. Add library pylcd2 to /plugins for lcd adjust setings plugin.
+
 
 July 22 2014
 -----------
