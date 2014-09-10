@@ -244,6 +244,7 @@ def sms_check(self):
                                 }
                       sm.SendSMS(message)
                       self.add_status('Command: '+comm6+' was processed and confirmation was sent as SMS to: '+m['Number'])
+                      os.system('git config core.filemode false')  # set ignore local file permission
                       os.system('sudo git pull')  # update OSPi from Dan in CA (GIT HUB)
                       sm.DeleteSMS(m['Folder'], m['Location'])
                       self.add_status('Received SMS was deleted and system is now reboot')
