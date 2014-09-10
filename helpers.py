@@ -52,7 +52,7 @@ def restart():
     gv.srvals = [0] * (gv.sd['nst'])
     set_output()
     print 'Restarting ' + gv.sd['name']
-    command = "/etc/init.d/ospy.sh restart"
+    command = 'service ospy restart'
     output = subprocess.check_output(command.split())
     print 'Restarted:', output
 
