@@ -26,7 +26,8 @@ except ImportError:
 urls.extend(['/pcf', 'plugins.pcf_8591_adj.settings', 
              '/pcfj', 'plugins.pcf_8591_adj.settings_json',
              '/pcfa', 'plugins.pcf_8591_adj.update',
-             '/pcfl', 'plugins.pcf_8591_adj.pcf_log'
+             '/pcfl', 'plugins.pcf_8591_adj.pcf_log',
+             '/pcfr', 'plugins.pcf_8591_adj.delete_log'
              ])
 
 # Add this plugin to the home page plugins menu
@@ -104,7 +105,7 @@ def get_now_measure(AD_pin):
        data = round(((involt*3.3)/255), 1)
        return data # volt in AD input range 0-255 
     except:
-       return 0.0
+       return 255
 
 def get_measure(AD_pin):
     """Return voltage from A/D PCF8591 to logline"""
@@ -255,3 +256,14 @@ class pcf_log(ProtectedPage): # save log file from web as csv file type
             data += event["Date"] + ", " + event["Time"] + ", " + str(event["AD0"]) + ", " + str(event["AD1"]) + ", " + str(event["AD2"]) + ", " + str(event["AD3"]) + ", " + "\n"
         web.header('Content-Type', 'text/csv')
         return data
+
+class delete_log(ProtectedPage): # delete log file from web 
+    """Delete all pcflog records"""
+
+    def GET(self):
+        qdict = web.input()
+        with open('./data/pcflog.json', 'w') as f:
+            f.write('')
+        raise web.seeother('/pcf')
+
+
