@@ -101,14 +101,17 @@ def get_rev_data():
            current = re.search("\w{40}", data)
            current = current.group(0)
     except:
-        curent = '----------------------------------------------------------------------'
+        current = ''
 
     
     if err == '1':
         if latest == current: # if sha local = sha latest
-              statusmsg = 'Ready - Using the latest version OSPy.'
+              statusmsg = 'Ready - Using the latest version.'
+        elif current == '':
+              statusmsg = 'You must first click RUN UPDATE button.'
         else:
-              statusmsg = 'On the server is a new version OSPy.'
+              statusmsg = 'On the server is a new version.'
+
     else:
         statusmsg = 'Error: no connection to server github.'
 
