@@ -71,10 +71,15 @@ class StatusChecker(Thread):
         command = 'git rev-list origin/master --count --first-parent'
         new_revision = int(subprocess.check_output(command.split()))
 
+        command = 'git rev-list HEAD --count --first-parent'
+        local_revision = int(subprocess.check_output(command.split()))
+
         command = 'git log HEAD..origin/master --oneline'
         changes = '  ' + '\n  '.join(subprocess.check_output(command.split()).split('\n'))
 
-        if new_revision == gv.revision and new_date == gv.ver_date:
+        if gv.revision != local_revision:
+            self.add_status('Reboot required to activate revision: %d!' % local_revision)
+        elif new_revision == gv.revision and new_date == gv.ver_date:
             self.add_status('Up-to-date.')
         elif new_revision > gv.revision:
             self.add_status('New version is available!')
