@@ -17,10 +17,19 @@ $var page: plugins
     });
 </script>   
 
+$code:
+     def volttemp(involt,unit):
+        if unit == "on":
+           value = involt*3.3/255
+        else:
+           value = (involt*3.3/255)*100
+        return str(value) + (" [V]" if unit == 'on' else " [C]")
+   
+
 <div id="plugin">
     <div class="title">PCF8591 voltage and temperature adjustments</div>
     <p>For this plugin is needed enabled I2C bus and connected I2C A/D converter PCF8591 on I2C adress 0x48.</p>
-    <p>For measure temperature use temp probe LM35D on AD converter.</p>
+    <p>For measure temperature use temp probe LM35D (0-100 &deg;C) on AD0-3 converter.</p>
     <p>Download log as <a href="/pcfl">csv</a>.</p>
     <form id="pluginForm" action="/pcfa" method="get">
         <table class="optionList">
@@ -49,27 +58,36 @@ $var page: plugins
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>Input AD0:</td>
+                <td style='text-transform: none;'>Label for input AD0:</td>
                 <td>
-                    <input name='ad0text' type='text' value=$m_vals["ad0text"]> <span style="font-weight: bold;">$m_vals["ad0val"]</span> measure as voltage <input name='ad0' type='checkbox'${" checked" if m_vals['ad0'] == "on" else ""} > 
+                    <input name='ad0text' type='text' value=$m_vals["ad0text"]> measure as voltage <input name='ad0' type='checkbox'${" checked" if m_vals['ad0'] == "on" else ""}>  
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>Input AD1:</td>
+                <td style='text-transform: none;'>Label for input AD1:</td>
                 <td>
-                    <input name='ad1text' type='text' value=$m_vals["ad1text"]> <span style="font-weight: bold;">$m_vals["ad1val"]</span> measure as voltage <input name='ad1' type='checkbox'${" checked" if m_vals['ad1'] == "on" else ""} > 
+                    <input name='ad1text' type='text' value=$m_vals["ad1text"]> measure as voltage <input name='ad1' type='checkbox'${" checked" if m_vals['ad1'] == "on" else ""}>    
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>Input AD2:</td>
+                <td style='text-transform: none;'>Label for input AD2:</td>
                 <td>
-                    <input name='ad2text' type='text' value=$m_vals["ad2text"]> <span style="font-weight: bold;">$m_vals["ad2val"]</span> measure as voltage <input name='ad2' type='checkbox'${" checked" if m_vals['ad2'] == "on" else ""} > 
+                    <input name='ad2text' type='text' value=$m_vals["ad2text"]> measure as voltage <input name='ad2' type='checkbox'${" checked" if m_vals['ad2'] == "on" else ""}>     
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>Input AD3:</td>
+                <td style='text-transform: none;'>Label for input AD3:</td>
                 <td>
-                    <input name='ad3text' type='text' value=$m_vals["ad3text"]> <span style="font-weight: bold;">$m_vals["ad3val"] </span> measure as voltage <input name='ad3' type='checkbox'${" checked" if m_vals['ad3'] == "on" else ""} > 
+                    <input name='ad3text' type='text' value=$m_vals["ad3text"]> measure as voltage <input name='ad3' type='checkbox'${" checked" if m_vals['ad3'] == "on" else ""}>   
+                </td>
+            </tr>
+            <tr> 
+                <td style='text-transform: none; vertical-align: top;'>Read value:</td>
+                <td style="background-color: rgb(204, 204, 204);text-align: center;">                    
+                    <h2> $m_vals["ad0text"]= ${volttemp(m_vals["ad0val"],m_vals['ad0'])} <br>
+                    $m_vals["ad1text"]= ${volttemp(m_vals["ad1val"],m_vals['ad1'])} <br>
+                    $m_vals["ad2text"]= ${volttemp(m_vals["ad2val"],m_vals['ad2'])} <br>
+                    $m_vals["ad3text"]= ${volttemp(m_vals["ad3val"],m_vals['ad3'])} </h2>
                 </td>
             </tr>
             <tr>
