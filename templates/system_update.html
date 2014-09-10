@@ -1,6 +1,6 @@
 $def with(m_vals)
 
-$var title: OpenSprinkler Pi System update from github
+$var title: OpenSprinkler Pi System update from GitHub
 $var page: plugins
 <script>
     // Initialize behaviors
@@ -21,46 +21,40 @@ $var page: plugins
 
 <div id="plugin">
     <div class="title">System update from github</div>
-    <p>This plugin checks SHA from github ($m_vals["user"]/OSPy) and from local files.</p>
+    <p>This plugin compares the local copy and the remote repository.</p>
     <form id="pluginForm" action="/UPu" method="get">
         <table class="optionList">
             <tr>
-                <td style='text-transform: none;'><b>Latest OSPy version on github:</b></td>
+                <td style='text-transform: none;'><b>Remote repository:</b></td>
                 <td>
-                     $m_vals["latest"]
+                     $m_vals["remote"]
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>           <b>Local OSPy version:<b></td>
+                <td style='text-transform: none;'><b>Local OSPy version:</b></td>
                 <td>
-                     $m_vals["current"]
+                     $m_vals["ver_str"]
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>           <b>Local OSPy rev date:<b></td>
+                <td style='text-transform: none;'><b>Local OSPy date:</b></td>
                 <td>
-                     $m_vals["revdate"]
-                </td>
-            </tr>
-            <tr>
-                <td style='text-transform: none;'>           <b>Local OSPy version:<b></td>
-                <td>
-                     $m_vals["ver"]
+                     $m_vals["ver_date"]
                 </td>
             </tr>
             <tr>
                 <td style='text-transform: none;'>Status:</td>
                 <td>
-                    <textarea style="font-family: monospace;" rows="7" cols="35" readonly>$m_vals['status']</textarea>
+                    <textarea style="font-family: monospace;" rows="7" cols="100" readonly>$m_vals['status']</textarea>
                 </td>
             </tr>
             
         </table>
     </form>
-<p>After the update, you must OSPy system reboots!</p>
+<p>After an update, you must restart OSPy!</p>
 </div>
 <div id="controls">
-    <button id="cSubmit" class="submit"><b>Run Update</b></button>
-    <button id="cReboot" class="reboot danger">Reboot system</button>
+    <button id="cSubmit" class="submit"><b>Update</b></button>
+    <button id="cReboot" class="reboot danger">Restart OSPy</button>
     <button id="cCancel" class="cancel danger">Cancel</button>
 </div>

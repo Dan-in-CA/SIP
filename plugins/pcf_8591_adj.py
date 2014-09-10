@@ -3,35 +3,35 @@
 
 from threading import Thread
 from random import randint
+import json
+import time
+import sys
+import traceback
 
-import web, json, re, os, time, datetime
+import web
 import gv # Get access to ospi's settings
-
 from urls import urls # Get access to ospi's URLs
 from ospy import template_render
 from webpages import ProtectedPage
-
-import errno
-
-import smbus # for PCF 8591
+from helpers import RPI_revision
 
 # I2C bus Rev Raspi RPI=1 rev1 RPI=0 rev0 
 try:
-   ADC = smbus.SMBus(1)
+    import smbus # for PCF 8591
+    ADC = smbus.SMBus(1 if RPI_revision() >= 2 else 0)
 except ImportError:
-   ADC = smbus.SMBus(0)
-   pass
+    ADC = None
 
 # Add a new url to open the data entry page.
-urls.extend(['/pcf', 'plugins.pcf_8591_adj.settings', 
+urls.extend(['/pcf', 'plugins.pcf_8591_adj.settings',
              '/pcfj', 'plugins.pcf_8591_adj.settings_json',
              '/pcfa', 'plugins.pcf_8591_adj.update',
              '/pcfl', 'plugins.pcf_8591_adj.pcf_log',
              '/pcfr', 'plugins.pcf_8591_adj.delete_log'
-             ])
+])
 
 # Add this plugin to the home page plugins menu
-gv.plugin_menu.append(['PCF8591 voltage and temperature adjustments ', '/pcf'])
+gv.plugin_menu.append(['PCF8591 voltage and temperature settings ', '/pcf'])
 
 ################################################################################
 # Main function loop:                                                          #
@@ -76,21 +76,25 @@ class PCFSender(Thread):
                     ad2 = get_measure(2, self)
                     ad3 = get_measure(3, self)
                     if datapcf['use_log'] != 'off' and datapcf['time'] != '0':      # if log is enabled and time is not 0 min
-                       actual_time = gv.now                   
-                       if actual_time - last_time > (int(datapcf['time'])*60):       # if is time for save 
-                           last_time = actual_time
-                           self.status = '' 
-                           TEXT = 'On ' + time.strftime('%d.%m.%Y at %H:%M:%S', time.localtime(time.time())) + ' save PCF8591 data AD0=' + str(ad0) + ' AD1=' + str(ad1) + ' AD2='+ str(ad2) + ' AD3='+ str(ad3) 
-                           self.add_status(TEXT)
-                           write_log(ad0, ad1, ad2, ad3)
-                       
-                self._sleep(1)   
+                        actual_time = gv.now
+                        if actual_time - last_time > (int(datapcf['time']) * 60):       # if is time for save
+                            last_time = actual_time
+                            self.status = ''
+                            TEXT = 'On ' + time.strftime('%d.%m.%Y at %H:%M:%S',
+                                                         time.localtime(time.time())) + ' save PCF8591 data AD0=' + str(
+                                ad0) + ' AD1=' + str(ad1) + ' AD2=' + str(ad2) + ' AD3=' + str(ad3)
+                            self.add_status(TEXT)
+                            write_log(ad0, ad1, ad2, ad3)
 
-            except Exception as err:
-                self.status = '' 
-                self.add_status('PCF plugin encountered error: ' + str(err))
-                self._sleep(5)  
- 
+                self._sleep(1)
+
+            except Exception:
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                err_string = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+                self.add_status('PCF plugin encountered error: ' + err_string)
+                self._sleep(5)
+
+
 checker = PCFSender()
 
 ################################################################################
@@ -100,83 +104,86 @@ checker = PCFSender()
 def get_now_measure(AD_pin):
     """Return voltage from A/D PCF8591 to webpage"""
     try:
-       ADC.write_byte_data(0x48, (0x40 + AD_pin),AD_pin)
-       involt = ADC.read_byte(0x48)
-       data = round(((involt*3.3)/255), 1)
-       return data # volt in AD input range 0-255 
+        ADC.write_byte_data(0x48, (0x40 + AD_pin), AD_pin)
+        involt = ADC.read_byte(0x48)
+        data = round(((involt * 3.3) / 255), 1)
+        return data # volt in AD input range 0-255
     except:
-       return 0.0
+        return 0.0
+
 
 def get_measure(AD_pin, self):
     """Return voltage from A/D PCF8591 to logline"""
     datapcf = get_pcf_options()
     try:
-       ADC.write_byte_data(0x48, (0x40 + AD_pin),AD_pin)
-       involt = ADC.read_byte(0x48) # involt range is 0-255
-  
-       if AD_pin == 0:
-          if datapcf['ad0'] != 'on': # off = measure temperature from LM35D, on = voltage
-             temp = (involt/77.27)*100.0 # voltage in AD0 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27 
-             data = round(temp, 1)
-             return data
-          else:
-             data = round(((involt*3.3)/255), 1)
-             return data
-       if AD_pin == 1:  
-          if datapcf['ad1'] != 'on': # off = measure temperature from LM35D, on = voltage
-             temp = (involt/77.27)*100.0 # voltage in AD1 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27 
-             data = round(temp, 1)
-             return data
-          else:
-             data = round(((involt*3.3)/255), 1)
-             return data
-       if AD_pin == 2:
-          if datapcf['ad2'] != 'on': # off = measure temperature from LM35D, on = voltage
-             temp = (involt/77.27)*100.0 # voltage in AD2 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27 
-             data = round(temp, 1)
-             return data
-          else:
-             data = round(((involt*3.3)/255), 1)
-             return data
-       if AD_pin == 3:
-          if datapcf['ad0'] != 'on': # off = measure temperature from LM35D, on = voltage
-             temp = (involt/77.27)*100.0 # voltage in AD3 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27 
-             data = round(temp, 1)
-             return data 
-          else:
-             data = round(((involt*3.3)/255), 1)
-             return data 
+        ADC.write_byte_data(0x48, (0x40 + AD_pin), AD_pin)
+        involt = ADC.read_byte(0x48) # involt range is 0-255
+
+        if AD_pin == 0:
+            if datapcf['ad0'] != 'on': # off = measure temperature from LM35D, on = voltage
+                temp = (involt / 77.27) * 100.0 # voltage in AD0 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
+                data = round(temp, 1)
+                return data
+            else:
+                data = round(((involt * 3.3) / 255), 1)
+                return data
+        if AD_pin == 1:
+            if datapcf['ad1'] != 'on': # off = measure temperature from LM35D, on = voltage
+                temp = (involt / 77.27) * 100.0 # voltage in AD1 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
+                data = round(temp, 1)
+                return data
+            else:
+                data = round(((involt * 3.3) / 255), 1)
+                return data
+        if AD_pin == 2:
+            if datapcf['ad2'] != 'on': # off = measure temperature from LM35D, on = voltage
+                temp = (involt / 77.27) * 100.0 # voltage in AD2 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
+                data = round(temp, 1)
+                return data
+            else:
+                data = round(((involt * 3.3) / 255), 1)
+                return data
+        if AD_pin == 3:
+            if datapcf['ad0'] != 'on': # off = measure temperature from LM35D, on = voltage
+                temp = (involt / 77.27) * 100.0 # voltage in AD3 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
+                data = round(temp, 1)
+                return data
+            else:
+                data = round(((involt * 3.3) / 255), 1)
+                return data
 
     except:
-       self.status = '' 
-       self.add_status('Error: Found PCF8591 at I2C adress 0x40!')  
-       return 0.0
+        self.status = ''
+        self.add_status('Error: Found PCF8591 at I2C adress 0x40!')
+        return 0.0
+
 
 def get_write_DA(Y): # PCF8591 D/A converter Y=(0-255) for future use
     """Write analog voltage to output"""
-    ADC.write_byte_data(0x48, 0x40,Y)    
+    ADC.write_byte_data(0x48, 0x40, Y)
+
 
 def get_pcf_options():
     """Returns the data form file."""
     datapcf = {
-              'use_pcf': 'off',
-              'use_log': 'off',
-              'time': '0',
-              'records': '0',
-              'ad0': 'off',
-              'ad1': 'off',
-              'ad2': 'off',
-              'ad3': 'off',
-              'ad0text': 'label_1',
-              'ad1text': 'label_2',
-              'ad2text': 'label_3',
-              'ad3text': 'label_4',
-              'ad0val': get_now_measure(0),
-              'ad1val': get_now_measure(1),
-              'ad2val': get_now_measure(2),
-              'ad3val': get_now_measure(3),
-              'status': checker.status
-              }
+        'use_pcf': 'off',
+        'use_log': 'off',
+        'time': '0',
+        'records': '0',
+        'ad0': 'off',
+        'ad1': 'off',
+        'ad2': 'off',
+        'ad3': 'off',
+        'ad0text': 'label_1',
+        'ad1text': 'label_2',
+        'ad2text': 'label_3',
+        'ad3text': 'label_4',
+        'ad0val': get_now_measure(0),
+        'ad1val': get_now_measure(1),
+        'ad2val': get_now_measure(2),
+        'ad3val': get_now_measure(3),
+        'status': checker.status
+    }
     try:
         with open('./data/pcf_adj.json', 'r') as f: # Read the settings from file
             file_data = json.load(f)
@@ -185,9 +192,10 @@ def get_pcf_options():
                 datapcf[key] = value
     except Exception:
         pass
-    
+
     return datapcf
-    
+
+
 def read_log():
     """Read pcf log"""
     try:
@@ -195,43 +203,50 @@ def read_log():
             records = logf.readlines()
         return records
     except IOError:
-        return []    
-        
-def write_log(ad0, ad1, ad2, ad3): 
+        return []
+
+
+def write_log(ad0, ad1, ad2, ad3):
     """Add run data to csv file - most recent first."""
-    datapcf = get_pcf_options()   
-    logline = '{"Time":"' + time.strftime('%H:%M:%S","Date":"%d-%m-%Y"', time.gmtime(gv.now)) + ',"AD0":"' + str(ad0) + '","AD1":"' + str(ad1) + '","AD2":"' + str(ad2) + '","AD3":"' + str(ad3) + '"}\n'
+    datapcf = get_pcf_options()
+    logline = '{"Time":"' + time.strftime('%H:%M:%S","Date":"%d-%m-%Y"', time.gmtime(gv.now)) + ',"AD0":"' + str(
+        ad0) + '","AD1":"' + str(ad1) + '","AD2":"' + str(ad2) + '","AD3":"' + str(ad3) + '"}\n'
     log = read_log()
     log.insert(0, logline)
     with open('./data/pcflog.json', 'w') as f:
-         if int(datapcf['records']) != 0:
-             f.writelines(log[:int(datapcf['records'])])
-         else:
-             f.writelines(log)
-    return      
- 
+        if int(datapcf['records']) != 0:
+            f.writelines(log[:int(datapcf['records'])])
+        else:
+            f.writelines(log)
+    return
+
 ################################################################################
 # Web pages:                                                                   #
 ################################################################################
- 
+
 class settings(ProtectedPage):
     """Load an html page for entering lcd adjustments."""
+
     def GET(self):
         return template_render.pcf_8591_adj(get_pcf_options())
 
+
 class settings_json(ProtectedPage):
     """Returns plugin settings in JSON format."""
+
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         return json.dumps(get_pcf_options())
 
+
 class update(ProtectedPage):
     """Save user input to pcf_adj.json file."""
+
     def GET(self):
         qdict = web.input()
         if not qdict.has_key('use_pcf'):
-            qdict['use_pcf'] = 'off'              
+            qdict['use_pcf'] = 'off'
         if not qdict.has_key('use_log'):
             qdict['use_log'] = 'off'
         if not qdict.has_key('ad0'):
@@ -247,6 +262,7 @@ class update(ProtectedPage):
         checker.update()
         raise web.seeother('/')
 
+
 class pcf_log(ProtectedPage): # save log file from web as csv file type
     """Simple PCF Log API"""
 
@@ -255,11 +271,13 @@ class pcf_log(ProtectedPage): # save log file from web as csv file type
         data = "Date, Time, AD0, AD1, AD2, AD3\n"
         for r in records:
             event = json.loads(r)
-            data += event["Date"] + ", " + event["Time"] + ", " + str(event["AD0"]) + ", " + str(event["AD1"]) + ", " + str(event["AD2"]) + ", " + str(event["AD3"]) + ", " + "\n"
+            data += event["Date"] + ", " + event["Time"] + ", " + str(event["AD0"]) + ", " + str(
+                event["AD1"]) + ", " + str(event["AD2"]) + ", " + str(event["AD3"]) + ", " + "\n"
         web.header('Content-Type', 'text/csv')
         return data
 
-class delete_log(ProtectedPage): # delete log file from web 
+
+class delete_log(ProtectedPage): # delete log file from web
     """Delete all pcflog records"""
 
     def GET(self):

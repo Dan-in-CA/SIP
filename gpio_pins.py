@@ -10,6 +10,7 @@ except ImportError:
     except ImportError:
         gv.platform = '' # if no platform, allows program to still run.
         print 'No GPIO module was loaded from GPIO Pins module'
+        GPIO = None
 
 try:
     GPIO.setwarnings(False)
@@ -36,6 +37,7 @@ try:
         pin_relay = "P9_16"
 except AttributeError:
     pass
+
 #### setup GPIO pins as output or input ####
 try:
     GPIO.setup(pin_sr_noe, GPIO.OUT)

@@ -1,6 +1,6 @@
 $def with(m_vals)
 
-$var title: OpenSprinkler Pi PCF8591 voltage and temperature adjustments
+$var title: OpenSprinkler Pi PCF8591 voltage and temperature settings
 $var page: plugins
 
 <script>
@@ -34,9 +34,9 @@ $code:
               return str("***")
 
 <div id="plugin">
-    <div class="title">PCF8591 voltage and temperature adjustments</div>
-    <p>For this plugin is needed enabled I2C bus and connected I2C A/D converter PCF8591 on I2C adress 0x48.</p>
-    <p>For measure temperature use temp probe LM35D (0-100 &deg;C) on AD0-3 converter.</p>
+    <div class="title">PCF8591 voltage and temperature settings</div>
+    <p>For this plugin a connected I2C A/D converter PCF8591 on I2C address 0x48 is needed.</p>
+    <p>For measuring temperature, use temp probe LM35D (0-100 &deg;C) on AD0-3 converter.</p>
     <p>Download log as <a href="/pcfl">csv</a>. <a href="/pcfr">Delete</a> log file.</p>
     <form id="pluginForm" action="/pcfa" method="get">
         <table class="optionList">

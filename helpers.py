@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
+import datetime
+
+__author__ = 'Rimco'
 
 import os
 import random
 import sys
 import time
-from gpio_pins import set_output
-
-import subprocess 
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEBase import MIMEBase
-from email.MIMEText import MIMEText
-from email import Encoders
-import smtplib
-
-
+import subprocess
 
 
 try:
@@ -24,11 +18,8 @@ except ImportError:
 import web
 from web import form
 
-
 import gv
 from web.session import sha1
-
-__author__ = 'Rimco'
 
 try:
     import json
@@ -43,80 +34,64 @@ except ImportError:
 #### Function Definitions ####
 
 def reboot():
-    gv.srvals = [0]*(gv.sd['nst'])
+    from gpio_pins import set_output
+    gv.srvals = [0] * (gv.sd['nst'])
     set_output()
     os.system('reboot')
 
+
 def poweroff():
-    gv.srvals = [0]*(gv.sd['nst'])
+    from gpio_pins import set_output
+    gv.srvals = [0] * (gv.sd['nst'])
     set_output()
     os.system('poweroff')
 
-def uptime(): 
-     """Returns UpTime for Raspi"""
-     try:
-         f = open( "/proc/uptime" )
-         contents = f.read().split()
-         f.close()
-     except:
-        return "Error 1: uptime"
-		# error 1 = "Cannot open uptime file: /proc/uptime"
- 
-     total_seconds = float(contents[0])
-     MINUTE  = 60
-     HOUR    = MINUTE * 60
-     DAY     = HOUR * 24
-     days    = int( total_seconds / DAY )
-     hours   = int( ( total_seconds % DAY ) / HOUR )
-     minutes = int( ( total_seconds % HOUR ) / MINUTE )
-     seconds = int( total_seconds % MINUTE )
-     string = ""
-     if days > 0:
-         string += str(days) + "d" + ":"
-     if len(string) > 0 or hours > 0:
-         string += str(hours) + "h" + ":"
-     if len(string) > 0 or minutes > 0:
-         string += str(minutes) + "m" + ":"
-     string += str(seconds) + "s" 
-     return string;
 
-def getIP(): 
+def restart():
+    from gpio_pins import set_output
+    gv.srvals = [0] * (gv.sd['nst'])
+    set_output()
+    print 'Restarting ' + gv.sd['name']
+    command = "/etc/init.d/ospy.sh restart"
+    output = subprocess.check_output(command.split())
+    print 'Restarted:', output
+
+
+def uptime():
+    """Returns UpTime for RPi"""
+    try:
+        f = open("/proc/uptime")
+        contents = f.read().split()
+        f.close()
+    except:
+        return "Error 1: uptime"
+
+    total_seconds = float(contents[0])
+    string = str(datetime.timedelta(seconds=total_seconds))
+    return string
+
+
+def getIP():
     """Returns the IP adress if available."""
     try:
-        arg='ip route list'
-        p=subprocess.Popen(arg,shell=True,stdout=subprocess.PIPE)
+        arg = 'ip route list'
+        p = subprocess.Popen(arg, shell=True, stdout=subprocess.PIPE)
         data = p.communicate()
         split_data = data[0].split()
-        ipaddr = split_data[split_data.index('src')+1]
+        ipaddr = split_data[split_data.index('src') + 1]
         return ipaddr
     except:
         return "No IP Settings"
 
-def email(to, subject, text, attach, user, name, pwd):
-      """Send email with with attachments"""
-      gmail_user = user                  # User name
-      gmail_name = name                  # OSPi name
-      gmail_pwd  = pwd                   # User password
-      #--------------
-      msg = MIMEMultipart()
-      msg['From'] = gmail_name
-      msg['To'] = to
-      msg['Subject'] = subject
-      msg.attach(MIMEText(text))
-      if attach != "":              # If insert attachments
-         part = MIMEBase('application', 'octet-stream')
-         part.set_payload(open(attach, 'rb').read())
-         Encoders.encode_base64(part)
-         part.add_header('Content-Disposition','attachment; filename="%s"' % os.path.basename(attach))
-         msg.attach(part)
-      mailServer = smtplib.SMTP("smtp.gmail.com", 587)
-      mailServer.ehlo()
-      mailServer.starttls()
-      mailServer.ehlo()
-      mailServer.login(gmail_user, gmail_pwd)
-      mailServer.sendmail(gmail_name, to, msg.as_string())   # name + e-mail address in the From: field
-      mailServer.close() 
-      print "Email was send to adress: ", to, text
+
+def RPI_revision():
+    try:
+        import RPi.GPIO as GPIO
+
+        return GPIO.RPI_REVISION
+    except ImportError:
+        return 0
+
 
 def baseurl():
     """Return URL app is running under."""
@@ -142,6 +117,7 @@ def check_rain():
 
 def clear_mm():
     """Clear manual mode settings."""
+    from gpio_pins import set_output
     if gv.sd['mm']:
         gv.sbits = [0] * (gv.sd['nbrd'] + 1)
         gv.ps = []
@@ -174,7 +150,7 @@ def CPU_temperature(unit=None):
             temp = str(0)
 
         if unit == 'F':
-            return str(9.0/5.0*float(temp)+32)
+            return str(9.0 / 5.0 * float(temp) + 32)
         elif unit is not None:
             return str(float(temp))
         else:
@@ -281,6 +257,7 @@ def schedule_stations(stations):
 
 def stop_onrain():
     """Stop stations that do not ignore rain."""
+    from gpio_pins import set_output
     for b in range(gv.sd['nbrd']):
         for s in range(8):
             sid = b * 8 + s # station index
@@ -297,6 +274,7 @@ def stop_onrain():
 
 def stop_stations():
     """Stop all running stations, clear schedules."""
+    from gpio_pins import set_output
     gv.srvals = [0] * (gv.sd['nst'])
     set_output()
     gv.ps = []
@@ -323,8 +301,8 @@ def jsave(data, fname):
     """Save data to a json file."""
     with open('./data/' + fname + '.json', 'w') as f:
         json.dump(data, f)
-        
-        
+
+
 def station_names():
     """Load station names from file if it exists otherwise create file with defaults."""
     try:
@@ -388,6 +366,7 @@ signin_form = form.Form(
         )
     ]
 )
+
 
 def get_input(qdict, key, default=None, cast=None):
     result = default

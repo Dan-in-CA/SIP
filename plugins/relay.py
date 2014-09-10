@@ -1,7 +1,8 @@
 # !/usr/bin/env python
 
-from gpio_pins import *
-from urls import *
+import gv
+from gpio_pins import GPIO, pin_relay
+from urls import urls
 import web, time
 from webpages import ProtectedPage
 

@@ -18,10 +18,35 @@ September 10 2014
 ----------
 (martinpihrt)<br/>
 Changes:<br/>
-1. Add to helpers.py Function Definitions: reboot, poweroff, uptime, getIP, email.<br/>
-2. Add new plugins and template: system update, email adjust settings, sms adjust settings, lcd adjust settings, pressure adjust settings, PCF8591 A/D converter plugin.<br/> 
-3. Add library pylcd2 to /plugins for lcd adjust setings plugin.
+1. Added new functions in helpers.py: reboot, poweroff, restart, uptime and getIP.<br/>
+2. Added new plugins:<br/>
+   - System update (Rimco: Checked, tested and improved.)<br/>
+   - Email (Rimco: Checked, tested and improved.)<br/>
+   - SMS (Rimco: Globally checked and reformatted, not tested.)<br/>
+   - LCD (Rimco: Globally checked and reformatted, not tested.)<br/>
+   - Pressure Monitor (Rimco: Globally checked and reformatted, not tested.)<br/>
+   - PCF8591 A/D converter read-out (Rimco: Globally checked and reformatted, not tested.)<br/>
+3. Added pylcd2 library in /plugins for LCD plug-in.<br/>
 
+September 9 2014
+----------
+(Rimco, Dan, Samer Albahra and Andrew Radke)<br/>
+Changes:<br/>
+1. Fixed plugin executable bits<br/>
+2. Removed all old txt reading functions<br/>
+3. Improved mobile app interface<br/>
+4. Fixed timeline display errors.<br/>
+5. Improved version numbering (partially automatic)<br/>
+6. Added @media CSS extension<br/>
+
+August 2014
+----------
+(Rimco and Dan)<br/>
+Changes:<br/>
+1. Improved weather level adjustment robustness, error logging and data removal.<br/>
+2. Added on-off buttons to program page<br/>
+3. Moved station names to JSON file<br/>
+4. Moved options section to gv.py<br/>
 
 July 22 2014
 -----------

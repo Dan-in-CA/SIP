@@ -19,7 +19,7 @@ try:
     ver_date = subprocess.check_output(['git', 'log', '-1', '--format=%cd', '--date=short']).strip()
 except Exception:
     print 'Could not use git to determine date of last commit!'
-    ver_date = '2014/09/09'
+    ver_date = '2014-09-10'
 
 #####################
 #### Global vars ####
@@ -59,7 +59,6 @@ sd = {
     u"nopts": 13,
     u"pwd": u"b3BlbmRvb3I=",
     u"password": u"",
-    u"salt": u"",
     u"ipas": 0,
     u"rst": 1,
     u"mm": 0,

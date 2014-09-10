@@ -3,24 +3,33 @@
 
 from threading import Thread
 from random import randint
-
-import web, json, re, time
+import json
+import time
 import os
+import sys
+import traceback
+
+import web
 import gv # Get access to ospy's settings
-
 from urls import urls # Get access to ospy's URLs
-import errno
-
 from ospy import template_render
 from webpages import ProtectedPage
-from helpers import email, timestr 
+from helpers import timestr
+
+from email import Encoders
+import smtplib
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEBase import MIMEBase
+from email.MIMEText import MIMEText
 
 # Add a new url to open the data entry page.
-urls.extend(['/emla', 'plugins.email_adj.settings', '/emlj', 'plugins.email_adj.settings_json', '/uemla', 'plugins.email_adj.update'])
+urls.extend(['/emla', 'plugins.email_adj.settings',
+             '/emlj', 'plugins.email_adj.settings_json',
+             '/uemla', 'plugins.email_adj.update'])
 
 # Add this plugin to the home page plugins menu
-gv.plugin_menu.append(['Email adjust settings', '/emla'])
-    
+gv.plugin_menu.append(['Email settings', '/emla'])
+
 ################################################################################
 # Main function loop:                                                          #
 ################################################################################
@@ -50,112 +59,98 @@ class EmailSender(Thread):
             time.sleep(1)
             self._sleep_time -= 1
 
+    def try_mail(self, subject, text, attachment=None):
+        self.status = ''
+        try:
+            email(subject, text, attachment)  # send email with attachment from
+            self.add_status('Email was sent: ' + text)
+        except Exception as err:
+            self.add_status('Email was not sent! ' + str(err))
+
     def run(self):
         time.sleep(randint(3, 10)) # Sleep some time to prevent printing before startup information
-        print "Email plugin is active"
-        SUBJ = "Reporting from OSPy" # Subject in email
-        log = 1 # send email only 1x
-        rain = 0    
-        norain = 0  
-        last = 0    
+
+        dataeml = get_email_options() # load data from file
+        subject = "Report from OSPy" # Subject in email
+        last_rain = 0
+        was_running = False
+
+        self.status = ''
+        self.add_status('Email plugin is started')
+
+        if dataeml["emllog"] != "off":          # if eml_log send email is enable (on)
+            body = ('On ' + time.strftime("%d.%m.%Y at %H:%M:%S", time.localtime(time.time())) +
+                    ': System was powered on.')
+            self.try_mail(subject, body, "/home/pi/OSPy/data/log.json")
 
         while True:
             try:
-                #self.status = ''
-                dataeml = get_email_options() # load data from file
-                # send if power on
-                if dataeml["emllog"] != "off":          # if eml_log send email is enable (on)
-                    if (log == 1):                       # only if plugin run 1x (power on)        
-                       TEXT = ('On ' + time.strftime("%d.%m.%Y at %H:%M:%S", time.localtime(time.time())) + ' System was powered on.')
-                       email(dataeml['emladr'],SUBJ,TEXT,"/home/pi/OSPy/data/log.json",dataeml['emlusr'],gv.sd['name'],dataeml['emlpwd'])        # send email with attachments from /home/pi/OSPi/data/log.json
-                       if email:
-                          log = 0
-                          self.status = ''
-                          self.add_status('Email was send: ' + TEXT)
-                          self._sleep(1)                                    
-                       else:
-                          self.status = ''
-                          self.add_status('Email was not send: connection error.')
-                          self._sleep(1) 
-                
                 # send if rain detected
-                if gv.sd['rs'] == 0:		      # if rain sensed is inactive emlrain is enabled
-                    norain = 1
-                if gv.sd['rs'] == 1:
-                    rain = 1
-                if dataeml["emlrain"] != "off":            # if eml_rain send email is enable (on)
-                    if (rain == 1) and (norain == 1):      # send email only 1x if  gv.sd rs change
-                        if gv.sd['rs'] and gv.sd['urs']:   # if rain sensed and use rain sensor
-                              TEXT = ('On ' + time.strftime("%d.%m.%Y at %H:%M:%S", time.localtime(time.time())) + ' System detected rain.')
-                              email(dataeml['emladr'],SUBJ,TEXT,"",dataeml['emlusr'],gv.sd['name'],dataeml['emlpwd'])     # send email without attachments
-                              if email:
-                                  norain = 0
-                                  rain = 0
-                                  self.add_status('Email was send: ' + TEXT)
-                                  self._sleep(1)
-                              else:
-                                  self.status = ''
-                                  self.add_status('Email was not send: connection error.')
-                                  self._sleep(1)
+                if dataeml["emlrain"] != "off":             # if eml_rain send email is enable (on)
+                    if gv.sd['rs'] != last_rain:            # send email only 1x if  gv.sd rs change
+                        last_rain = gv.sd['rs']
 
-                if dataeml["emlrun"] != "off":            # if eml_rain send email is enable (on)   
-                   state = ''            
-                   for b in range(gv.sd['nbrd']): # Check each station once a second
-                      for s in range(8):
-                         sid = b*8 + s # station index
-                         if gv.srvals[sid]: # if this station is on
-                            last = 1  
-                            state = 'on' 
-                  
-                   if last == 1 and  state != 'on':   
-                      last = 2         
-                      pgr = ''
-                      if gv.lrun[1] == 98:
-                         pgr = 'Run-once'
-                      elif gv.lrun[1] == 99:
-                         pgr = 'Manual'
-                      else:
-                         pgr = str(gv.lrun[1])
+                        if gv.sd['rs'] and gv.sd['urs']:    # if rain sensed and use rain sensor
+                            body = ('On ' + time.strftime("%d.%m.%Y at %H:%M:%S",time.localtime(time.time())) +
+                                    ': System detected rain.')
+                            self.try_mail(subject, body)    # send email without attachments
 
-                      dur = str(timestr(gv.lrun[2]))
-                      start = time.gmtime(gv.now - gv.lrun[2])
+                if dataeml["emlrun"] != "off":              # if eml_rain send email is enable (on)
+                    running = False
+                    for b in range(gv.sd['nbrd']):          # Check each station once a second
+                        for s in range(8):
+                            sid = b * 8 + s  # station index
+                            if gv.srvals[sid]:  # if this station is on
+                                running = True
+                                was_running = True
 
-                      TEXT = 'On '+time.strftime("%d.%m.%Y at %H:%M:%S", time.localtime(time.time()))+' System last run: '+'Station '+str(gv.lrun[0])+', Program '+pgr+', Duration '+dur+', Start time '+ time.strftime("%d.%m.%Y at %H:%M:%S", start)
-                      email(dataeml['emladr'],SUBJ,TEXT,"",dataeml['emlusr'],gv.sd['name'],dataeml['emlpwd'])     # send email without attachments
-                      if email:
-                         last = 0 # send is ok
-                         self.add_status('Email was send: ' + TEXT)
-                         self._sleep(1)
-                      else:
-                         self.status = ''
-                         self.add_status('Email was not send: connection error.')
-                         self._sleep(1)
-                         last = 1 # send repeat
-    
+                    if was_running and not running:
+                        was_running = False
+                        if gv.lrun[1] == 98:
+                            pgr = 'Run-once'
+                        elif gv.lrun[1] == 99:
+                            pgr = 'Manual'
+                        else:
+                            pgr = str(gv.lrun[1])
+
+                        dur = str(timestr(gv.lrun[2]))
+                        start = time.gmtime(gv.now - gv.lrun[2])
+
+                        body = 'On ' + time.strftime("%d.%m.%Y at %H:%M:%S", time.localtime(time.time())) + \
+                               ': System last run: ' + 'Station ' + str(gv.lrun[0]) + \
+                               ', Program ' + pgr + \
+                               ', Duration ' + dur + \
+                               ', Start time ' + time.strftime("%d.%m.%Y at %H:%M:%S", start)
+
+                        self.try_mail(subject, body)     # send email without attachment
+
                 self._sleep(1)
 
-            except Exception as err:
-                self.add_status('Email plugin encountered error: ' + str(err))
+            except Exception:
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                err_string = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+                self.add_status('Email plugin encountered error: ' + err_string)
                 self._sleep(60)
 
+
 checker = EmailSender()
-        	
+
 ################################################################################
 # Helper functions:                                                            #
 ################################################################################
 
-	   
+
 def get_email_options():
     """Returns the defaults data form file."""
     dataeml = {
-        	'emlusr': 'username',
-        	'emlpwd': '',
-        	'emladr': 'adr@dom.com',
-        	'emllog': 'off',
-        	'emlrain': 'off',
-        	'emlrun': 'off',
-        	'status': checker.status
-        	}
+        'emlusr': '',
+        'emlpwd': '',
+        'emladr': '',
+        'emllog': 'off',
+        'emlrain': 'off',
+        'emlrun': 'off',
+        'status': checker.status
+    }
     try:
         with open('./data/email_adj.json', 'r') as f: # Read the settings from file
             file_data = json.load(f)
@@ -164,8 +159,38 @@ def get_email_options():
                 dataeml[key] = value
     except Exception:
         pass
-   
+
     return dataeml
+
+
+def email(subject, text, attach=None):
+    """Send email with with attachments"""
+    dataeml = get_email_options()
+    if dataeml['emlusr'] != '' and dataeml['emlpwd'] != '' and dataeml['emladr'] != '':
+        gmail_user = dataeml['emlusr']          # User name
+        gmail_name = gv.sd['name']              # OSPi name
+        gmail_pwd = dataeml['emlpwd']           # User password
+        #--------------
+        msg = MIMEMultipart()
+        msg['From'] = gmail_name
+        msg['To'] = dataeml['emladr']
+        msg['Subject'] = subject
+        msg.attach(MIMEText(text))
+        if attach is not None:              # If insert attachments
+            part = MIMEBase('application', 'octet-stream')
+            part.set_payload(open(attach, 'rb').read())
+            Encoders.encode_base64(part)
+            part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(attach))
+            msg.attach(part)
+        mailServer = smtplib.SMTP("smtp.gmail.com", 587)
+        mailServer.ehlo()
+        mailServer.starttls()
+        mailServer.ehlo()
+        mailServer.login(gmail_user, gmail_pwd)
+        mailServer.sendmail(gmail_name, dataeml['emladr'], msg.as_string())   # name + e-mail address in the From: field
+        mailServer.close()
+    else:
+        raise Exception('E-mail plug-in is not properly configured!')
 
 ################################################################################
 # Web pages:                                                                   #
@@ -173,18 +198,23 @@ def get_email_options():
 
 class settings(ProtectedPage):
     """Load an html page for entering email adjustments."""
+
     def GET(self):
         return template_render.email_adj(get_email_options())
 
+
 class settings_json(ProtectedPage):
     """Returns plugin settings in JSON format."""
+
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         return json.dumps(get_email_options())
 
+
 class update(ProtectedPage):
     """Save user input to email_adj.json file."""
+
     def GET(self):
         qdict = web.input()
         if not qdict.has_key('emllog'):
@@ -192,8 +222,7 @@ class update(ProtectedPage):
         if not qdict.has_key('emlrain'):
             qdict['emlrain'] = 'off'
         if not qdict.has_key('emlrun'):
-            qdict['emlrun'] = 'off'     
+            qdict['emlrun'] = 'off'
         with open('./data/email_adj.json', 'w') as f: # write the settings to file
             json.dump(qdict, f)
-        checker.update()
         raise web.seeother('/')
