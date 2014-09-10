@@ -141,7 +141,7 @@ class update(ProtectedPage):
         print "Update plugin reports: ",output
         dataup['status'] = output
         return template_render.system_update(dataup)
-        raise web.seeother('/')
+        raise web.seeother('/UPl')
 
 class reboot(ProtectedPage):
     """Reboot system."""
