@@ -21,10 +21,17 @@ $code:
      def volttemp(involt,unit):
         if unit == "on":
            value = involt*3.3/255
+           if m_vals['use_pcf'] == "on":
+              return str(value) + (" [V]" if unit == 'on' else " [C]")
+           else:
+              return str("***")
+
         else:
            value = (involt*3.3/255)*100
-        return str(value) + (" [V]" if unit == 'on' else " [C]")
-   
+           if m_vals['use_pcf'] == "on":
+              return str(value) + (" [V]" if unit == 'on' else " [C]")
+           else:
+              return str("***")
 
 <div id="plugin">
     <div class="title">PCF8591 voltage and temperature adjustments</div>
