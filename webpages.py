@@ -13,15 +13,18 @@ from ospy import template_render
 
 __author__ = 'Rimco'
 
+
 class WebPage(object):
     def __init__(self):
         gv.baseurl = baseurl()
         gv.cputemp = CPU_temperature()
 
+
 class ProtectedPage(WebPage):
     def __init__(self):
-        checkLogin()
+        check_login()
         WebPage.__init__(self)
+
 
 class login(WebPage):
     """Login page"""
@@ -44,6 +47,7 @@ class logout(WebPage):
         web.config._session.user = 'anonymous'
         raise web.seeother('/')
 
+
 ###########################
 #### Class Definitions ####
 class home(ProtectedPage):
@@ -58,21 +62,21 @@ class change_values(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        if qdict.has_key('rsn') and qdict['rsn'] == '1':
+        if 'rsn' in qdict and qdict['rsn'] == '1':
             stop_stations()
             raise web.seeother('/')
-        if qdict.has_key('en') and qdict['en'] == '':
-            qdict['en'] = '1' # default
-        elif qdict.has_key('en') and qdict['en'] == '0':
-            gv.srvals = [0] * (gv.sd['nst']) # turn off all stations
+        if 'en' in qdict and qdict['en'] == '':
+            qdict['en'] = '1'  # default
+        elif 'en' in qdict and qdict['en'] == '0':
+            gv.srvals = [0] * (gv.sd['nst'])  # turn off all stations
             set_output()
-        if qdict.has_key('mm') and qdict['mm'] == '0':
+        if 'mm' in qdict and qdict['mm'] == '0':
             clear_mm()
-        if qdict.has_key('rd') and qdict['rd'] != '0' and qdict['rd'] != '':
+        if 'rd' in qdict and qdict['rd'] != '0' and qdict['rd'] != '':
             gv.sd['rd'] = float(qdict['rd'])
-            gv.sd['rdst'] = gv.now + gv.sd['rd'] * 3600 + 1 # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
+            gv.sd['rdst'] = gv.now + gv.sd['rd'] * 3600 + 1  # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
             stop_onrain()
-        elif qdict.has_key('rd') and qdict['rd'] == '0':
+        elif 'rd' in qdict and qdict['rd'] == '0':
             gv.sd['rdst'] = 0
         for key in qdict.keys():
             try:
@@ -80,7 +84,7 @@ class change_values(ProtectedPage):
             except Exception:
                 pass
         jsave(gv.sd, 'sd')
-        raise web.seeother('/')# Send browser back to home page
+        raise web.seeother('/')  # Send browser back to home page
 
 
 class view_options(ProtectedPage):
@@ -100,14 +104,14 @@ class change_options(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        if qdict.has_key('opw') and qdict['opw'] != "":
+        if 'opw' in qdict and qdict['opw'] != "":
             try:
-                if passwordHash(qdict['opw'], gv.sd['salt']) == gv.sd['password']:
+                if password_hash(qdict['opw'], gv.sd['salt']) == gv.sd['password']:
                     if qdict['npw'] == "":
                         raise web.seeother('/vo?errorCode=pw_blank')
                     elif qdict['cpw'] != '' and qdict['cpw'] == qdict['npw']:
-                        gv.sd['salt'] = passwordSalt()  # Make a new salt
-                        gv.sd['password'] = passwordHash(qdict['npw'], gv.sd['salt'])
+                        gv.sd['salt'] = password_salt()  # Make a new salt
+                        gv.sd['password'] = password_hash(qdict['npw'], gv.sd['salt'])
                     else:
                         raise web.seeother('/vo?errorCode=pw_mismatch')
                 else:
@@ -116,70 +120,71 @@ class change_options(ProtectedPage):
                 pass
 
         try:
-            if qdict.has_key('oipas') and (qdict['oipas'] == 'on' or qdict['oipas'] == '1'):
+            if 'oipas' in qdict and (qdict['oipas'] == 'on' or qdict['oipas'] == '1'):
                 gv.sd['ipas'] = 1
             else:
                 gv.sd['ipas'] = 0
         except KeyError:
             pass
 
-        if qdict.has_key('oname'):
+        if 'oname' in qdict:
             gv.sd['name'] = qdict['oname']
-        if qdict.has_key('oloc'):
+        if 'oloc' in qdict:
             gv.sd['loc'] = qdict['oloc']
-        if qdict.has_key('otz'):
+        if 'otz' in qdict:
             gv.sd['tz'] = int(qdict['otz'])
         try:
-            if qdict.has_key('otf') and (qdict['otf'] == 'on' or qdict['otf'] == '1'):
+            if 'otf' in qdict and (qdict['otf'] == 'on' or qdict['otf'] == '1'):
                 gv.sd['tf'] = 1
             else:
                 gv.sd['tf'] = 0
         except KeyError:
             pass
 
-        if int(qdict['onbrd']) + 1 != gv.sd['nbrd']: self.update_scount(qdict)
+        if int(qdict['onbrd']) + 1 != gv.sd['nbrd']:
+            self.update_scount(qdict)
         gv.sd['nbrd'] = int(qdict['onbrd']) + 1
 
         gv.sd['nst'] = gv.sd['nbrd'] * 8
-        if qdict.has_key('ohtp'):
+        if 'ohtp' in qdict:
             gv.sd['htp'] = int(qdict['ohtp'])
-        if qdict.has_key('osdt'):
+        if 'osdt' in qdict:
             gv.sd['sdt'] = int(qdict['osdt'])
 
-        if qdict.has_key('omas'):
+        if 'omas' in qdict:
             gv.sd['mas'] = int(qdict['omas'])
-        if qdict.has_key('omton'):
+        if 'omton' in qdict:
             gv.sd['mton'] = int(qdict['omton'])
-        if qdict.has_key('omtoff'):
+        if 'omtoff' in qdict:
             gv.sd['mtoff'] = int(qdict['omtoff'])
-        if qdict.has_key('owl'):
+        if 'owl' in qdict:
             gv.sd['wl'] = int(qdict['owl'])
 
-        if qdict.has_key('ours') and (qdict['ours'] == 'on' or qdict['ours'] == '1'):
+        if 'ours' in qdict and (qdict['ours'] == 'on' or qdict['ours'] == '1'):
             gv.sd['urs'] = 1
         else:
             gv.sd['urs'] = 0
 
-        if qdict.has_key('oseq') and (qdict['oseq'] == 'on' or qdict['oseq'] == '1'):
+        if 'oseq' in qdict and (qdict['oseq'] == 'on' or qdict['oseq'] == '1'):
             gv.sd['seq'] = 1
         else:
             gv.sd['seq'] = 0
 
-        if qdict.has_key('orst') and (qdict['orst'] == 'on' or qdict['orst'] == '1'):
+        if 'orst' in qdict and (qdict['orst'] == 'on' or qdict['orst'] == '1'):
             gv.sd['rst'] = 1
         else:
             gv.sd['rst'] = 0
 
-        if qdict.has_key('olg') and (qdict['olg'] == 'on' or qdict['olg'] == '1'):
+        if 'olg' in qdict and (qdict['olg'] == 'on' or qdict['olg'] == '1'):
             gv.sd['lg'] = 1
         else:
             gv.sd['lg'] = 0
 
-        if qdict.has_key('olr'):
+        if 'olr' in qdict:
             gv.sd['lr'] = int(qdict['olr'])
 
         jsave(gv.sd, 'sd')
-        if qdict.has_key('rbt') and qdict['rbt'] == '1':
+        if 'rbt' in qdict and qdict['rbt'] == '1':
             gv.srvals = [0] * (gv.sd['nst'])
             set_output()
             os.system('reboot')
@@ -187,7 +192,7 @@ class change_options(ProtectedPage):
 
     def update_scount(self, qdict):
         """Increase or decrease the number of stations displayed when number of expansion boards is changed in options."""
-        if int(qdict['onbrd']) + 1 > gv.sd['nbrd']: # Lengthen lists
+        if int(qdict['onbrd']) + 1 > gv.sd['nbrd']:  # Lengthen lists
             incr = int(qdict['onbrd']) - (gv.sd['nbrd'] - 1)
             for i in range(incr):
                 gv.sd['mo'].append(0)
@@ -196,7 +201,7 @@ class change_options(ProtectedPage):
             nlst = gv.snames
             ln = len(nlst)
             for i in range(incr*8):
-                nlst.append("S"+('%d'%(i+1+ln)))
+                nlst.append("S"+('%d' % (i+1+ln)))
             jsave(nlst, 'snames')
             for i in range(incr * 8):
                 gv.srvals.append(0)
@@ -204,20 +209,22 @@ class change_options(ProtectedPage):
                 gv.rs.append([0, 0, 0, 0])
             for i in range(incr):
                 gv.sbits.append(0)
-        elif int(qdict['onbrd']) + 1 < gv.sd['nbrd']: # Shorten lists
+        elif int(qdict['onbrd']) + 1 < gv.sd['nbrd']:  # Shorten lists
             onbrd = int(qdict['onbrd'])
             decr = gv.sd['nbrd'] - (onbrd + 1)
             gv.sd['mo'] = gv.sd['mo'][:(onbrd + 1)]
             gv.sd['ir'] = gv.sd['ir'][:(onbrd + 1)]
             gv.sd['show'] = gv.sd['show'][:(onbrd + 1)]
-            nlst = gv.snames
-            nlst = nlst[:8+(onbrd*8)]
+            # unused variables
+            # nlst = gv.snames
+            # nlst = nlst[:8+(onbrd*8)]
             newlen = gv.sd['nst'] - decr * 8
             gv.srvals = gv.srvals[:newlen]
             gv.ps = gv.ps[:newlen]
             gv.rs = gv.rs[:newlen]
             gv.sbits = gv.sbits[:onbrd + 1]
         return
+
 
 class view_stations(ProtectedPage):
     """Open a page to view and edit a run once program."""
@@ -231,28 +238,28 @@ class change_stations(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        for i in range(gv.sd['nbrd']): # capture master associations
-            if qdict.has_key('m' + str(i)):
+        for i in range(gv.sd['nbrd']):  # capture master associations
+            if 'm' + str(i) in qdict:
                 try:
                     gv.sd['mo'][i] = int(qdict['m' + str(i)])
                 except ValueError:
                     gv.sd['mo'][i] = 0
-            if qdict.has_key('i' + str(i)):
+            if 'i' + str(i) in qdict:
                 try:
                     gv.sd['ir'][i] = int(qdict['i' + str(i)])
                 except ValueError:
                     gv.sd['ir'][i] = 0
-            if qdict.has_key('sh' + str(i)):
+            if 'sh' + str(i) in qdict:
                 try:
                     gv.sd['show'][i] = int(qdict['sh' + str(i)])
                 except ValueError:
                     gv.sd['show'][i] = 255
         names = []
         for i in range(gv.sd['nst']):
-            if qdict.has_key('s' + str(i)):
-                 names.append(qdict['s'+str(i)])
+            if 's' + str(i) in qdict:
+                names.append(qdict['s'+str(i)])
             else:
-                 names.append('S'+str(i+1))
+                names.append('S'+str(i+1))
         gv.snames = names
         jsave(names, 'snames')
         jsave(gv.sd, 'sd')
@@ -281,18 +288,18 @@ class get_set_station(ProtectedPage):
             else:
                 return 'Station ' + str(sid+1) + ' not found.'
         elif gv.sd['mm']:
-            if set_to: # if status is
-                gv.rs[sid][0] = gv.now # set start time to current time
-                if set_time > 0: # if an optional duration time is given
+            if set_to:  # if status is
+                gv.rs[sid][0] = gv.now  # set start time to current time
+                if set_time > 0:  # if an optional duration time is given
                     gv.rs[sid][2] = set_time
-                    gv.rs[sid][1] = gv.rs[sid][0] + set_time # stop time = start time + duration
+                    gv.rs[sid][1] = gv.rs[sid][0] + set_time  # stop time = start time + duration
                 else:
-                    gv.rs[sid][1] = float('inf') # stop time = infinity
-                gv.rs[sid][3] = 99 # set program index
+                    gv.rs[sid][1] = float('inf')  # stop time = infinity
+                gv.rs[sid][3] = 99  # set program index
                 gv.ps[sid][1] = set_time
                 gv.sd['bsy'] = 1
                 time.sleep(1)
-            else: # If status is off
+            else:  # If status is off
                 gv.rs[sid][1] = gv.now
                 time.sleep(1)
             raise web.seeother('/')
@@ -312,17 +319,18 @@ class change_runonce(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        if not gv.sd['en']: return # check operation status
+        if not gv.sd['en']:   # check operation status
+            return
         gv.rovals = json.loads(qdict['t'])
         gv.rovals.pop()
         stations = [0] * gv.sd['nbrd']
-        gv.ps = [] # program schedule (for display)
-        gv.rs = [] # run schedule
+        gv.ps = []  # program schedule (for display)
+        gv.rs = []  # run schedule
         for i in range(gv.sd['nst']):
             gv.ps.append([0, 0])
             gv.rs.append([0, 0, 0, 0])
         for i, v in enumerate(gv.rovals):
-            if v: # if this element has a value
+            if v:  # if this element has a value
                 gv.rs[i][0] = gv.now
                 gv.rs[i][2] = v
                 gv.rs[i][3] = 98
@@ -348,12 +356,12 @@ class modify_program(ProtectedPage):
         pid = int(qdict['pid'])
         prog = []
         if pid != -1:
-            mp = gv.pd[pid][:] # Modified program
-            if mp[1] >= 128 and mp[2] > 1: # If this is an interval program
+            mp = gv.pd[pid][:]  # Modified program
+            if mp[1] >= 128 and mp[2] > 1:  # If this is an interval program
                 dse = int(gv.now / 86400)
-                rel_rem = (((mp[1] - 128) + mp[2]) - (dse % mp[2])) % mp[
-                    2] # Convert absolute to relative days remaining for display
-                mp[1] = rel_rem + 128 # Update from saved value.
+                # Convert absolute to relative days remaining for display
+                rel_rem = (((mp[1] - 128) + mp[2]) - (dse % mp[2])) % mp[2]
+                mp[1] = rel_rem + 128  # Update from saved value.
             prog = str(mp).replace(' ', '')
         return template_render.modify(pid, prog)
 
@@ -363,9 +371,9 @@ class change_program(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        pnum = int(qdict['pid']) + 1 # program number
+        pnum = int(qdict['pid']) + 1  # program number
         cp = json.loads(qdict['v'])
-        if cp[0] == 0 and pnum == gv.pon: # if disabled and program is running
+        if cp[0] == 0 and pnum == gv.pon:  # if disabled and program is running
             for i in range(len(gv.ps)):
                 if gv.ps[i][0] == pnum:
                     gv.ps[i] = [0, 0]
@@ -378,10 +386,10 @@ class change_program(ProtectedPage):
             dse = int(gv.now / 86400)
             ref = dse + cp[1] - 128
             cp[1] = (ref % cp[2]) + 128
-        if qdict['pid'] == '-1': # add new program
+        if qdict['pid'] == '-1':  # add new program
             gv.pd.append(cp)
         else:
-            gv.pd[int(qdict['pid'])] = cp # replace program
+            gv.pd[int(qdict['pid'])] = cp  # replace program
         jsave(gv.pd, 'programs')
         gv.sd['nprogs'] = len(gv.pd)
         raise web.seeother('/vp')
@@ -436,20 +444,21 @@ class run_now(ProtectedPage):
     def GET(self):
         qdict = web.input()
         pid = int(qdict['pid'])
-        p = gv.pd[int(qdict['pid'])] # program data
-        if not p[0]: # if program is disabled
+        p = gv.pd[int(qdict['pid'])]  # program data
+        if not p[0]:  # if program is disabled
             raise web.seeother('/vp')
         stop_stations()
         extra_adjustment = plugin_adjustment()
-        for b in range(len(p[7:7 + gv.sd['nbrd']])): # check each station
+        for b in range(len(p[7:7 + gv.sd['nbrd']])):  # check each station
             for s in range(8):
-                sid = b * 8 + s # station index
-                if sid + 1 == gv.sd['mas']: continue # skip if this is master valve
-                if p[7 + b] & 1 << s: # if this station is scheduled in this program
-                    gv.rs[sid][2] = p[6] * gv.sd['wl'] / 100 * extra_adjustment # duration scaled by water level
-                    gv.rs[sid][3] = pid + 1 # store program number in schedule
-                    gv.ps[sid][0] = pid + 1 # store program number for display
-                    gv.ps[sid][1] = gv.rs[sid][2] # duration
+                sid = b * 8 + s  # station index
+                if sid + 1 == gv.sd['mas']:  # skip if this is master valve
+                    continue
+                if p[7 + b] & 1 << s:  # if this station is scheduled in this program
+                    gv.rs[sid][2] = p[6] * gv.sd['wl'] / 100 * extra_adjustment  # duration scaled by water level
+                    gv.rs[sid][3] = pid + 1  # store program number in schedule
+                    gv.ps[sid][0] = pid + 1  # store program number for display
+                    gv.ps[sid][1] = gv.rs[sid][2]  # duration
         schedule_stations(p[7:7 + gv.sd['nbrd']])
         raise web.seeother('/')
 
@@ -555,7 +564,7 @@ class api_log(ProtectedPage):
             event = json.loads(r)
 
             # return any records starting on this date
-            if not (qdict.has_key('date')) or event['date'] == thedate:
+            if 'date' not in qdict or event['date'] == thedate:
                 data.append(event)
                 # also return any records starting the day before and completing after midnight
             if event['date'] == prevdate:

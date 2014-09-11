@@ -1,14 +1,14 @@
 import gv
 
 try:
-    import RPi.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Raspberry Pi
+    import RPi.GPIO as GPIO  # Required for accessing General Purpose Input Output pins on Raspberry Pi
     gv.platform = 'pi'
 except ImportError:
     try:
-        import Adafruit_BBIO.GPIO as GPIO # Required for accessing General Purpose Input Output pins on Beagle Bone Black
+        import Adafruit_BBIO.GPIO as GPIO  # Required for accessing General Purpose Input Output pins on Beagle Bone Black
         gv.platform = 'bo'
     except ImportError:
-        gv.platform = '' # if no platform, allows program to still run.
+        gv.platform = ''  # if no platform, allows program to still run.
         print 'No GPIO module was loaded from GPIO Pins module'
         GPIO = None
 
@@ -20,15 +20,15 @@ except Exception:
 
   #### pin defines ####
 try:
-    if gv.platform == 'pi': # If this will run on Raspberry Pi:
-        GPIO.setmode(GPIO.BOARD) # IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
+    if gv.platform == 'pi':  # If this will run on Raspberry Pi:
+        GPIO.setmode(GPIO.BOARD)  # IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
         pin_sr_dat = 13
         pin_sr_clk = 7
         pin_sr_noe = 11
         pin_sr_lat = 15
         pin_rain_sense = 8
         pin_relay = 10
-    elif gv.platform == 'bo': # If this will run on Beagle Bone Black:
+    elif gv.platform == 'bo':  # If this will run on Beagle Bone Black:
         pin_sr_dat = "P9_11"
         pin_sr_clk = "P9_13"
         pin_sr_noe = "P9_14"
@@ -53,6 +53,7 @@ try:
 except NameError:
     pass
 
+
 def disableShiftRegisterOutput():
     """Disable output from shift register."""
     try:
@@ -60,12 +61,14 @@ def disableShiftRegisterOutput():
     except NameError:
         pass
 
+
 def enableShiftRegisterOutput():
     """Enable output from shift register."""
     try:
         GPIO.output(pin_sr_noe, GPIO.LOW)
     except NameError:
         pass
+
 
 def setShiftRegister(srvals):
     """Set the state of each output pin on the shift register from the srvals list."""
@@ -83,8 +86,9 @@ def setShiftRegister(srvals):
     except NameError:
         pass
 
+
 def set_output():
     """Activate triacs according to shift register state."""
     disableShiftRegisterOutput()
-    setShiftRegister(gv.srvals) # gv.srvals stores shift register state
+    setShiftRegister(gv.srvals)  # gv.srvals stores shift register state
     enableShiftRegisterOutput()

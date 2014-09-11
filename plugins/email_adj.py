@@ -10,8 +10,8 @@ import sys
 import traceback
 
 import web
-import gv # Get access to ospy's settings
-from urls import urls # Get access to ospy's URLs
+import gv  # Get access to ospy's settings
+from urls import urls  # Get access to ospy's URLs
 from ospy import template_render
 from webpages import ProtectedPage
 from helpers import timestr
@@ -33,6 +33,7 @@ gv.plugin_menu.append(['Email settings', '/emla'])
 ################################################################################
 # Main function loop:                                                          #
 ################################################################################
+
 
 class EmailSender(Thread):
     def __init__(self):
@@ -68,10 +69,10 @@ class EmailSender(Thread):
             self.add_status('Email was not sent! ' + str(err))
 
     def run(self):
-        time.sleep(randint(3, 10)) # Sleep some time to prevent printing before startup information
+        time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
-        dataeml = get_email_options() # load data from file
-        subject = "Report from OSPy" # Subject in email
+        dataeml = get_email_options()  # load data from file
+        subject = "Report from OSPy"  # Subject in email
         last_rain = 0
         was_running = False
 
@@ -91,7 +92,7 @@ class EmailSender(Thread):
                         last_rain = gv.sd['rs']
 
                         if gv.sd['rs'] and gv.sd['urs']:    # if rain sensed and use rain sensor
-                            body = ('On ' + time.strftime("%d.%m.%Y at %H:%M:%S",time.localtime(time.time())) +
+                            body = ('On ' + time.strftime("%d.%m.%Y at %H:%M:%S", time.localtime(time.time())) +
                                     ': System detected rain.')
                             self.try_mail(subject, body)    # send email without attachments
 
@@ -152,7 +153,7 @@ def get_email_options():
         'status': checker.status
     }
     try:
-        with open('./data/email_adj.json', 'r') as f: # Read the settings from file
+        with open('./data/email_adj.json', 'r') as f:  # Read the settings from file
             file_data = json.load(f)
         for key, value in file_data.iteritems():
             if key in dataeml:
@@ -196,6 +197,7 @@ def email(subject, text, attach=None):
 # Web pages:                                                                   #
 ################################################################################
 
+
 class settings(ProtectedPage):
     """Load an html page for entering email adjustments."""
 
@@ -217,12 +219,12 @@ class update(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        if not qdict.has_key('emllog'):
+        if 'emllog' not in qdict:
             qdict['emllog'] = 'off'
-        if not qdict.has_key('emlrain'):
+        if 'emlrain' not in qdict:
             qdict['emlrain'] = 'off'
-        if not qdict.has_key('emlrun'):
+        if 'emlrun' not in qdict:
             qdict['emlrun'] = 'off'
-        with open('./data/email_adj.json', 'w') as f: # write the settings to file
+        with open('./data/email_adj.json', 'w') as f:  # write the settings to file
             json.dump(qdict, f)
         raise web.seeother('/')

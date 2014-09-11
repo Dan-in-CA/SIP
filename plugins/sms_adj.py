@@ -9,9 +9,9 @@ import sys
 import traceback
 
 import web
-import gv # Get access to ospy's settings
+import gv  # Get access to ospy's settings
 from helpers import getIP, uptime, reboot, poweroff, timestr, jsave, restart
-from urls import urls # Get access to ospy's URLs
+from urls import urls  # Get access to ospy's URLs
 from ospy import template_render
 from webpages import ProtectedPage
 
@@ -32,6 +32,7 @@ import gammu  # for SMS modem import gammu
 ################################################################################
 # Main function loop:                                                          #
 ################################################################################
+
 
 class SMS(Thread):
     def __init__(self):
@@ -59,15 +60,15 @@ class SMS(Thread):
             self._sleep_time -= 1
 
     def run(self):
-        time.sleep(randint(3, 10)) # Sleep some time to prevent printing before startup information
+        time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
         print "SMS plugin is active"
 
         while True:
             try:
                 #self.status = ''
                 data = get_sms_options()
-                if data["use_sms"] != "off": # if use_sms is enable (on)
-                    sms_check(self) # Check SMS command from modem
+                if data["use_sms"] != "off":  # if use_sms is enable (on)
+                    sms_check(self)  # Check SMS command from modem
                 self._sleep(20)
 
             except Exception:
@@ -100,7 +101,7 @@ def get_sms_options():
     }
 
     try:
-        with open('./data/sms_adj.json', 'r') as f: # Read the settings from file
+        with open('./data/sms_adj.json', 'r') as f:  # Read the settings from file
             file_data = json.load(f)
         for key, value in file_data.iteritems():
             if key in data:
@@ -113,7 +114,7 @@ def get_sms_options():
 
 def sms_check(self):
     """Control and processing SMS"""
-    data = get_sms_options() # Load data from json file
+    data = get_sms_options()  # Load data from json file
     tel1 = data['tel1']
     tel2 = data['tel2']
     comm1 = data['txt1']
@@ -151,7 +152,7 @@ def sms_check(self):
         print '%-15s: %s' % ('Date', str(m['DateTime']))
         print '%-15s: %s' % ('State', m['State'])
         print '%-15s: %s' % ('SMS command', m['Text'])
-        if (m['Number'] == tel1) or (m['Number'] == tel2): # If telephone is admin 1 or admin 2
+        if (m['Number'] == tel1) or (m['Number'] == tel2):  # If telephone is admin 1 or admin 2
             self.add_status(time.strftime("%d.%m.%Y at %H:%M:%S", time.localtime(time.time())) + ' SMS from admin')
             if m['State'] == "UnRead":          # If SMS is unread
                 if m['Text'] == comm1:           # If command = comm1 (info - send SMS to admin phone1 and phone2)
@@ -181,7 +182,7 @@ def sms_check(self):
                         'Command: ' + comm1 + ' was processed and confirmation was sent as SMS to: ' + m['Number'])
                     self.add_status('SMS text: ' + datastr)
 
-                    sm.DeleteSMS(m['Folder'], m['Location']) # SMS deleted
+                    sm.DeleteSMS(m['Folder'], m['Location'])  # SMS deleted
                     self.add_status('Received SMS was deleted')
 
                 elif m['Text'] == comm2:        # If command = comm2 (stop - system OSPi off)
@@ -267,7 +268,6 @@ def sms_check(self):
                         self._sleep(10)
                         restart()
 
-
                 else:                            # If SMS command is not defined
                     sm.DeleteSMS(m['Folder'], m['Location'])
                     self.add_status('Received command ' + m['Text'] + ' is not defined!')
@@ -305,9 +305,9 @@ class update(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        if not qdict.has_key('use_sms'):
+        if 'use_sms' not in qdict:
             qdict['use_sms'] = 'off'
-        with open('./data/sms_adj.json', 'w') as f: # write the settings to file
+        with open('./data/sms_adj.json', 'w') as f:  # write the settings to file
             json.dump(qdict, f)
         checker.update()
         raise web.seeother('/')

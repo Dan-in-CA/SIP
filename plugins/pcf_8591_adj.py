@@ -9,15 +9,15 @@ import sys
 import traceback
 
 import web
-import gv # Get access to ospi's settings
-from urls import urls # Get access to ospi's URLs
+import gv  # Get access to ospi's settings
+from urls import urls  # Get access to ospi's URLs
 from ospy import template_render
 from webpages import ProtectedPage
 from helpers import RPI_revision
 
 # I2C bus Rev Raspi RPI=1 rev1 RPI=0 rev0 
 try:
-    import smbus # for PCF 8591
+    import smbus  # for PCF 8591
     ADC = smbus.SMBus(1 if RPI_revision() >= 2 else 0)
 except ImportError:
     ADC = None
@@ -27,8 +27,7 @@ urls.extend(['/pcf', 'plugins.pcf_8591_adj.settings',
              '/pcfj', 'plugins.pcf_8591_adj.settings_json',
              '/pcfa', 'plugins.pcf_8591_adj.update',
              '/pcfl', 'plugins.pcf_8591_adj.pcf_log',
-             '/pcfr', 'plugins.pcf_8591_adj.delete_log'
-])
+             '/pcfr', 'plugins.pcf_8591_adj.delete_log'])
 
 # Add this plugin to the home page plugins menu
 gv.plugin_menu.append(['PCF8591 voltage and temperature settings ', '/pcf'])
@@ -36,6 +35,7 @@ gv.plugin_menu.append(['PCF8591 voltage and temperature settings ', '/pcf'])
 ################################################################################
 # Main function loop:                                                          #
 ################################################################################
+
 
 class PCFSender(Thread):
     def __init__(self):
@@ -63,7 +63,7 @@ class PCFSender(Thread):
             self._sleep_time -= 1
 
     def run(self):
-        time.sleep(randint(3, 10)) # Sleep some time to prevent printing before startup information
+        time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
         print "PCF8591 plugin is active"
         last_time = gv.now
 
@@ -75,14 +75,16 @@ class PCFSender(Thread):
                     ad1 = get_measure(1, self)
                     ad2 = get_measure(2, self)
                     ad3 = get_measure(3, self)
-                    if datapcf['use_log'] != 'off' and datapcf['time'] != '0':      # if log is enabled and time is not 0 min
+                    if datapcf['use_log'] != 'off' and datapcf['time'] != '0':  # if log is enabled and time is not 0 min
                         actual_time = gv.now
                         if actual_time - last_time > (int(datapcf['time']) * 60):       # if is time for save
                             last_time = actual_time
                             self.status = ''
-                            TEXT = 'On ' + time.strftime('%d.%m.%Y at %H:%M:%S',
-                                                         time.localtime(time.time())) + ' save PCF8591 data AD0=' + str(
-                                ad0) + ' AD1=' + str(ad1) + ' AD2=' + str(ad2) + ' AD3=' + str(ad3)
+                            TEXT = 'On ' + time.strftime('%d.%m.%Y at %H:%M:%S', time.localtime(time.time())) + \
+                                   ' save PCF8591 data AD0=' + str(ad0) + \
+                                   ' AD1=' + str(ad1) + \
+                                   ' AD2=' + str(ad2) + \
+                                   ' AD3=' + str(ad3)
                             self.add_status(TEXT)
                             write_log(ad0, ad1, ad2, ad3)
 
@@ -101,13 +103,14 @@ checker = PCFSender()
 # Helper functions:                                                            #
 ################################################################################
 
+
 def get_now_measure(AD_pin):
     """Return voltage from A/D PCF8591 to webpage"""
     try:
         ADC.write_byte_data(0x48, (0x40 + AD_pin), AD_pin)
         involt = ADC.read_byte(0x48)
         data = round(((involt * 3.3) / 255), 1)
-        return data # volt in AD input range 0-255
+        return data  # volt in AD input range 0-255
     except:
         return 0.0
 
@@ -117,35 +120,35 @@ def get_measure(AD_pin, self):
     datapcf = get_pcf_options()
     try:
         ADC.write_byte_data(0x48, (0x40 + AD_pin), AD_pin)
-        involt = ADC.read_byte(0x48) # involt range is 0-255
+        involt = ADC.read_byte(0x48)  # involt range is 0-255
 
         if AD_pin == 0:
-            if datapcf['ad0'] != 'on': # off = measure temperature from LM35D, on = voltage
-                temp = (involt / 77.27) * 100.0 # voltage in AD0 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
+            if datapcf['ad0'] != 'on':  # off = measure temperature from LM35D, on = voltage
+                temp = (involt / 77.27) * 100.0  # voltage in AD0 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
                 data = round(temp, 1)
                 return data
             else:
                 data = round(((involt * 3.3) / 255), 1)
                 return data
         if AD_pin == 1:
-            if datapcf['ad1'] != 'on': # off = measure temperature from LM35D, on = voltage
-                temp = (involt / 77.27) * 100.0 # voltage in AD1 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
+            if datapcf['ad1'] != 'on':  # off = measure temperature from LM35D, on = voltage
+                temp = (involt / 77.27) * 100.0  # voltage in AD1 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
                 data = round(temp, 1)
                 return data
             else:
                 data = round(((involt * 3.3) / 255), 1)
                 return data
         if AD_pin == 2:
-            if datapcf['ad2'] != 'on': # off = measure temperature from LM35D, on = voltage
-                temp = (involt / 77.27) * 100.0 # voltage in AD2 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
+            if datapcf['ad2'] != 'on':  # off = measure temperature from LM35D, on = voltage
+                temp = (involt / 77.27) * 100.0  # voltage in AD2 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
                 data = round(temp, 1)
                 return data
             else:
                 data = round(((involt * 3.3) / 255), 1)
                 return data
         if AD_pin == 3:
-            if datapcf['ad0'] != 'on': # off = measure temperature from LM35D, on = voltage
-                temp = (involt / 77.27) * 100.0 # voltage in AD3 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
+            if datapcf['ad0'] != 'on':  # off = measure temperature from LM35D, on = voltage
+                temp = (involt / 77.27) * 100.0  # voltage in AD3 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
                 data = round(temp, 1)
                 return data
             else:
@@ -158,7 +161,7 @@ def get_measure(AD_pin, self):
         return 0.0
 
 
-def get_write_DA(Y): # PCF8591 D/A converter Y=(0-255) for future use
+def get_write_DA(Y):  # PCF8591 D/A converter Y=(0-255) for future use
     """Write analog voltage to output"""
     ADC.write_byte_data(0x48, 0x40, Y)
 
@@ -185,7 +188,7 @@ def get_pcf_options():
         'status': checker.status
     }
     try:
-        with open('./data/pcf_adj.json', 'r') as f: # Read the settings from file
+        with open('./data/pcf_adj.json', 'r') as f:  # Read the settings from file
             file_data = json.load(f)
         for key, value in file_data.iteritems():
             if key in datapcf:
@@ -224,6 +227,7 @@ def write_log(ad0, ad1, ad2, ad3):
 # Web pages:                                                                   #
 ################################################################################
 
+
 class settings(ProtectedPage):
     """Load an html page for entering lcd adjustments."""
 
@@ -245,25 +249,25 @@ class update(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        if not qdict.has_key('use_pcf'):
+        if 'use_pcf' not in qdict:
             qdict['use_pcf'] = 'off'
-        if not qdict.has_key('use_log'):
+        if 'use_log' not in qdict:
             qdict['use_log'] = 'off'
-        if not qdict.has_key('ad0'):
+        if 'ad0' not in qdict:
             qdict['ad0'] = 'off'
-        if not qdict.has_key('ad1'):
+        if 'ad1' not in qdict:
             qdict['ad1'] = 'off'
-        if not qdict.has_key('ad2'):
+        if 'ad2' not in qdict:
             qdict['ad2'] = 'off'
-        if not qdict.has_key('ad3'):
+        if 'ad3' not in qdict:
             qdict['ad3'] = 'off'
-        with open('./data/pcf_adj.json', 'w') as f: # write the settings to file
+        with open('./data/pcf_adj.json', 'w') as f:  # write the settings to file
             json.dump(qdict, f)
         checker.update()
         raise web.seeother('/')
 
 
-class pcf_log(ProtectedPage): # save log file from web as csv file type
+class pcf_log(ProtectedPage):  # save log file from web as csv file type
     """Simple PCF Log API"""
 
     def GET(self):
@@ -277,7 +281,7 @@ class pcf_log(ProtectedPage): # save log file from web as csv file type
         return data
 
 
-class delete_log(ProtectedPage): # delete log file from web
+class delete_log(ProtectedPage):  # delete log file from web
     """Delete all pcflog records"""
 
     def GET(self):

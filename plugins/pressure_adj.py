@@ -9,8 +9,8 @@ import sys
 import traceback
 
 import web
-import gv # Get access to ospi's settings
-from urls import urls # Get access to ospi's URLs
+import gv  # Get access to ospi's settings
+from urls import urls  # Get access to ospi's URLs
 from ospy import template_render
 from webpages import ProtectedPage
 from helpers import stop_stations
@@ -31,9 +31,9 @@ gv.plugin_menu.append(['Pressure Monitor Settings', '/pressa'])
 from gpio_pins import GPIO as GPIO
 
 try:
-    if gv.platform == 'pi': # If this will run on Raspberry Pi:
+    if gv.platform == 'pi':  # If this will run on Raspberry Pi:
         pin_pressure = 22
-    elif gv.platform == 'bo': # If this will run on Beagle Bone Black:
+    elif gv.platform == 'bo':  # If this will run on Beagle Bone Black:
         pin_pressure = "P9_17"
 except AttributeError:
     pass
@@ -74,10 +74,10 @@ class PressureSender(Thread):
             self._sleep_time -= 1
 
     def run(self):
-        time.sleep(randint(3, 10)) # Sleep some time to prevent printing before startup information
+        time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
         print "Pressure plugin is active"
         send = False
-        SUBJ = "Reporting from OSPy" # Subject in email
+        SUBJ = "Reporting from OSPy"  # Subject in email
         self.add_status('Waiting...')
 
         while True:
@@ -91,10 +91,10 @@ class PressureSender(Thread):
                                 if GPIO.input(pin_pressure) == 0:                        # if sensor is current open
                                     stop_stations()
                                     self.add_status('Pressure sensor is not activated in time -> stops all stations and sends email.')
-                                    if datapressure['sendeml'] != 'off': # if enabled send email
+                                    if datapressure['sendeml'] != 'off':  # if enabled send email
                                         send = True
 
-                    else: # if not used master station
+                    else:  # if not used master station
                         self.status = ''
                         self.add_status('Not used master station.')
 
@@ -135,7 +135,7 @@ def get_pressure_options():
         'status': checker.status
     }
     try:
-        with open('./data/pressure_adj.json', 'r') as f: # Read the settings from file
+        with open('./data/pressure_adj.json', 'r') as f:  # Read the settings from file
             file_data = json.load(f)
         for key, value in file_data.iteritems():
             if key in datapressure:
@@ -148,15 +148,16 @@ def get_pressure_options():
 
 def get_pressure_sensor():
     if GPIO.input(pin_pressure) != 1:
-        press = ('Pressure sensor is not active.') # sensor pin is connected to ground
+        press = ('Pressure sensor is not active.')  # sensor pin is connected to ground
     else:
-        press = ('Pressure sensor is active - pressure in pipeline is OK.') # sensor pin is unconnected
+        press = ('Pressure sensor is active - pressure in pipeline is OK.')  # sensor pin is unconnected
 
     return str(press)
 
 ################################################################################
 # Web pages:                                                                   #
 ################################################################################
+
 
 class settings(ProtectedPage):
     """Load an html page for entering pressure adjustments."""
@@ -179,11 +180,11 @@ class update(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        if not qdict.has_key('press'):
+        if 'press' not in qdict:
             qdict['press'] = 'off'
-        if not qdict.has_key('sendeml'):
+        if 'sendeml' not in qdict:
             qdict['sendeml'] = 'off'
-        with open('./data/pressure_adj.json', 'w') as f: # write the settings to file
+        with open('./data/pressure_adj.json', 'w') as f:  # write the settings to file
             json.dump(qdict, f)
         checker.update()
         raise web.seeother('/')
