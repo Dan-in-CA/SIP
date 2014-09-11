@@ -10,7 +10,8 @@ except ImportError:
     except ImportError:
         gv.platform = ''  # if no platform, allows program to still run.
         print 'No GPIO module was loaded from GPIO Pins module'
-        GPIO = None
+        # Makes it runnable on machines other than RPi
+        #GPIO = None
 
 try:
     GPIO.setwarnings(False)
