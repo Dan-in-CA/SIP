@@ -69,7 +69,7 @@ def uptime():
     return string
 
 
-def getIP():
+def get_ip():
     """Returns the IP adress if available."""
     try:
         arg = 'ip route list'
@@ -82,7 +82,7 @@ def getIP():
         return "No IP Settings"
 
 
-def RPI_revision():
+def get_rpi_revision():
     try:
         import RPi.GPIO as GPIO
 
@@ -135,7 +135,7 @@ def plugin_adjustment():
     return result
 
 
-def CPU_temperature(unit=None):
+def get_cpu_temp(unit=None):
     """Returns the temperature of the CPU if available."""
     try:
         if gv.platform == 'bo':

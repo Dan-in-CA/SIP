@@ -13,12 +13,12 @@ import gv  # Get access to ospi's settings
 from urls import urls  # Get access to ospi's URLs
 from ospy import template_render
 from webpages import ProtectedPage
-from helpers import RPI_revision
+from helpers import get_rpi_revision
 
 # I2C bus Rev Raspi RPI=1 rev1 RPI=0 rev0 
 try:
     import smbus  # for PCF 8591
-    ADC = smbus.SMBus(1 if RPI_revision() >= 2 else 0)
+    ADC = smbus.SMBus(1 if get_rpi_revision() >= 2 else 0)
 except ImportError:
     ADC = None
 
