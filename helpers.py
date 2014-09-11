@@ -60,19 +60,16 @@ def restart():
 
 def uptime():
     """Returns UpTime for RPi"""
-    try:
-        f = open("/proc/uptime")
-        contents = f.read().split()
-        f.close()
-    except:
-        return "Error 1: uptime"
+    string = 'Error 1: uptime'
 
-    total_seconds = float(contents[0])
-    string = str(datetime.timedelta(seconds=total_seconds))
+    with open("/proc/uptime") as f:
+        total_sec = float(f.read().split()[0])
+        string = str(datetime.timedelta(seconds=total_sec)).split('.')[0]
+
     return string
 
 
-def getIP():
+def get_ip():
     """Returns the IP adress if available."""
     try:
         arg = 'ip route list'
@@ -85,7 +82,7 @@ def getIP():
         return "No IP Settings"
 
 
-def RPI_revision():
+def get_rpi_revision():
     try:
         import RPi.GPIO as GPIO
 
@@ -138,7 +135,7 @@ def plugin_adjustment():
     return result
 
 
-def CPU_temperature(unit=None):
+def get_cpu_temp(unit=None):
     """Returns the temperature of the CPU if available."""
     try:
         if gv.platform == 'bo':

@@ -3,7 +3,7 @@ import time
 import datetime
 import string
 
-from helpers import CPU_temperature
+from helpers import get_cpu_temp
 import web
 import gv  # Gain access to ospy's settings
 from urls import urls  # Gain access to ospy's URL list
@@ -69,7 +69,7 @@ class cur_settings(object):  # /jc
             "sbits": gv.sbits,
             "ps": gv.ps,
             "lrun": gv.lrun,
-            "ct": CPU_temperature(gv.sd['tu']),
+            "ct": get_cpu_temp(gv.sd['tu']),
             "tu": gv.sd['tu']
         }
 

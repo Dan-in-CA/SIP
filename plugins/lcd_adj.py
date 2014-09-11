@@ -15,7 +15,7 @@ import gv  # Get access to ospi's settings
 from urls import urls  # Get access to ospi's URLs
 from ospy import template_render
 from webpages import ProtectedPage
-from helpers import uptime, getIP, CPU_temperature, RPI_revision
+from helpers import uptime, get_ip, get_cpu_temp, get_rpi_revision
 
 
 # Add a new url to open the data entry page.
@@ -131,7 +131,7 @@ def get_LCD_print(self, report):
         return
 
     import pylcd2  # Library for LCD 16x2 PCF8574
-    lcd = pylcd2.lcd(adr, 1 if RPI_revision() >= 2 else 0)  # Address for PCF8574 = example 0x20, Bus Raspi = 1 (0 = 256MB, 1=512MB)
+    lcd = pylcd2.lcd(adr, 1 if get_rpi_revision() >= 2 else 0)  # Address for PCF8574 = example 0x20, Bus Raspi = 1 (0 = 256MB, 1=512MB)
 
     if report == 0:
         lcd.lcd_clear()
@@ -145,7 +145,7 @@ def get_LCD_print(self, report):
         self.add_status('Software OSPy: / ' + gv.ver_date)
     elif report == 2:
         lcd.lcd_clear()
-        ip = getIP()
+        ip = get_ip()
         lcd.lcd_puts("My IP is:", 1)
         lcd.lcd_puts(str(ip), 2)
         self.add_status('My IP is: / ' + str(ip))
@@ -156,7 +156,7 @@ def get_LCD_print(self, report):
         self.add_status('Port IP: / 8080')
     elif report == 4:
         lcd.lcd_clear()
-        temp = CPU_temperature(gv.sd['tu']) + ' ' + gv.sd['tu']
+        temp = get_cpu_temp(gv.sd['tu']) + ' ' + gv.sd['tu']
         lcd.lcd_puts("CPU temperature:", 1)
         lcd.lcd_puts(temp, 2)
         self.add_status('CPU temperature: / ' + temp)

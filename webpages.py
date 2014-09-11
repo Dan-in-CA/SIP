@@ -17,7 +17,7 @@ __author__ = 'Rimco'
 class WebPage(object):
     def __init__(self):
         gv.baseurl = baseurl()
-        gv.cputemp = CPU_temperature()
+        gv.cputemp = get_cpu_temp()
 
 
 class ProtectedPage(WebPage):

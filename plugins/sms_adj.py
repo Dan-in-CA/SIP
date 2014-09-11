@@ -10,7 +10,7 @@ import traceback
 
 import web
 import gv  # Get access to ospy's settings
-from helpers import getIP, uptime, reboot, poweroff, timestr, jsave, restart
+from helpers import get_ip, uptime, reboot, poweroff, timestr, jsave, restart
 from urls import urls  # Get access to ospy's URLs
 from ospy import template_render
 from webpages import ProtectedPage
@@ -171,7 +171,7 @@ def sms_check(self):
                         logline = ' Last program none'
                     revision = ' Rev: ' + gv.ver_date
                     datastr = ('On ' + time.strftime("%d.%m.%Y at %H:%M:%S", time.localtime(
-                        time.time())) + '. Run time: ' + uptime() + ' IP: ' + getIP() + logline + revision)
+                        time.time())) + '. Run time: ' + uptime() + ' IP: ' + get_ip() + logline + revision)
                     message = {
                         'Text': datastr,
                         'SMSC': {'Location': 1},
