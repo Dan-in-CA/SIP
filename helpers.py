@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+from threading import Thread
 
 __author__ = 'Rimco'
 
@@ -34,28 +35,43 @@ except ImportError:
 ##############################
 #### Function Definitions ####
 
-def reboot():
-    from gpio_pins import set_output
-    gv.srvals = [0] * (gv.sd['nst'])
-    set_output()
-    os.system('reboot')
+def reboot(wait=1, block=False):
+    if block:
+        from gpio_pins import set_output
+        gv.srvals = [0] * (gv.sd['nst'])
+        set_output()
+        time.sleep(wait)
+        print 'Rebooting...'
+        subprocess.Popen(['reboot'])
+    else:
+        t = Thread(target=reboot, args=(wait, True))
+        t.start()
 
 
-def poweroff():
-    from gpio_pins import set_output
-    gv.srvals = [0] * (gv.sd['nst'])
-    set_output()
-    os.system('poweroff')
+def poweroff(wait=1, block=False):
+    if block:
+        from gpio_pins import set_output
+        gv.srvals = [0] * (gv.sd['nst'])
+        set_output()
+        time.sleep(wait)
+        print 'Powering off...'
+        subprocess.Popen(['poweroff'])
+    else:
+        t = Thread(target=poweroff, args=(wait, True))
+        t.start()
 
 
-def restart():
-    from gpio_pins import set_output
-    gv.srvals = [0] * (gv.sd['nst'])
-    set_output()
-    print 'Restarting ' + gv.sd['name']
-    command = 'service ospy restart'
-    output = subprocess.check_output(command.split())
-    print 'Restarted:', output
+def restart(wait=1, block=False):
+    if block:
+        from gpio_pins import set_output
+        gv.srvals = [0] * (gv.sd['nst'])
+        set_output()
+        time.sleep(wait)
+        print 'Restarting...'
+        subprocess.Popen('service ospy restart'.split())
+    else:
+        t = Thread(target=restart, args=(wait, True))
+        t.start()
 
 
 def uptime():

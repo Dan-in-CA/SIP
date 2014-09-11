@@ -259,14 +259,11 @@ def sms_check(self):
                         from plugins.system_update import perform_update
 
                         perform_update()
-                    except ImportError:
-                        sm.DeleteSMS(m['Folder'], m['Location'])
-                        self.add_status('Received SMS was deleted but could not perform update')
-                    else:
-                        sm.DeleteSMS(m['Folder'], m['Location'])
                         self.add_status('Received SMS was deleted, update was performed and program will restart')
-                        self._sleep(10)
-                        restart()
+                    except ImportError:
+                        self.add_status('Received SMS was deleted, but could not perform update')
+
+                    sm.DeleteSMS(m['Folder'], m['Location'])
 
                 else:                            # If SMS command is not defined
                     sm.DeleteSMS(m['Folder'], m['Location'])

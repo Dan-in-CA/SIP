@@ -5,24 +5,25 @@ $var page: plugins
 <script>
     // Initialize behaviors
     jQuery(document).ready(function(){
-
-        jQuery("#cSubmit").click(function() {
-            jQuery("#pluginForm").submit();
+        jQuery("button#cRefresh").click(function(){
+            window.location="/UPsr";
         });
-        jQuery("button#cCancel").click(function(){
-            window.location="/";
+        jQuery("button#cUpdate").click(function(){
+            window.location="/UPu";
         });
         jQuery("button#cReboot").click(function(){
             window.location="/UPr";
         });
-
+        jQuery("button#cCancel").click(function(){
+            window.location="/";
+        });
     });
 </script>
 
 <div id="plugin">
     <div class="title">System update from github</div>
-    <p>This plugin compares the local copy and the remote repository.</p>
-    <form id="pluginForm" action="/UPu" method="get">
+    <p>This plugin compares the local copy with the remote repository and can automatically update the local copy.</p>
+    <form id="pluginForm" action="/UPsr" method="get">
         <table class="optionList">
             <tr>
                 <td style='text-transform: none;'><b>Remote repository:</b></td>
@@ -45,16 +46,19 @@ $var page: plugins
             <tr>
                 <td style='text-transform: none;'>Status:</td>
                 <td>
-                    <textarea style="font-family: monospace;" rows="7" cols="100" readonly>$m_vals['status']</textarea>
+                    <textarea style="font-family: monospace;" rows="7" cols="100" readonly>$m_vals['status']</textarea><br/>
+                    <button id="cRefresh" class="refresh">Update Status</button>
                 </td>
             </tr>
             
         </table>
     </form>
-<p>After an update, you must restart OSPy!</p>
 </div>
 <div id="controls">
-    <button id="cSubmit" class="submit"><b>Update</b></button>
+    $if m_vals['can_update']:
+        <button id="cUpdate" class="options"><b>Update OSPy</b></button>
+    $else:
+        <button id="cUpToDate" class="cancel"><b>Up-to-date</b></button>
     <button id="cReboot" class="reboot danger">Restart OSPy</button>
-    <button id="cCancel" class="cancel danger">Cancel</button>
+    <button id="cCancel" class="cancel danger">Back</button>
 </div>
