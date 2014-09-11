@@ -30,6 +30,7 @@ except ImportError:
         print "Error: json module not found"
         sys.exit()
 
+
 ##############################
 #### Function Definitions ####
 
@@ -102,7 +103,7 @@ def baseurl():
 def check_rain():
     try:
         if gv.sd['rst'] == 0:
-            if GPIO.input(pin_rain_sense): # Rain detected
+            if GPIO.input(pin_rain_sense):  # Rain detected
                 gv.sd['rs'] = 1
             else:
                 gv.sd['rs'] = 0
@@ -189,13 +190,14 @@ def log_run():
 
 def prog_match(prog):
     """Test a program for current date and time match."""
-    if not prog[0]: return 0  # Skip if program is not enabled
-    devday = int(gv.now / 86400) # Check day match
+    if not prog[0]:
+        return 0  # Skip if program is not enabled
+    devday = int(gv.now / 86400)  # Check day match
     lt = time.gmtime(gv.now)
     if (prog[1] >= 128) and (prog[2] > 1):  # Interval program
         if (devday % prog[2]) != (prog[1] - 128):
             return 0
-    else: # Weekday program
+    else:  # Weekday program
         if not prog[1] - 128 & 1 << lt[6]:
             return 0
         if prog[1] >= 128 and prog[2] == 0:  # even days
@@ -206,7 +208,7 @@ def prog_match(prog):
                 return 0
             elif lt[2] % 2 != 1:
                 return 0
-    this_minute = (lt[3] * 60) + lt[4] # Check time match
+    this_minute = (lt[3] * 60) + lt[4]  # Check time match
     if this_minute < prog[3] or this_minute >= prog[4]:
         return 0
     if prog[5] == 0:
@@ -218,37 +220,35 @@ def prog_match(prog):
 
 def schedule_stations(stations):
     """Schedule stations/valves/zones to run."""
-    if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']): # If rain delay or rain detected by sensor
+    if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']):  # If rain delay or rain detected by sensor
         rain = True
     else:
         rain = False
     accumulate_time = gv.now
-    if gv.sd['seq']: # sequential mode, stations run one after another
+    if gv.sd['seq']:  # sequential mode, stations run one after another
         for b in range(len(stations)):
             for s in range(8):
-                sid = b * 8 + s # station index
-                if gv.rs[sid][2]: # if station has a duration value
-                    if not rain or gv.sd['ir'][b] & 1 << s: # if no rain or station ignores rain
-                        gv.rs[sid][0] = accumulate_time # start at accumulated time
-                        accumulate_time += gv.rs[sid][2] # add duration
-                        gv.rs[sid][1] = accumulate_time # set new stop time
-                        accumulate_time += gv.sd['sdt'] # add station delay
+                sid = b * 8 + s  # station index
+                if gv.rs[sid][2]:  # if station has a duration value
+                    if not rain or gv.sd['ir'][b] & 1 << s:  # if no rain or station ignores rain
+                        gv.rs[sid][0] = accumulate_time  # start at accumulated time
+                        accumulate_time += gv.rs[sid][2]  # add duration
+                        gv.rs[sid][1] = accumulate_time  # set new stop time
+                        accumulate_time += gv.sd['sdt']  # add station delay
                     else:
                         gv.sbits[b] &= ~1 << s
                         gv.ps[s] = [0, 0]
-
-
-    else: # concurrent mode, stations allowed to run in parallel
+    else:  # concurrent mode, stations allowed to run in parallel
         for b in range(len(stations)):
             for s in range(8):
-                sid = b * 8 + s # station index
-                if not stations[b] & 1 << s: # skip stations not in prog
+                sid = b * 8 + s  # station index
+                if not stations[b] & 1 << s:  # skip stations not in prog
                     continue
-                if gv.rs[sid][2]: # if station has a duration value
-                    if not rain or gv.sd['ir'][b] & 1 << s: # if no rain or station ignores rain
-                        gv.rs[sid][0] = gv.now # accumulate_time # set start time
-                        gv.rs[sid][1] = (gv.now + gv.rs[sid][2]) # set stop time
-                    else: # if rain and station does not ignore, clear station from display
+                if gv.rs[sid][2]:  # if station has a duration value
+                    if not rain or gv.sd['ir'][b] & 1 << s:  # if no rain or station ignores rain
+                        gv.rs[sid][0] = gv.now  # accumulate_time # set start time
+                        gv.rs[sid][1] = (gv.now + gv.rs[sid][2])  # set stop time
+                    else:  # if rain and station does not ignore, clear station from display
                         gv.sbits[b] &= ~1 << s
                         gv.ps[s] = [0, 0]
     gv.sd['bsy'] = 1
@@ -260,13 +260,13 @@ def stop_onrain():
     from gpio_pins import set_output
     for b in range(gv.sd['nbrd']):
         for s in range(8):
-            sid = b * 8 + s # station index
-            if gv.sd['ir'][b] & 1 << s: # if station ignores rain...
+            sid = b * 8 + s  # station index
+            if gv.sd['ir'][b] & 1 << s:  # if station ignores rain...
                 continue
             elif not all(v == 0 for v in gv.rs[sid]):
                 gv.srvals[sid] = 0
                 set_output()
-                gv.sbits[b] &= ~1 << s# Clears stopped stations from display
+                gv.sbits[b] &= ~1 << s  # Clears stopped stations from display
                 gv.ps[sid] = [0, 0]
                 gv.rs[sid] = [0, 0, 0, 0]
     return
@@ -320,24 +320,24 @@ def load_programs():
         with open('./data/programs.json', 'r') as pf:
             gv.pd = json.load(pf)
     except IOError:
-        gv.pd = [] # A config file -- return default and create file if not found.
+        gv.pd = []  # A config file -- return default and create file if not found.
         with open('./data/programs.json', 'w') as pf:
             json.dump(gv.pd, pf)
     return gv.pd
 
 
-def passwordSalt():
+def password_salt():
     return "".join(chr(random.randint(33, 127)) for _ in xrange(64))
 
 
-def passwordHash(password, salt):
+def password_hash(password, salt):
     return sha1(password + salt).hexdigest()
 
 
 ########################
 #### Login Handling ####
 
-def checkLogin():
+def check_login():
     qdict = web.input()
 
     try:
@@ -349,8 +349,8 @@ def checkLogin():
     except KeyError:
         pass
 
-    if qdict.has_key('pw'):
-        if gv.sd['password'] == passwordHash(qdict['pw'], gv.sd['salt']):
+    if 'pw' in qdict:
+        if gv.sd['password'] == password_hash(qdict['pw'], gv.sd['salt']):
             return True
         raise web.unauthorized()
 
@@ -362,7 +362,7 @@ signin_form = form.Form(
     validators=[
         form.Validator(
             "Incorrect password, please try again",
-            lambda x: gv.sd['password'] == passwordHash(x.password, gv.sd['salt'])
+            lambda x: gv.sd['password'] == password_hash(x.password, gv.sd['salt'])
         )
     ]
 )
@@ -370,7 +370,7 @@ signin_form = form.Form(
 
 def get_input(qdict, key, default=None, cast=None):
     result = default
-    if qdict.has_key(key):
+    if key in qdict:
         result = qdict[key]
         if cast is not None:
             result = cast(result)

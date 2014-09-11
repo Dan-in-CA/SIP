@@ -1,6 +1,7 @@
 import smbus
 from time import sleep
 
+
 # General i2c device class so that other devices can be added easily
 class i2c_device:
     def __init__(self, addr, port):
@@ -13,18 +14,18 @@ class i2c_device:
     def read(self):
         return self.bus.read_byte(self.addr)
 
-    def read_nbytes_data(self, data, n): # For sequential reads > 1 byte
+    def read_nbytes_data(self, data, n):  # For sequential reads > 1 byte
         return self.bus.read_i2c_block_data(self.addr, data, n)
 
 
 class lcd:
     #initializes objects and lcd
-    '''
+    """
     Reverse Codes:
     0: lower 4 bits of expander are commands bits
     1: top 4 bits of expander are commands bits AND P0-4 P1-5 P2-6
     2: top 4 bits of expander are commands bits AND P0-6 P1-5 P2-4
-    '''
+    """
 
     def __init__(self, addr, port, reverse=0):
         self.reverse = reverse

@@ -1,21 +1,32 @@
 # !/usr/bin/env python
 from random import randint
 import thread
+import json
+import time
+import re
+import urllib
+import urllib2
 
-import web, json, time, re
-import gv # Get access to ospy's settings
-import urllib, urllib2
-from urls import urls # Get access to ospy's URLs
+import web
+import gv  # Get access to ospy's settings
+from urls import urls  # Get access to ospy's URLs
 from gpio_pins import set_output
 from ospy import template_render
 from webpages import ProtectedPage
 
-urls.extend(['/wa', 'plugins.weather_adj.settings', '/wj', 'plugins.weather_adj.settings_json', '/uwa', 'plugins.weather_adj.update']) # Add a new url to open the data entry page.
-gv.plugin_menu.append(['Weather-based Rain Delay', '/wa']) # Add this plugin to the home page plugins menu
+
+# Add a new url to open the data entry page.
+urls.extend(['/wa', 'plugins.weather_adj.settings',
+             '/wj', 'plugins.weather_adj.settings_json',
+             '/uwa', 'plugins.weather_adj.update'])
+
+# Add this plugin to the home page plugins menu
+gv.plugin_menu.append(['Weather-based Rain Delay', '/wa'])
+
 
 def weather_to_delay(run_loop=False):
     if run_loop:
-        time.sleep(randint(3, 10)) # Sleep some time to prevent printing before startup information
+        time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
     while True:
         data = get_weather_options()
@@ -26,7 +37,7 @@ def weather_to_delay(run_loop=False):
             if delay > 0:
                 print("Rain detected: " + weather["text"] + ". Adding delay of " + str(delay))
                 gv.sd['rd'] = float(delay)
-                gv.sd['rdst'] = gv.now + gv.sd['rd'] * 3600 + 1 # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
+                gv.sd['rdst'] = gv.now + gv.sd['rd'] * 3600 + 1  # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
                 stop_onrain()
             elif delay == 0:
                 print("No rain detected: " + weather["text"] + ". No action.")
@@ -41,12 +52,13 @@ def weather_to_delay(run_loop=False):
 
 def get_weather_options():
     try:
-        with open('./data/weather_adj.json', 'r') as f: # Read the monthly percentages from file
+        with open('./data/weather_adj.json', 'r') as f:  # Read the monthly percentages from file
             data = json.load(f)
     except Exception, e:
         data = {'auto_delay': 'off', 'delay_duration': 24, 'weather_provider': 'yahoo', 'wapikey': ''}
 
     return data
+
 
 # Resolve location to LID
 def get_wunderground_lid():
@@ -64,8 +76,8 @@ def get_wunderground_lid():
 
 def get_woeid():
     data = urllib2.urlopen(
-        "http://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.placefinder%20where%20text=%22" + urllib.quote_plus(
-            gv.sd["loc"]) + "%22").read()
+        "http://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.placefinder%20where%20text=%22" +
+        urllib.quote_plus(gv.sd["loc"]) + "%22").read()
     woeid = re.search("<woeid>(\d+)</woeid>", data)
     if woeid is None:
         return 0
@@ -101,6 +113,7 @@ def get_wunderground_weather_data():
                "code": data['current_observation']['icon']}
     return weather
 
+
 # Lookup code and get the set delay
 def code_to_delay(code):
     data = get_weather_options()
@@ -123,13 +136,13 @@ def stop_onrain():
     """Stop stations that do not ignore rain."""
     for b in range(gv.sd['nbrd']):
         for s in range(8):
-            sid = b * 8 + s # station index
-            if gv.sd['ir'][b] & 1 << s: # if station ignores rain...
+            sid = b * 8 + s  # station index
+            if gv.sd['ir'][b] & 1 << s:  # if station ignores rain...
                 continue
             elif not all(v == 0 for v in gv.rs[sid]):
                 gv.srvals[sid] = 0
                 set_output()
-                gv.sbits[b] &= ~1 << s# Clears stopped stations from display
+                gv.sbits[b] &= ~1 << s  # Clears stopped stations from display
                 gv.ps[sid] = [0, 0]
                 gv.rs[sid] = [0, 0, 0, 0]
     return
@@ -156,9 +169,9 @@ class update(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        if not qdict.has_key('auto_delay'):
+        if 'auto_delay' not in qdict:
             qdict['auto_delay'] = 'off'
-        with open('./data/weather_adj.json', 'w') as f: # write the monthly percentages to file
+        with open('./data/weather_adj.json', 'w') as f:  # write the monthly percentages to file
             json.dump(qdict, f)
         weather_to_delay()
         raise web.seeother('/')

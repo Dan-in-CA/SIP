@@ -1,9 +1,13 @@
-from helpers import CPU_temperature, passwordHash, station_names
-import web, json, re, os
-import time, datetime, string
-import gv # Gain access to ospy's settings
-from urls import urls # Gain access to ospy's URL list
-from webpages import ProtectedPage
+import json
+import time
+import datetime
+import string
+
+from helpers import CPU_temperature
+import web
+import gv  # Gain access to ospy's settings
+from urls import urls  # Gain access to ospy's URL list
+
 
 ##############
 ## New URLs ##
@@ -17,10 +21,11 @@ urls.extend([
     '/jl', 'plugins.mobile_app.get_logs',
     '/sp', 'plugins.mobile_app.set_password'])
 
+
 #######################
 ## Class definitions ##
 
-class options(object): # /jo
+class options(object):  # /jo
     """Returns device options as json."""
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
@@ -40,87 +45,92 @@ class options(object): # /jo
             "wl": gv.sd['wl'],
             "ipas": gv.sd['ipas'],
             "reset": gv.sd['rbt'],
-            "lg":gv.sd['lg']
+            "lg": gv.sd['lg']
         }
 
         return json.dumps(jopts)
 
-class cur_settings(object): # /jc
+
+class cur_settings(object):  # /jc
     """Returns current settings as json."""
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         web.header('Cache-Control', 'no-cache')
         jsettings = {
-            "devt":gv.now,
-            "nbrd":gv.sd['nbrd'],
-            "en":gv.sd['en'],
-            "rd":gv.sd['rd'],
-            "rs":gv.sd['rs'],
-            "mm":gv.sd['mm'],
-            "rdst":gv.sd['rdst'],
-            "loc":gv.sd['loc'],
-            "sbits":gv.sbits,
-            "ps":gv.ps,
-            "lrun":gv.lrun,
-            "ct":CPU_temperature(gv.sd['tu']),
-            "tu":gv.sd['tu']
+            "devt": gv.now,
+            "nbrd": gv.sd['nbrd'],
+            "en": gv.sd['en'],
+            "rd": gv.sd['rd'],
+            "rs": gv.sd['rs'],
+            "mm": gv.sd['mm'],
+            "rdst": gv.sd['rdst'],
+            "loc": gv.sd['loc'],
+            "sbits": gv.sbits,
+            "ps": gv.ps,
+            "lrun": gv.lrun,
+            "ct": CPU_temperature(gv.sd['tu']),
+            "tu": gv.sd['tu']
         }
 
         return json.dumps(jsettings)
 
-class station_state(object): # /js
+
+class station_state(object):  # /js
     """Returns station status and total number of stations as json."""
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         web.header('Cache-Control', 'no-cache')
         jstate = {
-            "sn":gv.srvals,
-            "nstations":gv.sd['nst']
+            "sn": gv.srvals,
+            "nstations": gv.sd['nst']
         }
 
         return json.dumps(jstate)
 
-class program_info(object): # /jp
+
+class program_info(object):  # /jp
     """Returns program data as json."""
     def GET(self):
-        lpd = [] # Local program data
-        dse = int((time.time()+((gv.sd['tz']/4)-12)*3600)/86400) # days since epoch
+        lpd = []  # Local program data
+        dse = int((time.time()+((gv.sd['tz']/4)-12)*3600)/86400)  # days since epoch
         for p in gv.pd:
-            op = p[:] # Make local copy of each program
+            op = p[:]  # Make local copy of each program
             if op[1] >= 128 and op[2] > 1:
-                rel_rem = (((op[1]-128) + op[2])-(dse%op[2]))%op[2]
+                rel_rem = (((op[1]-128) + op[2])-(dse % op[2])) % op[2]
                 op[1] = rel_rem + 128
             lpd.append(op)
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         web.header('Cache-Control', 'no-cache')
         jpinfo = {
-            "nprogs":gv.sd['nprogs']-1,
-            "nboards":gv.sd['nbrd'],
-            "mnp":9999,
+            "nprogs": gv.sd['nprogs']-1,
+            "nboards": gv.sd['nbrd'],
+            "mnp": 9999,
             'pd': lpd
         }
 
         return json.dumps(jpinfo)
 
-class station_info(object): # /jn
+
+class station_info(object):  # /jn
     """Returns station information as json."""
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         web.header('Cache-Control', 'no-cache')
         jpinfo = {
-            "snames":gv.snames,
-            "ignore_rain":gv.sd['ir'],
-            "masop":gv.sd['mo'],
-            "maxlen":gv.sd['snlen']
+            "snames": gv.snames,
+            "ignore_rain": gv.sd['ir'],
+            "masop": gv.sd['mo'],
+            "maxlen": gv.sd['snlen']
         }
 
         return json.dumps(jpinfo)
 
-class get_logs(object): # /jl
+
+class get_logs(object):  # /jl
     """Returns log information for specified date range."""
     def GET(self):
         records = self.read_log()
@@ -131,7 +141,7 @@ class get_logs(object): # /jl
         web.header('Content-Type', 'application/json')
         web.header('Cache-Control', 'no-cache')
 
-        if not(qdict.has_key('start')) or not(qdict.has_key('end')):
+        if 'start' not in qdict or 'end' not in qdict:
             return []
 
         for r in records:
@@ -146,11 +156,11 @@ class get_logs(object): # /jl
 
                 pid = int(pid)
                 station = int(event["station"])
-                duration = string.split(event["duration"],":")
+                duration = string.split(event["duration"], ":")
                 duration = (int(duration[0]) * 60) + int(duration[1])
                 timestamp = int(time.mktime(datetime.datetime.strptime(event["date"] + " " + event["start"], "%Y-%m-%d %H:%M:%S").timetuple()))
 
-                data.append([pid,station,duration,timestamp])
+                data.append([pid, station, duration, timestamp])
 
         return json.dumps(data)
 
@@ -161,4 +171,3 @@ class get_logs(object): # /jl
             return records
         except IOError:
             return []
-

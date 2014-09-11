@@ -5,14 +5,17 @@ from threading import Thread
 import sys
 import traceback
 import shutil
-
-import web, json, time, re
+import json
+import time
+import re
 import os
-import gv # Get access to ospy's settings
-import urllib, urllib2
-from urls import urls # Get access to ospy's URLs
+import urllib
+import urllib2
 import errno
 
+import web
+import gv  # Get access to ospy's settings
+from urls import urls  # Get access to ospy's URLs
 from ospy import template_render
 from webpages import ProtectedPage
 
@@ -20,13 +23,20 @@ from webpages import ProtectedPage
 def mkdir_p(path):
     try:
         os.makedirs(path)
-    except OSError as exc: # Python >2.5
+    except OSError as exc:  # Python >2.5
         if exc.errno == errno.EEXIST and os.path.isdir(path):
             pass
-        else: raise
+        else:
+            raise
 
-urls.extend(['/lwa', 'plugins.weather_level_adj.settings', '/lwj', 'plugins.weather_level_adj.settings_json', '/luwa', 'plugins.weather_level_adj.update']) # Add a new url to open the data entry page.
-gv.plugin_menu.append(['Weather-based Water Level', '/lwa']) # Add this plugin to the home page plugins menu
+# Add a new url to open the data entry page.
+urls.extend(['/lwa',  'plugins.weather_level_adj.settings',
+             '/lwj',  'plugins.weather_level_adj.settings_json',
+             '/luwa', 'plugins.weather_level_adj.update'])
+
+# Add this plugin to the home page plugins menu
+gv.plugin_menu.append(['Weather-based Water Level', '/lwa'])
+
 
 ################################################################################
 # Main function loop:                                                          #
@@ -58,7 +68,7 @@ class WeatherLevelChecker(Thread):
             self._sleep_time -= 1
 
     def run(self):
-        time.sleep(randint(3, 10)) # Sleep some time to prevent printing before startup information
+        time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
         while True:
             try:
@@ -142,6 +152,7 @@ class WeatherLevelChecker(Thread):
 
 checker = WeatherLevelChecker()
 
+
 ################################################################################
 # Web pages:                                                                   #
 ################################################################################
@@ -152,6 +163,7 @@ class settings(ProtectedPage):
     def GET(self):
         return template_render.weather_level_adj(options_data())
 
+
 class settings_json(ProtectedPage):
     """Returns plugin settings in JSON format"""
 
@@ -160,16 +172,18 @@ class settings_json(ProtectedPage):
         web.header('Content-Type', 'application/json')
         return json.dumps(options_data())
 
+
 class update(ProtectedPage):
     """Save user input to weather_level_adj.json file"""
     def GET(self):
         qdict = web.input()
-        if not qdict.has_key('auto_wl'):
+        if 'auto_wl' not in qdict:
             qdict['auto_wl'] = 'off'
-        with open('./data/weather_level_adj.json', 'w') as f: # write the settings to file
+        with open('./data/weather_level_adj.json', 'w') as f:  # write the settings to file
             json.dump(qdict, f)
         checker.update()
         raise web.seeother('/')
+
 
 ################################################################################
 # Helper functions:                                                            #
@@ -187,7 +201,7 @@ def options_data():
         'status': checker.status
     }
     try:
-        with open('./data/weather_level_adj.json', 'r') as f: # Read the settings from file
+        with open('./data/weather_level_adj.json', 'r') as f:  # Read the settings from file
             file_data = json.load(f)
         for key, value in file_data.iteritems():
             if key in result:
@@ -196,6 +210,7 @@ def options_data():
         pass
 
     return result
+
 
 # Resolve location to LID
 def get_wunderground_lid():
@@ -209,6 +224,7 @@ def get_wunderground_lid():
         lid = "zmw:" + data['RESULTS'][0]['zmw']
 
     return lid
+
 
 def get_data(suffix, name=None, force=False):
     if name is None:
@@ -251,6 +267,7 @@ def get_data(suffix, name=None, force=False):
 
     return data
 
+
 def remove_data(prefixes):
     # Delete old files
     for prefix in prefixes:
@@ -264,6 +281,7 @@ def remove_data(prefixes):
             if os.path.isdir(path):
                 shutil.rmtree(path)
             check_date -= day_delta
+
 
 ################################################################################
 # Info queries:                                                                #
@@ -303,6 +321,7 @@ def history_info():
 
     return result
 
+
 def today_info():
     lid = get_wunderground_lid()
     if lid == "":
@@ -324,6 +343,7 @@ def today_info():
     }
 
     return result
+
 
 def forecast_info():
     options = options_data()

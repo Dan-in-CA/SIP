@@ -11,8 +11,8 @@ import sys
 import traceback
 
 import web
-import gv # Get access to ospi's settings
-from urls import urls # Get access to ospi's URLs
+import gv  # Get access to ospi's settings
+from urls import urls  # Get access to ospi's URLs
 from ospy import template_render
 from webpages import ProtectedPage
 from helpers import uptime, getIP, CPU_temperature, RPI_revision
@@ -29,6 +29,7 @@ gv.plugin_menu.append(['LCD Settings', '/lcd'])
 ################################################################################
 # Main function loop:                                                          #
 ################################################################################
+
 
 class LCDSender(Thread):
     def __init__(self):
@@ -56,7 +57,7 @@ class LCDSender(Thread):
             self._sleep_time -= 1
 
     def run(self):
-        time.sleep(randint(3, 10)) # Sleep some time to prevent printing before startup information
+        time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
         print "LCD plugin is active"
         text_shift = 0
 
@@ -64,12 +65,12 @@ class LCDSender(Thread):
             try:
                 datalcd = get_lcd_options()                          # load data from file
                 if datalcd['use_lcd'] != 'off':                      # if LCD plugin is enabled
-                    if text_shift > 7: # Print 0-7 messages to LCD
+                    if text_shift > 7:  # Print 0-7 messages to LCD
                         text_shift = 0
                         self.status = ''
 
                     get_LCD_print(self, text_shift)   # Print to LCD 16x2
-                    text_shift += 1 # Increment text_shift value
+                    text_shift += 1  # Increment text_shift value
 
                 self._sleep(4)
 
@@ -86,11 +87,12 @@ checker = LCDSender()
 # Helper functions:                                                            #
 ################################################################################
 
+
 def get_LCD_print(self, report):
     """Print messages to LCD 16x2"""
     datalcd = get_lcd_options()
     adr = 0x20
-    if datalcd['adress'] == '0x20': # range adress from PCF8574 or PCF 8574A
+    if datalcd['adress'] == '0x20':  # range adress from PCF8574 or PCF 8574A
         adr = 0x20
     elif datalcd['adress'] == '0x21':
         adr = 0x21
@@ -128,8 +130,8 @@ def get_LCD_print(self, report):
         self._sleep(5)
         return
 
-    import pylcd2 # Library for LCD 16x2 PCF8574
-    lcd = pylcd2.lcd(adr, 1 if RPI_revision() >= 2 else 0) # Address for PCF8574 = example 0x20, Bus Raspi = 1 (0 = 256MB, 1=512MB)
+    import pylcd2  # Library for LCD 16x2 PCF8574
+    lcd = pylcd2.lcd(adr, 1 if RPI_revision() >= 2 else 0)  # Address for PCF8574 = example 0x20, Bus Raspi = 1 (0 = 256MB, 1=512MB)
 
     if report == 0:
         lcd.lcd_clear()
@@ -190,7 +192,7 @@ def get_lcd_options():
         'status': checker.status
     }
     try:
-        with open('./data/lcd_adj.json', 'r') as f: # Read the settings from file
+        with open('./data/lcd_adj.json', 'r') as f:  # Read the settings from file
             file_data = json.load(f)
         for key, value in file_data.iteritems():
             if key in datalcd:
@@ -203,6 +205,7 @@ def get_lcd_options():
 ################################################################################
 # Web pages:                                                                   #
 ################################################################################
+
 
 class settings(ProtectedPage):
     """Load an html page for entering lcd adjustments."""
@@ -225,9 +228,9 @@ class update(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        if not qdict.has_key('use_lcd'):
+        if 'use_lcd' not in qdict:
             qdict['use_lcd'] = 'off'
-        with open('./data/lcd_adj.json', 'w') as f: # write the settings to file
+        with open('./data/lcd_adj.json', 'w') as f:  # write the settings to file
             json.dump(qdict, f)
         checker.update()
         raise web.seeother('/')

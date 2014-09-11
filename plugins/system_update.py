@@ -9,8 +9,8 @@ import sys
 import traceback
 
 import web
-import gv # Get access to ospy's settings
-from urls import urls # Get access to ospy's URLsimport errno
+import gv  # Get access to ospy's settings
+from urls import urls  # Get access to ospy's URLsimport errno
 from ospy import template_render
 from webpages import ProtectedPage
 from helpers import restart
@@ -23,6 +23,7 @@ urls.extend(['/UPl', 'plugins.system_update.loading',
 
 # Add this plugin to the home page plugins menu
 gv.plugin_menu.append(['System update', '/UPl'])
+
 
 class StatusChecker(Thread):
     def __init__(self):
@@ -92,9 +93,8 @@ class StatusChecker(Thread):
             self.add_status('Currently running revision: %d (%s)' % (gv.revision, gv.ver_date))
             self.add_status('Available revision: %d (%s)' % (new_revision, new_date))
 
-
     def run(self):
-        time.sleep(randint(3, 10)) # Sleep some time to prevent printing before startup information
+        time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
         while True:
             try:
@@ -109,13 +109,15 @@ class StatusChecker(Thread):
                 self._sleep(60)
 
 checker = StatusChecker()
+
 ################################################################################
 # Helper functions:                                                            #
 ################################################################################
 
+
 def perform_update():
     # ignore local chmod permission
-    command = "git config core.filemode false" # http://superuser.com/questions/204757/git-chmod-problem-checkout-screws-exec-bit
+    command = "git config core.filemode false"  # http://superuser.com/questions/204757/git-chmod-problem-checkout-screws-exec-bit
     subprocess.call(command.split())
 
     command = "git pull"
@@ -126,6 +128,7 @@ def perform_update():
 ################################################################################
 # Web pages:                                                                   #
 ################################################################################
+
 
 class loading(ProtectedPage):
     """Load an html page rev data."""
