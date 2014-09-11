@@ -60,15 +60,12 @@ def restart():
 
 def uptime():
     """Returns UpTime for RPi"""
-    try:
-        f = open("/proc/uptime")
-        contents = f.read().split()
-        f.close()
-    except:
-        return "Error 1: uptime"
+    string = 'Error 1: uptime'
 
-    total_seconds = float(contents[0])
-    string = str(datetime.timedelta(seconds=total_seconds))
+    with open("/proc/uptime") as f:
+        total_sec = float(f.read().split()[0])
+        string = str(datetime.timedelta(seconds=total_sec)).split('.')[0]
+
     return string
 
 
