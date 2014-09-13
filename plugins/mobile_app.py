@@ -7,7 +7,7 @@ from helpers import get_cpu_temp
 import web
 import gv  # Gain access to ospy's settings
 from urls import urls  # Gain access to ospy's URL list
-
+from webpages import ProtectedPage
 
 ##############
 ## New URLs ##
@@ -25,7 +25,7 @@ urls.extend([
 #######################
 ## Class definitions ##
 
-class options(object):  # /jo
+class options(ProtectedPage):  # /jo
     """Returns device options as json."""
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
@@ -51,7 +51,7 @@ class options(object):  # /jo
         return json.dumps(jopts)
 
 
-class cur_settings(object):  # /jc
+class cur_settings(ProtectedPage):  # /jc
     """Returns current settings as json."""
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
@@ -76,7 +76,7 @@ class cur_settings(object):  # /jc
         return json.dumps(jsettings)
 
 
-class station_state(object):  # /js
+class station_state(ProtectedPage):  # /js
     """Returns station status and total number of stations as json."""
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
@@ -90,7 +90,7 @@ class station_state(object):  # /js
         return json.dumps(jstate)
 
 
-class program_info(object):  # /jp
+class program_info(ProtectedPage):  # /jp
     """Returns program data as json."""
     def GET(self):
         lpd = []  # Local program data
@@ -114,7 +114,7 @@ class program_info(object):  # /jp
         return json.dumps(jpinfo)
 
 
-class station_info(object):  # /jn
+class station_info(ProtectedPage):  # /jn
     """Returns station information as json."""
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
@@ -130,7 +130,7 @@ class station_info(object):  # /jn
         return json.dumps(jpinfo)
 
 
-class get_logs(object):  # /jl
+class get_logs(ProtectedPage):  # /jl
     """Returns log information for specified date range."""
     def GET(self):
         records = self.read_log()
