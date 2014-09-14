@@ -117,6 +117,11 @@ class program_info(ProtectedPage):  # /jp
 class station_info(ProtectedPage):  # /jn
     """Returns station information as json."""
     def GET(self):
+        disable = []
+
+        for byte in gv.sd['show']:
+            disable.append(~byte&255)
+
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         web.header('Cache-Control', 'no-cache')
@@ -124,6 +129,7 @@ class station_info(ProtectedPage):  # /jn
             "snames": gv.snames,
             "ignore_rain": gv.sd['ir'],
             "masop": gv.sd['mo'],
+            "stn_dis": disable,
             "maxlen": gv.sd['snlen']
         }
 
