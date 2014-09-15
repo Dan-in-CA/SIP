@@ -19,11 +19,24 @@ urls.extend([
     '/jp', 'plugins.mobile_app.program_info',
     '/jn', 'plugins.mobile_app.station_info',
     '/jl', 'plugins.mobile_app.get_logs',
+    '/jv', 'plugins.mobile_app.get_version',
     '/sp', 'plugins.mobile_app.set_password'])
 
 
 #######################
 ## Class definitions ##
+
+class get_version(object):  # /jv
+    """Returns device version as json."""
+    def GET(self):
+        web.header('Access-Control-Allow-Origin', '*')
+        web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
+        jver = {
+            "fwv": gv.ver_str+'-OSPi',
+        }
+
+        return json.dumps(jver)
 
 class options(ProtectedPage):  # /jo
     """Returns device options as json."""
@@ -49,7 +62,6 @@ class options(ProtectedPage):  # /jo
         }
 
         return json.dumps(jopts)
-
 
 class cur_settings(ProtectedPage):  # /jc
     """Returns current settings as json."""
