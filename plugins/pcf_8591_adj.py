@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# This plugin read data (temp or voltage) from I2C PCF8591 on adress 0x48. For temperature probe use LM35D
+# This plugin read data (temp or voltage) from I2C PCF8591 on adress 0x48. For temperature probe use LM35D. Power for PCF8591 or LM35D is 5V dc! no 3.3V dc
 
 from threading import Thread
 from random import randint
@@ -71,13 +71,29 @@ class PCFSender(Thread):
             try:
                 datapcf = get_pcf_options()                          # load data from file
                 if datapcf['use_pcf'] != 'off':                      # if pcf plugin is enabled
-                    ad0 = get_measure(0, self)
-                    ad1 = get_measure(1, self)
-                    ad2 = get_measure(2, self)
-                    ad3 = get_measure(3, self)
                     if datapcf['use_log'] != 'off' and datapcf['time'] != '0':  # if log is enabled and time is not 0 min
                         actual_time = gv.now
                         if actual_time - last_time > (int(datapcf['time']) * 60):       # if is time for save
+                            ad0 = get_now_measure(1)
+                            ad1 = get_now_measure(2)
+                            ad2 = get_now_measure(3)
+                            ad3 = get_now_measure(4)
+                            if datapcf['ad0'] != 'off': 
+                               ad0 = get_volt(ad0)
+                            else:
+                               ad0 = get_temp(ad0)
+                            if datapcf['ad1'] != 'off': 
+                               ad1 = get_volt(ad1)
+                            else:
+                               ad1 = get_temp(ad1)
+                            if datapcf['ad2'] != 'off': 
+                               ad2 = get_volt(ad2)
+                            else:
+                               ad2 = get_temp(ad2)
+                            if datapcf['ad3'] != 'off': 
+                               ad3 = get_volt(ad3)
+                            else:
+                               ad3 = get_temp(ad3)
                             last_time = actual_time
                             self.status = ''
                             TEXT = 'On ' + time.strftime('%d.%m.%Y at %H:%M:%S', time.localtime(time.time())) + \
@@ -86,16 +102,18 @@ class PCFSender(Thread):
                                    ' AD2=' + str(ad2) + \
                                    ' AD3=' + str(ad3)
                             self.add_status(TEXT)
-                            write_log(ad0, ad1, ad2, ad3)
-
+                            #write_log(ad0, ad1, ad2, ad3)
+                
+                out_val = datapcf['da0val']  
+                get_write_DA(int(out_val)) # send to DA 0 output value 0-255 -> 0-5V 
+               
                 self._sleep(1)
-
+               
             except Exception:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 err_string = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
                 self.add_status('PCF plugin encountered error: ' + err_string)
                 self._sleep(5)
-
 
 checker = PCFSender()
 
@@ -103,68 +121,26 @@ checker = PCFSender()
 # Helper functions:                                                            #
 ################################################################################
 
+def get_volt(data):
+    """Return voltage 0-5.0V from number"""
+    volt = (data*5.0)/255
+    volt = round(volt,1)
+    return volt
+
+def get_temp(data):
+    """Return temperature 0-100C from data"""
+    temp = ((data*5.0)/255)*100.0
+    temp = round(temp,1)
+    return temp
 
 def get_now_measure(AD_pin):
-    """Return voltage from A/D PCF8591 to webpage"""
-    try:
-        ADC.write_byte_data(0x48, (0x40 + AD_pin), AD_pin)
-        involt = ADC.read_byte(0x48)
-        data = round(((involt * 3.3) / 255), 1)
-        return data  # volt in AD input range 0-255
-    except:
-        return 0.0
-
-
-def get_measure(AD_pin, self):
-    """Return voltage from A/D PCF8591 to logline"""
-    datapcf = get_pcf_options()
-    try:
-        ADC.write_byte_data(0x48, (0x40 + AD_pin), AD_pin)
-        involt = ADC.read_byte(0x48)  # involt range is 0-255
-
-        if AD_pin == 0:
-            if datapcf['ad0'] != 'on':  # off = measure temperature from LM35D, on = voltage
-                temp = (involt / 77.27) * 100.0  # voltage in AD0 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
-                data = round(temp, 1)
-                return data
-            else:
-                data = round(((involt * 3.3) / 255), 1)
-                return data
-        if AD_pin == 1:
-            if datapcf['ad1'] != 'on':  # off = measure temperature from LM35D, on = voltage
-                temp = (involt / 77.27) * 100.0  # voltage in AD1 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
-                data = round(temp, 1)
-                return data
-            else:
-                data = round(((involt * 3.3) / 255), 1)
-                return data
-        if AD_pin == 2:
-            if datapcf['ad2'] != 'on':  # off = measure temperature from LM35D, on = voltage
-                temp = (involt / 77.27) * 100.0  # voltage in AD2 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
-                data = round(temp, 1)
-                return data
-            else:
-                data = round(((involt * 3.3) / 255), 1)
-                return data
-        if AD_pin == 3:
-            if datapcf['ad0'] != 'on':  # off = measure temperature from LM35D, on = voltage
-                temp = (involt / 77.27) * 100.0  # voltage in AD3 input is range 0-3.3V  == 0-255 -> 255/3.3V=77.27
-                data = round(temp, 1)
-                return data
-            else:
-                data = round(((involt * 3.3) / 255), 1)
-                return data
-
-    except:
-        self.status = ''
-        self.add_status('Error: Found PCF8591 at I2C adress 0x40!')
-        return 0.0
-
+    """Return number 0-255 from A/D PCF8591 to webpage"""
+    ADC.write_byte_data(0x48, (0x40 + AD_pin), AD_pin)
+    return ADC.read_byte(0x48)  
 
 def get_write_DA(Y):  # PCF8591 D/A converter Y=(0-255) for future use
     """Write analog voltage to output"""
     ADC.write_byte_data(0x48, 0x40, Y)
-
 
 def get_pcf_options():
     """Returns the data form file."""
@@ -181,10 +157,11 @@ def get_pcf_options():
         'ad1text': 'label_2',
         'ad2text': 'label_3',
         'ad3text': 'label_4',
-        'ad0val': get_now_measure(0),
-        'ad1val': get_now_measure(1),
-        'ad2val': get_now_measure(2),
-        'ad3val': get_now_measure(3),
+        'ad0val': get_now_measure(1),
+        'ad1val': get_now_measure(2),
+        'ad2val': get_now_measure(3),
+        'ad3val': get_now_measure(4),
+        'da0val': '0', 
         'status': checker.status
     }
     try:
