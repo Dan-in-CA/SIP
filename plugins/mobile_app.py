@@ -3,7 +3,7 @@ import time
 import datetime
 import string
 
-from helpers import get_cpu_temp, password_hash
+from helpers import get_cpu_temp, check_login
 import web
 import gv  # Gain access to ospy's settings
 from urls import urls  # Gain access to ospy's URL list
@@ -181,21 +181,3 @@ class get_logs(ProtectedPage):  # /jl
             return records
         except IOError:
             return []
-
-def check_login():
-    qdict = web.input()
-
-    try:
-        if gv.sd['ipas'] == 1:
-            return True
-
-        if web.config._session.user == 'admin':
-            return True
-    except KeyError:
-        pass
-
-    if 'pw' in qdict:
-        if gv.sd['password'] == password_hash(qdict['pw'], gv.sd['salt']):
-            return True
-
-    return False
