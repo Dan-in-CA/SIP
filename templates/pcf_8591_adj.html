@@ -1,7 +1,19 @@
 $def with(m_vals)
 
-$var title: OpenSprinkler Pi PCF8591 voltage and temperature settings
+$var title: OpenSprinkler Pi PCF8591 voltage and temperature adjustments
 $var page: plugins
+
+$code:
+   def meas(ad_text, ad_value, ad_unit):
+       volt = ad_value * 5.0 / 255
+       temp = volt * 100.0        
+
+       if ad_text != '':
+           if ad_unit == 'on':
+               return '%s: %.1f V' % (ad_text, volt) 
+           else:
+               return u'%s: %.1f \N{DEGREE SIGN}C' % (ad_text, temp)
+
 
 <script>
     // Initialize behaviors
@@ -13,30 +25,16 @@ $var page: plugins
         jQuery("button#cCancel").click(function(){
             window.location="/";
         });
+ });
 
-    });
-</script>   
-
-$code:
-     def volttemp(involt,unit):
-        if unit == "on":
-           value = involt*3.3/255
-           if m_vals['use_pcf'] == "on":
-              return str(value) + (" [V]" if unit == 'on' else " [C]")
-           else:
-              return str("***")
-
-        else:
-           value = (involt*3.3/255)*100
-           if m_vals['use_pcf'] == "on":
-              return str(value) + (" [V]" if unit == 'on' else " [C]")
-           else:
-              return str("***")
+</script>
+    
 
 <div id="plugin">
-    <div class="title">PCF8591 voltage and temperature settings</div>
-    <p>For this plugin a connected I2C A/D converter PCF8591 on I2C address 0x48 is needed.</p>
-    <p>For measuring temperature, use temp probe LM35D (0-100 &deg;C) on AD0-3 converter.</p>
+    <div class="title">PCF8591 voltage and temperature adjustments</div>
+    <p>For this plugin is needed enabled I2C bus and connected I2C A/D converter PCF8591 on I2C adress 0x48.</p>
+    <p>For measure temperature use temp probe LM35D (0-100 &deg;C) on AD0-3 converter.</p>
+    <p>If the label has not blank value the value is displayed in the window read value.</p>
     <p>Download log as <a href="/pcfl">csv</a>. <a href="/pcfr">Delete</a> log file.</p>
     <form id="pluginForm" action="/pcfa" method="get">
         <table class="optionList">
@@ -90,17 +88,27 @@ $code:
             </tr>
             <tr> 
                 <td style='text-transform: none; vertical-align: top;'>Read value:</td>
-                <td style="background-color: rgb(204, 204, 204);text-align: center;">                    
-                    <h2> $m_vals["ad0text"]: ${volttemp(m_vals["ad0val"],m_vals['ad0'])} <br>
-                    $m_vals["ad1text"]: ${volttemp(m_vals["ad1val"],m_vals['ad1'])} <br>
-                    $m_vals["ad2text"]: ${volttemp(m_vals["ad2val"],m_vals['ad2'])} <br>
-                    $m_vals["ad3text"]: ${volttemp(m_vals["ad3val"],m_vals['ad3'])} </h2>
+                <td style="background-color: rgb(220, 220, 220);text-align: left;">                     
+                  $if m_vals['ad0text'] != '': 
+                      ${meas(m_vals['ad0text'],m_vals['ad0val'],m_vals['ad0'])} <br>
+                  $if m_vals['ad1text'] != '': 
+                      ${meas(m_vals['ad1text'],m_vals['ad1val'],m_vals['ad1'])} <br>
+                  $if m_vals['ad2text'] != '': 
+                      ${meas(m_vals['ad2text'],m_vals['ad2val'],m_vals['ad2'])} <br>
+                  $if m_vals['ad3text'] != '':
+                      ${meas(m_vals['ad3text'],m_vals['ad3val'],m_vals['ad3'])} <br>                   
                 </td>
             </tr>
             <tr>
                 <td style='text-transform: none;'>Status:</td>
                 <td>
                     <textarea style="font-family: monospace;" rows="7" cols="35" readonly>$m_vals['status']</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>Output DA voltage:</td>
+                <td>
+                    <input name='da0val' type='number' min="0" max="255" value=$m_vals["da0val"]> (0-255 = 0-5 Volt)
                 </td>
             </tr>
         </table>
