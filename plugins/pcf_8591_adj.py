@@ -102,7 +102,7 @@ class PCFSender(Thread):
                                    ' AD2=' + str(ad2) + \
                                    ' AD3=' + str(ad3)
                             self.add_status(TEXT)
-                            #write_log(ad0, ad1, ad2, ad3)
+                            write_log(ad0, ad1, ad2, ad3)
                 
                 out_val = datapcf['da0val']  
                 get_write_DA(int(out_val)) # send to DA 0 output value 0-255 -> 0-5V 
