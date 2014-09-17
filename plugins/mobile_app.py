@@ -3,11 +3,11 @@ import time
 import datetime
 import string
 
-from helpers import get_cpu_temp
+from helpers import get_cpu_temp, password_hash
 import web
 import gv  # Gain access to ospy's settings
 from urls import urls  # Gain access to ospy's URL list
-from webpages import ProtectedPage
+from webpages import ProtectedPage, WebPage
 
 ##############
 ## New URLs ##
@@ -19,47 +19,39 @@ urls.extend([
     '/jp', 'plugins.mobile_app.program_info',
     '/jn', 'plugins.mobile_app.station_info',
     '/jl', 'plugins.mobile_app.get_logs',
-    '/jv', 'plugins.mobile_app.get_version',
     '/sp', 'plugins.mobile_app.set_password'])
 
 
 #######################
 ## Class definitions ##
 
-class get_version(object):  # /jv
-    """Returns device version as json."""
-    def GET(self):
-        web.header('Access-Control-Allow-Origin', '*')
-        web.header('Content-Type', 'application/json')
-        web.header('Cache-Control', 'no-cache')
-        jver = {
-            "fwv": gv.ver_str+'-OSPi',
-        }
-
-        return json.dumps(jver)
-
-class options(ProtectedPage):  # /jo
+class options(WebPage):  # /jo
     """Returns device options as json."""
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         web.header('Cache-Control', 'no-cache')
-        jopts = {
-            "fwv": gv.ver_str+'-OSPi',
-            "tz": gv.sd['tz'],
-            "ext": gv.sd['nbrd'] - 1,
-            "seq": gv.sd['seq'],
-            "sdt": gv.sd['sdt'],
-            "mas": gv.sd['mas'],
-            "mton": gv.sd['mton'],
-            "mtof": gv.sd['mtoff'],
-            "urs": gv.sd['urs'],
-            "rso": gv.sd['rst'],
-            "wl": gv.sd['wl'],
-            "ipas": gv.sd['ipas'],
-            "reset": gv.sd['rbt'],
-            "lg": gv.sd['lg']
-        }
+        if check_login():
+            jopts = {
+                "fwv": gv.ver_str+'-OSPi',
+                "tz": gv.sd['tz'],
+                "ext": gv.sd['nbrd'] - 1,
+                "seq": gv.sd['seq'],
+                "sdt": gv.sd['sdt'],
+                "mas": gv.sd['mas'],
+                "mton": gv.sd['mton'],
+                "mtof": gv.sd['mtoff'],
+                "urs": gv.sd['urs'],
+                "rso": gv.sd['rst'],
+                "wl": gv.sd['wl'],
+                "ipas": gv.sd['ipas'],
+                "reset": gv.sd['rbt'],
+                "lg": gv.sd['lg']
+            }
+        else:
+            jopts = {
+                "fwv": gv.ver_str+'-OSPi',
+            }
 
         return json.dumps(jopts)
 
@@ -189,3 +181,21 @@ class get_logs(ProtectedPage):  # /jl
             return records
         except IOError:
             return []
+
+def check_login():
+    qdict = web.input()
+
+    try:
+        if gv.sd['ipas'] == 1:
+            return True
+
+        if web.config._session.user == 'admin':
+            return True
+    except KeyError:
+        pass
+
+    if 'pw' in qdict:
+        if gv.sd['password'] == password_hash(qdict['pw'], gv.sd['salt']):
+            return True
+
+    return False
