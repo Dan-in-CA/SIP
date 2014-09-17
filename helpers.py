@@ -350,7 +350,7 @@ def password_hash(password, salt):
 ########################
 #### Login Handling ####
 
-def check_login():
+def check_login(redirect=False):
     qdict = web.input()
 
     try:
@@ -365,9 +365,13 @@ def check_login():
     if 'pw' in qdict:
         if gv.sd['password'] == password_hash(qdict['pw'], gv.sd['salt']):
             return True
-        raise web.unauthorized()
+        if redirect:
+            raise web.unauthorized()
+        return False
 
-    raise web.seeother('/login')
+    if redirect:
+        raise web.seeother('/login')
+    return False
 
 
 signin_form = form.Form(

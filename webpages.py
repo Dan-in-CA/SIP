@@ -22,7 +22,7 @@ class WebPage(object):
 
 class ProtectedPage(WebPage):
     def __init__(self):
-        check_login()
+        check_login(True)
         WebPage.__init__(self)
 
 
