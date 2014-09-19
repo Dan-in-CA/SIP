@@ -198,11 +198,9 @@ class change_options(ProtectedPage):
                 gv.sd['mo'].append(0)
                 gv.sd['ir'].append(0)
                 gv.sd['show'].append(255)
-            nlst = gv.snames
-            ln = len(nlst)
+            ln = len(gv.snames)
             for i in range(incr*8):
-                nlst.append("S"+('%d' % (i+1+ln)))
-            jsave(nlst, 'snames')
+                gv.snames.append("S"+('%d' % (i+1+ln)))
             for i in range(incr * 8):
                 gv.srvals.append(0)
                 gv.ps.append([0, 0])
@@ -222,8 +220,9 @@ class change_options(ProtectedPage):
             gv.srvals = gv.srvals[:newlen]
             gv.ps = gv.ps[:newlen]
             gv.rs = gv.rs[:newlen]
+            gv.snames = gv.snames[:newlen]
             gv.sbits = gv.sbits[:onbrd + 1]
-        return
+        jsave(gv.snames, 'snames')
 
 
 class view_stations(ProtectedPage):
