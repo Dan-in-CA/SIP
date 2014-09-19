@@ -253,6 +253,11 @@ class change_stations(ProtectedPage):
                     gv.sd['show'][i] = int(qdict['sh' + str(i)])
                 except ValueError:
                     gv.sd['show'][i] = 255
+            if 'd' + str(i) in qdict:
+                try:
+                    gv.sd['show'][i] = ~int(qdict['d' + str(i)])&255
+                except ValueError:
+                    gv.sd['show'][i] = 255
         names = []
         for i in range(gv.sd['nst']):
             if 's' + str(i) in qdict:

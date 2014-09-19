@@ -3,11 +3,11 @@ import time
 import datetime
 import string
 
-from helpers import get_cpu_temp
+from helpers import get_cpu_temp, check_login
 import web
 import gv  # Gain access to ospy's settings
 from urls import urls  # Gain access to ospy's URL list
-from webpages import ProtectedPage
+from webpages import ProtectedPage, WebPage
 
 ##############
 ## New URLs ##
@@ -25,31 +25,35 @@ urls.extend([
 #######################
 ## Class definitions ##
 
-class options(ProtectedPage):  # /jo
+class options(WebPage):  # /jo
     """Returns device options as json."""
     def GET(self):
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         web.header('Cache-Control', 'no-cache')
-        jopts = {
-            "fwv": gv.ver_str+'-OSPi',
-            "tz": gv.sd['tz'],
-            "ext": gv.sd['nbrd'] - 1,
-            "seq": gv.sd['seq'],
-            "sdt": gv.sd['sdt'],
-            "mas": gv.sd['mas'],
-            "mton": gv.sd['mton'],
-            "mtof": gv.sd['mtoff'],
-            "urs": gv.sd['urs'],
-            "rso": gv.sd['rst'],
-            "wl": gv.sd['wl'],
-            "ipas": gv.sd['ipas'],
-            "reset": gv.sd['rbt'],
-            "lg": gv.sd['lg']
-        }
+        if check_login():
+            jopts = {
+                "fwv": gv.ver_str+'-OSPi',
+                "tz": gv.sd['tz'],
+                "ext": gv.sd['nbrd'] - 1,
+                "seq": gv.sd['seq'],
+                "sdt": gv.sd['sdt'],
+                "mas": gv.sd['mas'],
+                "mton": gv.sd['mton'],
+                "mtof": gv.sd['mtoff'],
+                "urs": gv.sd['urs'],
+                "rso": gv.sd['rst'],
+                "wl": gv.sd['wl'],
+                "ipas": gv.sd['ipas'],
+                "reset": gv.sd['rbt'],
+                "lg": gv.sd['lg']
+            }
+        else:
+            jopts = {
+                "fwv": gv.ver_str+'-OSPi',
+            }
 
         return json.dumps(jopts)
-
 
 class cur_settings(ProtectedPage):  # /jc
     """Returns current settings as json."""
@@ -117,6 +121,11 @@ class program_info(ProtectedPage):  # /jp
 class station_info(ProtectedPage):  # /jn
     """Returns station information as json."""
     def GET(self):
+        disable = []
+
+        for byte in gv.sd['show']:
+            disable.append(~byte&255)
+
         web.header('Access-Control-Allow-Origin', '*')
         web.header('Content-Type', 'application/json')
         web.header('Cache-Control', 'no-cache')
@@ -124,6 +133,7 @@ class station_info(ProtectedPage):  # /jn
             "snames": gv.snames,
             "ignore_rain": gv.sd['ir'],
             "masop": gv.sd['mo'],
+            "stn_dis": disable,
             "maxlen": gv.sd['snlen']
         }
 
