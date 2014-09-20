@@ -8,7 +8,6 @@ import web
 
 import gv
 from helpers import *
-from gpio_pins import set_output
 from ospy import template_render
 
 __author__ = 'Rimco'
@@ -68,8 +67,7 @@ class change_values(ProtectedPage):
         if 'en' in qdict and qdict['en'] == '':
             qdict['en'] = '1'  # default
         elif 'en' in qdict and qdict['en'] == '0':
-            gv.srvals = [0] * (gv.sd['nst'])  # turn off all stations
-            set_output()
+            stations.clear()
         if 'mm' in qdict and qdict['mm'] == '0':
             clear_mm()
         if 'rd' in qdict and qdict['rd'] != '0' and qdict['rd'] != '':
@@ -185,9 +183,7 @@ class change_options(ProtectedPage):
 
         jsave(gv.sd, 'sd')
         if 'rbt' in qdict and qdict['rbt'] == '1':
-            gv.srvals = [0] * (gv.sd['nst'])
-            set_output()
-            os.system('reboot')
+            reboot()
         raise web.seeother('/')
 
     def update_scount(self, qdict):
