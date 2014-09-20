@@ -83,13 +83,6 @@ class Options(object):
         #######################################################################
         # Configure Master ####################################################
         {
-            "key": "master_station",
-            "name": "Master station",
-            "default": -1,
-            "help": "Select master station.",
-            "category": "Configure Master"
-        },
-        {
             "key": "master_on_delay",
             "name": "Master on adjust",
             "default": 0,

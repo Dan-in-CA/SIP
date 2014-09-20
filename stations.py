@@ -8,18 +8,38 @@ class Station(object):
     def __init__(self, outputs, index):
         self._outputs = outputs
         self._index = index
+        self._is_master = False
+        self._activate_master = False
 
         self.name = "Station %02d" % index
         self.enabled = False
         self.ignore_rain = False
-        self.is_master = False
-        self.activate_master = False
 
         options.load(self, self._index)
 
     @property
     def index(self):
         return self._index
+
+    @property
+    def is_master(self):
+        return self._is_master
+
+    @is_master.setter
+    def is_master(self, value):
+        if self._is_master != value:
+            self._is_master = value
+            if value:
+                self._outputs.master = self._index
+
+    @property
+    def activate_master(self):
+        return self._activate_master
+
+    @activate_master.setter
+    def activate_master(self, value):
+        self._activate_master = value
+        self._outputs.check_master()
 
     @property
     def activated(self):
@@ -66,10 +86,12 @@ class DummyStations(object):
     def activate(self, index):
         self._state[index] = True
         print "Output", index, "=", self._state[index]
+        self.check_master()
 
     def deactivate(self, index):
         self._state[index] = False
         print "Output", index, "=", self._state[index]
+        self.check_master()
 
     def activated(self, index=None):
         if index is None:
@@ -81,6 +103,39 @@ class DummyStations(object):
     def clear(self):
         for i in range(len(self._state)):
             self._state[i] = False
+
+    @property
+    def master(self):
+        result = None
+        for index, station in enumerate(self._outputs):
+            if station.is_master:
+                result = index
+                break
+        return result
+
+    @master.setter
+    def master(self, value):
+        old_master = self.master
+        if old_master is not None and self._state[old_master]:
+            self._state[old_master] = False
+
+        for index, station in enumerate(self._outputs):
+            if index == value:
+                station.is_master = True
+            else:
+                station.is_master = False
+        self.check_master()
+
+    def check_master(self):
+        master = self.master
+        if master is not None:
+            for station in self._outputs:
+                if station.activated and station.activate_master:
+                    self._state[master] = True
+                    break
+            else:
+                self._state[master] = False
+
 
 
 class ShiftStations(DummyStations):
@@ -105,6 +160,7 @@ class ShiftStations(DummyStations):
 
     def _activate(self):
         """Set the state of each output pin on the shift register from the internal state."""
+        self.check_master()
         self._io.output(self._sr_noe, self._io.HIGH)
         self._io.output(self._sr_clk, self._io.LOW)
         self._io.output(self._sr_lat, self._io.LOW)
