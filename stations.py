@@ -4,7 +4,7 @@ from options import options
 
 
 class Station(object):
-    SAVE_EXCLUDE = ['SAVE_EXCLUDE', 'index', 'activated']
+    SAVE_EXCLUDE = ['SAVE_EXCLUDE', 'index', 'active']
 
     def __init__(self, outputs, index):
         self._outputs = outputs
@@ -33,11 +33,11 @@ class Station(object):
             self._outputs.master = None
 
     @property
-    def activated(self):
-        return self._outputs.activated(self._index)
+    def active(self):
+        return self._outputs.active(self._index)
 
-    @activated.setter
-    def activated(self, value):
+    @active.setter
+    def active(self, value):
         if value:
             self._outputs.activate(self._index)
         else:
@@ -87,7 +87,7 @@ class BaseStations(object):
     def deactivate(self, index):
         self._state[index] = False
 
-    def activated(self, index=None):
+    def active(self, index=None):
         if index is None:
             result = self._state[:]
         else:

@@ -163,17 +163,14 @@ class Options(object):
         self._values = {}
         self._write_timer = None
 
-        try:
-            with open('./data/options.json', 'r') as options_file:  # A config file
-                options_data = json.load(options_file)
-        except Exception:
-            options_data = {}
-
         for info in self.OPTIONS:
             self._values[info["key"]] = info["default"]
 
-        for option in options_data:
-            self._values[option] = options_data[option]
+        try:
+            with open('./data/options.json', 'r') as options_file:  # A config file
+                self._values.update(json.load(options_file))
+        except Exception:
+            pass
 
     def __getattr__(self, item):
         if item.startswith('_'):
