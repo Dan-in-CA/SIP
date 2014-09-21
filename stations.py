@@ -6,79 +6,81 @@ from options import options
 class Station(object):
     SAVE_EXCLUDE = ['SAVE_EXCLUDE', 'index', 'active']
 
-    def __init__(self, outputs, index):
-        self._outputs = outputs
-        self._index = index
+    def __init__(self, stations_instance, index):
+        self._stations = stations_instance
         self.activate_master = False
 
-        self.name = "Station %02d" % index
+        self.name = "Station %02d" % (index+1)
         self.enabled = False
         self.ignore_rain = False
 
-        options.load(self, self._index)
+        options.load(self, index)
 
     @property
     def index(self):
-        return self._index
+        return self._stations.get().index(self)
 
     @property
     def is_master(self):
-        return self._index == self._outputs.master
+        return self.index == self._stations.master
 
     @is_master.setter
     def is_master(self, value):
         if value:
-            self._outputs.master = self._index
+            self._stations.master = self.index
         elif self.is_master:
-            self._outputs.master = None
+            self._stations.master = None
 
     @property
     def active(self):
-        return self._outputs.active(self._index)
+        return self._stations.active(self.index)
 
     @active.setter
     def active(self, value):
         if value:
-            self._outputs.activate(self._index)
+            self._stations.activate(self.index)
         else:
-            self._outputs.deactivate(self._index)
+            self._stations.deactivate(self.index)
 
     def __setattr__(self, key, value):
-        super(Station, self).__setattr__(key, value)
-        if not key.startswith('_') and key not in self.SAVE_EXCLUDE:
-            options.save(self, self._index)
+        try:
+            super(Station, self).__setattr__(key, value)
+            if not key.startswith('_') and key not in self.SAVE_EXCLUDE:
+                options.save(self, self.index)
+        except ValueError:  # No index available yet
+            pass
 
 
 class BaseStations(object):
     def __init__(self, count):
         self.master = None
-        self._outputs = []
+        self._stations = []
         self._state = [False] * count
         for i in range(count):
-            self._outputs.append(Station(self, i))
+            self._stations.append(Station(self, i))
         self.clear()
 
     def resize(self, count):
-        while len(self._outputs) < count:
-            self._outputs.append(Station(self, len(self._outputs)))
+        while len(self._stations) < count:
+            self._stations.append(Station(self, len(self._stations)))
             self._state.append(False)
 
         # Make sure we turn them off before they become unreachable
-        if len(self._outputs) > count:
+        if len(self._stations) > count:
             self.clear()
 
-        while len(self._outputs) > count:
-            del self._outputs[-1]
+        while len(self._stations) > count:
+            del self._stations[-1]
             del self._state[-1]
 
     def count(self):
-        return len(self._outputs)
+        return len(self._stations)
 
     def get(self, index=None):
         if index is None:
-            result = self._outputs[:]
+            result = self._stations[:]
         else:
-            result = self._outputs[index]
+            result = self._stations[index]
         return result
 
     def activate(self, index):

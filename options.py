@@ -1,7 +1,10 @@
 import json
+import shelve
 from threading import Timer
 
 __author__ = 'Rimco'
+
+OPTIONS_FILE = './data/options.db'
 
 
 class Options(object):
@@ -155,6 +158,12 @@ class Options(object):
             "key": "password_salt",
             "name": "Current password salt",
             "default": "",
+        },
+
+        {
+            "key": "program_count",
+            "name": "The number of programs",
+            "default": 0,
         }
 
     ]
@@ -167,10 +176,15 @@ class Options(object):
             self._values[info["key"]] = info["default"]
 
         try:
-            with open('./data/options.json', 'r') as options_file:  # A config file
-                self._values.update(json.load(options_file))
+            db = shelve.open(OPTIONS_FILE)
+            self._values.update(db)
+            db.close()
         except Exception:
             pass
+
+        import pprint
+        pp = pprint.PrettyPrinter(indent=2)
+        pp.pprint(self._values)
 
     def __getattr__(self, item):
         if item.startswith('_'):
@@ -193,8 +207,9 @@ class Options(object):
 
     def _write(self):
         ''''This function saves the current data to disk. Use a timer to limit the call rate.'''
-        with open('./data/options.json', 'w') as f:
-            json.dump(self._values, f)
+        db = shelve.open(OPTIONS_FILE)
+        db.update(self._values)
+        db.close()
 
     def get_categories(self):
         result = []
@@ -216,8 +231,8 @@ class Options(object):
     def get_info(self, option):
         return self.OPTIONS[option]
 
-    def load(self, obj, key):
-        cls = obj.__class__.__name__
+    def load(self, obj, key=""):
+        cls = type(obj).__name__
         try:
             values = getattr(self, cls + str(key))
             for name, value in values.iteritems():
@@ -225,8 +240,8 @@ class Options(object):
         except KeyError:
             pass
 
-    def save(self, obj, key):
-        cls = obj.__class__.__name__
+    def save(self, obj, key=""):
+        cls = type(obj).__name__
         values = {}
         exclude = obj.SAVE_EXCLUDE if hasattr(obj, 'SAVE_EXCLUDE') else []
         for attr in [att for att in dir(obj) if not att.startswith('_') and att not in exclude]:

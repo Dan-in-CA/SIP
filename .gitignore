@@ -7,3 +7,4 @@ web/
 /python
 .idea
 /.settings
+/data/*.db
