@@ -2,14 +2,14 @@ __author__ = 'Rimco'
 
 from options import options
 
+
 class Station(object):
     SAVE_EXCLUDE = ['SAVE_EXCLUDE', 'index', 'activated']
 
     def __init__(self, outputs, index):
         self._outputs = outputs
         self._index = index
-        self._is_master = False
-        self._activate_master = False
+        self.activate_master = False
 
         self.name = "Station %02d" % index
         self.enabled = False
@@ -23,23 +23,14 @@ class Station(object):
 
     @property
     def is_master(self):
-        return self._is_master
+        return self._index == self._outputs.master
 
     @is_master.setter
     def is_master(self, value):
-        if self._is_master != value:
-            self._is_master = value
-            if value:
-                self._outputs.master = self._index
-
-    @property
-    def activate_master(self):
-        return self._activate_master
-
-    @activate_master.setter
-    def activate_master(self, value):
-        self._activate_master = value
-        self._outputs.check_master()
+        if value:
+            self._outputs.master = self._index
+        elif self.is_master:
+            self._outputs.master = None
 
     @property
     def activated(self):
@@ -58,17 +49,24 @@ class Station(object):
             options.save(self, self._index)
 
 
-class DummyStations(object):
+class BaseStations(object):
     def __init__(self, count):
+        self.master = None
         self._outputs = []
         self._state = [False] * count
         for i in range(count):
             self._outputs.append(Station(self, i))
+        self.clear()
 
     def resize(self, count):
         while len(self._outputs) < count:
             self._outputs.append(Station(self, len(self._outputs)))
             self._state.append(False)
+
+        # Make sure we turn them off before they become unreachable
+        if len(self._outputs) > count:
+            self.clear()
+
         while len(self._outputs) > count:
             del self._outputs[-1]
             del self._state[-1]
@@ -85,13 +83,9 @@ class DummyStations(object):
 
     def activate(self, index):
         self._state[index] = True
-        print "Output", index, "=", self._state[index]
-        self.check_master()
 
     def deactivate(self, index):
         self._state[index] = False
-        print "Output", index, "=", self._state[index]
-        self.check_master()
 
     def activated(self, index=None):
         if index is None:
@@ -104,43 +98,27 @@ class DummyStations(object):
         for i in range(len(self._state)):
             self._state[i] = False
 
-    @property
-    def master(self):
-        result = None
-        for index, station in enumerate(self._outputs):
-            if station.is_master:
-                result = index
-                break
-        return result
 
-    @master.setter
-    def master(self, value):
-        old_master = self.master
-        if old_master is not None and self._state[old_master]:
-            self._state[old_master] = False
+class DummyStations(BaseStations):
+    def resize(self, count):
+        super(DummyStations, self).resize(count)
+        print "Output count =", count
 
-        for index, station in enumerate(self._outputs):
-            if index == value:
-                station.is_master = True
-            else:
-                station.is_master = False
-        self.check_master()
+    def activate(self, index):
+        super(DummyStations, self).activate(index)
+        print "Activated output", index
 
-    def check_master(self):
-        master = self.master
-        if master is not None:
-            for station in self._outputs:
-                if station.activated and station.activate_master:
-                    self._state[master] = True
-                    break
-            else:
-                self._state[master] = False
+    def deactivate(self, index):
+        super(DummyStations, self).deactivate(index)
+        print "Deactivated output", index
+
+    def clear(self):
+        super(DummyStations, self).clear()
+        print "Cleared all outputs"
 
 
-
-class ShiftStations(DummyStations):
+class ShiftStations(BaseStations):
     def __init__(self, count):
-        super(ShiftStations, self).__init__(count)
         self._io = None
         self._sr_dat = 0
         self._sr_clk = 0
@@ -156,11 +134,10 @@ class ShiftStations(DummyStations):
         self._io.setup(self._sr_lat, self._io.OUT)
         self._io.output(self._sr_lat, self._io.LOW)
 
-        self._activate()
+        super(ShiftStations, self).__init__(count)
 
     def _activate(self):
         """Set the state of each output pin on the shift register from the internal state."""
-        self.check_master()
         self._io.output(self._sr_noe, self._io.HIGH)
         self._io.output(self._sr_clk, self._io.LOW)
         self._io.output(self._sr_lat, self._io.LOW)
@@ -176,11 +153,11 @@ class ShiftStations(DummyStations):
         self._activate()
 
     def activate(self, index):
-        self._state[index] = True
+        super(ShiftStations, self).activate(index)
         self._activate()
 
     def deactivate(self, index):
-        self._state[index] = False
+        super(ShiftStations, self).deactivate(index)
         self._activate()
 
     def clear(self):
