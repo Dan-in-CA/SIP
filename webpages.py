@@ -9,7 +9,7 @@ import web
 import gv
 from helpers import *
 from gpio_pins import set_output
-from ospy import template_render
+from ospi import template_render
 
 __author__ = 'Rimco'
 
@@ -475,7 +475,7 @@ class show_revision(ProtectedPage):
         revpg += 'Python Interval Program for OpenSprinkler Pi<br/><br/>\n'
         revpg += 'Compatable with OpenSprinkler firmware 1.8.3.<br/><br/>\n'
         revpg += 'Includes plugin architecture\n'
-        revpg += 'ospy.py version: v' + gv.ver_str + '<br/><br/>\n'
+        revpg += 'ospi.py version: v' + gv.ver_str + '<br/><br/>\n'
         revpg += 'Updated ' + gv.ver_date + '\n'
         return revpg
 
