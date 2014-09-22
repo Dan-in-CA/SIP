@@ -6,11 +6,32 @@ from programs import programs
 import datetime
 
 
-def combined_schedule(start_time, end_time):
+def combined_schedule(start_time, end_time, current_active=None, skip_uids=None):
+    """Determines all schedules for the given time range.
+    To calculate what should currently be active, a start time of some time (a day) ago should be used.
+    The current_active list should contain intervals as returned by this function.
+    skip_uids is a list with uids that should not be returned. For example, if they already have been executed."""
+
+    ADJUSTMENT = 1.0  # FIXME: get (weather) level adjustment
+    MAX_USAGE = 1.01 if options.sequential else 1000000  # FIXME
+
+    if skip_uids is None:
+        skip_uids = []
+
+    if current_active is None:
+        current_active = []
+    else:
+        current_active = current_active[:]
+
+    current_usage = 0.0
+    for active in current_active:
+        current_usage += active['usage']
+        if active['uid'] not in skip_uids:
+            skip_uids.append(active['uid'])
 
     # Aggregate per station:
     station_schedules = {}
-    for program in programs.get():
+    for p_index, program in enumerate(programs.get()):
         if not program.enabled:
             continue
 
@@ -20,69 +41,87 @@ def combined_schedule(start_time, end_time):
             if station not in station_schedules:
                 station_schedules[station] = []
 
-            station_schedules[station] += [interval[:] for interval in program_intervals]  # Simple deepcopy
+            for interval in program_intervals:
+                new_schedule = {
+                    'program': p_index,
+                    'start': interval['start'],
+                    'end': interval['end'],
+                    'uid': '%d-%d-%s' % (p_index, station, str(interval['start'])),
+                    'usage': 1.0  # FIXME
+                }
+                if new_schedule['uid'] not in skip_uids:
+                    station_schedules[station].append(new_schedule)
 
     all_intervals = []
     # Adjust for weather and remove overlap:
     for station, schedule in station_schedules.iteritems():
         for interval in schedule:
-            adjustment = 1.0  # FIXME: get (weather) level adjustment
-            time_delta = interval[1] - interval[0]
-            time_delta = datetime.timedelta(seconds=(time_delta.days * 24 * 3600 + time_delta.seconds) * adjustment)
-            interval[1] = interval[0] + time_delta
+            time_delta = interval['end'] - interval['start']
+            time_delta = datetime.timedelta(seconds=(time_delta.days * 24 * 3600 + time_delta.seconds) * ADJUSTMENT)
+            interval['end'] = interval['start'] + time_delta
+            interval['adjustment'] = ADJUSTMENT
 
         last_end = datetime.datetime(2000, 1, 1)
         for interval in schedule:
-            if last_end > interval[0]:
-                time_delta = last_end - interval[0]
-                interval[0] += time_delta
-                interval[1] += time_delta
-            last_end = interval[1]
+            if last_end > interval['start']:
+                time_delta = last_end - interval['start']
+                interval['start'] += time_delta
+                interval['end'] += time_delta
+            last_end = interval['end']
 
-            all_intervals.append([station, interval])
+            new_interval = {
+                'station': station
+            }
+            new_interval.update(interval)
+
+            all_intervals.append(new_interval)
+
 
     # Make list of entries sorted on time (stable sorted on station #)
-    all_intervals.sort(key=lambda inter: inter[1])
-
-    current_usage = 0.0
-    current_active = []  # [ [station_index, [start, end] ], ... ]
-    max_usage = 1 if options.sequential else 1000000  # FIXME
+    all_intervals.sort(key=lambda inter: inter['start'])
 
     # Try to add each interval
-    for station, interval in all_intervals:
-        usage = 1  # FIXME
+    for interval in all_intervals:
         done = False
 
         while not done:
             # Delete all intervals that have finished
             while current_active:
-                if current_active[0][1][1] > interval[0]:
+                if current_active[0]['end'] > interval['start']:
                     break
-                current_usage -= 1  # FIXME
+                current_usage -= current_active[0]['usage']
                 del current_active[0]
 
             # Check if we can add it now
-            if current_usage + usage <= max_usage:
-                current_usage += usage
+            if current_usage + interval['usage'] <= MAX_USAGE:
+                current_usage += interval['usage']
                 # Add the newly "activated" station to the active list
                 for index in range(len(current_active)):
-                    if current_active[index][1][1] > interval[1]:
-                        current_active.insert(index, [station, interval])
+                    if current_active[index]['end'] > interval['end']:
+                        current_active.insert(index, interval)
                         break
                 else:
-                    current_active.append([station, interval])
+                    current_active.append(interval)
                 done = True
             else:
                 # Shift this interval to next possibility
-                next_option = current_active[0][1][1]
-                time_to_next = next_option - interval[0]
-                interval[0] += time_to_next
-                interval[1] += time_to_next
+                next_option = current_active[0]['end']
+                time_to_next = next_option - interval['start']
+                interval['start'] += time_to_next
+                interval['end'] += time_to_next
 
-    result = {}
-    for station, interval in all_intervals:
-        if station not in result:
-            result[station] = []
-        result[station].append(interval)
+    all_intervals.sort(key=lambda inter: inter['start'])
 
-    return result
+    return all_intervals
+
+# TODO: some function that combines logged runs with planned runs to provide complete overview
+# In: start_time, end_time, current_time, current_active => Out: intervals from history + prediction (for GUI)
+# It should make use of some log to determine which uids to skip
+# current_time > end_time => only log entries
+# current_time < start_time => only predictions
+# start_time <= current_time <= end_time => combination
+
+# TODO: some function/class (timing loop?) that keeps track of what is currently running and periodically checks
+# what should be running according to the prediction. It should use some log to determine the uids to skip.
+# It should also check the conditions that may prohibit the sprinklers from turning on (rain delay)
+# It should update the log whenever a run is started

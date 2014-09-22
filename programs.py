@@ -103,7 +103,10 @@ class Program(object):
                 if start >= date_time_end:
                     break
 
-                result.append([start, end])
+                result.append({
+                    'start': start,
+                    'end': end
+                })
 
             if self.manual:
                 break
