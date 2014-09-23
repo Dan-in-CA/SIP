@@ -1,9 +1,15 @@
 # !/usr/bin/env python
 
 import time
-
 import gv
-from gpio_pins import GPIO, pin_relay
+try:
+    from gpio_pins import pin_relay
+except NameError:
+    pass
+try:
+    from gpio_pins import GPIO
+except NameError:
+    pass
 from urls import urls
 import web
 from webpages import ProtectedPage

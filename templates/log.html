@@ -56,7 +56,7 @@ $code:
         </tr>
         $ odd = 1
         $for r in records:
-            $ event = r
+            $ event = json.loads(r)
             <tr class="log_rec ${'odd' if odd else 'even'}">
                 <td align='center'>${event["date"]}</td>
                 <td align='center'>${formatTime(event["start"])}</td>

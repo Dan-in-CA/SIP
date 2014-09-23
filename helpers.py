@@ -86,7 +86,7 @@ def uptime():
 
 
 def get_ip():
-    """Returns the IP adress if available."""
+    """Returns the IP address if available."""
     try:
         arg = 'ip route list'
         p = subprocess.Popen(arg, shell=True, stdout=subprocess.PIPE)
