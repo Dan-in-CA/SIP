@@ -76,7 +76,6 @@ def combined_schedule(start_time, end_time, current_active=None, skip_uids=None)
 
             all_intervals.append(new_interval)
 
-
     # Make list of entries sorted on time (stable sorted on station #)
     all_intervals.sort(key=lambda inter: inter['start'])
 

@@ -120,17 +120,24 @@ class Options(object):
         #######################################################################
         # Logging #############################################################
         {
-            "key": "log_runs",
-            "name": "Enable logging",
+            "key": "run_log",
+            "name": "Enable run logging",
             "default": False,
-            "help": "Log all events - note that repetitive writing to an SD card can shorten its lifespan.",
+            "help": "Log all runs - note that repetitive writing to an SD card can shorten its lifespan.",
             "category": "Logging"
         },
         {
-            "key": "log_entries",
-            "name": "Max log entries",
+            "key": "run_entries",
+            "name": "Max run entries",
             "default": 100,
-            "help": "Number of log entries to keep, 0=no limit.",
+            "help": "Number of run entries to save to disk, 0=no limit.",
+            "category": "Logging"
+        },
+        {
+            "key": "debug_log",
+            "name": "Enable debug logging",
+            "default": False,
+            "help": "Log all internal events (for debugging purposes).",
             "category": "Logging"
         },
 
