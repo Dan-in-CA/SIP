@@ -1,3 +1,4 @@
+import datetime
 from options import options
 
 import logging
@@ -7,35 +8,19 @@ __author__ = 'Rimco'
 
 EVENT_FILE = './data/events.log'
 EVENT_FORMAT = "%(asctime)s [%(levelname)s %(event_type)s] %(filename)s:%(lineno)d: %(message)s"
-RUN_FORMAT = "%(asctime)s [Run] Program %(program)d - Station %(station)d: From %(start)s to %(end)s"
+RUN_START_FORMAT = "%(asctime)s [START  Run] Program %(program)d - Station %(station)d: From %(start)s to %(end)s"
+RUN_FINISH_FORMAT = "%(asctime)s [FINISH Run] Program %(program)d - Station %(station)d: From %(start)s to %(end)s"
 
 
-class Log(logging.Handler):
-    SAVE_EXCLUDE = ['SAVE_EXCLUDE', 'level', 'formatter']
-
+class _Log(logging.Handler):
     def __init__(self):
-        super(Log, self).__init__()
+        super(_Log, self).__init__()
         self._log = {
-            'Run': []
+            'Run': options.logged_runs[:]
         }
 
-        options.load(self)
-
-    # We provide the runs property to get it saved to disk (limited by options setting)
-    # Internally we keep track of more events to ensure we have enough entries to know what we already did
-    @property
-    def runs(self):
-        result = []
-        for entry in self._log['Run']:
-            result.append(entry)
-            if 0 < options.log_entries <= len(result):
-                break
-
-        return result
-
-    @runs.setter
-    def runs(self, value):
-        self._log['Run'] = value.copy()
+        # Remove old entries:
+        self._prune('Run')
 
     @property
     def level(self):
@@ -45,38 +30,81 @@ class Log(logging.Handler):
     def level(self, value):
         pass  # Override level using options
 
-    def _file_log(self, msg):
+    def _save_log(self, msg):
+        result = []
+        for entry in self._log['Run']:
+            result.append(entry)
+            if 0 < options.run_entries <= len(result):
+                break
+        options.logged_runs = result
+
         if options.debug_log:
             with open(EVENT_FILE, 'a') as fh:
                 fh.write(msg + '\n')
 
     def _prune(self, event_type):
-        range_end = len(self._log.setdefault(event_type, []))
-        if event_type == 'Run':
-            if options.log_entries == 0:
-                return  # We may not prune
-            else:
-                range_end -= options.log_entries  # Keep at least the last XX entries
+        if event_type not in self._log or (event_type == 'Run' and options.run_entries == 0):
+            return  # We cannot prune
 
-        current_time = time.localtime()
-        for index in reversed(range(0, range_end)):
-            if current_time - self._log[event_type][index]['time'] > 2*24*3600:  # Older than two days
-                del self._log[event_type][index]
+        current_time = datetime.datetime.now()
+        while len(self._log[event_type]) > options.run_entries and \
+                current_time - self._log[event_type][0]['time'] > datetime.timedelta(days=2):
+            del self._log[event_type][0]
 
-    def log_run(self, interval):
+    def start_run(self, interval):
+        """Indicates a certain run has been started. The start time will be updated."""
+
+        # Update time with current time
+        interval = interval.copy()
+        interval['start'] = datetime.datetime.now()
+        interval['active'] = True
+
         self._log['Run'].append({
-            'time': time.localtime(),
+            'time': datetime.datetime.now(),
             'level': logging.INFO,
             'data': interval
         })
 
         fmt_dict = interval.copy()
         fmt_dict['asctime'] = time.strftime("%Y-%m-%d %H:%M:%S") + ',000'
-        fmt_dict['start'] = interval['start'].strftime("%Y-%m-%d %H:%M:%S")
-        fmt_dict['end'] = interval['end'].strftime("%Y-%m-%d %H:%M:%S")
+        fmt_dict['start'] = fmt_dict['start'].strftime("%Y-%m-%d %H:%M:%S")
+        fmt_dict['end'] = fmt_dict['end'].strftime("%Y-%m-%d %H:%M:%S")
 
-        self._file_log(RUN_FORMAT % fmt_dict)
+        self._save_log(RUN_START_FORMAT % fmt_dict)
         self._prune('Run')
+
+    def finish_run(self, interval):
+        """Indicates a certain run has been stopped. Use interval=None to stop all active runs.
+        The stop time(s) will be updated with the current time."""
+        if isinstance(interval, str) or interval is None:
+            uid = interval
+        elif isinstance(interval, dict) and 'uid' in interval:
+            uid = interval['uid']
+        else:
+            raise ValueError
+
+        for entry in self._log['Run']:
+            if (uid is None or entry['data']['uid'] == uid) and entry['data']['active']:
+                entry['data']['end'] = datetime.datetime.now()
+                entry['data']['active'] = False
+
+                fmt_dict = entry['data'].copy()
+                fmt_dict['asctime'] = time.strftime("%Y-%m-%d %H:%M:%S") + ',000'
+                fmt_dict['start'] = fmt_dict['start'].strftime("%Y-%m-%d %H:%M:%S")
+                fmt_dict['end'] = fmt_dict['end'].strftime("%Y-%m-%d %H:%M:%S")
+
+                self._save_log(RUN_FINISH_FORMAT % fmt_dict)
+                if uid is not None:
+                    break
+
+    def active_runs(self):
+        result = [run['data'].copy() for run in self._log['Run'] if run['data']['active']]
+        for entry in result:
+            entry['end'] = datetime.datetime.now()
+        return result
+
+    def finished_runs(self):
+        return [run['data'].copy() for run in self._log['Run'] if not run['data']['active']]
 
     def log_event(self, event_type, message, level=logging.INFO):
         if level >= self.level:
@@ -84,15 +112,18 @@ class Log(logging.Handler):
                 self._log[event_type] = []
 
             self._log[event_type].append({
-                'time': time.localtime(),
+                'time': datetime.datetime.now(),
                 'level': level,
                 'data': message
             })
-            self._file_log(message)
+            self._save_log(message)
             self._prune(event_type)
 
     def clear(self, event_type):
         self._log[event_type] = []
+
+    def event_types(self):
+        return self._log.keys()
 
     def events(self, event_type):
         return [evt['data'] for evt in self._log.setdefault(event_type, [])]
@@ -104,7 +135,7 @@ class Log(logging.Handler):
         txt = self.format(record) if options.debug_log else record.getMessage()
         self.log_event(record.event_type, txt, record.levelno)
 
-log = Log()
+log = _Log()
 log.setFormatter(logging.Formatter(EVENT_FORMAT))
 
 _logger = logging.getLogger()

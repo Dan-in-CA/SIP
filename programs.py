@@ -4,7 +4,7 @@ from options import options
 import datetime
 
 
-class Program(object):
+class _Program(object):
     SAVE_EXCLUDE = ['SAVE_EXCLUDE', 'index']
 
     def __init__(self, programs_instance, index):
@@ -117,22 +117,22 @@ class Program(object):
 
     def __setattr__(self, key, value):
         try:
-            super(Program, self).__setattr__(key, value)
+            super(_Program, self).__setattr__(key, value)
             if not key.startswith('_') and key not in self.SAVE_EXCLUDE:
                 options.save(self, self.index)
         except ValueError:  # No index available yet
             pass
 
 
-class Programs(object):
+class _Programs(object):
     def __init__(self):
         self._programs = []
 
         for i in range(options.program_count):
-            self._programs.append(Program(self, i))
+            self._programs.append(_Program(self, i))
 
     def add_program(self):
-        self._programs.append(Program(self, len(self._programs)))
+        self._programs.append(_Program(self, len(self._programs)))
         options.program_count = len(self._programs)
 
     def remove_program(self, index):
@@ -154,4 +154,4 @@ class Programs(object):
             result = self._programs[index]
         return result
 
-programs = Programs()
+programs = _Programs()

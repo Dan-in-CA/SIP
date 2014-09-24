@@ -1,12 +1,15 @@
+from stations import stations
+
 __author__ = 'Rimco'
 
 from options import options
 from programs import programs
+from log import log
 
 import datetime
 
 
-def combined_schedule(start_time, end_time, current_active=None, skip_uids=None):
+def predicted_schedule(start_time, end_time):
     """Determines all schedules for the given time range.
     To calculate what should currently be active, a start time of some time (a day) ago should be used.
     The current_active list should contain intervals as returned by this function.
@@ -15,13 +18,8 @@ def combined_schedule(start_time, end_time, current_active=None, skip_uids=None)
     ADJUSTMENT = 1.0  # FIXME: get (weather) level adjustment
     MAX_USAGE = 1.01 if options.sequential else 1000000  # FIXME
 
-    if skip_uids is None:
-        skip_uids = []
-
-    if current_active is None:
-        current_active = []
-    else:
-        current_active = current_active[:]
+    skip_uids = [entry['uid'] for entry in log.finished_runs()]
+    current_active = log.active_runs()
 
     current_usage = 0.0
     for active in current_active:
@@ -46,7 +44,7 @@ def combined_schedule(start_time, end_time, current_active=None, skip_uids=None)
                     'program': p_index,
                     'start': interval['start'],
                     'end': interval['end'],
-                    'uid': '%d-%d-%s' % (p_index, station, str(interval['start'])),
+                    'uid': '%s-%d-%d' % (str(interval['start']), p_index, station),
                     'usage': 1.0  # FIXME
                 }
                 if new_schedule['uid'] not in skip_uids:
@@ -104,7 +102,7 @@ def combined_schedule(start_time, end_time, current_active=None, skip_uids=None)
                 done = True
             else:
                 # Shift this interval to next possibility
-                next_option = current_active[0]['end']
+                next_option = current_active[0]['end'] + datetime.timedelta(seconds=options.station_delay)
                 time_to_next = next_option - interval['start']
                 interval['start'] += time_to_next
                 interval['end'] += time_to_next
@@ -113,14 +111,65 @@ def combined_schedule(start_time, end_time, current_active=None, skip_uids=None)
 
     return all_intervals
 
-# TODO: some function that combines logged runs with planned runs to provide complete overview
-# In: start_time, end_time, current_time, current_active => Out: intervals from history + prediction (for GUI)
-# It should make use of some log to determine which uids to skip
-# current_time > end_time => only log entries
-# current_time < start_time => only predictions
-# start_time <= current_time <= end_time => combination
 
-# TODO: some function/class (timing loop?) that keeps track of what is currently running and periodically checks
-# what should be running according to the prediction. It should use some log to determine the uids to skip.
-# It should also check the conditions that may prohibit the sprinklers from turning on (rain delay)
-# It should update the log whenever a run is started
+def combined_schedule(start_time, end_time, current_time):
+    if current_time < start_time:
+        result = predicted_schedule(start_time, end_time)
+    elif current_time > end_time:
+        result = []
+        for entry in log.finished_runs():
+            if start_time <= entry['start'] <= end_time or start_time <= entry['end'] <= end_time:
+                result.append(entry)
+    else:
+        result = log.finished_runs()
+        result += log.active_runs()
+        predicted = predicted_schedule(start_time, end_time)
+        result += [entry for entry in predicted if current_time <= entry['start'] <= end_time]
+
+    return result
+
+
+def check_schedule():
+    if options.system_enabled and not options.manual_mode:
+        current_time = datetime.datetime.now()
+
+        active = log.active_runs()
+        for entry in active:
+            if entry['end'] <= current_time:
+                log.finish_run(entry)
+                stations.deactivate(entry['station'])
+
+        check_start = current_time - datetime.timedelta(days=1)
+        check_end = current_time + datetime.timedelta(days=1)
+        schedule = predicted_schedule(check_start, check_end)
+        for entry in schedule:
+            if entry['start'] <= current_time < entry['end']:
+                log.start_run(entry)
+                stations.activate(entry['station'])
+
+        if stations.master is not None:
+            master_on = False
+
+            # It's easy if we don't have to use delays:
+            if options.master_on_delay == options.master_off_delay == 0:
+                active = log.active_runs()
+
+                for entry in active:
+                    if stations.get(entry['station']).activate_master:
+                        master_on = True
+                        break
+
+            else:
+                active = combined_schedule(check_start, check_end, current_time)
+                for entry in active:
+                    if stations.get(entry['station']).activate_master:
+                        if entry['start'] + datetime.timedelta(seconds=options.master_on_delay) \
+                                <= current_time < \
+                                entry['end'] + datetime.timedelta(seconds=options.master_off_delay):
+                            master_on = True
+                            break
+
+            master_station = stations.get(stations.master)
+
+            if master_on != master_station.active:
+                master_station.active = master_on

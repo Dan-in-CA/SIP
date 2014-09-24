@@ -7,7 +7,7 @@ __author__ = 'Rimco'
 OPTIONS_FILE = './data/options.db'
 
 
-class Options(object):
+class _Options(object):
     # Using an array to preserve order
     OPTIONS = [
         #######################################################################
@@ -171,6 +171,12 @@ class Options(object):
             "key": "program_count",
             "name": "The number of programs",
             "default": 0,
+        },
+
+        {
+            "key": "logged_runs",
+            "name": "The runs that have been logged",
+            "default": []
         }
 
     ]
@@ -189,20 +195,21 @@ class Options(object):
         except Exception:
             pass
 
+    def __str__(self):
         import pprint
         pp = pprint.PrettyPrinter(indent=2)
-        pp.pprint(self._values)
+        return pp.pformat(self._values)
 
     def __getattr__(self, item):
         if item.startswith('_'):
-            result = super(Options, self).__getattribute__(item)
+            result = super(_Options, self).__getattribute__(item)
         else:
             result = self._values[item]
         return result
 
     def __setattr__(self, key, value):
         if key.startswith('_'):
-            super(Options, self).__setattr__(key, value)
+            super(_Options, self).__setattr__(key, value)
         else:
             self._values[key] = value
 
@@ -239,7 +246,7 @@ class Options(object):
         return self.OPTIONS[option]
 
     def load(self, obj, key=""):
-        cls = type(obj).__name__
+        cls = 'Cls' + type(obj).__name__
         try:
             values = getattr(self, cls + str(key))
             for name, value in values.iteritems():
@@ -248,7 +255,7 @@ class Options(object):
             pass
 
     def save(self, obj, key=""):
-        cls = type(obj).__name__
+        cls = 'Cls' + type(obj).__name__
         values = {}
         exclude = obj.SAVE_EXCLUDE if hasattr(obj, 'SAVE_EXCLUDE') else []
         for attr in [att for att in dir(obj) if not att.startswith('_') and att not in exclude]:
@@ -256,4 +263,4 @@ class Options(object):
                 values[attr] = getattr(obj, attr)
         setattr(self, cls + str(key), values)
 
-options = Options()
+options = _Options()
