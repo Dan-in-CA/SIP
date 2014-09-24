@@ -112,7 +112,8 @@ def predicted_schedule(start_time, end_time):
     return all_intervals
 
 
-def combined_schedule(start_time, end_time, current_time):
+def combined_schedule(start_time, end_time):
+    current_time = datetime.datetime.now()
     if current_time < start_time:
         result = predicted_schedule(start_time, end_time)
     elif current_time > end_time:
