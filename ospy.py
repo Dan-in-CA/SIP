@@ -10,7 +10,6 @@ import web  # the Web.py module. See webpy.org (Enables the Python OpenSprinkler
 import gv
 
 from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave, station_names
-from gpio_pins import set_output  # provides access to GPIO pins
 from urls import urls  # Provides access to URLs for UI pages
 
 
