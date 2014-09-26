@@ -130,7 +130,7 @@ class station_info(ProtectedPage):  # /jn
         web.header('Content-Type', 'application/json')
         web.header('Cache-Control', 'no-cache')
         jpinfo = {
-            "snames": gv.snames,
+            "snames": gv.stations,
             "ignore_rain": gv.sd['ir'],
             "masop": gv.sd['mo'],
             "stn_dis": disable,

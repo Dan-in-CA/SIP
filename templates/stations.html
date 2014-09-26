@@ -3,7 +3,7 @@ $def with ()
 $var title: OpenSprinkler Pi Stations
 $var page: stations
 $code:
-	snames = gv.snames
+	stations = gv.stations
 	
 <script>
     // Initialize behaviors
@@ -87,7 +87,7 @@ $code:
                     <tr>
                         <td class="stationNumber">${sid + 1}</td>
                         <td class="stationName">
-                            <input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid}" id="n${sid}">
+                            <input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${stations[sid]}" name="s${sid}" id="n${sid}">
                         </td>
                         $if sid == gv.sd['mas'] - 1:
                             <td class="stationMaster" colspan="3">(Master valve)</td>

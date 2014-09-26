@@ -4,7 +4,7 @@ $var title: OpenSprinkler Pi
 $var page: home
 $code:
 	tf = gv.sd["tf"]
-	snames = gv.snames
+	stations = gv.stations
 
 $code:
 	def two_digits(n):
@@ -55,7 +55,7 @@ $code:
             pname = "Run Once Program";
         }
         var runDate = (new Date(lret*1000)).toString(); // + timezoneSuffix; //dk
-        return snames[lrsid] + " ran " + pname + " for " + (lrdur/60>>0) + "m" + (lrdur%60) + "s on " + runDate;
+        return stations[lrsid] + " ran " + pname + " for " + (lrdur/60>>0) + "m" + (lrdur%60) + "s on " + runDate;
     }
 
     function updateStatus(status) {
@@ -236,7 +236,7 @@ $if gv.sd['mm']:
                 $ show = (gv.sd['show'][bid]>>s)&1
                 $if show == 1:
                     <tr>
-                        <td class='station_name'>${snames[sid]}</td>
+                        <td class='station_name'>${stations[sid]}</td>
                         $if sn == gv.sd['mas']:
                             $if sbit:
                                 <td class="master station_on">On (Master)</td>
@@ -304,7 +304,7 @@ $else:
                     $ show = (gv.sd['show'][bid]>>s)&1
                     $if show == 1:
                         <tr class="stationSchedule ${'odd' if odd else 'even'}" id='schedule${sid}' data="${sid}">
-                            <td class='station_name'>${snames[sid]}</td>
+                            <td class='station_name'>${stations[sid]}</td>
                             <td id='status${sid}' class="stationStatus">loading...</td>
                             <td class="scheduleTick" data="0"></td>
                             <td class="scheduleTick" data="1"></td>

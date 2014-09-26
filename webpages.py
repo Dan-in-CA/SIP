@@ -198,9 +198,9 @@ class change_options(ProtectedPage):
                 gv.sd['mo'].append(0)
                 gv.sd['ir'].append(0)
                 gv.sd['show'].append(255)
-            ln = len(gv.snames)
+            ln = len(gv.stations)
             for i in range(incr*8):
-                gv.snames.append("S"+('%d' % (i+1+ln)))
+                gv.stations.append("S"+('%d' % (i+1+ln)))
             for i in range(incr * 8):
                 gv.srvals.append(0)
                 gv.ps.append([0, 0])
@@ -214,15 +214,15 @@ class change_options(ProtectedPage):
             gv.sd['ir'] = gv.sd['ir'][:(onbrd + 1)]
             gv.sd['show'] = gv.sd['show'][:(onbrd + 1)]
             # unused variables
-            # nlst = gv.snames
+            # nlst = gv.stations
             # nlst = nlst[:8+(onbrd*8)]
             newlen = gv.sd['nst'] - decr * 8
             gv.srvals = gv.srvals[:newlen]
             gv.ps = gv.ps[:newlen]
             gv.rs = gv.rs[:newlen]
-            gv.snames = gv.snames[:newlen]
+            gv.stations = gv.stations[:newlen]
             gv.sbits = gv.sbits[:onbrd + 1]
-        jsave(gv.snames, 'snames')
+        jsave(gv.stations, 'stations')
 
 
 class view_stations(ProtectedPage):
@@ -264,8 +264,8 @@ class change_stations(ProtectedPage):
                 names.append(qdict['s'+str(i)])
             else:
                 names.append('S'+str(i+1))
-        gv.snames = names
-        jsave(names, 'snames')
+        gv.stations = names
+        jsave(names, 'stations')
         jsave(gv.sd, 'sd')
         raise web.seeother('/')
 
