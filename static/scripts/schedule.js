@@ -3,7 +3,7 @@ var displayScheduleDate = new Date(devt); // dk
 var displayScheduleTimeout;
 var sid,sn,t;
 var simdate = displayScheduleDate; // date for simulation
-if (typeof progs !== 'undefined'){var nprogs = progs.length}; // number of progrms
+if (typeof progs !== 'undefined'){var nprogs = progs.length}; // number of programs
 if (typeof nbrd !== 'undefined'){var nst = nbrd*8}; // number of stations
 
 function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is scheduled for this date (displayScheduleDate) called from doSimulation
