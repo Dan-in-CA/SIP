@@ -29,9 +29,9 @@ def set_wl(run_loop=False):
             with open('./data/levels.json', 'r') as f:  # Read the monthly percentages from file
                 levels = json.load(f)
         except IOError:  # If file does not exist
-            vals = [100] * 12
+            levels = [100] * 12
             with open('./data/levels.json', 'w') as f:  # write default percentages to file
-                json.dump(vals, f)
+                json.dump(levels, f)
         month = time.localtime().tm_mon  # Get current month.
         if month != last_month:
             last_month = month
