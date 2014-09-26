@@ -25,13 +25,8 @@ def set_wl(run_loop=False):
 
     last_month = 0
     while True:
-        try:
-            with open('./data/levels.json', 'r') as f:  # Read the monthly percentages from file
-                levels = json.load(f)
-        except IOError:  # If file does not exist
-            levels = [100] * 12
-            with open('./data/levels.json', 'w') as f:  # write default percentages to file
-                json.dump(levels, f)
+        with open('./data/levels.json', 'r') as f:  # Read the monthly percentages from file
+            levels = json.load(f)
         month = time.localtime().tm_mon  # Get current month.
         if month != last_month:
             last_month = month
@@ -47,8 +42,13 @@ class monthly_percent(ProtectedPage):
     """Load an html page for entering monthly irrigation time adjustments"""
 
     def GET(self):
-        with open('./data/levels.json', 'r') as f:  # Read the monthly percentages from file
-            levels = json.load(f)
+        try:
+            with open('./data/levels.json', 'r') as f:  # Read the monthly percentages from file
+                levels = json.load(f)
+        except IOError:  # If file does not exist
+            levels = [100] * 12
+            with open('./data/levels.json', 'w') as f:  # write default percentages to file
+                json.dump(levels, f)
         return template_render.monthly(levels)
 
 
