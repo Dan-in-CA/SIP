@@ -3,7 +3,7 @@ $def with (records)
 $var title: OpenSprinkler Pi Log
 $var page: log
 $code:
-	snames = gv.snames
+	stations = gv.stations
 	if gv.sd['lg'] == 1:
 		log_state = "Enabled"
 		log_option = "checked"
@@ -56,11 +56,11 @@ $code:
         </tr>
         $ odd = 1
         $for r in records:
-            $ event = json.loads(r)
+            $ event = r
             <tr class="log_rec ${'odd' if odd else 'even'}">
                 <td align='center'>${event["date"]}</td>
                 <td align='center'>${formatTime(event["start"])}</td>
-                <td align='center'>${snames[event["station"]]}</td>
+                <td align='center'>${stations[event["station"]]}</td>
                 <td align='center'>${event["duration"]}</td>
                 <td align='center'>${event["program"]}</td>
             </tr>

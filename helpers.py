@@ -178,29 +178,6 @@ def timestr(t):
         (t % 60 >> 0) % 10)
 
 
-def log_run():
-    """add run data to csv file - most recent first."""
-    if gv.sd['lg']:
-        if gv.lrun[1] == 98:
-            pgr = 'Run-once'
-        elif gv.lrun[1] == 99:
-            pgr = 'Manual'
-        else:
-            pgr = str(gv.lrun[1])
-
-        start = time.gmtime(gv.now - gv.lrun[2])
-        logline = '{"program":"' + pgr + '","station":' + str(gv.lrun[0]) + ',"duration":"' + timestr(
-            gv.lrun[2]) + '","start":"' + time.strftime('%H:%M:%S","date":"%Y-%m-%d"', start) + '}\n'
-        log = read_log()
-        log.insert(0, logline)
-        with open('./data/log.json', 'w') as f:
-            if gv.sd['lr']:
-                f.writelines(log[:gv.sd['lr']])
-            else:
-                f.writelines(log)
-    return
-
-
 def prog_match(prog):
     """Test a program for current date and time match."""
     if not prog[0]:
@@ -302,12 +279,77 @@ def stop_stations():
 
 
 def read_log():
+    """
+    Read log.json file containing irrigation records.
+    :return: records from log file as list or empty list on error.
+    """
     try:
         with open('./data/log.json') as logf:
-            records = logf.readlines()
-        return records
+            records = json.load(logf)
+            return records
+    except ValueError:  # Handle old style log file
+        with open('./data/log.json') as logf:
+            lines = logf.readlines()
+            records = [json.loads(line) for line in lines]
+            return records
     except IOError:
         return []
+
+
+def log_run():
+    """add run data to log.json file - most recent first."""
+    if gv.sd['lg']:
+        if gv.lrun[1] == 98:
+            pgr = 'Run-once'
+        elif gv.lrun[1] == 99:
+            pgr = 'Manual'
+        else:
+            pgr = str(gv.lrun[1])
+        start = time.gmtime(gv.now - gv.lrun[2])  # Problem! Does not account for stations stopped by rain or other change.
+        logline = {}
+        logline["program"] = pgr
+        logline["station"] = gv.lrun[0]
+        logline["duration"] = timestr(gv.lrun[2])
+        logline["start"] = time.strftime("%H:%M:%S", start)
+        logline["date"] = time.strftime("%Y-%m-%d", start)
+        log = read_log()
+        log.insert(0, logline)
+        with open('./data/log.json', 'w') as f:
+            if gv.sd['lr']:
+                #f.writelines(log[:gv.sd['lr']])
+                json.dump(log[:gv.sd['lr']], f)
+            else:
+                #f.writelines(log)
+                json.dump(log, f)
+    return
+
+
+def log_events(event_list):
+    """add data to log.json file - most recent first."""
+    if gv.sd['lg']:
+        if gv.lrun[1] == 98:
+            pgr = 'Run-once'
+        elif gv.lrun[1] == 99:
+            pgr = 'Manual'
+        else:
+            pgr = str(gv.lrun[1])
+       # start = time.gmtime(gv.now - gv.lrun[2])  # not accurate at all
+        logline = {}
+        logline["program"] = pgr
+        logline["station"] = gv.lrun[0]
+        logline["duration"] = timestr(gv.lrun[2])
+        logline["start"] = time.strftime("%H:%M:%S", start)
+        logline["date"] = time.strftime("%Y-%m-%d", start)
+        log = read_log()
+        log.insert(0, logline)
+        with open('./data/log.json', 'w') as f:
+            if gv.sd['lr']:
+                #f.writelines(log[:gv.sd['lr']])
+                json.dump(log[:gv.sd['lr']], f, separators=(',',':'))
+            else:
+                #f.writelines(log)
+                json.dump(log, f, separators=(',',':'))
+    return
 
 
 def jsave(data, fname):

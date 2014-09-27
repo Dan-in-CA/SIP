@@ -3,7 +3,7 @@ $def with ()
 $var title: OpenSprinkler Pi Run-Once
 $var page: runonce
 $code:
-	snames = gv.snames
+	stations = gv.stations
 	
 <script>
     // Initialize behaviors
@@ -59,7 +59,7 @@ $code:
                     $ show = (gv.sd['show'][bid]>>s)&1
                     $if show == 1 and sid+1 != gv.sd['mas']:
                         <tr>
-                            <td class='station_name'>${snames[sid]}</td>
+                            <td class='station_name'>${stations[sid]}</td>
                             <td>
                                 <input type="text" size="3" maxlength="3" value="0" name="mm${sid}">:
                                 <input type="text" size="2" maxlength="2" value="0" name="ss${sid}"> (mm:ss)

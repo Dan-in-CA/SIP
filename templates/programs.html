@@ -3,7 +3,7 @@ $def with ()
 $var title: OpenSprinkler Pi Programs
 $var page: programs
 $code:
-	snames = gv.snames
+	stations = gv.stations
 	nprogs = len(gv.pd)
 	
 	def two_digits(n):
@@ -135,7 +135,7 @@ $code:
                 $for s in range(0,8):
                     $ sid = bid*8 + s
                     $if (gv.sd['show'][bid]>>s)&1 and bits&(1<<s):
-                        <span class="stationName val">${snames[sid]}</span>
+                        <span class="stationName val">${stations[sid]}</span>
                         $ stationsOn = stationsOn + 1
             </p>
             <p>Starting: <span class="val">${formatTime(two_digits(start/60) + ":" + two_digits(start%60))}</span>
