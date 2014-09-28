@@ -6,8 +6,7 @@ $var page: programs
 $code:
 	def two_digits(n):
 		return '%02d' % int(n)
-	
-    stations = gv.stations
+	stations = gv.stations
 	if pid < 0:
 		program = [1, 127, 4, 360, 1080, 240, 900] # does not include station bytes(program[7+]. #dk
 		for brd in range(gv.sd['nbrd']): #dk
@@ -42,9 +41,6 @@ $code:
 			if hour > 12:
 				newhour = hour-12
 			return str(newhour)  + t[2:] + (" am" if hour<12 else " pm")
-<script>
-    console.log("From modify.html")
-</script>
 
 <script>
     var prog = ${prog};
