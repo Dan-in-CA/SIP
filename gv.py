@@ -7,13 +7,15 @@ import subprocess
 
 major_ver = 2
 minor_ver = 1
+old_count = 0
 
 try:
     revision = int(subprocess.check_output(['git', 'rev-list', '--count', '--first-parent', 'HEAD']))
+    ver_str = '%d.%d.%s' % (major_ver, minor_ver, str(revision - old_count))
 except Exception:
     print 'Could not use git to determine version!'
     revision = 'xxx'
-ver_str = '%d.%d.%s' % (major_ver, minor_ver, str(revision))
+    ver_str = '%d.%d.%s' % (major_ver, minor_ver, str(revision))
 
 try:
     ver_date = subprocess.check_output(['git', 'log', '-1', '--format=%cd', '--date=short']).strip()
