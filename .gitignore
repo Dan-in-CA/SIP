@@ -1,7 +1,5 @@
 web/
 /sessions/*
-/data/*.json
-/data/snames.txt
 *.pyc
 *.csv
 /python
