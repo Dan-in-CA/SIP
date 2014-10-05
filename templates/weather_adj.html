@@ -1,9 +1,185 @@
-$def with(m_vals)
+$def with ()
 
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Weather-based adjustments</title>
+<html>
+<head>
+	<meta name="viewport" content="width=640">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>OpenSprinkler Pi Weather Setup ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
+	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
+	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
+	<style type="text/css">
+		button#tooltip {height:24px;}				
+		.tooltip {background-color:#FFF2B8; display:none; font-size:10pt; margin-left:4px;}
+		.label {font-weight:bold; float:left; width:160px; text-align:right; padding-right:4px;}
+		.option {margin: 6px 0px; clear:both;}
+            .redText {color:red;}
+            .blackText {color:black;}
+	</style>
+	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
+	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
+		<script>		
+		// Variables set by ospi.py
+		var devt = ${gv.now}*1000;
+		var tz = ${gv.sd['tz']};
+		var timeFormat = ${gv.sd['tf']};
+		var cputemp = "${gv.cputemp}";
+		var tempunit = "${gv.sd['tu']}";
+	
+		var nbrd = ${gv.sd['nbrd']};
+		var mas = ${gv.sd['mas']};
+		
+		// set local variables
+		var autoDelay = '$m_vals["auto_delay"]';
+		var forecastDelay = '$m_vals["forecast_delay"]';
+		var delayDuration = $m_vals["delay_duration"];
+		var weatherProvider = '$m_vals["weather_provider"]';
+		var wapiKey = '$m_vals["wapikey"]';
+		var wapiStation = '$m_vals["wapiStation"]';
+		var historyDelay = '$m_vals["history_delay"]';
+		var rain1 = $m_vals["rain1"];
+		var rain24 = $m_vals["rain24"];   
+		var rain48 = $m_vals["rain48"];
+		var windDelay = '$m_vals["wind_delay"]';
+		var windSpeed = $m_vals["windspeed"];
+            var tempDelay = '$m_vals["temp_delay"]';
+            var temp = $m_vals["temp"];
+            var curTempNum = $m_vals["curTempNum"];
+            var loc = "${gv.sd['loc']}";
+            var locName = "";
+            var curForecast = '$m_vals["forecastText"]';
+            var curTempHTML = '$m_vals["curTemp"]';
+            var curWind = parseFloat('$m_vals["curWind"]').toFixed(2);
+            var curRain1 = parseFloat('$m_vals["curRain1"]').toFixed(2);
+            var curRain24 = parseFloat('$m_vals["curRain24"]');
+            var curRain48 = parseFloat('$m_vals["curRain48"]') + curRain24;
+            var curRain24str = curRain24.toFixed(2);
+            var curRain48str = curRain48.toFixed(2);
+		
+		// Initialize behaviors
+		jQuery(document).ready(function(){
+
+                 // set checkboxes per variables
+                 if (autoDelay=='on') {jQuery("input#autoDelay").prop("checked",true)}			
+                 if (forecastDelay=='on') {jQuery("input#forecastDelay").prop("checked",true)}			
+                 if (historyDelay=='on') {
+                    jQuery("input#historyDelay").prop("checked",true);
+                    jQuery("div#historyDiv").css('display','block');}
+                 if (windDelay=='on') {jQuery("input#windDelay").prop("checked",true);
+                    jQuery("div#windDiv").css('display','block');}
+                 if (tempDelay=='on') {jQuery("input#tempDelay").prop("checked",true);
+                    jQuery("div#tempDiv").css('display','block');}
+                 if (weatherProvider=='wunderground') {jQuery("div#forecastDiv").css('display','block')}			
+
+                 if (wapiStation.length > 0) {locByID(wapiStation);} else {locByID(loc)};
+
+                 jQuery("#curTemp").html(curTempNum); if (curTempNum < temp) {jQuery("#curTemp").addClass("redText");}
+                 jQuery("#curWind").html(curWind); if (curWind >= windSpeed) {jQuery("#curWind").addClass("redText");}
+                 jQuery("#curRain1").html(curRain1); if (curRain1 >= rain1) {jQuery("#curRain1").addClass("redText");}
+                 jQuery("#curRain24").html(curRain24str); if (curRain24 >= rain24) {jQuery("#curRain24").addClass("redText");}
+                 jQuery("#curRain48").html(curRain48str); if (curRain48 >= rain48) {jQuery("#curRain48").addClass("redText");}
+
+                 // brute force capture change of checkboxes
+
+                 jQuery("#weather_provider").change(function(){
+                    if (jQuery("#weather_provider").val() == "wunderground") {
+                        jQuery("div#forecastDiv").css('display','block');
+                    } else {
+                        jQuery("div#forecastDiv").css('display','none');
+                    }
+                 })
+                 jQuery("input#autoDelay").change(function(){
+                    if (jQuery("input#autoDelay").is(":checked")) {
+                        jQuery("div#autoDiv").css('display','block');
+                    } else {
+                        jQuery("div#autoDiv").css('display','none');
+                    }
+                 })
+                 jQuery("input#historyDelay").change(function(){
+                    if (jQuery("input#historyDelay").is(":checked")) {
+                        jQuery("div#historyDiv").css('display','block');
+                    } else {
+                        jQuery("#historyDiv").css('display','none');
+                    }
+                 })
+                 jQuery("#windDelay").change(function(){
+                    if (jQuery("input#windDelay").is(":checked")) {
+                        jQuery("#windDiv").css('display','block');
+                    } else {
+                        jQuery("#windDiv").css('display','none');
+                    }
+                 })
+                 jQuery("#tempDelay").change(function(){
+                    if (jQuery("input#tempDelay").is(":checked")) {
+                        jQuery("#tempDiv").css('display','block');
+                    } else {
+                        jQuery("#tempDiv").css('display','none');
+                    }
+                 })
+
+                // capture the change of the station ID
+                 jQuery("#wapiStation").change(function(){
+                    queryLoc = jQuery("#wapiStation").val().trim();
+                    if (queryLoc.length == 0) {queryLoc = loc} 
+                    locByID(queryLoc);
+                 });
+
+                 // functions from original options.html
+			jQuery("button#tooltips").click(function(){
+				var visible = jQuery(this).text() == "Hide Tooltips";
+				jQuery(this).text(visible ? "Show Tooltips" : "Hide Tooltips");
+				jQuery(".tooltip").toggle();
+			});
+			
+			jQuery("button#cReboot").click(function(){
+				jQuery("input[name='rbt']").val(1);
+				jQuery("form[name='of']").submit();				
+			});
+			
+			jQuery("button#cSubmit").click(function(){
+				// process time zone value
+				var th = parseInt(jQuery("input[name='th']").val(),10);
+				var tq = parseInt(jQuery("input[name='tq']").val(),10);
+				tq = (tq/15>>0)/4.0;
+				th = th+(th>=0?tq:-tq);
+				jQuery("input[name='otz']").val(((th+12)*4)>>0);
+				jQuery("form[name='of']").submit();
+			});
+			
+			jQuery("button#cCancel").click(function(){
+				window.location="/";
+			});
+			
+			jQuery(".collapsible h4").click(function(event){
+				jQuery(this).parent(".category").toggleClass("expanded").toggleClass("collapsed");
+			});
+			
+			jQuery(".collapsible h4").first().parent(".category").toggleClass("expanded").toggleClass("collapsed");
+			
+		});
+
+           // lookup location based upon wunderground stationID 
+            function locByID(locString) {
+              locString = locString.replace('pws:','');
+              urlstr = "http://autocomplete.wunderground.com/aq?h=0&query="+locString;
+              jQuery.ajax({
+                  dataType:'jsonp', 
+                  jsonp: 'cb',
+                  url: urlstr,  
+                  success : function(json) {
+                      locName = json.RESULTS[0].name;
+                      jQuery('#locName').html(locName);
+                  },
+                  error : function (jqXHR, textStatus, errorThrown) {
+                      jQuery('#locName').html(textStatus + " : " + errorThrown)
+                  }
+                });
+            };
+
+</script>
+
+	</script>
 		<style>
 			button.submit {
 				height:30px;
@@ -24,22 +200,102 @@ $def with(m_vals)
 		</style>
 	</head>
 	<body>
-	<h1>Weather-based adjustments</h1>
-	<h2>Enable/Disable weather based adjustments</h2>
-	<h3>When weather-based rain delay is enabled, the weather will be checked for rain every hour. If the weather reports any condition suggesting rain, a rain delay is automatically issued using the below set delay duration.</h3>
+    
+	<div class="content">
+
+		<div class="header">
+			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
+		</div>
+			
+		<div class="body">
+		
+			<div id="status">
+				<p id="deviceTime"><span class="hour"></span><span class="sep">:</span><span class="minute"></span><span class="second"></span><span class="ampm"></span></p>
+				<p id="deviceDate"></p>
+			</div>
+	
+			<div class="panel">
+			
+				<div id="nav">
+					<button id="bHome" class="home" title="Home">Home</button>
+					<button id="bPrograms" class="programs" title="Define Programs">Programs</button>
+					<button id="bRunOnce" class="start" title="Define Run Once Program">Run Once</button>
+					<button id="bLog" class="log" title="View Log">Log</button>
+					<button id="bOptions" class="options here" title="Options">Options</button>
+					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
+					$if not(gv.sd['ipas']):
+						<button id="bLogout" class="logout" title="Logout">Logout</button>
+				</div>
+
+				<button id="tooltips">Show Tooltips</button>
+
 		<form action="/uwa" method="get">
-			$code:
-				output = ""
-				output += "<span>Use Automatic Rain Delay: </span><input name='auto_delay' type='checkbox' " + ("checked" if m_vals['auto_delay'] == "on" else "") + ">\n"
-			$:{output}
-			<br><span>Delay Duration (hours): </span><input name='delay_duration' type='number' min="0" max="96" value=$m_vals["delay_duration"]>
-			<br><span>Weather Provider: </span>
-			<select name="weather_provider">
-				<option value="yahoo" ${"selected" if m_vals["weather_provider"]=="yahoo" else ""}>Yahoo!</option>
-				<option value="wunderground" ${"selected" if m_vals["weather_provider"]=="wunderground" else ""}>Wunderground</option>
-			</select>
-			<br><span>Wunderground API Key: </span><input name='wapikey' type='text' value=$m_vals["wapikey"]>
-			<br><button class="submit" type="submit">Submit</button>
+
+				<div id="options">
+         			<div class="title">Weather Options</div>
+                    	<h1>Weather-based adjustments</h1>
+	<h2>Enable/Disable weather based adjustments</h2>
+	<h3>When weather-based rain delay is enabled, the weather will be checked for rain every hour.
+      <br> If the forecast check is enabled, weather reports any condition suggesting rain, a rain delay is automatically issued using the below set delay duration.  
+           Similarly, if the historical check is enabled, a rain delay will be applied.<br />  
+           Finally, the system can check for wind and tempature and delay greater than the threshold.</h3>
+      <h3>Note : at this point, if using Yahoo based forecast, only the forecast delay will work.  To use the other options, you must use Weather Underground</h3>
+			<span>Use on-line Weather based Rain Delay: </span><input name='auto_delay' id='autoDelay' type='checkbox'><span class='tooltip'>Master on/off for this function</span>
+                 <div id='autoDiv'>
+                     <span>Forecast Delay: </span><input name='forecast_delay' id='forecastDelay' type='checkbox'><span id='curForecast'>$m_vals["forecastText"]</span><span class='tooltip'>Enable weather forecast based delay.</span>
+        			<br><span>Forecast Delay Duration (hours): </span><input name='forecast_dd' type='number' min="0" max="96" value=$m_vals["forecast_dd"]><span class='tooltip'>Forecasted Rain delay time - typically 24 hours.</span>
+        			<br><span>Weather Provider: </span>
+        			<select name="weather_provider" id="weather_provider"><span class='tooltip'>Yahoo is default, but use wUnderground for more options.</span>
+        				<option value="yahoo" ${"selected" if m_vals["weather_provider"]=="yahoo" else ""}>Yahoo!</option>
+        				<option value="wunderground" ${"selected" if m_vals["weather_provider"]=="wunderground" else ""}>Wunderground</option>
+        			</select>
+                     <div id='forecastDiv' style='display:none'>
+            		  <br><span>Wunderground API Key: </span><input name='wapikey' type='text' size=18 value=$m_vals["wapikey"]><span class='tooltip'>Free to get - needed to google wunderound API website</span>
+            		  <br><span>Wunderground Prefered Station: </span><input name='wapiStation' id='wapiStation' type='text' size=9 value=$m_vals["wapiStation"]><span class='tooltip'>recommended, else uses location from option page - use the wundermap to find the closest.</span><span id='locName'></span>
+                         <br><hr><br>
+                         <span>Historical Rain Delay: </span><input name='history_delay' id = 'historyDelay' type='checkbox'><span class='tooltip'>If you don't have a rain gauge.</span>
+                         <div id='historyDiv' style='display:none'>
+                			<br /><span>Rain last hour (in): </span><input name='rain1' type='real' min="0" max="96" size = 3 value=$m_vals["rain1"]> current: <span id='curRain1'></span>
+            			<br><span>&nbsp &nbsp &nbsp &nbsp Delay Duration (hours): </span><input name='rain1_dd' type='number' min="0" max="96" value=$m_vals["rain1_dd"]><span class='tooltip'>Recent Rain delay time. Typically 1 hour.</span>
+                			<br /><span>Rain Limit same day (in): </span><input name='rain24' type='real' min="0.0" max="96.0" size = 3 value=$m_vals["rain24"]> current: <span id='curRain24'></span>
+            			<br><span>&nbsp &nbsp &nbsp &nbsp Delay Duration (hours): </span><input name='rain24_dd' type='number' min="0" max="96" value=$m_vals["rain24_dd"]><span class='tooltip'>Same Day Rain delay time. Typically 24 hours.</span>
+                			<br /><span>Rain Limit last 2 days (in): </span><input name='rain48' type='real' min="0.0" max="96.0" size = 3 value=$m_vals["rain48"]> current: <span id='curRain48'></span><span class='tooltip'>Cumlative comparison - ie acutal rain today+yesterday is compared to this</span>
+            			<br><span>&nbsp &nbsp &nbsp &nbsp Delay Duration (hours): </span><input name='rain48_dd' type='number' min="0" max="96" value=$m_vals["rain48_dd"]><span class='tooltip'>Last two days Rain delay time. Typically 24 hours.</span>
+                         </div>
+                         <br><hr><br>
+                         <span>Wind Delay: </span><input name='wind_delay' id='windDelay' type='checkbox'><span class='tooltip'>Wind delay - default one hour - toggle.</span>
+                         <div id='windDiv' style='display:none'>
+                			<br><span>Wind to cause delay (mph): </span><input name='windspeed' type='number' min="0" max="25" size = 3 value=$m_vals["windspeed"]> current: <span id='curWind'></span>
+            			<br><span>&nbsp &nbsp &nbsp &nbsp Delay Duration (hours): </span><input name='wind_dd' type='number' min="0" max="96" value=$m_vals["wind_dd"]><span class='tooltip'>Wind delay time. Typically 1 hour.</span>
+                         </div>
+                     </div> <!-- id forecastDiv -->
+
+                     <br><hr><br>
+                     <span>Temperature Delay: </span><input name='temp_delay' id='tempDelay' type='checkbox'><span class='tooltip'>Temperature delay - default one hour - toggle.</span>
+                     <div id='tempDiv' style='display:none'>
+            			<br><span>Temp to cause a delay (F): </span><input id='temp' name='temp' type='number' min="0" max="99" size = 3 value=$m_vals["temp"]> current: <span id='curTemp'></span>
+        			<br><span>&nbsp &nbsp &nbsp &nbsp Delay Duration (hours): </span><input name='temp_dd' type='number' min="0" max="96" value=$m_vals["temp_dd"]><span class='tooltip'>Temp delay time. Typically 1 hour.</span>
+                     </div>
+                     <br><hr><br>
+                    
+                 </div> <!-- id autoDiv -->
+				</div>  <!-- id options -->
+				
+				<div id="controls">
+					<button id='cSubmit' class="submit">Save</button>
+					<button id='cCancel' class="cancel danger">Cancel</button>
+				</div>
 		</form>
+			</div>
+		</div>
+		
+		<div class="footer">
+			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
+			<p><a href="https://github.com/Dan-in-CA/OSPi">Software</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
+		</div>
+	</div>
+    
+    
+    
 	</body>
 </html>
