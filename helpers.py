@@ -58,7 +58,7 @@ def restart(wait=1, block=False):
         stations.clear()
         time.sleep(wait)
         print 'Restarting...'
-        subprocess.Popen('service ospy restart'.split())
+        subprocess.Popen('service ospi restart'.split())
     else:
         t = Thread(target=restart, args=(wait, True))
         t.start()

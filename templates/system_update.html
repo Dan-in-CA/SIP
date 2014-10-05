@@ -32,13 +32,13 @@ $var page: plugins
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'><b>Local OSPy version:</b></td>
+                <td style='text-transform: none;'><b>Local ospi version:</b></td>
                 <td>
                      $m_vals["ver_str"]
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'><b>Local OSPy date:</b></td>
+                <td style='text-transform: none;'><b>Local ospi date:</b></td>
                 <td>
                      $m_vals["ver_date"]
                 </td>
@@ -56,9 +56,9 @@ $var page: plugins
 </div>
 <div id="controls">
     $if m_vals['can_update']:
-        <button id="cUpdate" class="options"><b>Update OSPy</b></button>
+        <button id="cUpdate" class="options"><b>Update ospi</b></button>
     $else:
         <button id="cUpToDate" class="cancel"><b>Up-to-date</b></button>
-    <button id="cReboot" class="reboot danger">Restart OSPy</button>
+    <button id="cReboot" class="reboot danger">Restart ospi</button>
     <button id="cCancel" class="cancel danger">Back</button>
 </div>

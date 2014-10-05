@@ -5,8 +5,8 @@ import string
 
 from helpers import get_cpu_temp, check_login
 import web
-import gv  # Gain access to ospy's settings
-from urls import urls  # Gain access to ospy's URL list
+import gv  # Gain access to ospi's settings
+from urls import urls  # Gain access to ospi's URL list
 from webpages import ProtectedPage, WebPage
 
 ##############

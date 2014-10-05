@@ -1,5 +1,5 @@
 # !/usr/bin/env python
-# this plugins send and check SMS data for modem to control your OSPy
+# this plugins send and check SMS data for modem to control your ospi
 
 from threading import Thread
 from random import randint
@@ -9,10 +9,10 @@ import sys
 import traceback
 
 import web
-import gv  # Get access to ospy's settings
+import gv  # Get access to ospi's settings
 from helpers import get_ip, uptime, reboot, poweroff, timestr, jsave, restart
-from urls import urls  # Get access to ospy's URLs
-from ospy import template_render
+from urls import urls  # Get access to ospi's URLs
+from ospi import template_render
 from webpages import ProtectedPage
 
 

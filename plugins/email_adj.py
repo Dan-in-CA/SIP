@@ -10,9 +10,9 @@ import sys
 import traceback
 
 import web
-import gv  # Get access to ospy's settings
-from urls import urls  # Get access to ospy's URLs
-from ospy import template_render
+import gv  # Get access to ospi's settings
+from urls import urls  # Get access to ospi's URLs
+from ospi import template_render
 from webpages import ProtectedPage
 from helpers import timestr
 
@@ -72,7 +72,7 @@ class EmailSender(Thread):
         time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
         dataeml = get_email_options()  # load data from file
-        subject = "Report from OSPy"  # Subject in email
+        subject = "Report from ospi"  # Subject in email
         last_rain = 0
         was_running = False
 
@@ -82,7 +82,7 @@ class EmailSender(Thread):
         if dataeml["emllog"] != "off":          # if eml_log send email is enable (on)
             body = ('On ' + time.strftime("%d.%m.%Y at %H:%M:%S", time.localtime(time.time())) +
                     ': System was powered on.')
-            self.try_mail(subject, body, "/home/pi/OSPy/data/log.json")
+            self.try_mail(subject, body, "/home/pi/ospi/data/log.json")
 
         while True:
             try:

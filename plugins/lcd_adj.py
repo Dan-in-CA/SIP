@@ -13,7 +13,7 @@ import traceback
 import web
 import gv  # Get access to ospi's settings
 from urls import urls  # Get access to ospi's URLs
-from ospy import template_render
+from ospi import template_render
 from webpages import ProtectedPage
 from helpers import uptime, get_ip, get_cpu_temp, get_rpi_revision
 
@@ -140,9 +140,9 @@ def get_LCD_print(self, report):
         self.add_status('Open Sprinkler. / Irrigation syst.')
     elif report == 1:
         lcd.lcd_clear()
-        lcd.lcd_puts("Software OSPy:", 1)
+        lcd.lcd_puts("Software ospi:", 1)
         lcd.lcd_puts(gv.ver_date, 2)
-        self.add_status('Software OSPy: / ' + gv.ver_date)
+        self.add_status('Software ospi: / ' + gv.ver_date)
     elif report == 2:
         lcd.lcd_clear()
         ip = get_ip()

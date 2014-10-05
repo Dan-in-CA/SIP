@@ -11,7 +11,7 @@ import traceback
 import web
 import gv  # Get access to ospi's settings
 from urls import urls  # Get access to ospi's URLs
-from ospy import template_render
+from ospi import template_render
 from webpages import ProtectedPage
 from helpers import stop_stations
 
@@ -77,7 +77,7 @@ class PressureSender(Thread):
         time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
         print "Pressure plugin is active"
         send = False
-        SUBJ = "Reporting from OSPy"  # Subject in email
+        SUBJ = "Reporting from ospi"  # Subject in email
         self.add_status('Waiting...')
 
         while True:
