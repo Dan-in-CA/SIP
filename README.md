@@ -1,11 +1,11 @@
 ospi
 ====
 
-An improved Python port of the Arduino based OpenSprinkler firmware V 1.8.3.
-This folder contains a fork of OpenSprinkler Pi written by Dan Kimberling making better use of the power of Python.
+An improved Python port of the Arduino based OpenSprinkler firmware, originally based on V 1.8.3.
+This is an updated version of OpenSprinkler Pi started by Dan Kimberling making better use of the power of Python.
 
 -----------------------------------------------------------------
-OpenSprinkler Py (ospi) Interval Program Demo<br/>
+OpenSprinkler Pi (ospi) Interval Program Demo<br/>
 Creative Commons Attribution-ShareAlike 3.0 license<br/>
 July 2014
 
@@ -13,6 +13,12 @@ July 2014
 UPDATES
 ===========
 ***********
+
+October 7 2014
+----------
+(Dan)<br/>
+
+Incorporated changes that had taken place on Rimnco's GitHub fork into Dan's OSPi repository.
 
 September 10 2014
 ----------
