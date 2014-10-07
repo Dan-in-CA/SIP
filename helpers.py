@@ -297,14 +297,15 @@ def station_names():
         with open('./data/snames.json', 'r') as snf:
             return json.load(snf)
     except IOError:
-        with open('./data/snames.txt', 'r') as snf:
-            stations = eval(snf.read())
+        try:
+            with open('./data/snames.txt', 'r') as snf:
+                stations = eval(snf.read())
+                jsave(stations, 'snames')
+                return stations
+        except IOError:
+            stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08"]
             jsave(stations, 'snames')
             return stations
-    except IOError:
-        stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08"]
-        jsave(stations, 'snames')
-        return stations
 
 
 def load_programs():
