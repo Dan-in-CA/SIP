@@ -10,6 +10,12 @@ import sys
 import time
 import subprocess
 
+
+try:
+    from gpio_pins import pin_rain_sense, GPIO
+except ImportError:
+    pass
+
 import web
 from web import form
 
@@ -31,7 +37,9 @@ except ImportError:
 
 def reboot(wait=1, block=False):
     if block:
-        stations.clear()
+        from gpio_pins import set_output
+        gv.srvals = [0] * (gv.sd['nst'])
+        set_output()
         time.sleep(wait)
         print 'Rebooting...'
         subprocess.Popen(['reboot'])
@@ -42,7 +50,9 @@ def reboot(wait=1, block=False):
 
 def poweroff(wait=1, block=False):
     if block:
-        stations.clear()
+        from gpio_pins import set_output
+        gv.srvals = [0] * (gv.sd['nst'])
+        set_output()
         time.sleep(wait)
         print 'Powering off...'
         subprocess.Popen(['poweroff'])
@@ -53,7 +63,9 @@ def poweroff(wait=1, block=False):
 
 def restart(wait=1, block=False):
     if block:
-        stations.clear()
+        from gpio_pins import set_output
+        gv.srvals = [0] * (gv.sd['nst'])
+        set_output()
         time.sleep(wait)
         print 'Restarting...'
         subprocess.Popen('service ospi restart'.split())
@@ -119,6 +131,7 @@ def check_rain():
 
 def clear_mm():
     """Clear manual mode settings."""
+    from gpio_pins import set_output
     if gv.sd['mm']:
         gv.sbits = [0] * (gv.sd['nbrd'] + 1)
         gv.ps = []
@@ -127,8 +140,8 @@ def clear_mm():
         gv.rs = []
         for i in range(gv.sd['nst']):
             gv.rs.append([0, 0, 0, 0])
-
-        stations.clear()
+        gv.srvals = [0] * (gv.sd['nst'])
+        set_output()
     return
 
 
@@ -257,14 +270,26 @@ def schedule_stations(stations):
 
 def stop_onrain():
     """Stop stations that do not ignore rain."""
-    for station in stations.get():
-        if not station.ignore_rain:
-            station.activated = False
+    from gpio_pins import set_output
+    for b in range(gv.sd['nbrd']):
+        for s in range(8):
+            sid = b * 8 + s  # station index
+            if gv.sd['ir'][b] & 1 << s:  # if station ignores rain...
+                continue
+            elif not all(v == 0 for v in gv.rs[sid]):
+                gv.srvals[sid] = 0
+                set_output()
+                gv.sbits[b] &= ~1 << s  # Clears stopped stations from display
+                gv.ps[sid] = [0, 0]
+                gv.rs[sid] = [0, 0, 0, 0]
+    return
 
 
 def stop_stations():
     """Stop all running stations, clear schedules."""
-    stations.clear()
+    from gpio_pins import set_output
+    gv.srvals = [0] * (gv.sd['nst'])
+    set_output()
     gv.ps = []
     for i in range(gv.sd['nst']):
         gv.ps.append([0, 0])
@@ -297,15 +322,9 @@ def station_names():
         with open('./data/snames.json', 'r') as snf:
             return json.load(snf)
     except IOError:
-        try:
-            with open('./data/snames.txt', 'r') as snf:
-                stations = eval(snf.read())
-                jsave(stations, 'snames')
-                return stations
-        except IOError:
-            stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08"]
-            jsave(stations, 'snames')
-            return stations
+        stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08"]
+        jsave(stations, 'snames')
+        return stations
 
 
 def load_programs():
