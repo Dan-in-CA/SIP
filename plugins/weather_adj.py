@@ -83,10 +83,9 @@ def get_woeid():
         data = urllib2.urlopen(
             "http://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.placefinder%20where%20text=%22" +
             urllib.quote_plus(gv.sd["loc"]) + "%22").read()
-    finally:
-        except urllib2.URLError as e:
-            print "Error getting yahoo data: ", e.reason
-            return 0
+    except urllib2.URLError as e:
+        print "Error getting yahoo data: ", e.reason
+        return 0
     woeid = re.search("<woeid>(\d+)</woeid>", data)
     if woeid is None:
         return 0
@@ -99,10 +98,9 @@ def get_weather_data():
         return {}
     try:
         data = urllib2.urlopen("http://weather.yahooapis.com/forecastrss?w=" + woeid).read()
-    finally:
-        except urllib2.URLError as e:
-            print "Error getting yahoo weather: ", e.reason
-            return {}
+    except urllib2.URLError as e:
+        print "Error getting yahoo weather: ", e.reason
+        return {}
     if data is None:
         return {}
     newdata = re.search("<yweather:condition\s+text=\"([\w|\s]+)\"\s+code=\"(\d+)\"\s+temp=\"(\d+)\"\s+date=\"(.*)\"",
@@ -119,10 +117,9 @@ def get_wunderground_weather_data():
         return []
     try:
         data = urllib2.urlopen("http://api.wunderground.com/api/" + options['wapikey'] + "/conditions/q/" + lid + ".json")
-    finally:
-        except urllib2.URLError as e:
-            print "Error getting wunderground weather: ", e.reason
-            return {}
+    except urllib2.URLError as e:
+        print "Error getting wunderground weather: ", e.reason
+        return {}
     data = json.load(data)
     if data is None:
         return {}
