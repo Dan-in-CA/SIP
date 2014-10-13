@@ -33,6 +33,8 @@ def weather_to_delay(run_loop=False):
         if data["auto_delay"] != "off":
             print("Checking rain status...")
             weather = get_weather_data() if data['weather_provider'] == "yahoo" else get_wunderground_weather_data()
+            if weather =={}:
+                continue
             delay = code_to_delay(weather["code"])
             if delay > 0:
                 print("Rain detected: " + weather["text"] + ". Adding delay of " + str(delay))
@@ -42,9 +44,12 @@ def weather_to_delay(run_loop=False):
             elif delay == 0:
                 print("No rain detected: " + weather["text"] + ". No action.")
             elif delay < 0:
-                print("Good weather detected: " + weather["text"] + ". Removing rain delay.")
-                gv.sd['rdst'] = gv.now
-
+                if gv.sd['rdst'] > gv.now:
+                    strremove = " Removing rain delay."
+                    gv.sd['rdst'] = gv.now
+                else:
+                    strremove = ""
+                print("Good weather detected: " + weather["text"] + "." + strremove)
         if not run_loop:
             break
         time.sleep(3600)
@@ -114,7 +119,7 @@ def get_wunderground_weather_data():
     options = get_weather_options()
     lid = get_wunderground_lid()
     if lid == "":
-        return []
+        return {}
     try:
         data = urllib2.urlopen("http://api.wunderground.com/api/" + options['wapikey'] + "/conditions/q/" + lid + ".json")
     except urllib2.URLError as e:
