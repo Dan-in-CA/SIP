@@ -377,4 +377,8 @@ def forecast_info():
                 'humidity': float(day_info['avehumidity'])
             }
 
+<<<<<<< HEAD
     return result
+=======
+    return result
+>>>>>>> fix bug in weather_level_adj plugin that would cause CPU to max out.
