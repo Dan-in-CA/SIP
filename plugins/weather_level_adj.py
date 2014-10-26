@@ -149,6 +149,7 @@ class WeatherLevelChecker(Thread):
                 err_string = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
                 self.add_status('Weather-base water level encountered error:\n' + err_string)
                 self._sleep(60)
+            time.sleep(0.5)
 
 checker = WeatherLevelChecker()
 
