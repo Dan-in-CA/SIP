@@ -71,7 +71,7 @@ sd = {
     u"nbrd": 1,
     u"tu": u"C",
     u"snlen": 32,
-    u"name": u"OpenSprinkler Pi",
+    u"name": u"OSPi Custom",
     u"theme": u"basic",
     u"show": [255],
     u"salt": password_salt()
