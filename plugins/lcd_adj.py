@@ -17,12 +17,6 @@ from ospi import template_render
 from webpages import ProtectedPage
 from helpers import uptime, get_ip, get_cpu_temp, get_rpi_revision
 
-# Adding Adafruit LCD 16x2 RGB Positive LCD
-import Adafruit_CharLCD as LCD
-
-# Initialize the LCD using the pins
-lcd = LCD.Adafruit_CharLCDPlate()
-
 # Add a new url to open the data entry page.
 urls.extend(['/lcd', 'plugins.lcd_adj.settings',
              '/lcdj', 'plugins.lcd_adj.settings_json',
@@ -96,48 +90,11 @@ checker = LCDSender()
 def get_LCD_print(self, report):
     """Print messages to LCD 16x2"""
     datalcd = get_lcd_options()
-    adr = 0x20
-    if datalcd['adress'] == '0x20':  # range adress from PCF8574 or PCF 8574A
-        adr = 0x20
-    elif datalcd['adress'] == '0x21':
-        adr = 0x21
-    elif datalcd['adress'] == '0x22':
-        adr = 0x22
-    elif datalcd['adress'] == '0x23':
-        adr = 0x23
-    elif datalcd['adress'] == '0x24':
-        adr = 0x24
-    elif datalcd['adress'] == '0x25':
-        adr = 0x25
-    elif datalcd['adress'] == '0x26':
-        adr = 0x26
-    elif datalcd['adress'] == '0x27':
-        adr = 0x27
-    elif datalcd['adress'] == '0x38':
-        adr = 0x38
-    elif datalcd['adress'] == '0x39':
-        adr = 0x39
-    elif datalcd['adress'] == '0x3a':
-        adr = 0x3a
-    elif datalcd['adress'] == '0x3b':
-        adr = 0x3b
-    elif datalcd['adress'] == '0x3c':
-        adr = 0x3c
-    elif datalcd['adress'] == '0x3d':
-        adr = 0x3d
-    elif datalcd['adress'] == '0x3e':
-        adr = 0x3e
-    elif datalcd['adress'] == '0x3f':
-        adr = 0x3f
-    else:
-        self.status = ''
-        self.add_status('Error: Address is not range 0x20-0x27 or 0x38-0x3F!')
-        self._sleep(5)
-        return
-
+    
     import Adafruit_CharLCD as LCD
     lcd = LCD.Adafruit_CharLCDPlate()
-    lcd.set_color(0.0, 1.0, 1.0)
+    lcd.set_color(1.0, 0.0, 0.0)
+    lcd.clear()
     ##lcd = pylcd2.lcd(adr, 1 if get_rpi_revision() >= 2 else 0)  # Address for PCF8574 = example 0x20, Bus Raspi = 1 (0 = 256MB, 1=512MB)
 
     if report == 0:
