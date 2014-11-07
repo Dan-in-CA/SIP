@@ -17,6 +17,11 @@ from ospi import template_render
 from webpages import ProtectedPage
 from helpers import uptime, get_ip, get_cpu_temp, get_rpi_revision
 
+# Adding Adafruit LCD 16x2 RGB Positive LCD
+import Adafruit_CharLCD as LCD
+
+# Initialize the LCD using the pins
+lcd = LCD.Adafruit_CharLCDPlate()
 
 # Add a new url to open the data entry page.
 urls.extend(['/lcd', 'plugins.lcd_adj.settings',
@@ -130,57 +135,51 @@ def get_LCD_print(self, report):
         self._sleep(5)
         return
 
-    import pylcd2  # Library for LCD 16x2 PCF8574
-    lcd = pylcd2.lcd(adr, 1 if get_rpi_revision() >= 2 else 0)  # Address for PCF8574 = example 0x20, Bus Raspi = 1 (0 = 256MB, 1=512MB)
+    import Adafruit_CharLCD as LCD
+    lcd = LCD.Adafruit_CharLCDPlate()
+    lcd.set_color(0.0, 1.0, 1.0)
+    ##lcd = pylcd2.lcd(adr, 1 if get_rpi_revision() >= 2 else 0)  # Address for PCF8574 = example 0x20, Bus Raspi = 1 (0 = 256MB, 1=512MB)
 
     if report == 0:
-        lcd.lcd_clear()
-        lcd.lcd_puts("Open Sprinkler", 1)
-        lcd.lcd_puts("Irrigation syst.", 2)
+        lcd.clear()
+        lcd.message("Open Sprinkler\nIrrigation Syst.")
         self.add_status('Open Sprinkler. / Irrigation syst.')
     elif report == 1:
-        lcd.lcd_clear()
-        lcd.lcd_puts("Software ospi:", 1)
-        lcd.lcd_puts(gv.ver_date, 2)
+        lcd.clear()
+        lcd.message("Software ospi:\n"+gv.ver_date)
         self.add_status('Software ospi: / ' + gv.ver_date)
     elif report == 2:
-        lcd.lcd_clear()
         ip = get_ip()
-        lcd.lcd_puts("My IP is:", 1)
-        lcd.lcd_puts(str(ip), 2)
+        lcd.clear()
+        lcd.message("My RPi IP:\n"+str(ip))
         self.add_status('My IP is: / ' + str(ip))
     elif report == 3:
-        lcd.lcd_clear()
-        lcd.lcd_puts("Port IP:", 1)
-        lcd.lcd_puts("8080", 2)
+        lcd.clear()
+        lcd.message("My Port:\n8080")
         self.add_status('Port IP: / 8080')
     elif report == 4:
-        lcd.lcd_clear()
         temp = get_cpu_temp(gv.sd['tu']) + ' ' + gv.sd['tu']
-        lcd.lcd_puts("CPU temperature:", 1)
-        lcd.lcd_puts(temp, 2)
+        lcd.clear()
+        lcd.message("CPU Temp.:\n"+temp)
         self.add_status('CPU temperature: / ' + temp)
     elif report == 5:
-        lcd.lcd_clear()
         da = time.strftime('%d.%m.%Y', time.gmtime(gv.now))
         ti = time.strftime('%H:%M:%S', time.gmtime(gv.now))
-        lcd.lcd_puts(da, 1)
-        lcd.lcd_puts(ti, 2)
+        lcd.clear()
+        lcd.message(da+"\n"+ti)
         self.add_status(da + ' ' + ti)
     elif report == 6:
-        lcd.lcd_clear()
         up = uptime()
-        lcd.lcd_puts("System run time:", 1)
-        lcd.lcd_puts(up, 2)
+        lcd.clear()
+        lcd.message("System Run Time:\n"+up)
         self.add_status('System run time: / ' + up)
     elif report == 7:
-        lcd.lcd_clear()
         if gv.sd['rs']:
             rain_sensor = "Active"
         else:
             rain_sensor = "Inactive"
-        lcd.lcd_puts("Rain sensor:", 1)
-        lcd.lcd_puts(rain_sensor, 2)
+        lcd.clear()
+        lcd.message("Rain Sensor:\n"+rain_sensor)
         self.add_status('Rain sensor: / ' + rain_sensor)
 
 
