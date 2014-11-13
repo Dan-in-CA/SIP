@@ -33,7 +33,7 @@ DESC="OpenSprinkler Raspberry Pi"
 NAME=ospi.py
 DAEMON=/usr/bin/python
 DAEMON_ARGS="ospi.py"
-HOMEDIR=/home/pi/ospi/ # Edit if different on your Raspberry Pi
+HOMEDIR=/home/pi/OSPi/ # Edit if different on your Raspberry Pi
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
