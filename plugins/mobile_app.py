@@ -2,6 +2,7 @@ import json
 import time
 import datetime
 import string
+import calendar
 
 from helpers import get_cpu_temp, check_login
 import web
@@ -168,7 +169,7 @@ class get_logs(ProtectedPage):  # /jl
                 station = int(event["station"])
                 duration = string.split(event["duration"], ":")
                 duration = (int(duration[0]) * 60) + int(duration[1])
-                timestamp = int(time.mktime(datetime.datetime.strptime(event["date"] + " " + event["start"], "%Y-%m-%d %H:%M:%S").timetuple()))
+                timestamp = int(time.mktime(utc_to_local(datetime.datetime.strptime(event["date"] + " " + event["start"], "%Y-%m-%d %H:%M:%S")).timetuple()))
 
                 data.append([pid, station, duration, timestamp])
 
@@ -181,3 +182,10 @@ class get_logs(ProtectedPage):  # /jl
             return records
         except IOError:
             return []
+
+def utc_to_local(utc_dt):
+    # get integer timestamp to avoid precision lost
+    timestamp = calendar.timegm(utc_dt.timetuple())
+    local_dt = datetime.datetime.fromtimestamp(timestamp)
+    assert utc_dt.resolution >= datetime.timedelta(microseconds=1)
+    return local_dt.replace(microsecond=utc_dt.microsecond)
