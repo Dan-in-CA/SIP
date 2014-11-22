@@ -2,8 +2,9 @@ import json
 import time
 import datetime
 import string
+import calendar
 
-from helpers import get_cpu_temp, check_login
+from helpers import get_cpu_temp, check_login, password_hash
 import web
 import gv  # Gain access to ospi's settings
 from urls import urls  # Gain access to ospi's URL list
@@ -168,7 +169,7 @@ class get_logs(ProtectedPage):  # /jl
                 station = int(event["station"])
                 duration = string.split(event["duration"], ":")
                 duration = (int(duration[0]) * 60) + int(duration[1])
-                timestamp = int(time.mktime(datetime.datetime.strptime(event["date"] + " " + event["start"], "%Y-%m-%d %H:%M:%S").timetuple()))
+                timestamp = int(time.mktime(utc_to_local(datetime.datetime.strptime(event["date"] + " " + event["start"], "%Y-%m-%d %H:%M:%S")).timetuple()))
 
                 data.append([pid, station, duration, timestamp])
 
@@ -181,3 +182,33 @@ class get_logs(ProtectedPage):  # /jl
             return records
         except IOError:
             return []
+
+class set_password():
+    """Save changes to device password"""
+    def GET(self):
+        qdict = web.input()
+        web.header('Access-Control-Allow-Origin', '*')
+        web.header('Content-Type', 'application/json')
+        web.header('Cache-Control', 'no-cache')
+
+        if not(qdict.has_key('pw')) or not(qdict.has_key('npw')) or not(qdict.has_key('cpw')):
+            return json.dumps({"result":3})
+
+        if password_hash(qdict['pw'], gv.sd['salt']) == gv.sd['password']:
+            if qdict['npw'] == "":
+                return json.dumps({"result":3})
+            elif qdict['cpw'] !='' and qdict['cpw'] == qdict['npw']:
+                gv.sd['password'] = password_hash(qdict['npw'], gv.sd['salt'])
+            else:
+                return json.dumps({"result":4})
+        else:
+            return json.dumps({"result":2})
+
+        return json.dumps({"result":1})
+
+def utc_to_local(utc_dt):
+    # get integer timestamp to avoid precision lost
+    timestamp = calendar.timegm(utc_dt.timetuple())
+    local_dt = datetime.datetime.fromtimestamp(timestamp)
+    assert utc_dt.resolution >= datetime.timedelta(microseconds=1)
+    return local_dt.replace(microsecond=utc_dt.microsecond)
