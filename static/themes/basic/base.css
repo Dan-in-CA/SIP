@@ -256,6 +256,7 @@ button.off {
 }
 button.execute {
 	background-color: #2E3959;
+    margin: 2px;
 }
 
 button.toggle {

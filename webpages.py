@@ -11,8 +11,6 @@ from helpers import *
 from gpio_pins import set_output
 from ospi import template_render
 
-__author__ = 'Rimco'
-
 
 class WebPage(object):
     def __init__(self):
@@ -74,7 +72,7 @@ class change_values(ProtectedPage):
             clear_mm()
         if 'rd' in qdict and qdict['rd'] != '0' and qdict['rd'] != '':
             gv.sd['rd'] = float(qdict['rd'])
-            gv.sd['rdst'] = gv.now + gv.sd['rd'] * 3600 + 1  # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
+            gv.sd['rdst'] = gv.gmtnow + gv.sd['rd'] * 3600 + 1  # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
             stop_onrain()
         elif 'rd' in qdict and qdict['rd'] == '0':
             gv.sd['rdst'] = 0
