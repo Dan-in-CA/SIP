@@ -1,4 +1,9 @@
+# -*- coding: utf-8 -*-
+
 import gv
+from blinker import signal
+
+zone_change = signal('zone_change')
 
 try:
     import RPi.GPIO as GPIO  # Required for accessing General Purpose Input Output pins on Raspberry Pi
@@ -10,8 +15,8 @@ except ImportError:
     except ImportError:
         gv.platform = ''  # if no platform, allows program to still run.
         print 'No GPIO module was loaded from GPIO Pins module'
-        # Makes it runnable on machines other than RPi
-        #GPIO = None
+         # Makes it runnable on machines other than RPi
+        #  GPIO = None
 
 try:
     GPIO.setwarnings(False)
@@ -20,6 +25,7 @@ except Exception:
     pass
 
   #### pin defines ####
+
 try:
     if gv.platform == 'pi':  # If this will run on Raspberry Pi:
         GPIO.setmode(GPIO.BOARD)  # IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
@@ -40,6 +46,7 @@ except AttributeError:
     pass
 
 #### setup GPIO pins as output or input ####
+
 try:
     GPIO.setup(pin_sr_noe, GPIO.OUT)
     GPIO.output(pin_sr_noe, GPIO.HIGH)
@@ -57,6 +64,7 @@ except NameError:
 
 def disableShiftRegisterOutput():
     """Disable output from shift register."""
+
     try:
         GPIO.output(pin_sr_noe, GPIO.HIGH)
     except NameError:
@@ -65,6 +73,7 @@ def disableShiftRegisterOutput():
 
 def enableShiftRegisterOutput():
     """Enable output from shift register."""
+
     try:
         GPIO.output(pin_sr_noe, GPIO.LOW)
     except NameError:
@@ -73,6 +82,7 @@ def enableShiftRegisterOutput():
 
 def setShiftRegister(srvals):
     """Set the state of each output pin on the shift register from the srvals list."""
+
     try:
         GPIO.output(pin_sr_clk, GPIO.LOW)
         GPIO.output(pin_sr_lat, GPIO.LOW)
@@ -90,6 +100,8 @@ def setShiftRegister(srvals):
 
 def set_output():
     """Activate triacs according to shift register state."""
+
     disableShiftRegisterOutput()
     setShiftRegister(gv.srvals)  # gv.srvals stores shift register state
     enableShiftRegisterOutput()
+    zone_change.send()
