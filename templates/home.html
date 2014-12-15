@@ -134,9 +134,13 @@ $code:
             } else {
                 var h = prompt("Enter hours to delay","0");
             }
-            if (h != null){
+            if (h < 0) {
+                var h = prompt("Delay must be a positive value","0");
+            }
+            if (h != null && h >= 0){
                 jQuery("form[name='hf'] input[name='rd']").val(h);
                 jQuery("form[name='hf']").submit();
+
             }
         });
 
@@ -211,7 +215,7 @@ $code:
 <div id="options">
     <button id="cStartStop" class="toggle ${'on' if gv.sd['en'] else 'off'}"><span class='toggleleft'>System On</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>System Off</span></button>
     <br>
-    <button id="cWaterLevel" class="toggle choice ${'on' if gv.sd['wl']==100 else 'off'}"><span class='toggleleft'>Normal</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>${'Water Level' if gv.sd['wl']==100 else str(gv.sd['wl']) + '% Level'}</span></button>${'' if int(plugin_adjustment()) == 100 else ' Plugin adjustments: ' + plugin_adjustment_list() + ('' if gv.sd['wl']==100 and '*' not in plugin_adjustment_list() else ' - Total adjustment: ' + total_adjustment() + '%')}
+    <button id="cWaterLevel" class="toggle choice ${'on' if gv.sd['wl']==100 else 'off'}"><span class='toggleleft'>Normal</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>${'Water Level' if gv.sd['wl']==100 else str(gv.sd['wl']) + '% Level'}</span></button> $# {'' if int(plugin_adjustment()) == 100 else ' Plugin adjustments: ' + plugin_adjustment_list() + ('' if gv.sd['wl']==100 and '*' not in plugin_adjustment_list() else ' - Total adjustment: ' + total_adjustment() + '%')}
     <br>
     <button id="cRainDelay" class="toggle ${'off' if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']) else 'on'}"><span class='toggleleft'>Active</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>Rain Delay</span></button>
     $if gv.sd['rd']:

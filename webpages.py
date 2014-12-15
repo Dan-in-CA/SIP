@@ -10,9 +10,42 @@ import gv
 from helpers import *
 from gpio_pins import set_output
 from ospi import template_render
+from blinker import signal
 
-__author__ = 'Rimco'
+loggedin = signal('loggedin')
+def report_login():
+    loggedin.send()
 
+value_change = signal('value_change')
+def report_value_change():
+    value_change.send()
+
+option_change = signal('option_change')
+def report_option_change():
+    option_change.send()
+
+rebooted = signal('rebooted')
+def report_rebooted():
+    rebooted.send()
+
+station_names = signal('station_names')
+def report_station_names():
+    station_names.send()
+
+program_change = signal('program_change')
+def report_program_change():
+    program_change.send()
+
+program_deleted = signal('program_deleted')
+def report_program_deleted():
+    program_deleted.send()
+
+program_toggled = signal('program_toggled')
+def report_program_toggle():
+    program_toggled.send()
+
+
+### Web pages ######################
 
 class WebPage(object):
     def __init__(self):
@@ -39,6 +72,7 @@ class login(WebPage):
             return template_render.login(my_signin)
         else:
             web.config._session.user = 'admin'
+            report_login()
             raise web.seeother('/')
 
 
@@ -74,7 +108,7 @@ class change_values(ProtectedPage):
             clear_mm()
         if 'rd' in qdict and qdict['rd'] != '0' and qdict['rd'] != '':
             gv.sd['rd'] = float(qdict['rd'])
-            gv.sd['rdst'] = gv.now + gv.sd['rd'] * 3600 + 1  # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
+            gv.sd['rdst'] = gv.gmtnow + gv.sd['rd'] * 3600 + 1  # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
             stop_onrain()
         elif 'rd' in qdict and qdict['rd'] == '0':
             gv.sd['rdst'] = 0
@@ -84,6 +118,7 @@ class change_values(ProtectedPage):
             except Exception:
                 pass
         jsave(gv.sd, 'sd')
+        report_value_change()
         raise web.seeother('/')  # Send browser back to home page
 
 
@@ -184,9 +219,11 @@ class change_options(ProtectedPage):
             gv.sd['lr'] = int(qdict['olr'])
 
         jsave(gv.sd, 'sd')
+        report_option_change()
         if 'rbt' in qdict and qdict['rbt'] == '1':
             gv.srvals = [0] * (gv.sd['nst'])
             set_output()
+            report_reboot()
             os.system('reboot')
         raise web.seeother('/')
 
@@ -267,6 +304,7 @@ class change_stations(ProtectedPage):
         gv.snames = names
         jsave(names, 'snames')
         jsave(gv.sd, 'sd')
+        report_station_names()
         raise web.seeother('/')
 
 
@@ -396,6 +434,7 @@ class change_program(ProtectedPage):
             gv.pd[int(qdict['pid'])] = cp  # replace program
         jsave(gv.pd, 'programs')
         gv.sd['nprogs'] = len(gv.pd)
+        report_program_change()
         raise web.seeother('/vp')
 
 
@@ -411,6 +450,7 @@ class delete_program(ProtectedPage):
             del gv.pd[int(qdict['pid'])]
         jsave(gv.pd, 'programs')
         gv.sd['nprogs'] = len(gv.pd)
+        report_program_deleted()
         raise web.seeother('/vp')
 
 
@@ -421,6 +461,7 @@ class enable_program(ProtectedPage):
         qdict = web.input()
         gv.pd[int(qdict['pid'])][0] = int(qdict['enable'])
         jsave(gv.pd, 'programs')
+        report_program_toggle()
         raise web.seeother('/vp')
 
 
