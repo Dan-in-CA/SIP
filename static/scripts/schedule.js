@@ -1,5 +1,5 @@
 // Global vars
-var displayScheduleDate = new Date(devt); // dk 
+var displayScheduleDate = new Date(Date.now() + cliTzOffset - devTzOffset); // dk
 var displayScheduleTimeout;
 var sid,sn,t;
 var simdate = displayScheduleDate; // date for simulation
@@ -147,11 +147,12 @@ function programName(p) {
 	}
 }
 
+// show timeline on home page
 function displaySchedule(schedule) {
 	if (displayScheduleTimeout != null) {
 		clearTimeout(displayScheduleTimeout);
 	}
-	var now = new Date();
+	var now = new Date(Date.now() + cliTzOffset - devTzOffset); // will show device time
 	var nowMark = now.getHours()*60 + now.getMinutes();
 	var isToday = toXSDate(displayScheduleDate) == toXSDate(now);
 	var programClassesUsed = new Object();
@@ -204,8 +205,9 @@ function displaySchedule(schedule) {
 	}
 }
 
-function displayProgram() {
-	if (displayScheduleDate > devt) { //dk 7-13-14 << new Date()
+function displayProgram() { // Controls home page irrigation timeline
+	//if (displayScheduleDate > devt) { //dk
+	if (displayScheduleDate > new Date(Date.now() + cliTzOffset - devTzOffset)) { //dk
 		var schedule = doSimulation(); //dk
 		displaySchedule(schedule);
 	} else {
@@ -219,7 +221,7 @@ function displayProgram() {
 				}
 				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
 			}
-			if (toXSDate(displayScheduleDate) == toXSDate(new Date())) {
+			if (toXSDate(displayScheduleDate) == toXSDate(new Date(Date.now() + cliTzOffset - devTzOffset))) {
 				var schedule = doSimulation(); //dk
 				log = log.concat(schedule);
 			}

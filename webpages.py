@@ -5,6 +5,8 @@ import re
 import time
 import datetime
 import web
+import io
+import ast
 
 import gv
 from helpers import *
@@ -96,6 +98,7 @@ class change_values(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
+        print 'qdict: ', qdict
         if 'rsn' in qdict and qdict['rsn'] == '1':
             stop_stations()
             raise web.seeother('/')
@@ -107,8 +110,8 @@ class change_values(ProtectedPage):
         if 'mm' in qdict and qdict['mm'] == '0':
             clear_mm()
         if 'rd' in qdict and qdict['rd'] != '0' and qdict['rd'] != '':
-            gv.sd['rd'] = float(qdict['rd'])
-            gv.sd['rdst'] = gv.gmtnow + gv.sd['rd'] * 3600 + 1  # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
+            gv.sd['rd'] = int(float(qdict['rd']))
+            gv.sd['rdst'] = int(gv.now + gv.sd['rd'] * 3600) # + 1  # +1 adds a smidge just so after a round trip the display hasn't already counted down by a minute.
             stop_onrain()
         elif 'rd' in qdict and qdict['rd'] == '0':
             gv.sd['rdst'] = 0
@@ -185,7 +188,8 @@ class change_options(ProtectedPage):
             gv.sd['htp'] = int(qdict['ohtp'])
         if 'osdt' in qdict:
             gv.sd['sdt'] = int(qdict['osdt'])
-
+        if 'olang' in qdict:
+           gv.sd['lang'] = qdict['olang']
         if 'omas' in qdict:
             gv.sd['mas'] = int(qdict['omas'])
         if 'omton' in qdict:
@@ -223,8 +227,12 @@ class change_options(ProtectedPage):
         if 'rbt' in qdict and qdict['rbt'] == '1':
             gv.srvals = [0] * (gv.sd['nst'])
             set_output()
-            report_reboot()
-            os.system('reboot')
+            report_rebooted()
+#            os.system('reboot')
+            reboot()
+
+        if 'rstrt' in qdict and qdict['rstrt'] == '1':
+            restart(1, True)
         raise web.seeother('/')
 
     def update_scount(self, qdict):
@@ -328,7 +336,7 @@ class get_set_station(ProtectedPage):
                 status += str(gv.srvals[sid])
                 return status
             else:
-                return 'Station ' + str(sid+1) + ' not found.'
+                return _('Station ') + str(sid+1) + _(' not found.')
         elif gv.sd['mm']:
             if set_to:  # if status is
                 gv.rs[sid][0] = gv.now  # set start time to current time
@@ -346,7 +354,7 @@ class get_set_station(ProtectedPage):
                 time.sleep(1)
             raise web.seeother('/')
         else:
-            return 'Manual mode not active.'
+            return _('Manual mode not active.')
 
 
 class view_runonce(ProtectedPage):
@@ -477,9 +485,8 @@ class clear_log(ProtectedPage):
     """Delete all log records"""
 
     def GET(self):
-        qdict = web.input()
-        with open('./data/log.json', 'w') as f:
-            f.write('')
+        with io.open('./data/log.json', 'w') as f:
+            f.write(u'')
         raise web.seeother('/vl')
 
 
@@ -508,17 +515,17 @@ class run_now(ProtectedPage):
         raise web.seeother('/')
 
 
-class show_revision(ProtectedPage):
-    """Show revision info to the user. Use: [URL of Pi]/rev."""
-
-    def GET(self):
-        revpg = '<!DOCTYPE html>\n'
-        revpg += 'Python Interval Program for OpenSprinkler Pi<br/><br/>\n'
-        revpg += 'Compatable with OpenSprinkler firmware 1.8.3.<br/><br/>\n'
-        revpg += 'Includes plugin architecture\n'
-        revpg += 'ospi.py version: v' + gv.ver_str + '<br/><br/>\n'
-        revpg += 'Updated ' + gv.ver_date + '\n'
-        return revpg
+# class show_revision(ProtectedPage):
+#     """Show revision info to the user. Use: [URL of Pi]/rev."""
+#
+#     def GET(self):
+#         revpg = '<!DOCTYPE html>\n'
+#         revpg += 'Python Interval Program for OpenSprinkler Pi<br/><br/>\n'
+#         revpg += 'Compatable with OpenSprinkler firmware 1.8.3.<br/><br/>\n'
+#         revpg += 'Includes plugin architecture\n'
+#         revpg += 'ospi.py version: v' + gv.ver_str + '<br/><br/>\n'
+#         revpg += 'Updated ' + gv.ver_date + '\n'
+#         return revpg
 
 
 class toggle_temp(ProtectedPage):
@@ -605,8 +612,8 @@ class api_log(ProtectedPage):
         records = read_log()
         data = []
 
-        for r in records:
-            event = json.loads(r)
+        for event in records:
+            #event = ast.literal_eval(json.loads(r))
 
             # return any records starting on this date
             if 'date' not in qdict or event['date'] == thedate:
@@ -626,9 +633,9 @@ class water_log(ProtectedPage):
 
     def GET(self):
         records = read_log()
-        data = "Date, Start Time, Zone, Duration, Program\n"
+        data = _("Date, Start Time, Zone, Duration, Program") + "\n"
         for r in records:
-            event = json.loads(r)
+            event = ast.literal_eval(json.dumps(r))
             data += event["date"] + ", " + event["start"] + ", " + str(event["station"]) + ", " + event[
                 "duration"] + ", " + event["program"] + "\n"
 

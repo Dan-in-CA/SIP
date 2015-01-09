@@ -1,27 +1,28 @@
 # !/usr/bin/python
 # -*- coding: utf-8 -*-
 
+
 ##############################
 #### Revision information ####
 import subprocess
 
 major_ver = 2
-minor_ver = 1
-old_count = 208
+minor_ver = 2
+old_count = 219
 
 try:
     revision = int(subprocess.check_output(['git', 'rev-list', '--count', '--first-parent', 'HEAD']))
     ver_str = '%d.%d.%d' % (major_ver, minor_ver, (revision - old_count))
 except Exception:
-    print 'Could not use git to determine version!'
+    print _('Could not use git to determine version!')
     revision = 999
     ver_str = '%d.%d.%d' % (major_ver, minor_ver, revision)
 
 try:
     ver_date = subprocess.check_output(['git', 'log', '-1', '--format=%cd', '--date=short']).strip()
 except Exception:
-    print 'Could not use git to determine date of last commit!'
-    ver_date = '2014-09-10'
+    print _('Could not use git to determine date of last commit!')
+    ver_date = '2015-01-09'
 
 #####################
 #### Global vars ####
@@ -74,7 +75,8 @@ sd = {
     u"name": u"OpenSprinkler Pi",
     u"theme": u"basic",
     u"show": [255],
-    u"salt": password_salt()
+    u"salt": password_salt(),
+    u"lang": u"default"
 }
 
 sd['password'] = password_hash('opendoor', sd['salt'])
@@ -91,7 +93,7 @@ except IOError:  # If file does not exist, it will be created using defaults.
 
 
 now = timegm(time.localtime())
-gmtnow = time.time()
+tz_offset = int(time.time() - timegm(time.localtime())) # compatible with Javascript (negative tz shown as positive value)
 plugin_menu = []  # Empty list of lists for plugin links (e.g. ['name', 'URL'])
 
 srvals = [0] * (sd['nst'])  # Shift Register values
@@ -107,30 +109,31 @@ pon = None  # Program on (Holds program number of a running program)
 sbits = [0] * (sd['nbrd'] + 1)  # Used to display stations that are on in UI
 
 rs = []  # run schedule
-for _ in range(sd['nst']):
+for j in range(sd['nst']):
     rs.append([0, 0, 0, 0])  # scheduled start time, scheduled stop time, duration, program index
 
 lrun = [0, 0, 0, 0]  # station index, program number, duration, end time (Used in UI)
 scount = 0  # Station count, used in set station to track on stations with master association.
 
 options = [
-    ["System name", "string", "name", "Unique name of this OpenSprinkler system.", "System"],
-    ["Location", "string", "loc", "City name or zip code. Use comma or + in place of space.", "System"],
-    ["Time zone", "int", "tz", "Example: GMT-4:00, GMT+5:30 (effective after reboot.)", "System"],
-    ["24-hour clock", "boolean", "tf", "Display times in 24 hour format (as opposed to AM/PM style.)", "System"],
-    ["HTTP port", "int", "htp", "HTTP port (effective after reboot.)", "System"],
-    ["Disable security", "boolean", "ipas", "Allow anonymous users to access the system without a password.", "Change Password"],
-    ["Current password", "password", "opw", "Re-enter the current password.", "Change Password"],
-    ["New password", "password", "npw", "Enter a new password.", "Change Password"],
-    ["Confirm password", "password", "cpw", "Confirm the new password.", "Change Password"],
-    ["Sequential", "boolean", "seq", "Sequential or concurrent running mode.", "Station Handling"],
-    ["Extension boards", "int", "nbrd", "Number of extension boards.", "Station Handling"],
-    ["Station delay", "int", "sdt", "Station delay time (in seconds), between 0 and 240.", "Station Handling"],
-    ["Master station", "int", "mas", "Select master station.", "Configure Master"],
-    ["Master on adjust", "int", "mton", "Master on delay (in seconds), between +0 and +60.", "Configure Master"],
-    ["Master off adjust", "int", "mtoff", "Master off delay (in seconds), between -60 and +60.", "Configure Master"],
-    ["Use rain sensor", "boolean", "urs", "Use rain sensor.", "Rain Sensor"],
-    ["Normally open", "boolean", "rst", "Rain sensor type.", "Rain Sensor"],
-    ["Enable logging", "boolean", "lg", "Log all events - note that repetitive writing to an SD card can shorten its lifespan.", "Logging"],
-    ["Max log entries", "int", "lr", "Length of log to keep, 0=no limits.", "Logging"]
+    [_("System name"), "string", "name", _("Unique name of this OpenSprinkler system."), _("System")],
+    [_("Location"), "string", "loc", _("City name or zip code. Use comma or + in place of space."), _("System")],
+    [_("Language"),"list","lang", _("Select language (effective after restart.)"),_("System")],
+#    [_("Time zone"), "int", "tz", _("Example: GMT-4:00, GMT+5:30 (effective after reboot.)"), _("System")],
+    [_("24-hour clock"), "boolean", "tf", _("Display times in 24 hour format (as opposed to AM/PM style.)"), _("System")],
+    [_("HTTP port"), "int", "htp", _("HTTP port (effective after reboot.)"), _("System")],
+    [_("Disable security"), "boolean", "ipas", _("Allow anonymous users to access the system without a password."), _("Change Password")],
+    [_("Current password"), "password", "opw", _("Re-enter the current password."), _("Change Password")],
+    [_("New password"), "password", "npw", _("Enter a new password."), _("Change Password")],
+    [_("Confirm password"), "password", "cpw", _("Confirm the new password."), _("Change Password")],
+    [_("Sequential"), "boolean", "seq", _("Sequential or concurrent running mode."), _("Station Handling")],
+    [_("Extension boards"), "int", "nbrd", _("Number of extension boards."), _("Station Handling")],
+    [_("Station delay"), "int", "sdt", _("Station delay time (in seconds), between 0 and 240."), _("Station Handling")],
+    [_("Master station"), "int", "mas",_( "Select master station."), _("Configure Master")],
+    [_("Master on adjust"), "int", "mton", _("Master on delay (in seconds), between +0 and +60."), _("Configure Master")],
+    [_("Master off adjust"), "int", "mtoff", _("Master off delay (in seconds), between -60 and +60."), _("Configure Master")],
+    [_("Use rain sensor"), "boolean", "urs", _("Use rain sensor."), _("Rain Sensor")],
+    [_("Normally open"), "boolean", "rst", _("Rain sensor type."), _("Rain Sensor")],
+    [_("Enable logging"), "boolean", "lg", _("Log all events - note that repetitive writing to an SD card can shorten its lifespan."), _("Logging")],
+    [_("Max log entries"), "int", "lr", _("Length of log to keep, 0=no limits."), _("Logging")]
 ]

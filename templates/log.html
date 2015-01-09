@@ -1,14 +1,14 @@
 $def with (records)
 
-$var title: OpenSprinkler Pi Log
+$var title: $_('OpenSprinkler Pi Log')
 $var page: log
 $code:
 	snames = gv.snames
 	if gv.sd['lg'] == 1:
-		log_state = "Enabled"
+		log_state = _("Enabled")
 		log_option = "checked"
 	else:
-		log_state = "Disabled"
+		log_state = _("Disabled")
 		log_option = ""
 		
 	def formatTime(t):
@@ -38,25 +38,25 @@ $code:
 </script>
 
 <div id="options">
-    <div class="title">Log $log_state</div>
+    <div class="title">$_('Log ')$log_state</div>
     <form method="get" action="cl" name="df" id="df"></form>
 </div>
 
 <div id="log">
-    <p>Total number of records: ${len(records)} (${"no" if gv.sd['lr']==0 else gv.sd['lr']} limit)</p>
-    <p>Download log as <a href="/wl">csv</a>.</p>
+    <p>$_('Total number of records: ')${len(records)} (${_("no") if gv.sd['lr']==0 else gv.sd['lr']}$_(' limit'))</p>
+    <p>$_('Download log as ')<a href="/wl">csv</a>.</p>
 
     <table class="logList">
         <tr class="log_rec">
-            <th>Date</th>
-            <th>Start Time</th>
-            <th>Station</th>
-            <th>Duration</th>
-            <th>Program</th>
+            <th>$_('Date')</th>
+            <th>$_('Start Time')</th>
+            <th>$_('Station')</th>
+            <th>$_('Duration')</th>
+            <th>$_('Program')</th>
         </tr>
         $ odd = 1
         $for r in records:
-            $ event = json.loads(r)
+            $ event = r #  ast.literal_eval(json.loads(r))
             <tr class="log_rec ${'odd' if odd else 'even'}">
                 <td align='center'>${event["date"]}</td>
                 <td align='center'>${formatTime(event["start"])}</td>
@@ -70,6 +70,6 @@ $code:
 </div>
 
 <div id="controls">
-    <button id="nRefresh" class="refresh">Refresh</button>
-    <button id="nDeleteAll" class="delete danger">Clear Log</button>
+    <button id="nRefresh" class="refresh">$_('Refresh')</button>
+    <button id="nDeleteAll" class="delete danger">$_('Clear Log')</button>
 </div>

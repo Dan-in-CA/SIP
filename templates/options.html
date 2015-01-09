@@ -1,9 +1,12 @@
 $def with (errorCode)
 
-$var title: OpenSprinkler Pi Options
+$var title: $_('OpenSprinkler Pi Options')
 $var page: options
 $code:
 	opts = gv.options
+	languages = i18n.languages
+	langKeys = i18n.languages.keys()
+	langKeys.sort()
 	snames = gv.snames
 
 <script>
@@ -12,8 +15,8 @@ $code:
     jQuery(document).ready(function(){
 
         jQuery("button#tooltips").click(function(){
-            var visible = jQuery(this).text() == "Hide Tooltips";
-            jQuery(this).text(visible ? "Show Tooltips" : "Hide Tooltips");
+            var visible = jQuery(this).text() == $:{json.dumps(_('Hide Tooltips'), ensure_ascii=False)};
+            jQuery(this).text(visible ? $:{json.dumps(_('Show Tooltips'), ensure_ascii=False)} : $:{json.dumps(_('Hide Tooltips'), ensure_ascii=False)});
             jQuery(".tooltip").toggle();
         });
 
@@ -22,13 +25,18 @@ $code:
             jQuery("form[name='of']").submit();
         });
 
+        jQuery("button#cRestart").click(function(){
+            jQuery("input[name='rstrt']").val(1);
+            jQuery("form[name='of']").submit();
+        });
+
         jQuery("button#cSubmit").click(function(){
             // process time zone value
-            var th = parseInt(jQuery("input[name='th']").val(),10);
-            var tq = parseInt(jQuery("input[name='tq']").val(),10);
-            tq = (tq/15>>0)/4.0;
-            th = th+(th>=0?tq:-tq);
-            jQuery("input[name='otz']").val(((th+12)*4)>>0);
+//            var th = parseInt(jQuery("input[name='th']").val(),10);
+//            var tq = parseInt(jQuery("input[name='tq']").val(),10);
+//            tq = (tq/15>>0)/4.0;
+//            th = th+(th>=0?tq:-tq);
+//            jQuery("input[name='otz']").val(((th+12)*4)>>0);
             jQuery("form[name='of']").submit();
         });
 
@@ -42,15 +50,15 @@ $code:
 
         switch (errorCode) {
             case "pw_wrong":
-                jQuery("#erroropw").text("The password given was incorrect.");
+                jQuery("#erroropw").text($:{json.dumps(_('The password given was incorrect.'), ensure_ascii=False)});
                 jQuery("#erroropw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
                 break;
             case "pw_blank":
-                jQuery("#errornpw").text("Please enter a password.");
+                jQuery("#errornpw").text($:{json.dumps(_('Please enter a password.'), ensure_ascii=False)});
                 jQuery("#errornpw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
                 break;
             case "pw_mismatch":
-                jQuery("#errorcpw").text("Passwords done't match, please re-enter.");
+                jQuery("#errorcpw").text($:{json.dumps(_("Passwords don't match, please re-enter."), ensure_ascii=False)});
                 jQuery("#errorcpw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
                 break;
         }
@@ -61,8 +69,8 @@ $code:
 
 </script>
 <div id="options">
-    <div class="title">Edit Options</div>
-    <button id="tooltips">Show Tooltips</button>
+    <div class="title">$_('Edit Options')</div>
+    <button id="tooltips">$_('Show Tooltips')</button>
     <form name="of" action="co" method="get">
     $code:
         output = ""
@@ -88,6 +96,12 @@ $code:
                 output += "<input name='o" + name + "' type='text' size='31' maxlength='31' value='" + value + "'>\n"
             elif datatype == "password":
                 output += "<input name='" + name + "' type='password' size='31' maxlength='31'><span class='inputError' id='error" + name + "'></span>\n"
+            elif name == "lang":
+                output += "<select name= 'olang'>\n"
+                output += "<option " + ("selected " if value=='default' else "") + "value='default'>"+_('Default')+"</option>\n"
+                for L in langKeys:
+                    output += "<option " + ("selected " if value==L else "") + "value='"+L+"'>"+languages[L]+"</option>\n"
+                output += "</select>\n"
             elif name == "tz":
                 output += "<input name='otz' type='hidden' value='0'>\n"
                 tz = value - 48
@@ -96,7 +110,7 @@ $code:
                 output += "<input name='th' type='text' size='3' maxlength='3' value='"+ th +"'>:<input name='tq' type='text' size='3' maxlength='3' value='" + tq + "'>\n"
             elif name == "mas":
                 output += "<select name='omas'>\n"
-                output += "<option " + ("selected " if value==0 else "") + "value='0'>None</option>\n"
+                output += "<option " + ("selected " if value==0 else "") + "value='0'>"+_('None')+"</option>\n"
                 for i in range(0,8):
                     if (gv.sd['show'][0]>>i)&1 == 1:
                         output += "<option " + ("selected " if value==i+1 else "") + "value='" + str(i+1) + "'>" + snames[i] + "  (Station " + str(i+1) + ")</option>\n"
@@ -110,15 +124,19 @@ $code:
 
             output += "<span class='tooltip'>" + tooltip + "</span>\n"
             output += "</div>\n\n"
-        output += categoryCloser + "<div class='category collapsible collapsed'><h4>System Reboot</h4>"
-        output += "<div class='option' title='Reboot system'><button id='cReboot' class='reboot danger'>Reboot</button></div>\n"
+        output += categoryCloser + "<div class='category collapsible collapsed'><h4>"+_('System Restart')+"</h4>"
+        output += "<div class='option'>"
+        output += "<button id='cRestart' class='restart danger' title=" + json.dumps(_('Restart software'), ensure_ascii=False)+">" + _('Restart')+"</button>"
+        output += "<button id='cReboot' class='reboot danger' title=" + json.dumps(_('Reboot hardware'), ensure_ascii=False) + ">" + _('Reboot')+"</button>"
+        output += "</div>\n"
         output += categoryCloser
     $:{output}
         <input type="hidden" name="rbt" value="0">
+        <input type="hidden" name="rstrt" value="0">
     </form>
 </div>
 
 <div id="controls">
-    <button id='cSubmit' class="submit">Submit Changes</button>
-    <button id='cCancel' class="cancel danger">Cancel</button>
+    <button id='cSubmit' class="submit">$_('Submit Changes')</button>
+    <button id='cCancel' class="cancel danger">$_('Cancel')</button>
 </div>

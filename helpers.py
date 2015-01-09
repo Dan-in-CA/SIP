@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
+import i18n
+
 import datetime
 from threading import Thread
-
-__author__ = 'Rimco'
-
 import os
 import random
 import sys
 import time
 import subprocess
-
+import io
+import ast
 
 try:
     from gpio_pins import pin_rain_sense, GPIO
@@ -28,7 +28,7 @@ except ImportError:
     try:
         import simplejson as json
     except ImportError:
-        print "Error: json module not found"
+        print _("Error: json module not found")
         sys.exit()
 
 
@@ -41,7 +41,7 @@ def reboot(wait=1, block=False):
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
         time.sleep(wait)
-        print 'Rebooting...'
+        print _('Rebooting...')
         subprocess.Popen(['reboot'])
     else:
         t = Thread(target=reboot, args=(wait, True))
@@ -54,7 +54,7 @@ def poweroff(wait=1, block=False):
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
         time.sleep(wait)
-        print 'Powering off...'
+        print _('Powering off...')
         subprocess.Popen(['poweroff'])
     else:
         t = Thread(target=poweroff, args=(wait, True))
@@ -67,7 +67,7 @@ def restart(wait=1, block=False):
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
         time.sleep(wait)
-        print 'Restarting...'
+        print _('Restarting...')
         subprocess.Popen('service ospi restart'.split())
     else:
         t = Thread(target=restart, args=(wait, True))
@@ -109,24 +109,26 @@ def get_rpi_revision():
 
 def baseurl():
     """Return URL app is running under."""
+
     result = web.ctx['home']
     return result
 
 
 def check_rain():
     try:
-        if gv.sd['rst'] == 0:
-            if GPIO.input(pin_rain_sense):  # Rain detected
+        if gv.sd['rst'] == 1:  # Rain sensor type normally open (default)
+            if not GPIO.input(pin_rain_sense):  # Rain detected
                 gv.sd['rs'] = 1
             else:
                 gv.sd['rs'] = 0
-        elif gv.sd['rst'] == 1:
-            if not GPIO.input(pin_rain_sense):
+        elif gv.sd['rst'] == 0:  # Rain sensor type normally closed
+            if GPIO.input(pin_rain_sense):  # Rain detected
                 gv.sd['rs'] = 1
             else:
                 gv.sd['rs'] = 0
     except NameError:
         pass
+
 
 
 def clear_mm():
@@ -153,6 +155,7 @@ def plugin_adjustment():
 
 def get_cpu_temp(unit=None):
     """Returns the temperature of the CPU if available."""
+
     try:
         if gv.platform == 'bo':
             res = os.popen('cat /sys/class/hwmon/hwmon0/device/temp1_input').readline()
@@ -180,24 +183,28 @@ def timestr(t):
 
 def log_run():
     """add run data to csv file - most recent first."""
+
     if gv.sd['lg']:
         if gv.lrun[1] == 98:
-            pgr = 'Run-once'
+            pgr = _('Run-once')
         elif gv.lrun[1] == 99:
-            pgr = 'Manual'
+            pgr = _('Manual')
         else:
             pgr = str(gv.lrun[1])
 
         start = time.gmtime(gv.now - gv.lrun[2])
-        logline = '{"program":"' + pgr + '","station":' + str(gv.lrun[0]) + ',"duration":"' + timestr(
-            gv.lrun[2]) + '","start":"' + time.strftime('%H:%M:%S","date":"%Y-%m-%d"', start) + '}\n'
+        logline = json.dumps('{"program":"' + pgr + '","station":' + str(gv.lrun[0]) + ',"duration":"' + timestr(
+            gv.lrun[2]) + '","start":"' + time.strftime('%H:%M:%S","date":"%Y-%m-%d"', start) + '}').decode('utf-8') + '\n'
+        lines = []
+        lines.append(logline)
         log = read_log()
-        log.insert(0, logline)
+        for r in log:
+            lines.append(json.dumps(r) + '\n')
         with open('./data/log.json', 'w') as f:
             if gv.sd['lr']:
-                f.writelines(log[:gv.sd['lr']])
+                f.writelines(lines[:gv.sd['lr']])
             else:
-                f.writelines(log)
+                f.writelines(lines)
     return
 
 
@@ -270,6 +277,7 @@ def schedule_stations(stations):
 
 def stop_onrain():
     """Stop stations that do not ignore rain."""
+
     from gpio_pins import set_output
     for b in range(gv.sd['nbrd']):
         for s in range(8):
@@ -302,12 +310,19 @@ def stop_stations():
 
 
 def read_log():
-    try:
-        with open('./data/log.json') as logf:
-            records = logf.readlines()
-        return records
-    except IOError:
-        return []
+      result = []
+      try:
+          with io.open('./data/log.json') as logf:
+              records = logf.readlines()
+              for i in records:
+                  try:
+                      rec = ast.literal_eval(json.loads(i))
+                  except ValueError:
+                      rec = json.loads(i)
+                  result.append(rec)
+          return result
+      except IOError:
+          return result
 
 
 def jsave(data, fname):
@@ -375,10 +390,10 @@ def check_login(redirect=False):
 
 
 signin_form = form.Form(
-    form.Password('password', description='Password:'),
+    form.Password('password', description = _('Password') + ':'),
     validators=[
         form.Validator(
-            "Incorrect password, please try again",
+            _("Incorrect password, please try again"),
             lambda x: gv.sd['password'] == password_hash(x.password, gv.sd['salt'])
         )
     ]
