@@ -1,6 +1,6 @@
 $def with ()
 
-$var title: OpenSprinkler Pi Stations
+$var title: $_('OpenSprinkler Pi Stations')
 $var page: stations
 $code:
 	snames = gv.snames
@@ -70,16 +70,16 @@ $code:
 
 </script>
 <div id="stations">
-    <div class="title">Configure Stations</div>
+    <div class="title">$_('Configure Stations')</div>
     <form id="sf" name="sf" action="cs" method="get">
         <table class="stationList">
             <tr>
-                <th class="stationNumber">Station</th>
-                <th class="stationName">Name</th>
-                <th class="stationShow">Connected?</th>
-                <th class="stationIgnore">Ignore Rain?</th>
+                <th class="stationNumber">$_('Station')</th>
+                <th class="stationName">$_('Name')</th>
+                <th class="stationShow">$_('Enabled?')</th>
+                <th class="stationIgnore">$_('Ignore Rain?')</th>
                 $if gv.sd['mas'] > 0:
-                    <th class="stationMaster">Activate Master?</th>
+                    <th class="stationMaster">$_('Activate Master?')</th>
             </tr>
             $for bid in range(0,gv.sd['nbrd']):
                 $for s in range(0,8):
@@ -90,7 +90,7 @@ $code:
                             <input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid}" id="n${sid}">
                         </td>
                         $if sid == gv.sd['mas'] - 1:
-                            <td class="stationMaster" colspan="3">(Master valve)</td>
+                            <td class="stationMaster" colspan="3">$_('(Master valve)')</td>
                         $else:
                             <td class="stationShow">
                                 <input type="checkbox" ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}">
@@ -115,7 +115,7 @@ $code:
 </div>
 
 <div id="controls">
-    <button id="cSubmit" class="submit">Submit Changes</button>
-    <button id="cResetNames" class="refresh">Reset Names</button>
-    <button id="cCancel" class="cancel danger">Cancel</button>
+    <button id="cSubmit" class="submit">$_('Submit Changes')</button>
+    <button id="cResetNames" class="refresh">$_('Reset Names')</button>
+    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
 </div>

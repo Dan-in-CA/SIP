@@ -21,7 +21,7 @@ gv.plugin_menu.append(['Monthly Adjust', '/ma'])
 def set_wl(run_loop=False):
     """Adjust irrigation time by percent based on historical climate data."""
     if run_loop:
-        time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
+        time.sleep(2)  # Sleep some time to prevent printing before startup information
 
     last_month = 0
     while True:

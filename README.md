@@ -7,12 +7,19 @@ This is an updated version of OpenSprinkler Pi started by Dan Kimberling making 
 -----------------------------------------------------------------
 OpenSprinkler Pi (ospi) Interval Program Demo<br/>
 Creative Commons Attribution-ShareAlike 3.0 license<br/>
-July 2014
 
 ***********
 UPDATES
 ===========
 ***********
+
+January 9 2015
+----------
+(Dan)<br/>
+
+1. Added multiple language support<br/>
+2. Updated timezone handling<br/>
+3. Added software RESTART button under System Restart on Options page<br/>
 
 October 7 2014
 ----------
@@ -22,7 +29,7 @@ Incorporated changes that had taken place on Rimnco's GitHub fork into Dan's OSP
 
 September 10 2014
 ----------
-(martinpihrt)<br/>
+(Martin Pihrt)<br/>
 Changes:<br/>
 1. Added new functions in helpers.py: reboot, poweroff, restart, uptime and getIP.<br/>
 2. Added new plugins:<br/>

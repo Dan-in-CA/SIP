@@ -1,6 +1,6 @@
 $def with ()
 
-$var title: OpenSprinkler Pi Run-Once
+$var title: $_('OpenSprinkler Pi Run-Once')
 $var page: runonce
 $code:
 	snames = gv.snames
@@ -22,7 +22,7 @@ $code:
                 mm = (strmm=="" || strmm==undefined ? 0 : parseInt(strmm));
                 ss = (strss=="" || strss==undefined ? 0 : parseInt(strss));
                 if (!(mm >= 0 && ss >= 0 && ss < 60)) {
-                    alert("Timer values wrong: " + strmm + ":" + strss);
+                    alert($:{json.dumps(_('Timer values wrong: '), ensure_ascii=False)} + strmm + ":" + strss);
                     return;
                 }
                 if (mm*60+ss > 0) {
@@ -32,7 +32,7 @@ $code:
             }
             comm += "0]";
             if (!matchfound) {
-                alert("No station is scheduled to run");
+                alert($:{json.dumps(_('No station is scheduled to run'), ensure_ascii=False)});
                 return;
             }
             window.location = comm;
@@ -50,7 +50,7 @@ $code:
 </script>
 
 <div id="runonce">
-    <div class="title">Run Once Program</div>
+    <div class="title">$_('Run Once Program')</div>
     <form name="rf" action="cr" method="get">
         <table class="stationList">
             $for bid in range(0, gv.sd['nbrd']):
@@ -71,7 +71,7 @@ $code:
 </div>
 
 <div id="controls">
-    <button id="cRunNow" class="submit"><b>Run Now</b></button>
-    <button id="cResetTime" class="refresh">Reset Time</button>
-    <button id="cCancel" class="cancel danger">Cancel</button>
+    <button id="cRunNow" class="submit"><b>$_('Run Now')</b></button>
+    <button id="cResetTime" class="refresh">$_('Reset Time')</button>
+    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
 </div>

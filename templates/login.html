@@ -1,12 +1,12 @@
 $def with (form)
 
-$var title: OpenSprinkler Pi Login
+$var title: $_('OpenSprinkler Pi Login')
 $var page: login
 
 <div class="panel" style="height:300px; padding-top:100px; padding-left: 50px">
-    <div class="title">Login</div>
+    <div class="title">$_('Login')</div>
     <form name="login" method="POST">
         $:form.render()
-        <button id="cSubmit" class="submit"><b>Login</b></button>
+        <button id="cSubmit" class="submit"><b>$_('Login')</b></button>
     </form>
 </div>

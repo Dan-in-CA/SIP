@@ -1,6 +1,6 @@
 $def with(m_vals)
 
-$var title: OpenSprinkler Pi Weather-based Water Level
+$var title: $_('OpenSprinkler Pi Monthly Adjustments')
 $var page: plugins
 <script>
     // Initialize behaviors
@@ -17,62 +17,62 @@ $var page: plugins
 </script>
 
 <div id="plugin">
-    <div class="title">Monthly Irrigation Adjustments</div>
-    <p>Enter an adjustment for each month (% irrigation time)</p>
+    <div class="title">$_('Monthly Irrigation Adjustments')</div>
+    <p>$_('Enter an adjustment for each month (% irrigation time)')</p>
     <form id="pluginForm" action="/uma" method="get">
         <table class="optionList">
             <tr>
-                <td style='text-transform: none;'>January:</td>
+                <td style='text-transform: none;'>$_('January'):</td>
                 <td><input type="text" name="jan" value=$m_vals[0]></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>February:</td>
+                <td style='text-transform: none;'>$_('February'):</td>
                 <td><input type="text" name="feb" value=$m_vals[1]></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>March:</td>
+                <td style='text-transform: none;'>$_('March'):</td>
                 <td><input type="text" name="mar" value=$m_vals[2]></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>April:</td>
+                <td style='text-transform: none;'>$_('April'):</td>
                 <td><input type="text" name="apr" value=$m_vals[3]></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>May:</td>
+                <td style='text-transform: none;'>$_('May'):</td>
                 <td><input type="text" name="may" value=$m_vals[4]></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>June:</td>
+                <td style='text-transform: none;'>$_('June'):</td>
                 <td><input type="text" name="jun" value=$m_vals[5]></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>July:</td>
+                <td style='text-transform: none;'>$_('July'):</td>
                 <td><input type="text" name="jul" value=$m_vals[6]></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>August:</td>
+                <td style='text-transform: none;'>$_('August'):</td>
                 <td><input type="text" name="aug" value=$m_vals[7]></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>September:</td>
+                <td style='text-transform: none;'>$_('September'):</td>
                 <td><input type="text" name="sep" value=$m_vals[8]></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>October:</td>
+                <td style='text-transform: none;'>$_('October'):</td>
                 <td><input type="text" name="oct" value=$m_vals[9]></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>November:</td>
+                <td style='text-transform: none;'>$_('November'):</td>
                 <td><input type="text" name="nov" value=$m_vals[10]></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>December:</td>
+                <td style='text-transform: none;'>$_('December'):</td>
                 <td><input type="text" name="dec" value=$m_vals[11]></td>
             </tr>
         </table>
     </form>
 </div>
 <div id="controls">
-    <button id="cSubmit" class="submit"><b>Submit</b></button>
-    <button id="cCancel" class="cancel danger">Cancel</button>
+    <button id="cSubmit" class="submit"><b>$_('Submit')</b></button>
+    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
 </div>
