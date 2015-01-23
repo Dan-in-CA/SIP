@@ -344,13 +344,16 @@ class application:
         ctx.output = ''
         ctx.environ = ctx.env = env
         ctx.host = env.get('HTTP_HOST')
-
-        if env.get('wsgi.url_scheme') in ['http', 'https']:
+	
+	if env.get('HTTP_X_FORWARDED_PROTO') in ['http', 'https']:
+            ctx.protocol = env.get('HTTP_X_FORWARDED_PROTO')	
+        elif env.get('wsgi.url_scheme') in ['http', 'https']:
             ctx.protocol = env['wsgi.url_scheme']
         elif env.get('HTTPS', '').lower() in ['on', 'true', '1']:
-            ctx.protocol = 'https'
-        else:
+            ctx.protocol = 'https' 
+	else:
             ctx.protocol = 'http'
+
         ctx.homedomain = ctx.protocol + '://' + env.get('HTTP_HOST', '[unknown]')
         ctx.homepath = os.environ.get('REAL_SCRIPT_NAME', env.get('SCRIPT_NAME', ''))
         ctx.home = ctx.homedomain + ctx.homepath
