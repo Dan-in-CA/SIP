@@ -191,12 +191,11 @@ def log_run():
             pgr = _('Manual')
         else:
             pgr = str(gv.lrun[1])
-
         start = time.gmtime(gv.now - gv.lrun[2])
-        logline = json.dumps('{"program":"' + pgr + '","station":' + str(gv.lrun[0]) + ',"duration":"' + timestr(
-            gv.lrun[2]) + '","start":"' + time.strftime('%H:%M:%S","date":"%Y-%m-%d"', start) + '}').decode('utf-8') + '\n'
+        logline = '{"program":"' + pgr + '","station":' + str(gv.lrun[0]) + ',"duration":"' + timestr(
+            gv.lrun[2]) + '","start":"' + time.strftime('%H:%M:%S","date":"%Y-%m-%d"', start) + '}'
         lines = []
-        lines.append(logline)
+        lines.append(logline + '\n')
         log = read_log()
         for r in log:
             lines.append(json.dumps(r) + '\n')
