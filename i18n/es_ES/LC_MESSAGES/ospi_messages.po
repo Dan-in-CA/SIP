@@ -1,6 +1,6 @@
 # Translation file for OpenSprinkler Pi (ospi).
-# Copyright (C) 2014
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Copyright (C) 2014-2015
+# José Zapater <jzapater@gmail.com>, 2015.
 #
 msgid ""
 msgstr ""
@@ -113,7 +113,7 @@ msgstr "Nueva contraseña"
 
 #: OSPi\gv.py:128
 msgid "Confirm password"
-msgstr "Confirma contraseña"
+msgstr "Repite contraseña"
 
 #: OSPi\gv.py:128
 msgid "Confirm the new password."
@@ -141,7 +141,7 @@ msgstr "Número de placas de expansión."
 
 #: OSPi\gv.py:131
 msgid "Station delay"
-msgstr "Retardo de la estación"
+msgstr "Retardo"
 
 #: OSPi\gv.py:131
 msgid "Station delay time (in seconds), between 0 and 240."
@@ -161,7 +161,7 @@ msgstr "Configura Maestra"
 
 #: OSPi\gv.py:133
 msgid "Master on adjust"
-msgstr "Ajuste de encendido de la maestra"
+msgstr "Ajuste de encendido"
 
 #: OSPi\gv.py:133
 msgid "Master on delay (in seconds), between +0 and +60."
@@ -169,7 +169,7 @@ msgstr "Retardo de encendido de la maestra (en segundos), entre +0 y +60."
 
 #: OSPi\gv.py:134
 msgid "Master off adjust"
-msgstr "Ajuste de apagado de la maestra"
+msgstr "Ajuste de apagado"
 
 #: OSPi\gv.py:134
 msgid "Master off delay (in seconds), between -60 and +60."
@@ -351,11 +351,11 @@ msgstr "Programas"
 
 #: OSPi\templates\base.html:137
 msgid "Define Run Once Program"
-msgstr "Definir Programa Ejecución Una vez"
+msgstr "Definir Programa Ejecutar Una vez"
 
 #: OSPi\templates\base.html:137
 msgid "Run Once"
-msgstr "Ejecución Una vez"
+msgstr "Ejecutar Una vez"
 
 #: OSPi\templates\base.html:138
 msgid "Acces Plugins"
@@ -470,19 +470,19 @@ msgstr "Programa de Ejecutar Una vez"
 
 #: OSPi\templates\home.html:58
 msgid " for "
-msgstr "para"
+msgstr " para "
 
 #: OSPi\templates\home.html:58
 msgid " on "
-msgstr "encender"
+msgstr " encender "
 
 #: OSPi\templates\home.html:58
 msgid " ran "
-msgstr "ejecutó"
+msgstr " ejecutó "
 
 #: OSPi\templates\home.html:82
 msgid "Master On"
-msgstr "Maestra Encendida"
+msgstr "Maestra |"
 
 #: OSPi\templates\home.html:84
 msgid "Master Off"
@@ -499,7 +499,7 @@ msgstr "Suprimido por Sensor de Lluvia"
 #: OSPi\templates\home.html:95 OSPi\templates\home.html:250
 #: OSPi\templates\modify.html:352 OSPi\templates\programs.html:120
 msgid "Off"
-msgstr "Apagar"
+msgstr "O"
 
 #: OSPi\templates\home.html:135
 msgid "Enter hours to delay"
@@ -511,7 +511,7 @@ msgstr "Introduce el porcentaje de ajuste"
 
 #: OSPi\templates\home.html:166 OSPi\templates\runonce.html:25
 msgid "Timer values wrong: "
-msgstr "Valores de programación erróneos:"
+msgstr "Valores de programación erróneos: "
 
 #: OSPi\templates\home.html:212
 msgid "System Off"
@@ -555,16 +555,16 @@ msgstr "Auto"
 
 #: OSPi\templates\home.html:242
 msgid "On (Master)"
-msgstr "Encender (Maestra)"
+msgstr "| (Maestra)"
 
 #: OSPi\templates\home.html:244
 msgid "Off (Master)"
-msgstr "Apagar (Maestra)"
+msgstr "O (Maestra)"
 
 #: OSPi\templates\home.html:250 OSPi\templates\modify.html:352
 #: OSPi\templates\programs.html:118
 msgid "On"
-msgstr "Encender"
+msgstr "|"
 
 #: OSPi\templates\home.html:268
 msgid " Prev Day"
@@ -628,19 +628,19 @@ msgstr "Desactivado"
 
 #: OSPi\templates\log.html:41
 msgid "Log "
-msgstr "Rastreo"
+msgstr "Rastreo "
 
 #: OSPi\templates\log.html:46
 msgid " limit"
-msgstr "límite"
+msgstr " límite"
 
 #: OSPi\templates\log.html:46
 msgid "Total number of records: "
-msgstr "Número total de registros:"
+msgstr "Número total de registros: "
 
 #: OSPi\templates\log.html:47 OSPi\templates\pcf_8591_adj.html:38
 msgid "Download log as "
-msgstr "Descargar rastreo como"
+msgstr "Descargar rastreo como "
 
 #: OSPi\templates\log.html:51
 msgid "Date"
@@ -680,7 +680,7 @@ msgstr "Modificar Programa OpenSprinkler Pi"
 
 #: OSPi\templates\modify.html:66
 msgid "Error: Incorrect time input "
-msgstr "Error: hora incorrecta"
+msgstr "Error: hora incorrecta "
 
 #: OSPi\templates\modify.html:78
 msgid "Please choose at least one weekday for the program to run."
@@ -718,7 +718,7 @@ msgstr "Apagar Programa"
 
 #: OSPi\templates\modify.html:288
 msgid "Program On"
-msgstr "Encender Programa"
+msgstr "Programa |"
 
 #: OSPi\templates\modify.html:304
 msgid "Recurring"
@@ -830,7 +830,7 @@ msgstr "Por defecto"
 
 #: OSPi\templates\options.html:108
 msgid "None"
-msgstr "Ninguno"
+msgstr "Ninguna"
 
 #: OSPi\templates\options.html:122
 msgid "System Restart"
@@ -889,7 +889,7 @@ msgstr ""
 
 #: OSPi\templates\pcf_8591_adj.html:38
 msgid " log file."
-msgstr "fichero rastreo."
+msgstr " fichero rastreo."
 
 #: OSPi\templates\pcf_8591_adj.html:38 OSPi\templates\programs.html:151
 msgid "Delete"
@@ -922,7 +922,7 @@ msgstr "Etiqueta para entrada AD0:"
 #: OSPi\templates\pcf_8591_adj.html:68 OSPi\templates\pcf_8591_adj.html:74
 #: OSPi\templates\pcf_8591_adj.html:80 OSPi\templates\pcf_8591_adj.html:86
 msgid " measure as voltage "
-msgstr "medido como voltaje"
+msgstr " medido como voltaje "
 
 #: OSPi\templates\pcf_8591_adj.html:72
 msgid "Label for input AD1"
@@ -954,7 +954,7 @@ msgid ""
 "be activated pressure sensor. "
 msgstr ""
 "Este plugin chequea la presión en una tubería, si la estación maestra es "
-"activada, debe ser activado el sensor de presión."
+"activada, debe ser activado el sensor de presión. "
 
 #: OSPi\templates\pressure_adj.html:22
 msgid ""
@@ -999,7 +999,7 @@ msgstr "Programas OpenSprinkler Pi"
 
 #: OSPi\templates\programs.html:18
 msgid "Every "
-msgstr "Todos"
+msgstr "Todos "
 
 #: OSPi\templates\programs.html:18 OSPi\templates\programs.html:20
 msgid "days"
@@ -1043,11 +1043,11 @@ msgstr "Mié"
 
 #: OSPi\templates\programs.html:29
 msgid " (Even days only)"
-msgstr "(sólo días pares)"
+msgstr " (sólo días pares)"
 
 #: OSPi\templates\programs.html:31
 msgid " (Odd days only)"
-msgstr "(sólo días impares)"
+msgstr " (sólo días impares)"
 
 #: OSPi\templates\programs.html:109
 msgid "Delete All"
@@ -1166,15 +1166,15 @@ msgstr "Nombre"
 
 #: OSPi\templates\stations.html:79
 msgid "Enabled?"
-msgstr "Activo?"
+msgstr "¿Activo?"
 
 #: OSPi\templates\stations.html:80
 msgid "Ignore Rain?"
-msgstr "Ignorar Lluvia?"
+msgstr "¿Ignorar Lluvia?"
 
 #: OSPi\templates\stations.html:82
 msgid "Activate Master?"
-msgstr "Activar Maestra?"
+msgstr "¿Activar Maestra?"
 
 #: OSPi\templates\stations.html:93
 msgid "(Master valve)"
@@ -1234,11 +1234,11 @@ msgstr "Atrás"
 
 #: OSPi\templates\weather_adj.html:3
 msgid "OpenSprinkler Pi Weather-based Rain Delay"
-msgstr "OpenSprinkler Pi Retardo de Lluvia basado en el tiempo"
+msgstr "OpenSprinkler Pi Retardo de Lluvia basado en el clima"
 
 #: OSPi\templates\weather_adj.html:20
 msgid "Weather-based Rain Delay"
-msgstr "Retardo de Lluvia basado en el tiempo"
+msgstr "Retardo de Lluvia basado en el clima"
 
 #: OSPi\templates\weather_adj.html:21
 msgid ""
@@ -1246,7 +1246,7 @@ msgid ""
 "rain every hour. If the weather reports any condition suggesting rain, a "
 "rain delay is automatically issued using the below set delay duration."
 msgstr ""
-"Cuando el retardo de lluvia basado en el tiempo es activado, el tiempo será "
+"Cuando el retardo de lluvia basado en el clima es activado, el tiempo será "
 "comprobado para lluvia cada hora. Si los informes de tiempo preven lluvia, "
 "un retardo por lluvia es automáticamente activado usando el retardo abajo "
 "indicado."
@@ -1261,7 +1261,7 @@ msgstr "Duración del Retardo (horas)"
 
 #: OSPi\templates\weather_adj.html:37
 msgid "Weather Provider"
-msgstr "Proveedor de Tiempo"
+msgstr "Proveedor de clima"
 
 #: OSPi\templates\weather_adj.html:46 OSPi\templates\weather_level_adj.html:55
 msgid "Wunderground API Key"
@@ -1269,18 +1269,18 @@ msgstr "Wunderground Clave API"
 
 #: OSPi\templates\weather_level_adj.html:3
 msgid "OpenSprinkler Pi Weather-based Water Level"
-msgstr "OpenSprinkler Pi Nivel de Agua basado en el tiempo"
+msgstr "OpenSprinkler Pi Nivel de Agua basado en el clima"
 
 #: OSPi\templates\weather_level_adj.html:20
 msgid "Weather-based Water Level"
-msgstr "Nivel de Agua basado en el tiempo"
+msgstr "Nivel de Agua basado en el clima"
 
 #: OSPi\templates\weather_level_adj.html:21
 msgid ""
 "When weather-based water level is enabled, the weather will be checked every "
 "hour and the water level will be adjusted accordingly."
 msgstr ""
-"Cuando el nivel de agua basado en el tiempo es activado, el tiempo será "
+"Cuando el nivel de agua basado en el clima es activado, el tiempo será "
 "chequeado cada hora y el nivel de agua ajustado convenientemente."
 
 #: OSPi\templates\weather_level_adj.html:25
@@ -1305,7 +1305,7 @@ msgstr "Previsión de días usado"
 
 #: OSPi\webpages.py:296
 msgid " not found."
-msgstr "no encontrado."
+msgstr " no encontrado."
 
 #: OSPi\webpages.py:296
 msgid "Station "
