@@ -5,7 +5,7 @@ Originally based on a Python port of OpenSprinkler firmware, V 1.8.3.
 This is an updated version of the Python Interval Program started by Dan Kimberling making better use of the power of Python.
 
 -----------------------------------------------------------------
-OpenSprinkler Pi (ospi) Interval Program Demo<br/>
+OpenSprinkler Pi (ospi) Interval Program
 [GPL 3.0 License](http://opensource.org/licenses/gpl-3.0.html)<br/>
 
 ***********
