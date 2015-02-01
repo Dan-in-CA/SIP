@@ -1,0 +1,13 @@
+$def with (form, title)
+<!doctype html>
+<html>
+    <head>
+        <title>$title</title>
+    </head> 
+    <body>
+        <br />
+        <form class="form" method="post"> 
+        $:form.render()
+        </form>
+    </body>  
+</html>
