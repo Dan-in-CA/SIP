@@ -1,12 +1,12 @@
-ospi
+Python Interval Program for OpenSprinkler Pi
 ====
 
-An improved Python port of the Arduino based OpenSprinkler firmware, originally based on V 1.8.3.
-This is an updated version of OpenSprinkler Pi started by Dan Kimberling making better use of the power of Python.
+Originally based on a Python port of OpenSprinkler firmware, V 1.8.3.
+This is an updated version of the Python Interval Program started by Dan Kimberling making better use of the power of Python.
 
 -----------------------------------------------------------------
 OpenSprinkler Pi (ospi) Interval Program Demo<br/>
-Creative Commons Attribution-ShareAlike 3.0 license<br/>
+[GPL 3.0 License](http://opensource.org/licenses/gpl-3.0.html)<br/>
 
 ***********
 UPDATES
