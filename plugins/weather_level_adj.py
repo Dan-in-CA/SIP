@@ -218,7 +218,11 @@ def get_wunderground_lid():
     if re.search("pws:", gv.sd['loc']):
         lid = gv.sd['loc']
     else:
-        data = urllib2.urlopen("http://autocomplete.wunderground.com/aq?h=0&query="+urllib.quote_plus(gv.sd['loc']))
+	try:
+        	data = urllib2.urlopen("http://autocomplete.wunderground.com/aq?h=0&query="+urllib.quote_plus(gv.sd['loc']))
+	except urllib2.URLError as e:
+            print "Error getting location: ", e.reason
+            return ""
         data = json.load(data)
         if data is None:
             return ""
@@ -374,3 +378,4 @@ def forecast_info():
             }
 
     return result
+

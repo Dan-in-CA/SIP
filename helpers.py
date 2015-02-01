@@ -191,7 +191,6 @@ def log_run():
             pgr = _('Manual')
         else:
             pgr = str(gv.lrun[1])
-
         start = time.gmtime(gv.now - gv.lrun[2])
         logline = '{"program":"' + pgr + '","station":' + str(gv.lrun[0]) + ',"duration":"' + timestr(
             gv.lrun[2]) + '","start":"' + time.strftime('%H:%M:%S","date":"%Y-%m-%d"', start) + '}'

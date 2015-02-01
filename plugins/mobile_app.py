@@ -183,6 +183,7 @@ class get_logs(ProtectedPage):  # /jl
         except IOError:
             return []
 
+
 class set_password():
     """Save changes to device password"""
     def GET(self):
@@ -205,6 +206,7 @@ class set_password():
             return json.dumps({"result":2})
 
         return json.dumps({"result":1})
+
 
 def utc_to_local(utc_dt):
     # get integer timestamp to avoid precision lost
