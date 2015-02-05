@@ -119,7 +119,7 @@ $code:
                  <span class='togglesep'>&nbsp;</span>
                  <span class='toggleright'>$_('Off')</span>
              </button>
-        Program ${pid+1}: <span class="val">${pdays(prog[1], prog[2])}</span></b>
+        $_('Program') ${pid+1}: <span class="val">${pdays(prog[1], prog[2])}</span></b>
          </p>
             $ start = prog[3]
             $ end = prog[4]
@@ -139,11 +139,11 @@ $code:
                         $ stationsOn = stationsOn + 1
             </p>
             <p>$_('Starting'): <span class="val">${formatTime(two_digits(start/60) + ":" + two_digits(start%60))}</span>
-            for <span class="val">${(duration/60>>0)}</span> mins<span class="val">${"" if (duration%60) == 0 else (" " + str(duration%60) + " secs")}</span></p>
+            $_('for') <span class="val">${(duration/60>>0)}</span> mins<span class="val">${"" if (duration%60) == 0 else (" " + str(duration%60) + " secs")}</span></p>
             $ recurring = start + duration/60*stationsOn < end
             $if recurring:
                 <p>$_('Recurring every')</b> <span class="val">${two_digits(interval/60)}</span> hrs <span class="val">${two_digits(interval%60)}</span> mins
-                until <span class="val">${formatTime(two_digits(end/60) + ":" + two_digits(end%60))}</span></p>
+                $_('until') <span class="val">${formatTime(two_digits(end/60) + ":" + two_digits(end%60))}</span></p>
 
             <p>
                 <button class="cRunNow" data="${pid}">$_('Run Now')</button>
