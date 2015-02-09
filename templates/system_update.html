@@ -1,44 +1,50 @@
 $def with(m_vals)
 
-$var title: OpenSprinkler Pi System update from GitHub
-$var page: plugins
+$var title: OSPi Update from GitHub
+$var page: system_update
 <script>
     // Initialize behaviors
     jQuery(document).ready(function(){
-        jQuery("button#cRefresh").click(function(){
+/*        jQuery("button#cRefresh").click(function(){
             window.location="/UPsr";
-        });
+        });*/
         jQuery("button#cUpdate").click(function(){
             window.location="/UPu";
         });
-        jQuery("button#cReboot").click(function(){
+/*        jQuery("button#cReboot").click(function(){
             window.location="/UPr";
-        });
+        });*/
         jQuery("button#cCancel").click(function(){
             window.location="/";
+        });
+
+        jQuery("button#docButton").click(function(){
+            window.open("/static/docs/plugins/system_update-docs.html", "_blank");
         });
     });
 </script>
 
 <div id="plugin">
-    <div class="title">System update from github</div>
-    <p>This plugin compares the local copy with the remote repository and can automatically update the local copy.</p>
+    <div class="title">$_('OSPi Software Updater')
+    <button class="execute" id="docButton" type="button" >$_('Help')</button>
+    </div>
+    <!--<p>$_('This plugin compares the local OSPi version with the GitHub repository and can update the local software.')</p>-->
     <form id="pluginForm" action="/UPsr" method="get">
         <table class="optionList">
             <tr>
-                <td style='text-transform: none;'><b>Remote repository:</b></td>
+                <td style='text-transform: none;'><b>$_('Remote repository'):</b></td>
                 <td>
                      $m_vals["remote"]
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'><b>Local ospi version:</b></td>
+                <td style='text-transform: none;'><b>$_('Local ospi version'):</b></td>
                 <td>
                      $m_vals["ver_str"]
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'><b>Local ospi date:</b></td>
+                <td style='text-transform: none;'><b>$_('Local ospi date'):</b></td>
                 <td>
                      $m_vals["ver_date"]
                 </td>
@@ -47,7 +53,7 @@ $var page: plugins
                 <td style='text-transform: none;'>Status:</td>
                 <td>
                     <textarea style="font-family: monospace;" rows="7" cols="100" readonly>$m_vals['status']</textarea><br/>
-                    <button id="cRefresh" class="refresh">Update Status</button>
+                    <!--<button id="cRefresh" class="refresh">$_('Refresh Status')</button>-->
                 </td>
             </tr>
             
@@ -56,9 +62,9 @@ $var page: plugins
 </div>
 <div id="controls">
     $if m_vals['can_update']:
-        <button id="cUpdate" class="options"><b>Update ospi</b></button>
+        <button id="cUpdate" class="options"><b>$_('Update ospi')</b></button>
     $else:
-        <button id="cUpToDate" class="cancel"><b>Up-to-date</b></button>
-    <button id="cReboot" class="reboot danger">Restart ospi</button>
-    <button id="cCancel" class="cancel danger">Back</button>
+        <button id="cUpToDate" class="cancel"><b>$_('Up-to-date')</b></button>
+    <!--<button id="cReboot" class="reboot danger">$_('Restart ospi')</button>-->
+    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
 </div>

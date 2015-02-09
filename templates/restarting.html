@@ -1,15 +1,15 @@
 $def with(go_to)
 
-$var title: _('OpenSprinkler Pi Restarting')
-$var page: home
+$var title: _('OSPi Restarting')
+$var page: restart
 
 <script>
     function checkPage() {
         jQuery.ajax({
             type: 'HEAD',
-            url: '${go_to}',
+            url: 'jQuery{go_to}',
             success: function() {
-                window.location.replace('${go_to}');
+                window.location.replace('jQuery{go_to}');
             },
             failure: function() {
                 setTimeout(function() {
