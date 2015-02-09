@@ -40,8 +40,12 @@ def reboot(wait=1, block=False):
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
+        GPIO.cleanup()
         time.sleep(wait)
-        print _('Rebooting...')
+        try:
+            print _('Rebooting...')
+        except Exception:
+            pass
         subprocess.Popen(['reboot'])
     else:
         t = Thread(target=reboot, args=(wait, True))
@@ -53,8 +57,12 @@ def poweroff(wait=1, block=False):
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
+        GPIO.cleanup()
         time.sleep(wait)
-        print _('Powering off...')
+        try:
+            print _('Powering off...')
+        except Exception:
+            pass
         subprocess.Popen(['poweroff'])
     else:
         t = Thread(target=poweroff, args=(wait, True))
@@ -66,8 +74,12 @@ def restart(wait=1, block=False):
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
+        GPIO.cleanup()
         time.sleep(wait)
-        print _('Restarting...')
+        try:
+            print _('Restarting...')
+        except Exception:
+            pass
         subprocess.Popen('service ospi restart'.split())
     else:
         t = Thread(target=restart, args=(wait, True))
@@ -105,13 +117,6 @@ def get_rpi_revision():
         return GPIO.RPI_REVISION
     except ImportError:
         return 0
-
-
-def baseurl():
-    """Return URL app is running under."""
-
-    result = web.ctx['home']
-    return result
 
 
 def check_rain():

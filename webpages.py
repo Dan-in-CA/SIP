@@ -51,7 +51,6 @@ def report_program_toggle():
 
 class WebPage(object):
     def __init__(self):
-        gv.baseurl = baseurl()
         gv.cputemp = get_cpu_temp()
 
 
@@ -86,6 +85,7 @@ class logout(WebPage):
 
 ###########################
 #### Class Definitions ####
+
 class home(ProtectedPage):
     """Open Home page."""
 
