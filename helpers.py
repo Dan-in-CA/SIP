@@ -74,7 +74,10 @@ def restart(wait=1, block=False):
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
-        GPIO.cleanup()
+        try:
+            GPIO.cleanup()
+        except Exception:
+            pass
         time.sleep(wait)
         try:
             print _('Restarting...')
