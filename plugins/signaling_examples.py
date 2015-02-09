@@ -1,3 +1,6 @@
+# !/usr/bin/env python
+#  This plugin includes example functions that are triggered by events in ospi.py
+
 from blinker import signal
 import gv
 

@@ -8,10 +8,10 @@ web/
 /.settings
 /data/*.db
 /plugins/*
-/plugins/!proto.py
-/plugins/!signaling_examples.py
-/plugins/!mobile_app.py
-/plugins/!system_update.py
-/plugins/!plugin_manager.py
+!/plugins/proto.py
+!/plugins/mobile_app.py
+!/plugins/signaling_examples.py
+!/plugins/system_update.py
+!/plugins/plugin_manager.py
 /plugins/manifests/*
-/plugins/manifests/!proto.manifest
+!/plugins/manifests/proto.manifest

@@ -8,6 +8,8 @@ import ast
 import time
 import thread
 from calendar import timegm
+import sys
+sys.path.append('./plugins')
 
 import web  # the Web.py module. See webpy.org (Enables the Python OpenSprinkler web interface)
 import gv
@@ -19,7 +21,10 @@ from gpio_pins import set_output
 
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
-    print _('Starting timing loop') + '\n'
+    try:
+        print _('Starting timing loop') + '\n'
+    except Exception:
+        pass
     last_min = 0
     while True:  # infinite loop
         gv.now = timegm(time.localtime())   # Current time as timestamp based on local time from the Pi. updated once per second.
@@ -153,6 +158,7 @@ class OSPiApp(web.application):
 
 
 app = OSPiApp(urls, globals())
+#  disableShiftRegisterOutput()
 web.config.debug = False  # Improves page load speed
 if web.config.get('_session') is None:
     web.config._session = web.session.Session(app, web.session.DiskStore('sessions'),
@@ -174,13 +180,22 @@ if __name__ == '__main__':
 
     #########################################################
     #### Code to import all webpages and plugin webpages ####
+
     import plugins
 
-    print 'plugins loaded:'  # Do not translate! Prevents program from starting.
+    try:
+        print _('plugins loaded:')
+    except Exception:
+        pass
     for name in plugins.__all__:
         print ' ', name
 
     gv.plugin_menu.sort(key=lambda entry: entry[0])
+    #  Keep plugin manager at top of menu
+    try:
+        gv.plugin_menu.pop(gv.plugin_menu.index(['Manage Plugins', '/plugins']))
+    except Exception:
+        pass
 
     thread.start_new_thread(timing_loop, ())
 
