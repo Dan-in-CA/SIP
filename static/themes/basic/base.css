@@ -5,7 +5,7 @@
  - rust: #7D1921
  - navy: #2E3959
 */
-@import url(https://fonts.googleapis.com/css?family=Quicksand:300,400,700);
+@import url(http://fonts.googleapis.com/css?family=Quicksand:300,400,700);
 
 body {
 	margin:0px;
@@ -259,6 +259,11 @@ button.execute {
     margin: 2px;
 }
 
+button.help {
+	font-weight: 700;
+    background-color: #2E3959;
+}
+
 button.toggle {
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -334,7 +339,7 @@ button.weekday {
 	width:100%;
 }
 button.pushon.on {
-	font-weight: 700;
+    font-weight: 700;
 }
 
 input.timeInput {
@@ -349,6 +354,16 @@ table.optionList {
 	border-spacing: 0px;
 	empty-cells: show;
 	border-collapse: separate;
+}
+
+td.pluginName {
+    text-align: right;
+    padding: 0px 12px;
+    color: #2E3959;
+    font-weight: 700;
+    width: 12em;
+    height: 30px;
+    white-space: nowrap;
 }
 
 table.stationList {
@@ -563,6 +578,26 @@ td.stationSchedule {
 {
     list-style-type: none;
     padding:0;
+}
+
+#pluginMgr
+{
+   background-color:#397F19;
+   font-weight: 700;
+}
+
+#browsPlugins
+{
+   background-color:#397F19;
+   /*font-weight: 700;*/
+   margin-left: 50px;
+}
+
+#writePlugins
+{
+   background-color:#397F19;
+   /*font-weight: 700;*/
+   margin-left: 50px;
 }
 
 #pluginMenu

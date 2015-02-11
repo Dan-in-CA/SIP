@@ -1,0 +1,46 @@
+$def with(p_vals)
+
+$var title: $_('OSPi Plugin Browser')
+$var page: plugins_repo
+
+
+<script>
+    // Initialize behaviors
+    jQuery(document).ready(function(){
+
+        jQuery("#cSubmit").click(function() {
+            jQuery("#installForm").submit();
+        });
+        jQuery("#cBack").click(function() {
+            window.location="/plugins";
+        });
+        jQuery("button#cCancel").click(function(){
+            window.location="/";
+        });
+
+    });
+</script>
+
+<div id="plugin_repo">
+    <div class="title">$_('Available Plugins')</div>
+    <p>$_('Unless otherwise stated these plugins are licensed under GPL 3.0')</p>
+    <form id="installForm" action="/inst-plugins" method="get">
+        <table class="optionList">
+            $ pnames = p_vals.keys()
+            $pnames.sort()
+            $for n in pnames:
+            <tr>
+                <td style='font-weight: bold;'>${n}</td>
+                <td><input type="checkbox" name=${n}></td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>${p_vals[n]}</td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="controls">
+    <button id="cSubmit" class="submit"><b>$_('install')</b></button>
+    <button id="cBack" class="cancel danger"><b>$_('Back')</b></button>
+    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
+</div>

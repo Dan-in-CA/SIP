@@ -68,6 +68,10 @@ jQuery(document).ready(function(){
 		window.location = "/logout";
 	});
 
+    jQuery("button#bHelp").click(function(){
+		window.open("https://github.com/Dan-in-CA/OSPi/wiki", "_blank");
+	});
+
 	// start the clock
 	updateClock();
 });

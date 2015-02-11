@@ -83,6 +83,7 @@ $code:
             var program = $:{json.dumps(_('Program'), ensure_ascii=False)};
 
             jQuery(document).ready(function(){
+                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'/plugins\'">Manage Plugins</button><br/>');
                 $if len(gv.plugin_menu) > 0:
                     jQuery.each(plugins, function() {
                         jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\''+this[1]+'\'">'+this[0]+'</button><br/>');
@@ -147,11 +148,16 @@ $code:
 
             </div>
         </div>
-
         <div class="footer">
-            <p>$_('CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_('Click to toggle'), ensure_ascii=False)} + ' Celsius &lt;&gt; Fahrenheit'></span></b></p>
-            <p><a href="https://github.com/Dan-in-CA/OSPi">$_('Software')</a> $_('version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
+            <div>
+                $if content.page != 'login':
+                <button id="bHelp" class="help" title=$:{json.dumps(_('Help'), ensure_ascii=False)}>$_('?')</button>
+            </div>
+                <p>$_('CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_('Click to toggle'), ensure_ascii=False)} + ' Celsius &lt;&gt; Fahrenheit'></span></b></p>
+                <p><a href="https://github.com/Dan-in-CA/OSPi">$_('Software')</a> $_('version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
+
         </div>
+
     </div>
 </body>
 </html>
