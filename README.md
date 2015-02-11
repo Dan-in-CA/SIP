@@ -1,17 +1,28 @@
-Python Interval Program for OpenSprinkler Pi
+ospi
 ====
 
-Originally based on a Python port of OpenSprinkler firmware, V 1.8.3.
-This is an updated version of the Python Interval Program started by Dan Kimberling making better use of the power of Python.
+An improved Python port of the Arduino based OpenSprinkler firmware, originally based on V 1.8.3.
+This is an updated version of OpenSprinkler Pi started by Dan Kimberling making better use of the power of Python.
 
 -----------------------------------------------------------------
-OpenSprinkler Pi (ospi) Interval Program
-[GPL 3.0 License](http://opensource.org/licenses/gpl-3.0.html)<br/>
+OpenSprinkler Pi (ospi) Interval Program Demo<br/>
+
+GNU GPL License<br/>
+July 2014
+
 
 ***********
 UPDATES
 ===========
 ***********
+February 10 2015
+----------
+(Dan)  
+1. Added Plugin Manager plugin  
+2. Updated System Updater plugin  
+3. Added help button linked to repository wiki  
+4. Moved plugins to new repository  
+5. Includes Spanish and French translations and related bug fixes
 
 January 9 2015
 ----------
@@ -29,7 +40,7 @@ Incorporated changes that had taken place on Rimnco's GitHub fork into Dan's OSP
 
 September 10 2014
 ----------
-(Martin Pihrt)<br/>
+(Rimco, Martin Pihrt)<br/>
 Changes:<br/>
 1. Added new functions in helpers.py: reboot, poweroff, restart, uptime and getIP.<br/>
 2. Added new plugins:<br/>
