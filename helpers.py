@@ -169,13 +169,17 @@ def get_cpu_temp(unit=None):
             res = os.popen('cat /sys/class/hwmon/hwmon0/device/temp1_input').readline()
             temp = str(int(float(res) / 1000))
         elif gv.platform == 'pi':
-            res = os.popen('vcgencmd measure_temp').readline()
-            temp = res.replace("temp=", "").replace("'C\n", "")
+            command = "cat /sys/class/thermal/thermal_zone0/temp"
+            output = subprocess.check_output(command.split())
+            temp = str(int(float(output) / 1000))
+#            res = os.popen('vcgencmd measure_temp').readline()
+#            temp = res.replace("temp=", "").replace("'C\n", "")
         else:
             temp = str(0)
 
         if unit == 'F':
-            return str(9.0 / 5.0 * float(temp) + 32)
+            return str(1.8 * float(temp) + 32)
+#            return str(9.0 / 5.0 * float(temp) + 32)
         elif unit is not None:
             return str(float(temp))
         else:
