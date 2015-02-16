@@ -52,7 +52,7 @@ sd = {
     u"rs": 0,
     u"rd": 0,
     u"mton": 0,
-    u"lr": u"100",
+    u"lr": 100,
     u"sdt": 0,
     u"mas": 0,
     u"wl": 100,
