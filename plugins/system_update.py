@@ -2,7 +2,6 @@
 
 # this plugin checks sha on github and updates ospi from github
 
-from threading import Thread, Event, Condition
 import time
 import subprocess
 import sys
@@ -17,22 +16,14 @@ from helpers import restart
 
 # Add a new url to open the data entry page.
 urls.extend(['/UPs', 'plugins.system_update.status_page',
-             #  '/UPsr', 'plugins.system_update.refresh_page',
-             '/UPu', 'plugins.system_update.update_page',
-             '/UPr', 'plugins.system_update.restart_page'])
+             '/UPu', 'plugins.system_update.update_page'])
 
 # Add this plugin to the home page plugins menu
 gv.plugin_menu.append(['System update', '/UPs'])
 
 
-class StatusChecker(Thread):
+class StatusChecker():
     def __init__(self):
-        # Thread.__init__(self)
-        # self.daemon = True
-        # self.start()
-        # self.started = Event()
-        # self._done = Condition()
-
         self.status = {
             'ver_str': gv.ver_str,
             'ver_date': gv.ver_date,
@@ -48,12 +39,6 @@ class StatusChecker(Thread):
         else:
             self.status['status'] = msg
         print msg
-
-    # def update_wait(self):
-    #     self._done.acquire()
-    #     self._sleep_time = 0
-    #     self._done.wait(10)
-    #     self._done.release()
 
     def update(self):
         self._sleep_time = 0
@@ -101,10 +86,8 @@ class StatusChecker(Thread):
 
         try:
             self.status['status'] = ''
-#            self.started.set()
 
         except Exception:
- #           self.started.set()
             exc_type, exc_value, exc_traceback = sys.exc_info()
             err_string = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
             self.add_status(_('System update plug-in encountered error')+':\n' + err_string)
@@ -117,7 +100,7 @@ checker = StatusChecker()
 
 
 def perform_update():
-    # ignore local chmod permission
+
     command = "git config core.filemode true"
     subprocess.call(command.split())
 
@@ -148,24 +131,11 @@ class status_page(ProtectedPage):
         checker.update_rev_data()
         return template_render.system_update(checker.status)
 
-class refresh_page(ProtectedPage):
-    """Refresh status and show it."""
-
-    def GET(self):
-        raise web.seeother('/UPs')
-
 
 class update_page(ProtectedPage):
-    """Update OSPi from github and return text message from command line."""
+    """Update OSPi from github and restart software."""
 
     def GET(self):
         perform_update()
-        return template_render.restarting('/UPr')
-
-
-class restart_page(ProtectedPage):
-    """Restart system."""
-
-    def GET(self):
-        restart(2, True)
+        restart(1, True)
         return template_render.restarting('/UPs')
