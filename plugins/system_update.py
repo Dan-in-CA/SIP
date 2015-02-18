@@ -2,7 +2,6 @@
 
 # this plugin checks sha on github and updates ospi from github
 
-from threading import Thread, Event, Condition
 import time
 import subprocess
 import sys
@@ -24,7 +23,7 @@ urls.extend(['/UPs', 'plugins.system_update.status_page',
 gv.plugin_menu.append(['System update', '/UPs'])
 
 
-class StatusChecker(Thread):
+class StatusChecker():
     def __init__(self):
         # Thread.__init__(self)
         # self.daemon = True
