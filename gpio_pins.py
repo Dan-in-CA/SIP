@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import time
 import gv
-from blinker import signal
-
-zone_change = signal('zone_change')
 
 try:
     import RPi.GPIO as GPIO  # Required for accessing General Purpose Input Output pins on Raspberry Pi
@@ -16,8 +12,10 @@ except ImportError:
     except ImportError:
         gv.platform = ''  # if no platform, allows program to still run.
         print 'No GPIO module was loaded from GPIO Pins module'
-         # Makes it runnable on machines other than RPi
-        #  GPIO = None
+
+from blinker import signal
+
+zone_change = signal('zone_change')
 
 try:
     GPIO.setwarnings(False)

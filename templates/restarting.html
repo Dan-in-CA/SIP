@@ -7,9 +7,9 @@ $var page: restart
     function checkPage() {
         jQuery.ajax({
             type: 'HEAD',
-            url: 'jQuery{go_to}',
+            url: '${go_to}',
             success: function() {
-                window.location.replace('jQuery{go_to}');
+                window.location.href = '${go_to}';
             },
             failure: function() {
                 setTimeout(function() {

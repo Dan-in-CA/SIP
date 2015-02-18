@@ -83,7 +83,9 @@ def restart(wait=1, block=False):
             print _('Restarting...')
         except Exception:
             pass
-        subprocess.Popen('service ospi restart'.split())
+#        subprocess.Popen('service ospi restart'.split())
+        command = 'service ospi restart'
+        resp = subprocess.call(command.split())
     else:
         t = Thread(target=restart, args=(wait, True))
         t.start()
@@ -172,10 +174,8 @@ def get_cpu_temp(unit=None):
             command = "cat /sys/class/thermal/thermal_zone0/temp"
             output = subprocess.check_output(command.split())
             temp = str(int(float(output) / 1000))
-#            res = os.popen('vcgencmd measure_temp').readline()
-#            temp = res.replace("temp=", "").replace("'C\n", "")
         else:
-            temp = str(0)
+            temp = str(999)
 
         if unit == 'F':
             return str(1.8 * float(temp) + 32)
