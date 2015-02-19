@@ -102,7 +102,7 @@ checker = StatusChecker()
 
 
 def perform_update():
-    # ignore local chmod permission
+
     command = "git config core.filemode true"
     subprocess.call(command.split())
 
@@ -117,6 +117,9 @@ def perform_update():
 
     command = "git merge -X theirs origin/master"
     output = subprocess.check_output(command.split())
+
+    command = "rm sessions/*"
+    subprocess.call(command.split())
 
 
     print 'Update result:', output
