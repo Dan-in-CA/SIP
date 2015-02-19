@@ -1,4 +1,4 @@
-$def with(go_to)
+$def with()
 
 $var title: $_('OSPi Restarting')
 $var page: restart
@@ -7,9 +7,9 @@ $var page: restart
     function checkPage() {
         jQuery.ajax({
             type: 'HEAD',
-            url: '${go_to}',
+            url: '/',
             success: function() {
-                window.location.href = '${go_to}';
+                window.location.href = '/';
             },
             failure: function() {
                 setTimeout(function() {
@@ -22,7 +22,7 @@ $var page: restart
     jQuery(document).ready(function(){
         setTimeout(function() {
             checkPage()
-        }, 5000);
+        }, 3000);
     });
 </script>
 

@@ -5,6 +5,7 @@ import re
 import subprocess
 import urllib
 import base64
+import time
 
 import web
 import gv  # Get access to ospi's settings
@@ -13,12 +14,15 @@ from ospi import template_render
 from webpages import ProtectedPage
 from helpers import restart
 
+installed = []
+
 # Add new url(s).
 urls.extend([
             '/plugins', 'plugins.plugin_manager.plugins',
             '/upd-plugins', 'plugins.plugin_manager.update_plugins',
             '/brows-plugins', 'plugins.plugin_manager.brows_plugins',
-            '/inst-plugins', 'plugins.plugin_manager.install_plugins'
+            '/inst-plugins', 'plugins.plugin_manager.install_plugins',
+            '/pmr' 'plugins.plugin_manager.restart_page'
              ])
 
 # Add this plugin to the home page plugins menu
@@ -91,6 +95,7 @@ class update_plugins(ProtectedPage):
     """
 
     def GET(self):
+        global installed
         qdict = web.input()
         print 'qdict: ', qdict
         if qdict['btnId'] =="upd":
@@ -101,7 +106,10 @@ class update_plugins(ProtectedPage):
                 else:
                     command = 'chmod g-x plugins/'+f
                     subprocess.call(command.split())
-            restart(1, True)
+                time.sleep(1)
+#            restart(1, True)
+#            return template_render.restarting('/')
+            raise web.seeother('/restart')
         if qdict['btnId'] =="del":
             del_list = []
             for k in qdict.keys():  # Get plugins to delete
@@ -119,8 +127,10 @@ class update_plugins(ProtectedPage):
                     command = 'rm -f '+victim[1]+'/'+victim[0]
 #                    print 'command: ', command
                     subprocess.call(command.split())
-            restart(1, True)
-        raise web.seeother('/')
+#            restart(1, True)
+#            return template_render.restarting('/')
+            raise web.seeother('/restart')
+#        raise web.seeother('/')
 
 
 class brows_plugins(ProtectedPage):
@@ -157,3 +167,10 @@ class install_plugins(ProtectedPage):
                 with open(pf[1]+'/'+pf[0], 'w') as next_file:
                     next_file.write(f_data)
         raise web.seeother('/plugins')
+
+    class restart_page(ProtectedPage):
+        """Restart system."""
+
+        def GET(self):
+            restart(2, True)
+            return template_render.home()

@@ -83,13 +83,22 @@ def restart(wait=1, block=False):
             print _('Restarting...')
         except Exception:
             pass
-#        subprocess.Popen('service ospi restart'.split())
-        command = 'service ospi restart'
-        resp = subprocess.call(command.split())
+        subprocess.Popen('service ospi restart'.split())
     else:
         t = Thread(target=restart, args=(wait, True))
         t.start()
 
+# def restart():
+#         from gpio_pins import set_output
+#         gv.srvals = [0] * (gv.sd['nst'])
+#         set_output()
+#         try:
+#             GPIO.cleanup()
+#         except Exception:
+#             pass
+#         subprocess.Popen('service ospi restart'.split())
+#         # command = 'service ospi restart'
+#         # resp = subprocess.call(command.split())
 
 def uptime():
     """Returns UpTime for RPi"""
@@ -175,7 +184,7 @@ def get_cpu_temp(unit=None):
             output = subprocess.check_output(command.split())
             temp = str(int(float(output) / 1000))
         else:
-            temp = str(999)
+            temp = str(0)
 
         if unit == 'F':
             return str(1.8 * float(temp) + 32)

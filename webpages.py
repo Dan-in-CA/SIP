@@ -82,6 +82,12 @@ class logout(WebPage):
         web.config._session.user = 'anonymous'
         raise web.seeother('/')
 
+class sw_restart(ProtectedPage):
+    """Restart system."""
+
+    def GET(self):
+        restart(1)
+        return template_render.restarting()
 
 ###########################
 #### Class Definitions ####
@@ -232,7 +238,8 @@ class change_options(ProtectedPage):
             reboot()
 
         if 'rstrt' in qdict and qdict['rstrt'] == '1':
-            restart(1, True)
+#            restart(2)
+            raise web.seeother('/restart')
         raise web.seeother('/')
 
     def update_scount(self, qdict):

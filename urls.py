@@ -27,5 +27,6 @@ urls = [
     '/api/status', 'webpages.api_status',
     '/api/log', 'webpages.api_log',
     '/login', 'webpages.login',
-    '/logout', 'webpages.logout'
+    '/logout', 'webpages.logout',
+    '/restart', 'webpages.sw_restart'
 ]
