@@ -22,7 +22,7 @@ urls.extend([
             '/upd-plugins', 'plugins.plugin_manager.update_plugins',
             '/brows-plugins', 'plugins.plugin_manager.brows_plugins',
             '/inst-plugins', 'plugins.plugin_manager.install_plugins',
-            '/pmr' 'plugins.plugin_manager.restart_page'
+            '/pmr', 'plugins.plugin_manager.restart_page'
              ])
 
 # Add this plugin to the home page plugins menu
