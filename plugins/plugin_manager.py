@@ -20,7 +20,7 @@ installed = []
 urls.extend([
             '/plugins', 'plugins.plugin_manager.plugins',
             '/upd-plugins', 'plugins.plugin_manager.update_plugins',
-            '/brows-plugins', 'plugins.plugin_manager.brows_plugins',
+            '/browse-plugins', 'plugins.plugin_manager.browse_plugins',
             '/inst-plugins', 'plugins.plugin_manager.install_plugins',
             '/pmr', 'plugins.plugin_manager.restart_page'
              ])
@@ -133,7 +133,7 @@ class update_plugins(ProtectedPage):
 #        raise web.seeother('/')
 
 
-class brows_plugins(ProtectedPage):
+class browse_plugins(ProtectedPage):
     """
     Load an html page for choosing and installing plugins.
     """
