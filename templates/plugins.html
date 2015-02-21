@@ -24,8 +24,8 @@ $var page: plugins
                 window.location="/";
         });
 
-        jQuery("button#browsPlugins").click(function(){
-            window.location="/brows-plugins";
+        jQuery("button#browsePlugins").click(function(){
+            window.location="/browse-plugins";
         });
 
         jQuery("button#writePlugins").click(function (){
@@ -37,7 +37,7 @@ $var page: plugins
 
 <div id="plugin">
     <div class="title">$_('Installed Plugins')
-    <button class="execute" id="browsPlugins" type="button" >$_('Browse More Plugins')</button>
+    <button class="execute" id="browsePlugins" type="button" >$_('Browse More Plugins')</button>
     <button class="execute" id="writePlugins" type="button" >$_('Roll Your Own')</button></div>
     <form id="pluginForm" action="upd-plugins" method="get">
         <table class="optionList" id="installedList">
