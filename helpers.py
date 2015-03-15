@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+
 import i18n
 
 import datetime
@@ -10,10 +12,12 @@ import time
 import subprocess
 import io
 import ast
+from web.webapi import seeother
 
 try:
-    from gpio_pins import pin_rain_sense, GPIO
+    from gpio_pins import GPIO, pin_rain_sense
 except ImportError:
+    print 'error importing GPIO pins into helpers'
     pass
 
 import web
@@ -88,17 +92,6 @@ def restart(wait=1, block=False):
         t = Thread(target=restart, args=(wait, True))
         t.start()
 
-# def restart():
-#         from gpio_pins import set_output
-#         gv.srvals = [0] * (gv.sd['nst'])
-#         set_output()
-#         try:
-#             GPIO.cleanup()
-#         except Exception:
-#             pass
-#         subprocess.Popen('service ospi restart'.split())
-#         # command = 'service ospi restart'
-#         # resp = subprocess.call(command.split())
 
 def uptime():
     """Returns UpTime for RPi"""

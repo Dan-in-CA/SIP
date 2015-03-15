@@ -114,6 +114,7 @@ for j in range(sd['nst']):
 
 lrun = [0, 0, 0, 0]  # station index, program number, duration, end time (Used in UI)
 scount = 0  # Station count, used in set station to track on stations with master association.
+use_gpio_pins = True
 
 options = [
     [_("System name"), "string", "name", _("Unique name of this OpenSprinkler system."), _("System")],
