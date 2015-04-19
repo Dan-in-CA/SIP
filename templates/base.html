@@ -85,10 +85,10 @@ $code:
             var program = $:{json.dumps(_('Program'), ensure_ascii=False)};
 
             jQuery(document).ready(function(){
-                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=' + baseUrl + '/plugins\'">Manage Plugins</button><br/>');
+                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + baseUrl + '/plugins\'">Manage Plugins</button><br/>');
                 $if len(gv.plugin_menu) > 0:
                     jQuery.each(plugins, function() {
-                        jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\baseUrl + ''+this[1]+'\'">'+this[0]+'</button><br/>');
+                        jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\'' + baseUrl + ''+this[1]+'\'">'+this[0]+'</button><br/>');
                     });
                 $else:
                     jQuery('#pluginMenu').append('None<br/>');
