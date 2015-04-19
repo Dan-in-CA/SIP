@@ -18,7 +18,7 @@ import gv
 from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave
 from urls import urls  # Provides access to URLs for UI pages
 from gpio_pins import set_output
-import ReverseProxied
+from ReverseProxied import ReverseProxied
 
 
 def timing_loop():
@@ -176,6 +176,7 @@ template_globals = {
     '_': _,
     'i18n': i18n,
     'app_path': lambda p: web.ctx.homepath + p,
+    'web' : web,
 }
 
 template_render = web.template.render('templates', globals=template_globals, base='base')
