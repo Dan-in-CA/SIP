@@ -1,3 +1,5 @@
+# coding=utf-8
+
 __author__ = "Gina Häußge <osd@foosel.net>, Christopher Bright <christopher.bright@gmail.com>"
 __license__ = 'GNU Affero General Public License http://www.gnu.org/licenses/agpl.html'
 
