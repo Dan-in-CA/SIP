@@ -1,24 +1,25 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import i18n
-
 import json
 import ast
 import time
 import thread
 from calendar import timegm
 import sys
+
+import i18n
 sys.path.append('./plugins')
 
 import web  # the Web.py module. See webpy.org (Enables the Python OpenSprinkler web interface)
 import gv
 
 
-from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave, station_names
+from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave
 from urls import urls  # Provides access to URLs for UI pages
 from gpio_pins import set_output
-from web.contrib import ReverseProxied
+import ReverseProxied
+
 
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
