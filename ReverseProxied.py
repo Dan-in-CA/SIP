@@ -1,4 +1,5 @@
-__author__ = 'Christopher Bright'
+__author__ = "Gina Häußge <osd@foosel.net>, Christopher Bright <christopher.bright@gmail.com>"
+__license__ = 'GNU Affero General Public License http://www.gnu.org/licenses/agpl.html'
 
 class ReverseProxied(object):
 	"""
@@ -12,14 +13,9 @@ class ReverseProxied(object):
 			proxy_pass http://192.168.0.1:5001;
 			proxy_set_header Host $host;
 			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-			proxy_set_header X-Scheme $scheme;
+			proxy_set_header X-Forwarded-Proto $scheme;
 			proxy_set_header X-Script-Name /myprefix;
 		}
-
-	Alternatively define prefix and scheme via config.yaml:
-		server:
-			baseUrl: /myprefix
-			scheme: http
 
 	:param app: the WSGI application
 	"""
@@ -36,7 +32,7 @@ class ReverseProxied(object):
 			if path_info.startswith(script_name):
 				environ['PATH_INFO'] = path_info[len(script_name):]
 
-		scheme = environ.get('HTTP_X_SCHEME', '')
+		scheme = environ.get('X-Forwarded-Proto', '')
 
 		if scheme:
 			environ['wsgi.url_scheme'] = scheme
