@@ -3,6 +3,9 @@ $def with (m_vals)
 $var title: $_('OSPi - Relay Board Settings')
 $var page: plugins
 <script>
+
+    var baseUrl = '${web.ctx.homepath}';
+
    // Initialize behaviors
    jQuery(document).ready(function(){
 
@@ -10,7 +13,7 @@ $var page: plugins
          jQuery("#pluginForm").submit();
       });
       jQuery("button#cCancel").click(function(){
-         window.location="/";
+         window.location= baseUrl + "/";
       });
 
        jQuery("button#docButton").click(function(){
@@ -27,7 +30,7 @@ $var page: plugins
    <p>$_('A plugin for using relay boards to control sprinkler valves.')
    </p>
    <br>
-   <form id="pluginForm" action="/rbu" method="get">
+   <form id="pluginForm" action="$app_path('/rbu')}" method="get">
    <div class='option' title='Number of relays connected to the Raspberry Pi (relay boards are commonly 2, 4, 8)'><span class='label'>$_('Relay channels'):</span>
       <select name="relays">
          <option value="1" ${" selected" if m_vals[u"relays"]==1 else ""}>1</option>

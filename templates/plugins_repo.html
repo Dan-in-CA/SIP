@@ -5,6 +5,9 @@ $var page: plugins_repo
 
 
 <script>
+
+    var baseUrl = '${web.ctx.homepath}';
+
     // Initialize behaviors
     jQuery(document).ready(function(){
 
@@ -12,10 +15,10 @@ $var page: plugins_repo
             jQuery("#installForm").submit();
         });
         jQuery("#cBack").click(function() {
-            window.location="/plugins";
+            window.location= baseUrl + "/plugins";
         });
         jQuery("button#cCancel").click(function(){
-            window.location="/";
+            window.location= baseUrl + "/";
         });
 
     });
@@ -24,7 +27,7 @@ $var page: plugins_repo
 <div id="plugin_repo">
     <div class="title">$_('Available Plugins')</div>
     <p>$_('Unless otherwise stated these plugins are licensed under GPL 3.0')</p>
-    <form id="installForm" action="/inst-plugins" method="get">
+    <form id="installForm" action="${app_path('/inst-plugins')}" method="get">
         <table class="optionList">
             $ pnames = p_vals.keys()
             $pnames.sort()

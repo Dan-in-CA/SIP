@@ -4,12 +4,15 @@ $var title: $_('OSPi Restarting')
 $var page: restart
 
 <script>
+
+    var baseUrl = '${web.ctx.homepath}';
+
     function checkPage() {
         jQuery.ajax({
             type: 'HEAD',
-            url: '/',
+            url: baseUrl + '/',
             success: function() {
-                window.location.href = '/';
+                window.location.href = baseUrl + '/';
             },
             failure: function() {
                 setTimeout(function() {

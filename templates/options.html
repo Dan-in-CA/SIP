@@ -11,6 +11,7 @@ $code:
 
 <script>
     var errorCode = "${errorCode}";
+    var baseUrl = '${web.ctx.homepath}';
     // Initialize behaviors
     jQuery(document).ready(function(){
 
@@ -41,7 +42,7 @@ $code:
         });
 
         jQuery("button#cCancel").click(function(){
-            window.location="/";
+            window.location= baseUrl + "/";
         });
 
         jQuery(".collapsible h4").click(function(event){
@@ -71,7 +72,7 @@ $code:
 <div id="options">
     <div class="title">$_('Edit Options')</div>
     <button id="tooltips">$_('Show Tooltips')</button>
-    <form name="of" action="co" method="get">
+    <form name="of" action="${app_path('/co')}" method="get">
     $code:
         output = ""
         oldcategory = ""
