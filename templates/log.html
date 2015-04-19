@@ -25,9 +25,6 @@ $code:
 
 
 <script>
-
-    var baseUrl = '${web.ctx.homepath}';
-
     // Initialize behaviors
     jQuery(document).ready(function(){
         jQuery("button#nRefresh").click(function(){
@@ -47,7 +44,7 @@ $code:
 
 <div id="log">
     <p>$_('Total number of records: ')${len(records)} (${_("no") if gv.sd['lr']==0 else gv.sd['lr']}$_(' limit'))</p>
-    <p>$_('Download log as ')<a href="/wl">csv</a>.</p>
+    <p>$_('Download log as ')<a href="$app_path('/wl')">csv</a>.</p>
 
     <table class="logList">
         <tr class="log_rec">
