@@ -30,8 +30,7 @@ $var page: plugins_repo
             $pnames.sort()
             $for n in pnames:
             <tr>
-                <td style='font-weight: bold;'>${n}</td>
-                <td><input type="checkbox" name=${n}></td>
+				<td style='font-weight: bold;'><input type="checkbox" name=${n}> ${n}</td>
             </tr>
             <tr>
                 <td style='text-transform: none;'>${p_vals[n]}</td>
