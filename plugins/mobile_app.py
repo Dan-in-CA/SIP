@@ -169,7 +169,7 @@ class get_logs(ProtectedPage):  # /jl
                 station = int(event["station"])
                 duration = string.split(event["duration"], ":")
                 duration = (int(duration[0]) * 60) + int(duration[1])
-                timestamp = int(time.mktime(utc_to_local(datetime.datetime.strptime(event["date"] + " " + event["start"], "%Y-%m-%d %H:%M:%S")).timetuple()))
+                timestamp = int(time.mktime(utc_to_local(datetime.datetime.strptime(event["date"] + " " + event["start"], "%Y-%m-%d %H:%M:%S")).timetuple())) + duration
 
                 data.append([pid, station, duration, timestamp])
 
