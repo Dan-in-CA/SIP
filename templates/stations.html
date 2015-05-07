@@ -86,7 +86,7 @@ $code:
                 <th class="stationName">$_('Name')</th>
                 <th class="stationShow">$_('Enabled?')</th>
                 <th class="stationIgnore">$_('Ignore Rain?')</th>
-                $if 'wl_weather' in gv.sd:
+                $if 'wl_weather' in gv.sd or 'et' in gv.plugin_data:
                     <th class="stationIgnoreWL">$_('Ignore Dynamic Water Level?')</th>
                 $if gv.sd['mas'] > 0:
                     <th class="stationMaster">$_('Activate Master?')</th>
@@ -111,7 +111,7 @@ $code:
                             <td class="stationIgnore">
                                 <input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">
                             </td>
-                            $if 'wl_weather' in gv.sd:
+                            $if 'wl_weather' in gv.sd or 'et' in gv.plugin_data:
                                 <td class="stationIgnoreWL">
                                     <input type="checkbox" ${"checked" if gv.sd['iw'][bid]&(1<<s) else ""} id="wlc${sid}">
                                 </td>
