@@ -40,7 +40,7 @@ class StatusChecker():
             self.status['status'] += '\n' + msg
         else:
             self.status['status'] = msg
-        print msg
+#        print msg #  For testing
 
     def update(self):
         self._sleep_time = 0
@@ -122,7 +122,7 @@ def perform_update():
     subprocess.call(command.split())
 
 
-    print 'Update result:', output
+#    print 'Update result:', output #  For testing
 
 ################################################################################
 # Web pages:                                                                   #

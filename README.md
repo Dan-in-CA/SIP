@@ -19,18 +19,18 @@ UPDATES - Note: This project, formally OSPi, has been renamed to SIP
 August 15 2015
 ----------
 (Brian)
-1. Add gv.output_srvals and a gv.output_srvals_lock, so that threads can get a consistent state of stations currently running
-2. Add gv.plugin_data which is a dictionary (index by plugin webpage base) to hold data associated with a plugin  
+1. Add gv.output_srvals and a gv.output_srvals_lock, so that threads can get a consistent state of stations currently running  
+2. Add gv.plugin_data which is a dictionary (index by plugin webpage base) to hold data associated with a plugin    
 3. Add gv.nowt to have a struct time of the current time
 
 ***********
 August 9 2015
 ----------
 (Brian)  
-1. Enable master valve to be a station not on first board (templates/options.html)
-2. Make sure station 9 has default of S09 instead of S9 (webpages.py)
-3. Some minor indenting changes in static/scripts/schedule.js  
-4. When dynamic water level adjustment is in effect, enable per zone ignoring of the adjustment  
+1. Enable master valve to be a station not on first board (templates/options.html)  
+2. Make sure station 9 has default of S09 instead of S9 (webpages.py)  
+3. Some minor indenting changes in static/scripts/schedule.js    
+4. When dynamic water level adjustment is in effect, enable per zone ignoring of the adjustment    
 
 
 ***********

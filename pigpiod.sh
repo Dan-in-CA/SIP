@@ -1,26 +1,25 @@
 #! /bin/sh
 ### BEGIN INIT INFO
-# Provides:          sip
+# Provides:          pigpiod
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
-# Should-Start:		 pigpiod
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start  sip at boot time
-# Description:       Enable service provided by sip
+# Short-Description: Start  pigpiod at boot time
+# Description:       Enable service provided by pigpiod
 ### END INIT INFO
 
 #
 # To auto start on boot execute (once) as root
 #
-# update-rc.d sip defaults
+# update-rc.d pigpiod defaults
 #
 # To stop auto start on boot execute
 #
-# update-rc.d sip remove
+# update-rc.d pigpiod remove
 #
 
-# Author: Denny Fox <dennyf at dfox.us>
+# Author: Dan Kimberling <dkimberling59@gmail.com>
 #
 # Please remove the "Author" lines above and replace them
 # with your own name if you copy and modify this script.
@@ -29,11 +28,10 @@
 
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
 PATH=/sbin:/usr/sbin:/bin:/usr/bin:
-DESC="sip"
-NAME=sip
-DAEMON=/usr/bin/python
-DAEMON_ARGS="sip.py"
-HOMEDIR=/home/pi/sip/ # Edit if different on your Raspberry Pi
+DESC="pigpiod"
+NAME=pigpiod
+DAEMON=/usr/local/bin/$NAME
+DAEMON_ARGS=""
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
@@ -60,11 +58,10 @@ do_start()
 		#   0 if daemon has been started
 		#   1 if daemon was already running
 		#   2 if daemon could not be started
-		start-stop-daemon --start --quiet --chdir $HOMEDIR --pidfile $PIDFILE --make-pidfile --background --exec $DAEMON --test > /dev/null \
-				|| return 1
-		start-stop-daemon --start --quiet --chdir $HOMEDIR --pidfile $PIDFILE --make-pidfile --background --exec $DAEMON -- \
-				$DAEMON_ARGS \
-				|| return 2
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
+		|| return 1
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON \
+		|| return 2
 		# Add code here, if necessary, that waits for the process to be ready
 		# to handle requests from services started subsequently which depend
 		# on this one.  As a last resort, sleep for some time.
@@ -75,25 +72,25 @@ do_start()
 #
 do_stop()
 {
-		# Return
-		#   0 if daemon has been stopped
-		#   1 if daemon was already stopped
-		#   2 if daemon could not be stopped
-		#   other if a failure occurred
-		start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE
-		RETVAL="$?"
-		[ "$RETVAL" = 2 ] && return 2
-		# Wait for children to finish too if this is a daemon that forks
-		# and if the daemon is only ever run from this initscript.
-		# If the above conditions are not satisfied then add some other code
-		# that waits for the process to drop all resources that could be
-		# needed by services started subsequently.  A last resort is to
-		# sleep for some time.
-		start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON
-		[ "$?" = 2 ] && return 2
-		# Many daemons don't delete their pidfiles when they exit.
-		rm -f $PIDFILE
-		return "$RETVAL"
+	# Return
+	#   0 if daemon has been stopped
+	#   1 if daemon was already stopped
+	#   2 if daemon could not be stopped
+	#   other if a failure occurred
+	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE
+	RETVAL="$?"
+	[ "$RETVAL" = 2 ] && return 2
+	# Wait for children to finish too if this is a daemon that forks
+	# and if the daemon is only ever run from this initscript.
+	# If the above conditions are not satisfied then add some other code
+	# that waits for the process to drop all resources that could be
+	# needed by services started subsequently.  A last resort is to
+	# sleep for some time.
+	start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON
+	[ "$?" = 2 ] && return 2
+	# Many daemons don't delete their pidfiles when they exit.
+	rm -f $PIDFILE
+	return "$RETVAL"
 }
 
 #

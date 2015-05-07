@@ -30,7 +30,7 @@ try:
 except ImportError:
     try:
         import Adafruit_BBIO.GPIO as GPIO  # Required for accessing General Purpose Input Output pins on Beagle Bone Black
-        gv.pin_map = [''*11] # map only the pins we are using
+        gv.pin_map = [None]*11 # map only the pins we are using
         gv.pin_map.extend(['P9_'+str(i) for i in range(11,17)])
         gv.platform = 'bo'
     except ImportError:
