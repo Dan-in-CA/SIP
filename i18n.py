@@ -22,8 +22,9 @@ except:
 languages = ({
     "en_US": "English",
     "cs_CZ": "Czech",
-    "es_ES": "Spanish",
     "fr_FR": "French",
+    "sl_SL": "Slovenian",
+    "es_ES": "Spanish",
 })
 
 

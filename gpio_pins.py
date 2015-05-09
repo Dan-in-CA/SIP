@@ -24,17 +24,21 @@ except Exception:
 
 
 global pin_rain_sense
+global pin_relay
 
 try:
     if gv.platform == 'pi':  # If this will run on Raspberry Pi:
         GPIO.setmode(GPIO.BOARD)  # IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
-        pin_rain_sense = 8        
+        pin_rain_sense = 8
+        pin_relay = 10               
     elif gv.platform == 'bo':  # If this will run on Beagle Bone Black:
-        pin_rain_sense = "P9_15"        
+        pin_rain_sense = "P9_15"
+        pin_relay = "P9_16"        
 except AttributeError:
     pass
 try:
-    GPIO.setup(pin_rain_sense, GPIO.IN)    
+    GPIO.setup(pin_rain_sense, GPIO.IN)
+    GPIO.setup(pin_relay, GPIO.OUT)    
 except NameError:
     pass
 
@@ -48,7 +52,7 @@ def setup_pins():
     global pin_sr_clk
     global pin_sr_noe
     global pin_sr_lat
-    global pin_relay
+
 
     try:
         if gv.platform == 'pi':  # If this will run on Raspberry Pi:
@@ -57,13 +61,11 @@ def setup_pins():
             pin_sr_clk = 7
             pin_sr_noe = 11
             pin_sr_lat = 15
-            pin_relay = 10
         elif gv.platform == 'bo':  # If this will run on Beagle Bone Black:
             pin_sr_dat = "P9_11"
             pin_sr_clk = "P9_13"
             pin_sr_noe = "P9_14"
             pin_sr_lat = "P9_12"
-            pin_relay = "P9_16"
     except AttributeError:
         pass
 
@@ -77,7 +79,6 @@ def setup_pins():
         GPIO.output(pin_sr_dat, GPIO.LOW)
         GPIO.setup(pin_sr_lat, GPIO.OUT)
         GPIO.output(pin_sr_lat, GPIO.LOW)
-        GPIO.setup(pin_relay, GPIO.OUT)
     except NameError:
         pass
 
