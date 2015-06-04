@@ -23,6 +23,7 @@ languages = ({
     "en_US": "English",
     "cs_CZ": "Czech",
     "fr_FR": "French",
+    "de_DE": "German",
     "sl_SL": "Slovenian",
     "es_ES": "Spanish",
 })

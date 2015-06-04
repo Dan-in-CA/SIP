@@ -19,6 +19,7 @@ from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, s
 from urls import urls  # Provides access to URLs for UI pages
 from gpio_pins import set_output
 from ReverseProxied import ReverseProxied
+set_output()
 
 
 def timing_loop():
@@ -201,6 +202,9 @@ if __name__ == '__main__':
         gv.plugin_menu.pop(gv.plugin_menu.index(['Manage Plugins', '/plugins']))
     except Exception:
         pass
+
+    if gv.use_gpio_pins:
+        set_output()    
 
     thread.start_new_thread(timing_loop, ())
 
