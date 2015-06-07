@@ -106,7 +106,7 @@ $code:
         }
     }
     function statusTimer() {
-        jQuery.getJSON("/api/status", updateStatus)
+        jQuery.getJSON(baseUrl + "/api/status", updateStatus)
     }
 
     function countdownTimer(el) {
@@ -160,7 +160,7 @@ $code:
             sid = parseInt(jQuery(this).attr("id"));
             sbit = jQuery(this).hasClass("on");
             if (sbit) {
-                window.location = "/sn?sid="+(sid+1)+"&set_to=0"; // turn off station
+                window.location = baseUrl + "/sn?sid="+(sid+1)+"&set_to=0"; // turn off station
             } else {
                 var strmm = jQuery("#mm"+sid).val();
                 var strss = jQuery("#ss"+sid).val();
@@ -170,12 +170,12 @@ $code:
                     alert($:{json.dumps(_('Timer values wrong: '), ensure_ascii=False)} + strmm + ":" + strss);
                     return;
                 }
-                window.location = "/sn?sid=" + (sid+1) + "&set_to=1" + "&set_time=" + (mm*60+ss);  // turn it off with timer
+                window.location = baseUrl+ "/sn?sid=" + (sid+1) + "&set_to=1" + "&set_time=" + (mm*60+ss);  // turn it off with timer
             }
         });
 
         jQuery("button#pStopAll").click(function(){
-            window.location="/cv?rsn=1";
+            window.location = baseUrl + "/cv?rsn=1";
         });
 
         jQuery("button#pPrev").click(function() {
@@ -205,7 +205,7 @@ $code:
         var rHours = Math.floor(remaining/3600000);
         var rMinutes = Math.floor((remaining%3600000)/60000);
         if (rHours <=0 && rMinutes <=0) {
-            window.location = "/";
+            window.location = baseUrl + "/";
         } else {
             timerElement.text((rHours<10 ? "0" : "") + rHours + ":" + (rMinutes<10 ? "0" : "") + rMinutes);
             setTimeout("countdownTimer('" + timerId + "')", 2000);
@@ -350,7 +350,7 @@ $else:
 </div>
 
 <div id="controls">
-    <form name="hf" action="cv" method="get">
+    <form name="hf" action="${app_path('/cv')}" method="get">
         <input type="hidden" name="en">
         <input type="hidden" name="mm">
         <input type="hidden" name="rd">

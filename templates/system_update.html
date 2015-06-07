@@ -3,23 +3,24 @@ $def with(m_vals)
 $var title: OSPi Update from GitHub
 $var page: system_update
 <script>
+
     // Initialize behaviors
     jQuery(document).ready(function(){
 /*        jQuery("button#cRefresh").click(function(){
-            window.location="/UPsr";
+            window.location= baseUrl + "/UPsr";
         });*/
         jQuery("button#cUpdate").click(function(){
-            window.location="/UPu";
+            window.location= baseUrl + "/UPu";
         });
 /*        jQuery("button#cReboot").click(function(){
-            window.location="/UPr";
+            window.location= baseUrl + "/UPr";
         });*/
         jQuery("button#cCancel").click(function(){
-            window.location="/";
+            window.location= baseUlr + "/";
         });
 
         jQuery("button#docButton").click(function(){
-            window.open("/static/docs/plugins/system_update-docs.html", "_blank");
+            window.open(baseUrl + "/static/docs/plugins/system_update-docs.html", "_blank");
         });
     });
 </script>
@@ -29,7 +30,7 @@ $var page: system_update
     <button class="execute" id="docButton" type="button" >$_('Help')</button>
     </div>
     <!--<p>$_('This plugin compares the local OSPi version with the GitHub repository and can update the local software.')</p>-->
-    <form id="pluginForm" action="/UPsr" method="get">
+    <form id="pluginForm" action="${app_path('/UPsr')}" method="get">
         <table class="optionList">
             <tr>
                 <td style='text-transform: none;'><b>$_('Remote repository'):</b></td>

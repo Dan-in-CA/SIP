@@ -3,6 +3,7 @@ $def with(m_vals)
 $var title: $_('OpenSprinkler Pi Monthly Adjustments')
 $var page: plugins
 <script>
+
     // Initialize behaviors
     jQuery(document).ready(function(){
 
@@ -10,7 +11,7 @@ $var page: plugins
             jQuery("#pluginForm").submit();
         });
         jQuery("button#cCancel").click(function(){
-            window.location="/";
+            window.location= baseUrl + "/";
         });
 
     });
@@ -19,7 +20,7 @@ $var page: plugins
 <div id="plugin">
     <div class="title">$_('Monthly Irrigation Adjustments')</div>
     <p>$_('Enter an adjustment for each month (% irrigation time)')</p>
-    <form id="pluginForm" action="/uma" method="get">
+    <form id="pluginForm" action="${app_path('/uma')}" method="get">
         <table class="optionList">
             <tr>
                 <td style='text-transform: none;'>$_('January'):</td>

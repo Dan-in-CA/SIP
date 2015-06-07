@@ -19,8 +19,8 @@ $code:
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="x-ua-compatible" content="IE=edge">
     <title>${content.title + (" - "+gv.sd['name'] if gv.sd['name'] != "OpenSprinkler Pi" else "")}</title>
-    <link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
-    <link href="/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>
+    <link href="$app_path('/static/images/favicon.ico')" rel="icon" type="image/x-icon">
+    <link href="$app_path('/static/themes/' + gv.sd['theme'] + '/base.css')" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         .bluebg {background-color:lightblue;}
         .opOn, .wlOn, .rsOff {color:green;}
@@ -50,7 +50,7 @@ $code:
         td.stationNumber, td.stationShow, td.stationIgnore, td.stationMaster {text-align:center;}
         td.stationName {text-align:left; padding-left:1em;}
     </style>
-    <script src="/static/scripts/jquery-1.8.2.min.js"></script>
+    <script src="$app_path('/static/scripts/jquery-1.8.2.min.js')"></script>
     <script>
         // Variables set server-side
         var devTzOffset = ${gv.tz_offset}*1000;
@@ -58,6 +58,7 @@ $code:
         var timeFormat = ${gv.sd["tf"]};
         var dayList = $:{days};
         var monthList = $:{months};
+        var baseUrl = '${web.ctx.homepath}';
 
         var cputemp = "${gv.cputemp}";
         var tempunit = "${gv.sd['tu']}";
@@ -84,10 +85,10 @@ $code:
             var program = $:{json.dumps(_('Program'), ensure_ascii=False)};
 
             jQuery(document).ready(function(){
-                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'/plugins\'">Manage Plugins</button><br/>');
+                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + baseUrl + '/plugins\'">Manage Plugins</button><br/>');
                 $if len(gv.plugin_menu) > 0:
                     jQuery.each(plugins, function() {
-                        jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\''+this[1]+'\'">'+this[0]+'</button><br/>');
+                        jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\'' + baseUrl + ''+this[1]+'\'">'+this[0]+'</button><br/>');
                     });
                 $else:
                     jQuery('#pluginMenu').append('None<br/>');
@@ -107,13 +108,13 @@ $code:
                 });
             });
     </script>
-    <script src="/static/scripts/behaviors.js"></script>
-    <script src="/static/scripts/schedule.js"></script>
-    <script src="/static/scripts/intervalSelect.js"></script>
+    <script src="$app_path('/static/scripts/behaviors.js')"></script>
+    <script src="$app_path('/static/scripts/schedule.js')"></script>
+    <script src="$app_path('/static/scripts/intervalSelect.js')"></script>
 </head>
 <body>
     <div class="content">
-        <form name="tt" action="ttu" method="get">
+        <form name="tt" action="${app_path('/ttu')}" method="get">
             <input type="hidden" name="tunit">
         </form>
 

@@ -4,6 +4,7 @@ $def with(settings)
 $var title: $_('OSPi Proto Plugin') <!--Edit: Title to show on browser tab-->
 $var page: proto_plugin  <!--Edit: page name, used internally-->
 <script>
+
     // Initialize behaviors
     jQuery(document).ready(function(){
 
@@ -11,11 +12,11 @@ $var page: proto_plugin  <!--Edit: page name, used internally-->
             jQuery("#pluginForm").submit();
         });
         jQuery("button#cCancel").click(function(){
-            window.location="/";
+            window.location= baseUrl + "/";
         });
 
         jQuery("button#docButton").click(function(){
-            window.open("/static/docs/plugins/proto-docs.html", "_blank"); //Edit: replace "proto-docs.html"
+            window.open(baseUrl + "/static/docs/plugins/proto-docs.html", "_blank"); //Edit: replace "proto-docs.html"
         });
 
     });
@@ -27,7 +28,7 @@ $var page: proto_plugin  <!--Edit: page name, used internally-->
     </div>
 
     <p>$_('Example Check Boxes')</p>
-    <form id="pluginForm" action="/proto-save" method="get"> <!--Edit: Replace "proto-save" with URL of plugin's class for saving settings-->
+    <form id="pluginForm" action="${app_path('/proto-save')}" method="get"> <!--Edit: Replace "proto-save" with URL of plugin's class for saving settings-->
 
         <table class="optionList">
 
