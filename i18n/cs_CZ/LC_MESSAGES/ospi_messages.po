@@ -1,0 +1,1331 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenSprinkler Pi V2.1\n"
+"POT-Creation-Date: 2014-11-12 10:35+Pacific Standard Time\n"
+"PO-Revision-Date: 2014-11-23 16:24-0800\n"
+"Last-Translator: Dan <dkimberling59@gmail.com>\n"
+"Language-Team:  <dkimberling59@gmail.com>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.10\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: C:\\Users\\Dan\\Documents\\OpenSprinkler\\OSPi "
+"2.1\\OSPi\n"
+"X-Poedit-SearchPath-1: C:\\Users\\Dan\\Documents\\OpenSprinkler\\OSPi "
+"2.1\\OSPi\\templates\n"
+
+#: OSPi\gv.py:17
+msgid "Could not use git to determine version!"
+msgstr "Nelze použít git pro určení aktuální verze!"
+
+#: OSPi\gv.py:24
+msgid "Could not use git to determine date of last commit!"
+msgstr "Nelze použít git na zjištění data úpravy poslední verze!"
+
+#: OSPi\gv.py:119
+msgid "System name"
+msgstr "Název zařízení"
+
+#: OSPi\gv.py:119
+msgid "Unique name of this OpenSprinkler system."
+msgstr "Jedinečný název pro OpenSprinkler zařízení."
+
+#: OSPi\gv.py:119 OSPi\gv.py:120 OSPi\gv.py:121 OSPi\gv.py:122 OSPi\gv.py:123
+#: OSPi\gv.py:124
+msgid "System"
+msgstr "Systém"
+
+#: OSPi\gv.py:120
+msgid "City name or zip code. Use comma or + in place of space."
+msgstr "Název města, nebo směrovací číslo. Použijte čárku nebo + pro oddělení."
+
+#: OSPi\gv.py:120
+msgid "Location"
+msgstr "Umístění"
+
+#: OSPi\gv.py:121
+msgid "Language"
+msgstr "Jazyk"
+
+#: OSPi\gv.py:121
+msgid "Select language (effective after restart.)"
+msgstr "Vyberte jazyk (efektivní po restartu)."
+
+#: OSPi\gv.py:122
+msgid "Example: GMT-4:00, GMT+5:30 (effective after reboot.)"
+msgstr "Příklad: GMT-4:00, GMT+5:30 (Platné až po restartu.)"
+
+#: OSPi\gv.py:122
+msgid "Time zone"
+msgstr "Časové pásmo\""
+
+#: OSPi\gv.py:123
+msgid "24-hour clock"
+msgstr "24-hodinový čas"
+
+#: OSPi\gv.py:123
+msgid "Display times in 24 hour format (as opposed to AM/PM style.)"
+msgstr "Zobrazení času ve 24hodinovém formátu (na rozdíl od AM/PM stylu.)"
+
+#: OSPi\gv.py:124
+msgid "HTTP port"
+msgstr "HTTP port"
+
+#: OSPi\gv.py:124
+msgid "HTTP port (effective after reboot.)"
+msgstr "HTTP port (Platné až po restartu.)"
+
+#: OSPi\gv.py:125
+msgid "Allow anonymous users to access the system without a password."
+msgstr "Povolit anonymním uživatelům přístup do systému bez hesla."
+
+#: OSPi\gv.py:125
+msgid "Disable security"
+msgstr "Zakázat zabezpečení"
+
+#: OSPi\gv.py:125 OSPi\gv.py:126 OSPi\gv.py:127 OSPi\gv.py:128
+msgid "Change Password"
+msgstr "Změna hesla"
+
+#: OSPi\gv.py:126
+msgid "Current password"
+msgstr "Aktuální heslo"
+
+#: OSPi\gv.py:126
+msgid "Re-enter the current password."
+msgstr "Znovu zadejte aktuální heslo."
+
+#: OSPi\gv.py:127
+msgid "Enter a new password."
+msgstr "Vložte nové heslo."
+
+#: OSPi\gv.py:127
+msgid "New password"
+msgstr "Nové heslo"
+
+#: OSPi\gv.py:128
+msgid "Confirm password"
+msgstr "Potvrdit heslo"
+
+#: OSPi\gv.py:128
+msgid "Confirm the new password."
+msgstr "Potcrdit nové heslo."
+
+#: OSPi\gv.py:129
+msgid "Sequential"
+msgstr "Sekvence"
+
+#: OSPi\gv.py:129
+msgid "Sequential or concurrent running mode."
+msgstr "Režim sekvenční, nebo souběžný běh stanic."
+
+#: OSPi\gv.py:129 OSPi\gv.py:130 OSPi\gv.py:131
+msgid "Station Handling"
+msgstr "Úprava stanic"
+
+#: OSPi\gv.py:130
+msgid "Extension boards"
+msgstr "Rozšiřující desky"
+
+#: OSPi\gv.py:130
+msgid "Number of extension boards."
+msgstr "Počet rozšiřujících desek."
+
+#: OSPi\gv.py:131
+msgid "Station delay"
+msgstr "Zpoždění stanice"
+
+#: OSPi\gv.py:131
+msgid "Station delay time (in seconds), between 0 and 240."
+msgstr "Čas zpoždění (ve vteřinách), rozsah 0 - 240."
+
+#: OSPi\gv.py:132
+msgid "Master station"
+msgstr "Hlavní stanice"
+
+#: OSPi\gv.py:132
+msgid "Select master station."
+msgstr "Volba hlavní stanice."
+
+#: OSPi\gv.py:132 OSPi\gv.py:133 OSPi\gv.py:134
+msgid "Configure Master"
+msgstr "Nastavení hlavní stanice"
+
+#: OSPi\gv.py:133
+msgid "Master on adjust"
+msgstr "Nastavení zapnutí hlavní stanice"
+
+#: OSPi\gv.py:133
+msgid "Master on delay (in seconds), between +0 and +60."
+msgstr "Čas zpoždění zapnutí hlavní stanice (ve vteřinách), rozsah +0 až +60."
+
+#: OSPi\gv.py:134
+msgid "Master off adjust"
+msgstr "Nastavení vypnutí hlavní stanice"
+
+#: OSPi\gv.py:134
+msgid "Master off delay (in seconds), between -60 and +60."
+msgstr "Čas zpoždění vypnutí hlavní stanice (ve vteřinách), rozsah -60 až +60."
+
+#: OSPi\gv.py:135
+msgid "Use rain sensor"
+msgstr "Používat dešťový senzor"
+
+#: OSPi\gv.py:135
+msgid "Use rain sensor."
+msgstr "Používat dešťový senzor."
+
+#: OSPi\gv.py:135 OSPi\gv.py:136
+msgid "Rain Sensor"
+msgstr "Dešťový senzor"
+
+#: OSPi\gv.py:136
+msgid "Normally open"
+msgstr "V klidu je kontakt rozpojen"
+
+#: OSPi\gv.py:136
+msgid "Rain sensor type."
+msgstr "Typ kontaktu dešťového senzoru."
+
+#: OSPi\gv.py:137
+msgid ""
+"Log all events - note that repetitive writing to an SD card can shorten its "
+"lifespan."
+msgstr ""
+"Berte na vědomí, že opakující se zápis na SD kartu může zkrátit její "
+"životnost. (neplatí v případě, že je systém na USB disku)."
+
+#: OSPi\gv.py:137 OSPi\gv.py:138
+msgid "Logging"
+msgstr "Záznam"
+
+#: OSPi\gv.py:137 OSPi\templates\pcf_8591_adj.html:48
+msgid "Enable logging"
+msgstr "Povolení záznamu"
+
+#: OSPi\gv.py:138
+msgid "Length of log to keep, 0=no limits."
+msgstr "Množství záznamů, 0= bez omezení."
+
+#: OSPi\gv.py:138
+msgid "Max log entries"
+msgstr "Max počet záznamů"
+
+#: OSPi\helpers.py:35 OSPi\helpers.py.LOCAL.py:35
+msgid "Error: json module not found"
+msgstr "Chyba: json modul nebyl nalezen"
+
+# Reboot = hardware restart
+#: OSPi\helpers.py:48 OSPi\helpers.py.LOCAL.py:48
+msgid "Rebooting..."
+msgstr "Restart systému..."
+
+#: OSPi\helpers.py:61 OSPi\helpers.py.LOCAL.py:61
+msgid "Powering off..."
+msgstr "Vypínání systému..."
+
+# Restart = software restart
+#: OSPi\helpers.py:74 OSPi\helpers.py.LOCAL.py:74
+msgid "Restarting..."
+msgstr "Restart ospi..."
+
+#: OSPi\helpers.py:190 OSPi\helpers.py.LOCAL.py:190
+#: OSPi\templates\base.html:81
+msgid "Run-once"
+msgstr "Jednorázový"
+
+#: OSPi\helpers.py:192 OSPi\helpers.py.LOCAL.py:192
+#: OSPi\templates\base.html:82 OSPi\templates\home.html:222
+msgid "Manual"
+msgstr "Manuál"
+
+#: OSPi\helpers.py:395
+msgid "Incorrect password, please try again"
+msgstr "Špatné heslo, zkuste to prosím znovu"
+
+#: OSPi\ospi.py:22
+msgid "Starting timing loop"
+msgstr "Startuji časovou smyčku"
+
+#: OSPi\ospi.py:180
+msgid "plugins loaded:"
+msgstr "nahrané pluginy:"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:333
+msgid "Monday"
+msgstr "Pondělí"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:334
+msgid "Tuesday"
+msgstr "Úterý"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:335
+msgid "Wednesday"
+msgstr "Středa"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:336
+msgid "Thursday"
+msgstr "Čtvrtek"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:337
+msgid "Friday"
+msgstr "Pátek"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:338
+msgid "Saturday"
+msgstr "Sobota"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:339
+msgid "Sunday"
+msgstr "Neděle"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:25
+msgid "January"
+msgstr "Leden"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:29
+msgid "February"
+msgstr "Leden"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:33
+msgid "March"
+msgstr "Březen"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:37
+msgid "April"
+msgstr "Duben"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:41
+msgid "May"
+msgstr "květen"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:45
+msgid "June"
+msgstr "Červen"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:49
+msgid "July"
+msgstr "Červenec"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:53
+msgid "August"
+msgstr "Srpen"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:57
+msgid "September"
+msgstr "Září"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:61
+msgid "October"
+msgstr "Říjen"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:65
+msgid "November"
+msgstr "Listopad"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:69
+msgid "December"
+msgstr "Prosinec"
+
+#: OSPi\templates\base.html:83 OSPi\templates\log.html:55
+msgid "Program"
+msgstr "Program"
+
+#: OSPi\templates\base.html:135
+msgid "Home"
+msgstr "Úvod"
+
+#: OSPi\templates\base.html:136
+msgid "Define Programs"
+msgstr "Nastavit programy"
+
+#: OSPi\templates\base.html:136
+msgid "Programs"
+msgstr "Programy"
+
+#: OSPi\templates\base.html:137
+msgid "Define Run Once Program"
+msgstr "Nastavit jednorázový program"
+
+#: OSPi\templates\base.html:137
+msgid "Run Once"
+msgstr "Jednorázový"
+
+#: OSPi\templates\base.html:138
+msgid "Acces Plugins"
+msgstr "Dostupné moduly"
+
+#: OSPi\templates\base.html:138
+msgid "Plugins"
+msgstr "Zásuvné moduly"
+
+#: OSPi\templates\base.html:139
+msgid "Log"
+msgstr "Záznam"
+
+#: OSPi\templates\base.html:139
+msgid "View Log"
+msgstr "Zobrazit záznam"
+
+#: OSPi\templates\base.html:140
+msgid "Options"
+msgstr "Nastavení"
+
+#: OSPi\templates\base.html:141
+msgid "Stations"
+msgstr "Stanice"
+
+#: OSPi\templates\base.html:141 OSPi\templates\stations.html:73
+msgid "Configure Stations"
+msgstr "Nastavení stanic"
+
+#: OSPi\templates\base.html:143
+msgid "Logout"
+msgstr "Odhlásit se"
+
+#: OSPi\templates\base.html:152
+msgid "CPU Temp"
+msgstr "Teplota CPU"
+
+#: OSPi\templates\base.html:152
+msgid "Click to toggle"
+msgstr "Klikněte pro přepnutí"
+
+#: OSPi\templates\base.html:153
+msgid "Software"
+msgstr "Program"
+
+#: OSPi\templates\base.html:153
+msgid "version"
+msgstr "verze"
+
+#: OSPi\templates\email_adj.html:3
+msgid "OpenSprinkler Pi Email adjustments"
+msgstr "OpenSprinkler Pi Nastavení emailu"
+
+#: OSPi\templates\email_adj.html:21
+msgid "Email adjustments"
+msgstr "Nastavení emailu"
+
+#: OSPi\templates\email_adj.html:22
+msgid ""
+"This plugin can send E-mails. For this plugin you need a GMail account as "
+"provider."
+msgstr ""
+"Tento plugin může zasílat e-maily. Pro tento plugin musíte mít zřízen účet u "
+"poskytovatele GMail."
+
+#: OSPi\templates\email_adj.html:26
+msgid "Send email with file log.csv after power on"
+msgstr "Zaslat email s přílohou log.csv po zapnutí systému"
+
+#: OSPi\templates\email_adj.html:32
+msgid "Send email if rain is detected"
+msgstr "Zaslat email pokud je detekován déšť"
+
+#: OSPi\templates\email_adj.html:39
+msgid "Sends email if program has run"
+msgstr "Zaslat email pokud je spuštěn systém"
+
+#: OSPi\templates\email_adj.html:45
+msgid "Your GMail username"
+msgstr "Vaše uživatelské jméno na GMail"
+
+#: OSPi\templates\email_adj.html:63 OSPi\templates\lcd_adj.html:44
+#: OSPi\templates\pcf_8591_adj.html:103 OSPi\templates\pressure_adj.html:50
+#: OSPi\templates\sms_adj.html:81 OSPi\templates\system_update.html:47
+#: OSPi\templates\weather_level_adj.html:61
+msgid "Status"
+msgstr "Stav"
+
+#: OSPi\templates\email_adj.html:72 OSPi\templates\lcd_adj.html:54
+#: OSPi\templates\monthly.html:76 OSPi\templates\pcf_8591_adj.html:118
+#: OSPi\templates\pressure_adj.html:59 OSPi\templates\sms_adj.html:90
+#: OSPi\templates\weather_adj.html:55 OSPi\templates\weather_level_adj.html:70
+msgid "Submit"
+msgstr "Odeslat"
+
+#: OSPi\templates\email_adj.html:73 OSPi\templates\lcd_adj.html:55
+#: OSPi\templates\modify.html:402 OSPi\templates\monthly.html:77
+#: OSPi\templates\options.html:135 OSPi\templates\pcf_8591_adj.html:119
+#: OSPi\templates\pressure_adj.html:60 OSPi\templates\runonce.html:76
+#: OSPi\templates\sms_adj.html:91 OSPi\templates\stations.html:120
+#: OSPi\templates\weather_adj.html:56 OSPi\templates\weather_level_adj.html:71
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: OSPi\templates\home.html:52
+msgid "Manual Mode"
+msgstr "Manuální režim"
+
+#: OSPi\templates\home.html:55 OSPi\templates\runonce.html:53
+msgid "Run Once Program"
+msgstr "Jednorázový režim"
+
+#: OSPi\templates\home.html:58
+msgid " for "
+msgstr "poběží"
+
+#: OSPi\templates\home.html:58
+#, fuzzy
+msgid " on "
+msgstr "Zap"
+
+#: OSPi\templates\home.html:58
+msgid " ran "
+msgstr "běžel"
+
+#: OSPi\templates\home.html:82
+msgid "Master On"
+msgstr "Hlavní stanice zap"
+
+#: OSPi\templates\home.html:84
+msgid "Master Off"
+msgstr "Hlavní stanice vyp"
+
+#: OSPi\templates\home.html:89
+msgid "Suppressed by Rain Delay"
+msgstr "Potlačeno dešťovým zpožděním"
+
+#: OSPi\templates\home.html:92
+msgid "Suppressed by Rain Sensor"
+msgstr "Potlačeno senzorem deště"
+
+#: OSPi\templates\home.html:95 OSPi\templates\home.html:250
+#: OSPi\templates\modify.html:352 OSPi\templates\programs.html:120
+msgid "Off"
+msgstr "Vyp"
+
+#: OSPi\templates\home.html:135
+msgid "Enter hours to delay"
+msgstr "Vložte zpoždění v hodinách"
+
+#: OSPi\templates\home.html:147
+msgid "Enter percentage adjustment"
+msgstr "Vložte procentuální nastavení"
+
+#: OSPi\templates\home.html:166 OSPi\templates\runonce.html:25
+msgid "Timer values wrong: "
+msgstr "Špatná hodnota časovače"
+
+#: OSPi\templates\home.html:212
+msgid "System Off"
+msgstr "Systém vyp"
+
+#: OSPi\templates\home.html:212
+msgid "System On"
+msgstr "systém zap"
+
+#: OSPi\templates\home.html:214
+#, fuzzy
+msgid "Level"
+msgstr "Úroveň vody"
+
+#: OSPi\templates\home.html:214
+#, fuzzy
+msgid "Normal"
+msgstr "V klidu je kontakt rozpojen"
+
+#: OSPi\templates\home.html:214
+msgid "Water Level"
+msgstr "Úroveň vody"
+
+#: OSPi\templates\home.html:216
+msgid "Active"
+msgstr "Aktivní"
+
+#: OSPi\templates\home.html:216
+msgid "Rain Delay"
+msgstr "Dešťové zpoždění"
+
+#: OSPi\templates\home.html:220
+msgid "rain sensed"
+msgstr "detekován déšť"
+
+#: OSPi\templates\home.html:220 OSPi\templates\log.html:46
+msgid "no"
+msgstr "ne"
+
+#: OSPi\templates\home.html:222
+msgid "Auto"
+msgstr "Auto"
+
+#: OSPi\templates\home.html:242
+msgid "On (Master)"
+msgstr "Zap (hl. stanice)"
+
+#: OSPi\templates\home.html:244
+msgid "Off (Master)"
+msgstr "Vyp (hl. stanice)"
+
+#: OSPi\templates\home.html:250 OSPi\templates\modify.html:352
+#: OSPi\templates\programs.html:118
+msgid "On"
+msgstr "Zap"
+
+#: OSPi\templates\home.html:268
+msgid " Prev Day"
+msgstr "Včera"
+
+#: OSPi\templates\home.html:269
+msgid "Today"
+msgstr "Dnes"
+
+#: OSPi\templates\home.html:270
+msgid "Next Day"
+msgstr "Zítra"
+
+#: OSPi\templates\home.html:308
+msgid "loading..."
+msgstr "nahrávám..."
+
+#: OSPi\templates\home.html:337
+msgid "Stop All Stations"
+msgstr "Zastavit všechny stanice"
+
+#: OSPi\templates\home.html:340
+msgid "Program 1"
+msgstr "Program 1"
+
+#: OSPi\templates\lcd_adj.html:3
+msgid "OpenSprinkler Pi LCD settings"
+msgstr "OpenSprinkler Pi LCD nastavení"
+
+#: OSPi\templates\lcd_adj.html:21
+msgid "LCD settings"
+msgstr "Nastavení LCD"
+
+#: OSPi\templates\lcd_adj.html:22
+msgid ""
+"This plugin sends data to I2C for LCD 16x2 char with PCF8574. Visit for "
+"more: www.pihrt.com/elektronika/258-moje-rapsberry-pi-i2c-lcd-16x2."
+msgstr ""
+
+#: OSPi\templates\lcd_adj.html:38
+msgid "Range adress"
+msgstr ""
+
+#: OSPi\templates\lcd_adj.html:51
+msgid "Compatible with HD44780 LCD 16x2 controller."
+msgstr ""
+
+#: OSPi\templates\log.html:3
+msgid "OpenSprinkler Pi Log"
+msgstr "OpenSprinkler Pi záznam"
+
+#: OSPi\templates\log.html:8
+msgid "Enabled"
+msgstr "Povolen"
+
+#: OSPi\templates\log.html:11
+msgid "Disabled"
+msgstr "Disabled"
+
+#: OSPi\templates\log.html:41
+msgid "Log "
+msgstr "záznam"
+
+#: OSPi\templates\log.html:46
+msgid " limit"
+msgstr "limit"
+
+#: OSPi\templates\log.html:46
+msgid "Total number of records: "
+msgstr "Celkem záznamů"
+
+#: OSPi\templates\log.html:47 OSPi\templates\pcf_8591_adj.html:38
+msgid "Download log as "
+msgstr "Stáhnout záznam jako"
+
+#: OSPi\templates\log.html:51
+msgid "Date"
+msgstr "Datum"
+
+#: OSPi\templates\log.html:52
+msgid "Start Time"
+msgstr "Čas startu"
+
+#: OSPi\templates\log.html:53 OSPi\templates\stations.html:77
+msgid "Station"
+msgstr "Stanice"
+
+#: OSPi\templates\log.html:54
+msgid "Duration"
+msgstr "Doba běhu"
+
+#: OSPi\templates\log.html:73
+msgid "Refresh"
+msgstr "Obnovit"
+
+#: OSPi\templates\log.html:74
+msgid "Clear Log"
+msgstr "Smazat záznamy"
+
+#: OSPi\templates\login.html:3
+msgid "OpenSprinkler Pi Login"
+msgstr "OpenSprinkler Pi Přihlášení"
+
+#: OSPi\templates\login.html:7 OSPi\templates\login.html:10
+msgid "Login"
+msgstr "Přihlášení"
+
+#: OSPi\templates\modify.html:3
+msgid "OpenSprinkler Pi Modify Program"
+msgstr "OpenSprinkler Pi Úprava programů"
+
+#: OSPi\templates\modify.html:66
+msgid "Error: Incorrect time input "
+msgstr "Chyba: Čas je zadán špatně"
+
+#: OSPi\templates\modify.html:78
+msgid "Please choose at least one weekday for the program to run."
+msgstr "Vyberte prosím alespoň jeden den v týdnu pro spuštění programu."
+
+#: OSPi\templates\modify.html:82
+msgid "Please choose at least one station to run in this program."
+msgstr "Vyberte prosím alespoň jednu stanici pro spuštění v tomto programu."
+
+#: OSPi\templates\modify.html:228
+msgid "Error: starting in days wrong."
+msgstr "Chyba: Začátek ve špatném dnu."
+
+#: OSPi\templates\modify.html:249
+msgid "Error: Incorrect duration."
+msgstr "Chyba: Doba běhu"
+
+#: OSPi\templates\modify.html:263
+msgid "Error: Start time must be prior to end time."
+msgstr "Chyba: Čas Spuštění musí být před koncem vypnutí."
+
+#: OSPi\templates\modify.html:283
+msgid "Edit Program #"
+msgstr "Úprava programu #"
+
+#: OSPi\templates\modify.html:283 OSPi\templates\programs.html:108
+msgid "Add a New Program"
+msgstr "Přidat nový program"
+
+#: OSPi\templates\modify.html:288
+msgid "Program Off"
+msgstr "Program vyp"
+
+#: OSPi\templates\modify.html:288
+msgid "Program On"
+msgstr "Program zap"
+
+#: OSPi\templates\modify.html:304
+msgid "Recurring"
+msgstr "Opakující se`"
+
+#: OSPi\templates\modify.html:304
+msgid "Single pass"
+msgstr "Jedno spuštění"
+
+#: OSPi\templates\modify.html:306
+msgid "Every"
+msgstr "Každý"
+
+#: OSPi\templates\modify.html:310
+msgid "Until"
+msgstr "Do"
+
+#: OSPi\templates\modify.html:322
+msgid "Interval"
+msgstr "Interval"
+
+#: OSPi\templates\modify.html:322
+msgid "Weekly"
+msgstr "Týdně"
+
+#: OSPi\templates\modify.html:327
+msgid "Select All"
+msgstr "Označit vše"
+
+#: OSPi\templates\modify.html:328
+msgid "Clear All"
+msgstr "Zrušit výběr"
+
+#: OSPi\templates\modify.html:359
+msgid "Water interval"
+msgstr "Interval zalévání"
+
+#: OSPi\templates\modify.html:375
+msgid "Starting in"
+msgstr "Start v"
+
+#: OSPi\templates\modify.html:389
+msgid "Any Day"
+msgstr "Každý den"
+
+#: OSPi\templates\modify.html:389
+msgid "Restrict Day"
+msgstr "Omezení dnů"
+
+#: OSPi\templates\modify.html:391
+msgid "Even"
+msgstr "Sudé"
+
+#: OSPi\templates\modify.html:391
+msgid "Odd"
+msgstr "Liché"
+
+#: OSPi\templates\modify.html:392
+msgid "(except 31st and Feb 29th)"
+msgstr "(s výjimkou 31. a 29.února)"
+
+#: OSPi\templates\modify.html:401
+msgid "Save"
+msgstr "Uložit"
+
+#: OSPi\templates\monthly.html:3
+#, fuzzy
+msgid "OpenSprinkler Pi Monthly Adjustments"
+msgstr "OpenSprinkler Pi Nastavení"
+
+#: OSPi\templates\monthly.html:20
+msgid "Monthly Irrigation Adjustments"
+msgstr "Nastavení množství vody dle měsíce"
+
+#: OSPi\templates\monthly.html:21
+msgid "Enter an adjustment for each month (% irrigation time)"
+msgstr "Vložte množství vody pro každý měsíc (% času zalévání)"
+
+#: OSPi\templates\options.html:3
+msgid "OpenSprinkler Pi Options"
+msgstr "OpenSprinkler Pi Nastavení"
+
+#: OSPi\templates\options.html:18 OSPi\templates\options.html:19
+msgid "Hide Tooltips"
+msgstr "Skrýt nápovědu"
+
+#: OSPi\templates\options.html:19 OSPi\templates\options.html:68
+msgid "Show Tooltips"
+msgstr "Zobrazit nápovědu"
+
+#: OSPi\templates\options.html:48
+msgid "The password given was incorrect."
+msgstr "Heslo není správné."
+
+#: OSPi\templates\options.html:52
+msgid "Please enter a password."
+msgstr "Prosím vložte heslo."
+
+msgid "Password"
+msgstr "Heslo"
+
+#: OSPi\templates\options.html:56
+#, fuzzy
+msgid "Passwords don't match, please re-enter."
+msgstr "Hesla se neshodují, zadejte znovu."
+
+#: OSPi\templates\options.html:67
+msgid "Edit Options"
+msgstr "Úprava nastavení"
+
+#: OSPi\templates\options.html:96
+msgid "Default"
+msgstr "Výchozí"
+
+#: OSPi\templates\options.html:108
+msgid "None"
+msgstr "Žádné"
+
+#: OSPi\templates\options.html:122
+#, fuzzy
+msgid "System Restart"
+msgstr "Restart systému"
+
+#: OSPi\templates\options.html:124
+msgid "Restart"
+msgstr "Restart"
+
+#: OSPi\templates\options.html:124
+#, fuzzy
+msgid "Restart software"
+msgstr "Restart"
+
+#: OSPi\templates\options.html:125
+msgid "Reboot"
+msgstr "Reboot"
+
+#: OSPi\templates\options.html:125
+msgid "Reboot hardware"
+msgstr "Restart hardware"
+
+#: OSPi\templates\options.html:134 OSPi\templates\stations.html:118
+msgid "Submit Changes"
+msgstr "Odeslat změny"
+
+#: OSPi\templates\pcf_8591_adj.html:3
+msgid "OpenSprinkler Pi PCF8591 voltage and temperature adjustments"
+msgstr "OpenSprinkler Pi PCF8591 měření teploty a napětí"
+
+#: OSPi\templates\pcf_8591_adj.html:34
+msgid "PCF8591 voltage and temperature adjustments"
+msgstr "PCF8591 měření teploty a napětí"
+
+#: OSPi\templates\pcf_8591_adj.html:35
+msgid ""
+"For this plugin is needed enabled I2C bus and connected I2C A/D converter "
+"PCF8591 on I2C adress 0x48."
+msgstr ""
+"Pro tento plugin je potřeba mít povolenu sběrnici I2C a připojen A/D "
+"převodník PCF8591 na I2C adrese 0X48."
+
+#: OSPi\templates\pcf_8591_adj.html:36
+msgid ""
+"For measure temperature use temp probe LM35D (0-100 &deg;C) on AD0-3 "
+"converter."
+msgstr ""
+"Pro měření teploty použijte sondu LM35D (0-100 &deg;C) na vstupech AD0-3 "
+"převodníku."
+
+#: OSPi\templates\pcf_8591_adj.html:37
+msgid ""
+"If the label has not blank value the value is displayed in the window read "
+"value."
+msgstr ""
+"Pokud není vyplněno označení pro vstup AD0-3 nebude se hodnota zobrazovat v "
+"okně naměřené hodnoty."
+
+#: OSPi\templates\pcf_8591_adj.html:38
+msgid " log file."
+msgstr "soubor s logem."
+
+#: OSPi\templates\pcf_8591_adj.html:38 OSPi\templates\programs.html:151
+msgid "Delete"
+msgstr "Smazat"
+
+#: OSPi\templates\pcf_8591_adj.html:42
+msgid "Use PCF8591"
+msgstr "Použít PCF8591"
+
+#: OSPi\templates\pcf_8591_adj.html:54
+msgid "Maximum number of records"
+msgstr "Maximální počet záznamů"
+
+#: OSPi\templates\pcf_8591_adj.html:56
+msgid "(0 = unlimited)"
+msgstr "(0= bez omezení)"
+
+#: OSPi\templates\pcf_8591_adj.html:60
+msgid "Time loop for logging"
+msgstr "Interval pro ukládání hodnot"
+
+#: OSPi\templates\pcf_8591_adj.html:62
+msgid "minutes (0 = logging disabled)"
+msgstr "minuty (0 = záznam je zakázán)"
+
+#: OSPi\templates\pcf_8591_adj.html:66
+msgid "Label for input AD0:"
+msgstr "Označení pro vstup AD0:"
+
+#: OSPi\templates\pcf_8591_adj.html:68 OSPi\templates\pcf_8591_adj.html:74
+#: OSPi\templates\pcf_8591_adj.html:80 OSPi\templates\pcf_8591_adj.html:86
+msgid " measure as voltage "
+msgstr "měřit jako napětí"
+
+#: OSPi\templates\pcf_8591_adj.html:72
+msgid "Label for input AD1"
+msgstr "Označení pro vstup AD1:"
+
+#: OSPi\templates\pcf_8591_adj.html:78
+msgid "Label for input AD2"
+msgstr "Označení pro vstup AD2:"
+
+#: OSPi\templates\pcf_8591_adj.html:90
+msgid "Read value"
+msgstr "Naměřené hodnoty"
+
+#: OSPi\templates\pcf_8591_adj.html:109
+msgid "Output DA voltage"
+msgstr "Výstupní napětí na DA"
+
+#: OSPi\templates\pressure_adj.html:3
+msgid "OpenSprinkler Pi Pressure monitor settings"
+msgstr "OpenSprinkler Pi Nastavení sledování tlaku"
+
+#: OSPi\templates\pressure_adj.html:20
+msgid "Pressure monitor settings"
+msgstr "Nastavení sledování tlaku"
+
+#: OSPi\templates\pressure_adj.html:21
+msgid ""
+"This plugin checked pressure in pipe, if master station is switched on must "
+"be activated pressure sensor. "
+msgstr ""
+"Tento plugin kontroluje tlak v potrubí. Pokud je zapnuta hlavní stanice "
+"(čerpadlo) musí se aktivovat snímač tlaku."
+
+#: OSPi\templates\pressure_adj.html:22
+msgid ""
+"If is not sensor activated in a certain time, switches off all station  and "
+"sends email with error. Prevent safety for master station pump."
+msgstr ""
+"Pokud se snímač tlaku neaktivuje do nastavené doby, dojde k vypnutí všech "
+"stanic a zaslání emailu s chybou. Tato funkce slouží jako ochrana čerpadla "
+"(například při prasknutí potrubí, nebo ztrátě vody)."
+
+#: OSPi\templates\pressure_adj.html:26
+msgid "Use pressure sensor for master station"
+msgstr "Používat snímač tlaku pro hlavní stanici"
+
+#: OSPi\templates\pressure_adj.html:28
+msgid "(Pressure sensor is connected between GPIO pin 22 and ground)"
+msgstr ""
+
+#: OSPi\templates\pressure_adj.html:32
+msgid "Send email with error"
+msgstr "Zaslat email pokud je chyba"
+
+#: OSPi\templates\pressure_adj.html:34
+msgid "(For this function required email plugin)"
+msgstr "(Pro tuto funkci je vyžadován email plugin)"
+
+#: OSPi\templates\pressure_adj.html:38
+msgid "Max time to activate pressure sensor"
+msgstr "Maximální čas pro aktivaci snímače tlaku"
+
+#: OSPi\templates\pressure_adj.html:40
+msgid "(max 999 seconds)"
+msgstr "(max 999 vteřin)"
+
+#: OSPi\templates\pressure_adj.html:44
+msgid "Pressure sensor"
+msgstr ""
+
+#: OSPi\templates\programs.html:3
+msgid "OpenSprinkler Pi Programs"
+msgstr "OpenSprinkler Pi Programy"
+
+#: OSPi\templates\programs.html:18
+#, fuzzy
+msgid "Every "
+msgstr "Každý"
+
+#: OSPi\templates\programs.html:18 OSPi\templates\programs.html:20
+msgid "days"
+msgstr "dny"
+
+#: OSPi\templates\programs.html:20
+#, fuzzy
+msgid "starting in"
+msgstr "Start v"
+
+#: OSPi\templates\programs.html:23
+msgid "Every Weekday"
+msgstr "Každý den v týdnu"
+
+#: OSPi\templates\programs.html:27
+#, fuzzy
+msgid "Fri"
+msgstr "Pátek"
+
+#: OSPi\templates\programs.html:27
+#, fuzzy
+msgid "Mon"
+msgstr "Pondělí"
+
+#: OSPi\templates\programs.html:27
+#, fuzzy
+msgid "Sat"
+msgstr "Stanice"
+
+#: OSPi\templates\programs.html:27
+#, fuzzy
+msgid "Sun"
+msgstr "Stanice ke spuštění"
+
+#: OSPi\templates\programs.html:27
+#, fuzzy
+msgid "Thur"
+msgstr "Čtvrtek"
+
+#: OSPi\templates\programs.html:27
+#, fuzzy
+msgid "Tue"
+msgstr "Úterý"
+
+#: OSPi\templates\programs.html:27
+msgid "Wed"
+msgstr "Středa"
+
+#: OSPi\templates\programs.html:29
+msgid " (Even days only)"
+msgstr "(Pouze ve zvolené dny)"
+
+#: OSPi\templates\programs.html:31
+msgid " (Odd days only)"
+msgstr "(Pouze liché dny)"
+
+#: OSPi\templates\programs.html:109
+msgid "Delete All"
+msgstr "Smazat vše"
+
+#: OSPi\templates\programs.html:128
+msgid "Run"
+msgstr "Stanice ke spuštění"
+
+#: OSPi\templates\programs.html:141
+msgid "Starting"
+msgstr "Začátek"
+
+#: OSPi\templates\programs.html:145
+msgid "Recurring every"
+msgstr "Opakující se"
+
+#: OSPi\templates\programs.html:149 OSPi\templates\runonce.html:74
+msgid "Run Now"
+msgstr "Spustit ihned"
+
+#: OSPi\templates\programs.html:150
+msgid "Edit"
+msgstr "Úprava"
+
+#: OSPi\templates\restarting.html:3
+msgid "OpenSprinkler Pi Restarting"
+msgstr "OpenSprinkler Pi restartování"
+
+#: OSPi\templates\restarting.html:30
+msgid "ospi is restarting"
+msgstr "ospi se restartuje"
+
+#: OSPi\templates\restarting.html:31
+msgid "You will be redirected as soon as possible..."
+msgstr "Budete přesměrováni hned jak to bude možné..."
+
+#: OSPi\templates\runonce.html:3
+msgid "OpenSprinkler Pi Run-Once"
+msgstr "OpenSprinkler Pi Jednorázový program"
+
+#: OSPi\templates\runonce.html:35
+msgid "No station is scheduled to run"
+msgstr "Žádná stanice nemá naplánováno spuštění"
+
+#: OSPi\templates\runonce.html:75
+msgid "Reset Time"
+msgstr "Smazat Nastavení"
+
+#: OSPi\templates\sms_adj.html:3
+msgid "OpenSprinkler Pi SMS adjustments"
+msgstr "OpenSprinkler Pi SMS nastavení"
+
+#: OSPi\templates\sms_adj.html:21
+msgid "SMS adjustments"
+msgstr "SMS nastavení"
+
+#: OSPi\templates\sms_adj.html:22
+msgid ""
+"For this plugin is needed to SMS modem with the telephone service provider."
+msgstr ""
+"Pro tento plugin je potřeba SMS modem a aktivní telefonní připojení "
+"poskytovatelem."
+
+#: OSPi\templates\sms_adj.html:23
+msgid ""
+"For more information visit the www.pihrt.com/elektronika/259-moje-rapsberry-"
+"pi-sms-ovladani-rpi for instructions."
+msgstr ""
+"Pro více informací navštivte: www.pihrt.com/elektronika/259-moje-rapsberry-"
+"pi-sms-ovladani-rpi"
+
+#: OSPi\templates\sms_adj.html:27
+msgid "Use SMS modem"
+msgstr "Používat SMS modem"
+
+#: OSPi\templates\sms_adj.html:33
+msgid "Number 1"
+msgstr "Telefonní číslo 1"
+
+#: OSPi\templates\sms_adj.html:39
+msgid "Number 2"
+msgstr "Telefonní číslo 2"
+
+#: OSPi\templates\sms_adj.html:45
+msgid "Command for info"
+msgstr "Příkaz pro info"
+
+#: OSPi\templates\sms_adj.html:51
+msgid "Command for stop irrigation"
+msgstr "Příkaz pro stop aut. zalévání"
+
+#: OSPi\templates\sms_adj.html:57
+msgid "Command for start irrigation"
+msgstr "Příkaz pro start aut. zalévání"
+
+#: OSPi\templates\sms_adj.html:63
+msgid "Command for reboot system"
+msgstr "Příkaz pro restart systému"
+
+#: OSPi\templates\sms_adj.html:69
+msgid "Command for power off system"
+msgstr "Příkaz pro vypnutí systému"
+
+#: OSPi\templates\sms_adj.html:75
+msgid "Command for update OSPi from GITHUB"
+msgstr "Příkaz pro aktualizaci systému"
+
+#: OSPi\templates\stations.html:3
+msgid "OpenSprinkler Pi Stations"
+msgstr "OpenSprinkler Pi Stanice"
+
+#: OSPi\templates\stations.html:78
+msgid "Name"
+msgstr "Jméno"
+
+#: OSPi\templates\stations.html:79
+msgid "Enabled?"
+msgstr "Povolen"
+
+#: OSPi\templates\stations.html:80
+msgid "Ignore Rain?"
+msgstr "Ignorovat déšť"
+
+#: OSPi\templates\stations.html:82
+msgid "Activate Master?"
+msgstr "Aktivovat hl. stanici"
+
+#: OSPi\templates\stations.html:93
+msgid "(Master valve)"
+msgstr "(Hl. stanice)"
+
+#: OSPi\templates\stations.html:119
+msgid "Reset Names"
+msgstr "Smazat jména"
+
+#: OSPi\templates\system_update.html:3
+msgid "OpenSprinkler Pi System update from GitHub"
+msgstr "OpenSprinkler Pi Aktualizace systému z GitHubu"
+
+#: OSPi\templates\system_update.html:24
+msgid "System update from github"
+msgstr "Aktualizace systému z githubu"
+
+#: OSPi\templates\system_update.html:25
+msgid ""
+"This plugin compares the local copy with the remote repository and can "
+"automatically update the local copy."
+msgstr ""
+"Tento plugin porovnává místní verzi ospi se vzdáleným uložištěm ospi a "
+"automaticky provádí aktualizaci na poslední verzi ospi."
+
+#: OSPi\templates\system_update.html:29
+msgid "Remote repository"
+msgstr "Vzdálené uložiště"
+
+#: OSPi\templates\system_update.html:35
+msgid "Local ospi version"
+msgstr "Místní verze ospi"
+
+#: OSPi\templates\system_update.html:41
+msgid "Local ospi date"
+msgstr "Místní datum ospi verze"
+
+#: OSPi\templates\system_update.html:50
+msgid "Update Status"
+msgstr "Stav aktualizace"
+
+#: OSPi\templates\system_update.html:59
+msgid "Update ospi"
+msgstr "Aktualizovat ospi"
+
+#: OSPi\templates\system_update.html:61
+msgid "Up-to-date"
+msgstr "Aktuální verze"
+
+#: OSPi\templates\system_update.html:62
+msgid "Restart ospi"
+msgstr "Restart ospi"
+
+#: OSPi\templates\system_update.html:63
+msgid "Back"
+msgstr "Zpět"
+
+#: OSPi\templates\weather_adj.html:3
+msgid "OpenSprinkler Pi Weather-based Rain Delay"
+msgstr "OpenSprinkler Pi Zpoždění při dešti"
+
+#: OSPi\templates\weather_adj.html:20
+msgid "Weather-based Rain Delay"
+msgstr "Zpoždění zalévání dle předpovědi počasí"
+
+#: OSPi\templates\weather_adj.html:21
+msgid ""
+"When weather-based rain delay is enabled, the weather will be checked for "
+"rain every hour. If the weather reports any condition suggesting rain, a "
+"rain delay is automatically issued using the below set delay duration."
+msgstr ""
+"Tento plugin kontroluje každou hodinu předpověď počasí. Pokud je hlášen déšť "
+"automaticky se odloží zalévání o nastavené zpoždění."
+
+#: OSPi\templates\weather_adj.html:25
+msgid "Use Automatic Rain Delay"
+msgstr "Použít automatické zpoždění zalévání"
+
+#: OSPi\templates\weather_adj.html:31
+msgid "Delay Duration (hours)"
+msgstr "Doba zpoždění (v hodinách)"
+
+#: OSPi\templates\weather_adj.html:37
+msgid "Weather Provider"
+msgstr "Poskytovatel předpovědi"
+
+#: OSPi\templates\weather_adj.html:46 OSPi\templates\weather_level_adj.html:55
+msgid "Wunderground API Key"
+msgstr "Wunderground API klíč"
+
+#: OSPi\templates\weather_level_adj.html:3
+msgid "OpenSprinkler Pi Weather-based Water Level"
+msgstr "OpenSprinkler Pi Předpověď počasí"
+
+#: OSPi\templates\weather_level_adj.html:20
+msgid "Weather-based Water Level"
+msgstr "Nastavení vody dle předpovědi počasí"
+
+#: OSPi\templates\weather_level_adj.html:21
+msgid ""
+"When weather-based water level is enabled, the weather will be checked every "
+"hour and the water level will be adjusted accordingly."
+msgstr ""
+"Tento plugin kontroluje každou hodinu předpověď počasí a nastavuje množství "
+"vody pro zalévání."
+
+#: OSPi\templates\weather_level_adj.html:25
+msgid "Use Automatic Water Level Adjustment"
+msgstr "Použít automatické nastavení množství vody"
+
+#: OSPi\templates\weather_level_adj.html:31
+msgid "Min percentage"
+msgstr "Minimu (%)"
+
+#: OSPi\templates\weather_level_adj.html:37
+msgid "Max percentage"
+msgstr "Maximum (%)"
+
+#: OSPi\templates\weather_level_adj.html:43
+msgid "History days used"
+msgstr "Používat historii "
+
+#: OSPi\templates\weather_level_adj.html:49
+msgid "Forecast days used"
+msgstr "Používat předpověď počasí"
+
+#: OSPi\webpages.py:296
+msgid " not found."
+msgstr "nenalezeno."
+
+#: OSPi\webpages.py:296
+msgid "Station "
+msgstr "Station"
+
+#: OSPi\webpages.py:314
+msgid "Manual mode not active."
+msgstr "Manuální režim není aktivní."
+
+#: OSPi\webpages.py:590
+msgid "Date, Start Time, Zone, Duration, Program"
+msgstr "Datum, Čas startu, Oblast, Trvání, Program"

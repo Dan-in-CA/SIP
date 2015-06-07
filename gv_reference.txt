@@ -30,7 +30,6 @@ snlen:32 max size of station names
 
 for scheduling:
 bsy:0	program busy
-mnp:32	maximum number of programs (disregard on OSPi)
 nprogs:0 number of programs (can be calculated form length of prog array)
 mo:[0] master operation bytes - contains bits per board for stations with master set
 ir:[0] ignore rain bytes - contains bits per board for stations to ignore rain delay and rain sensor
@@ -47,8 +46,7 @@ theme: "original" files used to style the UItyle the UI
 
 other gv attributes:
 gv.ver	software rev number (int, converted to dot separated digets in UI)
-gv.rev	release number of this program (int)  - no longer used as of v2.0
-gv.revdate	date of release (string)
+gv.ver_date	date of release (string)
 gv.now	current time, updated once per second at top of timing loop
 gv.srvals	shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
 gv.rovals	run once values - list of duration times in seconds for a run once program (list, length = number of statons)
@@ -59,5 +57,4 @@ gv.sbits	station bits, used to display stations that are on in UI (list of bytes
 gv.rs	run schedule (list [scheduled start time, scheduled stop time, duration, program index])
 gv.lrun	last run, used to display log line on home page (list [station index, program number, duration, end time]) 
 gv.scount	station count, used in set station to track on stations with master association
-gv.snames	station names, loaded from 'snames.txt' file (string)
 gv.plugin_menu list to hold a 2 element list for each plugin to be added to menu on home page (['menu text', 'url'])

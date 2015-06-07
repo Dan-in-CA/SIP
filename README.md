@@ -1,16 +1,94 @@
-OSPi
+ospi
 ====
 
-A Python port of the Arduino based OpenSprinkler firmware V 1.8.3
+An improved Python port of the Arduino based OpenSprinkler firmware, originally based on V 1.8.3.
+This is an updated version of OpenSprinkler Pi started by Dan Kimberling making better use of the power of Python.
+
 -----------------------------------------------------------------
-OpenSprinkler Pi (OSPi) Interval Program Demo<br/>
-Creative Commons Attribution-ShareAlike 3.0 license<br/>
-June 2013, http://rayshobby.net
+OpenSprinkler Pi (ospi) Interval Program Demo<br/>
+
+GNU GPL License<br/>
+July 2014
+
 
 ***********
 UPDATES
 ===========
 ***********
+February 10 2015
+----------
+(Dan)  
+1. Added Plugin Manager plugin  
+2. Updated System Updater plugin  
+3. Added help button linked to repository wiki  
+4. Moved plugins to new repository  
+5. Includes Spanish and French translations and related bug fixes
+
+January 9 2015
+----------
+(Dan)<br/>
+
+1. Added multiple language support<br/>
+2. Updated timezone handling<br/>
+3. Added software RESTART button under System Restart on Options page<br/>
+
+October 7 2014
+----------
+(Dan)<br/>
+
+Incorporated changes that had taken place on Rimnco's GitHub fork into Dan's OSPi repository.
+
+September 10 2014
+----------
+(Rimco, Martin Pihrt)<br/>
+Changes:<br/>
+1. Added new functions in helpers.py: reboot, poweroff, restart, uptime and getIP.<br/>
+2. Added new plugins:<br/>
+   - System update (Rimco: Checked, tested and improved.)<br/>
+   - Email (Rimco: Checked, tested and improved.)<br/>
+   - SMS (Rimco: Globally checked and reformatted, not tested.)<br/>
+   - LCD (Rimco: Globally checked and reformatted, not tested.)<br/>
+   - Pressure Monitor (Rimco: Globally checked and reformatted, not tested.)<br/>
+   - PCF8591 A/D converter read-out (Rimco: Globally checked and reformatted, not tested.)<br/>
+3. Added pylcd2 library in /plugins for LCD plug-in.<br/>
+
+September 9 2014
+----------
+(Rimco, Dan, Samer Albahra and Andrew Radke)<br/>
+Changes:<br/>
+1. Fixed plugin executable bits<br/>
+2. Removed all old txt reading functions<br/>
+3. Improved mobile app interface<br/>
+4. Fixed timeline display errors.<br/>
+5. Improved version numbering (partially automatic)<br/>
+6. Added @media CSS extension<br/>
+
+August 2014
+----------
+(Rimco and Dan)<br/>
+Changes:<br/>
+1. Improved weather level adjustment robustness, error logging and data removal.<br/>
+2. Added on-off buttons to program page<br/>
+3. Moved station names to JSON file<br/>
+4. Moved options section to gv.py<br/>
+
+July 22 2014
+-----------
+(Rimco)<br/>
+Changes:<br/>
+1. Split contents of the original ospi.py file into blocks that are more logical. (Should be improved even more.)<br/>
+2. Removed numerous bugs regarding undeclared variables, unreachable code and misinterpretation of python classes. Tried to use python standards as much as possible.<br/>
+3. Improved the way that plug-ins can adjust the water level. Each plug-in can now provide a water level adjustment which are combined by the main program.<br/>
+4. Introduced template inheritance to solve many web-page inconsistencies and code duplication.<br/>
+5. Fixed security issues where login-credentials were not checked. Introduced a ProtectedPage class as base class to be used for each page that should only be reachable if logged in.<br/>
+6. Removed unused code, reduced code duplication.<br/>
+7. Removed gv class (was not used at all) and put all global variables in the gv module itself.<br/>
+8. Improved exception handling.<br/>
+9. Because of the introduced template inheritance, plug-ins are now also using the same base template and are integrated better.<br/>
+10. Improved page load speeds.<br/>
+11. Added new weather-based water level adjustment plug-in that can change the water level depending on the history+forecast. This plug-in caches the queries made to WUnderground to reduce the number of queries, but a clean-up action needs to be added.<br/>
+12. Removed files that should not committed to GitHub.<br/>
+13. Removed APScheduler dependency.<br/>
 
 July 11 2014
 -----------
@@ -196,7 +274,7 @@ Jun 19, 2013
 
 NOTE
 ====
-This folder contains the interval program demo for OpenSprinkler Pi written by Dan Kimberling. It is compatible with the microcontroller-based OpenSprinkler firmware 1.8, the instructions of which can be found at:
+This folder contains a fork of OpenSprinkler Pi written by Dan Kimberling using Python as it should be used. It is largly compatible with the microcontroller-based OpenSprinkler firmware 1.8, the instructions of which can be found at:
   
   http://rayshobby.net/?page_id=730
 

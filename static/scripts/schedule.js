@@ -1,10 +1,10 @@
 // Global vars
-var displayScheduleDate = new Date(devt); // dk 
+var displayScheduleDate = new Date(Date.now() + cliTzOffset - devTzOffset); // dk
 var displayScheduleTimeout;
 var sid,sn,t;
 var simdate = displayScheduleDate; // date for simulation
-var nprogs = prog.length; // number of progrms
-var nst = nbrd*8; // number of stations
+if (typeof progs !== 'undefined'){var nprogs = progs.length}; // number of programs
+if (typeof nbrd !== 'undefined'){var nst = nbrd*8}; // number of stations
 
 function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is scheduled for this date (displayScheduleDate) called from doSimulation
   // simminutes is minute count generated in doSimulation()
@@ -52,13 +52,13 @@ function doSimulation() { // Create schedule by a full program simulation, was d
 	 endmin=0;
     match_found=0;
     for(pid=0;pid<nprogs;pid++) { //for each program
-      var pd=prog[pid]; //prog=program array, pd=program element at this index (program data)
+      var pd=progs[pid]; //prog=program array, pd=program element at this index (program data)
       if(scheduledThisDate(pd,simminutes,simdate)) { //call scheduledThisDate function, if scheduled...
         for(sid=0;sid<nst;sid++) { //for each station...
           bid=sid>>3;s=sid%8; //set board index (bid) and station number per board (s) from station index (sid) 
           if(mas==(sid+1)) continue; // skip master station
           if(pd[7+bid]&(1<<s)) { // if this station is selected in this program...
-				et_array[sid]=pd[6]*wl/100>>0; // Set end time for this station to duration adjusted by water level
+				et_array[sid]=pd[6]*wl/100*wlx/100; // Set end time for this station to duration adjusted by water level
 				pid_array[sid]=pid+1; // Set station element in pid array to program number (pid+1)
             match_found=1;
           }
@@ -147,11 +147,12 @@ function programName(p) {
 	}
 }
 
+// show timeline on home page
 function displaySchedule(schedule) {
 	if (displayScheduleTimeout != null) {
 		clearTimeout(displayScheduleTimeout);
 	}
-	var now = new Date();
+	var now = new Date(Date.now() + cliTzOffset - devTzOffset); // will show device time
 	var nowMark = now.getHours()*60 + now.getMinutes();
 	var isToday = toXSDate(displayScheduleDate) == toXSDate(now);
 	var programClassesUsed = new Object();
@@ -204,8 +205,9 @@ function displaySchedule(schedule) {
 	}
 }
 
-function displayProgram() {
-	if (displayScheduleDate > devt) { //dk 7-13-14 << new Date()
+function displayProgram() { // Controls home page irrigation timeline
+	//if (displayScheduleDate > devt) { //dk
+	if (displayScheduleDate > new Date(Date.now() + cliTzOffset - devTzOffset)) { //dk
 		var schedule = doSimulation(); //dk
 		displaySchedule(schedule);
 	} else {
@@ -219,7 +221,7 @@ function displayProgram() {
 				}
 				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
 			}
-			if (toXSDate(displayScheduleDate) == toXSDate(new Date())) {
+			if (toXSDate(displayScheduleDate) == toXSDate(new Date(Date.now() + cliTzOffset - devTzOffset))) {
 				var schedule = doSimulation(); //dk
 				log = log.concat(schedule);
 			}

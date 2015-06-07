@@ -1,0 +1,76 @@
+$def with(settings)
+<!-- Edit: Replace "proto_vals" with settings values for your plugin if used-->
+
+$var title: $_('OSPi Proto Plugin') <!--Edit: Title to show on browser tab-->
+$var page: proto_plugin  <!--Edit: page name, used internally-->
+<script>
+    // Initialize behaviors
+    jQuery(document).ready(function(){
+
+        jQuery("#cSubmit").click(function() {
+            jQuery("#pluginForm").submit();
+        });
+        jQuery("button#cCancel").click(function(){
+            window.location="/";
+        });
+
+        jQuery("button#docButton").click(function(){
+            window.open("/static/docs/plugins/proto-docs.html", "_blank"); //Edit: replace "proto-docs.html"
+        });
+
+    });
+</script>
+
+<div id="plugin">
+    <div class="title">Proto Plugin  <!--Edit: User page heading, Make relevant to your plugin-->
+    <button class="execute" id="docButton" type="button" >$_('Help')</button>
+    </div>
+
+    <p>$_('Example Check Boxes')</p>
+    <form id="pluginForm" action="/proto-save" method="get"> <!--Edit: Replace "proto-save" with URL of plugin's class for saving settings-->
+
+        <table class="optionList">
+
+            <!--Check boxes-->
+            <thead>
+                <th class="stationNumber">$_('Heading')</th>  <!--Edit: Optional-->
+                <th class="stationNumber">$_('Heading')</th>  <!--Edit: Optional-->
+            </thead>
+            <tr>
+                <td style='text-transform: none;'>$_('Check Box 1'):</td>  <!--Edit-->
+                <td><input type="checkbox" name="check-1"  ${"checked" if 'check-1' in settings else ""}></td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>$_('Check Box 2'):</td>  <!--Edit-->
+                <td><input type="checkbox" name="check-2" ${"checked" if 'check-2' in settings else ""}></td>
+            </tr>
+
+        </table></br>
+
+        <p>$_('Text Entry Fields')</p>  <!--Edit-->
+        <table class="optionList">
+
+            <!--Text fields-->
+            <thead>
+                <th class="stationNumber">$_('Heading')</th>  <!--Edit: Optional-->
+                <th class="stationNumber">$_('Heading')</th>  <!--Edit: Optional-->
+            </thead>
+
+            <tr>
+                <td style='text-transform: none;'>$_('Text Field 1'):</td>  <!--Edit-->
+                <td><input type="text" name="text-1" value="${settings['text-1'] if 'text-1' in settings else '' }"></td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>$_('Text Field 2'):</td>  <!--Edit-->
+                <td><input type="text" name="text-2" value="${settings['text-2'] if 'text-2' in settings else ''}"></td>
+            </tr>
+
+        </table>
+
+    </form>
+
+<div id="controls">
+    <button id="cSubmit" class="submit"><b>$_('Submit')</b></button>
+    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
+</div>
+</div>

@@ -1,187 +1,121 @@
 $def with ()
 
-<!-- 
-  2013-13-06: jonathanmarsh
-    - Converted to web.py template, retaining 99% of older look and feel
-    - Moved inline styling to stylesheet
-    - Moved inline behaviors to jQuery.
-    Note that the normal jQuery use of the dollar sign conflicts with the templating syntax - used the longer jQuery() throughout.
- -->
-
+$var title: $_('OpenSprinkler Pi Stations')
+$var page: stations
 $code:
-	snames = eval(data('snames'))
-
-<html>
-<head>
-	<meta name="viewport" content="width=640">
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>OpenSprinkler Pi Configure Stations ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
-	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
-	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
-	<style type="text/css">
-		td.stationNumber, td.stationShow, td.stationIgnore, td.stationMaster {text-align:center}
-		td.stationName {text-align:left; padding-left:1em;}
-	</style>
-	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
-	<script>		
-		// Variables set by ospi.py
-		var devt = ${gv.now}*1000;
-		var tz = ${gv.sd['tz']};
-		var timeFormat = ${gv.sd['tf']};
-		var cputemp = "${gv.cputemp}";
-		var tempunit = "${gv.sd['tu']}";
+	snames = gv.snames
 	
-		var nbrd = ${gv.sd['nbrd']};
-		var mas = ${gv.sd['mas']};
-	</script>
-	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
-	<script>		
-		// Initialize behaviors
-		jQuery(document).ready(function(){
-			
-			jQuery("button#cSubmit").click(function(){
-				if (mas>0) {
-					var s, bid, sid, vm;
-					for (bid=0; bid<nbrd; bid++) {
-						vm = 0;
-						for (s=0; s<8; s++) {
-							sid = bid*8 + (7-s);
-							vm = vm<<1;
-							if (sid == mas-1) {
-								vm = vm + 1;
-								continue;
-							}
-							if	(jQuery("#mc"+sid).is(":checked")) {
-								vm = vm + 1;
-							}
-						}
-						jQuery("#m"+bid).val(vm);
-					}
-				}
-				var vi, vs;	
-				for (bid=0; bid<nbrd; bid++) {
-					vi = 0;
-					vs = 0;
-					for (s=0; s<8; s++) {
-						sid = bid*8 + (7-s);
-						vi = vi<<1;	
-						vs = vs<<1;	
-						if (sid == mas-1) {
-							vi = vi + 1;
-							vs = vs + 1;
-							continue;
-						}
-						if (jQuery("#rc"+sid).is(":checked")) {
-							vi = vi + 1;
-						}	     		
-						if (jQuery("#show"+sid).is(":checked")) {
-							vs = vs + 1;
-						}	     		
-					}
-					jQuery("#i"+bid).val(vi);
-					jQuery("#sh"+bid).val(vs);
-				}
-				jQuery("#sf").submit();
-			});
-			jQuery("button#cResetNames").click(function(){
-				jQuery("input[type='text']").each(function () {
-					jQuery(this).val("S" + (parseInt(jQuery(this).attr("name").substring(1)) + 1));
-				});
-				jQuery(".stationShow input").each(function () {
-					jQuery(this).prop('checked', true);
-				});
-			});
-			
-			jQuery("button#cCancel").click(function(){
-				window.location="/";
-			});
+<script>
+    // Initialize behaviors
+    jQuery(document).ready(function(){
 
-		});
+        jQuery("button#cSubmit").click(function(){
+            if (mas>0) {
+                var s, bid, sid, vm;
+                for (bid=0; bid<nbrd; bid++) {
+                    vm = 0;
+                    for (s=0; s<8; s++) {
+                        sid = bid*8 + (7-s);
+                        vm = vm<<1;
+                        if (sid == mas-1) {
+                            vm = vm + 1;
+                            continue;
+                        }
+                        if	(jQuery("#mc"+sid).is(":checked")) {
+                            vm = vm + 1;
+                        }
+                    }
+                    jQuery("#m"+bid).val(vm);
+                }
+            }
+            var vi, vs;
+            for (bid=0; bid<nbrd; bid++) {
+                vi = 0;
+                vs = 0;
+                for (s=0; s<8; s++) {
+                    sid = bid*8 + (7-s);
+                    vi = vi<<1;
+                    vs = vs<<1;
+                    if (sid == mas-1) {
+                        vi = vi + 1;
+                        vs = vs + 1;
+                        continue;
+                    }
+                    if (jQuery("#rc"+sid).is(":checked")) {
+                        vi = vi + 1;
+                    }
+                    if (jQuery("#show"+sid).is(":checked")) {
+                        vs = vs + 1;
+                    }
+                }
+                jQuery("#i"+bid).val(vi);
+                jQuery("#sh"+bid).val(vs);
+            }
+            jQuery("#sf").submit();
+        });
+        jQuery("button#cResetNames").click(function(){
+            jQuery("input[type='text']").each(function () {
+                jQuery(this).val("S" + (parseInt(jQuery(this).attr("name").substring(1)) + 1));
+            });
+            jQuery(".stationShow input").each(function () {
+                jQuery(this).prop('checked', true);
+            });
+        });
 
-	</script>
-</head>
-<body>
-	<div class="content">
-		<div class="header">
-			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
-		</div>
-		
-		<div class="body">
-			<div id="status">
-				<p id="deviceTime"><span class="hour"></span><span class="sep">:</span><span class="minute"></span><span class="second"></span><span class="ampm"></span></p>
-				<p id="deviceDate"></p>
-			</div>
-	
-			<div class="panel">
-			
-				<div id="nav">
-					<button id="bHome" class="home" title="Home">Home</button>
-					<button id="bPrograms" class="programs" title="Define Programs">Programs</button>
-					<button id="bRunOnce" class="start" title="Define Run Once Program">Run Once</button>
-					<button id="bLog" class="log" title="View Log">Log</button>
-					<button id="bOptions" class="options" title="Options">Options</button>
-					<button id="bStations" class="stations here" title="Configure Stations">Stations</button>
-					$if not(gv.sd['ipas']):
-						<button id="bLogout" class="logout" title="Logout">Logout</button>
-				</div>
-				
-				<div id="stations">
-					<div class="title">Configure Stations</div>
-					<form id="sf" name="sf" action="cs" method="get">
-						<table class="stationList">
-							<tr>
-								<th class="stationNumber">Station</th>
-								<th class="stationName">Name</th>
-								<th class="stationShow">Connected?</th>
-								<th class="stationIgnore">Ignore Rain?</th>
-								$if gv.sd['mas'] > 0:
-									<th class="stationMaster">Activate Master?</th>
-							</tr>
-							$for bid in range(0,gv.sd['nbrd']):
-								$for s in range(0,8):
-									$ sid = bid*8 + s;
-									<tr>
-										<td class="stationNumber">${sid + 1}</td>
-										<td class="stationName">
-											<input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid}" id="n${sid}">
-										</td>
-										$if sid == gv.sd['mas'] - 1:
-											<td class="stationMaster" colspan="3">(Master valve)</td>
-										$else:
-											<td class="stationShow">
-												<input type="checkbox" ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}">
-											</td>
-											<td class="stationIgnore">
-												<input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">
-											</td>
-										$if gv.sd['mas'] > 0 and gv.sd['mas'] != sid+1:
-											<td class="stationMaster">
-												<input type="checkbox" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}">
-											</td>
-									</tr>
-						</table>
-						
-						<p></p>
-						
-						$for bid in range(gv.sd['nbrd']):
-							<input type="hidden" id="i${bid}" name="i${bid}"/>
-							<input type="hidden" id="sh${bid}" name="sh${bid}"/>
-							<input type="hidden" id="m${bid}" name="m${bid}"/>
-					</form>
-				</div>
-				
-				<div id="controls">
-					<button id="cSubmit" class="submit">Submit Changes</button>
-					<button id="cResetNames" class="refresh">Reset Names</button>
-					<button id="cCancel" class="cancel danger">Cancel</button>
-				</div>
-			</div>
-		</div>
-		
-		<div class="footer">
-			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
-			<p><a href="https://github.com/Dan-in-CA/OSPi">Software</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
-		</div>
-	</div>
-</body>
-</html>
+        jQuery("button#cCancel").click(function(){
+            window.location="/";
+        });
+
+    });
+
+</script>
+<div id="stations">
+    <div class="title">$_('Configure Stations')</div>
+    <form id="sf" name="sf" action="cs" method="get">
+        <table class="stationList">
+            <tr>
+                <th class="stationNumber">$_('Station')</th>
+                <th class="stationName">$_('Name')</th>
+                <th class="stationShow">$_('Enabled?')</th>
+                <th class="stationIgnore">$_('Ignore Rain?')</th>
+                $if gv.sd['mas'] > 0:
+                    <th class="stationMaster">$_('Activate Master?')</th>
+            </tr>
+            $for bid in range(0,gv.sd['nbrd']):
+                $for s in range(0,8):
+                    $ sid = bid*8 + s;
+                    <tr>
+                        <td class="stationNumber">${sid + 1}</td>
+                        <td class="stationName">
+                            <input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid}" id="n${sid}">
+                        </td>
+                        $if sid == gv.sd['mas'] - 1:
+                            <td class="stationMaster" colspan="3">$_('(Master valve)')</td>
+                        $else:
+                            <td class="stationShow">
+                                <input type="checkbox" ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}">
+                            </td>
+                            <td class="stationIgnore">
+                                <input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">
+                            </td>
+                        $if gv.sd['mas'] > 0 and gv.sd['mas'] != sid+1:
+                            <td class="stationMaster">
+                                <input type="checkbox" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}">
+                            </td>
+                    </tr>
+        </table>
+
+        <p></p>
+
+        $for bid in range(gv.sd['nbrd']):
+            <input type="hidden" id="i${bid}" name="i${bid}"/>
+            <input type="hidden" id="sh${bid}" name="sh${bid}"/>
+            <input type="hidden" id="m${bid}" name="m${bid}"/>
+    </form>
+</div>
+
+<div id="controls">
+    <button id="cSubmit" class="submit">$_('Submit Changes')</button>
+    <button id="cResetNames" class="refresh">$_('Reset Names')</button>
+    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
+</div>

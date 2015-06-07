@@ -1,16 +1,14 @@
 // Set up a live clock based on device time
 
-//var deviceTimeOffset = devt - (tz/4-12)*3600000 - Date.now();
-
 function dateString(d) {
-	var dateString = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][d.getDay()];
+	var dateString = dayList [d.getDay()]; // Moved translatable text to base.html, dk
 	dateString += " " + d.getDate() + " ";
-	dateString += ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][d.getMonth()];
+	dateString += monthList [d.getMonth()]; // Moved translatable text to base.html, dk
 	return dateString;
 }
 
-function updateClock() {
-	var now = new Date(Date.now()); // + deviceTimeOffset);
+function updateClock() { // Controls time and date clock.
+	var now = new Date(Date.now() + cliTzOffset - devTzOffset);
 	if (timeFormat) {
 		jQuery("#deviceTime span.hour").text((now.getHours() < 10 ? "0" : "") + now.getHours());
 		jQuery("#deviceTime span.ampm").text("");
@@ -23,9 +21,11 @@ function updateClock() {
 	
 	jQuery("#deviceDate").text(dateString(now));
 	
-	setTimeout(updateClock, 500);
+	// setTimeout(updateClock, 500);
 }
-		
+
+setInterval(updateClock, 1000)
+
 // Initialize behaviors
 jQuery(document).ready(function(){
 	jQuery("#heat")
@@ -66,6 +66,10 @@ jQuery(document).ready(function(){
 	});
 	jQuery("button#bLogout").click(function(){
 		window.location = "/logout";
+	});
+
+    jQuery("button#bHelp").click(function(){
+		window.open("https://github.com/Dan-in-CA/OSPi/wiki", "_blank");
 	});
 
 	// start the clock

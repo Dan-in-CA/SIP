@@ -1,0 +1,70 @@
+$def with(settings)
+
+$var title: $_('OSPi Plugin Manager')
+$var page: plugins
+
+
+<script>
+
+    // Initialize behaviors
+    jQuery(document).ready(function() {
+
+        jQuery("button#cSubmit").click(function () {
+           jQuery("#btnId").val("upd");
+           jQuery("#pluginForm").submit();
+        });
+
+        jQuery("button#cDelete").click( function() {
+            jQuery("#btnId").val("del");
+            jQuery("#pluginForm").submit();
+        }
+            );
+
+            jQuery("button#cCancel").click(function(){
+                window.location="/";
+        });
+
+        jQuery("button#browsePlugins").click(function(){
+            window.location="/browse-plugins";
+        });
+
+        jQuery("button#writePlugins").click(function (){
+            window.open("https://github.com/Dan-in-CA/ospi_plugins/wiki/introduction", "_blank");
+        });
+    });
+
+</script>
+
+<div id="plugin">
+    <div class="title">$_('Installed Plugins')
+    <button class="execute" id="browsePlugins" type="button" >$_('Browse More Plugins')</button>
+    <button class="execute" id="writePlugins" type="button" >$_('Roll Your Own')</button></div>
+    <form id="pluginForm" action="upd-plugins" method="get">
+        <table class="optionList" id="installedList">
+            <tr>
+                <th class="pluginName">$_('Name')</th>
+                <th class="pluginEnabled">$_('Enabled')&nbsp;&nbsp;&nbsp;</th>
+                <th class="pluginDelete">$_('Uninstall?')</th>
+            </tr>
+            $ names = settings.keys()
+            $names.sort()
+            $for n in names:
+                <tr>
+                    <td class="pluginName">${n.split('.')[0]}</td>
+                    <td class="stationShow">
+                        <input type="checkbox" name="${n}" ${"checked" if settings[n] else ""} >
+                    </td>
+                    <td class="stationShow">
+                        <input type="checkbox" name="del-${n}">
+                    </td>
+                </tr>
+        </table>
+        <input type="hidden" name="btnId" id="btnId">
+    </form>
+</div>
+<div><b>$_('CAUTION:')</b> $_('Clicking UPDATE or UNINSTALL will restart the software and stop any running programs.')</div>
+<div id="controls">
+    <button id="cSubmit" class="submit"><b>$_('Update Enabled')</b></button>
+    <button id="cDelete" class="submit danger"><b>$_('Uninstall')</b></button>
+    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
+</div>

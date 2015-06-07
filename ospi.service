@@ -2,7 +2,7 @@
 Description=Start Python Interval program
 
 [Service]
-WorkingDirectory=/home/root/OSPi
+WorkingDirectory=/home/root/ospi
 ExecStart=/usr/bin/python ospi.py
 KillMode=process
 

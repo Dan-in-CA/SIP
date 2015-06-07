@@ -1,0 +1,9 @@
+A bare bones plugin designed to be used as a starting point for writing plugins.
+
+##### List all plugin files below preceded by a blank line [file_name.ext path] relative to OSPi directory #####
+
+proto.py plugins
+proto.html templates
+proto-docs.html static/docs/plugins
+proto.json data (generated)
+proto.manifest plugins/manifests
