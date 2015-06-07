@@ -1,227 +1,154 @@
 $def with ()
 
-<!-- 
-  2013-13-06: jonathanmarsh
-    - Converted to web.py template, retaining 99% of older look and feel
-    - Moved inline styling to stylesheet
-    - Moved inline behaviors to jQuery.
-    Note that the normal jQuery use of the dollar sign conflicts with the templating syntax - used the longer jQuery() throughout.
- -->
-
+$var title: $_('OpenSprinkler Pi Programs')
+$var page: programs
 $code:
-	snames = eval(data('snames'))
-	nprogs = len(gv.pd)
-	
-	def twoDigits(n):
-		return str((n>>0)/10>>0) + str((n>>0)%10)
-	
-	def pdays(days, dayInterval):
-		output = ""
-		if (days&0x80) and (dayInterval>1): # this is an interval program
-			days = days&0x7f
-			dse = int(gv.now/86400) # days since epoc
-			daysRemaining = ((days + dayInterval)-(dse % dayInterval)) % dayInterval
-			output += "Every " + str(dayInterval) + " days"
-			if daysRemaining:
-				output += ", starting in " + str(daysRemaining) + " days."
-		else: # this is a weekly program 
-			if days == 127:
-				output += "Every Weekday"
-			else:
-				for d in range(0,7):
-					if days & (1<<d):
-						output += " " + ["Mon","Tue","Wed","Thur","Fri","Sat","Sun"][d]
-		if (days&0x80) and (dayInterval==0):
-			output += " (Even days only)"
-		if (days&0x80) and (dayInterval==1):
-			output += " (Odd days only)"
-		return output
+    snames = gv.snames
+    nprogs = len(gv.pd)
+    
+    def two_digits(n):
+        return '%02d' % int(n)
+    
+    def pdays(days, dayInterval):
+        output = ""
+        if (days&0x80) and (dayInterval>1): # this is an interval program
+            days = days&0x7f
+            dse = int(gv.now/86400) # days since epoc
+            daysRemaining = ((days + dayInterval)-(dse % dayInterval)) % dayInterval
+            output += _("Every ") + str(dayInterval) + " " + _("days")
+            if daysRemaining:
+                output += ", " + _('starting in') + " " + str(daysRemaining) + " " + _('days') + "."
+        else: # this is a weekly program 
+            if days == 127:
+                output += _("Every Weekday")
+            else:
+                for d in range(0,7):
+                    if days & (1<<d):
+                        output += " " + [_("Mon"),_("Tue"),_("Wed"),_("Thur"),_("Fri"),_("Sat"),_("Sun")][d]
+        if (days&0x80) and (dayInterval==0):
+            output += _(' (Even days only)')
+        if (days&0x80) and (dayInterval==1):
+            output += _(' (Odd days only)')
+        return output
 
-	def formatTime(t):
-		if gv.sd['tf']:
-			return t
-		else:
-			hour = int(t[0:2])
-			newhour = hour
-			if hour == 0:
-				newhour = 12
-			if hour > 12:
-				newhour = hour-12
-			return str(newhour)  + t[2:] + (" am" if hour<12 else " pm")
+    def formatTime(t):
+        if gv.sd['tf']:
+            return t
+        else:
+            hour = int(t[0:2])
+            newhour = hour
+            if hour == 0:
+                newhour = 12
+            if hour > 12:
+                newhour = hour-12
+            return str(newhour)  + t[2:] + (" am" if hour<12 else " pm")
 
+<script>
+    // Initialize behaviors
+    jQuery(document).ready(function(){
 
-<html>
-<head>
-	<meta name="viewport" content="width=640">
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>OpenSprinkler Pi Programs ${" - "+gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</title>
-	<link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
-	<link href="${gv.baseurl}/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>	
-	<style type="text/css">
-		.program {line-height:22px}
-		.strike {text-decoration:line-through;}
-		
-		.progstation_on {background-color:#9AFA9A; color:black; font-size:10pt}
-		.progstation_off {background-color:white; color:lightgray; font-size:10pt}
-		button.cDisable.toggle {float:right; width:130px; margin:0px; padding:0px; background-color:transparent}
-		button.cDisable.toggle span.toggleleft {width: 30px;}
-		button.cDisable.toggle span.toggleright {width: 30px;}
-	</style>
-	<script src="${gv.baseurl}/static/scripts/jquery-1.8.2.min.js"></script>
-	<script>		
-		// Variables set by ospi.py
-		var devt = ${gv.now}*1000;
-		//var tz = ${gv.sd['tz']};
-		var timeFormat = ${gv.sd['tf']};
-		var cputemp = "${gv.cputemp}";
-		var tempunit = "${gv.sd['tu']}";
-		var nbrd = ${gv.sd['nbrd']};
-		var mas = ${gv.sd['mas']};
-	</script>
-	<script src="${gv.baseurl}/static/scripts/behaviors.js"></script>
-	<script>		
-		// Initialize behaviors
-		jQuery(document).ready(function(){
-						
-			jQuery("button#nDelAll, button.cDelete").click(function(){
-				try{
-					var pid = jQuery(this).attr("data")
-					}
-				catch(err) {
-					var pid = 0
-				}
-				jQuery("form#df input[name='pid']").val(pid);
-				jQuery("form#df").submit();
-			});
-			
-			jQuery("button#nAdd, button.cModify").click(function(){
-				try{
-					var pid = jQuery(this).attr("data")
-					}
-				catch(err) {
-					var pid = 0
-				}
-				jQuery("form#mf input[name='pid']").val(pid);
-				jQuery("form#mf").submit();
-			});
-			
-			jQuery("button.cRunNow").click(function(){
-				try{
-					var pid = jQuery(this).attr("data")
-					}
-				catch(err) {
-					var pid = 0
-				}
-				jQuery("form#rn input[name='pid']").val(pid);
-				jQuery("form#rn").submit();
-			});
+        jQuery("button#nDelAll, button.cDelete").click(function(){
+            try{
+                var pid = jQuery(this).attr("data")
+                }
+            catch(err) {
+                var pid = 0
+            }
+            jQuery("form#df input[name='pid']").val(pid);
+            jQuery("form#df").submit();
+        });
 
-			jQuery("button.cDisable").click(function(){
-				var pid = jQuery(this).attr("data");
-				var enable = jQuery(this).hasClass("off");
-				jQuery("form#ep input[name='pid']").val(pid);
-				jQuery("form#ep input[name='enable']").val(enable ? 1 : 0);
-				jQuery("form#ep").submit();
-			});
-		});
+        jQuery("button#nAdd, button.cModify").click(function(){
+            try{
+                var pid = jQuery(this).attr("data")
+                }
+            catch(err) {
+                var pid = 0
+            }
+            jQuery("form#mf input[name='pid']").val(pid);
+            jQuery("form#mf").submit();
+        });
 
-	</script>
-</head>
-<body>
-	<div class="content">
-		<div class="header">
-			<div class="title">${gv.sd['name'] if gv.sd['name']!="OpenSprinkler Pi" else ""}</div>
-		</div>
-		
-		<div class="body">
-			<div id="status">
-				<p id="deviceTime"><span class="hour"></span><span class="sep">:</span><span class="minute"></span><span class="second"></span><span class="ampm"></span></p>
-				<p id="deviceDate"></p>
-			</div>
-	
-			<div class="panel">
-			
-				<div id="nav">
-					<button id="bHome" class="home" title="Home">Home</button>
-					<button id="bPrograms" class="programs here" title="Define Programs">Programs</button>
-					<button id="bRunOnce" class="start" title="Define Run Once Program">Run Once</button>
-					<button id="bLog" class="log" title="View Log">Log</button>
-					<button id="bOptions" class="options" title="Options">Options</button>
-					<button id="bStations" class="stations" title="Configure Stations">Stations</button>
-					$if not(gv.sd['ipas']):
-						<button id="bLogout" class="logout" title="Logout">Logout</button>
-				</div>
+        jQuery("button.cRunNow").click(function(){
+            try{
+                var pid = jQuery(this).attr("data")
+                }
+            catch(err) {
+                var pid = 0
+            }
+            jQuery("form#rn input[name='pid']").val(pid);
+            jQuery("form#rn").submit();
+        });
 
-				<form name="df" id="df" action="dp" method="get">
-						<input type="hidden" name="pid">
-				</form>
-				<form name="rn" id="rn" action="rp" method="get">
-					<input type="hidden" name="pid">
-				</form>
-				<form name="mf" id="mf" action="mp" method="get">
-					<input type="hidden" name="pid">
-				</form>
-				<form name="ep" id="ep" action="ep" method="get">
-					<input type="hidden" name="pid">
-					<input type="hidden" name="enable">
-				</form>
-				
-				<div id="controls">
-					<button id="nAdd" class="add" data="-1">Add a New Program</button>
-					<button id="nDelAll" class="deleteAll danger" data="-1">Delete All</button>
-				</div>
-				
-				<div id="programs">
-					$for pid in range(0,nprogs):
-						$ prog = gv.pd[pid]
-						<div id="p${pid}" class="controlBlock program ${'disabled' if prog[0] == 0 else ''}">
-							<p>
-								<button class="cDisable toggle ${'off' if prog[0] == 0 else 'on'}" data="${pid}">
-									<span class='toggleleft'>On</span>
-									<span class='togglesep'>&nbsp;</span>
-									<span class='toggleright'>Off</span>
-								</button>
-								Program ${pid+1}: <span class="val">${pdays(prog[1], prog[2])}</span></b>
-							</p>
-							$ start = prog[3]
-							$ end = prog[4]
-							$ interval = prog[5]
-							$ duration = prog[6]
-							<p class="stationList">Run:
-							$ stationsOn = 0
-							$for bid in range(0,gv.sd['nbrd']):
-								$if len(prog) >= 8 + bid:
-									$ bits = prog[7 + bid]
-								$else:
-									$ bits = 0
-								$for s in range(0,8):
-									$ sid = bid*8 + s
-									$if (gv.sd['show'][bid]>>s)&1 and bits&(1<<s):
-					 					<span class="stationName val">${snames[sid]}</span>
-					 					$ stationsOn = stationsOn + 1
-		 					</p>
-		 					<p>Starting: <span class="val">${formatTime(twoDigits(start/60) + ":" + twoDigits(start%60))}</span>
-							for <span class="val">${(duration/60>>0)}</span> mins<span class="val">${"" if (duration%60) == 0 else (" " + str(duration%60) + " secs")}</span></p>
-							$ recurring = start + duration/60*stationsOn < end
-		 					$if recurring:
-		 						<p>Recurring every</b> <span class="val">${(interval/60>>0)}</span> hrs <span class="val">${(interval%60)}</span> mins
-		 						until <span class="val">${formatTime(twoDigits(end/60) + ":" + twoDigits(end%60))}</span></p>
-	
-							<p>
-		 						<button class="cRunNow" data="${pid}">Run Now</button>
-		 						<button class="cModify" data="${pid}">Edit</button>
-								<button class="cDelete danger" data="${pid}">Delete</button>
-							</p>
-						</div>
-				</div>
-				
-			</div>
-		</div>
-		
-		<div class="footer">
-			<p>CPU Temp: <b><span id="heat" style="cursor:pointer" title="Click to toggle Celsius &lt;&gt; Fahrenheit"></span></b></p>
-			<p><a href="https://github.com/Dan-in-CA/OSPi">Software</a> version: <b>${".".join(list(str(gv.ver)))}</b></p>
-		</div>
-	</div>
-</body>
-</html>
+            jQuery("button.cDisable").click(function(){
+                var pid = jQuery(this).attr("data");
+                var enable = jQuery(this).hasClass("off");
+                jQuery("form#ep input[name='pid']").val(pid);
+                jQuery("form#ep input[name='enable']").val(enable ? 1 : 0);
+                jQuery("form#ep").submit();
+            });        
+        
+    });
+
+</script>
+<form name="df" id="df" action="dp" method="get">
+        <input type="hidden" name="pid">
+</form>
+<form name="rn" id="rn" action="rp" method="get">
+    <input type="hidden" name="pid">
+</form>
+<form name="mf" id="mf" action="mp" method="get">
+    <input type="hidden" name="pid">
+</form>
+     <form name="ep" id="ep" action="ep" method="get">
+     <input type="hidden" name="pid">
+     <input type="hidden" name="enable">
+</form>
+<div id="controls">
+    <button id="nAdd" class="add" data="-1">$_('Add a New Program')</button>
+    <button id="nDelAll" class="deleteAll danger" data="-1">$_('Delete All')</button>
+</div>
+
+<div id="programs">
+    $for pid in range(0,nprogs):
+        $ prog = gv.pd[pid]
+        <div id="p${pid}" class="controlBlock program ${'disabled' if prog[0] == 0 else ''}">
+         <p>
+             <button class="cDisable toggle ${'off' if prog[0] == 0 else 'on'}" data="${pid}">
+                 <span class='toggleleft'>$_('On')</span>
+                 <span class='togglesep'>&nbsp;</span>
+                 <span class='toggleright'>$_('Off')</span>
+             </button>
+        $_('Program') ${pid+1}: <span class="val">${pdays(prog[1], prog[2])}</span></b>
+         </p>
+            $ start = prog[3]
+            $ end = prog[4]
+            $ interval = prog[5]
+            $ duration = prog[6]
+            <p class="stationList">$_('Run'):
+            $ stationsOn = 0
+            $for bid in range(0,gv.sd['nbrd']):
+                $if len(prog) >= 8 + bid:
+                    $ bits = prog[7 + bid]
+                $else:
+                    $ bits = 0
+                $for s in range(0,8):
+                    $ sid = bid*8 + s
+                    $if (gv.sd['show'][bid]>>s)&1 and bits&(1<<s):
+                        <span class="stationName val">${snames[sid]}</span>
+                        $ stationsOn = stationsOn + 1
+            </p>
+            <p>$_('Starting'): <span class="val">${formatTime(two_digits(start/60) + ":" + two_digits(start%60))}</span>
+            $_('for') <span class="val">${(duration/60>>0)}</span> mins<span class="val">${"" if (duration%60) == 0 else (" " + str(duration%60) + " secs")}</span></p>
+            $ recurring = start + duration/60*stationsOn < end
+            $if recurring:
+                <p>$_('Recurring every')</b> <span class="val">${two_digits(interval/60)}</span> hrs <span class="val">${two_digits(interval%60)}</span> mins
+                $_('until') <span class="val">${formatTime(two_digits(end/60) + ":" + two_digits(end%60))}</span></p>
+
+            <p>
+                <button class="cRunNow" data="${pid}">$_('Run Now')</button>
+                <button class="cModify" data="${pid}">$_('Edit')</button>
+                <button class="cDelete danger" data="${pid}">$_('Delete')</button>
+            </p>
+        </div>
+</div>

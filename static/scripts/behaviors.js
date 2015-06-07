@@ -8,25 +8,28 @@ function dateString(d) {
 }
 
 function updateClock() { // Controls time and date clock.
+	// Do our best to match this clock with the device clock (instead of the client device clock)
 	var now = new Date(Date.now() + cliTzOffset - devTzOffset);
+	
+	/*
+		Uncomment to test styling - sets a random time
+		now.setHours(Math.floor(Math.random()*24));
+		now.setMinutes(Math.floor(Math.random()*60));
+	*/
+	
 	if (timeFormat) {
-		jQuery("#deviceTime span.hour").text((now.getHours() < 10 ? "0" : "") + now.getHours());
-		jQuery("#deviceTime span.ampm").text("");
+		jQuery("#deviceTime span.time").html((now.getHours() < 10 ? "0" : "") + now.getHours() + "<span class='sep'>:</span>" + (now.getMinutes() < 10 ? "0" : "") + now.getMinutes());
+		jQuery("#deviceTime span.ampm").html("");
 	} else {
-		jQuery("#deviceTime span.hour").text(now.getHours()%12 == 0 ? "12" : now.getHours() % 12);
-		jQuery("#deviceTime span.ampm").text((now.getHours() > 12 ? "pm" : "am"));
+		jQuery("#deviceTime span.time").html((now.getHours()%12 == 0 ? "12" : now.getHours() % 12) + "<span class='sep'>:</span>" + (now.getMinutes() < 10 ? "0" : "") + now.getMinutes());
+		jQuery("#deviceTime span.ampm").html((now.getHours() >= 12 ? "pm" : "am"));
 	}
-	jQuery("#deviceTime span.minute").text((now.getMinutes() < 10 ? "0" : "") + now.getMinutes());
 	jQuery("#deviceTime span.second").text(":" + (now.getSeconds() < 10 ? "0" : "") + now.getSeconds());
 	
 	jQuery("#deviceDate").text(dateString(now));
-	
-	// setTimeout(updateClock, 500);
 }
 
-setInterval(updateClock, 1000)
-
-// Initialize behaviors
+// Initialize standard behaviors
 jQuery(document).ready(function(){
 	jQuery("#heat")
 		.mouseenter(function() {
@@ -72,6 +75,8 @@ jQuery(document).ready(function(){
 		window.open("https://github.com/Dan-in-CA/OSPi/wiki", "_blank");
 	});
 
-	// start the clock
+	// start the clock now, and update every second
 	updateClock();
+	setInterval(updateClock, 1000);
+	
 });
