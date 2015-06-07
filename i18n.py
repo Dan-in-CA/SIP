@@ -43,7 +43,7 @@ curdir = os.path.abspath(os.path.dirname(__file__))
 # i18n directory.
 localedir = curdir + '/i18n'
 
-gettext.install('ospi_messages', localedir, unicode=True)
+gettext.install('sip_messages', localedir, unicode=True)
 
 sys_lang = get_system_lang()
 
@@ -56,6 +56,6 @@ else:
     ui_lang = sd_lang
 
 try:
-    gettext.translation('ospi_messages', localedir, languages=[ui_lang]).install(True)
+    gettext.translation('sip_messages', localedir, languages=[ui_lang]).install(True)
 except IOError:
     pass

@@ -23,31 +23,31 @@ Documentation</H1>
 <H2 CLASS="western"><A NAME="about-the-proto-plugin"></A>About the
 Proto Plugin</H2>
 <P>The proto plugin is designed as a starting point for creating new
-plugins for OSPi. It does not perform any useful action but contains
+plugins for SIP. It does not perform any useful action but contains
 the basic components necessary for a functioning plugin.</P>
 <P>The plugin includes the folowing files:</P>
 <UL>
 	<LI><P STYLE="margin-bottom: 0in"><STRONG>proto.py</STRONG><BR>The
 	python program that does the actual work of the plugin. Location:
-	<STRONG>OSPi/plugins</STRONG></P>
+	<STRONG>SIP/plugins</STRONG></P>
 	<LI><P STYLE="margin-bottom: 0in"><STRONG>proto.html</STRONG><BR>A
 	web.py template that provides a user interface for the plugin. It
 	includes both Python code and web page markup. Location:
-	<STRONG>OSPi/templates</STRONG></P>
+	<STRONG>SIP/templates</STRONG></P>
 	<LI><P STYLE="margin-bottom: 0in"><STRONG>proto-docs.html</STRONG><BR>This
 	file. Provides documentation for the plugin including any special hardware needed and set up instructions. Location:
-	<STRONG>OSPi/static/docs/plugins</STRONG></P>
+	<STRONG>SIP/static/docs/plugins</STRONG></P>
 	<LI><P STYLE="margin-bottom: 0in"><STRONG>proto.manifest</STRONG><BR>A
 	simple text file containing a list of each of the plugin&rsquo;s
 	files with the path to it&rsquo;s location. The manifest is used by
 	the plugin manager to install and uninstall the plugin. The file
 	can also contain information about the plugin such as author, brief description, requirements, etc.
-	Location: <STRONG>OSPi/plugins/manifest</STRONG></P>
+	Location: <STRONG>SIP/plugins/manifest</STRONG></P>
 	<LI><P><STRONG>proto.json</STRONG><BR>An optional file used for
 	persistant storage of plugin settings. It is created by the plugin
 	the first time it is run and is not installed with the other files.
 	This allows for software updates without overwriting existing
-	settings. Location: <STRONG>OSPi/data</STRONG></P>
+	settings. Location: <STRONG>SIP/data</STRONG></P>
 </UL>
 <H2 CLASS="western"><A NAME="using-the-proto-plugin"></A>Using the
 proto plugin</H2>
@@ -55,7 +55,7 @@ proto plugin</H2>
 proto plugin is probably enabled on your system. Otherwise you can
 enable it using the plugin manager or by setting the group
 permissions of the <STRONG>proto.py</STRONG> file to <STRONG>executable</STRONG>.
-Once it is enabled, and the ospi program has been restarted, You can
+Once it is enabled, and the SIP program has been restarted, You can
 verify it is working by selecting it from the PLUGINS drop down menu
 of the main program&rsquo;s web interface. You should be taken to the
 plugin&rsquo;s Settings page.</P>
@@ -63,7 +63,7 @@ plugin&rsquo;s Settings page.</P>
 copy/rename each of the proto files you will be using in your
 project. For example, on the command line, you can make a copy of the
 proto.py file with a new name:</P>
-<PRE CLASS="western" STYLE="margin-bottom: 0.2in"><CODE CLASS="western">sudo cp OSPi/plugins/proto.py OSPi/plugins/your-new-name.py</CODE></PRE><P>
+<PRE CLASS="western" STYLE="margin-bottom: 0.2in"><CODE CLASS="western">sudo cp SIP/plugins/proto.py SIP/plugins/your-new-name.py</CODE></PRE><P>
 Follow a similar procedure for the other files you will include in
 your project.</P>
 <P>The next step is to open your new Python file and edit the items
@@ -77,28 +77,28 @@ in the following list. See comments in the file for more information.</P>
 </UL>
 <P>After you make the changes and save the file, check that the group
 permission of the file is exicutable.</P>
-<PRE CLASS="western" STYLE="margin-bottom: 0.2in"><CODE CLASS="western">sudo ls -l OSPi/plugins/your-new-name.py</CODE></PRE><P>
+<PRE CLASS="western" STYLE="margin-bottom: 0.2in"><CODE CLASS="western">sudo ls -l SIP/plugins/your-new-name.py</CODE></PRE><P>
 The first column of the line for your plugin should look something
 like <CODE CLASS="western">-rw-r-xr-- 1</CODE>. The x preceding the
 third r is what counts.</P>
 <P>If you need to change the setting you can use the plugin manager
 or the command:</P>
-<PRE CLASS="western" STYLE="margin-bottom: 0.2in"><CODE CLASS="western">sudo chmod g+x OSPi/plugins/your-new-name.py</CODE></PRE><P>
+<PRE CLASS="western" STYLE="margin-bottom: 0.2in"><CODE CLASS="western">sudo chmod g+x SIP/plugins/your-new-name.py</CODE></PRE><P>
 to enable the plugin or:</P>
-<PRE CLASS="western" STYLE="margin-bottom: 0.2in"><CODE CLASS="western">sudo chmod g-x OSPi/plugins/your-new-name.py</CODE></PRE><P>
+<PRE CLASS="western" STYLE="margin-bottom: 0.2in"><CODE CLASS="western">sudo chmod g-x SIP/plugins/your-new-name.py</CODE></PRE><P>
 to disable it without affecting any other permissions.</P>
-<P>Restart the ospi program and you should be able to access your new
+<P>Restart the SIP program and you should be able to access your new
 plugin from the menu. If you entered a new name for the <STRONG>proto.json</STRONG>
-file it should appear in the <STRONG>OSPi/data</STRONG> directory
+file it should appear in the <STRONG>SIP/data</STRONG> directory
 after you access your plugin for the first time.</P>
 <P>If there is an error when you try to access your plugin, start the
-ospi program manually.<BR>In the <STRONG>OSPi directory</STRONG>
+SIP program manually.<BR>In the <STRONG>SIP directory</STRONG>
 issue the following command:</P>
-<PRE CLASS="western" STYLE="margin-bottom: 0.2in"><CODE CLASS="western">sudo python ospi.py</CODE></PRE><P>
+<PRE CLASS="western" STYLE="margin-bottom: 0.2in"><CODE CLASS="western">sudo python sip.py</CODE></PRE><P>
 You will now be able to see messages from the program that can help
 you figure out what went wrong.</P>
 <P>For the most up-to-date and detailed information about writing
-plugins see the <A HREF="https://github.com/Dan-in-CA/ospi_plugins/wiki">plugins
+plugins see the <A HREF="https://github.com/Dan-in-CA/SIP_plugins/wiki">plugins
 wiki</A>.</P>
 </P>
 </BODY>

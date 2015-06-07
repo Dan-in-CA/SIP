@@ -23,7 +23,7 @@ div, p {
 div.header {
 	background-image: url('logo.png');
 	background-repeat: no-repeat;
-	background-position: 42px 20px;
+	background-position: 64px 8px;
 	background-color: #32A620;
 	height:80px;
 }

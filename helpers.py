@@ -87,7 +87,7 @@ def restart(wait=1, block=False):
             print _('Restarting...')
         except Exception:
             pass
-        subprocess.Popen('service ospi restart'.split())
+        subprocess.Popen('service sip restart'.split())
     else:
         t = Thread(target=restart, args=(wait, True))
         t.start()

@@ -11,7 +11,7 @@ import ast
 import gv
 from helpers import *
 from gpio_pins import set_output
-from ospi import template_render
+from sip import template_render
 from blinker import signal
 
 loggedin = signal('loggedin')
@@ -520,19 +520,6 @@ class run_now(ProtectedPage):
                     gv.ps[sid][1] = gv.rs[sid][2]  # duration
         schedule_stations(p[7:7 + gv.sd['nbrd']])
         raise web.seeother('/')
-
-
-# class show_revision(ProtectedPage):
-#     """Show revision info to the user. Use: [URL of Pi]/rev."""
-#
-#     def GET(self):
-#         revpg = '<!DOCTYPE html>\n'
-#         revpg += 'Python Interval Program for OpenSprinkler Pi<br/><br/>\n'
-#         revpg += 'Compatable with OpenSprinkler firmware 1.8.3.<br/><br/>\n'
-#         revpg += 'Includes plugin architecture\n'
-#         revpg += 'ospi.py version: v' + gv.ver_str + '<br/><br/>\n'
-#         revpg += 'Updated ' + gv.ver_date + '\n'
-#         return revpg
 
 
 class toggle_temp(ProtectedPage):

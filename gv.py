@@ -72,7 +72,7 @@ sd = {
     u"nbrd": 1,
     u"tu": u"C",
     u"snlen": 32,
-    u"name": u"OpenSprinkler Pi",
+    u"name": u"SIP",
     u"theme": u"basic",
     u"show": [255],
     u"salt": password_salt(),
@@ -117,7 +117,7 @@ scount = 0  # Station count, used in set station to track on stations with maste
 use_gpio_pins = True
 
 options = [
-    [_("System name"), "string", "name", _("Unique name of this OpenSprinkler system."), _("System")],
+    [_("System name"), "string", "name", _("Unique name of this SIP system."), _("System")],
     [_("Location"), "string", "loc", _("City name or zip code. Use comma or + in place of space."), _("System")],
     [_("Language"),"list","lang", _("Select language (effective after restart.)"),_("System")],
 #    [_("Time zone"), "int", "tz", _("Example: GMT-4:00, GMT+5:30 (effective after reboot.)"), _("System")],

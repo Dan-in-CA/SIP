@@ -11,12 +11,13 @@ from calendar import timegm
 import sys
 sys.path.append('./plugins')
 
-import web  # the Web.py module. See webpy.org (Enables the Python OpenSprinkler web interface)
+import web  # the Web.py module. See webpy.org (Enables the Python SIP web interface)
 import gv
 
 from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave, station_names
 from urls import urls  # Provides access to URLs for UI pages
 from gpio_pins import set_output
+set_output()
 
 
 def timing_loop():
@@ -149,7 +150,7 @@ def timing_loop():
         #### End of timing loop ####
 
 
-class OSPiApp(web.application):
+class SIPApp(web.application):
     """Allow program to select HTTP port."""
 
     def run(self, port=gv.sd['htp'], *middleware):  # get port number from options settings
@@ -157,7 +158,7 @@ class OSPiApp(web.application):
         return web.httpserver.runsimple(func, ('0.0.0.0', port))
 
 
-app = OSPiApp(urls, globals())
+app = SIPApp(urls, globals())
 #  disableShiftRegisterOutput()
 web.config.debug = False  # Improves page load speed
 if web.config.get('_session') is None:
@@ -196,6 +197,9 @@ if __name__ == '__main__':
         gv.plugin_menu.pop(gv.plugin_menu.index(['Manage Plugins', '/plugins']))
     except Exception:
         pass
+
+    if gv.use_gpio_pins:
+        set_output()    
 
     thread.start_new_thread(timing_loop, ())
 

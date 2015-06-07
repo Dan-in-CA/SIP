@@ -1,6 +1,6 @@
 # !/usr/bin/env python
 
-# this plugin checks sha on github and updates ospi from github
+# this plugin checks sha on github and updates SIP from github
 
 import time
 import subprocess
@@ -8,9 +8,9 @@ import sys
 import traceback
 
 import web
-import gv  # Get access to ospi's settings
-from urls import urls  # Get access to ospi's URLsimport errno
-from ospi import template_render
+import gv  # Get access to SIP's settings
+from urls import urls  # Get access to SIP's URLsimport errno
+from sip import template_render
 from webpages import ProtectedPage
 from helpers import restart
 
@@ -137,7 +137,7 @@ class status_page(ProtectedPage):
         return template_render.system_update(checker.status)
 
 class update_page(ProtectedPage):
-    """Update OSPi from github and return text message from command line."""
+    """Update SIP from github and return text message from command line."""
 
     def GET(self):
         perform_update()

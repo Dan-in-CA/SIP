@@ -1,6 +1,6 @@
 $def with(m_vals)
 
-$var title: OSPi Update from GitHub
+$var title: SIP Update from GitHub
 $var page: system_update
 <script>
     // Initialize behaviors
@@ -25,10 +25,10 @@ $var page: system_update
 </script>
 
 <div id="plugin">
-    <div class="title">$_('OSPi Software Updater')
+    <div class="title">$_('SIP Software Updater')
     <button class="execute" id="docButton" type="button" >$_('Help')</button>
     </div>
-    <!--<p>$_('This plugin compares the local OSPi version with the GitHub repository and can update the local software.')</p>-->
+    <!--<p>$_('This plugin compares the local SIP version with the GitHub repository and can update the local software.')</p>-->
     <form id="pluginForm" action="/UPsr" method="get">
         <table class="optionList">
             <tr>
@@ -38,13 +38,13 @@ $var page: system_update
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'><b>$_('Local ospi version'):</b></td>
+                <td style='text-transform: none;'><b>$_('Local SIP version'):</b></td>
                 <td>
                      $m_vals["ver_str"]
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'><b>$_('Local ospi date'):</b></td>
+                <td style='text-transform: none;'><b>$_('Local SIP date'):</b></td>
                 <td>
                      $m_vals["ver_date"]
                 </td>
@@ -62,9 +62,9 @@ $var page: system_update
 </div>
 <div id="controls">
     $if m_vals['can_update']:
-        <button id="cUpdate" class="options"><b>$_('Update ospi')</b></button>
+        <button id="cUpdate" class="options"><b>$_('Update SIP')</b></button>
     $else:
         <button id="cUpToDate" class="cancel"><b>$_('Up-to-date')</b></button>
-    <!--<button id="cReboot" class="reboot danger">$_('Restart ospi')</button>-->
+    <!--<button id="cReboot" class="reboot danger">$_('Restart SIP')</button>-->
     <button id="cCancel" class="cancel danger">$_('Cancel')</button>
 </div>

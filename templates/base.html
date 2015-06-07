@@ -18,7 +18,7 @@ $code:
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="x-ua-compatible" content="IE=edge">
-    <title>${content.title + (" - "+gv.sd['name'] if gv.sd['name'] != "OpenSprinkler Pi" else "")}</title>
+    <title>${content.title + (" - "+gv.sd['name'] if gv.sd['name'] != "SIP" else "")}</title>
     <link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
     <link href="/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>
     <style type="text/css">
@@ -121,7 +121,7 @@ $code:
         </div>
 
         <div class="header">
-            <div class="title">${gv.sd['name'] if gv.sd['name'] != "OpenSprinkler Pi" else ""}</div>
+            <div class="title">${gv.sd['name'] if gv.sd['name'] != "SIP" else ""}</div>
         </div>
 
         <div class="body">
@@ -155,7 +155,7 @@ $code:
                 <button id="bHelp" class="help" title=$:{json.dumps(_('Help'), ensure_ascii=False)}>$_('?')</button>
             </div>
                 <p>$_('CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_('Click to toggle'), ensure_ascii=False)} + ' Celsius &lt;&gt; Fahrenheit'></span></b></p>
-                <p><a href="https://github.com/Dan-in-CA/OSPi">$_('Software')</a> $_('version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
+                <p><a href="https://github.com/Dan-in-CA/sip">$_('Software')</a> $_('version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
 
         </div>
 

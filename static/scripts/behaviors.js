@@ -69,7 +69,7 @@ jQuery(document).ready(function(){
 	});
 
     jQuery("button#bHelp").click(function(){
-		window.open("https://github.com/Dan-in-CA/OSPi/wiki", "_blank");
+		window.open("https://github.com/Dan-in-CA/SIP/wiki", "_blank");
 	});
 
 	// start the clock

@@ -8,9 +8,9 @@ import base64
 import time
 
 import web
-import gv  # Get access to ospi's settings
-from urls import urls  # Get access to ospi's URLs
-from ospi import template_render
+import gv  # Get access to SIP's settings
+from urls import urls  # Get access to SIP's URLs
+from sip import template_render
 from webpages import ProtectedPage
 from helpers import restart
 
@@ -61,7 +61,7 @@ def parse_manifest(plugin):
 
 
 def get_readme():
-    response = urllib.urlopen('https://api.github.com/repos/Dan-in-CA/ospi_plugins/readme')
+    response = urllib.urlopen('https://api.github.com/repos/Dan-in-CA/SIP_plugins/readme')
     data = response.read()
     d = json.loads(data)
     text = base64.b64decode(d['content'])
@@ -153,7 +153,7 @@ class install_plugins(ProtectedPage):
         for p in qdict.keys():  # Get plugins to install
             print p
 #           https://raw.github.com/<username>/<repo>/<branch>/some_directory/file.r #### Example
-            response = urllib.urlopen('https://raw.github.com/Dan-in-CA/ospi_plugins/master/'+p+'/'+p+'.manifest')
+            response = urllib.urlopen('https://raw.github.com/Dan-in-CA/SIP_plugins/master/'+p+'/'+p+'.manifest')
             data = response.readlines()
             sep = [i for i, s in enumerate(data) if '###' in s][0]
             file_list = [line.strip() for line in data[sep+2:]]
@@ -162,7 +162,7 @@ class install_plugins(ProtectedPage):
                 new_mf.writelines(data)
             for f in short_list:
                 pf = f.split()
-                response = urllib.urlopen('https://raw.github.com/Dan-in-CA/ospi_plugins/master/'+p+'/'+pf[0])
+                response = urllib.urlopen('https://raw.github.com/Dan-in-CA/SIP_plugins/master/'+p+'/'+pf[0])
                 f_data = response.read()
                 with open(pf[1]+'/'+pf[0], 'w') as next_file:
                     next_file.write(f_data)

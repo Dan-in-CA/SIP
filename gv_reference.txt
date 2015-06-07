@@ -25,7 +25,7 @@ loc:""	location (for weather) - not used
 rdst:0	rain delay stop time (unix time stamp)
 rs:0	rain sensed (bool)
 nopts:14 Number of optiions to be displayed
-name:"OpenSprinkler Pi"	configurable name for system
+name:"SIP"	configurable name for system
 snlen:32 max size of station names
 
 for scheduling:
@@ -41,7 +41,7 @@ lg:0 log runs if = "checked"
 lr:100 limit number of log records to keep, 0 = no limit
 
 UI related:
-name: u"OpenSprinkler Pi" System name. can be used to manage multiple controllers
+name: u"SIP" System name. can be used to manage multiple controllers
 theme: "original" files used to style the UItyle the UI
 
 other gv attributes:
