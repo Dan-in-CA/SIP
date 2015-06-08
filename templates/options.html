@@ -41,7 +41,7 @@ $code:
         });
 
         jQuery("button#cCancel").click(function(){
-            window.location="/";
+            window.location= baseUrl + "/";
         });
 
         jQuery(".collapsible h4").click(function(event){
@@ -71,7 +71,7 @@ $code:
 <div id="options">
     <div class="title">$_('Edit Options')</div>
     <button id="tooltips">$_('Show Tooltips')</button>
-    <form name="of" action="co" method="get">
+    <form name="of" action="${app_path('/co')}" method="get">
     $code:
         output = ""
         oldcategory = ""
@@ -126,8 +126,8 @@ $code:
             output += "</div>\n\n"
         output += categoryCloser + "<div class='category collapsible collapsed'><h4>"+_('System Restart')+"</h4>"
         output += "<div class='option'>"
-        output += "<button id='cRestart' class='restart danger' title=" + json.dumps(_('Restart software'), ensure_ascii=False)+">" + _('Restart')+"</button>"
-        output += "<button id='cReboot' class='reboot danger' title=" + json.dumps(_('Reboot hardware'), ensure_ascii=False) + ">" + _('Reboot')+"</button>"
+        output += "&nbsp;<button id='cRestart' class='restart danger' title=" + json.dumps(_('Restart software'), ensure_ascii=False)+">" + _('Restart')+"</button>"
+        output += "&nbsp;<button id='cReboot' class='reboot danger' title=" + json.dumps(_('Reboot hardware'), ensure_ascii=False) + ">" + _('Reboot')+"</button>"
         output += "</div>\n"
         output += categoryCloser
     $:{output}

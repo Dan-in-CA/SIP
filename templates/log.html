@@ -28,7 +28,7 @@ $code:
     // Initialize behaviors
     jQuery(document).ready(function(){
         jQuery("button#nRefresh").click(function(){
-            window.location="/vl";
+            window.location= baseUrl + "/vl";
         });
         jQuery("button#nDeleteAll").click(function(){
             jQuery("form#df").submit();
@@ -39,12 +39,12 @@ $code:
 
 <div id="options">
     <div class="title">$_('Log ')$log_state</div>
-    <form method="get" action="cl" name="df" id="df"></form>
+    <form method="get" action="${app_path('/cl')}" name="df" id="df"></form>
 </div>
 
 <div id="log">
     <p>$_('Total number of records: ')${len(records)} (${_("no") if gv.sd['lr']==0 else gv.sd['lr']}$_(' limit'))</p>
-    <p>$_('Download log as ')<a href="/wl">csv</a>.</p>
+    <p>$_('Download log as ')<a href="$app_path('/wl')">csv</a>.</p>
 
     <table class="logList">
         <tr class="log_rec">

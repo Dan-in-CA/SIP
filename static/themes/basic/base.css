@@ -5,7 +5,7 @@
  - rust: #7D1921
  - navy: #2E3959
 */
-@import url(http://fonts.googleapis.com/css?family=Quicksand:300,400,700);
+@import url(https://fonts.googleapis.com/css?family=Quicksand:300,400,700);
 
 body {
 	margin:0px;
@@ -145,44 +145,37 @@ div#status {
 	background-color: #397F19;
 	opacity: .85;
 }
-#deviceTime {
-	font-size: 24pt;
-}
 #deviceTime span {
 	display:inline-block;
 	position:relative;
-	top: 6px;
+}
+#deviceTime span.time {
+	text-align:right;
 	font-size:42pt;
-	width: 60px;
-	text-align:center;
+	top: 6px;
+	width: 160px;
 	letter-spacing: -3px;
 }
 #deviceTime span.sep {
-	text-align: center;
-	width: 8px;
-	font-size: 24pt;
-	top: -4px;
-}
-#deviceTime span.hour {
-	text-align:right;
+	font-size:36px;
+	top: -.25em;
 }
 #deviceTime span.second {
 	text-align:left;
 	font-size:18pt;
-	letter-spacing: -1px;
 	top: -16px;
-	left: 6px;
 	width: 36px;
+	letter-spacing: -1px;
 }
 #deviceTime span.ampm {
 	position:relative;
 	top:6px;
-	left: -32px;
+	left: -38px;
 	font-size:18pt;
 	width: 36px;
 	text-transform:uppercase;
-	letter-spacing: 0px;
 	text-align: right;
+	
 }
 #deviceDate {
 	margin-top:16px;
@@ -476,7 +469,7 @@ table.logList th {
 	background-repeat: no-repeat;
 	background-position: 3px center;
 	padding: 4px 4px 4px 24px;
-	margin: 3px;
+	margin: 3px 0px 0px 0px;
 }
 .collapsible.collapsed h4 {
 	background-image:url(collapsed.png)
@@ -489,7 +482,19 @@ table.logList th {
 	display:none;
 }
 .collapsible.expanded div {
+	border-right: 3px solid #2E3959;
+	border-left: 3px solid #2E3959;
 }
+.collapsible.expanded div:last-child {
+    border-bottom: 3px solid #2E3959;
+}
+.option {
+	margin: 0px;
+	padding: 6px 0px;
+	clear:both;
+}
+
+
 
 /******** Schedule graph Styles **********/
 
@@ -632,17 +637,18 @@ td.stationSchedule {
    #deviceTime {
       float: left;
    }
-   #deviceTime span {
-      font-size: 21pt;
-      width: 35px;
+   #deviceTime span.time {
+      font-size: 22pt;
+      width: 120px;
+      letter-spacing:0px;
+      padding-right:2px;
+      margin-bottom: 4px;
    }
    #deviceTime span.sep {
-      font-size: 12pt;
-      top: 0;
-      width: 4px;
+      font-size: 16pt;
    }
    #deviceTime span.second, #deviceTime span.ampm {
-      font-size: 9pt;
+      font-size: 10pt;
    }
    #deviceTime span.second {
       top: -5px;

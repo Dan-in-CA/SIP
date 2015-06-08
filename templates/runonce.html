@@ -35,7 +35,7 @@ $code:
                 alert($:{json.dumps(_('No station is scheduled to run'), ensure_ascii=False)});
                 return;
             }
-            window.location = comm;
+            window.location = baseUrl + comm;
         });
 
         jQuery("button#cResetTime").click(function(){
@@ -43,7 +43,7 @@ $code:
         });
 
         jQuery("button#cCancel").click(function(){
-            window.location="/";
+            window.location= baseUrl + "/";
         });
 
     });
@@ -51,7 +51,7 @@ $code:
 
 <div id="runonce">
     <div class="title">$_('Run Once Program')</div>
-    <form name="rf" action="cr" method="get">
+    <form name="rf" action="${app_path('/cr')}" method="get">
         <table class="stationList">
             $for bid in range(0, gv.sd['nbrd']):
                 $for s in range(0,8):

@@ -1,0 +1,1289 @@
+# Translation file for OpenSprinkler Pi (ospi).
+# Copyright (C) 2014
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 2.1.5\n"
+"POT-Creation-Date: 2014-11-12 10:35+Pacific Standard Time\n"
+"PO-Revision-Date: 2015-05-06 22:46+0100\n"
+"Last-Translator: Dan <dkimberling59@gmail.com>\n"
+"Language-Team: LANGUAGE <dkimberling59@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: en_US\n"
+"X-Generator: Poedit 1.7.6\n"
+
+#: OSPi\helpers.py:390
+msgid "Password"
+msgstr "Geslo"
+
+#: OSPi\gv.py:17
+msgid "Could not use git to determine version!"
+msgstr "Ni možno uporabiti določene verzije."
+
+#: OSPi\gv.py:24
+msgid "Could not use git to determine date of last commit!"
+msgstr "Ni možno določiti zadnjega dneva prispevka."
+
+#: OSPi\gv.py:119
+msgid "System name"
+msgstr "Ime sistema"
+
+#: OSPi\gv.py:119
+msgid "Unique name of this OpenSprinkler system."
+msgstr "Unikatno ime sistema."
+
+#: OSPi\gv.py:119 OSPi\gv.py:120 OSPi\gv.py:121 OSPi\gv.py:122 OSPi\gv.py:123
+#: OSPi\gv.py:124
+msgid "System"
+msgstr "Sistem"
+
+#: OSPi\gv.py:120
+msgid "City name or zip code. Use comma or + in place of space."
+msgstr ""
+"Ime mesta ali poštna številka.Uporabi znak . ali znak + v prostoru za presledek."
+
+#: OSPi\gv.py:120
+msgid "Location"
+msgstr "Lokacija"
+
+#: OSPi\gv.py:121
+msgid "Language"
+msgstr "Jezik"
+
+#: OSPi\gv.py:121
+msgid "Select language (effective after restart.)"
+msgstr "Izberi jezik (Spremembe bodo vidne po ponovnem zagonu)."
+
+#: OSPi\gv.py:122
+msgid "Example: GMT-4:00, GMT+5:30 (effective after reboot.)"
+msgstr "Primer: GMT-4:00, GMT+5:30 (Spremembe bodo vidne po ponovnem zagonu.)"
+
+#: OSPi\gv.py:122
+msgid "Time zone"
+msgstr "Časovni pas"
+
+#: OSPi\gv.py:123
+msgid "24-hour clock"
+msgstr "24 urni prikaz"
+
+#: OSPi\gv.py:123
+msgid "Display times in 24 hour format (as opposed to AM/PM style.)"
+msgstr "Prikaži čas v 24 urnem prikazu."
+
+#: OSPi\gv.py:124
+msgid "HTTP port"
+msgstr "HTTP vrata"
+
+#: OSPi\gv.py:124
+msgid "HTTP port (effective after reboot.)"
+msgstr "HTTP vrata (Sprembe bodo vidne po ponovnem zagonu)."
+
+#: OSPi\gv.py:125
+msgid "Allow anonymous users to access the system without a password."
+msgstr "Dovoli anonimnemu uporabniku vstop brez gesla."
+
+#: OSPi\gv.py:125
+msgid "Disable security"
+msgstr "Izklopi varnost"
+
+#: OSPi\gv.py:125 OSPi\gv.py:126 OSPi\gv.py:127 OSPi\gv.py:128
+msgid "Change Password"
+msgstr "Spremeni geslo"
+
+#: OSPi\gv.py:126
+msgid "Current password"
+msgstr "Trenutno geslo"
+
+#: OSPi\gv.py:126
+msgid "Re-enter the current password."
+msgstr "Ponovno vpiši geslo."
+
+#: OSPi\gv.py:127
+msgid "Enter a new password."
+msgstr "Vnesi novo geslo."
+
+#: OSPi\gv.py:127
+msgid "New password"
+msgstr "Novo geslo"
+
+#: OSPi\gv.py:128
+msgid "Confirm password"
+msgstr "Potrdi geslo"
+
+#: OSPi\gv.py:128
+msgid "Confirm the new password."
+msgstr "Potrdi novo geslo."
+
+#: OSPi\gv.py:129
+msgid "Sequential"
+msgstr "Sekvenčno (zaporedno)"
+
+#: OSPi\gv.py:129
+msgid "Sequential or concurrent running mode."
+msgstr "Sekvenčno ali sočasno delovanje."
+
+#: OSPi\gv.py:129 OSPi\gv.py:130 OSPi\gv.py:131
+msgid "Station Handling"
+msgstr "Urejanje ventilov"
+
+#: OSPi\gv.py:130
+msgid "Extension boards"
+msgstr "Razširitveni moduli releji"
+
+#: OSPi\gv.py:130
+msgid "Number of extension boards."
+msgstr "Število razširitvenih modulov"
+
+#: OSPi\gv.py:131
+msgid "Station delay"
+msgstr "Zakasnitev ventila "
+
+#: OSPi\gv.py:131
+msgid "Station delay time (in seconds), between 0 and 240."
+msgstr "Zakasnitev ventila v sekundah, izberi med 0 in 240 sekund."
+
+#: OSPi\gv.py:132
+msgid "Master station"
+msgstr "Glavni ventil"
+
+#: OSPi\gv.py:132
+msgid "Select master station."
+msgstr "Izberi glavni ventil."
+
+#: OSPi\gv.py:132 OSPi\gv.py:133 OSPi\gv.py:134
+msgid "Configure Master"
+msgstr "Nastavitev glavnega ventila"
+
+#: OSPi\gv.py:133
+msgid "Master on adjust"
+msgstr "Glavni ventil vklopljen za nastavitev"
+
+#: OSPi\gv.py:133
+msgid "Master on delay (in seconds), between +0 and +60."
+msgstr "Glavni ventil vklopljen na zakasnitvi v sekundah, izberi med +0 in +60."
+
+#: OSPi\gv.py:134
+msgid "Master off adjust"
+msgstr "Glavni ventil izklopljen za nastavljanje"
+
+#: OSPi\gv.py:134
+msgid "Master off delay (in seconds), between -60 and +60."
+msgstr "Glavni ventil izklopljena zakasnitev v sekundah, izberi med -60 in +60."
+
+#: OSPi\gv.py:135
+msgid "Use rain sensor"
+msgstr "Uporabi dežni senzor"
+
+#: OSPi\gv.py:135
+msgid "Use rain sensor."
+msgstr "Uporabi dežni senzor."
+
+#: OSPi\gv.py:135 OSPi\gv.py:136
+msgid "Rain Sensor"
+msgstr "Dežni senzor"
+
+#: OSPi\gv.py:136
+msgid "Normally open"
+msgstr "Normalno odprt rele (NO)"
+
+#: OSPi\gv.py:136
+msgid "Rain sensor type."
+msgstr "Tip dežnega senzorja."
+
+#: OSPi\gv.py:137
+msgid ""
+"Log all events - note that repetitive writing to an SD card can shorten its lifespan."
+msgstr ""
+"Zabeleži vse dogodke.(Ponavljajoče zapisovanje na SD kartico lahko zmanjša njeno "
+"življensko dobo."
+
+#: OSPi\gv.py:137 OSPi\gv.py:138
+msgid "Logging"
+msgstr "Prijava"
+
+#: OSPi\gv.py:137 OSPi\templates\pcf_8591_adj.html:48
+msgid "Enable logging"
+msgstr "Vklopi prijavo"
+
+#: OSPi\gv.py:138
+msgid "Length of log to keep, 0=no limits."
+msgstr "Dolžina znakov za vpis, 0=brez omejitev."
+
+#: OSPi\gv.py:138
+msgid "Max log entries"
+msgstr "Maksimalno število vpisov"
+
+#: OSPi\helpers.py:35 OSPi\helpers.py.LOCAL.py:35
+msgid "Error: json module not found"
+msgstr "Napaka: json modul ni najden"
+
+#: OSPi\helpers.py:48 OSPi\helpers.py.LOCAL.py:48
+msgid "Rebooting..."
+msgstr "Ponovni zagon..."
+
+#: OSPi\helpers.py:61 OSPi\helpers.py.LOCAL.py:61
+msgid "Powering off..."
+msgstr "Izklapljanje sistema..."
+
+#: OSPi\helpers.py:74 OSPi\helpers.py.LOCAL.py:74
+msgid "Restarting..."
+msgstr "Ponovni zagon..."
+
+#: OSPi\helpers.py:190 OSPi\helpers.py.LOCAL.py:190 OSPi\templates\base.html:81
+msgid "Run-once"
+msgstr "Zaženi enkrat"
+
+#: OSPi\helpers.py:192 OSPi\helpers.py.LOCAL.py:192 OSPi\templates\base.html:82
+#: OSPi\templates\home.html:222
+msgid "Manual"
+msgstr "Navodila"
+
+#: OSPi\helpers.py:395
+msgid "Incorrect password, please try again"
+msgstr "Napačno geslo, poizkusi ponovno"
+
+#: OSPi\ospi.py:22
+msgid "Starting timing loop"
+msgstr "Zagon časovnega ponavljanja"
+
+#: OSPi\ospi.py:180
+msgid "plugins loaded:"
+msgstr "Dodatki naloženi:"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:333
+msgid "Monday"
+msgstr "Ponedeljek"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:334
+msgid "Tuesday"
+msgstr "Torek"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:335
+msgid "Wednesday"
+msgstr "Sreda"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:336
+msgid "Thursday"
+msgstr "Četrtek"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:337
+msgid "Friday"
+msgstr "Petek"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:338
+msgid "Saturday"
+msgstr "Sobota"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:339
+msgid "Sunday"
+msgstr "Nedelja"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:25
+msgid "January"
+msgstr "Januar"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:29
+msgid "February"
+msgstr "Februar"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:33
+msgid "March"
+msgstr "Marec"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:37
+msgid "April"
+msgstr "April"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:41
+msgid "May"
+msgstr "Maj"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:45
+msgid "June"
+msgstr "Junij"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:49
+msgid "July"
+msgstr "Julij"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:53
+msgid "August"
+msgstr "Avgust"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:57
+msgid "September"
+msgstr "September"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:61
+msgid "October"
+msgstr "Oktober"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:65
+msgid "November"
+msgstr "November"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:69
+msgid "December"
+msgstr "December"
+
+#: OSPi\templates\base.html:83 OSPi\templates\log.html:55
+msgid "Program"
+msgstr "Program"
+
+#: OSPi\templates\base.html:135
+msgid "Home"
+msgstr "Domov"
+
+#: OSPi\templates\base.html:136
+msgid "Define Programs"
+msgstr "Nastavitev programov"
+
+#: OSPi\templates\base.html:136
+msgid "Programs"
+msgstr "Programi"
+
+#: OSPi\templates\base.html:137
+msgid "Define Run Once Program"
+msgstr "Nastavitev Zaženi Enkrat pogram"
+
+#: OSPi\templates\base.html:137
+msgid "Run Once"
+msgstr "Zaženi Enkrat"
+
+#: OSPi\templates\base.html:138
+msgid "Acces Plugins"
+msgstr "Dostop do dodatkov"
+
+#: OSPi\templates\base.html:138
+msgid "Plugins"
+msgstr "Dodatki"
+
+#: OSPi\templates\base.html:139
+msgid "Log"
+msgstr "Dnevnik"
+
+#: OSPi\templates\base.html:139
+msgid "View Log"
+msgstr "Poglej dnevnik"
+
+#: OSPi\templates\base.html:140
+msgid "Options"
+msgstr "Opcije"
+
+#: OSPi\templates\base.html:141
+msgid "Stations"
+msgstr "Ventili"
+
+#: OSPi\templates\base.html:141 OSPi\templates\stations.html:73
+msgid "Configure Stations"
+msgstr "Nastavitev ventilov"
+
+#: OSPi\templates\base.html:143
+msgid "Logout"
+msgstr "Odjava"
+
+#: OSPi\templates\base.html:152
+msgid "CPU Temp"
+msgstr "Temperatura procesorja"
+
+#: OSPi\templates\base.html:152
+msgid "Click to toggle"
+msgstr "Klikni za preklop"
+
+#: OSPi\templates\base.html:153
+msgid "Software"
+msgstr "Programska oprema"
+
+#: OSPi\templates\base.html:153
+msgid "version"
+msgstr "Verzija"
+
+#: OSPi\templates\email_adj.html:3
+msgid "OpenSprinkler Pi Email adjustments"
+msgstr "KeepGreen zalivalnik Email nastavitev"
+
+#: OSPi\templates\email_adj.html:21
+msgid "Email adjustments"
+msgstr "Email nastavitev"
+
+#: OSPi\templates\email_adj.html:22
+msgid ""
+"This plugin can send E-mails. For this plugin you need a GMail account as provider."
+msgstr "Ta dodatek lahko pošlje email, vendar potrebuješ Gmail račun."
+
+#: OSPi\templates\email_adj.html:26
+msgid "Send email with file log.csv after power on"
+msgstr "Pošlji Email z datoteko log.csv po vklopu sistema"
+
+#: OSPi\templates\email_adj.html:32
+msgid "Send email if rain is detected"
+msgstr "Pošlji Email če je zaznano deževanje"
+
+#: OSPi\templates\email_adj.html:39
+msgid "Sends email if program has run"
+msgstr "Pošlji Email če program teče"
+
+#: OSPi\templates\email_adj.html:45
+msgid "Your GMail username"
+msgstr "Gmail uporabniško ime"
+
+#: OSPi\templates\email_adj.html:63 OSPi\templates\lcd_adj.html:44
+#: OSPi\templates\pcf_8591_adj.html:103 OSPi\templates\pressure_adj.html:50
+#: OSPi\templates\sms_adj.html:81 OSPi\templates\system_update.html:47
+#: OSPi\templates\weather_level_adj.html:61
+msgid "Status"
+msgstr "Status"
+
+#: OSPi\templates\email_adj.html:72 OSPi\templates\lcd_adj.html:54
+#: OSPi\templates\monthly.html:76 OSPi\templates\pcf_8591_adj.html:118
+#: OSPi\templates\pressure_adj.html:59 OSPi\templates\sms_adj.html:90
+#: OSPi\templates\weather_adj.html:55 OSPi\templates\weather_level_adj.html:70
+msgid "Submit"
+msgstr "Potrdi"
+
+#: OSPi\templates\email_adj.html:73 OSPi\templates\lcd_adj.html:55
+#: OSPi\templates\modify.html:402 OSPi\templates\monthly.html:77
+#: OSPi\templates\options.html:135 OSPi\templates\pcf_8591_adj.html:119
+#: OSPi\templates\pressure_adj.html:60 OSPi\templates\runonce.html:76
+#: OSPi\templates\sms_adj.html:91 OSPi\templates\stations.html:120
+#: OSPi\templates\weather_adj.html:56 OSPi\templates\weather_level_adj.html:71
+msgid "Cancel"
+msgstr "Prekliči"
+
+#: OSPi\templates\home.html:52
+msgid "Manual Mode"
+msgstr "Ročni način"
+
+#: OSPi\templates\home.html:55 OSPi\templates\runonce.html:53
+msgid "Run Once Program"
+msgstr "Zaženi Enkrat Program"
+
+#: OSPi\templates\home.html:58
+msgid " for "
+msgstr " za "
+
+#: OSPi\templates\home.html:58
+msgid " on "
+msgstr " vklopljeno "
+
+#: OSPi\templates\home.html:58
+msgid " ran "
+msgstr " teče "
+
+#: OSPi\templates\home.html:82
+msgid "Master On"
+msgstr " Glavni ventil vklopljen"
+
+#: OSPi\templates\home.html:84
+msgid "Master Off"
+msgstr "Glavni ventil izklopljen"
+
+#: OSPi\templates\home.html:89
+msgid "Suppressed by Rain Delay"
+msgstr "Na čakanju zaradi Zakasnitve Deževanja"
+
+#: OSPi\templates\home.html:92
+msgid "Suppressed by Rain Sensor"
+msgstr " Na čakanju zaradi Dežnega Senzorja"
+
+#: OSPi\templates\home.html:95 OSPi\templates\home.html:250
+#: OSPi\templates\modify.html:352 OSPi\templates\programs.html:120
+msgid "Off"
+msgstr "Izklopljeno"
+
+#: OSPi\templates\home.html:135
+msgid "Enter hours to delay"
+msgstr "Vnesi ure za zaksnitev"
+
+#: OSPi\templates\home.html:147
+msgid "Enter percentage adjustment"
+msgstr "Vnesi nastavitev v odstotkih"
+
+#: OSPi\templates\home.html:166 OSPi\templates\runonce.html:25
+msgid "Timer values wrong: "
+msgstr "Časovne vrednosti so napačne"
+
+#: OSPi\templates\home.html:212
+msgid "System Off"
+msgstr "Sistem je izklopljen"
+
+#: OSPi\templates\home.html:212
+msgid "System On"
+msgstr "Sistem je vklopljen"
+
+#: OSPi\templates\home.html:214
+msgid "Level"
+msgstr "Nivo"
+
+#: OSPi\templates\home.html:214
+msgid "Normal"
+msgstr "Normalno"
+
+#: OSPi\templates\home.html:214
+msgid "Water Level"
+msgstr "Nivo vode"
+
+#: OSPi\templates\home.html:216
+msgid "Active"
+msgstr "Aktivno"
+
+#: OSPi\templates\home.html:216
+msgid "Rain Delay"
+msgstr "Dežna zakasnitev"
+
+#: OSPi\templates\home.html:220
+msgid "rain sensed"
+msgstr "zaznan dež"
+
+#: OSPi\templates\home.html:220 OSPi\templates\log.html:46
+msgid "no"
+msgstr "ne"
+
+#: OSPi\templates\home.html:222
+msgid "Auto"
+msgstr "Avtomatsko"
+
+#: OSPi\templates\home.html:242
+msgid "On (Master)"
+msgstr "Vklop (glavni ventil)"
+
+#: OSPi\templates\home.html:244
+msgid "Off (Master)"
+msgstr "Izklop (glavni ventil)"
+
+#: OSPi\templates\home.html:250 OSPi\templates\modify.html:352
+#: OSPi\templates\programs.html:118
+msgid "On"
+msgstr "Vklop"
+
+#: OSPi\templates\home.html:268
+msgid " Prev Day"
+msgstr "Prejšni dan"
+
+#: OSPi\templates\home.html:269
+msgid "Today"
+msgstr "Danes"
+
+#: OSPi\templates\home.html:270
+msgid "Next Day"
+msgstr "Naslednji dan"
+
+#: OSPi\templates\home.html:308
+msgid "loading..."
+msgstr "Nalagam..."
+
+#: OSPi\templates\home.html:337
+msgid "Stop All Stations"
+msgstr "Stop na vseh postajah"
+
+#: OSPi\templates\home.html:340
+msgid "Program 1"
+msgstr "Program 1"
+
+#: OSPi\templates\lcd_adj.html:3
+msgid "OpenSprinkler Pi LCD settings"
+msgstr "Zalivalnik LCD nastavitve"
+
+#: OSPi\templates\lcd_adj.html:21
+msgid "LCD settings"
+msgstr "LCD nastavitve"
+
+#: OSPi\templates\lcd_adj.html:22
+msgid ""
+"This plugin sends data to I2C for LCD 16x2 char with PCF8574. Visit for more: www."
+"pihrt.com/elektronika/258-moje-rapsberry-pi-i2c-lcd-16x2."
+msgstr ""
+
+#: OSPi\templates\lcd_adj.html:38
+msgid "Range adress"
+msgstr "Razpon naslovov"
+
+#: OSPi\templates\lcd_adj.html:51
+msgid "Compatible with HD44780 LCD 16x2 controller."
+msgstr ""
+
+#: OSPi\templates\log.html:3
+msgid "OpenSprinkler Pi Log"
+msgstr "KeepGreen dnevnik"
+
+#: OSPi\templates\log.html:8
+msgid "Enabled"
+msgstr "Vklopljeno"
+
+#: OSPi\templates\log.html:11
+msgid "Disabled"
+msgstr "Izklopljeno"
+
+#: OSPi\templates\log.html:41
+msgid "Log "
+msgstr "Vpis"
+
+#: OSPi\templates\log.html:46
+msgid " limit"
+msgstr " limit"
+
+#: OSPi\templates\log.html:46
+msgid "Total number of records: "
+msgstr "Skupno število zapisov: "
+
+#: OSPi\templates\log.html:47 OSPi\templates\pcf_8591_adj.html:38
+msgid "Download log as "
+msgstr "Shrani vpis kot "
+
+#: OSPi\templates\log.html:51
+msgid "Date"
+msgstr "Datum"
+
+#: OSPi\templates\log.html:52
+msgid "Start Time"
+msgstr "Začetni čas"
+
+#: OSPi\templates\log.html:53 OSPi\templates\stations.html:77
+msgid "Station"
+msgstr "Ventil"
+
+#: OSPi\templates\log.html:54
+msgid "Duration"
+msgstr "Trajanje"
+
+#: OSPi\templates\log.html:73
+msgid "Refresh"
+msgstr "Osveži"
+
+#: OSPi\templates\log.html:74
+msgid "Clear Log"
+msgstr "Počisti dnevnik"
+
+#: OSPi\templates\login.html:3
+msgid "OpenSprinkler Pi Login"
+msgstr "Vpis v zalivalnik KeepGreen"
+
+#: OSPi\templates\login.html:7 OSPi\templates\login.html:10
+msgid "Login"
+msgstr "Vpis"
+
+#: OSPi\templates\modify.html:3
+msgid "OpenSprinkler Pi Modify Program"
+msgstr "KeepGreen zalivalnik nastavitev programov"
+
+#: OSPi\templates\modify.html:66
+msgid "Error: Incorrect time input "
+msgstr "Napaka: Napačna vrednost časa"
+
+#: OSPi\templates\modify.html:78
+msgid "Please choose at least one weekday for the program to run."
+msgstr "Izberi vsaj en dan v tednu za zagon programa."
+
+#: OSPi\templates\modify.html:82
+msgid "Please choose at least one station to run in this program."
+msgstr "Izberi vsaj en Ventil za zagon programa"
+
+#: OSPi\templates\modify.html:228
+msgid "Error: starting in days wrong."
+msgstr "Napaka: začetni dan za zagon je napačen."
+
+#: OSPi\templates\modify.html:249
+msgid "Error: Incorrect duration."
+msgstr "Napaka: Napačen čas trajanja."
+
+#: OSPi\templates\modify.html:263
+msgid "Error: Start time must be prior to end time."
+msgstr "Napaka: Začetni čas mora biti prilagojen končnemu času."
+
+#: OSPi\templates\modify.html:283
+msgid "Edit Program #"
+msgstr "Nastavi Program #"
+
+#: OSPi\templates\modify.html:283 OSPi\templates\programs.html:108
+msgid "Add a New Program"
+msgstr "Dodaj Nov Program"
+
+#: OSPi\templates\modify.html:288
+msgid "Program Off"
+msgstr "Program Izklopljen"
+
+#: OSPi\templates\modify.html:288
+msgid "Program On"
+msgstr "Program Vklopljen"
+
+#: OSPi\templates\modify.html:304
+msgid "Recurring"
+msgstr "Ponavljajoče"
+
+#: OSPi\templates\modify.html:304
+msgid "Single pass"
+msgstr "Enojni prehod"
+
+#: OSPi\templates\modify.html:306
+msgid "Every"
+msgstr "Vsak"
+
+#: OSPi\templates\modify.html:310
+msgid "Until"
+msgstr "Dokler"
+
+#: OSPi\templates\modify.html:322
+msgid "Interval"
+msgstr "Interval"
+
+#: OSPi\templates\modify.html:322
+msgid "Weekly"
+msgstr "Tedensko"
+
+#: OSPi\templates\modify.html:327
+msgid "Select All"
+msgstr "Izberi Vse"
+
+#: OSPi\templates\modify.html:328
+msgid "Clear All"
+msgstr "Izbriši Vse"
+
+#: OSPi\templates\modify.html:359
+msgid "Water interval"
+msgstr "Vodni interval"
+
+#: OSPi\templates\modify.html:375
+msgid "Starting in"
+msgstr "Zaženi v"
+
+#: OSPi\templates\modify.html:389
+msgid "Any Day"
+msgstr "Vsak Dan"
+
+#: OSPi\templates\modify.html:389
+msgid "Restrict Day"
+msgstr "Določen Dan"
+
+#: OSPi\templates\modify.html:391
+msgid "Even"
+msgstr "Soda"
+
+#: OSPi\templates\modify.html:391
+msgid "Odd"
+msgstr "Liha"
+
+#: OSPi\templates\modify.html:392
+msgid "(except 31st and Feb 29th)"
+msgstr "(razen 31tega in Februar 29tega)"
+
+#: OSPi\templates\modify.html:401
+msgid "Save"
+msgstr "Shrani"
+
+#: OSPi\templates\monthly.html:3
+msgid "OpenSprinkler Pi Monthly Adjustments"
+msgstr "KeepGreen zalivalnik Mesečna Nastavitev"
+
+#: OSPi\templates\monthly.html:20
+msgid "Monthly Irrigation Adjustments"
+msgstr "Mesečna zalivalna nastavitev"
+
+#: OSPi\templates\monthly.html:21
+msgid "Enter an adjustment for each month (% irrigation time)"
+msgstr "Vnesi nastavitev za vsak mesec (% zalivalnega časa)"
+
+#: OSPi\templates\options.html:3
+msgid "OpenSprinkler Pi Options"
+msgstr "KeepGreen zalivalnik Opcije"
+
+#: OSPi\templates\options.html:18 OSPi\templates\options.html:19
+msgid "Hide Tooltips"
+msgstr "Skrij nasvete"
+
+#: OSPi\templates\options.html:19 OSPi\templates\options.html:68
+msgid "Show Tooltips"
+msgstr "Prikaži nasvete"
+
+#: OSPi\templates\options.html:48
+msgid "The password given was incorrect."
+msgstr "Napisano geslo je napačno"
+
+#: OSPi\templates\options.html:52
+msgid "Please enter a password."
+msgstr "Vnesite geslo"
+
+#: OSPi\templates\options.html:56
+msgid "Passwords don't match, please re-enter."
+msgstr "Geslo se ne ujema s prejšnim, ponovno vpiši geslo."
+
+#: OSPi\templates\options.html:67
+msgid "Edit Options"
+msgstr "Uredi nastavitve"
+
+#: OSPi\templates\options.html:96
+msgid "Default"
+msgstr "Privzeto"
+
+#: OSPi\templates\options.html:108
+msgid "None"
+msgstr "Nobeden"
+
+#: OSPi\templates\options.html:122
+msgid "System Restart"
+msgstr "Ponovni zagon sistema"
+
+#: OSPi\templates\options.html:124
+msgid "Restart"
+msgstr "Ponovni zagon"
+
+#: OSPi\templates\options.html:124
+msgid "Restart software"
+msgstr "Ponovni zagon programa"
+
+#: OSPi\templates\options.html:125
+msgid "Reboot"
+msgstr "Ponovni zagon"
+
+#: OSPi\templates\options.html:125
+msgid "Reboot hardware"
+msgstr "Ponovni zagon opreme"
+
+#: OSPi\templates\options.html:134 OSPi\templates\stations.html:118
+msgid "Submit Changes"
+msgstr "Potrdi spremembe"
+
+#: OSPi\templates\pcf_8591_adj.html:3
+msgid "OpenSprinkler Pi PCF8591 voltage and temperature adjustments"
+msgstr "KeepGreen zalivalnik PCF8591 napetostna in temperaturna nastavitev"
+
+#: OSPi\templates\pcf_8591_adj.html:34
+msgid "PCF8591 voltage and temperature adjustments"
+msgstr "PCF8591 napetostna in temperaturna nastavitev"
+
+#: OSPi\templates\pcf_8591_adj.html:35
+msgid ""
+"For this plugin is needed enabled I2C bus and connected I2C A/D converter PCF8591 on "
+"I2C adress 0x48."
+msgstr ""
+
+#: OSPi\templates\pcf_8591_adj.html:36
+msgid "For measure temperature use temp probe LM35D (0-100 &deg;C) on AD0-3 converter."
+msgstr ""
+
+#: OSPi\templates\pcf_8591_adj.html:37
+msgid ""
+"If the label has not blank value the value is displayed in the window read value."
+msgstr ""
+
+#: OSPi\templates\pcf_8591_adj.html:38
+msgid " log file."
+msgstr "dnevnik."
+
+#: OSPi\templates\pcf_8591_adj.html:38 OSPi\templates\programs.html:151
+msgid "Delete"
+msgstr "Briši"
+
+#: OSPi\templates\pcf_8591_adj.html:42
+msgid "Use PCF8591"
+msgstr ""
+
+#: OSPi\templates\pcf_8591_adj.html:54
+msgid "Maximum number of records"
+msgstr "Maksimalno število vnosov"
+
+#: OSPi\templates\pcf_8591_adj.html:56
+msgid "(0 = unlimited)"
+msgstr "(0 = neomejeno)"
+
+#: OSPi\templates\pcf_8591_adj.html:60
+msgid "Time loop for logging"
+msgstr ""
+
+#: OSPi\templates\pcf_8591_adj.html:62
+msgid "minutes (0 = logging disabled)"
+msgstr ""
+
+#: OSPi\templates\pcf_8591_adj.html:66
+msgid "Label for input AD0:"
+msgstr ""
+
+#: OSPi\templates\pcf_8591_adj.html:68 OSPi\templates\pcf_8591_adj.html:74
+#: OSPi\templates\pcf_8591_adj.html:80 OSPi\templates\pcf_8591_adj.html:86
+msgid " measure as voltage "
+msgstr ""
+
+#: OSPi\templates\pcf_8591_adj.html:72
+msgid "Label for input AD1"
+msgstr ""
+
+#: OSPi\templates\pcf_8591_adj.html:78
+msgid "Label for input AD2"
+msgstr ""
+
+#: OSPi\templates\pcf_8591_adj.html:90
+msgid "Read value"
+msgstr ""
+
+#: OSPi\templates\pcf_8591_adj.html:109
+msgid "Output DA voltage"
+msgstr ""
+
+#: OSPi\templates\pressure_adj.html:3
+msgid "OpenSprinkler Pi Pressure monitor settings"
+msgstr ""
+
+#: OSPi\templates\pressure_adj.html:20
+msgid "Pressure monitor settings"
+msgstr ""
+
+#: OSPi\templates\pressure_adj.html:21
+msgid ""
+"This plugin checked pressure in pipe, if master station is switched on must be "
+"activated pressure sensor. "
+msgstr ""
+
+#: OSPi\templates\pressure_adj.html:22
+msgid ""
+"If is not sensor activated in a certain time, switches off all station  and sends "
+"email with error. Prevent safety for master station pump."
+msgstr ""
+
+#: OSPi\templates\pressure_adj.html:26
+msgid "Use pressure sensor for master station"
+msgstr ""
+
+#: OSPi\templates\pressure_adj.html:28
+msgid "(Pressure sensor is connected between GPIO pin 22 and ground)"
+msgstr ""
+
+#: OSPi\templates\pressure_adj.html:32
+msgid "Send email with error"
+msgstr ""
+
+#: OSPi\templates\pressure_adj.html:34
+msgid "(For this function required email plugin)"
+msgstr ""
+
+#: OSPi\templates\pressure_adj.html:38
+msgid "Max time to activate pressure sensor"
+msgstr ""
+
+#: OSPi\templates\pressure_adj.html:40
+msgid "(max 999 seconds)"
+msgstr ""
+
+#: OSPi\templates\pressure_adj.html:44
+msgid "Pressure sensor"
+msgstr ""
+
+#: OSPi\templates\programs.html:3
+msgid "OpenSprinkler Pi Programs"
+msgstr "KeepGreen zalivalnik Programi"
+
+#: OSPi\templates\programs.html:18
+msgid "Every "
+msgstr "Vsak"
+
+#: OSPi\templates\programs.html:18 OSPi\templates\programs.html:20
+msgid "days"
+msgstr "Dnevi"
+
+#: OSPi\templates\programs.html:20
+msgid "starting in"
+msgstr "Zaženi v"
+
+#: OSPi\templates\programs.html:23
+msgid "Every Weekday"
+msgstr "Vsak dan v tednu"
+
+#: OSPi\templates\programs.html:27
+msgid "Fri"
+msgstr "Torek"
+
+#: OSPi\templates\programs.html:27
+msgid "Mon"
+msgstr "Ponedeljek"
+
+#: OSPi\templates\programs.html:27
+msgid "Sat"
+msgstr "Sobota"
+
+#: OSPi\templates\programs.html:27
+msgid "Sun"
+msgstr "Nedelja"
+
+#: OSPi\templates\programs.html:27
+msgid "Thur"
+msgstr "Četrtek"
+
+#: OSPi\templates\programs.html:27
+msgid "Tue"
+msgstr "Torek"
+
+#: OSPi\templates\programs.html:27
+msgid "Wed"
+msgstr "Sreda"
+
+#: OSPi\templates\programs.html:29
+msgid " (Even days only)"
+msgstr "Soda dnevi"
+
+#: OSPi\templates\programs.html:31
+msgid " (Odd days only)"
+msgstr "Liha dnevi"
+
+#: OSPi\templates\programs.html:109
+msgid "Delete All"
+msgstr "Zbriši Vse"
+
+#: OSPi\templates\programs.html:128
+msgid "Run"
+msgstr "Zaženi"
+
+#: OSPi\templates\programs.html:141
+msgid "Starting"
+msgstr "Zagnano"
+
+#: OSPi\templates\programs.html:145
+msgid "Recurring every"
+msgstr "Ponavljajoč vsak"
+
+#: OSPi\templates\programs.html:149 OSPi\templates\runonce.html:74
+msgid "Run Now"
+msgstr "Zaženi zdaj"
+
+#: OSPi\templates\programs.html:150
+msgid "Edit"
+msgstr "Uredi"
+
+#: OSPi\templates\restarting.html:3
+msgid "OpenSprinkler Pi Restarting"
+msgstr "KeepGreen zalivalnik ponovni zagon"
+
+#: OSPi\templates\restarting.html:30
+msgid "ospi is restarting"
+msgstr "Krmilna enota se ponovno zaganja"
+
+#: OSPi\templates\restarting.html:31
+msgid "You will be redirected as soon as possible..."
+msgstr "Preusmeritev takoj ko bo mogoča"
+
+#: OSPi\templates\runonce.html:3
+msgid "OpenSprinkler Pi Run-Once"
+msgstr "KeepGreen zalivalnik zaženi program enkrat"
+
+#: OSPi\templates\runonce.html:35
+msgid "No station is scheduled to run"
+msgstr "Noben ventil ni v urniku za zagon"
+
+#: OSPi\templates\runonce.html:75
+msgid "Reset Time"
+msgstr "Resetiraj čas"
+
+#: OSPi\templates\sms_adj.html:3
+msgid "OpenSprinkler Pi SMS adjustments"
+msgstr ""
+
+#: OSPi\templates\sms_adj.html:21
+msgid "SMS adjustments"
+msgstr ""
+
+#: OSPi\templates\sms_adj.html:22
+msgid "For this plugin is needed to SMS modem with the telephone service provider."
+msgstr ""
+
+#: OSPi\templates\sms_adj.html:23
+msgid ""
+"For more information visit the www.pihrt.com/elektronika/259-moje-rapsberry-pi-sms-"
+"ovladani-rpi for instructions."
+msgstr ""
+
+#: OSPi\templates\sms_adj.html:27
+msgid "Use SMS modem"
+msgstr ""
+
+#: OSPi\templates\sms_adj.html:33
+msgid "Number 1"
+msgstr "Številka 1"
+
+#: OSPi\templates\sms_adj.html:39
+msgid "Number 2"
+msgstr "Številka 2"
+
+#: OSPi\templates\sms_adj.html:45
+msgid "Command for info"
+msgstr "Ukaz za informacijo"
+
+#: OSPi\templates\sms_adj.html:51
+msgid "Command for stop irrigation"
+msgstr "Ukaz za stop namakanja"
+
+#: OSPi\templates\sms_adj.html:57
+msgid "Command for start irrigation"
+msgstr "Ukaz za start namakanja"
+
+#: OSPi\templates\sms_adj.html:63
+msgid "Command for reboot system"
+msgstr "Ukaz za ponovni zagon sistema"
+
+#: OSPi\templates\sms_adj.html:69
+msgid "Command for power off system"
+msgstr "Ukaz za izklop sistema"
+
+#: OSPi\templates\sms_adj.html:75
+msgid "Command for update OSPi from GITHUB"
+msgstr "Ukaz za posodobitev KeepGreen z GitHub"
+
+#: OSPi\templates\stations.html:3
+msgid "OpenSprinkler Pi Stations"
+msgstr "KeepGreen ventili"
+
+#: OSPi\templates\stations.html:78
+msgid "Name"
+msgstr "Ime"
+
+#: OSPi\templates\stations.html:79
+msgid "Enabled?"
+msgstr "Vklopim?"
+
+#: OSPi\templates\stations.html:80
+msgid "Ignore Rain?"
+msgstr "Prezri dež?"
+
+#: OSPi\templates\stations.html:82
+msgid "Activate Master?"
+msgstr "Aktiviraj glavni ventil"
+
+#: OSPi\templates\stations.html:93
+msgid "(Master valve)"
+msgstr "(Glavni ventil)"
+
+#: OSPi\templates\stations.html:119
+msgid "Reset Names"
+msgstr "Razveljavi imena"
+
+#: OSPi\templates\system_update.html:3
+msgid "OpenSprinkler Pi System update from GitHub"
+msgstr "KeepGreen zalivalnik se posodobi z GitHub"
+
+#: OSPi\templates\system_update.html:24
+msgid "System update from github"
+msgstr "Sistem se posodobi z Github"
+
+#: OSPi\templates\system_update.html:25
+msgid ""
+"This plugin compares the local copy with the remote repository and can automatically "
+"update the local copy."
+msgstr ""
+"Ta dodatek se primerja z dodatkom na oddaljeni lokaciji in se lahko avtomatsko "
+"posodobi z novejšo verzijo."
+
+#: OSPi\templates\system_update.html:29
+msgid "Remote repository"
+msgstr "Oddaljena lokacija"
+
+#: OSPi\templates\system_update.html:35
+msgid "Local ospi version"
+msgstr "Lokalna verzija kontrolerja"
+
+#: OSPi\templates\system_update.html:41
+msgid "Local ospi date"
+msgstr "Lokalni čas kontrolerja"
+
+#: OSPi\templates\system_update.html:50
+msgid "Update Status"
+msgstr "Posodobitveni status"
+
+#: OSPi\templates\system_update.html:59
+msgid "Update ospi"
+msgstr "Posodobi sistem"
+
+#: OSPi\templates\system_update.html:61
+msgid "Up-to-date"
+msgstr "do datuma"
+
+#: OSPi\templates\system_update.html:62
+msgid "Restart ospi"
+msgstr "Ponovni zagon kontrolerja"
+
+#: OSPi\templates\system_update.html:63
+msgid "Back"
+msgstr "Nazaj"
+
+#: OSPi\templates\weather_adj.html:3
+msgid "OpenSprinkler Pi Weather-based Rain Delay"
+msgstr "KeepGreen zalivalnik na zakasnitvi deževanja"
+
+#: OSPi\templates\weather_adj.html:20
+msgid "Weather-based Rain Delay"
+msgstr "Vremenska napoved na zakasnitev deževanja"
+
+#: OSPi\templates\weather_adj.html:21
+msgid ""
+"When weather-based rain delay is enabled, the weather will be checked for rain every "
+"hour. If the weather reports any condition suggesting rain, a rain delay is "
+"automatically issued using the below set delay duration."
+msgstr ""
+"Kadar je vklopljena dežna zakasnitev, se vreme preverja vsako uro.V kolikor se "
+"nakazuje možnost dežja, se vklopi zakasnitev zalivanja ki je nastavljena."
+
+#: OSPi\templates\weather_adj.html:25
+msgid "Use Automatic Rain Delay"
+msgstr "Uporabi avtomatsko dežno zakasnitev"
+
+#: OSPi\templates\weather_adj.html:31
+msgid "Delay Duration (hours)"
+msgstr "Zakasnitev dolžine (v urah)"
+
+#: OSPi\templates\weather_adj.html:37
+msgid "Weather Provider"
+msgstr "Ponudnik vremenske napovedi"
+
+#: OSPi\templates\weather_adj.html:46 OSPi\templates\weather_level_adj.html:55
+msgid "Wunderground API Key"
+msgstr "Wunderground API ključ"
+
+#: OSPi\templates\weather_level_adj.html:3
+msgid "OpenSprinkler Pi Weather-based Water Level"
+msgstr "keepGreen zalivlnik vremensko voden nivo vode"
+
+#: OSPi\templates\weather_level_adj.html:20
+msgid "Weather-based Water Level"
+msgstr "Vremensko voden nivo vode"
+
+#: OSPi\templates\weather_level_adj.html:21
+msgid ""
+"When weather-based water level is enabled, the weather will be checked every hour and "
+"the water level will be adjusted accordingly."
+msgstr "Ko je uporabljn vremenski nivo vode, se bo vreme preverjalo vsako uro"
+
+#: OSPi\templates\weather_level_adj.html:25
+msgid "Use Automatic Water Level Adjustment"
+msgstr "Uporabi avtomatski nivo vode"
+
+#: OSPi\templates\weather_level_adj.html:31
+msgid "Min percentage"
+msgstr "Minimalno odstotkov"
+
+#: OSPi\templates\weather_level_adj.html:37
+msgid "Max percentage"
+msgstr "Maksimalno odstotkov"
+
+#: OSPi\templates\weather_level_adj.html:43
+msgid "History days used"
+msgstr "Zgodovina na dnevih je uporabljnena"
+
+#: OSPi\templates\weather_level_adj.html:49
+msgid "Forecast days used"
+msgstr "Vremenska napoved na dnevih je uporabljena"
+
+#: OSPi\webpages.py:296
+msgid " not found."
+msgstr "Ni najdeno"
+
+#: OSPi\webpages.py:296
+msgid "Station "
+msgstr "Ventil"
+
+#: OSPi\webpages.py:314
+msgid "Manual mode not active."
+msgstr "Ročni način ni aktiven"
+
+#: OSPi\webpages.py:590
+msgid "Date, Start Time, Zone, Duration, Program"
+msgstr "Datum, Začetni čas, Časovni pas, Trajanje, Program"

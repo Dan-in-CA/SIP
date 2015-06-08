@@ -91,16 +91,16 @@ $code:
     });
 
 </script>
-<form name="df" id="df" action="dp" method="get">
+<form name="df" id="df" action="${app_path('/dp')}" method="get">
         <input type="hidden" name="pid">
 </form>
-<form name="rn" id="rn" action="rp" method="get">
+<form name="rn" id="rn" action="${app_path('/rp')}" method="get">
     <input type="hidden" name="pid">
 </form>
-<form name="mf" id="mf" action="mp" method="get">
+<form name="mf" id="mf" action="${app_path('/mp')}" method="get">
     <input type="hidden" name="pid">
 </form>
-     <form name="ep" id="ep" action="ep" method="get">
+     <form name="ep" id="ep" action="${app_path('/ep')}" method="get">
      <input type="hidden" name="pid">
      <input type="hidden" name="enable">
 </form>

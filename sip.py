@@ -172,7 +172,9 @@ template_globals = {
     'json': json,
     'ast': ast,
     '_': _,
-    'i18n': i18n
+    'i18n': i18n,
+    'app_path': lambda p: web.ctx.homepath + p,
+    'web' : web,
 }
 
 template_render = web.template.render('templates', globals=template_globals, base='base')

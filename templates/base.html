@@ -18,9 +18,15 @@ $code:
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="x-ua-compatible" content="IE=edge">
+<<<<<<< HEAD
     <title>${content.title + (" - "+gv.sd['name'] if gv.sd['name'] != "SIP" else "")}</title>
     <link href="/static/images/favicon.ico" rel="icon" type="image/x-icon">
     <link href="/static/themes/${gv.sd['theme']}/base.css" rel="stylesheet" type="text/css"/>
+=======
+    <title>${content.title + (" - "+gv.sd['name'] if gv.sd['name'] != "OpenSprinkler Pi" else "")}</title>
+    <link href="$app_path('/static/images/favicon.ico')" rel="icon" type="image/x-icon">
+    <link href="$app_path('/static/themes/' + gv.sd['theme'] + '/base.css')" rel="stylesheet" type="text/css"/>
+>>>>>>> 7ec2626d766073b5dc645129414277936954af8c
     <style type="text/css">
         .bluebg {background-color:lightblue;}
         .opOn, .wlOn, .rsOff {color:green;}
@@ -45,12 +51,11 @@ $code:
         button#tooltip {height:24px;}
         .tooltip {background-color:#FFF2B8; display:none; font-size:10pt; margin-left:4px;}
         .label {font-weight:bold; float:left; width:160px; text-align:right; padding-right:4px;}
-        .option {margin: 6px 0px; clear:both;}
 
         td.stationNumber, td.stationShow, td.stationIgnore, td.stationMaster {text-align:center;}
         td.stationName {text-align:left; padding-left:1em;}
     </style>
-    <script src="/static/scripts/jquery-1.8.2.min.js"></script>
+    <script src="$app_path('/static/scripts/jquery-1.8.2.min.js')"></script>
     <script>
         // Variables set server-side
         var devTzOffset = ${gv.tz_offset}*1000;
@@ -58,6 +63,7 @@ $code:
         var timeFormat = ${gv.sd["tf"]};
         var dayList = $:{days};
         var monthList = $:{months};
+        var baseUrl = '${web.ctx.homepath}';
 
         var cputemp = "${gv.cputemp}";
         var tempunit = "${gv.sd['tu']}";
@@ -84,10 +90,10 @@ $code:
             var program = $:{json.dumps(_('Program'), ensure_ascii=False)};
 
             jQuery(document).ready(function(){
-                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'/plugins\'">Manage Plugins</button><br/>');
+                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + baseUrl + '/plugins\'">Manage Plugins</button><br/>');
                 $if len(gv.plugin_menu) > 0:
                     jQuery.each(plugins, function() {
-                        jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\''+this[1]+'\'">'+this[0]+'</button><br/>');
+                        jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\'' + baseUrl + ''+this[1]+'\'">'+this[0]+'</button><br/>');
                     });
                 $else:
                     jQuery('#pluginMenu').append('None<br/>');
@@ -107,13 +113,13 @@ $code:
                 });
             });
     </script>
-    <script src="/static/scripts/behaviors.js"></script>
-    <script src="/static/scripts/schedule.js"></script>
-    <script src="/static/scripts/intervalSelect.js"></script>
+    <script src="$app_path('/static/scripts/behaviors.js')"></script>
+    <script src="$app_path('/static/scripts/schedule.js')"></script>
+    <script src="$app_path('/static/scripts/intervalSelect.js')"></script>
 </head>
 <body>
     <div class="content">
-        <form name="tt" action="ttu" method="get">
+        <form name="tt" action="${app_path('/ttu')}" method="get">
             <input type="hidden" name="tunit">
         </form>
 
@@ -126,7 +132,7 @@ $code:
 
         <div class="body">
             <div id="status">
-                <p id="deviceTime"><span class="hour"></span><span class="sep">:</span><span class="minute"></span><span class="second"></span><span class="ampm"></span></p>
+                <p id="deviceTime"><span class="time"></span><span class="second"></span><span class="ampm"></span></p>
                 <p id="deviceDate"></p>
             </div>
 

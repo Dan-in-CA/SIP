@@ -1,0 +1,1299 @@
+# Translation file for OpenSprinkler Pi (ospi).
+# Copyright (C) 2014
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 2.1.5\n"
+"POT-Creation-Date: 2014-11-12 10:35+Pacific Standard Time\n"
+"PO-Revision-Date: 2015-02-04 10:15+0100\n"
+"Last-Translator: Francois Bienaime <fbienaime@free.fr>\n"
+"Language-Team: LANGUAGE <dkimberling59@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr_FR\n"
+"X-Generator: Poedit 1.7.4\n"
+
+#: OSPi\helpers.py:390
+msgid "Password"
+msgstr "Mot de passe "
+
+#: OSPi\gv.py:17
+msgid "Could not use git to determine version!"
+msgstr "Détermination du numéro de version impossible depuis Git"
+
+#: OSPi\gv.py:24
+msgid "Could not use git to determine date of last commit!"
+msgstr "Détermination de la date de version impossible depuis Git"
+
+#: OSPi\gv.py:119
+msgid "System name"
+msgstr "Nom du système "
+
+#: OSPi\gv.py:119
+msgid "Unique name of this OpenSprinkler system."
+msgstr "Nom unique de ce système OpenSprinkler"
+
+#: OSPi\gv.py:119 OSPi\gv.py:120 OSPi\gv.py:121 OSPi\gv.py:122 OSPi\gv.py:123 OSPi\gv.py:124
+msgid "System"
+msgstr "Système"
+
+# Emploi du code postal ne fonctionne pas en France
+#: OSPi\gv.py:120
+msgid "City name or zip code. Use comma or + in place of space."
+msgstr "Nom de la ville et du pays (Exemple : Paris, France)"
+
+#: OSPi\gv.py:120
+msgid "Location"
+msgstr "Lieu "
+
+#: OSPi\gv.py:121
+msgid "Language"
+msgstr "Langage "
+
+#: OSPi\gv.py:121
+msgid "Select language (effective after restart.)"
+msgstr "Choisir une langue (redémarrage nécessaire)"
+
+#: OSPi\gv.py:122
+msgid "Example: GMT-4:00, GMT+5:30 (effective after reboot.)"
+msgstr "Exemple : GMT-4:00, GMT+5:30 (redémarrage nécessaire)"
+
+#: OSPi\gv.py:122
+msgid "Time zone"
+msgstr "Fuseau horaire"
+
+#: OSPi\gv.py:123
+msgid "24-hour clock"
+msgstr "Format 24 heures "
+
+#: OSPi\gv.py:123
+msgid "Display times in 24 hour format (as opposed to AM/PM style.)"
+msgstr "Affiche les heures en format 24 heures (alternative au format AM/PM)"
+
+#: OSPi\gv.py:124
+msgid "HTTP port"
+msgstr "Port HTTP "
+
+#: OSPi\gv.py:124
+msgid "HTTP port (effective after reboot.)"
+msgstr "Port HTTP (redémarrage nécessaire)"
+
+#: OSPi\gv.py:125
+msgid "Allow anonymous users to access the system without a password."
+msgstr "Permettre à des utilisateurs anonymes d'accéder au système sans mot de passe"
+
+#: OSPi\gv.py:125
+msgid "Disable security"
+msgstr "Sécurité désactivée "
+
+#: OSPi\gv.py:125 OSPi\gv.py:126 OSPi\gv.py:127 OSPi\gv.py:128
+msgid "Change Password"
+msgstr "Modifier le mot de passe"
+
+# Contraction conditionnée par l'interface
+#: OSPi\gv.py:126
+msgid "Current password"
+msgstr "Mdp actuel "
+
+#: OSPi\gv.py:126
+msgid "Re-enter the current password."
+msgstr "Répéter le mot de passe actuel"
+
+#: OSPi\gv.py:127
+msgid "Enter a new password."
+msgstr "Entrer un nouveau mot de passe"
+
+# Contraction conditionnée par l'interface
+#: OSPi\gv.py:127
+msgid "New password"
+msgstr "Nouveau Mdp "
+
+# Contraction conditionnée par l'interface
+#: OSPi\gv.py:128
+msgid "Confirm password"
+msgstr "Confirmer Mdp "
+
+#: OSPi\gv.py:128
+msgid "Confirm the new password."
+msgstr "Confirmer le nouveau mot de passe"
+
+# Plus compréhensible que "Séquentiel" dans le contexte
+#: OSPi\gv.py:129
+msgid "Sequential"
+msgstr "En séquence "
+
+#: OSPi\gv.py:129
+msgid "Sequential or concurrent running mode."
+msgstr "Mode séquentiel ou parallèle"
+
+#: OSPi\gv.py:129 OSPi\gv.py:130 OSPi\gv.py:131
+msgid "Station Handling"
+msgstr "Contrôle des stations"
+
+#: OSPi\gv.py:130
+msgid "Extension boards"
+msgstr "Cartes extensions "
+
+#: OSPi\gv.py:130
+msgid "Number of extension boards."
+msgstr "Nombre de cartes d'extensions (nombre de dispositifs 8 stations)"
+
+#: OSPi\gv.py:131
+msgid "Station delay"
+msgstr "Départ différé "
+
+#: OSPi\gv.py:131
+msgid "Station delay time (in seconds), between 0 and 240."
+msgstr "Délai de départ différé compris entre 0 et 240 (en secondes)"
+
+#: OSPi\gv.py:132
+msgid "Master station"
+msgstr "Station Maître "
+
+#: OSPi\gv.py:132
+msgid "Select master station."
+msgstr "Choisir la Station Maître"
+
+#: OSPi\gv.py:132 OSPi\gv.py:133 OSPi\gv.py:134
+msgid "Configure Master"
+msgstr "Configurer la Station Maître"
+
+# Contraction conditionnée par l'interface
+#: OSPi\gv.py:133
+msgid "Master on adjust"
+msgstr "Délai départ Maître "
+
+#: OSPi\gv.py:133
+msgid "Master on delay (in seconds), between +0 and +60."
+msgstr "Délai de démarrage Station Maître compris entre +0 et +60 (en secondes)"
+
+# Contraction conditionnée par l'interface
+#: OSPi\gv.py:134
+msgid "Master off adjust"
+msgstr "Délai arrêt Maître "
+
+#: OSPi\gv.py:134
+msgid "Master off delay (in seconds), between -60 and +60."
+msgstr "Délai d'arrêt Station Maître compris entre +0 et +60 (en secondes)"
+
+# Contraction conditionnée par l'interface
+#: OSPi\gv.py:135
+msgid "Use rain sensor"
+msgstr "Détecteur de pluie "
+
+#: OSPi\gv.py:135
+msgid "Use rain sensor."
+msgstr "Utiliser un détecteur de pluie"
+
+#: OSPi\gv.py:135 OSPi\gv.py:136
+msgid "Rain Sensor"
+msgstr "Détecteur de pluie"
+
+#: OSPi\gv.py:136
+msgid "Normally open"
+msgstr "Ouvert par défaut "
+
+#: OSPi\gv.py:136
+msgid "Rain sensor type."
+msgstr "Mode de fonctionnement du détecteur de pluie"
+
+#: OSPi\gv.py:137
+msgid "Log all events - note that repetitive writing to an SD card can shorten its lifespan."
+msgstr "Journaliser tous les événements - Attention, l'enregistrement continu peut limiter la durée de vie de la carte SD"
+
+#: OSPi\gv.py:137 OSPi\gv.py:138
+msgid "Logging"
+msgstr "Journaux"
+
+#: OSPi\gv.py:137 OSPi\templates\pcf_8591_adj.html:48
+msgid "Enable logging"
+msgstr "Journalisation "
+
+#: OSPi\gv.py:138
+msgid "Length of log to keep, 0=no limits."
+msgstr "Nombre d'enregistrements, 0 = pas de limite"
+
+# Contraction conditionnée par l'interface
+#: OSPi\gv.py:138
+msgid "Max log entries"
+msgstr "Nombre max "
+
+#: OSPi\helpers.py:35 OSPi\helpers.py.LOCAL.py:35
+msgid "Error: json module not found"
+msgstr "Erreur : module json non trouvé"
+
+#: OSPi\helpers.py:48 OSPi\helpers.py.LOCAL.py:48
+msgid "Rebooting..."
+msgstr "Reboot..."
+
+#: OSPi\helpers.py:61 OSPi\helpers.py.LOCAL.py:61
+msgid "Powering off..."
+msgstr "Arrêt en cours..."
+
+#: OSPi\helpers.py:74 OSPi\helpers.py.LOCAL.py:74
+msgid "Restarting..."
+msgstr "Redémarrage..."
+
+# Concept OSPi ne trouvant pas de traduction pouvant convenir à toute l'interface
+#: OSPi\helpers.py:190 OSPi\helpers.py.LOCAL.py:190 OSPi\templates\base.html:81
+msgid "Run-once"
+msgstr "Run-once"
+
+#: OSPi\helpers.py:192 OSPi\helpers.py.LOCAL.py:192 OSPi\templates\base.html:82 OSPi\templates\home.html:222
+msgid "Manual"
+msgstr "Manuel"
+
+#: OSPi\helpers.py:395
+msgid "Incorrect password, please try again"
+msgstr "Mot de passe incorrect, réessayer"
+
+#: OSPi\ospi.py:22
+msgid "Starting timing loop"
+msgstr "Démarrage de la séquence"
+
+#: OSPi\ospi.py:180
+msgid "plugins loaded:"
+msgstr "modules chargés :"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:333
+msgid "Monday"
+msgstr "Lundi"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:334
+msgid "Tuesday"
+msgstr "Mardi"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:335
+msgid "Wednesday"
+msgstr "Mercredi"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:336
+msgid "Thursday"
+msgstr "Jeudi"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:337
+msgid "Friday"
+msgstr "Vendredi"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:338
+msgid "Saturday"
+msgstr "Samedi"
+
+#: OSPi\templates\base.html:14 OSPi\templates\modify.html:339
+msgid "Sunday"
+msgstr "Dimanche"
+
+# Libellés des mois sans majuscules en français
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:25
+msgid "January"
+msgstr "janvier"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:29
+msgid "February"
+msgstr "février"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:33
+msgid "March"
+msgstr "mars"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:37
+msgid "April"
+msgstr "avril"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:41
+msgid "May"
+msgstr "mai"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:45
+msgid "June"
+msgstr "juin"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:49
+msgid "July"
+msgstr "juillet"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:53
+msgid "August"
+msgstr "août"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:57
+msgid "September"
+msgstr "septembre"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:61
+msgid "October"
+msgstr "octobre"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:65
+msgid "November"
+msgstr "novembre"
+
+#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:69
+msgid "December"
+msgstr "décembre"
+
+#: OSPi\templates\base.html:83 OSPi\templates\log.html:55
+msgid "Program"
+msgstr "Programme"
+
+#: OSPi\templates\base.html:135
+msgid "Home"
+msgstr "Accueil"
+
+#: OSPi\templates\base.html:136
+msgid "Define Programs"
+msgstr "Gestion des programmes"
+
+#: OSPi\templates\base.html:136
+msgid "Programs"
+msgstr "Programmes"
+
+#: OSPi\templates\base.html:137
+msgid "Define Run Once Program"
+msgstr "Définir le programme Run Once"
+
+# Concept OSPi ne trouvant pas de traduction pouvant convenir à toute l'interface
+#: OSPi\templates\base.html:137
+msgid "Run Once"
+msgstr "Run Once"
+
+#: OSPi\templates\base.html:138
+msgid "Acces Plugins"
+msgstr "Accéder aux modules"
+
+#: OSPi\templates\base.html:138
+msgid "Plugins"
+msgstr "Modules"
+
+#: OSPi\templates\base.html:139
+msgid "Log"
+msgstr "Journaux"
+
+#: OSPi\templates\base.html:139
+msgid "View Log"
+msgstr "Visualiser les journaux"
+
+#: OSPi\templates\base.html:140
+msgid "Options"
+msgstr "Options"
+
+# Notion de Station de l'OSPi conservée pour convenir à tous types d'activation (et pas seulement des électrovannes, des voies ou autres)
+#: OSPi\templates\base.html:141
+msgid "Stations"
+msgstr "Stations"
+
+#: OSPi\templates\base.html:141 OSPi\templates\stations.html:73
+msgid "Configure Stations"
+msgstr "Configurer les stations"
+
+#: OSPi\templates\base.html:143
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: OSPi\templates\base.html:152
+msgid "CPU Temp"
+msgstr "Température CPU "
+
+#: OSPi\templates\base.html:152
+msgid "Click to toggle"
+msgstr "Cliquer pour basculer"
+
+# Voir contexte
+#: OSPi\templates\base.html:153
+msgid "Software"
+msgstr "Interval Program"
+
+#: OSPi\templates\base.html:153
+msgid "version"
+msgstr "version "
+
+#: OSPi\templates\email_adj.html:3
+msgid "OpenSprinkler Pi Email adjustments"
+msgstr "Paramètres email de l'OpenSprinkler Pi"
+
+#: OSPi\templates\email_adj.html:21
+msgid "Email adjustments"
+msgstr "Paramètres email"
+
+#: OSPi\templates\email_adj.html:22
+msgid "This plugin can send E-mails. For this plugin you need a GMail account as provider."
+msgstr "Ce module génère des emails. Ce module nécessite un compte Gmail."
+
+#: OSPi\templates\email_adj.html:26
+msgid "Send email with file log.csv after power on"
+msgstr "Envoyer un email contenant le fichier log.csv après démarrage"
+
+#: OSPi\templates\email_adj.html:32
+msgid "Send email if rain is detected"
+msgstr "Envoyer un email en cas de détection de pluie"
+
+#: OSPi\templates\email_adj.html:39
+msgid "Sends email if program has run"
+msgstr "Envoyer un email si le programme a démarré"
+
+#: OSPi\templates\email_adj.html:45
+msgid "Your GMail username"
+msgstr "Nom d'utilisateur Gmail"
+
+#: OSPi\templates\email_adj.html:63 OSPi\templates\lcd_adj.html:44 OSPi\templates\pcf_8591_adj.html:103
+#: OSPi\templates\pressure_adj.html:50 OSPi\templates\sms_adj.html:81 OSPi\templates\system_update.html:47
+#: OSPi\templates\weather_level_adj.html:61
+msgid "Status"
+msgstr "Etat "
+
+#: OSPi\templates\email_adj.html:72 OSPi\templates\lcd_adj.html:54 OSPi\templates\monthly.html:76 OSPi\templates\pcf_8591_adj.html:118
+#: OSPi\templates\pressure_adj.html:59 OSPi\templates\sms_adj.html:90 OSPi\templates\weather_adj.html:55
+#: OSPi\templates\weather_level_adj.html:70
+msgid "Submit"
+msgstr "Soumettre"
+
+#: OSPi\templates\email_adj.html:73 OSPi\templates\lcd_adj.html:55 OSPi\templates\modify.html:402 OSPi\templates\monthly.html:77
+#: OSPi\templates\options.html:135 OSPi\templates\pcf_8591_adj.html:119 OSPi\templates\pressure_adj.html:60
+#: OSPi\templates\runonce.html:76 OSPi\templates\sms_adj.html:91 OSPi\templates\stations.html:120 OSPi\templates\weather_adj.html:56
+#: OSPi\templates\weather_level_adj.html:71
+msgid "Cancel"
+msgstr "Annuler"
+
+#: OSPi\templates\home.html:52
+msgid "Manual Mode"
+msgstr "Mode manuel"
+
+#: OSPi\templates\home.html:55 OSPi\templates\runonce.html:53
+msgid "Run Once Program"
+msgstr "Programme Run Once"
+
+#: OSPi\templates\home.html:58
+msgid " for "
+msgstr "pour"
+
+#: OSPi\templates\home.html:58
+msgid " on "
+msgstr " on "
+
+#: OSPi\templates\home.html:58
+msgid " ran "
+msgstr " activée "
+
+#: OSPi\templates\home.html:82
+msgid "Master On"
+msgstr "Station Maître On"
+
+#: OSPi\templates\home.html:84
+msgid "Master Off"
+msgstr "Station Maître Off"
+
+#: OSPi\templates\home.html:89
+msgid "Suppressed by Rain Delay"
+msgstr "Annulé par le délai pluie"
+
+#: OSPi\templates\home.html:92
+msgid "Suppressed by Rain Sensor"
+msgstr "Annulé par le détecteur de pluie"
+
+#: OSPi\templates\home.html:95 OSPi\templates\home.html:250 OSPi\templates\modify.html:352 OSPi\templates\programs.html:120
+msgid "Off"
+msgstr "Off"
+
+#: OSPi\templates\home.html:135
+msgid "Enter hours to delay"
+msgstr "Entrer le délai en heures"
+
+#: OSPi\templates\home.html:147
+msgid "Enter percentage adjustment"
+msgstr "Entrer le pourcentage d'ajustement"
+
+#: OSPi\templates\home.html:166 OSPi\templates\runonce.html:25
+msgid "Timer values wrong: "
+msgstr "Valeur minuterie erronée : "
+
+#: OSPi\templates\home.html:212
+msgid "System Off"
+msgstr "Système Off"
+
+#: OSPi\templates\home.html:212
+msgid "System On"
+msgstr "Système On"
+
+#: OSPi\templates\home.html:214
+msgid "Level"
+msgstr " Durées"
+
+#: OSPi\templates\home.html:214
+msgid "Normal"
+msgstr "Normal"
+
+#: OSPi\templates\home.html:214
+msgid "Water Level"
+msgstr "Pondéré"
+
+#: OSPi\templates\home.html:216
+msgid "Active"
+msgstr "Arrosage"
+
+#: OSPi\templates\home.html:216
+msgid "Rain Delay"
+msgstr "Délai pluie"
+
+#: OSPi\templates\home.html:220
+msgid "rain sensed"
+msgstr "pluie détectée"
+
+#: OSPi\templates\home.html:220 OSPi\templates\log.html:46
+msgid "no"
+msgstr "non"
+
+#: OSPi\templates\home.html:222
+msgid "Auto"
+msgstr "Auto"
+
+#: OSPi\templates\home.html:242
+msgid "On (Master)"
+msgstr "Maître On"
+
+#: OSPi\templates\home.html:244
+msgid "Off (Master)"
+msgstr "Maître Off"
+
+#: OSPi\templates\home.html:250 OSPi\templates\modify.html:352 OSPi\templates\programs.html:118
+msgid "On"
+msgstr "On"
+
+#: OSPi\templates\home.html:268
+msgid " Prev Day"
+msgstr "Jour préc."
+
+#: OSPi\templates\home.html:269
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#: OSPi\templates\home.html:270
+msgid "Next Day"
+msgstr "Jour suiv."
+
+#: OSPi\templates\home.html:308
+msgid "loading..."
+msgstr "chargement..."
+
+#: OSPi\templates\home.html:337
+msgid "Stop All Stations"
+msgstr "Arrêt toutes stations"
+
+#: OSPi\templates\home.html:340
+msgid "Program 1"
+msgstr "Programme 1"
+
+#: OSPi\templates\lcd_adj.html:3
+msgid "OpenSprinkler Pi LCD settings"
+msgstr "Paramètres LCD de l'OpenSprinkler Pi"
+
+#: OSPi\templates\lcd_adj.html:21
+msgid "LCD settings"
+msgstr "Paramètres LCD"
+
+#: OSPi\templates\lcd_adj.html:22
+msgid ""
+"This plugin sends data to I2C for LCD 16x2 char with PCF8574. Visit for more: www.pihrt.com/elektronika/258-moje-rapsberry-pi-i2c-"
+"lcd-16x2."
+msgstr ""
+"Ce module adresse les données pour le LCD 16x2 du PCF8574 par l'interface I2C. Pour en savoir plus : www.pihrt.com/elektronika/258-"
+"moje-rapsberry-pi-i2c-lcd-16x2"
+
+#: OSPi\templates\lcd_adj.html:38
+msgid "Range adress"
+msgstr "Plage d'adresses"
+
+#: OSPi\templates\lcd_adj.html:51
+msgid "Compatible with HD44780 LCD 16x2 controller."
+msgstr "Compatible avec le controleur LCD 16x2 HD44780"
+
+# Libellé de l'URL. Affichage des apostrophes non permis.
+#: OSPi\templates\log.html:3
+msgid "OpenSprinkler Pi Log"
+msgstr "Journal de l OpenSrinkler Pi"
+
+#: OSPi\templates\log.html:8
+msgid "Enabled"
+msgstr "activée"
+
+#: OSPi\templates\log.html:11
+msgid "Disabled"
+msgstr "désactivée"
+
+#: OSPi\templates\log.html:41
+msgid "Log "
+msgstr "Journalisation "
+
+#: OSPi\templates\log.html:46
+msgid " limit"
+msgstr " limite"
+
+#: OSPi\templates\log.html:46
+msgid "Total number of records: "
+msgstr "Nombre total d'enregistrements : "
+
+#: OSPi\templates\log.html:47 OSPi\templates\pcf_8591_adj.html:38
+msgid "Download log as "
+msgstr "Télécharger le journal au format "
+
+#: OSPi\templates\log.html:51
+msgid "Date"
+msgstr "Date"
+
+#: OSPi\templates\log.html:52
+msgid "Start Time"
+msgstr "Heure de départ "
+
+#: OSPi\templates\log.html:53 OSPi\templates\stations.html:77
+msgid "Station"
+msgstr "Station"
+
+#: OSPi\templates\log.html:54
+msgid "Duration"
+msgstr "Durée "
+
+#: OSPi\templates\log.html:73
+msgid "Refresh"
+msgstr "Rafraichir"
+
+#: OSPi\templates\log.html:74
+msgid "Clear Log"
+msgstr "Effacer les journaux"
+
+#: OSPi\templates\login.html:3
+msgid "OpenSprinkler Pi Login"
+msgstr "Connexion OpenSprinkler Pi"
+
+#: OSPi\templates\login.html:7 OSPi\templates\login.html:10
+msgid "Login"
+msgstr "Connexion"
+
+#: OSPi\templates\modify.html:3
+msgid "OpenSprinkler Pi Modify Program"
+msgstr "Modification du programme de l'OpenSprinkler Pi"
+
+#: OSPi\templates\modify.html:66
+msgid "Error: Incorrect time input "
+msgstr "Erreur : Heure indiquée incorrecte"
+
+#: OSPi\templates\modify.html:78
+msgid "Please choose at least one weekday for the program to run."
+msgstr "Sélectionner au moins un jour de la semaine"
+
+#: OSPi\templates\modify.html:82
+msgid "Please choose at least one station to run in this program."
+msgstr "Sélectionner au moins une station"
+
+#: OSPi\templates\modify.html:228
+msgid "Error: starting in days wrong."
+msgstr "Erreur : Délai de départ en jours erroné"
+
+#: OSPi\templates\modify.html:249
+msgid "Error: Incorrect duration."
+msgstr "Erreur : Durée incorrecte"
+
+#: OSPi\templates\modify.html:263
+msgid "Error: Start time must be prior to end time."
+msgstr "Erreur : L'heure de départ doit précéder l'heure d'arrêt"
+
+#: OSPi\templates\modify.html:283
+msgid "Edit Program #"
+msgstr "Edition du programme #"
+
+#: OSPi\templates\modify.html:283 OSPi\templates\programs.html:108
+msgid "Add a New Program"
+msgstr "Ajouter un nouveau programme"
+
+#: OSPi\templates\modify.html:288
+msgid "Program Off"
+msgstr "Programme Off"
+
+#: OSPi\templates\modify.html:288
+msgid "Program On"
+msgstr "Programme On"
+
+#: OSPi\templates\modify.html:304
+msgid "Recurring"
+msgstr "Récurrent"
+
+#: OSPi\templates\modify.html:304
+msgid "Single pass"
+msgstr "Unitaire"
+
+# Voir contexte
+#: OSPi\templates\modify.html:306
+msgid "Every"
+msgstr "Toutes les "
+
+#: OSPi\templates\modify.html:310
+msgid "Until"
+msgstr "Jusqu'à "
+
+#: OSPi\templates\modify.html:322
+msgid "Interval"
+msgstr "Intervalle"
+
+# Voir contexte
+#: OSPi\templates\modify.html:322
+msgid "Weekly"
+msgstr "Jour"
+
+#: OSPi\templates\modify.html:327
+msgid "Select All"
+msgstr "Tout sélectionner"
+
+#: OSPi\templates\modify.html:328
+msgid "Clear All"
+msgstr "Tout effacer"
+
+#: OSPi\templates\modify.html:359
+msgid "Water interval"
+msgstr "Intervalle d'arrosage (en jours) "
+
+#: OSPi\templates\modify.html:375
+msgid "Starting in"
+msgstr "Départ dans (jour) "
+
+# Voir contexte dans l'interface
+#: OSPi\templates\modify.html:389
+msgid "Any Day"
+msgstr "Continu"
+
+#: OSPi\templates\modify.html:389
+msgid "Restrict Day"
+msgstr "Restriction"
+
+#: OSPi\templates\modify.html:391
+msgid "Even"
+msgstr "Pair"
+
+# Interface inadaptée
+#: OSPi\templates\modify.html:391
+msgid "Odd"
+msgstr "Impair"
+
+#: OSPi\templates\modify.html:392
+msgid "(except 31st and Feb 29th)"
+msgstr "(excepté les 31 et 29 février)"
+
+#: OSPi\templates\modify.html:401
+msgid "Save"
+msgstr "Enregistrer"
+
+# Libellé de l'URL. Affichage des apostrophes non permis.
+#: OSPi\templates\monthly.html:3
+msgid "OpenSprinkler Pi Monthly Adjustments"
+msgstr "Pourcentage mensuel d arrosage de l OpenSrinkler Pi"
+
+#: OSPi\templates\monthly.html:20
+msgid "Monthly Irrigation Adjustments"
+msgstr "Pourcentage mensuel d'arrosage"
+
+#: OSPi\templates\monthly.html:21
+msgid "Enter an adjustment for each month (% irrigation time)"
+msgstr "Entrer une valeur pour chaque mois (% temps d'arrosage)"
+
+# Libellé de l'URL. Affichage des apostrophes non permis.
+#: OSPi\templates\options.html:3
+msgid "OpenSprinkler Pi Options"
+msgstr "Options de l OpenSrinkler Pi"
+
+#: OSPi\templates\options.html:18 OSPi\templates\options.html:19
+msgid "Hide Tooltips"
+msgstr "Masquer les légendes"
+
+#: OSPi\templates\options.html:19 OSPi\templates\options.html:68
+msgid "Show Tooltips"
+msgstr "Montrer les légendes"
+
+#: OSPi\templates\options.html:48
+msgid "The password given was incorrect."
+msgstr "Le mot de passe indiqué est incorrect"
+
+#: OSPi\templates\options.html:52
+msgid "Please enter a password."
+msgstr "Indiquer un mot de passe SVP"
+
+#: OSPi\templates\options.html:56
+msgid "Passwords don't match, please re-enter."
+msgstr "Le mot de passe ne correspond pas, recommencer"
+
+#: OSPi\templates\options.html:67
+msgid "Edit Options"
+msgstr "Editer les options"
+
+#: OSPi\templates\options.html:96
+msgid "Default"
+msgstr "Défaut"
+
+#: OSPi\templates\options.html:108
+msgid "None"
+msgstr "Aucun"
+
+#: OSPi\templates\options.html:122
+msgid "System Restart"
+msgstr "Redémarrage système"
+
+#: OSPi\templates\options.html:124
+msgid "Restart"
+msgstr "Redémarrer"
+
+#: OSPi\templates\options.html:124
+msgid "Restart software"
+msgstr "Redémarrer l'application"
+
+#: OSPi\templates\options.html:125
+msgid "Reboot"
+msgstr "Rebooter"
+
+#: OSPi\templates\options.html:125
+msgid "Reboot hardware"
+msgstr "Rebooter l'appareil"
+
+#: OSPi\templates\options.html:134 OSPi\templates\stations.html:118
+msgid "Submit Changes"
+msgstr "Enregistrer les changements"
+
+#: OSPi\templates\pcf_8591_adj.html:3
+msgid "OpenSprinkler Pi PCF8591 voltage and temperature adjustments"
+msgstr "Réglage voltage et température du PCF8591 de l'OpenSrinkler Pi"
+
+#: OSPi\templates\pcf_8591_adj.html:34
+msgid "PCF8591 voltage and temperature adjustments"
+msgstr "Réglage voltage et température du PCF8591"
+
+#: OSPi\templates\pcf_8591_adj.html:35
+msgid "For this plugin is needed enabled I2C bus and connected I2C A/D converter PCF8591 on I2C adress 0x48."
+msgstr ""
+"Ce module requiert l'activation de l'interface I2C et la connexion sur I2C A/D du convertisseur PCF8591 à l'adresse 0x48 de l'I2C"
+
+#: OSPi\templates\pcf_8591_adj.html:36
+msgid "For measure temperature use temp probe LM35D (0-100 &deg;C) on AD0-3 converter."
+msgstr "Pour la mesure de température utiliser la sonde LM35D sur le convertisseur AD0-3 (0-100 &deg;C)"
+
+#: OSPi\templates\pcf_8591_adj.html:37
+msgid "If the label has not blank value the value is displayed in the window read value."
+msgstr "Avec une mesure effective, la valeur est affichée dans la fenêtre de lecture"
+
+#: OSPi\templates\pcf_8591_adj.html:38
+msgid " log file."
+msgstr " fichier journal."
+
+#: OSPi\templates\pcf_8591_adj.html:38 OSPi\templates\programs.html:151
+msgid "Delete"
+msgstr "Supprimer"
+
+#: OSPi\templates\pcf_8591_adj.html:42
+msgid "Use PCF8591"
+msgstr "Utiliser PCF8591"
+
+#: OSPi\templates\pcf_8591_adj.html:54
+msgid "Maximum number of records"
+msgstr "Nombre maximum d'enregistrements"
+
+#: OSPi\templates\pcf_8591_adj.html:56
+msgid "(0 = unlimited)"
+msgstr "(0 = illimité)"
+
+#: OSPi\templates\pcf_8591_adj.html:60
+msgid "Time loop for logging"
+msgstr "Délai d'enregistrement"
+
+#: OSPi\templates\pcf_8591_adj.html:62
+msgid "minutes (0 = logging disabled)"
+msgstr "minutes (0 = enregistrement désactivé)"
+
+#: OSPi\templates\pcf_8591_adj.html:66
+msgid "Label for input AD0:"
+msgstr "Libellé pour entrée AD0 :"
+
+#: OSPi\templates\pcf_8591_adj.html:68 OSPi\templates\pcf_8591_adj.html:74 OSPi\templates\pcf_8591_adj.html:80
+#: OSPi\templates\pcf_8591_adj.html:86
+msgid " measure as voltage "
+msgstr " mesure de tension "
+
+#: OSPi\templates\pcf_8591_adj.html:72
+msgid "Label for input AD1"
+msgstr "Libellé pour entrée AD1"
+
+#: OSPi\templates\pcf_8591_adj.html:78
+msgid "Label for input AD2"
+msgstr "Libellé pour entrée AD2"
+
+#: OSPi\templates\pcf_8591_adj.html:90
+msgid "Read value"
+msgstr "Lire la valeur"
+
+#: OSPi\templates\pcf_8591_adj.html:109
+msgid "Output DA voltage"
+msgstr "Tension sortie DA"
+
+#: OSPi\templates\pressure_adj.html:3
+msgid "OpenSprinkler Pi Pressure monitor settings"
+msgstr "Paramètres surveillance pression de l'OpenSrinkler Pi"
+
+#: OSPi\templates\pressure_adj.html:20
+msgid "Pressure monitor settings"
+msgstr "Paramètres surveillance pression"
+
+#: OSPi\templates\pressure_adj.html:21
+msgid "This plugin checked pressure in pipe, if master station is switched on must be activated pressure sensor. "
+msgstr "Ce module controle la pression de la canalisation, si une Station Maître est activée, le capteur de pression doit être en place"
+
+#: OSPi\templates\pressure_adj.html:22
+msgid ""
+"If is not sensor activated in a certain time, switches off all station  and sends email with error. Prevent safety for master station "
+"pump."
+msgstr ""
+"Si le capteur de pression n'est pas activé dans un certain délai, arrête toutes les stations et envoie un email d'erreur rencontrée. "
+"Préserve la pompe de la Station Maître."
+
+#: OSPi\templates\pressure_adj.html:26
+msgid "Use pressure sensor for master station"
+msgstr "Utiliser un capteur de pression pour la Station Maître"
+
+#: OSPi\templates\pressure_adj.html:28
+msgid "(Pressure sensor is connected between GPIO pin 22 and ground)"
+msgstr "(Le capteur de pression est connecté sur le pin 22 et la masse du GPIO)"
+
+# Peut-être "Envoyer un email lorsqu'une erreur est rencontrée"
+#: OSPi\templates\pressure_adj.html:32
+msgid "Send email with error"
+msgstr "Envoyer un email avec l'erreur"
+
+#: OSPi\templates\pressure_adj.html:34
+msgid "(For this function required email plugin)"
+msgstr "(Cette fonction nécessite le module email)"
+
+#: OSPi\templates\pressure_adj.html:38
+msgid "Max time to activate pressure sensor"
+msgstr "Temps maximum pour activer le capteur de pression"
+
+#: OSPi\templates\pressure_adj.html:40
+msgid "(max 999 seconds)"
+msgstr "(max 999 secondes)"
+
+#: OSPi\templates\pressure_adj.html:44
+msgid "Pressure sensor"
+msgstr "Capteur de pression"
+
+# Libellé de l'URL. Affichage des apostrophes non permis.
+#: OSPi\templates\programs.html:3
+msgid "OpenSprinkler Pi Programs"
+msgstr "Programmes de l OpenSprinkler Pi"
+
+# Voir contexte
+#: OSPi\templates\programs.html:18
+msgid "Every "
+msgstr "Tous les "
+
+#: OSPi\templates\programs.html:18 OSPi\templates\programs.html:20
+msgid "days"
+msgstr "jours"
+
+#: OSPi\templates\programs.html:20
+msgid "starting in"
+msgstr "Débute dans"
+
+# Voir contexte
+#: OSPi\templates\programs.html:23
+msgid "Every Weekday"
+msgstr "Tous les jours"
+
+#: OSPi\templates\programs.html:27
+msgid "Fri"
+msgstr "Ven"
+
+#: OSPi\templates\programs.html:27
+msgid "Mon"
+msgstr "Lun"
+
+#: OSPi\templates\programs.html:27
+msgid "Sat"
+msgstr "Sam"
+
+#: OSPi\templates\programs.html:27
+msgid "Sun"
+msgstr "Dim"
+
+#: OSPi\templates\programs.html:27
+msgid "Thur"
+msgstr "Jeu"
+
+#: OSPi\templates\programs.html:27
+msgid "Tue"
+msgstr "Mar"
+
+#: OSPi\templates\programs.html:27
+msgid "Wed"
+msgstr "Mer"
+
+#: OSPi\templates\programs.html:29
+msgid " (Even days only)"
+msgstr " (Jours pairs seulement)"
+
+#: OSPi\templates\programs.html:31
+msgid " (Odd days only)"
+msgstr " (Jours impairs seulement)"
+
+#: OSPi\templates\programs.html:109
+msgid "Delete All"
+msgstr "Réinitialiser"
+
+# Voir contexte
+#: OSPi\templates\programs.html:128
+msgid "Run"
+msgstr "Station "
+
+#: OSPi\templates\programs.html:141
+msgid "Starting"
+msgstr "Départ "
+
+#: OSPi\templates\programs.html:145
+msgid "Recurring every"
+msgstr "Récurrent toutes les"
+
+#: OSPi\templates\programs.html:149 OSPi\templates\runonce.html:74
+msgid "Run Now"
+msgstr "Lancer"
+
+#: OSPi\templates\programs.html:150
+msgid "Edit"
+msgstr "Editer"
+
+#: OSPi\templates\restarting.html:3
+msgid "OpenSprinkler Pi Restarting"
+msgstr "Redémarrage de l'OpenSprinkler Pi"
+
+#: OSPi\templates\restarting.html:30
+msgid "ospi is restarting"
+msgstr "OSPi redémarre"
+
+#: OSPi\templates\restarting.html:31
+msgid "You will be redirected as soon as possible..."
+msgstr "Redirection en cours..."
+
+# Libellé de l'URL. Affichage des apostrophes non permis.
+#: OSPi\templates\runonce.html:3
+msgid "OpenSprinkler Pi Run-Once"
+msgstr "Fonction Run-Once de l OpenSprinkler Pi"
+
+#: OSPi\templates\runonce.html:35
+msgid "No station is scheduled to run"
+msgstr "Aucune station programmée"
+
+#: OSPi\templates\runonce.html:75
+msgid "Reset Time"
+msgstr "Réinitialiser"
+
+#: OSPi\templates\sms_adj.html:3
+msgid "OpenSprinkler Pi SMS adjustments"
+msgstr "Réglages SMS de l'OpenSprinkler Pi"
+
+#: OSPi\templates\sms_adj.html:21
+msgid "SMS adjustments"
+msgstr "Réglages SMS"
+
+#: OSPi\templates\sms_adj.html:22
+msgid "For this plugin is needed to SMS modem with the telephone service provider."
+msgstr "Ce module nécessite d'associer le modem SMS avec l'opérateur de téléphonie"
+
+#: OSPi\templates\sms_adj.html:23
+msgid "For more information visit the www.pihrt.com/elektronika/259-moje-rapsberry-pi-sms-ovladani-rpi for instructions."
+msgstr "Pour plus d'information et instructions visiter le site www.pihrt.com/elektronika/259-moje-rapsberry-pi-sms-ovladani-rpi"
+
+#: OSPi\templates\sms_adj.html:27
+msgid "Use SMS modem"
+msgstr "Utiliser un modem SMS"
+
+#: OSPi\templates\sms_adj.html:33
+msgid "Number 1"
+msgstr "Numéro 1"
+
+#: OSPi\templates\sms_adj.html:39
+msgid "Number 2"
+msgstr "Numéro 2"
+
+#: OSPi\templates\sms_adj.html:45
+msgid "Command for info"
+msgstr "Commande pour obtenir le statut"
+
+#: OSPi\templates\sms_adj.html:51
+msgid "Command for stop irrigation"
+msgstr "Commande pour arrêter l'arrosage"
+
+#: OSPi\templates\sms_adj.html:57
+msgid "Command for start irrigation"
+msgstr "Commande pour démarrer l'arrosage"
+
+#: OSPi\templates\sms_adj.html:63
+msgid "Command for reboot system"
+msgstr "Commande pour rebooter l'appareil"
+
+#: OSPi\templates\sms_adj.html:69
+msgid "Command for power off system"
+msgstr "Commande pour arrêter l'appareil"
+
+#: OSPi\templates\sms_adj.html:75
+msgid "Command for update OSPi from GITHUB"
+msgstr "Commande pour mettre à jour OSPi depuis GitHub"
+
+#: OSPi\templates\stations.html:3
+msgid "OpenSprinkler Pi Stations"
+msgstr "Stations OpenSrinkler Pi"
+
+#: OSPi\templates\stations.html:78
+msgid "Name"
+msgstr "Nom"
+
+#: OSPi\templates\stations.html:79
+msgid "Enabled?"
+msgstr "Activée ?"
+
+#: OSPi\templates\stations.html:80
+msgid "Ignore Rain?"
+msgstr "Ignorer pluie ?"
+
+#: OSPi\templates\stations.html:82
+msgid "Activate Master?"
+msgstr "Activer le Maître ?"
+
+#: OSPi\templates\stations.html:93
+msgid "(Master valve)"
+msgstr "(Station Maître)"
+
+# Voir contexte
+#: OSPi\templates\stations.html:119
+msgid "Reset Names"
+msgstr "Réinitialiser"
+
+#: OSPi\templates\system_update.html:3
+msgid "OpenSprinkler Pi System update from GitHub"
+msgstr "Mise à jour OpenSprinkler Pi depuis GitHub"
+
+#: OSPi\templates\system_update.html:24
+msgid "System update from github"
+msgstr "Mise à jour système depuis GitHub"
+
+#: OSPi\templates\system_update.html:25
+msgid "This plugin compares the local copy with the remote repository and can automatically update the local copy."
+msgstr "Ce module compare la version locale avec la version centrale et effectue automatiquement la mise à jour locale."
+
+#: OSPi\templates\system_update.html:29
+msgid "Remote repository"
+msgstr "Dépot distant"
+
+#: OSPi\templates\system_update.html:35
+msgid "Local ospi version"
+msgstr "Version locale de l'OSPi"
+
+#: OSPi\templates\system_update.html:41
+msgid "Local ospi date"
+msgstr "Date locale de l'OSPi"
+
+#: OSPi\templates\system_update.html:50
+msgid "Update Status"
+msgstr "Niveau mise à jour"
+
+#: OSPi\templates\system_update.html:59
+msgid "Update ospi"
+msgstr "Mettre à jour l'OSPi"
+
+#: OSPi\templates\system_update.html:61
+msgid "Up-to-date"
+msgstr "A jour"
+
+#: OSPi\templates\system_update.html:62
+msgid "Restart ospi"
+msgstr "Redémarrer l'OSPi"
+
+#: OSPi\templates\system_update.html:63
+msgid "Back"
+msgstr "Retour"
+
+#: OSPi\templates\weather_adj.html:3
+msgid "OpenSprinkler Pi Weather-based Rain Delay"
+msgstr "Délai pluie basé sur la météo de l OpenSrinkler Pi"
+
+#: OSPi\templates\weather_adj.html:20
+msgid "Weather-based Rain Delay"
+msgstr "Délai pluie basé sur la météo"
+
+#: OSPi\templates\weather_adj.html:21
+msgid ""
+"When weather-based rain delay is enabled, the weather will be checked for rain every hour. If the weather reports any condition "
+"suggesting rain, a rain delay is automatically issued using the below set delay duration."
+msgstr ""
+"Lorsque le délai pluie est basé sur la météo, la pluviométrie est vérifiée toutes les heures. Si les prévisions météo indiquent de la "
+"pluie, le délai pluie sera déterminé à partir de la durée suivante"
+
+#: OSPi\templates\weather_adj.html:25
+msgid "Use Automatic Rain Delay"
+msgstr "Utiliser le délai pluie automatique "
+
+#: OSPi\templates\weather_adj.html:31
+msgid "Delay Duration (hours)"
+msgstr "Durée du délai (en heures) "
+
+#: OSPi\templates\weather_adj.html:37
+msgid "Weather Provider"
+msgstr "Fournisseur météo "
+
+#: OSPi\templates\weather_adj.html:46 OSPi\templates\weather_level_adj.html:55
+msgid "Wunderground API Key"
+msgstr "Clé API Wunderground "
+
+# Libellé de l'URL. Affichage des apostrophes non permis.
+#: OSPi\templates\weather_level_adj.html:3
+msgid "OpenSprinkler Pi Weather-based Water Level"
+msgstr "Ajustement du % d arrosage de l OpenSprinkler Pi en fonction de la météo"
+
+#: OSPi\templates\weather_level_adj.html:20
+msgid "Weather-based Water Level"
+msgstr "Ajustement du % d'arrosage en fonction de la météo"
+
+#: OSPi\templates\weather_level_adj.html:21
+msgid ""
+"When weather-based water level is enabled, the weather will be checked every hour and the water level will be adjusted accordingly."
+msgstr ""
+"Lorsque le % d'arrosage est basé sur la météo, la pluviométrie est vérifiée toutes les heures. Si les prévisions météo indiquent de la "
+"pluie, le % d'arrosage sera adapté en conséquence"
+
+#: OSPi\templates\weather_level_adj.html:25
+msgid "Use Automatic Water Level Adjustment"
+msgstr "Ajustement auto du % d'arrosage "
+
+#: OSPi\templates\weather_level_adj.html:31
+msgid "Min percentage"
+msgstr "Pourcentage min "
+
+#: OSPi\templates\weather_level_adj.html:37
+msgid "Max percentage"
+msgstr "Pourcentage max "
+
+#: OSPi\templates\weather_level_adj.html:43
+msgid "History days used"
+msgstr "Nombre de jours d'historique "
+
+#: OSPi\templates\weather_level_adj.html:49
+msgid "Forecast days used"
+msgstr "Nombre de jours de prévision "
+
+#: OSPi\webpages.py:296
+msgid " not found."
+msgstr " non trouvé"
+
+#: OSPi\webpages.py:296
+msgid "Station "
+msgstr "Station"
+
+#: OSPi\webpages.py:314
+msgid "Manual mode not active."
+msgstr "Mode manuel désactivé"
+
+#: OSPi\webpages.py:590
+msgid "Date, Start Time, Zone, Duration, Program"
+msgstr "Date et heure de départ, Durée, Zone, Programme"
