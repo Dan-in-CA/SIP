@@ -43,7 +43,7 @@ sd = {
     u"seq": 1,
     u"ir": [0],
     u"rsn": 0,
-    u"htp": 8080,
+    u"htp": 80,
     u"nst": 8,
     u"rdst": 0,
     u"loc": u"",
