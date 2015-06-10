@@ -281,7 +281,7 @@ $code:
 </script>
 <div id="programs">
     <div class="title">${_("Edit Program #") + str(pid+1) if (pid>-1) else _("Add a New Program")}</div>
-    <form name="mf" id="mf" action="${app_path('/cp')" method="get">
+    <form name="mf" id="mf" action="${app_path('/cp')}" method="get">
         <input type="hidden" name="pid" value="${pid}">
         <input type="hidden" name="v" value="$:{program}">
         <div style="padding-left:5px;padding-right:5px;">
