@@ -1,0 +1,5 @@
+ospi (2.0-1) UNRELEASED; urgency=low
+
+  * Initial packaging setup for 2.0
+
+ -- Niv Gal Waizer <nivwiz@gmail.com>  Fri, 26 Jun 2015 21:49:10 +0300

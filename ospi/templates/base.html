@@ -1,0 +1,164 @@
+$def with (content)
+$code:
+    snames = gv.snames
+
+$code:
+    def plugin_adjustment():
+        duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith('wl_')]
+        result = 100.0
+        for entry in duration_adjustments:
+            result *= entry/100.0
+        return '%.0f' % result
+
+$code:
+    days= json.dumps([_('Sunday'), _('Monday'), _('Tuesday'), _('Wednesday'), _('Thursday'), _('Friday'), _('Saturday')])
+    months = json.dumps([_('January'), _('February'), _('March'), _('April'), _('May'), _('June'), _('July'), _('August'), _('September'), _('October'), _('November'), _('December')])
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <title>${content.title + (" - "+gv.sd['name'] if gv.sd['name'] != "OpenSprinkler Pi" else "")}</title>
+    <link href="$app_path('/static/images/favicon.ico')" rel="icon" type="image/x-icon">
+    <link href="$app_path('/static/themes/' + gv.sd['theme'] + '/base.css')" rel="stylesheet" type="text/css"/>
+    <style type="text/css">
+        .bluebg {background-color:lightblue;}
+        .opOn, .wlOn, .rsOff {color:green;}
+        .opOff, .wlOff, .rsOn {color:red;}
+        .rdOff {color:black;}
+        .rdOn {color:red;}
+        .rsNA, station_waiting {color:gray;}
+        .station_disabled {color:gray;}
+
+        #lastRun {color:gray;}
+        #stations {width:100%;}
+        #pluginMenu {display: none; z-index: 99}
+        .program {line-height:22px}
+        .strike {text-decoration:line-through;}
+
+        .progstation_on {background-color:#9AFA9A; color:black; font-size:10pt}
+        .progstation_off {background-color:white; color:lightgray; font-size:10pt}
+        button.cDisable.toggle {float:right; width:130px; margin:0px; padding:0px; background-color:transparent}
+        button.cDisable.toggle span.toggleleft {width: 30px;}
+        button.cDisable.toggle span.toggleright {width: 30px;}
+
+        button#tooltip {height:24px;}
+        .tooltip {background-color:#FFF2B8; display:none; font-size:10pt; margin-left:4px;}
+        .label {font-weight:bold; float:left; width:160px; text-align:right; padding-right:4px;}
+
+        td.stationNumber, td.stationShow, td.stationIgnore, td.stationMaster {text-align:center;}
+        td.stationName {text-align:left; padding-left:1em;}
+    </style>
+    <script src="$app_path('/static/scripts/jquery-1.8.2.min.js')"></script>
+    <script>
+        // Variables set server-side
+        var devTzOffset = ${gv.tz_offset}*1000;
+        var cliTzOffset = new Date().getTimezoneOffset() * 60 * 1000;
+        var timeFormat = ${gv.sd["tf"]};
+        var dayList = $:{days};
+        var monthList = $:{months};
+        var baseUrl = '${web.ctx.homepath}';
+
+        var cputemp = "${gv.cputemp}";
+        var tempunit = "${gv.sd['tu']}";
+
+        $if content.page != 'login':
+            var snames = $:{[s.encode('utf-8') for s in snames]};
+            var lrun = ${gv.lrun};
+            var rdst = ${gv.sd['rdst']}*1000;
+            var ipas = ${gv.sd['ipas']};
+            var en = ${gv.sd['en']};
+            var mm = ${gv.sd['mm']};
+            var rd = ${gv.sd['rd']};
+            var wl = ${gv.sd['wl']};
+            var wlx = ${plugin_adjustment()};
+            var mas = ${gv.sd['mas']};
+            var nbrd = ${gv.sd['nbrd']};
+            var plugins = $:{gv.plugin_menu};
+            var progs = $:{gv.pd};
+            var nprogs = ${len(gv.pd)};
+            var sdt = ${gv.sd['sdt']};
+            var seq = ${gv.sd['seq']};
+            var run_once = $:{json.dumps(_('Run-once'), ensure_ascii=False)};
+            var man = $:{json.dumps(_('Manual'), ensure_ascii=False)};
+            var program = $:{json.dumps(_('Program'), ensure_ascii=False)};
+
+            jQuery(document).ready(function(){
+                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + baseUrl + '/plugins\'">Manage Plugins</button><br/>');
+                $if len(gv.plugin_menu) > 0:
+                    jQuery.each(plugins, function() {
+                        jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\'' + baseUrl + ''+this[1]+'\'">'+this[0]+'</button><br/>');
+                    });
+                $else:
+                    jQuery('#pluginMenu').append('None<br/>');
+
+                jQuery("#bPlugins").click(function(e) {
+                    var btn = jQuery("#bPlugins");
+                    jQuery("#pluginMenu").css({
+                        position: 'absolute',
+                        top: btn.offset().top + btn.outerHeight() + 10,
+                        left: btn.offset().left
+                    }).slideToggle();
+                    e.stopPropagation();
+                });
+
+                jQuery(document).click(function(){
+                    jQuery("#pluginMenu").slideUp();
+                });
+            });
+    </script>
+    <script src="$app_path('/static/scripts/behaviors.js')"></script>
+    <script src="$app_path('/static/scripts/schedule.js')"></script>
+    <script src="$app_path('/static/scripts/intervalSelect.js')"></script>
+</head>
+<body>
+    <div class="content">
+        <form name="tt" action="${app_path('/ttu')}" method="get">
+            <input type="hidden" name="tunit">
+        </form>
+
+        <div id="pluginMenu">
+        </div>
+
+        <div class="header">
+            <div class="title">${gv.sd['name'] if gv.sd['name'] != "OpenSprinkler Pi" else ""}</div>
+        </div>
+
+        <div class="body">
+            <div id="status">
+                <p id="deviceTime"><span class="time"></span><span class="second"></span><span class="ampm"></span></p>
+                <p id="deviceDate"></p>
+            </div>
+
+            <div class="panel">
+
+                $if content.page != 'login':
+                    <div id="nav">
+                        <button id="bHome" class="home${' here' if content.page=='home' else ''}" title=$:{json.dumps(_('Home'), ensure_ascii=False)}>$_('Home')</button>
+                        <button id="bPrograms" class="programs${' here' if content.page=='programs' else ''}" title=$:{json.dumps(_('Define Programs'), ensure_ascii=False)}>$_('Programs')</button>
+                        <button id="bRunOnce" class="start${' here' if content.page=='runonce' else ''}" title=$:{json.dumps(_('Define Run Once Program'), ensure_ascii=False)}>$_('Run Once')</button>
+                        <button id="bPlugins" class="plugins${' here' if content.page=='plugins' else ''}" title=$:{json.dumps(_('Acces Plugins'), ensure_ascii=False)}>$_('Plugins')</button>
+                        <button id="bLog" class="log${' here' if content.page=='log' else ''}" title=$:{json.dumps(_('View Log'), ensure_ascii=False)}>$_('Log')</button>
+                        <button id="bOptions" class="options${' here' if content.page=='options' else ''}" title=$:{json.dumps(_('Options'), ensure_ascii=False)}>$_('Options')</button>
+                        <button id="bStations" class="stations${' here' if content.page=='stations' else ''}" title=$:{json.dumps(_('Configure Stations'), ensure_ascii=False)}>$_('Stations')</button>
+                        $if not(gv.sd['ipas']):
+                            <button id="bLogout" class="logout" title=$:{json.dumps(_('Logout'), ensure_ascii=False)}>$_('Logout')</button>
+                    </div>
+
+                $:{content}
+
+            </div>
+        </div>
+        <div class="footer">
+            <div>
+                $if content.page != 'login':
+                <button id="bHelp" class="help" title=$:{json.dumps(_('Help'), ensure_ascii=False)}>$_('?')</button>
+            </div>
+                <p>$_('CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_('Click to toggle'), ensure_ascii=False)} + ' Celsius &lt;&gt; Fahrenheit'></span></b></p>
+                <p><a href="https://github.com/Dan-in-CA/OSPi">$_('Software')</a> $_('version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
+
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+This Debian package provides unofficial support for OSPi
+In order to create the Debian package from upstream sources, do the following:
+
+mkdir ospi
+git clone https://github.com/Dan-in-CA/OSPi.git
+mv OSPi ospi
+
+copy the content of ospi-deb to the ospi directory:
+cp -r ../ospi-deb/* .
+
+touch ospi/__init_.py
+dpkg-buildpackage -S -sa
+mv ../ospi_2.0-1.tar.gz ../ospi_2.0.orig.tar.gz
+debuild
