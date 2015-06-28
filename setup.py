@@ -4,16 +4,16 @@ import os
 import platform
 
 _PYTHON_VERSION = platform.python_version()
-_in_same_dir = functools.partial(os.path.join, os.path.dirname(__file__))
+_in_same_dir = functools.partial( os.path.join, os.path.dirname( __file__ ) )
 
 data_files=[]
-for root, dirs, files in os.walk('ospi'):
-        for f in files:
-                if f.startswith('.') :
-                        files.remove(f)
-        if len(files) and '/.' not in root:
-                data_files.append( ( root, [ os.path.join( root, f) for f in files] ))
-
+for root, dirs, files in os.walk( os.getcwd() ):
+  for f in files:
+    if f.startswith('.') :
+      files.remove(f)
+  if len(files) and '/.' not in root:
+    data_files.append( ( root, [ os.path.join( root, f) for f in files] ))
+                
 with open(_in_same_dir("__version__.py")) as version_file:
         exec(version_file.read()) # pylint: disable=W0122
 
@@ -34,9 +34,14 @@ with open(_in_same_dir("__version__.py")) as version_file:
               url='https://github.com/Dan-in-CA/OSPi',
               data_files=data_files,
               packages=find_packages(),
+              entry_points={
+                      'console_scripts': [
+                              'ospi = ospi:run',
+                              ]
+                      },
               )
 
-        """
+"""
                          ('data', glob.glob('ospi/data/*') ),
                          ('blinker', glob.glob('ospi/blinker/*') ),
                          ('static/plugins', glob.glob('ospi/static/plugins/*') ),
