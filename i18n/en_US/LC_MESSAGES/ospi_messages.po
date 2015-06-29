@@ -355,7 +355,7 @@ msgid "Run Once"
 msgstr ""
 
 #: OSPi\templates\base.html:138
-msgid "Acces Plugins"
+msgid "Access Plugins"
 msgstr ""
 
 #: OSPi\templates\base.html:138
@@ -600,7 +600,7 @@ msgid ""
 msgstr ""
 
 #: OSPi\templates\lcd_adj.html:38
-msgid "Range adress"
+msgid "Range address"
 msgstr ""
 
 #: OSPi\templates\lcd_adj.html:51
@@ -942,7 +942,7 @@ msgstr ""
 
 #: OSPi\templates\pressure_adj.html:22
 msgid ""
-"If is not sensor activated in a certain time, switches off all station  and "
+"If is not sensor activated in a certain time, switches off all stations and "
 "sends email with error. Prevent safety for master station pump."
 msgstr ""
 

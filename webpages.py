@@ -504,8 +504,8 @@ class run_now(ProtectedPage):
         qdict = web.input()
         pid = int(qdict['pid'])
         p = gv.pd[int(qdict['pid'])]  # program data
-        if not p[0]:  # if program is disabled
-            raise web.seeother('/vp')
+#        if not p[0]:  # if program is disabled
+#           Sraise web.seeother('/vp')
         stop_stations()
         extra_adjustment = plugin_adjustment()
         for b in range(len(p[7:7 + gv.sd['nbrd']])):  # check each station
