@@ -13,6 +13,7 @@ import subprocess
 import io
 import ast
 from web.webapi import seeother
+from blinker import signal
 
 try:
     from gpio_pins import GPIO, pin_rain_sense
@@ -38,6 +39,10 @@ except ImportError:
 
 ##############################
 #### Function Definitions ####
+
+restarting = signal('restart')
+def report_restart():
+    restarting.send()
 
 def reboot(wait=1, block=False):
     if block:
@@ -74,7 +79,9 @@ def poweroff(wait=1, block=False):
 
 
 def restart(wait=1, block=False):
+#    report_restart()
     if block:
+        report_restart()
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()

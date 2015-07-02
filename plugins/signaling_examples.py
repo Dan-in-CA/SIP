@@ -39,10 +39,17 @@ option_change.connect(notify_option_change)
 
 ### Reboot ###
 def notify_rebooted(name, **kw):
-    print "Systm rebooted"
+    print "System rebooted"
 
 rebooted = signal('rebooted')
 rebooted.connect(notify_rebooted)
+
+### Restart ###
+def notify_restart(name, **kw):
+    print "System is restarting"
+
+restart = signal('restart')
+restart.connect(notify_restart)
 
 ### station names ###
 def notify_station_names(name, **kw):
