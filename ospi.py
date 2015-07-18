@@ -39,6 +39,7 @@ def timing_loop():
                     # check if program time matches current time, is active, and has a duration
                     if prog_match(p) and p[0] and p[6]:
                         duration = p[6] * gv.sd['wl'] / 100 * extra_adjustment  # program duration scaled by "water level"
+                        duration = int(round(duration)) #  convert to int
                         # check each station for boards listed in program up to number of boards in Options
                         for b in range(len(p[7:7 + gv.sd['nbrd']])):
                             for s in range(8):
