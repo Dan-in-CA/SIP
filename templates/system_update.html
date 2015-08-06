@@ -6,18 +6,14 @@ $var page: system_update
 
     // Initialize behaviors
     jQuery(document).ready(function(){
-/*        jQuery("button#cRefresh").click(function(){
-            window.location= baseUrl + "/UPsr";
-        });*/
-        jQuery("button#cUpdate").click(function(){
+
+    	jQuery("button#cUpdate").click(function(){
             window.location= baseUrl + "/UPu";
         });
-/*        jQuery("button#cReboot").click(function(){
-            window.location= baseUrl + "/UPr";
-        });*/
+
         jQuery("button#cCancel").click(function(){
-            window.location= baseUlr + "/";
-        });
+            window.location= baseUrl + "/";
+    	});
 
         jQuery("button#docButton").click(function(){
             window.open(baseUrl + "/static/docs/plugins/system_update-docs.html", "_blank");
