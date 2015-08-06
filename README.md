@@ -18,7 +18,7 @@ UPDATES - Note: This project, formally OSPi, has been renamed to SIP
 ***********
 August 6 2015
 ----------
-(Dan)
+(Dan)  
 1. Pushed file modifications for project rename to GitHub  
 2. Renamed main Python file from ospi.py to sip.py  
 3. Added ospi.py file as symlink to sip.py for backward compatibility  
