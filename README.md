@@ -1,4 +1,4 @@
-ospi
+SIP
 ====
 
 An improved Python port of the Arduino based OpenSprinkler firmware, originally based on V 1.8.3.
@@ -12,8 +12,18 @@ July 2014
 
 
 ***********
-UPDATES - Note: This project is being renamed to SIP
+UPDATES - Note: This project, formally OSPi, has been renamed SIP
 ===========
+
+***********
+August 6 2015
+----------
+(Dan)
+1. Pushed file modifications for project rename to GitHub.
+2. Renamed main Python file from ospi.py to sip.py
+3. Added ospi.py as symlink to sip.py for backward compatibility
+4. Renamed related GitHub repositories to SIPS
+
 
 ***********
 February 10 2015
