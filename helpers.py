@@ -45,6 +45,15 @@ def report_restart():
     restarting.send()
 
 def reboot(wait=1, block=False):
+    """
+    Reboots the Raspberry Pi from a new thread.
+    
+    @type wait: int
+    @param wait: length of time to wait before rebooting
+    @type block: bool
+    @param block: If True, clear output and perform reboot after wait.
+        Set to True at start of thread.
+    """
     if block:
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
@@ -62,6 +71,15 @@ def reboot(wait=1, block=False):
 
 
 def poweroff(wait=1, block=False):
+    """
+    Powers the Raspberry Pi off from a new thread.
+    
+    @type wait: int
+    @param wait: length of time to wait before rebooting
+    @type block: bool
+    @param block: If True, clear output and perform reboot after wait.
+        Set to True at start of thread.
+    """
     if block:
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
@@ -79,7 +97,15 @@ def poweroff(wait=1, block=False):
 
 
 def restart(wait=1, block=False):
-#    report_restart()
+    """
+    Restarts the software from a new thread.
+    
+    @type wait: int
+    @param wait: length of time to wait before rebooting
+    @type block: bool
+    @param block: If True, clear output and perform reboot after wait.
+        Set to True at start of thread.
+    """
     if block:
         report_restart()
         from gpio_pins import set_output
@@ -101,7 +127,12 @@ def restart(wait=1, block=False):
 
 
 def uptime():
-    """Returns UpTime for RPi"""
+    """
+    Returns UpTime for RPi
+    
+    @rtype: String
+    @return: Length of time System has been running.
+    """
     string = 'Error 1: uptime'
 
     with open("/proc/uptime") as f:

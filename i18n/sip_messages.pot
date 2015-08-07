@@ -1,1289 +1,1090 @@
-# Translation file for OpenSprinkler Pi (ospi).
-# Copyright (C) 2014
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# Translation file for SIP (Sustainable Irrigation Platform).
+# Copyright (C) 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.1.5\n"
-"POT-Creation-Date: 2014-11-12 10:35+Pacific Standard Time\n"
-"PO-Revision-Date: 2014-11-24 12:37-0800\n"
-"Last-Translator: Dan <dkimberling59@gmail.com>\n"
-"Language-Team: LANGUAGE <dkimberling59@gmail.com>\n"
+"Project-Id-Version: 3\n"
+"POT-Creation-Date: 2015-08-07 13:25+Pacific Daylight Time\n"
+"PO-Revision-Date: 2015-08-07 13:25-0800\n"
+"Last-Translator: Dan Kimberling<dkimberling59@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: en_US\n"
-"X-Generator: Poedit 1.6.10\n"
 
-#: OSPi\helpers.py:390
-msgid "Password"
+
+#: SIP/plugins\system_update.py:75
+msgid "Up-to-date."
 msgstr ""
 
-#: OSPi\gv.py:17
+#: SIP/plugins\system_update.py:78
+msgid "New version is available!"
+msgstr ""
+
+#: SIP/plugins\system_update.py:79 SIP/plugins\system_update.py:84
+msgid "Available revision"
+msgstr ""
+
+#: SIP/plugins\system_update.py:80
+msgid "Changes"
+msgstr ""
+
+#: SIP/plugins\system_update.py:83
+msgid "Currently running revision"
+msgstr ""
+
+#: SIP/plugins\system_update.py:95
+msgid "System update plug-in encountered error"
+msgstr ""
+
+#: SIP\gv.py:17
 msgid "Could not use git to determine version!"
 msgstr ""
 
-#: OSPi\gv.py:24
+#: SIP\gv.py:24
 msgid "Could not use git to determine date of last commit!"
 msgstr ""
 
-#: OSPi\gv.py:119
+#: SIP\gv.py:120
 msgid "System name"
 msgstr ""
 
-#: OSPi\gv.py:119
-msgid "Unique name of this OpenSprinkler system."
+#: SIP\gv.py:120
+msgid "Unique name of this SIP system."
 msgstr ""
 
-#: OSPi\gv.py:119 OSPi\gv.py:120 OSPi\gv.py:121 OSPi\gv.py:122 OSPi\gv.py:123
-#: OSPi\gv.py:124
+#: SIP\gv.py:120 SIP\gv.py:121 SIP\gv.py:122 SIP\gv.py:124 SIP\gv.py:125
 msgid "System"
 msgstr ""
 
-#: OSPi\gv.py:120
+#: SIP\gv.py:121
 msgid "City name or zip code. Use comma or + in place of space."
 msgstr ""
 
-#: OSPi\gv.py:120
+#: SIP\gv.py:121
 msgid "Location"
 msgstr ""
 
-#: OSPi\gv.py:121
+#: SIP\gv.py:122
 msgid "Language"
 msgstr ""
 
-#: OSPi\gv.py:121
+#: SIP\gv.py:122
 msgid "Select language (effective after restart.)"
 msgstr ""
 
-#: OSPi\gv.py:122
-msgid "Example: GMT-4:00, GMT+5:30 (effective after reboot.)"
-msgstr ""
-
-#: OSPi\gv.py:122
-msgid "Time zone"
-msgstr ""
-
-#: OSPi\gv.py:123
+#: SIP\gv.py:124
 msgid "24-hour clock"
 msgstr ""
 
-#: OSPi\gv.py:123
+#: SIP\gv.py:124
 msgid "Display times in 24 hour format (as opposed to AM/PM style.)"
 msgstr ""
 
-#: OSPi\gv.py:124
+#: SIP\gv.py:125
 msgid "HTTP port"
 msgstr ""
 
-#: OSPi\gv.py:124
+#: SIP\gv.py:125
 msgid "HTTP port (effective after reboot.)"
 msgstr ""
 
-#: OSPi\gv.py:125
+#: SIP\gv.py:126
 msgid "Allow anonymous users to access the system without a password."
 msgstr ""
 
-#: OSPi\gv.py:125
+#: SIP\gv.py:126
 msgid "Disable security"
 msgstr ""
 
-#: OSPi\gv.py:125 OSPi\gv.py:126 OSPi\gv.py:127 OSPi\gv.py:128
+#: SIP\gv.py:126 SIP\gv.py:127 SIP\gv.py:128 SIP\gv.py:129
 msgid "Change Password"
 msgstr ""
 
-#: OSPi\gv.py:126
+#: SIP\gv.py:127
 msgid "Current password"
 msgstr ""
 
-#: OSPi\gv.py:126
+#: SIP\gv.py:127
 msgid "Re-enter the current password."
 msgstr ""
 
-#: OSPi\gv.py:127
+#: SIP\gv.py:128
 msgid "Enter a new password."
 msgstr ""
 
-#: OSPi\gv.py:127
+#: SIP\gv.py:128
 msgid "New password"
 msgstr ""
 
-#: OSPi\gv.py:128
+#: SIP\gv.py:129
 msgid "Confirm password"
 msgstr ""
 
-#: OSPi\gv.py:128
+#: SIP\gv.py:129
 msgid "Confirm the new password."
 msgstr ""
 
-#: OSPi\gv.py:129
+#: SIP\gv.py:130
 msgid "Sequential"
 msgstr ""
 
-#: OSPi\gv.py:129
+#: SIP\gv.py:130
 msgid "Sequential or concurrent running mode."
 msgstr ""
 
-#: OSPi\gv.py:129 OSPi\gv.py:130 OSPi\gv.py:131
+#: SIP\gv.py:130 SIP\gv.py:131 SIP\gv.py:132
 msgid "Station Handling"
 msgstr ""
 
-#: OSPi\gv.py:130
+#: SIP\gv.py:131
 msgid "Extension boards"
 msgstr ""
 
-#: OSPi\gv.py:130
+#: SIP\gv.py:131
 msgid "Number of extension boards."
 msgstr ""
 
-#: OSPi\gv.py:131
+#: SIP\gv.py:132
 msgid "Station delay"
 msgstr ""
 
-#: OSPi\gv.py:131
+#: SIP\gv.py:132
 msgid "Station delay time (in seconds), between 0 and 240."
 msgstr ""
 
-#: OSPi\gv.py:132
+#: SIP\gv.py:133
 msgid "Master station"
 msgstr ""
 
-#: OSPi\gv.py:132
+#: SIP\gv.py:133
 msgid "Select master station."
 msgstr ""
 
-#: OSPi\gv.py:132 OSPi\gv.py:133 OSPi\gv.py:134
+#: SIP\gv.py:133 SIP\gv.py:134 SIP\gv.py:135
 msgid "Configure Master"
 msgstr ""
 
-#: OSPi\gv.py:133
+#: SIP\gv.py:134
 msgid "Master on adjust"
 msgstr ""
 
-#: OSPi\gv.py:133
+#: SIP\gv.py:134
 msgid "Master on delay (in seconds), between +0 and +60."
 msgstr ""
 
-#: OSPi\gv.py:134
+#: SIP\gv.py:135
 msgid "Master off adjust"
 msgstr ""
 
-#: OSPi\gv.py:134
+#: SIP\gv.py:135
 msgid "Master off delay (in seconds), between -60 and +60."
 msgstr ""
 
-#: OSPi\gv.py:135
+#: SIP\gv.py:136
 msgid "Use rain sensor"
 msgstr ""
 
-#: OSPi\gv.py:135
+#: SIP\gv.py:136
 msgid "Use rain sensor."
 msgstr ""
 
-#: OSPi\gv.py:135 OSPi\gv.py:136
+#: SIP\gv.py:136 SIP\gv.py:137
 msgid "Rain Sensor"
 msgstr ""
 
-#: OSPi\gv.py:136
+#: SIP\gv.py:137
 msgid "Normally open"
 msgstr ""
 
-#: OSPi\gv.py:136
+#: SIP\gv.py:137
 msgid "Rain sensor type."
 msgstr ""
 
-#: OSPi\gv.py:137
-msgid ""
-"Log all events - note that repetitive writing to an SD card can shorten its "
-"lifespan."
-msgstr ""
-
-#: OSPi\gv.py:137 OSPi\gv.py:138
-msgid "Logging"
-msgstr ""
-
-#: OSPi\gv.py:137 OSPi\templates\pcf_8591_adj.html:48
+#: SIP\gv.py:138
 msgid "Enable logging"
 msgstr ""
 
-#: OSPi\gv.py:138
+#: SIP\gv.py:138
+msgid "Log all events - note that repetitive writing to an SD card can shorten its lifespan."
+msgstr ""
+
+#: SIP\gv.py:138 SIP\gv.py:139
+msgid "Logging"
+msgstr ""
+
+#: SIP\gv.py:139
 msgid "Length of log to keep, 0=no limits."
 msgstr ""
 
-#: OSPi\gv.py:138
+#: SIP\gv.py:139
 msgid "Max log entries"
 msgstr ""
 
-#: OSPi\helpers.py:35 OSPi\helpers.py.LOCAL.py:35
+#: SIP\helpers.py:36
 msgid "Error: json module not found"
 msgstr ""
 
-#: OSPi\helpers.py:48 OSPi\helpers.py.LOCAL.py:48
+#: SIP\helpers.py:55
 msgid "Rebooting..."
 msgstr ""
 
-#: OSPi\helpers.py:61 OSPi\helpers.py.LOCAL.py:61
+#: SIP\helpers.py:72
 msgid "Powering off..."
 msgstr ""
 
-#: OSPi\helpers.py:74 OSPi\helpers.py.LOCAL.py:74
+#: SIP\helpers.py:94
 msgid "Restarting..."
 msgstr ""
 
-#: OSPi\helpers.py:190 OSPi\helpers.py.LOCAL.py:190
-#: OSPi\templates\base.html:81
+#: SIP\helpers.py:210 SIP\templates\base.html:82
 msgid "Run-once"
 msgstr ""
 
-#: OSPi\helpers.py:192 OSPi\helpers.py.LOCAL.py:192
-#: OSPi\templates\base.html:82 OSPi\templates\home.html:222
+#: SIP\helpers.py:212 SIP\templates\base.html:83 SIP\templates\home.html:219
 msgid "Manual"
 msgstr ""
 
-#: OSPi\helpers.py:395
+#: SIP\helpers.py:413
+msgid "Password"
+msgstr ""
+
+#: SIP\helpers.py:416
 msgid "Incorrect password, please try again"
 msgstr ""
 
-#: OSPi\ospi.py:22
+#: SIP\sip.py:26
 msgid "Starting timing loop"
 msgstr ""
 
-#: OSPi\ospi.py:180
+#: SIP\sip.py:190
 msgid "plugins loaded:"
 msgstr ""
 
-#: OSPi\templates\base.html:14 OSPi\templates\modify.html:333
+#: SIP\templates\base.html:14 SIP\templates\modify.html:333
 msgid "Monday"
 msgstr ""
 
-#: OSPi\templates\base.html:14 OSPi\templates\modify.html:334
+#: SIP\templates\base.html:14 SIP\templates\modify.html:334
 msgid "Tuesday"
 msgstr ""
 
-#: OSPi\templates\base.html:14 OSPi\templates\modify.html:335
+#: SIP\templates\base.html:14 SIP\templates\modify.html:335
 msgid "Wednesday"
 msgstr ""
 
-#: OSPi\templates\base.html:14 OSPi\templates\modify.html:336
+#: SIP\templates\base.html:14 SIP\templates\modify.html:336
 msgid "Thursday"
 msgstr ""
 
-#: OSPi\templates\base.html:14 OSPi\templates\modify.html:337
+#: SIP\templates\base.html:14 SIP\templates\modify.html:337
 msgid "Friday"
 msgstr ""
 
-#: OSPi\templates\base.html:14 OSPi\templates\modify.html:338
+#: SIP\templates\base.html:14 SIP\templates\modify.html:338
 msgid "Saturday"
 msgstr ""
 
-#: OSPi\templates\base.html:14 OSPi\templates\modify.html:339
+#: SIP\templates\base.html:14 SIP\templates\modify.html:339
 msgid "Sunday"
 msgstr ""
 
-#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:25
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:26
 msgid "January"
 msgstr ""
 
-#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:29
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:30
 msgid "February"
 msgstr ""
 
-#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:33
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:34
 msgid "March"
 msgstr ""
 
-#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:37
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:38
 msgid "April"
 msgstr ""
 
-#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:41
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:42
 msgid "May"
 msgstr ""
 
-#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:45
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:46
 msgid "June"
 msgstr ""
 
-#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:49
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:50
 msgid "July"
 msgstr ""
 
-#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:53
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:54
 msgid "August"
 msgstr ""
 
-#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:57
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:58
 msgid "September"
 msgstr ""
 
-#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:61
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:62
 msgid "October"
 msgstr ""
 
-#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:65
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:66
 msgid "November"
 msgstr ""
 
-#: OSPi\templates\base.html:15 OSPi\templates\monthly.html:69
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:70
 msgid "December"
 msgstr ""
 
-#: OSPi\templates\base.html:83 OSPi\templates\log.html:55
+#: SIP\templates\base.html:84 SIP\templates\log.html:55
+#: SIP\templates\programs.html:122
 msgid "Program"
 msgstr ""
 
-#: OSPi\templates\base.html:135
+#: SIP\templates\base.html:137
 msgid "Home"
 msgstr ""
 
-#: OSPi\templates\base.html:136
+#: SIP\templates\base.html:138
 msgid "Define Programs"
 msgstr ""
 
-#: OSPi\templates\base.html:136
+#: SIP\templates\base.html:138
 msgid "Programs"
 msgstr ""
 
-#: OSPi\templates\base.html:137
+#: SIP\templates\base.html:139
 msgid "Define Run Once Program"
 msgstr ""
 
-#: OSPi\templates\base.html:137
+#: SIP\templates\base.html:139
 msgid "Run Once"
 msgstr ""
 
-#: OSPi\templates\base.html:138
-msgid "Acces Plugins"
+#: SIP\templates\base.html:140
+msgid "Access Plugins"
 msgstr ""
 
-#: OSPi\templates\base.html:138
+#: SIP\templates\base.html:140
 msgid "Plugins"
 msgstr ""
 
-#: OSPi\templates\base.html:139
+#: SIP\templates\base.html:141
 msgid "Log"
 msgstr ""
 
-#: OSPi\templates\base.html:139
+#: SIP\templates\base.html:141
 msgid "View Log"
 msgstr ""
 
-#: OSPi\templates\base.html:140
+#: SIP\templates\base.html:142
 msgid "Options"
 msgstr ""
 
-#: OSPi\templates\base.html:141
+#: SIP\templates\base.html:143
 msgid "Stations"
 msgstr ""
 
-#: OSPi\templates\base.html:141 OSPi\templates\stations.html:73
+#: SIP\templates\base.html:143 SIP\templates\stations.html:74
 msgid "Configure Stations"
 msgstr ""
 
-#: OSPi\templates\base.html:143
+#: SIP\templates\base.html:145
 msgid "Logout"
 msgstr ""
 
-#: OSPi\templates\base.html:152
+#: SIP\templates\base.html:155
+msgid "?"
+msgstr ""
+
+#: SIP\templates\base.html:155 SIP\templates\proto.html:27
+#: SIP\templates\system_update.html:26
+msgid "Help"
+msgstr ""
+
+#: SIP\templates\base.html:157
 msgid "CPU Temp"
 msgstr ""
 
-#: OSPi\templates\base.html:152
+#: SIP\templates\base.html:157
 msgid "Click to toggle"
 msgstr ""
 
-#: OSPi\templates\base.html:153
+#: SIP\templates\base.html:158
 msgid "Software"
 msgstr ""
 
-#: OSPi\templates\base.html:153
+#: SIP\templates\base.html:158
 msgid "version"
 msgstr ""
 
-#: OSPi\templates\email_adj.html:3
-msgid "OpenSprinkler Pi Email adjustments"
-msgstr ""
-
-#: OSPi\templates\email_adj.html:21
-msgid "Email adjustments"
-msgstr ""
-
-#: OSPi\templates\email_adj.html:22
-msgid ""
-"This plugin can send E-mails. For this plugin you need a GMail account as "
-"provider."
-msgstr ""
-
-#: OSPi\templates\email_adj.html:26
-msgid "Send email with file log.csv after power on"
-msgstr ""
-
-#: OSPi\templates\email_adj.html:32
-msgid "Send email if rain is detected"
-msgstr ""
-
-#: OSPi\templates\email_adj.html:39
-msgid "Sends email if program has run"
-msgstr ""
-
-#: OSPi\templates\email_adj.html:45
-msgid "Your GMail username"
-msgstr ""
-
-#: OSPi\templates\email_adj.html:63 OSPi\templates\lcd_adj.html:44
-#: OSPi\templates\pcf_8591_adj.html:103 OSPi\templates\pressure_adj.html:50
-#: OSPi\templates\sms_adj.html:81 OSPi\templates\system_update.html:47
-#: OSPi\templates\weather_level_adj.html:61
-msgid "Status"
-msgstr ""
-
-#: OSPi\templates\email_adj.html:72 OSPi\templates\lcd_adj.html:54
-#: OSPi\templates\monthly.html:76 OSPi\templates\pcf_8591_adj.html:118
-#: OSPi\templates\pressure_adj.html:59 OSPi\templates\sms_adj.html:90
-#: OSPi\templates\weather_adj.html:55 OSPi\templates\weather_level_adj.html:70
-msgid "Submit"
-msgstr ""
-
-#: OSPi\templates\email_adj.html:73 OSPi\templates\lcd_adj.html:55
-#: OSPi\templates\modify.html:402 OSPi\templates\monthly.html:77
-#: OSPi\templates\options.html:135 OSPi\templates\pcf_8591_adj.html:119
-#: OSPi\templates\pressure_adj.html:60 OSPi\templates\runonce.html:76
-#: OSPi\templates\sms_adj.html:91 OSPi\templates\stations.html:120
-#: OSPi\templates\weather_adj.html:56 OSPi\templates\weather_level_adj.html:71
-msgid "Cancel"
-msgstr ""
-
-#: OSPi\templates\home.html:52
+#: SIP\templates\home.html:45
 msgid "Manual Mode"
 msgstr ""
 
-#: OSPi\templates\home.html:55 OSPi\templates\runonce.html:53
+#: SIP\templates\home.html:48 SIP\templates\runonce.html:53
 msgid "Run Once Program"
 msgstr ""
 
-#: OSPi\templates\home.html:58
+#: SIP\templates\home.html:51
 msgid " for "
 msgstr ""
 
-#: OSPi\templates\home.html:58
+#: SIP\templates\home.html:51
 msgid " on "
 msgstr ""
 
-#: OSPi\templates\home.html:58
+#: SIP\templates\home.html:51
 msgid " ran "
 msgstr ""
 
-#: OSPi\templates\home.html:82
+#: SIP\templates\home.html:75
 msgid "Master On"
 msgstr ""
 
-#: OSPi\templates\home.html:84
+#: SIP\templates\home.html:77
 msgid "Master Off"
 msgstr ""
 
-#: OSPi\templates\home.html:89
+#: SIP\templates\home.html:82
 msgid "Suppressed by Rain Delay"
 msgstr ""
 
-#: OSPi\templates\home.html:92
+#: SIP\templates\home.html:85
 msgid "Suppressed by Rain Sensor"
 msgstr ""
 
-#: OSPi\templates\home.html:95 OSPi\templates\home.html:250
-#: OSPi\templates\modify.html:352 OSPi\templates\programs.html:120
+#: SIP\templates\home.html:88 SIP\templates\home.html:247
+#: SIP\templates\modify.html:352 SIP\templates\programs.html:120
 msgid "Off"
 msgstr ""
 
-#: OSPi\templates\home.html:135
+#: SIP\templates\home.html:128
 msgid "Enter hours to delay"
 msgstr ""
 
-#: OSPi\templates\home.html:147
+#: SIP\templates\home.html:144
 msgid "Enter percentage adjustment"
 msgstr ""
 
-#: OSPi\templates\home.html:166 OSPi\templates\runonce.html:25
+#: SIP\templates\home.html:163 SIP\templates\runonce.html:25
 msgid "Timer values wrong: "
 msgstr ""
 
-#: OSPi\templates\home.html:212
+#: SIP\templates\home.html:209
 msgid "System Off"
 msgstr ""
 
-#: OSPi\templates\home.html:212
+#: SIP\templates\home.html:209
 msgid "System On"
 msgstr ""
 
-#: OSPi\templates\home.html:214
+#: SIP\templates\home.html:211
 msgid "Level"
 msgstr ""
 
-#: OSPi\templates\home.html:214
+#: SIP\templates\home.html:211
 msgid "Normal"
 msgstr ""
 
-#: OSPi\templates\home.html:214
+#: SIP\templates\home.html:211
 msgid "Water Level"
 msgstr ""
 
-#: OSPi\templates\home.html:216
+#: SIP\templates\home.html:213
 msgid "Active"
 msgstr ""
 
-#: OSPi\templates\home.html:216
+#: SIP\templates\home.html:213
 msgid "Rain Delay"
 msgstr ""
 
-#: OSPi\templates\home.html:220
+#: SIP\templates\home.html:217
 msgid "rain sensed"
 msgstr ""
 
-#: OSPi\templates\home.html:220 OSPi\templates\log.html:46
+#: SIP\templates\home.html:217 SIP\templates\log.html:46
 msgid "no"
 msgstr ""
 
-#: OSPi\templates\home.html:222
+#: SIP\templates\home.html:219
 msgid "Auto"
 msgstr ""
 
-#: OSPi\templates\home.html:242
+#: SIP\templates\home.html:239
 msgid "On (Master)"
 msgstr ""
 
-#: OSPi\templates\home.html:244
+#: SIP\templates\home.html:241
 msgid "Off (Master)"
 msgstr ""
 
-#: OSPi\templates\home.html:250 OSPi\templates\modify.html:352
-#: OSPi\templates\programs.html:118
+#: SIP\templates\home.html:247 SIP\templates\modify.html:352
+#: SIP\templates\programs.html:118
 msgid "On"
 msgstr ""
 
-#: OSPi\templates\home.html:268
+#: SIP\templates\home.html:265
 msgid " Prev Day"
 msgstr ""
 
-#: OSPi\templates\home.html:269
+#: SIP\templates\home.html:266
 msgid "Today"
 msgstr ""
 
-#: OSPi\templates\home.html:270
+#: SIP\templates\home.html:267
 msgid "Next Day"
 msgstr ""
 
-#: OSPi\templates\home.html:308
+#: SIP\templates\home.html:305
 msgid "loading..."
 msgstr ""
 
-#: OSPi\templates\home.html:337
+#: SIP\templates\home.html:334
 msgid "Stop All Stations"
 msgstr ""
 
-#: OSPi\templates\home.html:340
+#: SIP\templates\home.html:337
 msgid "Program 1"
 msgstr ""
 
-#: OSPi\templates\lcd_adj.html:3
-msgid "OpenSprinkler Pi LCD settings"
+#: SIP\templates\log.html:3
+msgid "SIP Log"
 msgstr ""
 
-#: OSPi\templates\lcd_adj.html:21
-msgid "LCD settings"
-msgstr ""
-
-#: OSPi\templates\lcd_adj.html:22
-msgid ""
-"This plugin sends data to I2C for LCD 16x2 char with PCF8574. Visit for "
-"more: www.pihrt.com/elektronika/258-moje-rapsberry-pi-i2c-lcd-16x2."
-msgstr ""
-
-#: OSPi\templates\lcd_adj.html:38
-msgid "Range adress"
-msgstr ""
-
-#: OSPi\templates\lcd_adj.html:51
-msgid "Compatible with HD44780 LCD 16x2 controller."
-msgstr ""
-
-#: OSPi\templates\log.html:3
-msgid "OpenSprinkler Pi Log"
-msgstr ""
-
-#: OSPi\templates\log.html:8
+#: SIP\templates\log.html:8 SIP\templates\plugins.html:46
 msgid "Enabled"
 msgstr ""
 
-#: OSPi\templates\log.html:11
+#: SIP\templates\log.html:11
 msgid "Disabled"
 msgstr ""
 
-#: OSPi\templates\log.html:41
+#: SIP\templates\log.html:41
 msgid "Log "
 msgstr ""
 
-#: OSPi\templates\log.html:46
+#: SIP\templates\log.html:46
 msgid " limit"
 msgstr ""
 
-#: OSPi\templates\log.html:46
+#: SIP\templates\log.html:46
 msgid "Total number of records: "
 msgstr ""
 
-#: OSPi\templates\log.html:47 OSPi\templates\pcf_8591_adj.html:38
+#: SIP\templates\log.html:47
 msgid "Download log as "
 msgstr ""
 
-#: OSPi\templates\log.html:51
+#: SIP\templates\log.html:51
 msgid "Date"
 msgstr ""
 
-#: OSPi\templates\log.html:52
+#: SIP\templates\log.html:52 SIP\templates\modify.html:292
 msgid "Start Time"
 msgstr ""
 
-#: OSPi\templates\log.html:53 OSPi\templates\stations.html:77
+#: SIP\templates\log.html:53 SIP\templates\stations.html:78
 msgid "Station"
 msgstr ""
 
-#: OSPi\templates\log.html:54
+#: SIP\templates\log.html:54 SIP\templates\modify.html:302
 msgid "Duration"
 msgstr ""
 
-#: OSPi\templates\log.html:73
+#: SIP\templates\log.html:73
 msgid "Refresh"
 msgstr ""
 
-#: OSPi\templates\log.html:74
+#: SIP\templates\log.html:74
 msgid "Clear Log"
 msgstr ""
 
-#: OSPi\templates\login.html:3
-msgid "OpenSprinkler Pi Login"
+#: SIP\templates\login.html:3
+msgid "SIP Login"
 msgstr ""
 
-#: OSPi\templates\login.html:7 OSPi\templates\login.html:10
+#: SIP\templates\login.html:7 SIP\templates\login.html:10
 msgid "Login"
 msgstr ""
 
-#: OSPi\templates\modify.html:3
-msgid "OpenSprinkler Pi Modify Program"
+#: SIP\templates\modify.html:3
+msgid "SIP Modify Program"
 msgstr ""
 
-#: OSPi\templates\modify.html:66
+#: SIP\templates\modify.html:66
 msgid "Error: Incorrect time input "
 msgstr ""
 
-#: OSPi\templates\modify.html:78
+#: SIP\templates\modify.html:78
 msgid "Please choose at least one weekday for the program to run."
 msgstr ""
 
-#: OSPi\templates\modify.html:82
+#: SIP\templates\modify.html:82
 msgid "Please choose at least one station to run in this program."
 msgstr ""
 
-#: OSPi\templates\modify.html:228
+#: SIP\templates\modify.html:228
 msgid "Error: starting in days wrong."
 msgstr ""
 
-#: OSPi\templates\modify.html:249
+#: SIP\templates\modify.html:249
 msgid "Error: Incorrect duration."
 msgstr ""
 
-#: OSPi\templates\modify.html:263
+#: SIP\templates\modify.html:263
 msgid "Error: Start time must be prior to end time."
 msgstr ""
 
-#: OSPi\templates\modify.html:283
+#: SIP\templates\modify.html:283
 msgid "Edit Program #"
 msgstr ""
 
-#: OSPi\templates\modify.html:283 OSPi\templates\programs.html:108
+#: SIP\templates\modify.html:283 SIP\templates\programs.html:108
 msgid "Add a New Program"
 msgstr ""
 
-#: OSPi\templates\modify.html:288
+#: SIP\templates\modify.html:288
 msgid "Program Off"
 msgstr ""
 
-#: OSPi\templates\modify.html:288
+#: SIP\templates\modify.html:288
 msgid "Program On"
 msgstr ""
 
-#: OSPi\templates\modify.html:304
+#: SIP\templates\modify.html:304
 msgid "Recurring"
 msgstr ""
 
-#: OSPi\templates\modify.html:304
+#: SIP\templates\modify.html:304
 msgid "Single pass"
 msgstr ""
 
-#: OSPi\templates\modify.html:306
+#: SIP\templates\modify.html:306
 msgid "Every"
 msgstr ""
 
-#: OSPi\templates\modify.html:310
+#: SIP\templates\modify.html:310
 msgid "Until"
 msgstr ""
 
-#: OSPi\templates\modify.html:322
+#: SIP\templates\modify.html:322
 msgid "Interval"
 msgstr ""
 
-#: OSPi\templates\modify.html:322
+#: SIP\templates\modify.html:322
 msgid "Weekly"
 msgstr ""
 
-#: OSPi\templates\modify.html:327
+#: SIP\templates\modify.html:327
 msgid "Select All"
 msgstr ""
 
-#: OSPi\templates\modify.html:328
+#: SIP\templates\modify.html:328
 msgid "Clear All"
 msgstr ""
 
-#: OSPi\templates\modify.html:359
+#: SIP\templates\modify.html:359
 msgid "Water interval"
 msgstr ""
 
-#: OSPi\templates\modify.html:375
+#: SIP\templates\modify.html:375
 msgid "Starting in"
 msgstr ""
 
-#: OSPi\templates\modify.html:389
+#: SIP\templates\modify.html:389
 msgid "Any Day"
 msgstr ""
 
-#: OSPi\templates\modify.html:389
+#: SIP\templates\modify.html:389
 msgid "Restrict Day"
 msgstr ""
 
-#: OSPi\templates\modify.html:391
+#: SIP\templates\modify.html:391
 msgid "Even"
 msgstr ""
 
-#: OSPi\templates\modify.html:391
+#: SIP\templates\modify.html:391
 msgid "Odd"
 msgstr ""
 
-#: OSPi\templates\modify.html:392
+#: SIP\templates\modify.html:392
 msgid "(except 31st and Feb 29th)"
 msgstr ""
 
-#: OSPi\templates\modify.html:401
+#: SIP\templates\modify.html:401
 msgid "Save"
 msgstr ""
 
-#: OSPi\templates\monthly.html:3
-msgid "OpenSprinkler Pi Monthly Adjustments"
+#: SIP\templates\modify.html:402 SIP\templates\monthly.html:78
+#: SIP\templates\options.html:141 SIP\templates\plugins.html:69
+#: SIP\templates\plugins_repo.html:45 SIP\templates\proto.html:75
+#: SIP\templates\runonce.html:76 SIP\templates\stations.html:121
+#: SIP\templates\system_update.html:66
+msgid "Cancel"
 msgstr ""
 
-#: OSPi\templates\monthly.html:20
+#: SIP\templates\monthly.html:3
+msgid "SIP Monthly Adjustments"
+msgstr ""
+
+#: SIP\templates\monthly.html:21
 msgid "Monthly Irrigation Adjustments"
 msgstr ""
 
-#: OSPi\templates\monthly.html:21
+#: SIP\templates\monthly.html:22
 msgid "Enter an adjustment for each month (% irrigation time)"
 msgstr ""
 
-#: OSPi\templates\options.html:3
-msgid "OpenSprinkler Pi Options"
+#: SIP\templates\monthly.html:77 SIP\templates\proto.html:74
+msgid "Submit"
 msgstr ""
 
-#: OSPi\templates\options.html:18 OSPi\templates\options.html:19
+#: SIP\templates\options.html:3
+msgid "SIP Options"
+msgstr ""
+
+#: SIP\templates\options.html:18 SIP\templates\options.html:19
 msgid "Hide Tooltips"
 msgstr ""
 
-#: OSPi\templates\options.html:19 OSPi\templates\options.html:68
+#: SIP\templates\options.html:19 SIP\templates\options.html:73
 msgid "Show Tooltips"
 msgstr ""
 
-#: OSPi\templates\options.html:48
+#: SIP\templates\options.html:53
 msgid "The password given was incorrect."
 msgstr ""
 
-#: OSPi\templates\options.html:52
+#: SIP\templates\options.html:57
 msgid "Please enter a password."
 msgstr ""
 
-#: OSPi\templates\options.html:56
+#: SIP\templates\options.html:61
 msgid "Passwords don't match, please re-enter."
 msgstr ""
 
-#: OSPi\templates\options.html:67
+#: SIP\templates\options.html:72
 msgid "Edit Options"
 msgstr ""
 
-#: OSPi\templates\options.html:96
+#: SIP\templates\options.html:101
 msgid "Default"
 msgstr ""
 
-#: OSPi\templates\options.html:108
+#: SIP\templates\options.html:113
 msgid "None"
 msgstr ""
 
-#: OSPi\templates\options.html:122
+#: SIP\templates\options.html:127
 msgid "System Restart"
 msgstr ""
 
-#: OSPi\templates\options.html:124
+#: SIP\templates\options.html:129
 msgid "Restart"
 msgstr ""
 
-#: OSPi\templates\options.html:124
+#: SIP\templates\options.html:129
 msgid "Restart software"
 msgstr ""
 
-#: OSPi\templates\options.html:125
+#: SIP\templates\options.html:130
 msgid "Reboot"
 msgstr ""
 
-#: OSPi\templates\options.html:125
+#: SIP\templates\options.html:130
 msgid "Reboot hardware"
 msgstr ""
 
-#: OSPi\templates\options.html:134 OSPi\templates\stations.html:118
+#: SIP\templates\options.html:140 SIP\templates\stations.html:119
 msgid "Submit Changes"
 msgstr ""
 
-#: OSPi\templates\pcf_8591_adj.html:3
-msgid "OpenSprinkler Pi PCF8591 voltage and temperature adjustments"
+#: SIP\templates\plugins.html:3
+msgid "SIP Plugin Manager"
 msgstr ""
 
-#: OSPi\templates\pcf_8591_adj.html:34
-msgid "PCF8591 voltage and temperature adjustments"
+#: SIP\templates\plugins.html:39
+msgid "Installed Plugins"
 msgstr ""
 
-#: OSPi\templates\pcf_8591_adj.html:35
-msgid ""
-"For this plugin is needed enabled I2C bus and connected I2C A/D converter "
-"PCF8591 on I2C adress 0x48."
+#: SIP\templates\plugins.html:40
+msgid "Browse More Plugins"
 msgstr ""
 
-#: OSPi\templates\pcf_8591_adj.html:36
-msgid ""
-"For measure temperature use temp probe LM35D (0-100 &deg;C) on AD0-3 "
-"converter."
+#: SIP\templates\plugins.html:41
+msgid "Roll Your Own"
 msgstr ""
 
-#: OSPi\templates\pcf_8591_adj.html:37
-msgid ""
-"If the label has not blank value the value is displayed in the window read "
-"value."
-msgstr ""
-
-#: OSPi\templates\pcf_8591_adj.html:38
-msgid " log file."
-msgstr ""
-
-#: OSPi\templates\pcf_8591_adj.html:38 OSPi\templates\programs.html:151
-msgid "Delete"
-msgstr ""
-
-#: OSPi\templates\pcf_8591_adj.html:42
-msgid "Use PCF8591"
-msgstr ""
-
-#: OSPi\templates\pcf_8591_adj.html:54
-msgid "Maximum number of records"
-msgstr ""
-
-#: OSPi\templates\pcf_8591_adj.html:56
-msgid "(0 = unlimited)"
-msgstr ""
-
-#: OSPi\templates\pcf_8591_adj.html:60
-msgid "Time loop for logging"
-msgstr ""
-
-#: OSPi\templates\pcf_8591_adj.html:62
-msgid "minutes (0 = logging disabled)"
-msgstr ""
-
-#: OSPi\templates\pcf_8591_adj.html:66
-msgid "Label for input AD0:"
-msgstr ""
-
-#: OSPi\templates\pcf_8591_adj.html:68 OSPi\templates\pcf_8591_adj.html:74
-#: OSPi\templates\pcf_8591_adj.html:80 OSPi\templates\pcf_8591_adj.html:86
-msgid " measure as voltage "
-msgstr ""
-
-#: OSPi\templates\pcf_8591_adj.html:72
-msgid "Label for input AD1"
-msgstr ""
-
-#: OSPi\templates\pcf_8591_adj.html:78
-msgid "Label for input AD2"
-msgstr ""
-
-#: OSPi\templates\pcf_8591_adj.html:90
-msgid "Read value"
-msgstr ""
-
-#: OSPi\templates\pcf_8591_adj.html:109
-msgid "Output DA voltage"
-msgstr ""
-
-#: OSPi\templates\pressure_adj.html:3
-msgid "OpenSprinkler Pi Pressure monitor settings"
-msgstr ""
-
-#: OSPi\templates\pressure_adj.html:20
-msgid "Pressure monitor settings"
-msgstr ""
-
-#: OSPi\templates\pressure_adj.html:21
-msgid ""
-"This plugin checked pressure in pipe, if master station is switched on must "
-"be activated pressure sensor. "
-msgstr ""
-
-#: OSPi\templates\pressure_adj.html:22
-msgid ""
-"If is not sensor activated in a certain time, switches off all station  and "
-"sends email with error. Prevent safety for master station pump."
-msgstr ""
-
-#: OSPi\templates\pressure_adj.html:26
-msgid "Use pressure sensor for master station"
-msgstr ""
-
-#: OSPi\templates\pressure_adj.html:28
-msgid "(Pressure sensor is connected between GPIO pin 22 and ground)"
-msgstr ""
-
-#: OSPi\templates\pressure_adj.html:32
-msgid "Send email with error"
-msgstr ""
-
-#: OSPi\templates\pressure_adj.html:34
-msgid "(For this function required email plugin)"
-msgstr ""
-
-#: OSPi\templates\pressure_adj.html:38
-msgid "Max time to activate pressure sensor"
-msgstr ""
-
-#: OSPi\templates\pressure_adj.html:40
-msgid "(max 999 seconds)"
-msgstr ""
-
-#: OSPi\templates\pressure_adj.html:44
-msgid "Pressure sensor"
-msgstr ""
-
-#: OSPi\templates\programs.html:3
-msgid "OpenSprinkler Pi Programs"
-msgstr ""
-
-#: OSPi\templates\programs.html:18
-msgid "Every "
-msgstr ""
-
-#: OSPi\templates\programs.html:18 OSPi\templates\programs.html:20
-msgid "days"
-msgstr ""
-
-#: OSPi\templates\programs.html:20
-msgid "starting in"
-msgstr ""
-
-#: OSPi\templates\programs.html:23
-msgid "Every Weekday"
-msgstr ""
-
-#: OSPi\templates\programs.html:27
-msgid "Fri"
-msgstr ""
-
-#: OSPi\templates\programs.html:27
-msgid "Mon"
-msgstr ""
-
-#: OSPi\templates\programs.html:27
-msgid "Sat"
-msgstr ""
-
-#: OSPi\templates\programs.html:27
-msgid "Sun"
-msgstr ""
-
-#: OSPi\templates\programs.html:27
-msgid "Thur"
-msgstr ""
-
-#: OSPi\templates\programs.html:27
-msgid "Tue"
-msgstr ""
-
-#: OSPi\templates\programs.html:27
-msgid "Wed"
-msgstr ""
-
-#: OSPi\templates\programs.html:29
-msgid " (Even days only)"
-msgstr ""
-
-#: OSPi\templates\programs.html:31
-msgid " (Odd days only)"
-msgstr ""
-
-#: OSPi\templates\programs.html:109
-msgid "Delete All"
-msgstr ""
-
-#: OSPi\templates\programs.html:128
-msgid "Run"
-msgstr ""
-
-#: OSPi\templates\programs.html:141
-msgid "Starting"
-msgstr ""
-
-#: OSPi\templates\programs.html:145
-msgid "Recurring every"
-msgstr ""
-
-#: OSPi\templates\programs.html:149 OSPi\templates\runonce.html:74
-msgid "Run Now"
-msgstr ""
-
-#: OSPi\templates\programs.html:150
-msgid "Edit"
-msgstr ""
-
-#: OSPi\templates\restarting.html:3
-msgid "OpenSprinkler Pi Restarting"
-msgstr ""
-
-#: OSPi\templates\restarting.html:30
-msgid "ospi is restarting"
-msgstr ""
-
-#: OSPi\templates\restarting.html:31
-msgid "You will be redirected as soon as possible..."
-msgstr ""
-
-#: OSPi\templates\runonce.html:3
-msgid "OpenSprinkler Pi Run-Once"
-msgstr ""
-
-#: OSPi\templates\runonce.html:35
-msgid "No station is scheduled to run"
-msgstr ""
-
-#: OSPi\templates\runonce.html:75
-msgid "Reset Time"
-msgstr ""
-
-#: OSPi\templates\sms_adj.html:3
-msgid "OpenSprinkler Pi SMS adjustments"
-msgstr ""
-
-#: OSPi\templates\sms_adj.html:21
-msgid "SMS adjustments"
-msgstr ""
-
-#: OSPi\templates\sms_adj.html:22
-msgid ""
-"For this plugin is needed to SMS modem with the telephone service provider."
-msgstr ""
-
-#: OSPi\templates\sms_adj.html:23
-msgid ""
-"For more information visit the www.pihrt.com/elektronika/259-moje-rapsberry-"
-"pi-sms-ovladani-rpi for instructions."
-msgstr ""
-
-#: OSPi\templates\sms_adj.html:27
-msgid "Use SMS modem"
-msgstr ""
-
-#: OSPi\templates\sms_adj.html:33
-msgid "Number 1"
-msgstr ""
-
-#: OSPi\templates\sms_adj.html:39
-msgid "Number 2"
-msgstr ""
-
-#: OSPi\templates\sms_adj.html:45
-msgid "Command for info"
-msgstr ""
-
-#: OSPi\templates\sms_adj.html:51
-msgid "Command for stop irrigation"
-msgstr ""
-
-#: OSPi\templates\sms_adj.html:57
-msgid "Command for start irrigation"
-msgstr ""
-
-#: OSPi\templates\sms_adj.html:63
-msgid "Command for reboot system"
-msgstr ""
-
-#: OSPi\templates\sms_adj.html:69
-msgid "Command for power off system"
-msgstr ""
-
-#: OSPi\templates\sms_adj.html:75
-msgid "Command for update OSPi from GITHUB"
-msgstr ""
-
-#: OSPi\templates\stations.html:3
-msgid "OpenSprinkler Pi Stations"
-msgstr ""
-
-#: OSPi\templates\stations.html:78
+#: SIP\templates\plugins.html:45 SIP\templates\stations.html:79
 msgid "Name"
 msgstr ""
 
-#: OSPi\templates\stations.html:79
-msgid "Enabled?"
+#: SIP\templates\plugins.html:47
+msgid "Uninstall?"
 msgstr ""
 
-#: OSPi\templates\stations.html:80
-msgid "Ignore Rain?"
+#: SIP\templates\plugins.html:65
+msgid "CAUTION:"
 msgstr ""
 
-#: OSPi\templates\stations.html:82
-msgid "Activate Master?"
+#: SIP\templates\plugins.html:65
+msgid "Clicking UPDATE or UNINSTALL will restart the software and stop any running programs."
 msgstr ""
 
-#: OSPi\templates\stations.html:93
-msgid "(Master valve)"
+#: SIP\templates\plugins.html:67
+msgid "Update Enabled"
 msgstr ""
 
-#: OSPi\templates\stations.html:119
-msgid "Reset Names"
+#: SIP\templates\plugins.html:68
+msgid "Uninstall"
 msgstr ""
 
-#: OSPi\templates\system_update.html:3
-msgid "OpenSprinkler Pi System update from GitHub"
+#: SIP\templates\plugins_repo.html:3
+msgid "SIP Plugin Browser"
 msgstr ""
 
-#: OSPi\templates\system_update.html:24
-msgid "System update from github"
+#: SIP\templates\plugins_repo.html:26
+msgid "Available Plugins"
 msgstr ""
 
-#: OSPi\templates\system_update.html:25
-msgid ""
-"This plugin compares the local copy with the remote repository and can "
-"automatically update the local copy."
+#: SIP\templates\plugins_repo.html:27
+msgid "Unless otherwise stated these plugins are licensed under GPL 3.0"
 msgstr ""
 
-#: OSPi\templates\system_update.html:29
-msgid "Remote repository"
+#: SIP\templates\plugins_repo.html:43
+msgid "install"
 msgstr ""
 
-#: OSPi\templates\system_update.html:35
-msgid "Local ospi version"
-msgstr ""
-
-#: OSPi\templates\system_update.html:41
-msgid "Local ospi date"
-msgstr ""
-
-#: OSPi\templates\system_update.html:50
-msgid "Update Status"
-msgstr ""
-
-#: OSPi\templates\system_update.html:59
-msgid "Update ospi"
-msgstr ""
-
-#: OSPi\templates\system_update.html:61
-msgid "Up-to-date"
-msgstr ""
-
-#: OSPi\templates\system_update.html:62
-msgid "Restart ospi"
-msgstr ""
-
-#: OSPi\templates\system_update.html:63
+#: SIP\templates\plugins_repo.html:44
 msgid "Back"
 msgstr ""
 
-#: OSPi\templates\weather_adj.html:3
-msgid "OpenSprinkler Pi Weather-based Rain Delay"
+#: SIP\templates\programs.html:3
+msgid "SIP Programs"
 msgstr ""
 
-#: OSPi\templates\weather_adj.html:20
-msgid "Weather-based Rain Delay"
+#: SIP\templates\programs.html:18
+msgid "Every "
 msgstr ""
 
-#: OSPi\templates\weather_adj.html:21
-msgid ""
-"When weather-based rain delay is enabled, the weather will be checked for "
-"rain every hour. If the weather reports any condition suggesting rain, a "
-"rain delay is automatically issued using the below set delay duration."
+#: SIP\templates\programs.html:18 SIP\templates\programs.html:20
+msgid "days"
 msgstr ""
 
-#: OSPi\templates\weather_adj.html:25
-msgid "Use Automatic Rain Delay"
+#: SIP\templates\programs.html:20
+msgid "starting in"
 msgstr ""
 
-#: OSPi\templates\weather_adj.html:31
-msgid "Delay Duration (hours)"
+#: SIP\templates\programs.html:23
+msgid "Every Weekday"
 msgstr ""
 
-#: OSPi\templates\weather_adj.html:37
-msgid "Weather Provider"
+#: SIP\templates\programs.html:27
+msgid "Fri"
 msgstr ""
 
-#: OSPi\templates\weather_adj.html:46 OSPi\templates\weather_level_adj.html:55
-msgid "Wunderground API Key"
+#: SIP\templates\programs.html:27
+msgid "Mon"
 msgstr ""
 
-#: OSPi\templates\weather_level_adj.html:3
-msgid "OpenSprinkler Pi Weather-based Water Level"
+#: SIP\templates\programs.html:27
+msgid "Sat"
 msgstr ""
 
-#: OSPi\templates\weather_level_adj.html:20
-msgid "Weather-based Water Level"
+#: SIP\templates\programs.html:27
+msgid "Sun"
 msgstr ""
 
-#: OSPi\templates\weather_level_adj.html:21
-msgid ""
-"When weather-based water level is enabled, the weather will be checked every "
-"hour and the water level will be adjusted accordingly."
+#: SIP\templates\programs.html:27
+msgid "Thur"
 msgstr ""
 
-#: OSPi\templates\weather_level_adj.html:25
-msgid "Use Automatic Water Level Adjustment"
+#: SIP\templates\programs.html:27
+msgid "Tue"
 msgstr ""
 
-#: OSPi\templates\weather_level_adj.html:31
-msgid "Min percentage"
+#: SIP\templates\programs.html:27
+msgid "Wed"
 msgstr ""
 
-#: OSPi\templates\weather_level_adj.html:37
-msgid "Max percentage"
+#: SIP\templates\programs.html:29
+msgid " (Even days only)"
 msgstr ""
 
-#: OSPi\templates\weather_level_adj.html:43
-msgid "History days used"
+#: SIP\templates\programs.html:31
+msgid " (Odd days only)"
 msgstr ""
 
-#: OSPi\templates\weather_level_adj.html:49
-msgid "Forecast days used"
+#: SIP\templates\programs.html:109
+msgid "Delete All"
 msgstr ""
 
-#: OSPi\webpages.py:296
+#: SIP\templates\programs.html:128
+msgid "Run"
+msgstr ""
+
+#: SIP\templates\programs.html:141
+msgid "Starting"
+msgstr ""
+
+#: SIP\templates\programs.html:142
+msgid "for"
+msgstr ""
+
+#: SIP\templates\programs.html:145
+msgid "Recurring every"
+msgstr ""
+
+#: SIP\templates\programs.html:146
+msgid "until"
+msgstr ""
+
+#: SIP\templates\programs.html:149 SIP\templates\runonce.html:74
+msgid "Run Now"
+msgstr ""
+
+#: SIP\templates\programs.html:150
+msgid "Edit"
+msgstr ""
+
+#: SIP\templates\programs.html:151
+msgid "Delete"
+msgstr ""
+
+#: SIP\templates\proto.html:4
+msgid "SIP Proto Plugin"
+msgstr ""
+
+#: SIP\templates\proto.html:30
+msgid "Example Check Boxes"
+msgstr ""
+
+#: SIP\templates\proto.html:37 SIP\templates\proto.html:38
+#: SIP\templates\proto.html:56 SIP\templates\proto.html:57
+msgid "Heading"
+msgstr ""
+
+#: SIP\templates\proto.html:41
+msgid "Check Box 1"
+msgstr ""
+
+#: SIP\templates\proto.html:45
+msgid "Check Box 2"
+msgstr ""
+
+#: SIP\templates\proto.html:51
+msgid "Text Entry Fields"
+msgstr ""
+
+#: SIP\templates\proto.html:61
+msgid "Text Field 1"
+msgstr ""
+
+#: SIP\templates\proto.html:65
+msgid "Text Field 2"
+msgstr ""
+
+#: SIP\templates\restarting.html:3
+msgid "SIP Restarting"
+msgstr ""
+
+#: SIP\templates\restarting.html:30
+msgid "SIP is restarting"
+msgstr ""
+
+#: SIP\templates\restarting.html:31
+msgid "This may take several seconds..."
+msgstr ""
+
+#: SIP\templates\runonce.html:3
+msgid "SIP Run-Once"
+msgstr ""
+
+#: SIP\templates\runonce.html:35
+msgid "No station is scheduled to run"
+msgstr ""
+
+#: SIP\templates\runonce.html:75
+msgid "Reset Time"
+msgstr ""
+
+#: SIP\templates\stations.html:3
+msgid "SIP Stations"
+msgstr ""
+
+#: SIP\templates\stations.html:80
+msgid "Enabled?"
+msgstr ""
+
+#: SIP\templates\stations.html:81
+msgid "Ignore Rain?"
+msgstr ""
+
+#: SIP\templates\stations.html:83
+msgid "Activate Master?"
+msgstr ""
+
+#: SIP\templates\stations.html:94
+msgid "(Master valve)"
+msgstr ""
+
+#: SIP\templates\stations.html:120
+msgid "Reset Names"
+msgstr ""
+
+#: SIP\templates\system_update.html:25
+msgid "SIP Software Updater"
+msgstr ""
+
+#: SIP\templates\system_update.html:28
+msgid "This plugin compares the local SIP version with the GitHub repository and can update the local software."
+msgstr ""
+
+#: SIP\templates\system_update.html:32
+msgid "Remote repository"
+msgstr ""
+
+#: SIP\templates\system_update.html:38
+msgid "Local SIP version"
+msgstr ""
+
+#: SIP\templates\system_update.html:44
+msgid "Local SIP date"
+msgstr ""
+
+#: SIP\templates\system_update.html:53
+msgid "Refresh Status"
+msgstr ""
+
+#: SIP\templates\system_update.html:62
+msgid "Update SIP"
+msgstr ""
+
+#: SIP\templates\system_update.html:64
+msgid "Up-to-date"
+msgstr ""
+
+#: SIP\templates\system_update.html:65
+msgid "Restart SIP"
+msgstr ""
+
+#: SIP\webpages.py:346
 msgid " not found."
 msgstr ""
 
-#: OSPi\webpages.py:296
+#: SIP\webpages.py:346
 msgid "Station "
 msgstr ""
 
-#: OSPi\webpages.py:314
+#: SIP\webpages.py:364
 msgid "Manual mode not active."
 msgstr ""
 
-#: OSPi\webpages.py:590
+#: SIP\webpages.py:630
 msgid "Date, Start Time, Zone, Duration, Program"
 msgstr ""
+
