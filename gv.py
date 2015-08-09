@@ -42,6 +42,7 @@ sd = {
     u"en": 1,
     u"seq": 1,
     u"ir": [0],
+    u"iw": [0],
     u"rsn": 0,
     u"htp": 80,
     u"nst": 8,

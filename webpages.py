@@ -249,10 +249,11 @@ class change_options(ProtectedPage):
             for i in range(incr):
                 gv.sd['mo'].append(0)
                 gv.sd['ir'].append(0)
+                gv.sd['iw'].append(0)
                 gv.sd['show'].append(255)
             ln = len(gv.snames)
             for i in range(incr*8):
-                gv.snames.append("S"+('%d' % (i+1+ln)))
+                gv.snames.append("S"+"{:0>2d}".format(i+1+ln))
             for i in range(incr * 8):
                 gv.srvals.append(0)
                 gv.ps.append([0, 0])
@@ -264,6 +265,7 @@ class change_options(ProtectedPage):
             decr = gv.sd['nbrd'] - (onbrd + 1)
             gv.sd['mo'] = gv.sd['mo'][:(onbrd + 1)]
             gv.sd['ir'] = gv.sd['ir'][:(onbrd + 1)]
+            gv.sd['iw'] = gv.sd['iw'][:(onbrd + 1)]
             gv.sd['show'] = gv.sd['show'][:(onbrd + 1)]
             # unused variables
             # nlst = gv.snames
@@ -300,6 +302,11 @@ class change_stations(ProtectedPage):
                     gv.sd['ir'][i] = int(qdict['i' + str(i)])
                 except ValueError:
                     gv.sd['ir'][i] = 0
+            if 'w' + str(i) in qdict:
+                try:
+                    gv.sd['iw'][i] = int(qdict['w' + str(i)])
+                except ValueError:
+                    gv.sd['iw'][i] = 0
             if 'sh' + str(i) in qdict:
                 try:
                     gv.sd['show'][i] = int(qdict['sh' + str(i)])
@@ -315,7 +322,7 @@ class change_stations(ProtectedPage):
             if 's' + str(i) in qdict:
                 names.append(qdict['s'+str(i)])
             else:
-                names.append('S'+str(i+1))
+                names.append('S'+"{:0>2d}".format(i+1))
         gv.snames = names
         jsave(names, 'snames')
         jsave(gv.sd, 'sd')
@@ -514,7 +521,9 @@ class run_now(ProtectedPage):
                 if sid + 1 == gv.sd['mas']:  # skip if this is master valve
                     continue
                 if p[7 + b] & 1 << s:  # if this station is scheduled in this program
-                    gv.rs[sid][2] = p[6] * gv.sd['wl'] / 100 * extra_adjustment  # duration scaled by water level
+                    gv.rs[sid][2] = p[6]
+                    if gv.sd['iw'][b] & 1<<s == 0:
+                        gv.rs[sid][2] *= gv.sd['wl'] / 100 * extra_adjustment  # duration scaled by water level
                     gv.rs[sid][3] = pid + 1  # store program number in schedule
                     gv.ps[sid][0] = pid + 1  # store program number for display
                     gv.ps[sid][1] = gv.rs[sid][2]  # duration

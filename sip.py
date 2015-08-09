@@ -36,7 +36,6 @@ def timing_loop():
                 for i, p in enumerate(gv.pd):  # get both index and prog item
                     # check if program time matches current time, is active, and has a duration
                     if prog_match(p) and p[0] and p[6]:
-                        duration = p[6] * gv.sd['wl'] / 100 * extra_adjustment  # program duration scaled by "water level"
                         # check each station for boards listed in program up to number of boards in Options
                         for b in range(len(p[7:7 + gv.sd['nbrd']])):
                             for s in range(8):
@@ -46,6 +45,10 @@ def timing_loop():
                                 if gv.srvals[sid]:  # skip if currently on
                                     continue
 
+				# station duration condionally scaled by "water level"
+				duration_adj = 1.0 if gv.sd['iw'][b] & (1<<s) else gv.sd['wl'] / 100 * extra_adjustment
+                                duration = p[6] * duration_adj
+                        	duration = int(round(duration)) # convert to int
                                 if p[7 + b] & 1 << s:  # if this station is scheduled in this program
                                     if gv.sd['seq']:  # sequential mode
                                         gv.rs[sid][2] = duration

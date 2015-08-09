@@ -4,7 +4,7 @@ $var title: $_('SIP Stations')
 $var page: stations
 $code:
 	snames = gv.snames
-	
+
 <script>
 
     // Initialize behaviors
@@ -29,21 +29,27 @@ $code:
                     jQuery("#m"+bid).val(vm);
                 }
             }
-            var vi, vs;
+            var vi, vs, vw;
             for (bid=0; bid<nbrd; bid++) {
                 vi = 0;
                 vs = 0;
+                vw = 0;
                 for (s=0; s<8; s++) {
                     sid = bid*8 + (7-s);
                     vi = vi<<1;
                     vs = vs<<1;
+                    vw = vw<<1;
                     if (sid == mas-1) {
                         vi = vi + 1;
                         vs = vs + 1;
+                        vw = vw + 1;
                         continue;
                     }
                     if (jQuery("#rc"+sid).is(":checked")) {
                         vi = vi + 1;
+                    }
+                    if (jQuery("#wlc"+sid).is(":checked")) {
+                        vw = vw + 1;
                     }
                     if (jQuery("#show"+sid).is(":checked")) {
                         vs = vs + 1;
@@ -51,6 +57,7 @@ $code:
                 }
                 jQuery("#i"+bid).val(vi);
                 jQuery("#sh"+bid).val(vs);
+                jQuery("#w"+bid).val(vw);
             }
             jQuery("#sf").submit();
         });
@@ -79,6 +86,8 @@ $code:
                 <th class="stationName">$_('Name')</th>
                 <th class="stationShow">$_('Enabled?')</th>
                 <th class="stationIgnore">$_('Ignore Rain?')</th>
+                $if 'wl_weather' in gv.sd:
+                    <th class="stationIgnoreWL">$_('Ignore Dynamic Water Level?')</th>
                 $if gv.sd['mas'] > 0:
                     <th class="stationMaster">$_('Activate Master?')</th>
             </tr>
@@ -91,7 +100,10 @@ $code:
                             <input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid}" id="n${sid}">
                         </td>
                         $if sid == gv.sd['mas'] - 1:
-                            <td class="stationMaster" colspan="3">$_('(Master valve)')</td>
+                            $if 'wl_weather' in gv.sd:
+                                <td class="stationMaster" colspan="4">$_('(Master valve)')</td>
+                            $else:
+                                <td class="stationMaster" colspan="3">$_('(Master valve)')</td>
                         $else:
                             <td class="stationShow">
                                 <input type="checkbox" ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}">
@@ -99,6 +111,10 @@ $code:
                             <td class="stationIgnore">
                                 <input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">
                             </td>
+                            $if 'wl_weather' in gv.sd:
+                                <td class="stationIgnoreWL">
+                                    <input type="checkbox" ${"checked" if gv.sd['iw'][bid]&(1<<s) else ""} id="wlc${sid}">
+                                </td>
                         $if gv.sd['mas'] > 0 and gv.sd['mas'] != sid+1:
                             <td class="stationMaster">
                                 <input type="checkbox" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}">
@@ -111,6 +127,7 @@ $code:
         $for bid in range(gv.sd['nbrd']):
             <input type="hidden" id="i${bid}" name="i${bid}"/>
             <input type="hidden" id="sh${bid}" name="sh${bid}"/>
+            <input type="hidden" id="w${bid}" name="w${bid}"/>
             <input type="hidden" id="m${bid}" name="m${bid}"/>
     </form>
 </div>
