@@ -199,11 +199,12 @@ if __name__ == '__main__':
         gv.plugin_menu.pop(gv.plugin_menu.index(['Manage Plugins', '/plugins']))
     except Exception:
         pass
+    
+    thread.start_new_thread(timing_loop, ())
 
     if gv.use_gpio_pins:
         set_output()    
 
-    thread.start_new_thread(timing_loop, ())
 
     app.notfound = lambda: web.seeother('/')
 

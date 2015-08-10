@@ -8,7 +8,7 @@ import subprocess
 
 major_ver = 3
 minor_ver = 0
-old_count = 275
+old_count = 274
 
 try:
     revision = int(subprocess.check_output(['git', 'rev-list', '--count', '--first-parent', 'HEAD']))
