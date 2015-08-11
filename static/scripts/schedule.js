@@ -19,8 +19,8 @@ function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is schedu
     if((pd[1]&(1<<wd))==0)  return 0; // weekday checking
     dt=simdate.getDate(); // set dt = day of the month
     if((pd[1]&0x80)&&(pd[2]==0)) { // even day checking...
-	    if(dt%2) return 0; // if odd day (dt%2 == 1), no not match
-	 }
+      if(dt%2) return 0; // if odd day (dt%2 == 1), no not match
+    }
     if((pd[1]&0x80)&&(pd[2]==1))  { // odd day checking...
       if(dt==31) return 0; // if 31st of month, do not match
       else if (dt==29 && simdate.getMonth()==1) return 0; // if leap year day, do not match
@@ -49,7 +49,7 @@ function doSimulation() { // Create schedule by a full program simulation, was d
   }
   do { // check through every program
     busy=0;
-	 endmin=0;
+    endmin=0;
     match_found=0;
     for(pid=0;pid<nprogs;pid++) { //for each program
       var pd=progs[pid]; //prog=program array, pd=program element at this index (program data)
@@ -58,8 +58,11 @@ function doSimulation() { // Create schedule by a full program simulation, was d
           bid=sid>>3;s=sid%8; //set board index (bid) and station number per board (s) from station index (sid) 
           if(mas==(sid+1)) continue; // skip master station
           if(pd[7+bid]&(1<<s)) { // if this station is selected in this program...
-				et_array[sid]=pd[6]*wl/100*wlx/100; // Set end time for this station to duration adjusted by water level
-				pid_array[sid]=pid+1; // Set station element in pid array to program number (pid+1)
+            et_array[sid]=pd[6]; // Set duration for this station to duration
+            if (iw[bid]&(1<<s) == 0) { // adjust duration by water level
+              et_array[sid] *= wl/100*wlx/100;
+            }
+            pid_array[sid]=pid+1; // Set station element in pid array to program number (pid+1)
             match_found=1;
           }
         }
@@ -71,10 +74,10 @@ function doSimulation() { // Create schedule by a full program simulation, was d
         for(sid=0;sid<nst;sid++) { // for each station...
           if(et_array[sid]) { // if an end time is set...
             st_array[sid]=acctime; // set start time for this station to accumulated time 
-			  acctime+=et_array[sid]; //increment accumulated time by end time (adjusted duration) for this station
+            acctime+=et_array[sid]; //increment accumulated time by end time (adjusted duration) for this station
             et_array[sid]=acctime; // set end time for this station to updated accumulated time
-			  endmin = Math.ceil(et_array[sid]/60); // update end time
-			  acctime+=sdt; // increment accumulated time by station delay time
+            endmin = Math.ceil(et_array[sid]/60); // update end time
+            acctime+=sdt; // increment accumulated time by station delay time
             busy=1; // set system busy flag - prevents new scheduleing until current schedule is finished
           }//if
         }//for
@@ -83,23 +86,23 @@ function doSimulation() { // Create schedule by a full program simulation, was d
           if(et_array[sid]) { // if an end time is set...
             st_array[sid]=simminutes*60; // set start time for this station to simminutes converted to seconds
             et_array[sid]=simminutes*60+et_array[sid]; // set end time for this station to end time shifted by start time
-			  if ((et_array[sid]/60)>endmin) {endmin = Math.ceil((et_array[sid]/60))} // update endmin to whole minute
+            if ((et_array[sid]/60)>endmin) {endmin = Math.ceil((et_array[sid]/60))} // update endmin to whole minute
             busy=1; // set system busy flag - prevents new scheduleing until current schedule is complete
           }//if(et_array)
         }//for(sid)
       }//else(seq)
     }//if(match_found)
-	// add to schedule
-	for(sid=0;sid<nst;sid++) { // for each station
-	  if(pid_array[sid]) { // if this station is included...
-	    schedule.push({ // data for creating home page program display
-			program: pid_array[sid], // program number
-			station: sid, // station index
-			start: st_array[sid]/60, // start time, minutes since midnight
-			duration: et_array[sid]-st_array[sid], // duration in seconds
-			label: toClock(st_array[sid]/60, timeFormat) + " for " + toClock(((et_array[sid]/60)-(st_array[sid]/60)), 1) // ***not the same as log data date element
-		});
-	  }
+    // add to schedule
+    for(sid=0;sid<nst;sid++) { // for each station
+      if(pid_array[sid]) { // if this station is included...
+        schedule.push({ // data for creating home page program display
+                        program: pid_array[sid], // program number
+                        station: sid, // station index
+                        start: st_array[sid]/60, // start time, minutes since midnight
+                        duration: et_array[sid]-st_array[sid], // duration in seconds
+                        label: toClock(st_array[sid]/60, timeFormat) + " for " + toClock(((et_array[sid]/60)-(st_array[sid]/60)), 1) // ***not the same as log data date element
+                      });
+      }
     }	  
     if (busy) { // if system buisy...
       if(seq&&simminutes!=endmin) simminutes=endmin; // move to end of system busy state.
@@ -244,5 +247,3 @@ function scheduleMarkerMouseover() {
 function scheduleMarkerMouseout() {
 	jQuery(this).children(".showDetails").remove();
 }
-
-

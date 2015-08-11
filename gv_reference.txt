@@ -33,6 +33,7 @@ bsy:0	program busy
 nprogs:0 number of programs (can be calculated form length of prog array)
 mo:[0] master operation bytes - contains bits per board for stations with master set
 ir:[0] ignore rain bytes - contains bits per board for stations to ignore rain delay and rain sensor
+iw:[0] ingore water level - contains bits per board for stations to ignore water level (both general scaling and plugin adjustments)
 rsn:0 Reset all stations
 nst:8 number of stations
 
