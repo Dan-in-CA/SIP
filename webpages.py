@@ -639,7 +639,7 @@ class water_log(ProtectedPage):
         data = _("Date, Start Time, Zone, Duration, Program") + "\n"
         for r in records:
             event = ast.literal_eval(json.dumps(r))
-            data += event["date"] + ", " + event["start"] + ", " + str(event["station"]) + ", " + event[
+            data += event["date"] + ", " + event["start"] + ", " + str(event["station"]+1) + ", " + event[
                 "duration"] + ", " + event["program"] + "\n"
 
         web.header('Content-Type', 'text/csv')
