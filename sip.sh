@@ -33,7 +33,7 @@ DESC="OpenSprinkler Raspberry Pi"
 NAME=sip.py
 DAEMON=/usr/bin/python
 DAEMON_ARGS="sip.py"
-HOMEDIR=/home/pi/sip/ # Edit if different on your Raspberry Pi
+HOMEDIR=/home/pi/SIP/ # Edit if different on your Raspberry Pi
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
