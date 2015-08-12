@@ -17,8 +17,9 @@ import gv
 from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave, station_names
 from urls import urls  # Provides access to URLs for UI pages
 from gpio_pins import set_output
-set_output()
-
+# do not call set output until plugins are loaded because it should NOT be called
+# if gv.use_gpio_pins is False (which is set in relay board plugin.
+# set_output()
 
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
