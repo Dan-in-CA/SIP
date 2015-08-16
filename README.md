@@ -16,6 +16,14 @@ UPDATES - Note: This project, formally OSPi, has been renamed to SIP
 ===========
 
 ***********
+August 15 2015
+----------
+(Brian)
+1. Add gv.output_srvals and a gv.output_srvals_lock, so that threads can get a consistent state of stations currently running
+2. Add gv.plugin_data which is a dictionary (index by plugin webpage base) to hold data associated with a plugin  
+3. Add gv.nowt to have a struct time of the current time
+
+***********
 August 9 2015
 ----------
 (Brian)  

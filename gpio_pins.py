@@ -42,7 +42,6 @@ try:
 except NameError:
     pass
 
-
 def setup_pins():
     """
     Define and setup GPIO pins for shift register operation
@@ -127,7 +126,9 @@ def setShiftRegister(srvals):
 def set_output():
     """Activate triacs according to shift register state."""
 
-    disableShiftRegisterOutput()
-    setShiftRegister(gv.srvals)  # gv.srvals stores shift register state
-    enableShiftRegisterOutput()
-    zone_change.send()
+    with gv.output_srvals_lock:
+        gv.output_srvals = gv.srvals
+        disableShiftRegisterOutput()
+        setShiftRegister(gv.output_srvals)  # gv.srvals stores shift register state
+        enableShiftRegisterOutput()
+        zone_change.send()
