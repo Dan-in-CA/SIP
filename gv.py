@@ -5,10 +5,11 @@
 ##############################
 #### Revision information ####
 import subprocess
+from threading import RLock
 
 major_ver = 3
-minor_ver = 0
-old_count = 274
+minor_ver = 1
+old_count = 275
 
 try:
     revision = int(subprocess.check_output(['git', 'rev-list', '--count', '--first-parent', 'HEAD']))
@@ -93,15 +94,18 @@ except IOError:  # If file does not exist, it will be created using defaults.
         json.dump(sd, sdf)
 
 
-now = timegm(time.localtime())
+nowt = time.localtime()
+now = timegm(nowt)
 tz_offset = int(time.time() - timegm(time.localtime())) # compatible with Javascript (negative tz shown as positive value)
 plugin_menu = []  # Empty list of lists for plugin links (e.g. ['name', 'URL'])
 
 srvals = [0] * (sd['nst'])  # Shift Register values
+output_srvals = [0] * (sd['nst'])  # Shift Register values last set by set_output()
+output_srvals_lock = RLock()
 rovals = [0] * sd['nbrd'] * 7  # Run Once durations
 snames = station_names()  # Load station names from file
 pd = load_programs()  # Load program data from file
-
+plugin_data = {}  # Empty dictionary to hold plugin based global data
 ps = []  # Program schedule (used for UI display)
 for i in range(sd['nst']):
     ps.append([0, 0])

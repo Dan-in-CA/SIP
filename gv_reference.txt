@@ -48,8 +48,11 @@ theme: "original" files used to style the UItyle the UI
 other gv attributes:
 gv.ver	software rev number (int, converted to dot separated digets in UI)
 gv.ver_date	date of release (string)
+gv.nowt	current time as struct time, updated once per second at top of timing loop
 gv.now	current time, updated once per second at top of timing loop
 gv.srvals	shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
+gv.output_srvals	shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
+gv.outpu_srvals_lock  a mutex used whenever gv.output_srvals must be accessed atomically
 gv.rovals	run once values - list of duration times in seconds for a run once program (list, length = number of statons)
 gv.pd	program data - loaded from file at startup (list of lists)
 gv.ps	program schedule used for UI display (list of 2 element lists i.e. [program number, duration])
@@ -59,3 +62,4 @@ gv.rs	run schedule (list [scheduled start time, scheduled stop time, duration, p
 gv.lrun	last run, used to display log line on home page (list [station index, program number, duration, end time]) 
 gv.scount	station count, used in set station to track on stations with master association
 gv.plugin_menu list to hold a 2 element list for each plugin to be added to menu on home page (['menu text', 'url'])
+gv.plugin_data dictionary (index by plugin root web prefix) to hold plugin data.
