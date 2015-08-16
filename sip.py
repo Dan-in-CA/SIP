@@ -29,7 +29,8 @@ def timing_loop():
         pass
     last_min = 0
     while True:  # infinite loop
-        gv.now = timegm(time.localtime())   # Current time as timestamp based on local time from the Pi. updated once per second.
+        gv.nowt = time.localtime()   # Current time as time struct.  Updated once per second.
+        gv.now = timegm(gv.nowt)   # Current time as timestamp based on local time from the Pi. Updated once per second.
         if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']):
             if gv.now / 60 != last_min:  # only check programs once a minute
                 last_min = gv.now / 60
@@ -198,6 +199,19 @@ if __name__ == '__main__':
         print ' ', name
 
     gv.plugin_menu.sort(key=lambda entry: entry[0])
+
+    # Ensure first three characters ('/' plus two characters of base name of each
+    # plugin is unique.  This allows the gv.plugin_data dictionary to be indexed
+    # by the two characters in the base name.
+    plugin_map = {}
+    for p in gv.plugin_menu:
+        three_char = p[1][0:3]
+        if three_char not in plugin_map:
+            plugin_map[three_char] = p[0] + '; ' + p[1]
+        else:
+            print 'ERROR - Plugin Conflict:', p[0] + '; ' + p[1] + ' and ', plugin_map[three_char]
+            exit()
+
     #  Keep plugin manager at top of menu
     try:
         gv.plugin_menu.pop(gv.plugin_menu.index(['Manage Plugins', '/plugins']))
