@@ -208,7 +208,7 @@ $code:
 <div id="options">
     <button id="cStartStop" class="toggle ${'on' if gv.sd['en'] else 'off'}"><span class='toggleleft'>$_('System On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_('System Off')</span></button>
     <br>
-    <button id="cWaterLevel" class="toggle choice ${'on' if gv.sd['wl']==100 else 'off'}"><span class='toggleleft'>$_('Normal')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>${_('Water Level') if gv.sd['wl']==100 else str(gv.sd['wl']) + '%' + _('Level')}</span></button> $# ${'' if int(plugin_adjustment()) == 100 else ' Plugin adjustments: ' + plugin_adjustment_list() + ('' if gv.sd['wl']==100 and '*' not in plugin_adjustment_list() else ' - Total adjustment: ' + total_adjustment() + '%')}
+    <button id="cWaterLevel" class="toggle choice ${'on' if gv.sd['wl']==100 else 'off'}"><span class='toggleleft'>$_('Normal')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>${_('Water Level') if gv.sd['wl']==100 else str(gv.sd['wl']) + '%' + _('Level')}</span></button> ${'' if int(plugin_adjustment()) == 100 else ' Plugin adjustments: ' + plugin_adjustment_list() + ('' if gv.sd['wl']==100 and '*' not in plugin_adjustment_list() else ' - Total adjustment: ' + total_adjustment() + '%')}
     <br>
     <button id="cRainDelay" class="toggle ${'off' if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']) else 'on'}"><span class='toggleleft'>$_('Active')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_('Rain Delay')</span></button>
     $if gv.sd['rd']:
