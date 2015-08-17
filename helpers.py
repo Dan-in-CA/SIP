@@ -183,6 +183,7 @@ def mkdir_p(path):
             raise
 
 def check_rain():
+    global pi
     try:
         if gv.sd['rst'] == 1:  # Rain sensor type normally open (default)
             if gv.use_pigpio:

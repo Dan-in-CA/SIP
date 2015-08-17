@@ -79,7 +79,7 @@ def setup_pins():
     global pin_sr_clk
     global pin_sr_noe
     global pin_sr_lat
-
+    global pi
 
     try:
         if gv.platform == 'pi':  # If this will run on Raspberry Pi:
@@ -124,6 +124,7 @@ def setup_pins():
 def disableShiftRegisterOutput():
     """Disable output from shift register."""
 
+    global pi
     try:
         pin_sr_noe
     except NameError:
@@ -141,6 +142,7 @@ def disableShiftRegisterOutput():
 def enableShiftRegisterOutput():
     """Enable output from shift register."""
 
+    global pi
     try:
         if gv.use_pigpio:
             pi.write(pin_sr_noe, 0)
@@ -153,6 +155,7 @@ def enableShiftRegisterOutput():
 def setShiftRegister(srvals):
     """Set the state of each output pin on the shift register from the srvals list."""
 
+    global pi
     try:
         if gv.use_pigpio:
             pi.write(pin_sr_clk, 0)
