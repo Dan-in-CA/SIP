@@ -37,6 +37,12 @@ import time
 
 platform = ''  # must be done before the following import because gpio_pins will try to set it
 
+try:
+    import pigpio
+    use_pigpio = True
+except ImportError:
+    use_pigpio = False
+
 from helpers import password_salt, password_hash, load_programs, station_names
 
 sd = {

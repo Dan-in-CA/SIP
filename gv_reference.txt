@@ -63,3 +63,4 @@ gv.lrun	last run, used to display log line on home page (list [station index, pr
 gv.scount	station count, used in set station to track on stations with master association
 gv.plugin_menu list to hold a 2 element list for each plugin to be added to menu on home page (['menu text', 'url'])
 gv.plugin_data dictionary (index by plugin root web prefix) to hold plugin data.
+gv.use_pigpio  set if pigpio libary is installed.
