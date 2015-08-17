@@ -6,6 +6,7 @@ import i18n
 import datetime
 from threading import Thread
 import os
+import errno
 import random
 import sys
 import time
@@ -15,17 +16,20 @@ import ast
 from web.webapi import seeother
 from blinker import signal
 
-try:
-    from gpio_pins import GPIO, pin_rain_sense
-except ImportError:
-    print 'error importing GPIO pins into helpers'
-    pass
-
 import web
 from web import form
 
 import gv
 from web.session import sha1
+
+try:
+    from gpio_pins import GPIO, pin_rain_sense
+    if gv.use_pigpio:
+        import pigpio
+        pi = pigpio.pi()
+except ImportError:
+    print 'error importing GPIO pins into helpers'
+    pass
 
 try:
     import json
@@ -58,7 +62,10 @@ def reboot(wait=1, block=False):
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
-        GPIO.cleanup()
+        if gv.use_pigpio:
+            pass
+        else:
+            GPIO.cleanup()
         time.sleep(wait)
         try:
             print _('Rebooting...')
@@ -84,7 +91,10 @@ def poweroff(wait=1, block=False):
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
-        GPIO.cleanup()
+        if gv.use_pigpio:
+            pass
+        else:
+            GPIO.cleanup()
         time.sleep(wait)
         try:
             print _('Powering off...')
@@ -111,10 +121,10 @@ def restart(wait=1, block=False):
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
-        try:
-            GPIO.cleanup()
-        except Exception:
+        if gv.use_pigpio:
             pass
+        else:
+            GPIO.cleanup()
         time.sleep(wait)
         try:
             print _('Restarting...')
@@ -163,19 +173,39 @@ def get_rpi_revision():
     except ImportError:
         return 0
 
+def mkdir_p(path):
+    try:
+        os.makedirs(path)
+    except OSError as exc:  # Python >2.5
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            raise
 
 def check_rain():
     try:
         if gv.sd['rst'] == 1:  # Rain sensor type normally open (default)
-            if not GPIO.input(pin_rain_sense):  # Rain detected
-                gv.sd['rs'] = 1
+            if gv.use_pigpio:
+                if not pi.read(pin_rain_sense):  # Rain detected
+                    gv.sd['rs'] = 1
+                else:
+                    gv.sd['rs'] = 0
             else:
-                gv.sd['rs'] = 0
+                if not GPIO.input(pin_rain_sense):  # Rain detected
+                    gv.sd['rs'] = 1
+                else:
+                    gv.sd['rs'] = 0
         elif gv.sd['rst'] == 0:  # Rain sensor type normally closed
-            if GPIO.input(pin_rain_sense):  # Rain detected
-                gv.sd['rs'] = 1
+            if gv.use_pigpio:
+                if pi.read(pin_rain_sense):  # Rain detected
+                    gv.sd['rs'] = 1
+                else:
+                    gv.sd['rs'] = 0
             else:
-                gv.sd['rs'] = 0
+                if GPIO.input(pin_rain_sense):  # Rain detected
+                    gv.sd['rs'] = 1
+                else:
+                    gv.sd['rs'] = 0
     except NameError:
         pass
 
@@ -330,6 +360,7 @@ def stop_onrain():
     """Stop stations that do not ignore rain."""
 
     from gpio_pins import set_output
+    do_set_output = False
     for b in range(gv.sd['nbrd']):
         for s in range(8):
             sid = b * 8 + s  # station index
@@ -337,10 +368,13 @@ def stop_onrain():
                 continue
             elif not all(v == 0 for v in gv.rs[sid]):
                 gv.srvals[sid] = 0
-                set_output()
+                do_set_output = True
                 gv.sbits[b] &= ~1 << s  # Clears stopped stations from display
                 gv.ps[sid] = [0, 0]
                 gv.rs[sid] = [0, 0, 0, 0]
+
+    if do_set_output:
+        set_output()
     return
 
 
