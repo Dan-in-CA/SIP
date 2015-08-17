@@ -12,9 +12,9 @@ import sys
 sys.path.append('./plugins')
 
 import web  # the Web.py module. See webpy.org (Enables the Python SIP web interface)
-import gv
 
-from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave, station_names
+import gv
+from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave, station_names, get_rpi_revision
 from urls import urls  # Provides access to URLs for UI pages
 from gpio_pins import set_output
 # do not call set output until plugins are loaded because it should NOT be called
