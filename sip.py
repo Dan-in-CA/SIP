@@ -12,13 +12,14 @@ import sys
 sys.path.append('./plugins')
 
 import web  # the Web.py module. See webpy.org (Enables the Python SIP web interface)
-import gv
 
-from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave, station_names
+import gv
+from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave, station_names, get_rpi_revision
 from urls import urls  # Provides access to URLs for UI pages
 from gpio_pins import set_output
-set_output()
-
+# do not call set output until plugins are loaded because it should NOT be called
+# if gv.use_gpio_pins is False (which is set in relay board plugin.
+# set_output()
 
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
@@ -28,7 +29,8 @@ def timing_loop():
         pass
     last_min = 0
     while True:  # infinite loop
-        gv.now = timegm(time.localtime())   # Current time as timestamp based on local time from the Pi. updated once per second.
+        gv.nowt = time.localtime()   # Current time as time struct.  Updated once per second.
+        gv.now = timegm(gv.nowt)   # Current time as timestamp based on local time from the Pi. Updated once per second.
         if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']):
             if gv.now / 60 != last_min:  # only check programs once a minute
                 last_min = gv.now / 60
@@ -36,7 +38,6 @@ def timing_loop():
                 for i, p in enumerate(gv.pd):  # get both index and prog item
                     # check if program time matches current time, is active, and has a duration
                     if prog_match(p) and p[0] and p[6]:
-                        duration = p[6] * gv.sd['wl'] / 100 * extra_adjustment  # program duration scaled by "water level"
                         # check each station for boards listed in program up to number of boards in Options
                         for b in range(len(p[7:7 + gv.sd['nbrd']])):
                             for s in range(8):
@@ -46,6 +47,10 @@ def timing_loop():
                                 if gv.srvals[sid]:  # skip if currently on
                                     continue
 
+				# station duration condionally scaled by "water level"
+				duration_adj = 1.0 if gv.sd['iw'][b] & (1<<s) else gv.sd['wl'] / 100 * extra_adjustment
+                                duration = p[6] * duration_adj
+                        	duration = int(round(duration)) # convert to int
                                 if p[7 + b] & 1 << s:  # if this station is scheduled in this program
                                     if gv.sd['seq']:  # sequential mode
                                         gv.rs[sid][2] = duration
@@ -194,16 +199,30 @@ if __name__ == '__main__':
         print ' ', name
 
     gv.plugin_menu.sort(key=lambda entry: entry[0])
+
+    # Ensure first three characters ('/' plus two characters of base name of each
+    # plugin is unique.  This allows the gv.plugin_data dictionary to be indexed
+    # by the two characters in the base name.
+    plugin_map = {}
+    for p in gv.plugin_menu:
+        three_char = p[1][0:3]
+        if three_char not in plugin_map:
+            plugin_map[three_char] = p[0] + '; ' + p[1]
+        else:
+            print 'ERROR - Plugin Conflict:', p[0] + '; ' + p[1] + ' and ', plugin_map[three_char]
+            exit()
+
     #  Keep plugin manager at top of menu
     try:
         gv.plugin_menu.pop(gv.plugin_menu.index(['Manage Plugins', '/plugins']))
     except Exception:
         pass
+    
+    thread.start_new_thread(timing_loop, ())
 
     if gv.use_gpio_pins:
         set_output()    
 
-    thread.start_new_thread(timing_loop, ())
 
     app.notfound = lambda: web.seeother('/')
 

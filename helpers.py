@@ -6,6 +6,7 @@ import i18n
 import datetime
 from threading import Thread
 import os
+import errno
 import random
 import sys
 import time
@@ -15,17 +16,20 @@ import ast
 from web.webapi import seeother
 from blinker import signal
 
-try:
-    from gpio_pins import GPIO, pin_rain_sense
-except ImportError:
-    print 'error importing GPIO pins into helpers'
-    pass
-
 import web
 from web import form
 
 import gv
 from web.session import sha1
+
+try:
+    from gpio_pins import GPIO, pin_rain_sense
+    if gv.use_pigpio:
+        import pigpio
+        pi = pigpio.pi()
+except ImportError:
+    print 'error importing GPIO pins into helpers'
+    pass
 
 try:
     import json
@@ -40,8 +44,11 @@ except ImportError:
 ##############################
 #### Function Definitions ####
 
-restarting = signal('restart')
+restarting = signal('restart') #: Signal to send on software restart
 def report_restart():
+    """
+    Send blinker signal indicating system will restart.
+    """
     restarting.send()
 
 def reboot(wait=1, block=False):
@@ -52,13 +59,16 @@ def reboot(wait=1, block=False):
     @param wait: length of time to wait before rebooting
     @type block: bool
     @param block: If True, clear output and perform reboot after wait.
-        Set to True at start of thread.
+        Set to True at start of thread (recursive).
     """
     if block:
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
-        GPIO.cleanup()
+        if gv.use_pigpio:
+            pass
+        else:
+            GPIO.cleanup()
         time.sleep(wait)
         try:
             print _('Rebooting...')
@@ -72,19 +82,22 @@ def reboot(wait=1, block=False):
 
 def poweroff(wait=1, block=False):
     """
-    Powers the Raspberry Pi off from a new thread.
+    Powers off the Raspberry Pi from a new thread.
     
-    @type wait: int
-    @param wait: length of time to wait before rebooting
+    @type wait: int or float
+    @param wait: number of seconds to wait before rebooting
     @type block: bool
     @param block: If True, clear output and perform reboot after wait.
-        Set to True at start of thread.
+        Set to True at start of thread (recursive).
     """
     if block:
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
-        GPIO.cleanup()
+        if gv.use_pigpio:
+            pass
+        else:
+            GPIO.cleanup()
         time.sleep(wait)
         try:
             print _('Powering off...')
@@ -104,17 +117,17 @@ def restart(wait=1, block=False):
     @param wait: length of time to wait before rebooting
     @type block: bool
     @param block: If True, clear output and perform reboot after wait.
-        Set to True at start of thread.
+        Set to True at start of thread (recursive).
     """
     if block:
         report_restart()
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
-        try:
-            GPIO.cleanup()
-        except Exception:
+        if gv.use_pigpio:
             pass
+        else:
+            GPIO.cleanup()
         time.sleep(wait)
         try:
             print _('Restarting...')
@@ -143,7 +156,9 @@ def uptime():
 
 
 def get_ip():
-    """Returns the IP adress if available."""
+    """
+    Returns the IP address of the system if available.
+    """
     try:
         arg = 'ip route list'
         p = subprocess.Popen(arg, shell=True, stdout=subprocess.PIPE)
@@ -156,6 +171,10 @@ def get_ip():
 
 
 def get_rpi_revision():
+    """
+    Returns the hardware revision of the Raspberry Pi
+    using the RPI_REVISION method from RPi.GPIO.
+    """
     try:
         import RPi.GPIO as GPIO
 
@@ -163,26 +182,57 @@ def get_rpi_revision():
     except ImportError:
         return 0
 
+def mkdir_p(path):
+    try:
+        os.makedirs(path)
+    except OSError as exc:  # Python >2.5
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            raise
 
 def check_rain():
+    """
+    Checks status of an installed rain sensor.
+    
+    Handles normally open and normally closed rain sensors
+    
+    Sets gv.sd['rs'] to 1 if rain is detected otherwise 0.
+    """
+
+    global pi
     try:
         if gv.sd['rst'] == 1:  # Rain sensor type normally open (default)
-            if not GPIO.input(pin_rain_sense):  # Rain detected
-                gv.sd['rs'] = 1
+            if gv.use_pigpio:
+                if not pi.read(pin_rain_sense):  # Rain detected
+                    gv.sd['rs'] = 1
+                else:
+                    gv.sd['rs'] = 0
             else:
-                gv.sd['rs'] = 0
+                if not GPIO.input(pin_rain_sense):  # Rain detected
+                    gv.sd['rs'] = 1
+                else:
+                    gv.sd['rs'] = 0
         elif gv.sd['rst'] == 0:  # Rain sensor type normally closed
-            if GPIO.input(pin_rain_sense):  # Rain detected
-                gv.sd['rs'] = 1
+            if gv.use_pigpio:
+                if pi.read(pin_rain_sense):  # Rain detected
+                    gv.sd['rs'] = 1
+                else:
+                    gv.sd['rs'] = 0
             else:
-                gv.sd['rs'] = 0
+                if GPIO.input(pin_rain_sense):  # Rain detected
+                    gv.sd['rs'] = 1
+                else:
+                    gv.sd['rs'] = 0
     except NameError:
         pass
 
 
 
 def clear_mm():
-    """Clear manual mode settings."""
+    """
+    Clear manual mode settings and stop any running zones.
+    """
     from gpio_pins import set_output
     if gv.sd['mm']:
         gv.sbits = [0] * (gv.sd['nbrd'] + 1)
@@ -198,13 +248,30 @@ def clear_mm():
 
 
 def plugin_adjustment():
+    """
+    Sums irrigation time (water level) adjustments from multiple plugins.
+    
+    The adjustment value output from a plugin must be 
+    a unique element in the gv.sd dictionary with a key starting with 'wl_'
+    
+    @rtype:   float
+    @return:  Total irrigation time adjustments for all active plugins
+    """
     duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith('wl_')]
     result = reduce(lambda x, y: x * y / 100, duration_adjustments, 1.0)
     return result
 
 
 def get_cpu_temp(unit=None):
-    """Returns the temperature of the CPU if available."""
+    """
+    Reads and returns the temperature of the CPU if available.
+    If unit is F, temperature is returned as Fahrenheit otherwise Celsius.
+    
+    @type unit: character
+    @param unit: F or C        
+    @rtype:   string
+    @return:  CPU temperature
+    """
 
     try:
         if gv.platform == 'bo':
@@ -229,12 +296,24 @@ def get_cpu_temp(unit=None):
 
 
 def timestr(t):
+    """
+    Convert duration in seconds to string in the form mm:ss.
+      
+    @type  t: int
+    @param t: duration in seconds
+    @rtype:   string
+    @return:  duration as "mm:ss"   
+    """
     return str((t / 60 >> 0) / 10 >> 0) + str((t / 60 >> 0) % 10) + ":" + str((t % 60 >> 0) / 10 >> 0) + str(
         (t % 60 >> 0) % 10)
 
 
 def log_run():
-    """add run data to csv file - most recent first."""
+    """
+    Add run data to json log file - most recent first.
+    
+    If a record limit is specified (gv.sd['lr']) the number of records is truncated.  
+    """
 
     if gv.sd['lg']:
         if gv.lrun[1] == 98:
@@ -260,7 +339,9 @@ def log_run():
 
 
 def prog_match(prog):
-    """Test a program for current date and time match."""
+    """
+    Test a program for current date and time match.
+    """
     if not prog[0]:
         return 0  # Skip if program is not enabled
     devday = int(gv.now / 86400)  # Check day match
@@ -290,7 +371,9 @@ def prog_match(prog):
 
 
 def schedule_stations(stations):
-    """Schedule stations/valves/zones to run."""
+    """
+    Schedule stations/valves/zones to run.
+    """
     if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']):  # If rain delay or rain detected by sensor
         rain = True
     else:
@@ -327,9 +410,12 @@ def schedule_stations(stations):
 
 
 def stop_onrain():
-    """Stop stations that do not ignore rain."""
+    """
+    Stop stations that do not ignore rain.
+    """
 
     from gpio_pins import set_output
+    do_set_output = False
     for b in range(gv.sd['nbrd']):
         for s in range(8):
             sid = b * 8 + s  # station index
@@ -337,15 +423,20 @@ def stop_onrain():
                 continue
             elif not all(v == 0 for v in gv.rs[sid]):
                 gv.srvals[sid] = 0
-                set_output()
+                do_set_output = True
                 gv.sbits[b] &= ~1 << s  # Clears stopped stations from display
                 gv.ps[sid] = [0, 0]
                 gv.rs[sid] = [0, 0, 0, 0]
+
+    if do_set_output:
+        set_output()
     return
 
 
 def stop_stations():
-    """Stop all running stations, clear schedules."""
+    """
+    Stop all running stations, clear schedules.
+    """
     from gpio_pins import set_output
     gv.srvals = [0] * (gv.sd['nst'])
     set_output()
@@ -361,29 +452,42 @@ def stop_stations():
 
 
 def read_log():
-      result = []
-      try:
-          with io.open('./data/log.json') as logf:
-              records = logf.readlines()
-              for i in records:
-                  try:
-                      rec = ast.literal_eval(json.loads(i))
-                  except ValueError:
-                      rec = json.loads(i)
-                  result.append(rec)
-          return result
-      except IOError:
-          return result
+    """
+    
+    """
+    result = []
+    try:
+        with io.open('./data/log.json') as logf:
+            records = logf.readlines()
+            for i in records:
+                try:
+                    rec = ast.literal_eval(json.loads(i))
+                except ValueError:
+                    rec = json.loads(i)
+                result.append(rec)
+        return result
+    except IOError:
+        return result
 
 
 def jsave(data, fname):
-    """Save data to a json file."""
+    """
+    Save data to a json file.
+    
+    
+    """
     with open('./data/' + fname + '.json', 'w') as f:
         json.dump(data, f)
 
 
 def station_names():
-    """Load station names from file if it exists otherwise create file with defaults."""
+    """
+    Load station names from /data/stations.json file if it exists
+    otherwise create file with defaults.
+    
+    Return station names as a list.
+    
+    """
     try:
         with open('./data/snames.json', 'r') as snf:
             return json.load(snf)
@@ -394,7 +498,11 @@ def station_names():
 
 
 def load_programs():
-    """Load program data from json file, if it exists, into memory, otherwise create an empty programs var."""
+    """
+    Load program data into memory from /data/programs.json file if it exists.
+    otherwise create an empty programs data list (gv.pd).
+    
+    """
     try:
         with open('./data/programs.json', 'r') as pf:
             gv.pd = json.load(pf)
@@ -406,10 +514,24 @@ def load_programs():
 
 
 def password_salt():
+    """
+    Generate random number for use as salt for password encryption
+    
+    @rtype: string
+    @return: random value as 64 byte string.
+    """
     return "".join(chr(random.randint(33, 127)) for _ in xrange(64))
 
 
 def password_hash(password, salt):
+    """
+    Generate password hash using sha-1.
+    
+    @type: string
+    @param param: password
+    @type param: string
+    @param: salt 
+    """
     return sha1(password + salt).hexdigest()
 
 
@@ -417,6 +539,9 @@ def password_hash(password, salt):
 #### Login Handling ####
 
 def check_login(redirect=False):
+    """
+    Check login.
+    """
     qdict = web.input()
 
     try:
@@ -452,6 +577,11 @@ signin_form = form.Form(
 
 
 def get_input(qdict, key, default=None, cast=None):
+    """
+    Checks data returned from a UI web page.
+    
+    
+    """
     result = default
     if key in qdict:
         result = qdict[key]

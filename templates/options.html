@@ -111,8 +111,10 @@ $code:
             elif name == "mas":
                 output += "<select name='omas'>\n"
                 output += "<option " + ("selected " if value==0 else "") + "value='0'>"+_('None')+"</option>\n"
-                for i in range(0,8):
-                    if (gv.sd['show'][0]>>i)&1 == 1:
+                for i in range(gv.sd['nst']):
+                    bid = i // 8
+                    sid = i % 8
+                    if (gv.sd['show'][bid]>>sid)&1 == 1:
                         output += "<option " + ("selected " if value==i+1 else "") + "value='" + str(i+1) + "'>" + snames[i] + "  (Station " + str(i+1) + ")</option>\n"
                 output += "</select>\n"
             elif name == "htp":
