@@ -163,22 +163,15 @@ class change_options(ProtectedPage):
             except KeyError:
                 pass
 
-        try:
-            if 'oipas' in qdict and (qdict['oipas'] == 'on' or qdict['oipas'] == '1'):
-                gv.sd['ipas'] = 1
-            else:
-                gv.sd['ipas'] = 0
-        except KeyError:
-            pass
-
-        for f in ['name', 'lang']:
+        for f in ['name']:
             if 'o'+f in qdict:
                 gv.sd[f] = qdict['o'+f]
 
-        if 'oloc' in qdict:
-            if 'loc' not in gv.sd or gv.sd['loc'] != qdict['oloc']:
-                qdict['rstrt'] = '1'  # force restart with change in location
-            gv.sd['loc'] = qdict['oloc']
+        for f in ['loc', 'lang']:
+            if 'o'+f in qdict:
+                if f not in gv.sd or gv.sd[f] != qdict['o'+f]:
+                    qdict['rstrt'] = '1'  # force restart with change
+                gv.sd[f] = qdict['o'+f]
 
         if int(qdict['onbrd']) + 1 != gv.sd['nbrd']:
             self.update_scount(qdict)
@@ -188,14 +181,14 @@ class change_options(ProtectedPage):
 
         if 'ohtp' in qdict:
             if 'htp' not in gv.sd or gv.sd['htp'] != int(qdict['ohtp']):
-                qdict['rstrt'] = '1'  # force restart with change in htp
+                qdict['rbt'] = '1'  # force reboot with change in htp
             gv.sd['htp'] = int(qdict['ohtp'])
 
         for f in ['sdt', 'mas', 'mton', 'mtoff', 'wl', 'lr', 'tz']:
             if 'o'+f in qdict:
                 gv.sd[f] = int(qdict['o'+f])
 
-        for f in ['tf', 'urs', 'seq', 'rst', 'lg']:
+        for f in ['ipas', 'tf', 'urs', 'seq', 'rst', 'lg']:
             if 'o'+f in qdict and (qdict['o'+f] == 'on' or qdict['o'+f] == '1'):
                 gv.sd[f] = 1
             else:

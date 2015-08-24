@@ -130,10 +130,11 @@ use_gpio_pins = True
 options = [
     [_("System name"), "string", "name", _("Unique name of this SIP system."), _("System")],
     [_("Location"), "string", "loc", _("City name or zip code. Use comma or + in place of space."), _("System")],
-    [_("Language"),"list","lang", _("Select language (effective after restart.)"),_("System")],
+    [_("Language"),"list","lang", _("Select language."),_("System")],
 #    [_("Time zone"), "int", "tz", _("Example: GMT-4:00, GMT+5:30 (effective after reboot.)"), _("System")],
     [_("24-hour clock"), "boolean", "tf", _("Display times in 24 hour format (as opposed to AM/PM style.)"), _("System")],
-    [_("HTTP port"), "int", "htp", _("HTTP port (effective after reboot.)"), _("System")],
+    [_("HTTP port"), "int", "htp", _("HTTP port."), _("System")],
+    [_("Water Scaling"), "int", "wl", _("Water scaling (as %), between 0 and 100."), _("System")],
     [_("Disable security"), "boolean", "ipas", _("Allow anonymous users to access the system without a password."), _("Change Password")],
     [_("Current password"), "password", "opw", _("Re-enter the current password."), _("Change Password")],
     [_("New password"), "password", "npw", _("Enter a new password."), _("Change Password")],
