@@ -21,6 +21,7 @@
 #
 
 # Author: Denny Fox <dennyf at dfox.us>
+# Changed from OSPi to SIP by Dan
 #
 # Please remove the "Author" lines above and replace them
 # with your own name if you copy and modify this script.
