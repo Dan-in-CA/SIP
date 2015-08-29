@@ -163,70 +163,36 @@ class change_options(ProtectedPage):
             except KeyError:
                 pass
 
-        try:
-            if 'oipas' in qdict and (qdict['oipas'] == 'on' or qdict['oipas'] == '1'):
-                gv.sd['ipas'] = 1
-            else:
-                gv.sd['ipas'] = 0
-        except KeyError:
-            pass
+        for f in ['name']:
+            if 'o'+f in qdict:
+                gv.sd[f] = qdict['o'+f]
 
-        if 'oname' in qdict:
-            gv.sd['name'] = qdict['oname']
-        if 'oloc' in qdict:
-            gv.sd['loc'] = qdict['oloc']
-        if 'otz' in qdict:
-            gv.sd['tz'] = int(qdict['otz'])
-        try:
-            if 'otf' in qdict and (qdict['otf'] == 'on' or qdict['otf'] == '1'):
-                gv.sd['tf'] = 1
-            else:
-                gv.sd['tf'] = 0
-        except KeyError:
-            pass
+        for f in ['loc', 'lang']:
+            if 'o'+f in qdict:
+                if f not in gv.sd or gv.sd[f] != qdict['o'+f]:
+                    qdict['rstrt'] = '1'  # force restart with change
+                gv.sd[f] = qdict['o'+f]
 
         if int(qdict['onbrd']) + 1 != gv.sd['nbrd']:
             self.update_scount(qdict)
+
         gv.sd['nbrd'] = int(qdict['onbrd']) + 1
-
         gv.sd['nst'] = gv.sd['nbrd'] * 8
+
         if 'ohtp' in qdict:
+            if 'htp' not in gv.sd or gv.sd['htp'] != int(qdict['ohtp']):
+                qdict['rbt'] = '1'  # force reboot with change in htp
             gv.sd['htp'] = int(qdict['ohtp'])
-        if 'osdt' in qdict:
-            gv.sd['sdt'] = int(qdict['osdt'])
-        if 'olang' in qdict:
-           gv.sd['lang'] = qdict['olang']
-        if 'omas' in qdict:
-            gv.sd['mas'] = int(qdict['omas'])
-        if 'omton' in qdict:
-            gv.sd['mton'] = int(qdict['omton'])
-        if 'omtoff' in qdict:
-            gv.sd['mtoff'] = int(qdict['omtoff'])
-        if 'owl' in qdict:
-            gv.sd['wl'] = int(qdict['owl'])
 
-        if 'ours' in qdict and (qdict['ours'] == 'on' or qdict['ours'] == '1'):
-            gv.sd['urs'] = 1
-        else:
-            gv.sd['urs'] = 0
+        for f in ['sdt', 'mas', 'mton', 'mtoff', 'wl', 'lr', 'tz']:
+            if 'o'+f in qdict:
+                gv.sd[f] = int(qdict['o'+f])
 
-        if 'oseq' in qdict and (qdict['oseq'] == 'on' or qdict['oseq'] == '1'):
-            gv.sd['seq'] = 1
-        else:
-            gv.sd['seq'] = 0
-
-        if 'orst' in qdict and (qdict['orst'] == 'on' or qdict['orst'] == '1'):
-            gv.sd['rst'] = 1
-        else:
-            gv.sd['rst'] = 0
-
-        if 'olg' in qdict and (qdict['olg'] == 'on' or qdict['olg'] == '1'):
-            gv.sd['lg'] = 1
-        else:
-            gv.sd['lg'] = 0
-
-        if 'olr' in qdict:
-            gv.sd['lr'] = int(qdict['olr'])
+        for f in ['ipas', 'tf', 'urs', 'seq', 'rst', 'lg']:
+            if 'o'+f in qdict and (qdict['o'+f] == 'on' or qdict['o'+f] == '1'):
+                gv.sd[f] = 1
+            else:
+                gv.sd[f] = 0
 
         jsave(gv.sd, 'sd')
         report_option_change()
