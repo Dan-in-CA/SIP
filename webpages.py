@@ -257,6 +257,7 @@ class change_stations(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
+#        print "qdict from change stations: ", qdict
         for i in range(gv.sd['nbrd']):  # capture master associations
             if 'm' + str(i) in qdict:
                 try:
@@ -488,8 +489,8 @@ class run_now(ProtectedPage):
                     continue
                 if p[7 + b] & 1 << s:  # if this station is scheduled in this program
                     gv.rs[sid][2] = p[6]
-                    if gv.sd['iw'][b] & 1<<s == 0:
-                        gv.rs[sid][2] *= gv.sd['wl'] / 100 * extra_adjustment  # duration scaled by water level
+                    if not gv.sd['iw'][b] & 1 << s:
+                        gv.rs[sid][2] = gv.rs[sid][2] * gv.sd['wl'] / 100 * extra_adjustment
                     gv.rs[sid][3] = pid + 1  # store program number in schedule
                     gv.ps[sid][0] = pid + 1  # store program number for display
                     gv.ps[sid][1] = gv.rs[sid][2]  # duration
