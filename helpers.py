@@ -28,7 +28,7 @@ try:
         import pigpio
         pi = pigpio.pi()
 except ImportError:
-    print 'error importing GPIO pins into helpers'
+    gv.logger.error('error importing GPIO pins into helpers')
     pass
 
 try:
@@ -37,7 +37,7 @@ except ImportError:
     try:
         import simplejson as json
     except ImportError:
-        print _("Error: json module not found")
+        gv.logger.error(_("Error: json module not found"))
         sys.exit()
 
 
@@ -71,7 +71,7 @@ def reboot(wait=1, block=False):
             GPIO.cleanup()
         time.sleep(wait)
         try:
-            print _('Rebooting...')
+            gv.logger.info(_('Rebooting...'))
         except Exception:
             pass
         subprocess.Popen(['reboot'])
@@ -100,7 +100,7 @@ def poweroff(wait=1, block=False):
             GPIO.cleanup()
         time.sleep(wait)
         try:
-            print _('Powering off...')
+            gv.logger.info(_('Powering off...'))
         except Exception:
             pass
         subprocess.Popen(['poweroff'])
@@ -130,7 +130,7 @@ def restart(wait=1, block=False):
             GPIO.cleanup()
         time.sleep(wait)
         try:
-            print _('Restarting...')
+            gv.logger.info(_('Restarting...'))
         except Exception:
             pass
         subprocess.Popen('service sip restart'.split())
