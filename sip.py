@@ -14,8 +14,7 @@ sys.path.append('./plugins')
 import web  # the Web.py module. See webpy.org (Enables the Python SIP web interface)
 
 import gv
-import logging
-from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave, station_names, get_rpi_revision, mkdir_p
+from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave, station_names, get_rpi_revision
 from urls import urls  # Provides access to URLs for UI pages
 from gpio_pins import set_output
 # do not call set output until plugins are loaded because it should NOT be called
@@ -48,10 +47,13 @@ def timing_loop():
                                 if gv.srvals[sid]:  # skip if currently on
                                     continue
 
-				# station duration condionally scaled by "water level"
-				duration_adj = 1.0 if gv.sd['iw'][b] & (1<<s) else gv.sd['wl'] / 100 * extra_adjustment
-                                duration = p[6] * duration_adj
-                        	duration = int(round(duration)) # convert to int
+            				# station duration condionally scaled by "water level"
+                                if gv.sd['iw'][b] & 1 << s:
+                                    duration_adj = 1.0 
+                                else:
+                                    gv.sd['wl'] / 100 * extra_adjustment
+                                    duration = p[6] * duration_adj
+                                    duration = int(round(duration)) # convert to int
                                 if p[7 + b] & 1 << s:  # if this station is scheduled in this program
                                     if gv.sd['seq']:  # sequential mode
                                         gv.rs[sid][2] = duration
@@ -187,43 +189,17 @@ template_render = web.template.render('templates', globals=template_globals, bas
 
 if __name__ == '__main__':
 
-    mkdir_p('logs')
-
-    log_levels = { 'debug':logging.DEBUG,
-        'info':logging.INFO,
-        'warning':logging.WARNING,
-        'error':logging.ERROR,
-         'critical':logging.CRITICAL,
-        }
-    log_file = 'logs/sip.out'
-    fh = logging.FileHandler(log_file)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    fh.setFormatter(formatter)
-    gv.logger.addHandler(fh)
-    gv.logger.setLevel(logging.DEBUG) 
-
-    if len(sys.argv) > 1:
-        level_name = sys.argv[1]
-        if level_name in log_levels:
-            level = log_levels[level_name]
-            gv.logger.setLevel(level) 
-        else:
-            gv.logger.critical('Bad parameter to sip: ' + level_name)
-
-    gv.logger.critical('Starting')
-
     #########################################################
     #### Code to import all webpages and plugin webpages ####
 
     import plugins
 
     try:
-        gv.logger.info(_('plugins loaded:'))
+        print _('plugins loaded:')
     except Exception:
         pass
-
     for name in plugins.__all__:
-        gv.logger.info(name)
+        print ' ', name
 
     gv.plugin_menu.sort(key=lambda entry: entry[0])
 
@@ -236,7 +212,7 @@ if __name__ == '__main__':
         if three_char not in plugin_map:
             plugin_map[three_char] = p[0] + '; ' + p[1]
         else:
-            gv.logger.error('ERROR - Plugin Conflict:' + p[0] + '; ' + p[1] + ' and ' + plugin_map[three_char])
+            print 'ERROR - Plugin Conflict:', p[0] + '; ' + p[1] + ' and ', plugin_map[three_char]
             exit()
 
     #  Keep plugin manager at top of menu
@@ -245,12 +221,13 @@ if __name__ == '__main__':
     except Exception:
         pass
     
-    gv.logger.debug('Starting main thread')
     thread.start_new_thread(timing_loop, ())
 
     if gv.use_gpio_pins:
         set_output()    
 
+
     app.notfound = lambda: web.seeother('/')
 
     app.run()
+

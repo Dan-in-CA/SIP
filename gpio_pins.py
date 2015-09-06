@@ -57,6 +57,7 @@ global pin_relay
 
 try:
     if gv.platform == 'pi':  # If this will run on Raspberry Pi:
+        GPIO.setmode(GPIO.BOARD)
         pin_rain_sense = gv.pin_map[8]
         pin_relay = gv.pin_map[10]
     elif gv.platform == 'bo':  # If this will run on Beagle Bone Black:

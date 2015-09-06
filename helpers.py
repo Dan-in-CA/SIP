@@ -23,7 +23,7 @@ import gv
 from web.session import sha1
 
 try:
-    from gpio_pins import GPIO, pin_rain_sense
+    from gpio_pins import GPIO, pin_rain_sense, pin_relay
     if gv.use_pigpio:
         import pigpio
         pi = pigpio.pi()

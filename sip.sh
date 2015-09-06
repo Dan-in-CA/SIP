@@ -21,6 +21,7 @@
 #
 
 # Author: Denny Fox <dennyf at dfox.us>
+# Changed from OSPi to SIP by Dan
 #
 # Please remove the "Author" lines above and replace them
 # with your own name if you copy and modify this script.
@@ -33,7 +34,7 @@ DESC="sip"
 NAME=sip
 DAEMON=/usr/bin/python
 DAEMON_ARGS="sip.py"
-HOMEDIR=/home/pi/sip/ # Edit if different on your Raspberry Pi
+HOMEDIR=/home/pi/SIP/ # Edit if different on your Raspberry Pi
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
