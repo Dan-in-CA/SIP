@@ -6,10 +6,12 @@
 #### Revision information ####
 import subprocess
 from threading import RLock
+import logging
 
 major_ver = 3
 minor_ver = 1
 old_count = 275
+logger = logging.getLogger('sip')
 
 try:
     revision = int(subprocess.check_output(['git', 'rev-list', '--count', '--first-parent', 'HEAD']))

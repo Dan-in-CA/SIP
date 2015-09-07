@@ -25,7 +25,7 @@ try:
         else:
             gv.pin_map = [0,0,0,3,0,5,0,7,8,0,10,11,12,13,0,15,16,0,18,19,0,21,22,23,24,0,26,0,0,29,0,31,32,33,0,35,36,37,38,0,40]
     else:
-        print 'Unknown pi pin revision.  Using pin mapping for rev 3'
+        gv.logger.error('Unknown pi pin revision.  Using pin mapping for rev 3')
 
 except ImportError:
     try:
@@ -36,7 +36,7 @@ except ImportError:
     except ImportError:
         gv.pin_map = [i for i in range(27)] # assume 26 pins all mapped.  Maybe we should not assume anything, but...
         gv.platform = ''  # if no platform, allows program to still run.
-        print 'No GPIO module was loaded from GPIO Pins module'
+        gv.logger.error('No GPIO module was loaded from GPIO Pins module')
 
 from blinker import signal
 zone_change = signal('zone_change')
@@ -70,7 +70,7 @@ try:
     if gv.use_pigpio:
         pi.set_mode(pin_rain_sense, pigpio.INPUT)
         pi.set_mode(pin_relay, pigpio.OUTPUT)
-    else:      
+    else:
         GPIO.setup(pin_rain_sense, GPIO.IN)
         GPIO.setup(pin_relay, GPIO.OUT)
 except NameError:

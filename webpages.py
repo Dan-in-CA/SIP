@@ -104,7 +104,6 @@ class change_values(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        print 'qdict: ', qdict
         if 'rsn' in qdict and qdict['rsn'] == '1':
             stop_stations()
             raise web.seeother('/')
