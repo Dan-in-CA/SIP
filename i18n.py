@@ -26,7 +26,7 @@ languages = ({
     "de_DE": "German",
     "sl_SL": "Slovenian",
     "es_ES": "Spanish",
-    "it_IT": "Itallian",
+    "it_IT": "Italian",
 })
 
 
