@@ -19,7 +19,24 @@ $code:
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="x-ua-compatible" content="IE=edge">
     <title>${content.title + (" - "+gv.sd['name'] if gv.sd['name'] != "SIP" else "")}</title>
-    <link href="$app_path('/static/images/favicon.ico')" rel="icon" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="57x57" href="$app_path('/static/images/apple-icon-57x57.png')">
+    <link rel="apple-touch-icon" sizes="60x60" href="$app_path('/static/images/apple-icon-60x60.png')">
+    <link rel="apple-touch-icon" sizes="72x72" href="$app_path('/static/images/apple-icon-72x72.png')">
+    <link rel="apple-touch-icon" sizes="76x76" href="$app_path('/static/images/apple-icon-76x76.png')">
+    <link rel="apple-touch-icon" sizes="114x114" href="$app_path('/static/images/apple-icon-114x114.png')">
+    <link rel="apple-touch-icon" sizes="120x120" href="$app_path('/static/images/apple-icon-120x120.png')">
+    <link rel="apple-touch-icon" sizes="144x144" href="$app_path('/static/images/apple-icon-144x144.png')">
+    <link rel="apple-touch-icon" sizes="152x152" href="$app_path('/static/images/apple-icon-152x152.png')">
+    <link rel="apple-touch-icon" sizes="180x180" href="$app_path('/static/images/apple-icon-180x180.png')">
+    <link rel="icon" type="image/png" sizes="192x192"  href="$app_path('/static/images/android-icon-192x192.png')">
+    <link rel="icon" type="image/png" sizes="32x32" href="$app_path('/static/images/favicon-32x32.png')">
+    <link rel="icon" type="image/png" sizes="96x96" href="$app_path('/static/images/favicon-96x96.png')">
+    <link rel="icon" type="image/png" sizes="16x16" href="$app_path('/static/images/favicon-16x16.png')">
+    <link rel="manifest" href="$app_path('/static/images/manifest.json')">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="$app_path('/static/images/ms-icon-144x144.png')">
+    <meta name="theme-color" content="#ffffff">
+
     <link href="$app_path('/static/themes/' + gv.sd['theme'] + '/base.css')" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         .bluebg {background-color:lightblue;}
@@ -27,7 +44,7 @@ $code:
         .opOff, .wlOff, .rsOn {color:red;}
         .rdOff {color:black;}
         .rdOn {color:red;}
-        .rsNA, station_waiting {color:gray;}
+        .rsNA, .station_waiting {color:gray;}
         .station_disabled {color:gray;}
 
         #lastRun {color:gray;}
@@ -157,7 +174,7 @@ $code:
                 <button id="bHelp" class="help" title=$:{json.dumps(_('Help'), ensure_ascii=False)}>$_('?')</button>
             </div>
                 <p>$_('CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_('Click to toggle'), ensure_ascii=False)} + ' Celsius &lt;&gt; Fahrenheit'></span></b></p>
-                <p><a href="https://github.com/Dan-in-CA/sip">$_('Software')</a> $_('version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
+                <p><a target="_blank" href="https://github.com/Dan-in-CA/sip">$_('Software')</a> $_('version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
 
         </div>
 
