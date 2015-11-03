@@ -4,6 +4,8 @@ SIP
 An improved Python port of the Arduino based OpenSprinkler firmware, originally based on V 1.8.3.
 This is an updated version of the Python Interval Program for OpenSprinkler Pi started by Dan Kimberling using the power of Python.
 
+###To ask question and learn more about SIP please visit the **[SIP Forum](http://nosack.com/sipforum/index.php)**
+
 -----------------------------------------------------------------
 SIP Program Demo<br/>
 
