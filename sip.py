@@ -49,9 +49,10 @@ def timing_loop():
 
             				# station duration condionally scaled by "water level"
                                 if gv.sd['iw'][b] & 1 << s:
-                                    duration_adj = 1.0 
+                                    duration_adj = 1.0
+                                    duration = p[6] 
                                 else:
-                                    gv.sd['wl'] / 100 * extra_adjustment
+                                    duration_adj = gv.sd['wl'] / 100 * extra_adjustment
                                     duration = p[6] * duration_adj
                                     duration = int(round(duration)) # convert to int
                                 if p[7 + b] & 1 << s:  # if this station is scheduled in this program
