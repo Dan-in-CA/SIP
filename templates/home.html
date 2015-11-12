@@ -210,7 +210,7 @@ $code:
     <br>
     <button id="cWaterLevel" class="toggle choice ${'on' if gv.sd['wl']==100 else 'off'}"><span class='toggleleft'>$_('Normal')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>${_('Water Level') if gv.sd['wl']==100 else str(gv.sd['wl']) + '%' + _('Level')}</span></button> ${'' if int(plugin_adjustment()) == 100 else ' Plugin adjustments: ' + plugin_adjustment_list() + ('' if gv.sd['wl']==100 and '*' not in plugin_adjustment_list() else ' - Total adjustment: ' + total_adjustment() + '%')}
     <br>
-    <button id="cRainDelay" class="toggle ${'off' if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']) else 'on'}"><span class='toggleleft'>$_('Active')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_('Rain Delay')</span></button>
+    <button id="cRainDelay" class="toggle ${'off' if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']) else 'on'}"><span class='toggleleft'>$_('Active')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_('Rain Delay')</span></button> ${'' if gv.sd['rdst']-gv.now <= 0 else 'Rain delay time left: ' +  str((int(gv.sd['rdst']-gv.now)/3600)) + ':' + str(int((gv.sd['rdst']-gv.now)%3600/60)).zfill(2)}
     $if gv.sd['rd']:
         $:{'<span class="countdown" id="rainDelayCountdown" data="' + str(gv.sd['rdst']*1000) + '"></span>' if gv.sd['rd'] else ''}
     $if gv.sd['urs']:
