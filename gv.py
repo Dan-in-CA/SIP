@@ -9,10 +9,10 @@ from threading import RLock
 
 major_ver = 3
 minor_ver = 1
-old_count = 275
+old_count = 648
 
 try:
-    revision = int(subprocess.check_output(['git', 'rev-list', '--count', '--first-parent', 'HEAD']))
+    revision = int(subprocess.check_output(['git', 'rev-list', '--count', 'HEAD']))
     ver_str = '%d.%d.%d' % (major_ver, minor_ver, (revision - old_count))
 except Exception:
     print _('Could not use git to determine version!')

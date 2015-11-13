@@ -65,7 +65,7 @@ class StatusChecker():
         command = 'git log -1 origin/master --format=%cd --date=short'
         new_date = subprocess.check_output(command.split()).strip()
 
-        command = 'git rev-list origin/master --count --first-parent'
+        command = 'git rev-list origin/master --count'
         new_revision = int(subprocess.check_output(command.split()))
 
         command = 'git log HEAD..origin/master --oneline'
