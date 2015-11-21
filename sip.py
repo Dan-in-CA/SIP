@@ -17,6 +17,8 @@ import gv
 from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave, station_names, get_rpi_revision
 from urls import urls  # Provides access to URLs for UI pages
 from gpio_pins import set_output
+from ReverseProxied import ReverseProxied
+
 # do not call set output until plugins are loaded because it should NOT be called
 # if gv.use_gpio_pins is False (which is set in relay board plugin.
 # set_output()
@@ -164,6 +166,7 @@ class SIPApp(web.application):
 
     def run(self, port=gv.sd['htp'], *middleware):  # get port number from options settings
         func = self.wsgifunc(*middleware)
+        func = ReverseProxied(func)
         return web.httpserver.runsimple(func, ('0.0.0.0', port))
 
 
