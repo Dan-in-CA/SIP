@@ -24,9 +24,10 @@ languages = ({
     "cs_CZ": "Czech",
     "fr_FR": "French",
     "de_DE": "German",
+	"gr_GR": "Greek",
+	"it_IT": "Italian",
     "sl_SL": "Slovenian",
     "es_ES": "Spanish",
-    "it_IT": "Italian",
 })
 
 

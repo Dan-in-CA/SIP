@@ -1,0 +1,1110 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2016-04-29 12:40+0300\n"
+"PO-Revision-Date: 2016-04-29 14:17+0300\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 1.8.7\n"
+"Last-Translator: \n"
+"Language: gr_GR\n"
+
+#: SIP/plugins\system_update.py:75
+msgid "Up-to-date."
+msgstr "Ενημερωμένο."
+
+#: SIP/plugins\system_update.py:78
+msgid "New version is available!"
+msgstr "Νέα έκδοση διαθέσιμη!"
+
+#: SIP/plugins\system_update.py:79 SIP/plugins\system_update.py:84
+msgid "Available revision"
+msgstr "Διαθέσιμη ενημέρωση"
+
+#: SIP/plugins\system_update.py:80
+msgid "Changes"
+msgstr "Αλλαγές"
+
+#: SIP/plugins\system_update.py:83
+msgid "Currently running revision"
+msgstr "Τρέχουσα έκδοση"
+
+#: SIP/plugins\system_update.py:95
+msgid "System update plug-in encountered error"
+msgstr "Το πρόσθετο ενημέρωσης συστήματος αντιμετώπισε σφάλμα"
+
+#: SIP\gv.py:18
+msgid "Could not use git to determine version!"
+msgstr "Δεν μπορεί να προσδιοριστεί η έκδοση μέσω git!"
+
+#: SIP\gv.py:25
+msgid "Could not use git to determine date of last commit!"
+msgstr "Δεν μπορεί να προσδιοριστεί η τελευταία προσθήκη μέσω git!"
+
+#: SIP\gv.py:131
+msgid "System name"
+msgstr "Όνομα συστήματος"
+
+#: SIP\gv.py:131
+msgid "Unique name of this SIP system."
+msgstr "Μοναδικό όνομα αυτού του συστήματος SIP"
+
+#: SIP\gv.py:131 SIP\gv.py:132 SIP\gv.py:133 SIP\gv.py:135 SIP\gv.py:136
+msgid "System"
+msgstr "Σύστημα"
+
+#: SIP\gv.py:132
+msgid "City name or zip code. Use comma or + in place of space."
+msgstr "Όνομα πόλης ή ΤΚ. Χρησιμοποιήστε , ή + αντί για κενό."
+
+#: SIP\gv.py:132
+msgid "Location"
+msgstr "Τοποθεσία"
+
+#: SIP\gv.py:133
+msgid "Language"
+msgstr "Γλώσσα"
+
+#: SIP\gv.py:133
+msgid "Select language (effective after restart.)"
+msgstr "Επιλέξτε γλώσσα (εφαρμογή μετά από επανεκκίνηση.)"
+
+#: SIP\gv.py:135
+msgid "24-hour clock"
+msgstr "24ωρο ρολόι"
+
+#: SIP\gv.py:135
+msgid "Display times in 24 hour format (as opposed to AM/PM style.)"
+msgstr "Εμφάνιση ώρας σε μορφή 24ώρου (αντί για ΠΜ/ΜΜ)"
+
+#: SIP\gv.py:136
+msgid "HTTP port"
+msgstr "θύρα HTTP"
+
+#: SIP\gv.py:136
+msgid "HTTP port (effective after reboot.)"
+msgstr "θύρα HTTP (εφαρμογή μετά από επανεκκίνηση)"
+
+#: SIP\gv.py:137
+msgid "Allow anonymous users to access the system without a password."
+msgstr ""
+"Να επιτρέπεται σε ανώνυμους χρήστες η πρόσβαση στο σύστημα χωρίς κωδικό."
+
+#: SIP\gv.py:137
+msgid "Disable security"
+msgstr "Απενεργοποίηση ασφάλειας"
+
+#: SIP\gv.py:137 SIP\gv.py:138 SIP\gv.py:139 SIP\gv.py:140
+msgid "Change Password"
+msgstr "Αλλαγή κωδικού"
+
+#: SIP\gv.py:138
+msgid "Current password"
+msgstr "Τρέχων κωδικός"
+
+#: SIP\gv.py:138
+msgid "Re-enter the current password."
+msgstr "Βάλτε ξανά το τρέχον κωδικό."
+
+#: SIP\gv.py:139
+msgid "Enter a new password."
+msgstr "Εισάγετε νέο κωδικό."
+
+#: SIP\gv.py:139
+msgid "New password"
+msgstr "Νέος κωδικός"
+
+#: SIP\gv.py:140
+msgid "Confirm password"
+msgstr "Επιβεβαίωση κωδικού"
+
+#: SIP\gv.py:140
+msgid "Confirm the new password."
+msgstr "Επιβεβαίωση του νέου κωδικού."
+
+#: SIP\gv.py:141
+msgid "Sequential"
+msgstr "Διαδοχικό"
+
+#: SIP\gv.py:141
+msgid "Sequential or concurrent running mode."
+msgstr "Διαδοχικό ή ταυτόχρονο πρόγραμμα"
+
+#: SIP\gv.py:141 SIP\gv.py:142 SIP\gv.py:143
+msgid "Station Handling"
+msgstr "Διαχείριση σταθμού"
+
+#: SIP\gv.py:142
+msgid "Extension boards"
+msgstr "Κάρτες επέκτασης"
+
+#: SIP\gv.py:142
+msgid "Number of extension boards."
+msgstr "Αριθμός καρτών επέκτασης."
+
+#: SIP\gv.py:143
+msgid "Station delay"
+msgstr "Καθυστέρηση σταθμού"
+
+#: SIP\gv.py:143
+msgid "Station delay time (in seconds), between 0 and 240."
+msgstr "Καθυστέρηση σταθμού (σε δευτερόλεπτα), ανάμεσα 0 και 240."
+
+#: SIP\gv.py:144
+msgid "Master station"
+msgstr "Κεντρικός σταθμός"
+
+#: SIP\gv.py:144
+msgid "Select master station."
+msgstr "Επιλογή κεντρικού σταθμού."
+
+#: SIP\gv.py:144 SIP\gv.py:145 SIP\gv.py:146
+msgid "Configure Master"
+msgstr "Ρύθμιση Κεντρικού"
+
+#: SIP\gv.py:145
+msgid "Master on adjust"
+msgstr "Κεντρικός on ρύθμιση"
+
+#: SIP\gv.py:145
+msgid "Master on delay (in seconds), between +0 and +60."
+msgstr "Κεντρικό on καθυστέρηση (σε δευτερόλεπτα), ανάμεσα +0 και +60."
+
+#: SIP\gv.py:146
+msgid "Master off adjust"
+msgstr "Κεντρικός off ρύθμιση"
+
+#: SIP\gv.py:146
+msgid "Master off delay (in seconds), between -60 and +60."
+msgstr "Κεντρικό off καθυστέρηση (σε δευτερόλεπτα), ανάμεσα -60 και +60."
+
+#: SIP\gv.py:147
+msgid "Use rain sensor"
+msgstr "Χρήση αισθητήρα βροχής "
+
+#: SIP\gv.py:147
+msgid "Use rain sensor."
+msgstr "Χρήση αισθητήρα βροχής."
+
+#: SIP\gv.py:147 SIP\gv.py:148
+msgid "Rain Sensor"
+msgstr "Αισθητήρας Βροχής"
+
+#: SIP\gv.py:148
+msgid "Normally open"
+msgstr "Συνήθως ανοικτό"
+
+#: SIP\gv.py:148
+msgid "Rain sensor type."
+msgstr "Τύπος αισθητήρα βροχής."
+
+#: SIP\gv.py:149
+msgid "Enable logging"
+msgstr "Ενεργοποίηση καταγραφής"
+
+#: SIP\gv.py:149
+msgid ""
+"Log all events - note that repetitive writing to an SD card can shorten its "
+"lifespan."
+msgstr ""
+"Καταγραφή όλων των συμβάντων - προσοχή η επαναλαμβανόμενη εγγραφή σε μια SD "
+"κάρτα μπορεί να μειώσει τη διάρκεια ζωής της."
+
+#: SIP\gv.py:149 SIP\gv.py:150
+msgid "Logging"
+msgstr "Καταγραφή"
+
+#: SIP\gv.py:150
+msgid "Length of log to keep, 0=no limits."
+msgstr "Πλήθος καταγραφών για αποθήκευση, 0=χωρίς όριο"
+
+#: SIP\gv.py:150
+msgid "Max log entries"
+msgstr "Μέγιστες εγγραφές καταγραφής"
+
+#: SIP\helpers.py:40
+msgid "Error: json module not found"
+msgstr "Σφάλμα: δεν βρέθηκε το json module"
+
+#: SIP\helpers.py:74
+msgid "Rebooting..."
+msgstr "Επανεκκίνηση..."
+
+#: SIP\helpers.py:103
+msgid "Powering off..."
+msgstr "Σβήσιμο..."
+
+#: SIP\helpers.py:133
+msgid "Restarting..."
+msgstr "Επανεκκίνηση..."
+
+#: SIP\helpers.py:320 SIP\templates\base.html:84
+msgid "Run-once"
+msgstr "Τρέξιμο μία φορά"
+
+#: SIP\helpers.py:322 SIP\templates\base.html:85 SIP\templates\home.html:219
+msgid "Manual"
+msgstr "Χειροκίνητο"
+
+#: SIP\helpers.py:569
+msgid "Password"
+msgstr "Κωδικός"
+
+#: SIP\helpers.py:572
+msgid "Incorrect password, please try again"
+msgstr "Λάθος κωδικός, δοκιμάστε ξανά"
+
+#: SIP\sip.py:27
+msgid "Starting timing loop"
+msgstr "Εκκίνηση χρονοκύκλου"
+
+#: SIP\sip.py:195
+msgid "plugins loaded:"
+msgstr "φορτωμένα πρόσθετα:"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:333
+msgid "Monday"
+msgstr "Δευτέρα"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:334
+msgid "Tuesday"
+msgstr "Τρίτη"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:335
+msgid "Wednesday"
+msgstr "Τετάρτη"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:336
+msgid "Thursday"
+msgstr "Πέμπτη"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:337
+msgid "Friday"
+msgstr "Παρασκευή"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:338
+msgid "Saturday"
+msgstr "Σάββατο"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:339
+msgid "Sunday"
+msgstr "Κυριακή"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:26
+msgid "January"
+msgstr "Ιανουάριος"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:30
+msgid "February"
+msgstr "Φεβρουάριος"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:34
+msgid "March"
+msgstr "Μάρτιος"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:38
+msgid "April"
+msgstr "Απρίλιος"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:42
+msgid "May"
+msgstr "Μάιος"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:46
+msgid "June"
+msgstr "Ιούνιος"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:50
+msgid "July"
+msgstr "Ιούλιος"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:54
+msgid "August"
+msgstr "Αύγουστος"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:58
+msgid "September"
+msgstr "Σεπτέμβριος"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:62
+msgid "October"
+msgstr "Οκτώβριος"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:66
+msgid "November"
+msgstr "Νοέμβριος"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:70
+msgid "December"
+msgstr "Δεκέμβριος"
+
+#: SIP\templates\base.html:86 SIP\templates\log.html:55
+#: SIP\templates\programs.html:122
+msgid "Program"
+msgstr "Πρόγραμμα"
+
+#: SIP\templates\base.html:139
+msgid "Home"
+msgstr "Αρχική"
+
+#: SIP\templates\base.html:140
+msgid "Define Programs"
+msgstr "Προσδιορίστε Προγράμματα"
+
+#: SIP\templates\base.html:140
+msgid "Programs"
+msgstr "Προγράμματα"
+
+#: SIP\templates\base.html:141
+msgid "Define Run Once Program"
+msgstr "Προσδιορίστε Πρόγραμμα μίας φοράς"
+
+#: SIP\templates\base.html:141
+msgid "Run Once"
+msgstr "Τρέξε μία φορά"
+
+#: SIP\templates\base.html:142
+msgid "Access Plugins"
+msgstr "Πρόσβαση Προσθέτων"
+
+#: SIP\templates\base.html:142
+msgid "Plugins"
+msgstr "Πρόσθετα"
+
+#: SIP\templates\base.html:143
+msgid "Log"
+msgstr "Αρχείο καταγραφής"
+
+#: SIP\templates\base.html:143
+msgid "View Log"
+msgstr "Δείτε το αρχείο καταγραφής"
+
+#: SIP\templates\base.html:144
+msgid "Options"
+msgstr "Επιλογές"
+
+#: SIP\templates\base.html:145
+msgid "Stations"
+msgstr "Σταθμοί"
+
+#: SIP\templates\base.html:145 SIP\templates\stations.html:81
+msgid "Configure Stations"
+msgstr "Ρύθμιση σταθμών"
+
+#: SIP\templates\base.html:147
+msgid "Logout"
+msgstr "Έξοδος"
+
+#: SIP\templates\base.html:157
+msgid "?"
+msgstr "?"
+
+#: SIP\templates\base.html:157 SIP\templates\proto.html:27
+#: SIP\templates\system_update.html:26
+msgid "Help"
+msgstr "Βοήθεια"
+
+#: SIP\templates\base.html:159
+msgid "CPU Temp"
+msgstr "Θερμ. CPU"
+
+#: SIP\templates\base.html:159
+msgid "Click to toggle"
+msgstr "Κλικ για εναλλαγή"
+
+#: SIP\templates\base.html:160
+msgid "Software"
+msgstr "Λογισμικό"
+
+#: SIP\templates\base.html:160
+msgid "version"
+msgstr "έκδοση"
+
+#: SIP\templates\home.html:45
+msgid "Manual Mode"
+msgstr "Χειροκίνητη λειτουργία"
+
+#: SIP\templates\home.html:48 SIP\templates\runonce.html:53
+msgid "Run Once Program"
+msgstr "Πρόγραμμα μίας χρήσης"
+
+#: SIP\templates\home.html:51
+msgid " for "
+msgstr "για"
+
+#: SIP\templates\home.html:51
+msgid " on "
+msgstr "ανοικτό"
+
+#: SIP\templates\home.html:51
+msgid " ran "
+msgstr "έτρεξε"
+
+#: SIP\templates\home.html:75
+msgid "Master On"
+msgstr "Κεντρικό On"
+
+#: SIP\templates\home.html:77
+msgid "Master Off"
+msgstr "Κεντρικό Off"
+
+#: SIP\templates\home.html:82
+msgid "Suppressed by Rain Delay"
+msgstr "Διακοπή από Καθυστέρηση Βροχής"
+
+#: SIP\templates\home.html:85
+msgid "Suppressed by Rain Sensor"
+msgstr "Διακοπή από Αισθητήρα Βροχής"
+
+#: SIP\templates\home.html:88 SIP\templates\home.html:247
+#: SIP\templates\modify.html:352 SIP\templates\programs.html:120
+msgid "Off"
+msgstr "Off"
+
+#: SIP\templates\home.html:128
+msgid "Enter hours to delay"
+msgstr "Ορίστε ώρες για καθυστέρηση"
+
+#: SIP\templates\home.html:144
+msgid "Enter percentage adjustment"
+msgstr "Ορίστε ρύθμιση ποσοστού"
+
+#: SIP\templates\home.html:163 SIP\templates\runonce.html:25
+msgid "Timer values wrong: "
+msgstr "Λάθος τιμές Χρονομέτρου:"
+
+#: SIP\templates\home.html:209
+msgid "System Off"
+msgstr "Σύστημα Off"
+
+#: SIP\templates\home.html:209
+msgid "System On"
+msgstr "Σύστημα On"
+
+#: SIP\templates\home.html:211
+msgid "Level"
+msgstr "Επίπεδο"
+
+#: SIP\templates\home.html:211
+msgid "Normal"
+msgstr "Κανονικό"
+
+#: SIP\templates\home.html:211
+msgid "Water Level"
+msgstr "Επίπεδο Νερού"
+
+#: SIP\templates\home.html:213
+msgid "Active"
+msgstr "Ενεργό"
+
+#: SIP\templates\home.html:213
+msgid "Rain Delay"
+msgstr "Καθυστέρηση Βροχής"
+
+#: SIP\templates\home.html:217
+msgid "rain sensed"
+msgstr "εντοπίστηκε βροχή"
+
+#: SIP\templates\home.html:217 SIP\templates\log.html:46
+msgid "no"
+msgstr "όχι"
+
+#: SIP\templates\home.html:219
+msgid "Auto"
+msgstr "Αυτόματο"
+
+#: SIP\templates\home.html:239
+msgid "On (Master)"
+msgstr "On (Κεντρικό)"
+
+#: SIP\templates\home.html:241
+msgid "Off (Master)"
+msgstr "Off (Κεντρικό)"
+
+#: SIP\templates\home.html:247 SIP\templates\modify.html:352
+#: SIP\templates\programs.html:118
+msgid "On"
+msgstr "On"
+
+#: SIP\templates\home.html:265
+msgid " Prev Day"
+msgstr "Προηγ Μέρα"
+
+#: SIP\templates\home.html:266
+msgid "Today"
+msgstr "Σήμερα"
+
+#: SIP\templates\home.html:267
+msgid "Next Day"
+msgstr "Επόμενη Μέρα"
+
+#: SIP\templates\home.html:305
+msgid "loading..."
+msgstr "φορτώνει..."
+
+#: SIP\templates\home.html:334
+msgid "Stop All Stations"
+msgstr "Σταμάτημα Όλων των Σταθμών"
+
+#: SIP\templates\home.html:337
+msgid "Program 1"
+msgstr "Πρόγραμμα 1"
+
+#: SIP\templates\log.html:3
+msgid "SIP Log"
+msgstr "Αρχείο καταγραφής SIP"
+
+#: SIP\templates\log.html:8 SIP\templates\plugins.html:46
+msgid "Enabled"
+msgstr "Ενεργο"
+
+#: SIP\templates\log.html:11
+msgid "Disabled"
+msgstr "Ανενεργό"
+
+#: SIP\templates\log.html:41
+msgid "Log "
+msgstr "Αρχείο καταγραφής"
+
+#: SIP\templates\log.html:46
+msgid " limit"
+msgstr "όριο"
+
+#: SIP\templates\log.html:46
+msgid "Total number of records: "
+msgstr "Συνολικός αριθμός εγγραφών:"
+
+#: SIP\templates\log.html:47
+msgid "Download log as "
+msgstr "Κατέβασμα αρχείου"
+
+#: SIP\templates\log.html:51
+msgid "Date"
+msgstr "Ημερομηνία"
+
+#: SIP\templates\log.html:52 SIP\templates\modify.html:292
+msgid "Start Time"
+msgstr "Ώρα Έναρξης"
+
+#: SIP\templates\log.html:53 SIP\templates\stations.html:85
+msgid "Station"
+msgstr "Σταθμός"
+
+#: SIP\templates\log.html:54 SIP\templates\modify.html:302
+msgid "Duration"
+msgstr "Διάρκεια"
+
+#: SIP\templates\log.html:73
+msgid "Refresh"
+msgstr "Ανανέωση"
+
+#: SIP\templates\log.html:74
+msgid "Clear Log"
+msgstr "Καθαρισμός Αρχείου Καταγραφής"
+
+#: SIP\templates\login.html:3
+msgid "SIP Login"
+msgstr "SIP Σύνδεση"
+
+#: SIP\templates\login.html:7 SIP\templates\login.html:10
+msgid "Login"
+msgstr "Σύνδεση"
+
+#: SIP\templates\modify.html:3
+msgid "SIP Modify Program"
+msgstr "SIP Τροποποίηση Προγράμματος"
+
+#: SIP\templates\modify.html:66
+msgid "Error: Incorrect time input "
+msgstr "Σφάλμα: Λάθος εισαγωγή χρόνου"
+
+#: SIP\templates\modify.html:78
+msgid "Please choose at least one weekday for the program to run."
+msgstr ""
+"Παρακαλώ επιλέξτε τουλάχιστον μία εβδομάδα για να τρέξει το πρόγραμμα."
+
+#: SIP\templates\modify.html:82
+msgid "Please choose at least one station to run in this program."
+msgstr "Παρακαλώ επιλέξτε τουλάχιστον ένα σταθμό για να τρέξει το πρόγραμμα."
+
+#: SIP\templates\modify.html:228
+msgid "Error: starting in days wrong."
+msgstr "Σφάλμα: λάθος στις μέρες εκκίνησης."
+
+#: SIP\templates\modify.html:249
+msgid "Error: Incorrect duration."
+msgstr "Σφάλμα: Λάθος διάρκεια."
+
+#: SIP\templates\modify.html:263
+msgid "Error: Start time must be prior to end time."
+msgstr "Σφάλμα: Η ώρα εκκίνησης πρέπει να προηγείται της ώρας τερματισμού."
+
+#: SIP\templates\modify.html:283
+msgid "Edit Program #"
+msgstr "Διόρθωση Προγράμματος #"
+
+#: SIP\templates\modify.html:283 SIP\templates\programs.html:108
+msgid "Add a New Program"
+msgstr "Προσθήκη νέου Προγράμματος"
+
+#: SIP\templates\modify.html:288
+msgid "Program Off"
+msgstr "Πρόγραμμα Off"
+
+#: SIP\templates\modify.html:288
+msgid "Program On"
+msgstr "Πρόγραμμα On"
+
+#: SIP\templates\modify.html:304
+msgid "Recurring"
+msgstr "Epanalmban;omeno"
+
+#: SIP\templates\modify.html:304
+msgid "Single pass"
+msgstr "Μονό πέρασμα"
+
+#: SIP\templates\modify.html:306
+msgid "Every"
+msgstr "Κάθε"
+
+#: SIP\templates\modify.html:310
+msgid "Until"
+msgstr "Μέχρι"
+
+#: SIP\templates\modify.html:322
+msgid "Interval"
+msgstr "Διάλειμμα "
+
+#: SIP\templates\modify.html:322
+msgid "Weekly"
+msgstr "Εβδομαδιαίο"
+
+#: SIP\templates\modify.html:327
+msgid "Select All"
+msgstr "Επιλογή Όλων"
+
+#: SIP\templates\modify.html:328
+msgid "Clear All"
+msgstr "Καθάρισμα Όλων"
+
+#: SIP\templates\modify.html:359
+msgid "Water interval"
+msgstr "Διάλειμμα Νερού"
+
+#: SIP\templates\modify.html:375
+msgid "Starting in"
+msgstr "Εκκίνηση στις"
+
+#: SIP\templates\modify.html:389
+msgid "Any Day"
+msgstr "Οποιαδήποτε Μέρα"
+
+#: SIP\templates\modify.html:389
+msgid "Restrict Day"
+msgstr "Περιορισμός Μέρας"
+
+#: SIP\templates\modify.html:391
+msgid "Even"
+msgstr "Ζυγός"
+
+#: SIP\templates\modify.html:391
+msgid "Odd"
+msgstr "Μονός"
+
+#: SIP\templates\modify.html:392
+msgid "(except 31st and Feb 29th)"
+msgstr "(εκτός 31 και Φεβρ. 29)"
+
+#: SIP\templates\modify.html:401
+msgid "Save"
+msgstr "Αποθήκευση"
+
+#: SIP\templates\modify.html:402 SIP\templates\monthly.html:78
+#: SIP\templates\options.html:143 SIP\templates\plugins.html:69
+#: SIP\templates\plugins_repo.html:45 SIP\templates\proto.html:75
+#: SIP\templates\runonce.html:76 SIP\templates\stations.html:138
+#: SIP\templates\system_update.html:66
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: SIP\templates\monthly.html:3
+msgid "SIP Monthly Adjustments"
+msgstr "Μηνιαίες Προσαρμογές SIP"
+
+#: SIP\templates\monthly.html:21
+msgid "Monthly Irrigation Adjustments"
+msgstr "Μηνιαίες Προσαρμογές Ποτίσματος"
+
+#: SIP\templates\monthly.html:22
+msgid "Enter an adjustment for each month (% irrigation time)"
+msgstr "Παρακαλώ εισάγετε προσαρμογή για κάθε μήνα (% χρόνος ποτίσματος)"
+
+#: SIP\templates\monthly.html:77 SIP\templates\proto.html:74
+msgid "Submit"
+msgstr "Υποβολή"
+
+#: SIP\templates\options.html:3
+msgid "SIP Options"
+msgstr "Ρυθμίσεις SIP"
+
+#: SIP\templates\options.html:18 SIP\templates\options.html:19
+msgid "Hide Tooltips"
+msgstr "Κρύψιμο Συμβουλών"
+
+#: SIP\templates\options.html:19 SIP\templates\options.html:73
+msgid "Show Tooltips"
+msgstr "Εμφάνιση Συμβουλών"
+
+#: SIP\templates\options.html:53
+msgid "The password given was incorrect."
+msgstr "Ο κωδικός που δόθηκε ήταν λάθος."
+
+#: SIP\templates\options.html:57
+msgid "Please enter a password."
+msgstr "Παρακαλώ εισάγετε κωδικό."
+
+#: SIP\templates\options.html:61
+msgid "Passwords don't match, please re-enter."
+msgstr "Οι κωδικοι δεν ταιριάζουν, παρακαλώ ξαναπροσπαθήστε."
+
+#: SIP\templates\options.html:72
+msgid "Edit Options"
+msgstr "Αλλαγή Ρυθμίσεων"
+
+#: SIP\templates\options.html:101
+msgid "Default"
+msgstr "Προεπιλογή"
+
+#: SIP\templates\options.html:113
+msgid "None"
+msgstr "Κανένα"
+
+#: SIP\templates\options.html:129
+msgid "System Restart"
+msgstr "Επανεκκίνηση Συστήματος"
+
+#: SIP\templates\options.html:131
+msgid "Restart"
+msgstr "Επανεκκίνηση"
+
+#: SIP\templates\options.html:131
+msgid "Restart software"
+msgstr "Επανεκκίνηση λογισμικού"
+
+#: SIP\templates\options.html:132
+msgid "Reboot"
+msgstr "Επανεκίννηση"
+
+#: SIP\templates\options.html:132
+msgid "Reboot hardware"
+msgstr "Επανεκκίνηση Συστήματος"
+
+#: SIP\templates\options.html:142 SIP\templates\stations.html:136
+msgid "Submit Changes"
+msgstr "Υποβολή Αλλαγών"
+
+#: SIP\templates\plugins.html:3
+msgid "SIP Plugin Manager"
+msgstr "Διαχειριστής Προσθέτων SIP"
+
+#: SIP\templates\plugins.html:39
+msgid "Installed Plugins"
+msgstr "Εγκατεστημένα Πρόσθετα"
+
+#: SIP\templates\plugins.html:40
+msgid "Browse More Plugins"
+msgstr "Περισσότερα Πρόσθετα"
+
+#: SIP\templates\plugins.html:41
+msgid "Roll Your Own"
+msgstr "Δημιούργησε δικό σου"
+
+#: SIP\templates\plugins.html:45 SIP\templates\stations.html:86
+msgid "Name"
+msgstr "Όνομα"
+
+#: SIP\templates\plugins.html:47
+msgid "Uninstall?"
+msgstr "Απεγκατάσταση?"
+
+#: SIP\templates\plugins.html:65
+msgid "CAUTION:"
+msgstr "ΠΡΟΣΟΧΗ:"
+
+#: SIP\templates\plugins.html:65
+msgid ""
+"Clicking UPDATE or UNINSTALL will restart the software and stop any running "
+"programs."
+msgstr ""
+"Πατώντας ΕΝΗΜΕΡΩΣΗ ή ΑΠΕΓΚΑΤΑΣΤΑΣΗ θα επανεκκινήσει το λογισμικό και θα "
+"σταματήσει προγράμματα που τρέχουν."
+
+#: SIP\templates\plugins.html:67
+msgid "Update Enabled"
+msgstr "Ενημέρωση ενεργών"
+
+#: SIP\templates\plugins.html:68
+msgid "Uninstall"
+msgstr "Απεγκατάσταση"
+
+#: SIP\templates\plugins_repo.html:3
+msgid "SIP Plugin Browser"
+msgstr "Περιήγηση Προσθέτων SIP"
+
+#: SIP\templates\plugins_repo.html:26
+msgid "Available Plugins"
+msgstr "Διαθέσιμα Πρόσθετα"
+
+#: SIP\templates\plugins_repo.html:27
+msgid "Unless otherwise stated these plugins are licensed under GPL 3.0"
+msgstr ""
+"Εκτός και αν αναφέρεται αλλιώς τα πρόσθετα είναι αδειοδοτημένα σύμφωνα με "
+"GPL 3.0"
+
+#: SIP\templates\plugins_repo.html:43
+msgid "install"
+msgstr "εγκατάσταση"
+
+#: SIP\templates\plugins_repo.html:44
+msgid "Back"
+msgstr "Πίσω"
+
+#: SIP\templates\programs.html:3
+msgid "SIP Programs"
+msgstr "Προγράμματα SIP"
+
+#: SIP\templates\programs.html:18
+msgid "Every "
+msgstr "Κάθε"
+
+#: SIP\templates\programs.html:18 SIP\templates\programs.html:20
+msgid "days"
+msgstr "μέρες"
+
+#: SIP\templates\programs.html:20
+msgid "starting in"
+msgstr "ξεκινά στις"
+
+#: SIP\templates\programs.html:23
+msgid "Every Weekday"
+msgstr "Κάθε Εβδομάδα"
+
+#: SIP\templates\programs.html:27
+msgid "Fri"
+msgstr "Παρ"
+
+#: SIP\templates\programs.html:27
+msgid "Mon"
+msgstr "Δευτ"
+
+#: SIP\templates\programs.html:27
+msgid "Sat"
+msgstr "Σαβ"
+
+#: SIP\templates\programs.html:27
+msgid "Sun"
+msgstr "Κυρ"
+
+#: SIP\templates\programs.html:27
+msgid "Thur"
+msgstr "Πεμ"
+
+#: SIP\templates\programs.html:27
+msgid "Tue"
+msgstr "Τρι"
+
+#: SIP\templates\programs.html:27
+msgid "Wed"
+msgstr "Τετ"
+
+#: SIP\templates\programs.html:29
+msgid " (Even days only)"
+msgstr "(Ζυγές μέρες μόνο)"
+
+#: SIP\templates\programs.html:31
+msgid " (Odd days only)"
+msgstr "(Μονές μέρες μόνο)"
+
+#: SIP\templates\programs.html:109
+msgid "Delete All"
+msgstr "Διαγραφή Όλων"
+
+#: SIP\templates\programs.html:128
+msgid "Run"
+msgstr "Τρέξε"
+
+#: SIP\templates\programs.html:141
+msgid "Starting"
+msgstr "Ξεκινά"
+
+#: SIP\templates\programs.html:142
+msgid "for"
+msgstr "για"
+
+#: SIP\templates\programs.html:145
+msgid "Recurring every"
+msgstr "Επαναλαμβάνεται κάθε"
+
+#: SIP\templates\programs.html:146
+msgid "until"
+msgstr "μέχρι"
+
+#: SIP\templates\programs.html:149 SIP\templates\runonce.html:74
+msgid "Run Now"
+msgstr "Τρέξε Τώρα"
+
+#: SIP\templates\programs.html:150
+msgid "Edit"
+msgstr "Διόρθωση"
+
+#: SIP\templates\programs.html:151
+msgid "Delete"
+msgstr "Διαγραφή"
+
+#: SIP\templates\proto.html:4
+msgid "SIP Proto Plugin"
+msgstr "Πρόσθετο Proto SIP "
+
+#: SIP\templates\proto.html:30
+msgid "Example Check Boxes"
+msgstr "Παράδειγμα Κουτιών Επιλογής"
+
+#: SIP\templates\proto.html:37 SIP\templates\proto.html:38
+#: SIP\templates\proto.html:56 SIP\templates\proto.html:57
+msgid "Heading"
+msgstr "Τίτλος"
+
+#: SIP\templates\proto.html:41
+msgid "Check Box 1"
+msgstr "Κουτί Επιλογής 1"
+
+#: SIP\templates\proto.html:45
+msgid "Check Box 2"
+msgstr "Κουτί Επιλογής 2"
+
+#: SIP\templates\proto.html:51
+msgid "Text Entry Fields"
+msgstr "Πεδία εισαγωγής Κειμένου"
+
+#: SIP\templates\proto.html:61
+msgid "Text Field 1"
+msgstr "Πεδίο Κειμένου 1"
+
+#: SIP\templates\proto.html:65
+msgid "Text Field 2"
+msgstr "Πεδίο Κειμένου 2"
+
+#: SIP\templates\restarting.html:3
+msgid "SIP Restarting"
+msgstr "Επανεκκίνηση SIP"
+
+#: SIP\templates\restarting.html:30
+msgid "SIP is restarting"
+msgstr "Το SIP επανεκκινεί"
+
+#: SIP\templates\restarting.html:31
+msgid "This may take several seconds..."
+msgstr "Αυτό θα πάρει μερικά δευτερόλεπτα..."
+
+#: SIP\templates\runonce.html:3
+msgid "SIP Run-Once"
+msgstr "SIP Τρέξιμο μια Φορά "
+
+#: SIP\templates\runonce.html:35
+msgid "No station is scheduled to run"
+msgstr "Κανείς σταθμός δεν είναι προγραμματισμένος να τρέξει"
+
+#: SIP\templates\runonce.html:75
+msgid "Reset Time"
+msgstr "Επαναφορά Χρόνου"
+
+#: SIP\templates\stations.html:3
+msgid "SIP Stations"
+msgstr "Σταθμοί SIP"
+
+#: SIP\templates\stations.html:87
+msgid "Enabled?"
+msgstr "Ενεργοποιημένο?"
+
+#: SIP\templates\stations.html:88
+msgid "Ignore Rain?"
+msgstr "Αγνόησε Βροχή?"
+
+#: SIP\templates\stations.html:90
+msgid "Ignore Dynamic Water Level?"
+msgstr "Αγνόησε Δυναμικό Επίπεδο Νερού?"
+
+#: SIP\templates\stations.html:92
+msgid "Activate Master?"
+msgstr "Ενεργοποίηση Κεντρικού?"
+
+#: SIP\templates\stations.html:104 SIP\templates\stations.html:106
+msgid "(Master valve)"
+msgstr "(Κεντρική Βαλβίδα)"
+
+#: SIP\templates\stations.html:137
+msgid "Reset Names"
+msgstr "Επαναφορά Ονομάτων"
+
+#: SIP\templates\system_update.html:25
+msgid "SIP Software Updater"
+msgstr "Ενημερωτής Λογισμικού SIP"
+
+#: SIP\templates\system_update.html:28
+msgid ""
+"This plugin compares the local SIP version with the GitHub repository and "
+"can update the local software."
+msgstr ""
+"Το πρόσθετο αυτό συγκρίνει την τοπική έκδοση SIP με το GitHub repository "
+"και μπορεί να αναβαθμίσει το τοπικό λογισμικό."
+
+#: SIP\templates\system_update.html:32
+msgid "Remote repository"
+msgstr "Απομακρυσμένο repository"
+
+#: SIP\templates\system_update.html:38
+msgid "Local SIP version"
+msgstr "Τοπική έκδοση SIP"
+
+#: SIP\templates\system_update.html:44
+msgid "Local SIP date"
+msgstr "Τοπική ημερομηνία SIP"
+
+#: SIP\templates\system_update.html:53
+msgid "Refresh Status"
+msgstr "Ανανέωση Status"
+
+#: SIP\templates\system_update.html:62
+msgid "Update SIP"
+msgstr "Ενημέρωση SIP"
+
+#: SIP\templates\system_update.html:64
+msgid "Up-to-date"
+msgstr "Ενημερωμένο"
+
+#: SIP\templates\system_update.html:65
+msgid "Restart SIP"
+msgstr "Επανεκκίνηση SIP"
+
+#: SIP\webpages.py:353
+msgid " not found."
+msgstr "δεν βρέθηκε."
+
+#: SIP\webpages.py:353
+msgid "Station "
+msgstr "Σταθμός"
+
+#: SIP\webpages.py:371
+msgid "Manual mode not active."
+msgstr "Χειροκίνητη ρύθμιση μη ενεργή."
+
+#: SIP\webpages.py:639
+msgid "Date, Start Time, Zone, Duration, Program"
+msgstr "Ημερομηνία, Ώρα Εκκίνησης, Ζώνη, Διάρκεια, Πρόγραμμα"
