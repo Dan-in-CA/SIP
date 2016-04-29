@@ -1,202 +1,226 @@
-# Translation file for OpenSprinkler Pi (SIP).
+# Translation file for OpenSprinkler Pi (ospi).
 # Copyright (C) 2014
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.5\n"
-"POT-Creation-Date: 2014-11-12 10:35+Pacific Standard Time\n"
-"PO-Revision-Date: 2015-08-07 13:41-0700\n"
+"POT-Creation-Date: 2016-04-29 09:37-0700\n"
+"PO-Revision-Date: 2016-04-29 09:39-0700\n"
 "Last-Translator: Dan <dkimberling59@gmail.com>\n"
 "Language-Team: dkimberling59@gmail.com\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.8.4\n"
-"Language: de_DE\n"
 
-#: SIP\helpers.py:390
-msgid "Password"
-msgstr "Passwort"
+#: SIP/plugins\system_update.py:75
+msgid "Up-to-date."
+msgstr ""
 
-#: SIP\gv.py:17
+#: SIP/plugins\system_update.py:78
+msgid "New version is available!"
+msgstr ""
+
+#: SIP/plugins\system_update.py:79 SIP/plugins\system_update.py:84
+msgid "Available revision"
+msgstr ""
+
+#: SIP/plugins\system_update.py:80
+msgid "Changes"
+msgstr ""
+
+#: SIP/plugins\system_update.py:83
+msgid "Currently running revision"
+msgstr ""
+
+#: SIP/plugins\system_update.py:95
+msgid "System update plug-in encountered error"
+msgstr ""
+
+#: SIP\gv.py:18
 msgid "Could not use git to determine version!"
 msgstr "Git konnte nicht verwendet werden um die Version zu ermitteln."
 
-#: SIP\gv.py:24
+#: SIP\gv.py:25
 msgid "Could not use git to determine date of last commit!"
 msgstr ""
 "Git konnte nicht verwendet werden um das letzte Aktualisierungsdatum zu "
 "ermitteln."
 
-#: SIP\gv.py:119
+#: SIP\gv.py:133
 msgid "System name"
 msgstr "System Name"
 
-#: SIP\gv.py:119
-msgid "Unique name of this OpenSprinkler system."
-msgstr "Individueller Name von diesem OpenSprinkler System."
+#: SIP\gv.py:133
+msgid "Unique name of this SIP system."
+msgstr ""
 
-#: SIP\gv.py:119 SIP\gv.py:120 SIP\gv.py:121 SIP\gv.py:122 SIP\gv.py:123
-#: SIP\gv.py:124
+#: SIP\gv.py:133 SIP\gv.py:134 SIP\gv.py:135 SIP\gv.py:137 SIP\gv.py:138
+#: SIP\gv.py:139
 msgid "System"
 msgstr "System"
 
-#: SIP\gv.py:120
+#: SIP\gv.py:134
 msgid "City name or zip code. Use comma or + in place of space."
 msgstr "Ortsname oder PLZ. Benutze \",\" oder \"+\" anstatt Leerzeichen"
 
-#: SIP\gv.py:120
+#: SIP\gv.py:134
 msgid "Location"
 msgstr "Standort"
 
-#: SIP\gv.py:121
+#: SIP\gv.py:135
 msgid "Language"
 msgstr "Sprache"
 
-#: SIP\gv.py:121
-msgid "Select language (effective after restart.)"
-msgstr "Sprache wählen (Neustart erforderlich)"
+#: SIP\gv.py:135
+msgid "Select language."
+msgstr ""
 
-#: SIP\gv.py:122
-msgid "Example: GMT-4:00, GMT+5:30 (effective after reboot.)"
-msgstr "Beispiel: GMT -4:00, GMT+5:30 (Neustart erforderlich)"
-
-#: SIP\gv.py:122
-msgid "Time zone"
-msgstr "Zeitzone"
-
-#: SIP\gv.py:123
+#: SIP\gv.py:137
 msgid "24-hour clock"
 msgstr "24-Stunden Anzeige"
 
-#: SIP\gv.py:123
+#: SIP\gv.py:137
 msgid "Display times in 24 hour format (as opposed to AM/PM style.)"
 msgstr "Anzeige im 24h Format (anstatt AM/PM Format)"
 
-#: SIP\gv.py:124
+#: SIP\gv.py:138
 msgid "HTTP port"
 msgstr "HTTP  port"
 
-#: SIP\gv.py:124
-msgid "HTTP port (effective after reboot.)"
-msgstr "HTTP  port (Neustart erforderlich)"
+#: SIP\gv.py:138
+msgid "HTTP port."
+msgstr ""
 
-#: SIP\gv.py:125
+#: SIP\gv.py:139
+msgid "Water Scaling"
+msgstr "Wasser-Reduzierung"
+
+#: SIP\gv.py:139
+msgid "Water scaling (as %), between 0 and 100."
+msgstr ""
+
+#: SIP\gv.py:140
 msgid "Allow anonymous users to access the system without a password."
 msgstr "Erlaubt unbefugten Nutzern den Zugang zum System ohne Passwortabfrage."
 
-#: SIP\gv.py:125
+#: SIP\gv.py:140
 msgid "Disable security"
 msgstr "Passwortabfrage"
 
-#: SIP\gv.py:125 SIP\gv.py:126 SIP\gv.py:127 SIP\gv.py:128
+#: SIP\gv.py:140 SIP\gv.py:141 SIP\gv.py:142 SIP\gv.py:143
 msgid "Change Password"
 msgstr "Passwort ändern"
 
-#: SIP\gv.py:126
+#: SIP\gv.py:141
 msgid "Current password"
 msgstr "aktuelles Passwort"
 
-#: SIP\gv.py:126
+#: SIP\gv.py:141
 msgid "Re-enter the current password."
 msgstr "aktuelles Passwort wiederholen"
 
-#: SIP\gv.py:127
+#: SIP\gv.py:142
 msgid "Enter a new password."
 msgstr "Neues Passwort eingeben."
 
-#: SIP\gv.py:127
+#: SIP\gv.py:142
 msgid "New password"
 msgstr "Neues Passwort"
 
-#: SIP\gv.py:128
+#: SIP\gv.py:143
 msgid "Confirm password"
 msgstr "PW bestätigen"
 
-#: SIP\gv.py:128
+#: SIP\gv.py:143
 msgid "Confirm the new password."
 msgstr "Neues Passwort bestätigen."
 
-#: SIP\gv.py:129
+#: SIP\gv.py:144
 msgid "Sequential"
 msgstr "Nacheinander"
 
-#: SIP\gv.py:129
+#: SIP\gv.py:144
 msgid "Sequential or concurrent running mode."
 msgstr "Nacheinander oder gleichzeitiger Betriebsmodus"
 
-#: SIP\gv.py:129 SIP\gv.py:130 SIP\gv.py:131
+#: SIP\gv.py:144 SIP\gv.py:145 SIP\gv.py:146
 msgid "Station Handling"
 msgstr "Stationen Handhabung"
 
-#: SIP\gv.py:130
+#: SIP\gv.py:145
 msgid "Extension boards"
 msgstr "Erweiterungsplatine"
 
-#: SIP\gv.py:130
+#: SIP\gv.py:145
 msgid "Number of extension boards."
 msgstr "Anzahl von Erweiterungsplatinen."
 
-#: SIP\gv.py:131
+#: SIP\gv.py:146
 msgid "Station delay"
 msgstr "Stationsverzögerung"
 
-#: SIP\gv.py:131
+#: SIP\gv.py:146
 msgid "Station delay time (in seconds), between 0 and 240."
 msgstr "Stations-verzögerungszeit (in Sekunden), zwischen 0 und 240."
 
-#: SIP\gv.py:132
+#: SIP\gv.py:147
 msgid "Master station"
 msgstr "Haupt-Station"
 
-#: SIP\gv.py:132
+#: SIP\gv.py:147
 msgid "Select master station."
 msgstr "Wähle eine Haupt-Station."
 
-#: SIP\gv.py:132 SIP\gv.py:133 SIP\gv.py:134
+#: SIP\gv.py:147 SIP\gv.py:148 SIP\gv.py:149
 msgid "Configure Master"
 msgstr "Konfiguriere Haupt-Station"
 
-#: SIP\gv.py:133
+#: SIP\gv.py:148
 msgid "Master on adjust"
 msgstr "Einschaltverzögerung"
 
-#: SIP\gv.py:133
+#: SIP\gv.py:148
 msgid "Master on delay (in seconds), between +0 and +60."
 msgstr "Einschaltverzögerung (in Sekunden), zwischen -60 und +60."
 
-#: SIP\gv.py:134
+#: SIP\gv.py:149
 msgid "Master off adjust"
 msgstr "Ausschaltverzögerung"
 
-#: SIP\gv.py:134
+#: SIP\gv.py:149
 msgid "Master off delay (in seconds), between -60 and +60."
 msgstr "Ausschaltverzögerung (in Sekunden), zwischen -60 und +60."
 
-#: SIP\gv.py:135
+#: SIP\gv.py:150
 msgid "Use rain sensor"
 msgstr "Regensensor"
 
-#: SIP\gv.py:135
+#: SIP\gv.py:150
 msgid "Use rain sensor."
 msgstr "Benutze Regensensor."
 
-#: SIP\gv.py:135 SIP\gv.py:136
+#: SIP\gv.py:150 SIP\gv.py:151
 msgid "Rain Sensor"
 msgstr "Regensensor"
 
-#: SIP\gv.py:136
+#: SIP\gv.py:151
 msgid "Normally open"
 msgstr "Normal geöffnet"
 
-#: SIP\gv.py:136
+#: SIP\gv.py:151
 msgid "Rain sensor type."
 msgstr "Regensensor Typ"
 
-#: SIP\gv.py:137
+#: SIP\gv.py:152
+msgid "Enable logging"
+msgstr "Ereignisprotokoll"
+
+#: SIP\gv.py:152
 msgid ""
 "Log all events - note that repetitive writing to an SD card can shorten its "
 "lifespan."
@@ -204,56 +228,55 @@ msgstr ""
 "Alle Ereignisse protokollieren - Beachte dass ein wiederholtes Beschreiben "
 "der SD Karte die Lebensdauer verkürzt."
 
-#: SIP\gv.py:137 SIP\gv.py:138
+#: SIP\gv.py:152 SIP\gv.py:153
 msgid "Logging"
 msgstr "Ereignisprotokoll"
 
-#: SIP\gv.py:137 SIP\templates\pcf_8591_adj.html:48
-msgid "Enable logging"
-msgstr "Ereignisprotokoll"
-
-#: SIP\gv.py:138
+#: SIP\gv.py:153
 msgid "Length of log to keep, 0=no limits."
 msgstr "Länge (Anzahl) des Protokolls, 0=keine Begrenzung."
 
-#: SIP\gv.py:138
+#: SIP\gv.py:153
 msgid "Max log entries"
 msgstr "Anzahl Einträge"
 
-#: SIP\helpers.py:35 SIP\helpers.py.LOCAL.py:35
+#: SIP\helpers.py:40
 msgid "Error: json module not found"
 msgstr "Fehler: json Modul wurde nicht gefunden"
 
-#: SIP\helpers.py:48 SIP\helpers.py.LOCAL.py:48
+#: SIP\helpers.py:74
 msgid "Rebooting..."
 msgstr "Bootvorgang..."
 
-#: SIP\helpers.py:61 SIP\helpers.py.LOCAL.py:61
+#: SIP\helpers.py:103
 msgid "Powering off..."
 msgstr "Abschalten..."
 
-#: SIP\helpers.py:74 SIP\helpers.py.LOCAL.py:74
+#: SIP\helpers.py:133
 msgid "Restarting..."
 msgstr "Neustarten..."
 
-#: SIP\helpers.py:190 SIP\helpers.py.LOCAL.py:190 SIP\templates\base.html:81
+#: SIP\helpers.py:320 SIP\templates\base.html:101
 msgid "Run-once"
 msgstr "Schnellstart"
 
-#: SIP\helpers.py:192 SIP\helpers.py.LOCAL.py:192 SIP\templates\base.html:82
-#: SIP\templates\home.html:222
+#: SIP\helpers.py:322 SIP\templates\base.html:102 SIP\templates\home.html:219
 msgid "Manual"
 msgstr "Manuell"
 
-#: SIP\helpers.py:395
+#: SIP\helpers.py:569
+msgid "Password"
+msgstr "Passwort"
+
+#: SIP\helpers.py:572
 msgid "Incorrect password, please try again"
 msgstr "Falsches Passwort, bitte erneut versuchen."
 
-#: SIP\SIP.py:22
+#: SIP\sip.py:29
 msgid "Starting timing loop"
 msgstr "Wiederholungsschleife starten"
 
-#: SIP\SIP.py:180
+#: SIP\sip.py:202
 msgid "plugins loaded:"
 msgstr "Geladene Plugins:"
 
@@ -285,340 +308,271 @@ msgstr "Samstag"
 msgid "Sunday"
 msgstr "Sonntag"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:25
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:26
 msgid "January"
 msgstr "Januar"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:29
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:30
 msgid "February"
 msgstr "Februar"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:33
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:34
 msgid "March"
 msgstr "März"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:37
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:38
 msgid "April"
 msgstr "April"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:41
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:42
 msgid "May"
 msgstr "Mai"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:45
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:46
 msgid "June"
 msgstr "Juni"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:49
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:50
 msgid "July"
 msgstr "Juli"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:53
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:54
 msgid "August"
 msgstr "August"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:57
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:58
 msgid "September"
 msgstr "September"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:61
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:62
 msgid "October"
 msgstr "Oktober"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:65
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:66
 msgid "November"
 msgstr "November"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:69
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:70
 msgid "December"
 msgstr "Dezember"
 
-#: SIP\templates\base.html:83 SIP\templates\log.html:55
+#: SIP\templates\base.html:103 SIP\templates\log.html:55
+#: SIP\templates\programs.html:122
 msgid "Program"
 msgstr "Programm"
 
-#: SIP\templates\base.html:135
+#: SIP\templates\base.html:156
 msgid "Home"
 msgstr "Home"
 
-#: SIP\templates\base.html:136
+#: SIP\templates\base.html:157
 msgid "Define Programs"
 msgstr "Erstelle Programme"
 
-#: SIP\templates\base.html:136
+#: SIP\templates\base.html:157
 msgid "Programs"
 msgstr "Programme"
 
-#: SIP\templates\base.html:137
+#: SIP\templates\base.html:158
 msgid "Define Run Once Program"
 msgstr "Erstelle einmaliges Programm"
 
-#: SIP\templates\base.html:137
+#: SIP\templates\base.html:158
 msgid "Run Once"
 msgstr "Schnellstart"
 
-#: SIP\templates\base.html:138
-msgid "Acces Plugins"
-msgstr "Verwalte Plugins"
+#: SIP\templates\base.html:159
+msgid "Access Plugins"
+msgstr ""
 
-#: SIP\templates\base.html:138
+#: SIP\templates\base.html:159
 msgid "Plugins"
 msgstr "Plugins"
 
-#: SIP\templates\base.html:139
+#: SIP\templates\base.html:160
 msgid "Log"
 msgstr "Protokoll "
 
-#: SIP\templates\base.html:139
+#: SIP\templates\base.html:160
 msgid "View Log"
 msgstr "Protokoll anzeigen"
 
-#: SIP\templates\base.html:140
+#: SIP\templates\base.html:161
 msgid "Options"
 msgstr "Optionen"
 
-#: SIP\templates\base.html:141
+#: SIP\templates\base.html:162
 msgid "Stations"
 msgstr "Stationen"
 
-#: SIP\templates\base.html:141 SIP\templates\stations.html:73
+#: SIP\templates\base.html:162 SIP\templates\stations.html:81
 msgid "Configure Stations"
 msgstr "Konfiguriere Stationen"
 
-#: SIP\templates\base.html:143
+#: SIP\templates\base.html:164
 msgid "Logout"
 msgstr "Ausloggen"
 
-#: SIP\templates\base.html:152
+#: SIP\templates\base.html:174
+msgid "?"
+msgstr ""
+
+#: SIP\templates\base.html:174 SIP\templates\proto.html:27
+#: SIP\templates\system_update.html:26
+msgid "Help"
+msgstr ""
+
+#: SIP\templates\base.html:176
 msgid "CPU Temp"
 msgstr "CPU Temperatur"
 
-#: SIP\templates\base.html:152
+#: SIP\templates\base.html:176
 msgid "Click to toggle"
 msgstr "Klicken zum schalten"
 
-#: SIP\templates\base.html:153
+#: SIP\templates\base.html:177
 msgid "Software"
 msgstr "Software"
 
-#: SIP\templates\base.html:153
+#: SIP\templates\base.html:177
 msgid "version"
 msgstr "Version"
 
-#: SIP\templates\email_adj.html:3
-msgid "OpenSprinkler Pi Email adjustments"
-msgstr "OpenSprinkler Pi Email Einstellungen"
-
-#: SIP\templates\email_adj.html:21
-msgid "Email adjustments"
-msgstr "Email Einstellungen"
-
-#: SIP\templates\email_adj.html:22
-msgid ""
-"This plugin can send E-mails. For this plugin you need a GMail account as "
-"provider."
-msgstr ""
-"Dieses Plugin kann keine Email senden. Für dieses Plugin wird ein GMail "
-"Account benötigt."
-
-#: SIP\templates\email_adj.html:26
-msgid "Send email with file log.csv after power on"
-msgstr "Sendet eine Email mit Protokoll Datei (log.csv) nach dem Einschalten."
-
-#: SIP\templates\email_adj.html:32
-msgid "Send email if rain is detected"
-msgstr "Sendet eine Email, wenn Regen erkannt wurde."
-
-#: SIP\templates\email_adj.html:39
-msgid "Sends email if program has run"
-msgstr "Sendet eine Email, wenn das Programm läuft."
-
-#: SIP\templates\email_adj.html:45
-msgid "Your GMail username"
-msgstr "Dein GMail Benutzername"
-
-#: SIP\templates\email_adj.html:63 SIP\templates\lcd_adj.html:44
-#: SIP\templates\pcf_8591_adj.html:103 SIP\templates\pressure_adj.html:50
-#: SIP\templates\sms_adj.html:81 SIP\templates\system_update.html:47
-#: SIP\templates\weather_level_adj.html:61
-msgid "Status"
-msgstr "Status"
-
-#: SIP\templates\email_adj.html:72 SIP\templates\lcd_adj.html:54
-#: SIP\templates\monthly.html:76 SIP\templates\pcf_8591_adj.html:118
-#: SIP\templates\pressure_adj.html:59 SIP\templates\sms_adj.html:90
-#: SIP\templates\weather_adj.html:55 SIP\templates\weather_level_adj.html:70
-msgid "Submit"
-msgstr "Absenden"
-
-#: SIP\templates\email_adj.html:73 SIP\templates\lcd_adj.html:55
-#: SIP\templates\modify.html:402 SIP\templates\monthly.html:77
-#: SIP\templates\options.html:135 SIP\templates\pcf_8591_adj.html:119
-#: SIP\templates\pressure_adj.html:60 SIP\templates\runonce.html:76
-#: SIP\templates\sms_adj.html:91 SIP\templates\stations.html:120
-#: SIP\templates\weather_adj.html:56 SIP\templates\weather_level_adj.html:71
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: SIP\templates\home.html:52
+#: SIP\templates\home.html:45
 msgid "Manual Mode"
 msgstr "Manueller Modus"
 
-#: SIP\templates\home.html:55 SIP\templates\runonce.html:53
+#: SIP\templates\home.html:48 SIP\templates\runonce.html:53
 msgid "Run Once Program"
 msgstr "Einmalig ausführen"
 
-#: SIP\templates\home.html:58
+#: SIP\templates\home.html:51
 msgid " for "
 msgstr "für"
 
-#: SIP\templates\home.html:58
+#: SIP\templates\home.html:51
 msgid " on "
 msgstr "Ein"
 
-#: SIP\templates\home.html:58
+#: SIP\templates\home.html:51
 msgid " ran "
 msgstr "lief"
 
-#: SIP\templates\home.html:82
+#: SIP\templates\home.html:75
 msgid "Master On"
 msgstr "Haupt-Station AN"
 
-#: SIP\templates\home.html:84
+#: SIP\templates\home.html:77
 msgid "Master Off"
 msgstr "Haupt-Station AUS"
 
-#: SIP\templates\home.html:89
+#: SIP\templates\home.html:82
 msgid "Suppressed by Rain Delay"
 msgstr "Unterdrückt durch Regen Verzögerung"
 
-#: SIP\templates\home.html:92
+#: SIP\templates\home.html:85
 msgid "Suppressed by Rain Sensor"
 msgstr "Unterdrückt von Regensensor"
 
-#: SIP\templates\home.html:95 SIP\templates\home.html:250
+#: SIP\templates\home.html:88 SIP\templates\home.html:247
 #: SIP\templates\modify.html:352 SIP\templates\programs.html:120
 msgid "Off"
 msgstr "Aus"
 
-#: SIP\templates\home.html:135
+#: SIP\templates\home.html:128
 msgid "Enter hours to delay"
 msgstr "Verzögerung eingeben (in Stunden)"
 
-#: SIP\templates\home.html:147
+#: SIP\templates\home.html:144
 msgid "Enter percentage adjustment"
 msgstr "Einstellung in Prozent eingeben."
 
-#: SIP\templates\home.html:166 SIP\templates\runonce.html:25
+#: SIP\templates\home.html:163 SIP\templates\runonce.html:25
 msgid "Timer values wrong: "
 msgstr "Zeitwerte falsch:"
 
-#: SIP\templates\home.html:212
+#: SIP\templates\home.html:209
 msgid "System Off"
 msgstr "System Aus"
 
-#: SIP\templates\home.html:212
+#: SIP\templates\home.html:209
 msgid "System On"
 msgstr "System An"
 
-#: SIP\templates\home.html:214
+#: SIP\templates\home.html:211
 msgid "Level"
 msgstr "Level"
 
-#: SIP\templates\home.html:214
+#: SIP\templates\home.html:211
 msgid "Normal"
 msgstr "Normal"
 
-#: SIP\templates\home.html:214
+#: SIP\templates\home.html:211
 msgid "Water Level"
 msgstr "Niederschlag"
 
-#: SIP\templates\home.html:216
+#: SIP\templates\home.html:213
 msgid "Active"
 msgstr "Aktiv"
 
-#: SIP\templates\home.html:216
+#: SIP\templates\home.html:213
 msgid "Rain Delay"
 msgstr "Verzögerung bei Regen"
 
-#: SIP\templates\home.html:220
+#: SIP\templates\home.html:217
 msgid "rain sensed"
 msgstr "Regen erkannt"
 
-#: SIP\templates\home.html:220 SIP\templates\log.html:46
+#: SIP\templates\home.html:217 SIP\templates\log.html:46
 msgid "no"
 msgstr "nein"
 
-#: SIP\templates\home.html:222
+#: SIP\templates\home.html:219
 msgid "Auto"
 msgstr "Automatisch"
 
-#: SIP\templates\home.html:242
+#: SIP\templates\home.html:239
 msgid "On (Master)"
 msgstr "An (Haupt-Station)"
 
-#: SIP\templates\home.html:244
+#: SIP\templates\home.html:241
 msgid "Off (Master)"
 msgstr "Aus (Haupt-Station)"
 
-#: SIP\templates\home.html:250 SIP\templates\modify.html:352
+#: SIP\templates\home.html:247 SIP\templates\modify.html:352
 #: SIP\templates\programs.html:118
 msgid "On"
 msgstr "An"
 
-#: SIP\templates\home.html:268
+#: SIP\templates\home.html:265
 msgid " Prev Day"
 msgstr "Vorheriger Tag"
 
-#: SIP\templates\home.html:269
+#: SIP\templates\home.html:266
 msgid "Today"
 msgstr "Heute"
 
-#: SIP\templates\home.html:270
+#: SIP\templates\home.html:267
 msgid "Next Day"
 msgstr "Nächster Tag"
 
-#: SIP\templates\home.html:308
+#: SIP\templates\home.html:305
 msgid "loading..."
 msgstr "lädt..."
 
-#: SIP\templates\home.html:337
+#: SIP\templates\home.html:334
 msgid "Stop All Stations"
 msgstr "Alle Stationen stoppen"
 
-#: SIP\templates\home.html:340
+#: SIP\templates\home.html:337
 msgid "Program 1"
 msgstr "Programm 1"
 
-#: SIP\templates\lcd_adj.html:3
-msgid "OpenSprinkler Pi LCD settings"
-msgstr "OpenSprinkler Pi LCD Einstellungen"
-
-#: SIP\templates\lcd_adj.html:21
-msgid "LCD settings"
-msgstr "LCD Einstellungen"
-
-#: SIP\templates\lcd_adj.html:22
-msgid ""
-"This plugin sends data to I2C for LCD 16x2 char with PCF8574. Visit for "
-"more: www.pihrt.com/elektronika/258-moje-rapsberry-pi-i2c-lcd-16x2."
-msgstr ""
-"Diese Plugin sendet Daten zum I2C für LCD 16x2 mit PCF8574. Mehr Infos "
-"unter: www.pihrt.com/elektronika/258-moje-rapsberry-pi-i2c-lcd-16x2"
-
-#: SIP\templates\lcd_adj.html:38
-msgid "Range adress"
-msgstr "Bereichs-Adresse"
-
-#: SIP\templates\lcd_adj.html:51
-msgid "Compatible with HD44780 LCD 16x2 controller."
-msgstr "Kompatibel mit HD44780 LCD 16x2 controller."
-
 #: SIP\templates\log.html:3
-msgid "OpenSprinkler Pi Log"
-msgstr "OpenSprinkler Pi Protokoll"
+msgid "SIP Log"
+msgstr ""
 
-#: SIP\templates\log.html:8
+#: SIP\templates\log.html:8 SIP\templates\plugins.html:46
 msgid "Enabled"
 msgstr "Aktiviert"
 
@@ -638,7 +592,7 @@ msgstr "Limit"
 msgid "Total number of records: "
 msgstr "Anzahl von Einträgen: "
 
-#: SIP\templates\log.html:47 SIP\templates\pcf_8591_adj.html:38
+#: SIP\templates\log.html:47
 msgid "Download log as "
 msgstr "Protokoll herunterladen als "
 
@@ -646,15 +600,15 @@ msgstr "Protokoll herunterladen als "
 msgid "Date"
 msgstr "Datum"
 
-#: SIP\templates\log.html:52
+#: SIP\templates\log.html:52 SIP\templates\modify.html:292
 msgid "Start Time"
 msgstr "Start Zeit"
 
-#: SIP\templates\log.html:53 SIP\templates\stations.html:77
+#: SIP\templates\log.html:53 SIP\templates\stations.html:85
 msgid "Station"
 msgstr "Station"
 
-#: SIP\templates\log.html:54
+#: SIP\templates\log.html:54 SIP\templates\modify.html:302
 msgid "Duration"
 msgstr "Dauer"
 
@@ -667,16 +621,16 @@ msgid "Clear Log"
 msgstr "Protokolle löschen"
 
 #: SIP\templates\login.html:3
-msgid "OpenSprinkler Pi Login"
-msgstr "Anmelden am OpenSprinkler Pi "
+msgid "SIP Login"
+msgstr ""
 
 #: SIP\templates\login.html:7 SIP\templates\login.html:10
 msgid "Login"
 msgstr "Login"
 
 #: SIP\templates\modify.html:3
-msgid "OpenSprinkler Pi Modify Program"
-msgstr "OpenSprinkler Pi modifiziertes Programm"
+msgid "SIP Modify Program"
+msgstr ""
 
 #: SIP\templates\modify.html:66
 msgid "Error: Incorrect time input "
@@ -784,217 +738,155 @@ msgstr "(außer 31. eines Monats und 29.Feb.)"
 msgid "Save"
 msgstr "Speichern"
 
-#: SIP\templates\monthly.html:3
-msgid "OpenSprinkler Pi Monthly Adjustments"
-msgstr "OpenSprinkler Pi Monats Einstellungen"
+#: SIP\templates\modify.html:402 SIP\templates\monthly.html:78
+#: SIP\templates\options.html:143 SIP\templates\plugins.html:69
+#: SIP\templates\plugins_repo.html:45 SIP\templates\proto.html:75
+#: SIP\templates\runonce.html:76 SIP\templates\stations.html:138
+#: SIP\templates\system_update.html:66
+msgid "Cancel"
+msgstr "Abbrechen"
 
-#: SIP\templates\monthly.html:20
+#: SIP\templates\monthly.html:3
+msgid "SIP Monthly Adjustments"
+msgstr ""
+
+#: SIP\templates\monthly.html:21
 msgid "Monthly Irrigation Adjustments"
 msgstr "Monatliche Bewässerungs Einstellungen"
 
-#: SIP\templates\monthly.html:21
+#: SIP\templates\monthly.html:22
 msgid "Enter an adjustment for each month (% irrigation time)"
 msgstr "Einstellung (in % Bewässerungszeit) für jeden Monat eingeben."
 
+#: SIP\templates\monthly.html:77 SIP\templates\proto.html:74
+msgid "Submit"
+msgstr "Absenden"
+
 #: SIP\templates\options.html:3
-msgid "OpenSprinkler Pi Options"
-msgstr "OpenSprinkler Pi Optionen"
+msgid "SIP Options"
+msgstr ""
 
 #: SIP\templates\options.html:18 SIP\templates\options.html:19
 msgid "Hide Tooltips"
 msgstr "Verberge Tipps"
 
-#: SIP\templates\options.html:19 SIP\templates\options.html:68
+#: SIP\templates\options.html:19 SIP\templates\options.html:73
 msgid "Show Tooltips"
 msgstr "Zeige Tipps"
 
-#: SIP\templates\options.html:48
+#: SIP\templates\options.html:53
 msgid "The password given was incorrect."
 msgstr "Das eingegebene Passwort ist falsch."
 
-#: SIP\templates\options.html:52
+#: SIP\templates\options.html:57
 msgid "Please enter a password."
 msgstr "Bitte Passwort eingeben."
 
-#: SIP\templates\options.html:56
+#: SIP\templates\options.html:61
 msgid "Passwords don't match, please re-enter."
 msgstr "Passwort stimmt nicht, bitte erneut versuchen."
 
-#: SIP\templates\options.html:67
+#: SIP\templates\options.html:72
 msgid "Edit Options"
 msgstr "Optionen ändern"
 
-#: SIP\templates\options.html:96
+#: SIP\templates\options.html:101
 msgid "Default"
 msgstr "Standard"
 
-#: SIP\templates\options.html:108
+#: SIP\templates\options.html:113
 msgid "None"
 msgstr "Keine"
 
-#: SIP\templates\options.html:122
+#: SIP\templates\options.html:129
 msgid "System Restart"
 msgstr "System Neustart"
 
-#: SIP\templates\options.html:124
+#: SIP\templates\options.html:131
 msgid "Restart"
 msgstr "Neustart soft"
 
-#: SIP\templates\options.html:124
+#: SIP\templates\options.html:131
 msgid "Restart software"
 msgstr "Neustart Software"
 
-#: SIP\templates\options.html:125
+#: SIP\templates\options.html:132
 msgid "Reboot"
 msgstr "Neustart hard"
 
-#: SIP\templates\options.html:125
+#: SIP\templates\options.html:132
 msgid "Reboot hardware"
 msgstr "Neustart Hardware"
 
-#: SIP\templates\options.html:134 SIP\templates\stations.html:118
+#: SIP\templates\options.html:142 SIP\templates\stations.html:136
 msgid "Submit Changes"
 msgstr "Änderungen speichern"
 
-#: SIP\templates\pcf_8591_adj.html:3
-msgid "OpenSprinkler Pi PCF8591 voltage and temperature adjustments"
-msgstr "OpenSprinkler Pi PCF8591 Spannungs- und Temperatur- Einstellungen"
-
-#: SIP\templates\pcf_8591_adj.html:34
-msgid "PCF8591 voltage and temperature adjustments"
-msgstr "PCF8591 Spannungs- und Temperatur- Einstellungen"
-
-#: SIP\templates\pcf_8591_adj.html:35
-msgid ""
-"For this plugin is needed enabled I2C bus and connected I2C A/D converter "
-"PCF8591 on I2C adress 0x48."
-msgstr ""
-"Für dieses Plugin wird der I2C Bus, verbunden mit I2C A/D converter PCF8591 "
-"auf I2C Adresse  0x48 benötigt."
-
-#: SIP\templates\pcf_8591_adj.html:36
-msgid ""
-"For measure temperature use temp probe LM35D (0-100 &deg;C) on AD0-3 "
-"converter."
-msgstr ""
-"Für eine Temperaturmessung wird LM35D (0-100 &deg;C) am AD0-3 converter "
-"benötigt."
-
-#: SIP\templates\pcf_8591_adj.html:37
-msgid ""
-"If the label has not blank value the value is displayed in the window read "
-"value."
+#: SIP\templates\plugins.html:3
+msgid "SIP Plugin Manager"
 msgstr ""
 
-#: SIP\templates\pcf_8591_adj.html:38
-msgid " log file."
-msgstr "Protokoll Datei"
-
-#: SIP\templates\pcf_8591_adj.html:38 SIP\templates\programs.html:151
-msgid "Delete"
-msgstr "löschen"
-
-#: SIP\templates\pcf_8591_adj.html:42
-msgid "Use PCF8591"
-msgstr "Benutze PCF8591"
-
-#: SIP\templates\pcf_8591_adj.html:54
-msgid "Maximum number of records"
-msgstr "Maximale Anzahl von Aufnahmen"
-
-#: SIP\templates\pcf_8591_adj.html:56
-msgid "(0 = unlimited)"
-msgstr "(0= unendlich)"
-
-#: SIP\templates\pcf_8591_adj.html:60
-msgid "Time loop for logging"
-msgstr "Wiederholungsschleife für das Protokoll"
-
-#: SIP\templates\pcf_8591_adj.html:62
-msgid "minutes (0 = logging disabled)"
-msgstr "Minuten (0 = Protoll inaktiv)"
-
-#: SIP\templates\pcf_8591_adj.html:66
-msgid "Label for input AD0:"
-msgstr "Beschriftung für Eingang AD0:"
-
-#: SIP\templates\pcf_8591_adj.html:68 SIP\templates\pcf_8591_adj.html:74
-#: SIP\templates\pcf_8591_adj.html:80 SIP\templates\pcf_8591_adj.html:86
-msgid " measure as voltage "
-msgstr "Spannungsmessung"
-
-#: SIP\templates\pcf_8591_adj.html:72
-msgid "Label for input AD1"
-msgstr "Beschriftung für Eingang AD1:"
-
-#: SIP\templates\pcf_8591_adj.html:78
-msgid "Label for input AD2"
-msgstr "Beschriftung für Eingang AD2:"
-
-#: SIP\templates\pcf_8591_adj.html:90
-msgid "Read value"
-msgstr "Wert lesen"
-
-#: SIP\templates\pcf_8591_adj.html:109
-msgid "Output DA voltage"
-msgstr "Ausgang DA Spannung"
-
-#: SIP\templates\pressure_adj.html:3
-msgid "OpenSprinkler Pi Pressure monitor settings"
-msgstr "OpenSprinkler Pi Druck-Einstellungs Monitor"
-
-#: SIP\templates\pressure_adj.html:20
-msgid "Pressure monitor settings"
-msgstr "Druck-Einstellungs Monitor"
-
-#: SIP\templates\pressure_adj.html:21
-msgid ""
-"This plugin checked pressure in pipe, if master station is switched on must "
-"be activated pressure sensor. "
+#: SIP\templates\plugins.html:39
+msgid "Installed Plugins"
 msgstr ""
-"Dieses Plugin misst den Druck in der Rohrleitung, wenn die Haupt-Station "
-"aktiv ist wird der Drucksensor angeregt."
 
-#: SIP\templates\pressure_adj.html:22
-msgid ""
-"If is not sensor activated in a certain time, switches off all station  and "
-"sends email with error. Prevent safety for master station pump."
+#: SIP\templates\plugins.html:40
+msgid "Browse More Plugins"
 msgstr ""
-"Wenn der Sensor innerhalb einer Überwachungszeit nicht anspricht, werden "
-"alle Stationen abgeschalten und eine Email mit Fehlermeldung gesendet. Zum "
-"Schutz der Pumpe."
 
-#: SIP\templates\pressure_adj.html:26
-msgid "Use pressure sensor for master station"
-msgstr "Benutze einen Drucksensor für die Haupt-Station"
+#: SIP\templates\plugins.html:41
+msgid "Roll Your Own"
+msgstr ""
 
-#: SIP\templates\pressure_adj.html:28
-msgid "(Pressure sensor is connected between GPIO pin 22 and ground)"
-msgstr "(Der Drucksensor wird an GPIO pin 22 und Masse angeschlossen.)"
+#: SIP\templates\plugins.html:45 SIP\templates\stations.html:86
+msgid "Name"
+msgstr "Name"
 
-#: SIP\templates\pressure_adj.html:32
-msgid "Send email with error"
-msgstr "Sende Email mit Fehlermeldung"
+#: SIP\templates\plugins.html:47
+msgid "Uninstall?"
+msgstr ""
 
-#: SIP\templates\pressure_adj.html:34
-msgid "(For this function required email plugin)"
-msgstr "(Für diese Funktion wird ein Email Plugin benötigt)"
+#: SIP\templates\plugins.html:65
+msgid "CAUTION:"
+msgstr ""
 
-#: SIP\templates\pressure_adj.html:38
-msgid "Max time to activate pressure sensor"
-msgstr "Max. Zeit bis der Drucksensor angesprochen haben muss."
+#: SIP\templates\plugins.html:65
+msgid ""
+"Clicking UPDATE or UNINSTALL will restart the software and stop any running "
+"programs."
+msgstr ""
 
-#: SIP\templates\pressure_adj.html:40
-msgid "(max 999 seconds)"
-msgstr "(max. 999 sekunden)"
+#: SIP\templates\plugins.html:67
+msgid "Update Enabled"
+msgstr ""
 
-#: SIP\templates\pressure_adj.html:44
-msgid "Pressure sensor"
-msgstr "Drucksensor"
+#: SIP\templates\plugins.html:68
+msgid "Uninstall"
+msgstr ""
+
+#: SIP\templates\plugins_repo.html:3
+msgid "SIP Plugin Browser"
+msgstr ""
+
+#: SIP\templates\plugins_repo.html:26
+msgid "Available Plugins"
+msgstr ""
+
+#: SIP\templates\plugins_repo.html:27
+msgid "Unless otherwise stated these plugins are licensed under GPL 3.0"
+msgstr ""
+
+#: SIP\templates\plugins_repo.html:43
+msgid "install"
+msgstr ""
+
+#: SIP\templates\plugins_repo.html:44
+msgid "Back"
+msgstr "zurück"
 
 #: SIP\templates\programs.html:3
-msgid "OpenSprinkler Pi Programs"
-msgstr "OpenSprinkler Pi Programme"
+msgid "SIP Programs"
+msgstr ""
 
 #: SIP\templates\programs.html:18
 msgid "Every "
@@ -1060,9 +952,17 @@ msgstr "Läuft"
 msgid "Starting"
 msgstr "Startet"
 
+#: SIP\templates\programs.html:142
+msgid "for"
+msgstr ""
+
 #: SIP\templates\programs.html:145
 msgid "Recurring every"
 msgstr "immer Wiederkehrend"
+
+#: SIP\templates\programs.html:146
+msgid "until"
+msgstr ""
 
 #: SIP\templates\programs.html:149 SIP\templates\runonce.html:74
 msgid "Run Now"
@@ -1072,21 +972,58 @@ msgstr "jetzt starten"
 msgid "Edit"
 msgstr "Bearbeiten"
 
+#: SIP\templates\programs.html:151
+msgid "Delete"
+msgstr "löschen"
+
+#: SIP\templates\proto.html:4
+msgid "SIP Proto Plugin"
+msgstr ""
+
+#: SIP\templates\proto.html:30
+msgid "Example Check Boxes"
+msgstr ""
+
+#: SIP\templates\proto.html:37 SIP\templates\proto.html:38
+#: SIP\templates\proto.html:56 SIP\templates\proto.html:57
+msgid "Heading"
+msgstr ""
+
+#: SIP\templates\proto.html:41
+msgid "Check Box 1"
+msgstr ""
+
+#: SIP\templates\proto.html:45
+msgid "Check Box 2"
+msgstr ""
+
+#: SIP\templates\proto.html:51
+msgid "Text Entry Fields"
+msgstr ""
+
+#: SIP\templates\proto.html:61
+msgid "Text Field 1"
+msgstr ""
+
+#: SIP\templates\proto.html:65
+msgid "Text Field 2"
+msgstr ""
+
 #: SIP\templates\restarting.html:3
-msgid "OpenSprinkler Pi Restarting"
-msgstr "OpenSprinkler Pi startet neu"
+msgid "SIP Restarting"
+msgstr ""
 
 #: SIP\templates\restarting.html:30
 msgid "SIP is restarting"
-msgstr "SIP startet neu..."
+msgstr ""
 
 #: SIP\templates\restarting.html:31
-msgid "You will be redirected as soon as possible..."
-msgstr "Du wirst so schnell wie möglich wieder verbunden..."
+msgid "This may take several seconds..."
+msgstr ""
 
 #: SIP\templates\runonce.html:3
-msgid "OpenSprinkler Pi Run-Once"
-msgstr "OpenSprinkler Pi wird einmalig ausgeführt"
+msgid "SIP Run-Once"
+msgstr ""
 
 #: SIP\templates\runonce.html:35
 msgid "No station is scheduled to run"
@@ -1096,222 +1033,410 @@ msgstr "Es wurde keine Station zum Start geplant."
 msgid "Reset Time"
 msgstr "Zurücksetzen"
 
-#: SIP\templates\sms_adj.html:3
-msgid "OpenSprinkler Pi SMS adjustments"
-msgstr "OpenSprinkler Pi SMS Einstellungen"
-
-#: SIP\templates\sms_adj.html:21
-msgid "SMS adjustments"
-msgstr "SMS Einstellungen"
-
-#: SIP\templates\sms_adj.html:22
-msgid ""
-"For this plugin is needed to SMS modem with the telephone service provider."
-msgstr "Für dieses Plugin wird ein SMS Modul benötigt."
-
-#: SIP\templates\sms_adj.html:23
-msgid ""
-"For more information visit the www.pihrt.com/elektronika/259-moje-rapsberry-"
-"pi-sms-ovladani-rpi for instructions."
-msgstr ""
-"Für mehr Informationen besuche www.pihrt.com/elektronika/259-moje-rapsberry-"
-"pi-sms-ovladani-rpi "
-
-#: SIP\templates\sms_adj.html:27
-msgid "Use SMS modem"
-msgstr "Benutze SMS Modul"
-
-#: SIP\templates\sms_adj.html:33
-msgid "Number 1"
-msgstr "Nummer 1"
-
-#: SIP\templates\sms_adj.html:39
-msgid "Number 2"
-msgstr "Nummer 2"
-
-#: SIP\templates\sms_adj.html:45
-msgid "Command for info"
-msgstr "Befehl für Info"
-
-#: SIP\templates\sms_adj.html:51
-msgid "Command for stop irrigation"
-msgstr "Befehl zum Bewässerungsstop"
-
-#: SIP\templates\sms_adj.html:57
-msgid "Command for start irrigation"
-msgstr "Befehl zum Bewässerungsstart"
-
-#: SIP\templates\sms_adj.html:63
-msgid "Command for reboot system"
-msgstr "Befehl zum Neustart"
-
-#: SIP\templates\sms_adj.html:69
-msgid "Command for power off system"
-msgstr "Befehl zum abschalten des Systems"
-
-#: SIP\templates\sms_adj.html:75
-msgid "Command for update SIP from GITHUB"
-msgstr "Befehl zum Aktualisieren des SIP über GITHUB"
-
 #: SIP\templates\stations.html:3
-msgid "OpenSprinkler Pi Stations"
-msgstr "OpenSprinkler Pi Stationen"
+msgid "SIP Stations"
+msgstr ""
 
-#: SIP\templates\stations.html:78
-msgid "Name"
-msgstr "Name"
-
-#: SIP\templates\stations.html:79
+#: SIP\templates\stations.html:87
 msgid "Enabled?"
 msgstr "Aktiviert?"
 
-#: SIP\templates\stations.html:80
+#: SIP\templates\stations.html:88
 msgid "Ignore Rain?"
 msgstr "Regen ignorieren?"
 
-#: SIP\templates\stations.html:82
+#: SIP\templates\stations.html:90
+msgid "Ignore Plugin adjustments?"
+msgstr ""
+
+#: SIP\templates\stations.html:92
 msgid "Activate Master?"
 msgstr "Haupt-Station aktiv?"
 
-#: SIP\templates\stations.html:93
+#: SIP\templates\stations.html:104 SIP\templates\stations.html:106
 msgid "(Master valve)"
 msgstr "(Haupt-Station)"
 
-#: SIP\templates\stations.html:119
+#: SIP\templates\stations.html:137
 msgid "Reset Names"
 msgstr "Namen zurücksetzen"
 
-#: SIP\templates\system_update.html:3
-msgid "OpenSprinkler Pi System update from GitHub"
-msgstr "OpenSprinkler Pi System Aktualisierung von GitHub"
-
-#: SIP\templates\system_update.html:24
-msgid "System update from github"
-msgstr "System Aktualisierung von GITHUB"
-
 #: SIP\templates\system_update.html:25
-msgid ""
-"This plugin compares the local copy with the remote repository and can "
-"automatically update the local copy."
+msgid "SIP Software Updater"
 msgstr ""
-"Dieses Plugin vergleicht die lokale Kopie mit der aktuellen Version von "
-"GITHUB und kann automatisch eine Aktualisierung ausführen."
 
-#: SIP\templates\system_update.html:29
+#: SIP\templates\system_update.html:28
+msgid ""
+"This plugin compares the local SIP version with the GitHub repository and "
+"can update the local software."
+msgstr ""
+
+#: SIP\templates\system_update.html:32
 msgid "Remote repository"
 msgstr "entfernte Quelle"
 
-#: SIP\templates\system_update.html:35
+#: SIP\templates\system_update.html:38
 msgid "Local SIP version"
-msgstr "Lokale SIP Version"
+msgstr ""
 
-#: SIP\templates\system_update.html:41
+#: SIP\templates\system_update.html:44
 msgid "Local SIP date"
-msgstr "Lokales SIP Datum"
+msgstr ""
 
-#: SIP\templates\system_update.html:50
-msgid "Update Status"
-msgstr "Aktualisierungs Status"
+#: SIP\templates\system_update.html:53
+msgid "Refresh Status"
+msgstr ""
 
-#: SIP\templates\system_update.html:59
+#: SIP\templates\system_update.html:62
 msgid "Update SIP"
-msgstr "Aktualisiere SIP"
+msgstr ""
 
-#: SIP\templates\system_update.html:61
+#: SIP\templates\system_update.html:64
 msgid "Up-to-date"
 msgstr "Auf dem neusten Stand"
 
-#: SIP\templates\system_update.html:62
+#: SIP\templates\system_update.html:65
 msgid "Restart SIP"
-msgstr "Neustart SIP"
-
-#: SIP\templates\system_update.html:63
-msgid "Back"
-msgstr "zurück"
-
-#: SIP\templates\weather_adj.html:3
-msgid "OpenSprinkler Pi Weather-based Rain Delay"
-msgstr "OpenSprinkler Pi Wetter-basierte Regenverzögerung"
-
-#: SIP\templates\weather_adj.html:20
-msgid "Weather-based Rain Delay"
-msgstr "Wetter-basierte Regenverzögerung"
-
-#: SIP\templates\weather_adj.html:21
-msgid ""
-"When weather-based rain delay is enabled, the weather will be checked for "
-"rain every hour. If the weather reports any condition suggesting rain, a "
-"rain delay is automatically issued using the below set delay duration."
 msgstr ""
-"Wenn Wetter-basierte Regenverzögerung aktiviert ist, wird stündlich der "
-"Wetterbericht ausgewertet. Sollte der Wetterbericht Regen vorhersagen, wird "
-"die Bewässerung um die eingestellte Zeitdauer ausgesetzt."
 
-#: SIP\templates\weather_adj.html:25
-msgid "Use Automatic Rain Delay"
-msgstr "Benutze automatische Regenverzögerung"
-
-#: SIP\templates\weather_adj.html:31
-msgid "Delay Duration (hours)"
-msgstr "Verzögerungsdauer (in Stunden)"
-
-#: SIP\templates\weather_adj.html:37
-msgid "Weather Provider"
-msgstr "Wetterdienst"
-
-#: SIP\templates\weather_adj.html:46 SIP\templates\weather_level_adj.html:55
-msgid "Wunderground API Key"
-msgstr "Wunderground API Schlüssel"
-
-#: SIP\templates\weather_level_adj.html:3
-msgid "OpenSprinkler Pi Weather-based Water Level"
-msgstr "OpenSprinkler Pi Niederschlags-vorhersage"
-
-#: SIP\templates\weather_level_adj.html:20
-msgid "Weather-based Water Level"
-msgstr "Wetterdienst-basierter Niederschlag (Level)"
-
-#: SIP\templates\weather_level_adj.html:21
-msgid ""
-"When weather-based water level is enabled, the weather will be checked every "
-"hour and the water level will be adjusted accordingly."
-msgstr ""
-"Wenn Wetterdienst-basierter Niederschlag (Level) aktiviert ist, wird "
-"stündlich der Wetterbericht ausgewertet. Je nach dem wieviel Regen "
-"vorhergesagt wird,, wird die Bewässerungszeit angepasst."
-
-#: SIP\templates\weather_level_adj.html:25
-msgid "Use Automatic Water Level Adjustment"
-msgstr "Benutze Automatische Niederschlagsvorhersage"
-
-#: SIP\templates\weather_level_adj.html:31
-msgid "Min percentage"
-msgstr "Min Prozent"
-
-#: SIP\templates\weather_level_adj.html:37
-msgid "Max percentage"
-msgstr "Max Prozent"
-
-#: SIP\templates\weather_level_adj.html:43
-msgid "History days used"
-msgstr "Vergangenheitswerte werden benutzt"
-
-#: SIP\templates\weather_level_adj.html:49
-msgid "Forecast days used"
-msgstr "Vorhersagewerte werden benutzt"
-
-#: SIP\webpages.py:296
+#: SIP\webpages.py:320
 msgid " not found."
 msgstr "nicht gefunden."
 
-#: SIP\webpages.py:296
+#: SIP\webpages.py:320
 msgid "Station "
 msgstr "Station"
 
-#: SIP\webpages.py:314
+#: SIP\webpages.py:338
 msgid "Manual mode not active."
 msgstr "Manueller Modus nicht aktiv"
 
-#: SIP\webpages.py:590
+#: SIP\webpages.py:606
 msgid "Date, Start Time, Zone, Duration, Program"
 msgstr "Datum, Startzeit, Zone, Dauer, Programm"
+
+#~ msgid "Unique name of this OpenSprinkler system."
+#~ msgstr "Individueller Name von diesem OpenSprinkler System."
+
+#~ msgid "Select language (effective after restart.)"
+#~ msgstr "Sprache wählen (Neustart erforderlich)"
+
+#~ msgid "Example: GMT-4:00, GMT+5:30 (effective after reboot.)"
+#~ msgstr "Beispiel: GMT -4:00, GMT+5:30 (Neustart erforderlich)"
+
+#~ msgid "Time zone"
+#~ msgstr "Zeitzone"
+
+#~ msgid "HTTP port (effective after reboot.)"
+#~ msgstr "HTTP  port (Neustart erforderlich)"
+
+#~ msgid "Acces Plugins"
+#~ msgstr "Verwalte Plugins"
+
+#~ msgid "OpenSprinkler Pi Email adjustments"
+#~ msgstr "OpenSprinkler Pi Email Einstellungen"
+
+#~ msgid "Email adjustments"
+#~ msgstr "Email Einstellungen"
+
+#~ msgid ""
+#~ "This plugin can send E-mails. For this plugin you need a GMail account as "
+#~ "provider."
+#~ msgstr ""
+#~ "Dieses Plugin kann keine Email senden. Für dieses Plugin wird ein GMail "
+#~ "Account benötigt."
+
+#~ msgid "Send email with file log.csv after power on"
+#~ msgstr ""
+#~ "Sendet eine Email mit Protokoll Datei (log.csv) nach dem Einschalten."
+
+#~ msgid "Send email if rain is detected"
+#~ msgstr "Sendet eine Email, wenn Regen erkannt wurde."
+
+#~ msgid "Sends email if program has run"
+#~ msgstr "Sendet eine Email, wenn das Programm läuft."
+
+#~ msgid "Your GMail username"
+#~ msgstr "Dein GMail Benutzername"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "OpenSprinkler Pi LCD settings"
+#~ msgstr "OpenSprinkler Pi LCD Einstellungen"
+
+#~ msgid "LCD settings"
+#~ msgstr "LCD Einstellungen"
+
+#~ msgid ""
+#~ "This plugin sends data to I2C for LCD 16x2 char with PCF8574. Visit for "
+#~ "more: www.pihrt.com/elektronika/258-moje-rapsberry-pi-i2c-lcd-16x2."
+#~ msgstr ""
+#~ "Diese Plugin sendet Daten zum I2C für LCD 16x2 mit PCF8574. Mehr Infos "
+#~ "unter: www.pihrt.com/elektronika/258-moje-rapsberry-pi-i2c-lcd-16x2"
+
+#~ msgid "Range adress"
+#~ msgstr "Bereichs-Adresse"
+
+#~ msgid "Compatible with HD44780 LCD 16x2 controller."
+#~ msgstr "Kompatibel mit HD44780 LCD 16x2 controller."
+
+#~ msgid "OpenSprinkler Pi Log"
+#~ msgstr "OpenSprinkler Pi Protokoll"
+
+#~ msgid "OpenSprinkler Pi Login"
+#~ msgstr "Anmelden am OpenSprinkler Pi "
+
+#~ msgid "OpenSprinkler Pi Modify Program"
+#~ msgstr "OpenSprinkler Pi modifiziertes Programm"
+
+#~ msgid "OpenSprinkler Pi Monthly Adjustments"
+#~ msgstr "OpenSprinkler Pi Monats Einstellungen"
+
+#~ msgid "OpenSprinkler Pi Options"
+#~ msgstr "OpenSprinkler Pi Optionen"
+
+#~ msgid "OpenSprinkler Pi PCF8591 voltage and temperature adjustments"
+#~ msgstr "OpenSprinkler Pi PCF8591 Spannungs- und Temperatur- Einstellungen"
+
+#~ msgid "PCF8591 voltage and temperature adjustments"
+#~ msgstr "PCF8591 Spannungs- und Temperatur- Einstellungen"
+
+#~ msgid ""
+#~ "For this plugin is needed enabled I2C bus and connected I2C A/D converter "
+#~ "PCF8591 on I2C adress 0x48."
+#~ msgstr ""
+#~ "Für dieses Plugin wird der I2C Bus, verbunden mit I2C A/D converter "
+#~ "PCF8591 auf I2C Adresse  0x48 benötigt."
+
+#~ msgid ""
+#~ "For measure temperature use temp probe LM35D (0-100 &deg;C) on AD0-3 "
+#~ "converter."
+#~ msgstr ""
+#~ "Für eine Temperaturmessung wird LM35D (0-100 &deg;C) am AD0-3 converter "
+#~ "benötigt."
+
+#~ msgid " log file."
+#~ msgstr "Protokoll Datei"
+
+#~ msgid "Use PCF8591"
+#~ msgstr "Benutze PCF8591"
+
+#~ msgid "Maximum number of records"
+#~ msgstr "Maximale Anzahl von Aufnahmen"
+
+#~ msgid "(0 = unlimited)"
+#~ msgstr "(0= unendlich)"
+
+#~ msgid "Time loop for logging"
+#~ msgstr "Wiederholungsschleife für das Protokoll"
+
+#~ msgid "minutes (0 = logging disabled)"
+#~ msgstr "Minuten (0 = Protoll inaktiv)"
+
+#~ msgid "Label for input AD0:"
+#~ msgstr "Beschriftung für Eingang AD0:"
+
+#~ msgid " measure as voltage "
+#~ msgstr "Spannungsmessung"
+
+#~ msgid "Label for input AD1"
+#~ msgstr "Beschriftung für Eingang AD1:"
+
+#~ msgid "Label for input AD2"
+#~ msgstr "Beschriftung für Eingang AD2:"
+
+#~ msgid "Read value"
+#~ msgstr "Wert lesen"
+
+#~ msgid "Output DA voltage"
+#~ msgstr "Ausgang DA Spannung"
+
+#~ msgid "OpenSprinkler Pi Pressure monitor settings"
+#~ msgstr "OpenSprinkler Pi Druck-Einstellungs Monitor"
+
+#~ msgid "Pressure monitor settings"
+#~ msgstr "Druck-Einstellungs Monitor"
+
+#~ msgid ""
+#~ "This plugin checked pressure in pipe, if master station is switched on "
+#~ "must be activated pressure sensor. "
+#~ msgstr ""
+#~ "Dieses Plugin misst den Druck in der Rohrleitung, wenn die Haupt-Station "
+#~ "aktiv ist wird der Drucksensor angeregt."
+
+#~ msgid ""
+#~ "If is not sensor activated in a certain time, switches off all station  "
+#~ "and sends email with error. Prevent safety for master station pump."
+#~ msgstr ""
+#~ "Wenn der Sensor innerhalb einer Überwachungszeit nicht anspricht, werden "
+#~ "alle Stationen abgeschalten und eine Email mit Fehlermeldung gesendet. "
+#~ "Zum Schutz der Pumpe."
+
+#~ msgid "Use pressure sensor for master station"
+#~ msgstr "Benutze einen Drucksensor für die Haupt-Station"
+
+#~ msgid "(Pressure sensor is connected between GPIO pin 22 and ground)"
+#~ msgstr "(Der Drucksensor wird an GPIO pin 22 und Masse angeschlossen.)"
+
+#~ msgid "Send email with error"
+#~ msgstr "Sende Email mit Fehlermeldung"
+
+#~ msgid "(For this function required email plugin)"
+#~ msgstr "(Für diese Funktion wird ein Email Plugin benötigt)"
+
+#~ msgid "Max time to activate pressure sensor"
+#~ msgstr "Max. Zeit bis der Drucksensor angesprochen haben muss."
+
+#~ msgid "(max 999 seconds)"
+#~ msgstr "(max. 999 sekunden)"
+
+#~ msgid "Pressure sensor"
+#~ msgstr "Drucksensor"
+
+#~ msgid "OpenSprinkler Pi Programs"
+#~ msgstr "OpenSprinkler Pi Programme"
+
+#~ msgid "OpenSprinkler Pi Restarting"
+#~ msgstr "OpenSprinkler Pi startet neu"
+
+#~ msgid "ospi is restarting"
+#~ msgstr "Ospi startet neu..."
+
+#~ msgid "You will be redirected as soon as possible..."
+#~ msgstr "Du wirst so schnell wie möglich wieder verbunden..."
+
+#~ msgid "OpenSprinkler Pi Run-Once"
+#~ msgstr "OpenSprinkler Pi wird einmalig ausgeführt"
+
+#~ msgid "OpenSprinkler Pi SMS adjustments"
+#~ msgstr "OpenSprinkler Pi SMS Einstellungen"
+
+#~ msgid "SMS adjustments"
+#~ msgstr "SMS Einstellungen"
+
+#~ msgid ""
+#~ "For this plugin is needed to SMS modem with the telephone service "
+#~ "provider."
+#~ msgstr "Für dieses Plugin wird ein SMS Modul benötigt."
+
+#~ msgid ""
+#~ "For more information visit the www.pihrt.com/elektronika/259-moje-"
+#~ "rapsberry-pi-sms-ovladani-rpi for instructions."
+#~ msgstr ""
+#~ "Für mehr Informationen besuche www.pihrt.com/elektronika/259-moje-"
+#~ "rapsberry-pi-sms-ovladani-rpi "
+
+#~ msgid "Use SMS modem"
+#~ msgstr "Benutze SMS Modul"
+
+#~ msgid "Number 1"
+#~ msgstr "Nummer 1"
+
+#~ msgid "Number 2"
+#~ msgstr "Nummer 2"
+
+#~ msgid "Command for info"
+#~ msgstr "Befehl für Info"
+
+#~ msgid "Command for stop irrigation"
+#~ msgstr "Befehl zum Bewässerungsstop"
+
+#~ msgid "Command for start irrigation"
+#~ msgstr "Befehl zum Bewässerungsstart"
+
+#~ msgid "Command for reboot system"
+#~ msgstr "Befehl zum Neustart"
+
+#~ msgid "Command for power off system"
+#~ msgstr "Befehl zum abschalten des Systems"
+
+#~ msgid "Command for update OSPi from GITHUB"
+#~ msgstr "Befehl zum Aktualisieren des Ospi über GITHUB"
+
+#~ msgid "OpenSprinkler Pi Stations"
+#~ msgstr "OpenSprinkler Pi Stationen"
+
+#~ msgid "OpenSprinkler Pi System update from GitHub"
+#~ msgstr "OpenSprinkler Pi System Aktualisierung von GitHub"
+
+#~ msgid "System update from github"
+#~ msgstr "System Aktualisierung von GITHUB"
+
+#~ msgid ""
+#~ "This plugin compares the local copy with the remote repository and can "
+#~ "automatically update the local copy."
+#~ msgstr ""
+#~ "Dieses Plugin vergleicht die lokale Kopie mit der aktuellen Version von "
+#~ "GITHUB und kann automatisch eine Aktualisierung ausführen."
+
+#~ msgid "Local ospi version"
+#~ msgstr "Lokale Ospi Version"
+
+#~ msgid "Local ospi date"
+#~ msgstr "Lokales Ospi Datum"
+
+#~ msgid "Update Status"
+#~ msgstr "Aktualisierungs Status"
+
+#~ msgid "Update ospi"
+#~ msgstr "Aktualisiere Ospi"
+
+#~ msgid "Restart ospi"
+#~ msgstr "Neustart Ospi"
+
+#~ msgid "OpenSprinkler Pi Weather-based Rain Delay"
+#~ msgstr "OpenSprinkler Pi Wetter-basierte Regenverzögerung"
+
+#~ msgid "Weather-based Rain Delay"
+#~ msgstr "Wetter-basierte Regenverzögerung"
+
+#~ msgid ""
+#~ "When weather-based rain delay is enabled, the weather will be checked for "
+#~ "rain every hour. If the weather reports any condition suggesting rain, a "
+#~ "rain delay is automatically issued using the below set delay duration."
+#~ msgstr ""
+#~ "Wenn Wetter-basierte Regenverzögerung aktiviert ist, wird stündlich der "
+#~ "Wetterbericht ausgewertet. Sollte der Wetterbericht Regen vorhersagen, "
+#~ "wird die Bewässerung um die eingestellte Zeitdauer ausgesetzt."
+
+#~ msgid "Use Automatic Rain Delay"
+#~ msgstr "Benutze automatische Regenverzögerung"
+
+#~ msgid "Delay Duration (hours)"
+#~ msgstr "Verzögerungsdauer (in Stunden)"
+
+#~ msgid "Weather Provider"
+#~ msgstr "Wetterdienst"
+
+#~ msgid "Wunderground API Key"
+#~ msgstr "Wunderground API Schlüssel"
+
+#~ msgid "OpenSprinkler Pi Weather-based Water Level"
+#~ msgstr "OpenSprinkler Pi Niederschlags-vorhersage"
+
+#~ msgid "Weather-based Water Level"
+#~ msgstr "Wetterdienst-basierter Niederschlag (Level)"
+
+#~ msgid ""
+#~ "When weather-based water level is enabled, the weather will be checked "
+#~ "every hour and the water level will be adjusted accordingly."
+#~ msgstr ""
+#~ "Wenn Wetterdienst-basierter Niederschlag (Level) aktiviert ist, wird "
+#~ "stündlich der Wetterbericht ausgewertet. Je nach dem wieviel Regen "
+#~ "vorhergesagt wird,, wird die Bewässerungszeit angepasst."
+
+#~ msgid "Use Automatic Water Level Adjustment"
+#~ msgstr "Benutze Automatische Niederschlagsvorhersage"
+
+#~ msgid "Min percentage"
+#~ msgstr "Min Prozent"
+
+#~ msgid "Max percentage"
+#~ msgstr "Max Prozent"
+
+#~ msgid "History days used"
+#~ msgstr "Vergangenheitswerte werden benutzt"
+
+#~ msgid "Forecast days used"
+#~ msgstr "Vorhersagewerte werden benutzt"
