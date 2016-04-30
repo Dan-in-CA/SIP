@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2016-04-30 01:23+0300\n"
-"PO-Revision-Date: 2016-04-30 01:27+0300\n"
+"PO-Revision-Date: 2016-04-30 10:38+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: gr_GR\n"
@@ -552,7 +552,7 @@ msgstr "Σημερα"
 
 #: SIP\templates\home.html:267
 msgid "Next Day"
-msgstr "Επόμενη Μερα"
+msgstr "Επομενη Μερα"
 
 #: SIP\templates\home.html:305
 msgid "loading..."
@@ -672,7 +672,7 @@ msgstr "Προγραμμα On"
 
 #: SIP\templates\modify.html:304
 msgid "Recurring"
-msgstr "Επαναλαψη"
+msgstr "Επαναληψη"
 
 #: SIP\templates\modify.html:304
 msgid "Single pass"
