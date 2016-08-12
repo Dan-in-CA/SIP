@@ -477,7 +477,7 @@ def jsave(data, fname):
     
     """
     with open('./data/' + fname + '.json', 'w') as f:
-        json.dump(data, f)
+        json.dump(data, f, indent=4, sort_keys=True)
 
 
 def station_names():
@@ -509,7 +509,7 @@ def load_programs():
     except IOError:
         gv.pd = []  # A config file -- return default and create file if not found.
         with open('./data/programs.json', 'w') as pf:
-            json.dump(gv.pd, pf)
+            json.dump(gv.pd, pf, indent=4, sort_keys=True)
     return gv.pd
 
 
