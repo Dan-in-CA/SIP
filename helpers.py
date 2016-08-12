@@ -12,6 +12,7 @@ import sys
 import time
 import subprocess
 import io
+import codecs
 import ast
 from web.webapi import seeother
 from blinker import signal
@@ -316,6 +317,11 @@ def log_run():
     """
 
     if gv.sd['lg']:
+        program = _('program')
+        station = _('station')
+        duration = _('duration')
+        strt = _('start')
+        date = _('date')
         if gv.lrun[1] == 98:
             pgr = _('Run-once')
         elif gv.lrun[1] == 99:
@@ -323,14 +329,14 @@ def log_run():
         else:
             pgr = str(gv.lrun[1])
         start = time.gmtime(gv.now - gv.lrun[2])
-        logline = '{"program":"' + pgr + '","station":' + str(gv.lrun[0]) + ',"duration":"' + timestr(
-            gv.lrun[2]) + '","start":"' + time.strftime('%H:%M:%S","date":"%Y-%m-%d"', start) + '}'
+        logline = '{"'+program+'":"' + pgr + '","'+station+'":' + str(gv.lrun[0]) + ',"'+duration+'":"' + timestr(
+            gv.lrun[2]) + '","'+strt+'":"' + time.strftime('%H:%M:%S","'+date+'":"%Y-%m-%d"', start) + '}'
         lines = []
         lines.append(logline + '\n')
         log = read_log()
         for r in log:
             lines.append(json.dumps(r) + '\n')
-        with open('./data/log.json', 'w') as f:
+        with codecs.open('./data/log.json', 'w', encoding='utf-8') as f:
             if gv.sd['lr']:
                 f.writelines(lines[:gv.sd['lr']])
             else:
