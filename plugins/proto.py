@@ -6,6 +6,8 @@ from urls import urls  # Get access to SIP's URLs
 from sip import template_render  #  Needed for working with web.py templates
 from webpages import ProtectedPage  # Needed for security
 import json  # for working with data file
+import os
+import os.path
 
 # Add new URLs to access classes in this plugin.
 urls.extend([
@@ -32,7 +34,7 @@ class settings(ProtectedPage):
 
     def GET(self):
         try:
-            with open('./data/proto.json', 'r') as f:  # Read settings from json file if it exists
+            with open(os.path.join(os.getenv('SIP_DATA_DIR', './data'), 'proto.json'), 'r') as f:  # Read settings from json file if it exists
                 settings = json.load(f)
         except IOError:  # If file does not exist return empty value
             settings = {}  # Default settings. can be list, dictionary, etc.
@@ -48,7 +50,7 @@ class save_settings(ProtectedPage):
     def GET(self):
         qdict = web.input()  # Dictionary of values returned as query string from settings page.
 #        print qdict  # for testing
-        with open('./data/proto.json', 'w') as f:  # Edit: change name of json file
+        with open(os.path.join(os.getenv('SIP_DATA_DIR', './data'), 'proto.json'), 'w') as f:  # Edit: change name of json file
              json.dump(qdict, f) # save to file
         raise web.seeother('/')  # Return user to home page.
 

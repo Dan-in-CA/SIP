@@ -4,6 +4,8 @@
 
 ##############################
 #### Revision information ####
+import os
+import os.path
 import subprocess
 from threading import RLock
 
@@ -92,13 +94,13 @@ sd = {
 sd['password'] = password_hash('opendoor', sd['salt'])
 
 try:
-    with open('./data/sd.json', 'r') as sdf:  # A config file
+    with open(os.path.join(os.getenv('SIP_DATA_DIR', './data'), 'sd.json'), 'r') as sdf:  # A config file
         sd_temp = json.load(sdf)
     for key in sd:  # If file loaded, replce default values in sd with values from file
         if key in sd_temp:
             sd[key] = sd_temp[key]
 except IOError:  # If file does not exist, it will be created using defaults.
-    with open('./data/sd.json', 'w') as sdf:  # save file
+    with open(os.path.join(os.getenv('SIP_DATA_DIR', './data'), 'sd.json'), 'w') as sdf:  # save file
         json.dump(sd, sdf, indent=4, sort_keys=True)
 
 

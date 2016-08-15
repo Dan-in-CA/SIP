@@ -3,6 +3,8 @@ import time
 import datetime
 import string
 import calendar
+import os
+import os.path
 
 from helpers import get_cpu_temp, check_login, password_hash
 import web
@@ -177,7 +179,7 @@ class get_logs(ProtectedPage):  # /jl
 
     def read_log(self):
         try:
-            with open('./data/log.json') as logf:
+            with open(os.path.join(os.getenv('SIP_DATA_DIR', './data'), 'log.json')) as logf:
                 records = logf.readlines()
             return records
         except IOError:
