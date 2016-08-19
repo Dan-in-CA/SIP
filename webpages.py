@@ -173,11 +173,11 @@ class change_options(ProtectedPage):
                     qdict['rstrt'] = '1'  # force restart with change
                 gv.sd[f] = qdict['o'+f]
 
-        if int(qdict['onbrd']) + 1 != gv.sd['nbrd']:
-            self.update_scount(qdict)
-
-        gv.sd['nbrd'] = int(qdict['onbrd']) + 1
-        gv.sd['nst'] = gv.sd['nbrd'] * 8
+        if 'onbrd' in qdict:
+            if int(qdict['onbrd']) + 1 != gv.sd['nbrd']:
+                self.update_scount(qdict)
+            gv.sd['nbrd'] = int(qdict['onbrd']) + 1
+            gv.sd['nst'] = gv.sd['nbrd'] * 8
 
         if 'ohtp' in qdict:
             if 'htp' not in gv.sd or gv.sd['htp'] != int(qdict['ohtp']):
