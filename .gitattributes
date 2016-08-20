@@ -1,0 +1,10 @@
+# Set the default behavior, always convert line endings to lf on checkout.
+* text eol=lf
+
+# Explicitly declare text files you want to always be normalized and converted
+# to native line endings on checkout.
+*.py text
+*.sh text
+*.md text
+*.txt text
+*.service text
