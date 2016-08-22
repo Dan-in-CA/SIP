@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import os
+import os.path
 import locale
 import gettext
 import json
@@ -9,7 +10,7 @@ import json
 __author__ = 'Dan'
 
 try:
-    with open('./data/sd.json', 'r') as sdf:
+    with open(os.path.join(os.getenv('SIP_DATA_DIR', './data'), 'sd.json'), 'r') as sdf:
         sd_temp = json.load(sdf)
 except:
     pass

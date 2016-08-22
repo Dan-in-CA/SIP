@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import os.path
 import re
 import time
 import datetime
@@ -466,7 +467,7 @@ class clear_log(ProtectedPage):
     """Delete all log records"""
 
     def GET(self):
-        with io.open('./data/log.json', 'w') as f:
+        with io.open(os.path.join(os.getenv('SIP_DATA_DIR', './data'), 'log.json'), 'w') as f:
             f.write(u'')
         raise web.seeother('/vl')
 

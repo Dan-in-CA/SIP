@@ -6,6 +6,7 @@ import i18n
 import datetime
 from threading import Thread
 import os
+import os.path
 import errno
 import random
 import sys
@@ -336,7 +337,7 @@ def log_run():
         log = read_log()
         for r in log:
             lines.append(json.dumps(r) + '\n')
-        with codecs.open('./data/log.json', 'w', encoding='utf-8') as f:
+        with codecs.open(os.path.join(os.getenv('SIP_DATA_DIR', './data'), 'log.json'), 'w', encoding='utf-8') as f:
             if gv.sd['lr']:
                 f.writelines(lines[:gv.sd['lr']])
             else:
@@ -463,7 +464,7 @@ def read_log():
     """
     result = []
     try:
-        with io.open('./data/log.json') as logf:
+        with io.open(os.path.join(os.getenv('SIP_DATA_DIR', './data'), 'log.json')) as logf:
             records = logf.readlines()
             for i in records:
                 try:
@@ -482,7 +483,7 @@ def jsave(data, fname):
     
     
     """
-    with open('./data/' + fname + '.json', 'w') as f:
+    with open(os.path.join(os.getenv('SIP_DATA_DIR', './data'), fname + '.json'), 'w') as f:
         json.dump(data, f, indent=4, sort_keys=True)
 
 
@@ -495,7 +496,7 @@ def station_names():
     
     """
     try:
-        with open('./data/snames.json', 'r') as snf:
+        with open(os.path.join(os.getenv('SIP_DATA_DIR', './data'), 'snames.json'), 'r') as snf:
             return json.load(snf)
     except IOError:
         stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08"]
@@ -510,11 +511,11 @@ def load_programs():
     
     """
     try:
-        with open('./data/programs.json', 'r') as pf:
+        with open(os.path.join(os.getenv('SIP_DATA_DIR', './data'), 'programs.json'), 'r') as pf:
             gv.pd = json.load(pf)
     except IOError:
         gv.pd = []  # A config file -- return default and create file if not found.
-        with open('./data/programs.json', 'w') as pf:
+        with open(os.path.join(os.getenv('SIP_DATA_DIR', './data'), 'programs.json'), 'w') as pf:
             json.dump(gv.pd, pf, indent=4, sort_keys=True)
     return gv.pd
 

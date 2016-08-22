@@ -9,6 +9,8 @@ import time
 import thread
 from calendar import timegm
 import sys
+import os
+import os.path
 sys.path.append('./plugins')
 
 import web  # the Web.py module. See webpy.org (Enables the Python SIP web interface)
@@ -174,7 +176,8 @@ app = SIPApp(urls, globals())
 #  disableShiftRegisterOutput()
 web.config.debug = False  # Improves page load speed
 if web.config.get('_session') is None:
-    web.config._session = web.session.Session(app, web.session.DiskStore('sessions'),
+    web.config._session = web.session.Session(app,
+                                              web.session.DiskStore(os.path.join(os.getenv('SIP_DATA_DIR', ''), 'sessions')),
                                               initializer={'user': 'anonymous'})
 template_globals = {
     'gv': gv,
