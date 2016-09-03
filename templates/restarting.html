@@ -9,7 +9,7 @@ $var page: restart
             type: 'HEAD',
             url: baseUrl + '/',
             success: function() {
-                window.location.href = baseUrl + '/';
+                window.location.href = '/';
             },
             failure: function() {
                 setTimeout(function() {
@@ -20,6 +20,7 @@ $var page: restart
     }
 
     jQuery(document).ready(function(){
+    	window.name = "noRestart"
         setTimeout(function() {
             checkPage()
         }, 3000);
