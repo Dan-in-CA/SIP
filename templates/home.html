@@ -106,8 +106,14 @@ $code:
         alert(jQuery(el).html());
     }
 
+    var restarted = ${gv.restarted};    
+    
     // Initialize behaviors
     jQuery(document).ready(function(){
+        if(restarted == 0) {
+        	alert("SIP could not restart.\nPlease restart the program from the command line.");
+        }
+    	
         $if gv.sd['mm'] == 0:
             statusTimer();
 

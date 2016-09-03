@@ -23,6 +23,8 @@ from ReverseProxied import ReverseProxied
 # if gv.use_gpio_pins is False (which is set in relay board plugin.
 # set_output()
 
+gv.restarted = 1
+
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
     try:

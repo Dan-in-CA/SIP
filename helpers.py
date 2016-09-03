@@ -134,6 +134,7 @@ def restart(wait=1, block=False):
             print _('Restarting...')
         except Exception:
             pass
+        gv.restarted = 0
         subprocess.Popen('service sip restart'.split())
     else:
         t = Thread(target=restart, args=(wait, True))
