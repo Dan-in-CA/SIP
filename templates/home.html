@@ -105,16 +105,10 @@ $code:
     function countdownTimer(el) {
         alert(jQuery(el).html());
     }
-    
-    var restarted = ${gv.restarted};
 
     // Initialize behaviors
     jQuery(document).ready(function(){
-        if(restarted == 0) {
-        	alert("SIP could not restart. Please restart the program");
-        }
-    	
-    	$if gv.sd['mm'] == 0:
+        $if gv.sd['mm'] == 0:
             statusTimer();
 
         jQuery("button#cStartStop").click(function(){
