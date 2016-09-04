@@ -14,7 +14,7 @@ July 2014
 
 
 ***********
-UPDATES - Note: This project, formally OSPi, has been renamed to SIP
+UPDATES
 ===========
 
 ***********
@@ -306,9 +306,6 @@ Jun 19, 2013
 
 NOTE
 ====
-This folder contains a fork of OpenSprinkler Pi written by Dan Kimberling using Python as it should be used. It is largly compatible with the microcontroller-based OpenSprinkler firmware 1.8, the instructions of which can be found at:
-  
-  http://rayshobby.net/?page_id=730
 
 The program makes use of web.py (http://webpy.org/) for the web interface. 
 
@@ -322,6 +319,6 @@ in porting the microcontroller firmware to Python.
 ## Installation and set up
 
 
-For complete and up-to-date installation and set up instructions, see the Rays Hobby wiki page at:
-http://rayshobby.net/mediawiki/index.php?title=Python_Interval_Program_for_OSPi
+For complete and up-to-date installation and set up instructions, see the wiki for this GitHub repository:
+https://github.com/Dan-in-CA/SIP/wiki
 
