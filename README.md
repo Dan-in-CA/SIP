@@ -301,7 +301,6 @@ This update includes:<br/>
 Jun 19, 2013
 ------------
   Applied Samer Albahra's patch so that the program will work with Samer's mobile web app.
-  Per forum discussion: http://rayshobby.net/phpBB3/viewtopic.php?f=2&t=154&start=40#p781<br/>
  
 
 NOTE
