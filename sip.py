@@ -25,7 +25,7 @@ from ReverseProxied import ReverseProxied
 # set_output()
 
 gv.restarted = 1
-gv.os_cname = subprocess.check_output(['lsb_release', '-c'])[10:-1]
+# gv.os_cname = subprocess.check_output(['lsb_release', '-c'])[10:-1]
 
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
