@@ -40,6 +40,7 @@ platform = ''  # must be done before the following import because gpio_pins will
 try:
     import pigpio
     use_pigpio = True
+    subprocess.call(['pigpiod'])
 except ImportError:
     use_pigpio = False
     
