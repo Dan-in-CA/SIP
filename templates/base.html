@@ -15,8 +15,12 @@ $code:
     months = json.dumps([_('January'), _('February'), _('March'), _('April'), _('May'), _('June'), _('July'), _('August'), _('September'), _('October'), _('November'), _('December')])
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="$app_path('/static/bootstrap-3.3.7/css/bootstrap.min.css">
+  	<link href="$app_path('/static/bootstrap-3.3.7/js/bootstrap.min.js">
+    
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="x-ua-compatible" content="IE=edge">
     <title>${content.title + (" - "+gv.sd['name'] if gv.sd['name'] != "SIP" else "")}</title>
