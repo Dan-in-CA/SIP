@@ -8,6 +8,12 @@ $code:
 	langKeys = i18n.languages.keys()
 	langKeys.sort()
 	snames = gv.snames
+	
+<style type="text/css">
+    button#tooltip {height:24px;}
+    .optTooltip {background-color:#FFF2B8; display:none; font-size:10pt; margin-left:4px;}
+    .optLabel {font-weight:bold; float:left; width:160px; text-align:right; padding-right:4px;}
+</style>	
 
 <script>
     var errorCode = "${errorCode}";
@@ -17,7 +23,7 @@ $code:
         jQuery("button#tooltips").click(function(){
             var visible = jQuery(this).text() == $:{json.dumps(_('Hide Tooltips'), ensure_ascii=False)};
             jQuery(this).text(visible ? $:{json.dumps(_('Show Tooltips'), ensure_ascii=False)} : $:{json.dumps(_('Hide Tooltips'), ensure_ascii=False)});
-            jQuery(".tooltip").toggle();
+            jQuery(".optTooltip").toggle();
         });
 
         jQuery("button#cReboot").click(function(){
@@ -89,7 +95,7 @@ $code:
                 output += categoryCloser + "<div class='category collapsible collapsed'><h4>" + category + "</h4>"
                 categoryCloser = "</div>"
             oldcategory = category
-            output += "<div class='option' title='" + tooltip + "'><span class='label'>" + label + ":</span>\n"
+            output += "<div class='option' title='" + tooltip + "'><span class='optLabel'>" + label + ":</span>\n"
             if datatype == "boolean":
                 output += "<input name='o" + name + "' type='checkbox' " + ("checked" if value>0 else "") + ">\n"
             elif datatype == "string":
@@ -124,7 +130,7 @@ $code:
             else:
                 output += "<input name='o" + name + "' type='text' size='3' maxlength='3' value='" + str(value) + "'>\n"
 
-            output += "<span class='tooltip'>" + tooltip + "</span>\n"
+            output += "<span class='optTooltip'>" + tooltip + "</span>\n"
             output += "</div>\n\n"
         output += categoryCloser + "<div class='category collapsible collapsed'><h4>"+_('System Restart')+"</h4>"
         output += "<div class='option'>"
