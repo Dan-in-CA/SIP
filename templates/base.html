@@ -18,12 +18,14 @@ $code:
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-  	<link rel="stylesheet" href="$app_path('/static/bootstrap-3.3.7/css/bootstrap.min.css')">
-  	<link href="$app_path('/static/bootstrap-3.3.7/js/bootstrap.min.js')">
-    
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="x-ua-compatible" content="IE=edge">
+    
+  	<link rel="stylesheet" href="$app_path('/static/bootstrap-3.3.7/css/bootstrap.min.css')">
+  	<link rel="stylesheet" href="$app_path('/static/bootstrap-timepicker/css/bootstrap-timepicker.min.css')">
+    
     <title>${content.title + (" - "+gv.sd['name'] if gv.sd['name'] != "SIP" else "")}</title>
+    
     <link rel="apple-touch-icon" sizes="57x57" href="$app_path('/static/images/apple-icon-57x57.png')">
     <link rel="apple-touch-icon" sizes="60x60" href="$app_path('/static/images/apple-icon-60x60.png')">
     <link rel="apple-touch-icon" sizes="72x72" href="$app_path('/static/images/apple-icon-72x72.png')">
@@ -44,6 +46,8 @@ $code:
 
     <link href="$app_path('/static/themes/' + gv.sd['theme'] + '/base.css')" rel="stylesheet" type="text/css"/>
     <style type="text/css">
+    	div {overflow-y: hidden;}
+    	div.row {overflow-y: visible;}
         .bluebg {background-color:lightblue;}
         .opOn, .wlOn, .rsOff {color:green;}
         .opOff, .wlOff, .rsOn {color:red;}
@@ -72,7 +76,13 @@ $code:
         td.stationIgnoreWL {text-align:center;}
         td.stationName {text-align:left; padding-left:1em;}
     </style>
+    
     <script src="$app_path('/static/scripts/jquery-3.1.0.min.js')"></script>
+    <script src="$app_path('/static/bootstrap-3.3.7/js/bootstrap.min.js')"></script>
+<!--     <script src="$app_path('/static/bootstrap-timepicker/js/bootstrap-timepicker.min.js')"></script> -->
+    <script src="$app_path('/static/bootstrap-timepicker/js/bootstrap-timepicker.js')"></script>
+    
+    
     <script>
         // Variables set server-side
         var devTzOffset = ${gv.tz_offset}*1000;
@@ -173,16 +183,31 @@ $code:
 
             </div>
         </div>
-        <div class="footer">
-            <div>
+        <div class="footer container">
+          <div class="row">
+          <div class="col-10-xs"></div>
+            <div class="col-2-xs pull-right">
                 $if content.page != 'login':
                 <button id="bHelp" class="help" title=$:{json.dumps(_('Help'), ensure_ascii=False)}>$_('?')</button>
             </div>
-                <p>$_('CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_('Click to toggle'), ensure_ascii=False)} + ' Celsius &lt;&gt; Fahrenheit'></span></b></p>
-                <p><a target="_blank" href="https://github.com/Dan-in-CA/sip">$_('Software')</a> $_('version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
-
+          </div>
+          
+          <div class="row">
+            <div class="col-5-xs"></div>
+              <div class="col-6-xs pull-right">
+            <div class="col-1-xs"></div>              
+                <p class="text-xs-right text-nowrap">$_('CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_('Click to toggle'), ensure_ascii=False)} + ' Celsius &lt;&gt; Fahrenheit'></span></b></p>
+             </div>
+          </div>     
+            
+            
+          <div class="row"> 
+              <div class="col-12-xs pull-right"> 
+                <p class="text-xs-right text-nowrap"><a target="_blank" href="https://github.com/Dan-in-CA/sip">$_('Software')</a> $_('version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
+              </div>
+          </div>
+          
         </div>
-
     </div>
 </body>
 </html>

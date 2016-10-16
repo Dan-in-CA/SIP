@@ -13,6 +13,9 @@ body {
 	background-color:#397F19;
 	font-family: 'Helvetica', sans-serif;
 	font-size:12pt;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: none;
+  -ms-text-size-adjust: 100%;
 }
 div, p {
 	margin:0px;
@@ -46,14 +49,15 @@ div.header div.titlenote {
 
 div.footer {
 	background-image: url(grass.jpg);
-	background-position: top right -200px;
+	background-position: top right -220px;
 	background-repeat: no-repeat;
 	background-color: #32A620;
 	color:white;
-	text-align: right;
-	padding: 16px 170px;
+/* 	text-align: right; */
+	padding: 16px 160px;
 	font-size:9pt;
 	clear: both;
+	width: 100%;
 }
 
 div.content {
@@ -63,6 +67,7 @@ div.content {
 
 div.body {
 	margin:0px;
+	margin-bottom: -20px;
 	padding:0px;
 	background-image: url(grass.jpg);
 }
@@ -360,6 +365,7 @@ td.pluginName {
 }
 
 table.stationList {
+	background-color: white;
 	border:3px solid #2E3959;
 	border-radius: 12px;
 	padding: 4px;
@@ -496,7 +502,7 @@ table.logList th {
 
 
 
-/******** Schedule graph Styles **********/
+/******** Timeline Styles **********/
 
 td.stationSchedule {
 	padding: 0px;
@@ -564,6 +570,10 @@ td.stationSchedule {
 	padding: 3px;
 }
 
+.systemInfo {
+	margin-right: -5px;
+}
+
 .scheduleMarker.showDetails {
 	border: 1px solid black;
 }
@@ -618,9 +628,12 @@ td.stationSchedule {
    body {
       font-size: 10pt;
    }
-
+   div.option .input{
+   	  padding-left: 20;
+   }
    div.panel {
       margin-left: 0;
+      margin-top: -4pt;
    }
    div.panel div.title {
       font-size: 14pt;

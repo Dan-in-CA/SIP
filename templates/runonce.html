@@ -8,7 +8,11 @@ $code:
 <script>
     // Initialize behaviors
     jQuery(document).ready(function(){
-
+		
+    	jQuery('#timepicker1').timepicker({
+    		showHours: false   	
+    	});
+    	
         jQuery("button#cRunNow").click(function(){
             var comm="/cr?&t=[";
             var sid,strmm,strss,mm,ss,matchfound=0;
@@ -67,8 +71,14 @@ $code:
                         </tr>
 
         </table>
+
     </form>
+        <div class="input-group bootstrap-timepicker timepicker">
+            <input id="timepicker1" type="text" class="form-control input-small">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+        </div>
 </div>
+
 
 <div id="controls">
     <button id="cRunNow" class="submit"><b>$_('Run Now')</b></button>
