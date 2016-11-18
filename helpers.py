@@ -44,6 +44,14 @@ except ImportError:
 
 ##############################
 #### Function Definitions ####
+stations_scheduled = signal('stations_scheduled')
+def report_stations_scheduled(txt=None):
+    """
+    Send blinker signal indicating that stations had been scheduled.
+    """
+    stations_scheduled.send('SIP',txt=txt)
+
+
 
 restarting = signal('restart') #: Signal to send on software restart
 def report_restart():
@@ -412,6 +420,7 @@ def schedule_stations(stations):
                     else:  # if rain and station does not ignore, clear station from display
                         gv.sbits[b] &= ~1 << s
                         gv.ps[s] = [0, 0]
+    report_stations_scheduled()
     gv.sd['bsy'] = 1
     return
 
