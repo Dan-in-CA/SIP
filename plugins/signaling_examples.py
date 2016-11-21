@@ -88,7 +88,7 @@ program_toggled.connect(notify_program_toggled)
 #       - A program is run (Scheduled or "run now")
 #       - Stations are manually started with RunOnce
 def notify_station_scheduled(name, **kw):
-    print "Some Stations has been scheduled: {}".format(strings(gv.rs))
+    print "Some Stations has been scheduled: {}".format(str(gv.rs))
 program_started = signal('stations_scheduled')
 program_started.connect(notify_station_scheduled)
 
