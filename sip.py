@@ -26,15 +26,9 @@ from ReverseProxied import ReverseProxied
 
 gv.restarted = 1
 
-try:
-    gv.os_cname = subprocess.check_output(['lsb_release', '-c'])[10:-1]
-except Exception:
-    gv.os_cname = "not found"
-
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
     try:
-        print _('OS code name: '), gv.os_cname
         print _('Starting timing loop') + '\n'
     except Exception:
         pass
