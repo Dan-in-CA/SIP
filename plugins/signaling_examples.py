@@ -82,3 +82,20 @@ def notify_program_toggled(name, **kw):
 
 program_toggled = signal('program_toggled')
 program_toggled.connect(notify_program_toggled)
+
+### Stations where sheduled to run ###
+# gets triggered when:
+#       - A program is run (Scheduled or "run now")
+#       - Stations are manually started with RunOnce
+def notify_station_scheduled(name, **kw):
+    print "Some Stations has been scheduled: {}".format(str(gv.rs))
+program_started = signal('stations_scheduled')
+program_started.connect(notify_station_scheduled)
+
+### Alarm Signal ###
+def notify_alarm_toggled(name, **kw):
+    print "ALARM from {}!: {}".format(name, kw['txt'])
+alarm = signal('alarm_toggled')
+alarm.connect(notify_alarm_toggled)
+# Send an alarm!
+alarm.send("Example_Sender",txt="Just and example!")
