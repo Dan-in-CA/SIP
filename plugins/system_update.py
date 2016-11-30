@@ -103,6 +103,12 @@ checker = StatusChecker()
 
 def perform_update():
 
+    command = "git config user.email 'user@sip.email'"
+    subprocess.call(command.split())
+    
+    command = "git config user.name 'SIP user'"
+    subprocess.call(command.split())
+    
     command = "git config core.filemode true"
     subprocess.call(command.split())
 
@@ -112,12 +118,12 @@ def perform_update():
     command = "git stash"  # stash any local changes
     output = subprocess.check_output(command.split())
 
-    command = "git fetch"
+    command = "git fetch --prune"
     output = subprocess.check_output(command.split())
-
-    command = "git merge -X theirs origin/master"
+    
+    command = "git reset --hard origin/master"
     output = subprocess.check_output(command.split())
-
+    
     command = "rm sessions/*"
     subprocess.call(command.split())
 
