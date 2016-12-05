@@ -67,6 +67,10 @@ $code:
                 jQuery("#errorcpw").text($:{json.dumps(_("Passwords don't match, please re-enter."), ensure_ascii=False)});
                 jQuery("#errorcpw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
                 break;
+            case "mton_minus":
+                jQuery("#errormton").text($:{json.dumps(_("Must be 0 to +60, please re-enter."), ensure_ascii=False)});
+                jQuery("#errormton").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
+                break;                 
         }
 
         jQuery(".collapsible h4").first().parent(".category").toggleClass("expanded").toggleClass("collapsed");
@@ -126,7 +130,9 @@ $code:
             elif name == "htp":
                 output += "<input name='ohtp' type='text' size='5' maxlength='5' value='" + str(value) + "'>\n"
             elif name == "nbrd":
-                output += "<input name='onbrd' type='text' size='3' maxlength='3' value='" + str(value - 1) + "'>\n"
+                output += "<input name='onbrd' type='text' size='3' maxlength='3' value='" + str(value - 1) + "'>\n"           
+            elif name == "mton":    
+                output += "<input name='omton' type='text' size='3' maxlength='3' value='" + str(value) + "'><span class='inputError' id='error" + name + "'></span>\n"           
             else:
                 output += "<input name='o" + name + "' type='text' size='3' maxlength='3' value='" + str(value) + "'>\n"
 

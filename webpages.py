@@ -186,6 +186,8 @@ class change_options(ProtectedPage):
 
         for f in ['sdt', 'mas', 'mton', 'mtoff', 'wl', 'lr', 'tz']:
             if 'o'+f in qdict:
+                if f == 'mton'  and int(qdict['o'+f])<0: #handle values less than zero (temp fix)
+                    raise web.seeother('/vo?errorCode=mton_minus')                 
                 gv.sd[f] = int(qdict['o'+f])
 
         for f in ['ipas', 'tf', 'urs', 'seq', 'rst', 'lg']:
