@@ -6,18 +6,29 @@ $var page: programs
 $code:
 	def two_digits(n):
 		return '%02d' % int(n)
-	
+
 	snames = gv.snames
+	idd = (gv.sd['idd'] > 0)
 	if pid < 0:
 		program = [1, 127, 4, 360, 1080, 240, 900] # does not include station bytes(program[7+]. #dk
+		sduration = []
+
 		for brd in range(gv.sd['nbrd']): #dk
 			program.extend([0]) # add bytes per number of boards. #dk
+			for s in range(0,8):
+				sduration.extend([0])
+		program.append(sduration) #need to add array for station duration
 	else:
 		program = eval(prog)
+		sduration = []
 		full_len = 7 + gv.sd['nbrd'] #dk
 		if len(program) < full_len: #dk
-		    for brd in range(full_len - len(program)): #dk
-		        program.extend([0]) # add bytes per number of boards. #dk
+            for brd in range(full_len - len(program)): #dk
+				program.extend([0]) # add bytes per number of boards. #dk
+				for s in range(0,8):
+					sduration.extend([0])
+		program[-1].extend(sduration)
+
 	weekly = not((program[1]&0x80) and (program[2]>1))
 	stationsShown = 0
 	stationsOn = 0
@@ -26,7 +37,7 @@ $code:
 		for s in range(0,8):
 			stationsShown += (boardShow>>s) & 1
 			if program[bid+7]&(1<<s):
-				stationsOn = stationsOn + 1		 			
+				stationsOn = stationsOn + 1
 	even = program[1]&0x80 and program[2]==0
 	odd = program[1]&0x80 and program[2]==1
 	recurring = program[3] + program[6]/60*stationsOn < program[4]
@@ -268,6 +279,34 @@ $code:
             for (var i=0; i<nbrd; i++) {
                 v += "," + stations[i];
             }
+            // save individual station times
+            var t = "[";
+            for (var bid=0; bid<nbrd; bid++) {
+                for (var s=0; s<8; s++) {
+                    sid = bid*8 + s;
+                    var stationOn = jQuery("button#station"+sid).hasClass("on")
+                    if (idd && stationOn) {
+                        var dm = parseInt(jQuery("#tdm" + sid).val());
+                        var ds = parseInt(jQuery("#tds" + sid).val());
+                        var duration = dm*60 + ds;
+                        if (!(dm>=0 && ds>=0 && ds<60 && duration>0)) {
+                            alert($:{json.dumps(_('Error: Incorrect duration.'), ensure_ascii=False)});
+                            return;
+                        }
+                    } else {
+                        duration = 0;
+                    }
+                    t += duration;
+                    if(s < 7)
+                        t += ",";
+                }
+                if (bid < (nbrd-1))
+                    t += ",";
+            }
+            t += "]";
+
+            v += "," + t;
+
             v += "]";
             jQuery("form#mf input[name='v']").val(v);
             jQuery("form#mf").submit();
@@ -299,7 +338,7 @@ $code:
                         <option ${"selected" if t.find("pm")>=0 else ""}>PM</option>
                     </select>
                 </p>
-                <p><b>$_('Duration'):</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="3" id="tdm" value="${two_digits(program[6]/60)}"> :
+                <p ${"" if not idd else "style=display:none"}><b>$_('Duration'):</b> <input class="timeInput numbersOnly" type="text" size="2" maxlength="3" id="tdm" value="${two_digits(program[6]/60)}"> :
                 <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tds" value="${two_digits(program[6]%60)}"> (mm:ss)</p>
                 <p><button id="cRecurring" class="toggle choice ${'off' if recurring else 'on'}"><span class='toggleleft'>$_('Single pass')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_('Recurring')</span></button></p>
                 <div id="recurr" $:{"" if recurring else "style='display:none'"}>
@@ -322,7 +361,7 @@ $code:
             <p><button id="cWeeklyInterval" class="toggle choice ${'on' if weekly else 'off'}"><span class='toggleleft'>$_('Weekly')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_('Interval')</span></button></p>
             <table id="stations" class="stationList">
                 <tr class="showWeekly" $:{"" if weekly else "style='display:none'"}>
-                    <td colspan="2"></td>
+                    <td colspan="3"></td>
                     <td colspan="7" style="text-align:center">
                         <button id="allWeekdays" class="execute">$_('Select All')</button>
                         <button id="noWeekdays" class="execute">$_('Clear All')</button>
@@ -330,6 +369,7 @@ $code:
                 </tr>
                 <tr class="showWeekly" $:{"" if weekly else "style='display:none'"}>
                     <td colspan="2"></td>
+                    <td><span ${"" if idd else "style=display:none"}>$_('Duration'):</span></td>
                     <td><button id="day0" class="weekday pushon ${"on" if program[1]&(1<<0) else "off"}">$_('Monday')</button></td>
                     <td><button id="day1" class="weekday pushon ${"on" if program[1]&(1<<1) else "off"}">$_('Tuesday')</button></td>
                     <td><button id="day2" class="weekday pushon ${"on" if program[1]&(1<<2) else "off"}">$_('Wednesday')</button></td>
@@ -350,6 +390,10 @@ $code:
                                 <td class='station_name'>${snames[sid]}</td>
                                 <td>
                                     <button id="station${sid}" class='station toggle narrow ${'on' if stationEnabled else 'off'}'><span class='toggleleft'>$_('On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_('Off')</span></button>
+                                </td>
+                                <td>
+                                    <span ${"" if idd else "style=display:none"}><input class="timeInput numbersOnly" type="text" size="2" maxlength="3" id="tdm${sid}" value="${two_digits(program[-1][sid]/60)}"> :
+                                    <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tds${sid}" value="${two_digits(program[-1][sid]%60)}"> (mm:ss)</span>
                                 </td>
                                 $for d in range(0,7):
                                     $ status = ("stationOn" if stationEnabled else "") + (" dayOn" if program[1]&(1<<d) else "")

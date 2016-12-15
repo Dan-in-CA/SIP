@@ -58,7 +58,10 @@ function doSimulation() { // Create schedule by a full program simulation, was d
           bid=sid>>3;s=sid%8; //set board index (bid) and station number per board (s) from station index (sid) 
           if(mas==(sid+1)) continue; // skip master station
           if(pd[7+bid]&(1<<s)) { // if this station is selected in this program...
-            et_array[sid]=pd[6]; // Set duration for this station to duration
+            var duration=pd[6]; // get the program duration
+            if(idd==1)  //is individual station time
+               duration=pd[pd.length-1][sid];  //get the station duration
+            et_array[sid]=duration; // Set duration for this station to duration
             if (iw[bid]&(1<<s) == 0) { // adjust duration by water level
               et_array[sid] *= wl/100*wlx/100;
             }
