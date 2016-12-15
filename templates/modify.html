@@ -23,7 +23,7 @@ $code:
 		sduration = []
 		full_len = 7 + gv.sd['nbrd'] #dk
 		if len(program) < full_len: #dk
-            for brd in range(full_len - len(program)): #dk
+			for brd in range(full_len - len(program)): #dk
 				program.extend([0]) # add bytes per number of boards. #dk
 				for s in range(0,8):
 					sduration.extend([0])
