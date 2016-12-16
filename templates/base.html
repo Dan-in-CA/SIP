@@ -116,6 +116,7 @@ $code:
             var run_once = $:{json.dumps(_('Run-once'), ensure_ascii=False)};
             var man = $:{json.dumps(_('Manual'), ensure_ascii=False)};
             var program = $:{json.dumps(_('Program'), ensure_ascii=False)};
+            var idd = $:{gv.sd['idd']};
 
             jQuery(document).ready(function(){
                 jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + baseUrl + '/plugins\'">Manage Plugins</button><br/>');

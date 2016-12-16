@@ -190,7 +190,7 @@ class change_options(ProtectedPage):
                     raise web.seeother('/vo?errorCode=mton_minus')                 
                 gv.sd[f] = int(qdict['o'+f])
 
-        for f in ['ipas', 'tf', 'urs', 'seq', 'rst', 'lg']:
+        for f in ['ipas', 'tf', 'urs', 'seq', 'rst', 'lg', 'idd']:
             if 'o'+f in qdict and (qdict['o'+f] == 'on' or qdict['o'+f] == '1'):
                 gv.sd[f] = 1
             else:
