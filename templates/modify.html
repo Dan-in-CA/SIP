@@ -27,7 +27,6 @@ $code:
 		    else:
 		        sd_list = [0] * 8 * (predicted_len - len(program)) # Handle older program format (no existing sduration) 
 			for brd in range(predicted_len - len(program)): 
-				#program.insert(len(program)-1, 0) # add bytes before sduration list per number of extra boards.
 				program.extend([0]) # add bytes per number of extra boards.
 				sduration.extend([0] * 8) # increase length of sduration
 			program.append(sd_list)	
@@ -40,6 +39,8 @@ $code:
 	stationsShown = 0
 	stationsOn = 0
 	for bid in range(0, gv.sd['nbrd']):
+		if not isinstance(program[bid+7], int):
+			program.insert(-1, 0)		
 		boardShow = gv.sd['show'][bid]
 		for s in range(0,8):
 			stationsShown += (boardShow>>s) & 1
@@ -387,6 +388,8 @@ $code:
                 </td>
                 $ firstTime = True
                 $for bid in range(0, gv.sd['nbrd']):
+                	$if not isinstance(program[bid+7], int):
+                		$ program.insert(-1, 0)
                     $for s in range(0,8):
                         $ sid = bid*8 + s;
                         $ sn = sid + 1
