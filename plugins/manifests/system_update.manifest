@@ -1,0 +1,13 @@
+Description: Updates the SIP program from the main GitHub repository.
+Copyright 2016
+Author: Dan Kimberling
+Email:
+License: GNU GPL 3.0
+
+Requirements:
+
+##### List all plugin files below preceded by a blank line [file_name.ext path] relative to OSPi directory #####
+
+system_update.py plugins
+system_update.html templates
+system_update.manifest plugins/manifests
