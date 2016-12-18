@@ -522,11 +522,6 @@ def load_programs():
     try:
         with open('./data/programs.json', 'r') as pf:
             gv.pd = json.load(pf)
-            i = 0
-            while i < len(gv.pd): # fix bug when upgrading to multiple run times from older programs
-                if len(gv.pd[i]) == 8:
-                    gv.pd[i].append([0] * 8) 
-                i += 1             
     except IOError:
         gv.pd = []  # A config file -- return default and create file if not found.
         with open('./data/programs.json', 'w') as pf:

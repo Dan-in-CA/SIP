@@ -9,25 +9,32 @@ $code:
 
 	snames = gv.snames
 	idd = (gv.sd['idd'] > 0)
-	if pid < 0:
-		program = [1, 127, 4, 360, 1080, 240, 900] # does not include station bytes(program[7+]. #dk
+	if pid < 0: #  A new program
+		program = [1, 127, 4, 360, 1080, 240, 900] # does not include station bytes(program[7+].
 		sduration = []
-
-		for brd in range(gv.sd['nbrd']): #dk
-			program.extend([0]) # add bytes per number of boards. #dk
-			for s in range(0,8):
-				sduration.extend([0])
+		for brd in range(gv.sd['nbrd']):
+			program.extend([0]) # add bytes per number of boards.
+			sduration.extend([0] * 8)
 		program.append(sduration) #need to add array for station duration
-	else:
+	else: #  An existing program
 		program = eval(prog)
-		sduration = []
-		full_len = 7 + gv.sd['nbrd'] #dk
-		if len(program) < full_len: #dk
-			for brd in range(full_len - len(program)): #dk
-				program.extend([0]) # add bytes per number of boards. #dk
-				for s in range(0,8):
-					sduration.extend([0])
-		program[-1].extend(sduration)
+		sduration = []		
+		predicted_len = 7 + gv.sd['nbrd'] + 1 #  Expected length of program including sduration list
+		if len(program) < predicted_len:
+		    if isinstance(program[-1], list): # If program has sduration list at the end...
+		        sd_list = program.pop()
+		        predicted_len -= 1
+		    else:
+		        sd_list = [0] * 8 * (predicted_len - len(program)) # Handle older program format (no existing sduration) 
+			for brd in range(predicted_len - len(program)): 
+				#program.insert(len(program)-1, 0) # add bytes before sduration list per number of extra boards.
+				program.extend([0]) # add bytes per number of extra boards.
+				sduration.extend([0] * 8) # increase length of sduration
+			program.append(sd_list)	
+		if isinstance(program[-1], list):
+			program[-1].extend(sduration)
+		else:
+			program.append([0] * 8 * gv.sd['nbrd']) # Handle older program format
 
 	weekly = not((program[1]&0x80) and (program[2]>1))
 	stationsShown = 0
