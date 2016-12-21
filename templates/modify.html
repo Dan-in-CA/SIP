@@ -265,7 +265,7 @@ $code:
             var ds = parseInt(jQuery("#tds").val());
             var duration = dm*60 + ds;
             if (!(dm>=0 && ds>=0 && ds<60 && duration>0)) {
-                alert($:{json.dumps(_('Error: Incorrect duration.'), ensure_ascii=False)});
+                alert($:{json.dumps(_('Error: Duration missing.'), ensure_ascii=False)});
                 return;
             }
 
