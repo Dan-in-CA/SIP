@@ -165,7 +165,7 @@ def timing_loop():
         if gv.sd['rd'] and gv.now >= gv.sd['rdst']:  # Check of rain delay time is up
             gv.sd['rd'] = 0
             gv.sd['rdst'] = 0  # Rain delay stop time
-            jsave(gv.sd, 'sd')
+            jsave(gv.sd, 'sd')        
         time.sleep(1)
         #### End of timing loop ####
 

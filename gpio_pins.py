@@ -71,7 +71,7 @@ try:
         pi.set_mode(pin_rain_sense, pigpio.INPUT)
         pi.set_mode(pin_relay, pigpio.OUTPUT)
     else:      
-        GPIO.setup(pin_rain_sense, GPIO.IN)
+        GPIO.setup(pin_rain_sense, GPIO.IN, pull_up_down = GPIO.PUD_UP)
         GPIO.setup(pin_relay, GPIO.OUT)
 except NameError:
     pass
