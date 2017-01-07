@@ -99,3 +99,11 @@ alarm = signal('alarm_toggled')
 alarm.connect(notify_alarm_toggled)
 # Send an alarm!
 alarm.send("Example_Sender",txt="Just and example!")
+
+### rain changed ##
+def notify_rain_changed(name, **kw):
+    print "Rain changed (from plugin)"
+    #  Programs are in gv.pd and /data/programs.json
+
+rain_changed = signal('rain_changed')
+rain_changed.connect(notify_rain_changed)

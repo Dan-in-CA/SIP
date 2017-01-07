@@ -166,6 +166,9 @@ def timing_loop():
             gv.sd['rd'] = 0
             gv.sd['rdst'] = 0  # Rain delay stop time
             jsave(gv.sd, 'sd')        
+        
+#        print "rs: ", gv.sd["rs"]
+        
         time.sleep(1)
         #### End of timing loop ####
 
@@ -195,7 +198,7 @@ template_globals = {
     '_': _,
     'i18n': i18n,
     'app_path': lambda p: web.ctx.homepath + p,
-    'web' : web,
+    'web': web,
 }
 
 template_render = web.template.render('templates', globals=template_globals, base='base')

@@ -2,6 +2,7 @@ $def with ()
 
 $var title: SIP Irrigation Control
 $var page: home
+
 $code:
 	tf = gv.sd["tf"]
 	snames = gv.snames
@@ -35,6 +36,9 @@ $code:
         return '%.0f' % result
 
 <script>
+    var priorRs = ${gv.sd["rs"]};
+    var useRainsense = ${gv.sd["urs"]};
+    
     function formatLogline(log) {
         var lrsid = lrun[0], lrpid = lrun[1], lrdur = lrun[2], lret = lrun[3];
         if (lrpid == 0) {
@@ -106,10 +110,23 @@ $code:
         alert(jQuery(el).html());
     }
 
-    var restarted = ${gv.restarted};    
+    function rainChange() {
+    	jQuery.get("rss", function(data){
+	    	if(priorRs != data) {
+	    		priorRs = data;
+	    		location.reload(true);
+	    	}
+    	})
+    }
+    
+    var restarted = ${gv.restarted};
     
     // Initialize behaviors
     jQuery(document).ready(function(){
+    	if(useRainsense){
+    		var rainCheck = setInterval(rainChange, 1000);
+    	}
+    	
         if(restarted == 0) {
         	alert("SIP could not restart.\nPlease restart the program from the command line.");
         }

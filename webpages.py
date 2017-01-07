@@ -613,3 +613,8 @@ class water_log(ProtectedPage):
 
         web.header('Content-Type', 'text/csv')
         return data
+    
+class rain_sensor_state(ProtectedPage):
+    """Return rain sensor state."""
+    def GET(self):
+        return gv.sd['rs']

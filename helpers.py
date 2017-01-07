@@ -52,6 +52,13 @@ def report_stations_scheduled(txt=None):
     stations_scheduled.send('SIP',txt=txt)
 
 
+rain_changed = signal('rain_changed')
+def report_rain_changed(txt=None):
+    """
+    Send blinker signal indicating that rain sensor changed.
+    """
+    rain_changed.send()
+
 
 restarting = signal('restart') #: Signal to send on software restart
 def report_restart():
@@ -219,10 +226,9 @@ def check_rain():
                 else:
                     gv.sd['rs'] = 0
             else:
-                if not GPIO.input(pin_rain_sense):  # Rain detected
-                    gv.sd['rs'] = 1
-                else:
-                    gv.sd['rs'] = 0
+                if GPIO.input(pin_rain_sense) == gv.sd['rs']: #  Rain sensor changed, reading and gv.sd['rs'] are inverse.
+                    report_rain_changed()
+                    gv.sd['rs'] = 1 - gv.sd['rs'] #  toggle
         elif gv.sd['rst'] == 0:  # Rain sensor type normally closed
             if gv.use_pigpio:
                 if pi.read(pin_rain_sense):  # Rain detected
@@ -230,10 +236,9 @@ def check_rain():
                 else:
                     gv.sd['rs'] = 0
             else:
-                if GPIO.input(pin_rain_sense):  # Rain detected
-                    gv.sd['rs'] = 1
-                else:
-                    gv.sd['rs'] = 0
+                if GPIO.input(pin_rain_sense) != gv.sd['rs']:  # Rain sensor changed
+                    report_rain_changed()
+                    gv.sd['rs'] = 1 - gv.sd['rs'] #  toggle
     except NameError:
         pass
 

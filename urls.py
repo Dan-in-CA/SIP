@@ -28,5 +28,6 @@ urls = [
     '/api/log', 'webpages.api_log',
     '/login', 'webpages.login',
     '/logout', 'webpages.logout',
-    '/restart', 'webpages.sw_restart'
+    '/restart', 'webpages.sw_restart',
+    '/rss', 'webpages.rain_sensor_state'
 ]
