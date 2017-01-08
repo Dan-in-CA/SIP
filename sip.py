@@ -115,7 +115,7 @@ def timing_loop():
                                     gv.rs[masid][1] = gv.rs[sid][1] + gv.sd['mtoff']
                                     gv.rs[masid][3] = gv.rs[sid][3]
                             elif gv.sd['mas'] == sid + 1:
-                                gv.sbits[b] |= 1 << sid  # (gv.sd['mas'] - 1)
+                                gv.sbits[b] |= 1 << sid
                                 gv.srvals[masid] = 1
                                 set_output()
 
@@ -128,7 +128,7 @@ def timing_loop():
                 gv.pon = None
 
             if program_running:
-                if gv.sd['urs'] and gv.sd['rs']:  # Stop stations if use rain sensor and rain detected.
+                if gv.sd['urs'] and gv.sd['rs']:  #  Stop stations if use rain sensor and rain detected.
                     stop_onrain()  # Clear schedule for stations that do not ignore rain.
                 for idx in range(len(gv.rs)):  # loop through program schedule (gv.ps)
                     if gv.rs[idx][2] == 0:  # skip stations with no duration
@@ -148,27 +148,31 @@ def timing_loop():
                     gv.rs.append([0, 0, 0, 0])
                 gv.sd['bsy'] = 0
 
-            if gv.sd['mas'] and (gv.sd['mm'] or not gv.sd['seq']):  # handle master for maual or concurrent mode.
-                mval = 0
-                for sid in range(gv.sd['nst']):
-                    bid = sid / 8
-                    s = sid - bid * 8
-                    if gv.sd['mas'] != sid + 1 and (gv.srvals[sid] and gv.sd['mo'][bid] & 1 << s):
-                        mval = 1
-                        break
-                if not mval:
-                    gv.rs[gv.sd['mas'] - 1][1] = gv.now  # turn off master
+            if (gv.sd['mas'] #  master is defined
+                and (gv.sd['mm'] or not gv.sd['seq']) #  manual or concurrent mode.
+                ):
+                stayon = 0
+                for octet in xrange(gv.sd['nbrd']):
+                    base = octet * 8
+                    for s in xrange(8):
+                        stn = base + s
+                        if (gv.srvals[stn] #  station is on
+                            and gv.rs[stn][1] >= gv.now #  station has a stop time >= now
+                            and gv.sd['mo'][octet] & 1 << s #  station activates master   
+                            ):                  
+                            stayon = 1
+                            break
+                if not stayon:
+                    gv.rs[gv.sd['mas'] - 1][1] = gv.now  # set master to turn off next cycle 
 
         if gv.sd['urs']:
             check_rain()  # in helpers.py
 
-        if gv.sd['rd'] and gv.now >= gv.sd['rdst']:  # Check of rain delay time is up
+        if gv.sd['rd'] and gv.now >= gv.sd['rdst']:  # Check if rain delay time is up
             gv.sd['rd'] = 0
             gv.sd['rdst'] = 0  # Rain delay stop time
             jsave(gv.sd, 'sd')        
-        
-#        print "rs: ", gv.sd["rs"]
-        
+
         time.sleep(1)
         #### End of timing loop ####
 

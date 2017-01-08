@@ -7,12 +7,12 @@ mm:0	manual mode (bool)
 rbt:0	reboot (bool) 
 
 from options:
-htp:8080 http port the program will use
+htp:80	http port the program will use
 seq:1	sequential/concurrent operation (bool)
 sdt:0	station delay time
 mton:0	master on delay
 mtoff:0	master off delay
-nbrd:1	number of boards (includes base unit and expansion boards)
+nbrd:1	number of boards (includes base unit and expansion octets/boards)
 tz:16	time zone -- no longer used by the program as of v2.0
 tf:1	time format (24 hour clock == 1)
 urs:0	use rain sensor (bool)
