@@ -69,6 +69,7 @@ except AttributeError:
 try:
     if gv.use_pigpio:
         pi.set_mode(pin_rain_sense, pigpio.INPUT)
+        pi.set_pull_up_down(pin_rain_sense, pigpio.PUD_UP)
         pi.set_mode(pin_relay, pigpio.OUTPUT)
     else:      
         GPIO.setup(pin_rain_sense, GPIO.IN, pull_up_down = GPIO.PUD_UP)
