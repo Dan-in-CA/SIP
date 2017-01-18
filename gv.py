@@ -106,10 +106,12 @@ except IOError:  # If file does not exist, it will be created using defaults.
     with open('./data/sd.json', 'w') as sdf:  # save file
         json.dump(sd, sdf, indent=4, sort_keys=True)
 
-if sd['pigpio']:
-    use_pigpio = sd['pigpio']
-    
-
+if sd["pigpio"]:
+    try:
+        subprocess.check_output("pigpiod", stderr=subprocess.STDOUT)
+        use_pigpio = sd['pigpio']
+    except ImportError:
+        print "pigpio not found. Using RPi.GPIO"
 
 from helpers import load_programs, station_names
 
