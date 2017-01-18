@@ -8,8 +8,8 @@ import subprocess
 from threading import RLock
 
 major_ver = 3
-minor_ver = 1
-old_count = 648
+minor_ver = 2
+old_count = 747
 
 try:
     revision = int(subprocess.check_output(['git', 'rev-list', '--count', 'HEAD']))
@@ -36,15 +36,6 @@ import json
 import time
 
 platform = ''  # must be done before the following import because gpio_pins will try to set it
-
-# try:
-#     import pigpio
-#     use_pigpio = True
-#     subprocess.call(['pigpiod'])
-# except ImportError:
-#     use_pigpio = False
-#     
-# use_pigpio = False #  for testing  
 
 # from helpers import password_salt, password_hash, load_programs, station_names
 
@@ -88,13 +79,10 @@ sd = {
     u"show": [255],
     u"salt": "sZJ@LZ^!w1NGG|qg_zz>X\\jMR2#L#0e#Io[9gjW?'Ek:[Q087izk~\\{8!>/)27{}",
     u"password": "e74a224d3277c87785d284286f230ae5f5ee940d",
-#     u"salt": password_salt(),
     u"lang": u"default",
     u"idd": 0,
     u"pigpio": 0
 }
-
-# sd['password'] = password_hash('opendoor', sd['salt'])
 
 try:
     with open('./data/sd.json', 'r') as sdf:  # A config file
@@ -109,9 +97,11 @@ except IOError:  # If file does not exist, it will be created using defaults.
 if sd["pigpio"]:
     try:
         subprocess.check_output("pigpiod", stderr=subprocess.STDOUT)
-        use_pigpio = sd['pigpio']
-    except ImportError:
+        use_pigpio = True
+    except Exception:
         print "pigpio not found. Using RPi.GPIO"
+else:
+    use_pigpio = False       
 
 from helpers import load_programs, station_names
 
