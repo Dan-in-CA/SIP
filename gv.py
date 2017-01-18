@@ -138,6 +138,7 @@ options = [
 #    [_("Time zone"), "int", "tz", _("Example: GMT-4:00, GMT+5:30 (effective after reboot.)"), _("System")],
     [_("24-hour clock"), "boolean", "tf", _("Display times in 24 hour format (as opposed to AM/PM style.)"), _("System")],
     [_("HTTP port"), "int", "htp", _("HTTP port."), _("System")],
+#     [_("Use pigpio"), "boolean", "pigpio", _("GPIO Library to use. Default is RPi.GPIO"), _("System")],    
     [_("Water Scaling"), "int", "wl", _("Water scaling (as %), between 0 and 100."), _("System")],
     [_("Disable security"), "boolean", "ipas", _("Allow anonymous users to access the system without a password."), _("Change Password")],
     [_("Current password"), "password", "opw", _("Re-enter the current password."), _("Change Password")],
