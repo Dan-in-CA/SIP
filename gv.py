@@ -88,7 +88,8 @@ sd = {
     u"show": [255],
     u"salt": password_salt(),
     u"lang": u"default",
-    u"idd": 0
+    u"idd": 0,
+    u"pigpio": 0
 }
 
 sd['password'] = password_hash('opendoor', sd['salt'])
