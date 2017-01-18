@@ -44,7 +44,7 @@ try:
 except ImportError:
     use_pigpio = False
     
-# use_pigpio = False #  for tasting  
+use_pigpio = False #  for tasting  
 
 from helpers import password_salt, password_hash, load_programs, station_names
 
