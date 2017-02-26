@@ -223,18 +223,6 @@ if __name__ == '__main__':
 
     gv.plugin_menu.sort(key=lambda entry: entry[0])
 
-    # Ensure first three characters ('/' plus two characters of base name of each
-    # plugin is unique.  This allows the gv.plugin_data dictionary to be indexed
-    # by the two characters in the base name.
-    plugin_map = {}
-    for p in gv.plugin_menu:
-        three_char = p[1][0:3]
-        if three_char not in plugin_map:
-            plugin_map[three_char] = p[0] + '; ' + p[1]
-        else:
-            print 'ERROR - Plugin Conflict:', p[0] + '; ' + p[1] + ' and ', plugin_map[three_char]
-            exit()
-
     #  Keep plugin manager at top of menu
     try:
         gv.plugin_menu.pop(gv.plugin_menu.index(['Manage Plugins', '/plugins']))
