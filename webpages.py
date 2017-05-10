@@ -523,10 +523,11 @@ class api_status(ProtectedPage):
                 if (gv.sd['show'][bid] >> s) & 1 == 1:
                     sid = bid * 8 + s
                     sn = sid + 1
+                    sname = gv.snames[sid]
                     sbit = (gv.sbits[bid] >> s) & 1
                     irbit = (gv.sd['ir'][bid] >> s) & 1
                     status = {'station': sid, 'status': 'disabled', 'reason': '', 'master': 0, 'programName': '',
-                              'remaining': 0}
+                              'remaining': 0, 'name': sname}
                     if gv.sd['en'] == 1:
                         if sbit:
                             status['status'] = 'on'
