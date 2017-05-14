@@ -44,6 +44,15 @@ except ImportError:
 
 ##############################
 #### Function Definitions ####
+
+station_completed = signal('station_completed')
+def report_station_completed(station):
+    """
+    Send blinker signal indicating that a station has completed.
+    Include the station number as data.
+    """
+    station_completed.send(station)
+
 stations_scheduled = signal('stations_scheduled')
 def report_stations_scheduled(txt=None):
     """

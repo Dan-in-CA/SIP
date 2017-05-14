@@ -15,7 +15,18 @@ sys.path.append('./plugins')
 import web  # the Web.py module. See webpy.org (Enables the Python SIP web interface)
 
 import gv
-from helpers import plugin_adjustment, prog_match, schedule_stations, log_run, stop_onrain, check_rain, jsave, station_names, get_rpi_revision
+from helpers import (
+                     report_station_completed, 
+                     plugin_adjustment, 
+                     prog_match, 
+                     schedule_stations, 
+                     log_run, 
+                     stop_onrain, 
+                     check_rain, 
+                     jsave, 
+                     station_names, 
+                     get_rpi_revision
+                     )
 from urls import urls  # Provides access to URLs for UI pages
 from gpio_pins import set_output
 from ReverseProxied import ReverseProxied
@@ -99,6 +110,7 @@ def timing_loop():
                                 gv.lrun[2] = int(gv.now - gv.rs[sid][0])
                                 gv.lrun[3] = gv.now
                                 log_run()
+                                report_station_completed(sid + 1)
                                 gv.pon = None  # Program has ended
                             gv.rs[sid] = [0, 0, 0, 0]
                     else:  # if this station is not yet on
