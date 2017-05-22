@@ -141,7 +141,7 @@ $code:
             <p>$_('Starting'): <span class="val">${formatTime(two_digits(start/60) + ":" + two_digits(start%60))}</span>
                 <span ${"" if not (gv.sd['idd'] > 0) else "style=display:none"}>$_('for') <span class="val">${(duration/60>>0)}</span> mins<span class="val">${"" if (duration%60) == 0 else (" " + str(duration%60) + " secs")}</span></span>
                 <span ${"" if (gv.sd['idd'] > 0) else "style=display:none"}>$_('with individual station durations')</span></p>
-            $ recurring = start + duration/60*stationsOn < end
+            $ recurring = int(start + duration/60*stationsOn) < int(end)
             $if recurring:
                 <p>$_('Recurring every')</b> <span class="val">${two_digits(interval/60)}</span> hrs <span class="val">${two_digits(interval%60)}</span> mins
                 $_('until') <span class="val">${formatTime(two_digits(end/60) + ":" + two_digits(end%60))}</span></p>
