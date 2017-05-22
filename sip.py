@@ -71,7 +71,7 @@ def timing_loop():
                                     else:
                                         duration = p[6]
                                 else:
-                                    duration_adj = gv.sd['wl'] / 100 * extra_adjustment
+                                    duration_adj = (float(gv.sd['wl']) / 100) * extra_adjustment
                                     if gv.sd['idd'] == 1:
                                         duration = p[-1][sid] * duration_adj
                                     else:
