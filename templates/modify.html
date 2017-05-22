@@ -48,7 +48,7 @@ $code:
 				stationsOn = stationsOn + 1
 	even = program[1]&0x80 and program[2]==0
 	odd = program[1]&0x80 and program[2]==1
-	recurring = program[3] + program[6]/60*stationsOn < program[4]
+	recurring = int(program[3] + program[6]/60*stationsOn) < int(program[4])
 	tf = gv.sd['tf']
 	def formatTime(t):
 		if gv.sd['tf']:
