@@ -260,36 +260,11 @@ $code:
                     }
                 }
             }
-            // process time
-            var dm = parseInt(jQuery("#tdm").val());
-            var ds = parseInt(jQuery("#tds").val());
-            var duration = dm*60 + ds;
-            if (!(dm>=0 && ds>=0 && ds<60 && duration>0)) {
-                alert($:{json.dumps(_('Error: Duration missing.'), ensure_ascii=False)});
-                return;
-            }
 
-            var startTime = parseTime("ts");
-            if (jQuery("button#cRecurring").hasClass("on")) {
-                var interval = jQuery(".station.on").length * duration/60;
-                var endTime = startTime + interval;
-            } else {
-                var endTime = parseTime("te");
-                var interval = parseTime("ti");
-            }
-            if (startTime >= endTime) {
-                // Possible bug - can you run a program from 10PM to 2AM?
-                alert($:{json.dumps(_('Error: Start time must be prior to end time.'), ensure_ascii=False)});
-                return;
-            }
-
-            var v = "[" + en + "," + days + "," + dayInterval + "," + startTime + "," + endTime + "," + interval + "," + duration;
-            for (var i=0; i<nbrd; i++) {
-                v += "," + stations[i];
-            }
-            // save individual station times
+            // Process individual station times
             var t = "[";
-            for (var bid=0; bid<nbrd; bid++) {
+            var total_t=0;
+			for (var bid=0; bid<nbrd; bid++) {
                 for (var s=0; s<8; s++) {
                     sid = bid*8 + s;
                     var stationOn = jQuery("button#station"+sid).hasClass("on")
@@ -305,6 +280,7 @@ $code:
                         duration = 0;
                     }
                     t += duration;
+					total_t += duration;
                     if(s < 7)
                         t += ",";
                 }
@@ -313,9 +289,40 @@ $code:
             }
             t += "]";
 
-            v += "," + t;
+            // process general duration
+            var dm = parseInt(jQuery("#tdm").val());
+            var ds = parseInt(jQuery("#tds").val());
+            var duration = dm*60 + ds;
+            if (!(dm>=0 && ds>=0 && ds<60 && duration>0)) {
+                alert($:{json.dumps(_('Error: Duration missing.'), ensure_ascii=False)});
+                return;
+            }
 
-            v += "]";
+            // process time
+            var startTime = parseTime("ts");
+            if (jQuery("button#cRecurring").hasClass("on")) {
+				if (idd) {
+						var interval = total_t/60;;
+                    } else {
+						var interval = jQuery(".station.on").length * duration/60;
+				}
+                var endTime = startTime + interval;
+            } else {
+                var endTime = parseTime("te");
+                var interval = parseTime("ti");
+            }
+            if (startTime >= endTime) {
+                // Possible bug - can you run a program from 10PM to 2AM?
+                alert($:{json.dumps(_('Error: Start time must be prior to end time.'), ensure_ascii=False)});
+                return;
+            }
+
+            var v = "[" + en + "," + days + "," + dayInterval + "," + startTime + "," + endTime + "," + interval + "," + duration;
+            for (var i=0; i<nbrd; i++) {
+                v += "," + stations[i];
+            }
+            v += "," + t 
+			v += "]";
             jQuery("form#mf input[name='v']").val(v);
             jQuery("form#mf").submit();
         });
