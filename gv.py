@@ -59,7 +59,7 @@ sd = {
     u"mas": 0,
     u"wl": 100,
     u"bsy": 0,
-    u"lg": u"",
+    u"lg": 0,
     u"urs": 0,
     u"nopts": 13,
     u"pwd": u"b3BlbmRvb3I=",
