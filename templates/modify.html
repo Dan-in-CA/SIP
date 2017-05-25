@@ -37,18 +37,23 @@ $code:
 
 	weekly = not((program[1]&0x80) and (program[2]>1))
 	stationsShown = 0
-	stationsOn = 0
-	for bid in range(0, gv.sd['nbrd']):
+	duration = 0
+	sid = -1
+	for bid in range(gv.sd['nbrd']):
 		if not isinstance(program[bid+7], int):
 			program.insert(-1, 0)		
 		boardShow = gv.sd['show'][bid]
-		for s in range(0,8):
+		for s in range(8):
+			sid += 1
 			stationsShown += (boardShow>>s) & 1
 			if program[bid+7]&(1<<s):
-				stationsOn = stationsOn + 1
+				if gv.sd['idd'] :
+					duration += program[-1][sid]
+				else:
+					duration += program[6]
 	even = program[1]&0x80 and program[2]==0
 	odd = program[1]&0x80 and program[2]==1
-	recurring = int(program[3] + program[6]/60*stationsOn) < int(program[4])
+	recurring = int(program[3] + duration/60) < int(program[4])
 	tf = gv.sd['tf']
 	def formatTime(t):
 		if gv.sd['tf']:
