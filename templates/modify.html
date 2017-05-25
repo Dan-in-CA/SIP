@@ -37,18 +37,33 @@ $code:
 
 	weekly = not((program[1]&0x80) and (program[2]>1))
 	stationsShown = 0
-	stationsOn = 0
-	for bid in range(0, gv.sd['nbrd']):
+	for bid in range(gv.sd['nbrd']):
 		if not isinstance(program[bid+7], int):
 			program.insert(-1, 0)		
 		boardShow = gv.sd['show'][bid]
-		for s in range(0,8):
+		for s in range(8):
 			stationsShown += (boardShow>>s) & 1
-			if program[bid+7]&(1<<s):
-				stationsOn = stationsOn + 1
+
+	duration = 0
+	sid = -1
+	for b in range(gv.sd['nbrd']):
+		for s in range(8):
+			sid += 1
+			if program[b+7]&(1<<s):
+				if gv.sd['seq'] :
+					if gv.sd['idd'] :
+						duration += program[-1][sid]
+					else:
+						duration += program[6]
+				else:
+					if gv.sd['idd'] :
+						duration = max(duration, program[-1][sid])
+					else:
+						duration = program[6]
+	lap_end = program[3] + duration/60
+	recurring = int(lap_end) < int(program[4])
 	even = program[1]&0x80 and program[2]==0
 	odd = program[1]&0x80 and program[2]==1
-	recurring = int(program[3] + program[6]/60*stationsOn) < int(program[4])
 	tf = gv.sd['tf']
 	def formatTime(t):
 		if gv.sd['tf']:
@@ -261,26 +276,44 @@ $code:
                 }
             }
 
+            // process general duration
+            var dm = parseInt(jQuery("#tdm").val());
+            var ds = parseInt(jQuery("#tds").val());
+            var gduration = dm*60 + ds;
+            if (!(dm>=0 && ds>=0 && ds<60 && gduration>0)) {
+                alert($:{json.dumps(_('Error: Duration missing.'), ensure_ascii=False)});
+                return;
+            }
+
             // Process individual station times
             var t = "[";
-            var total_t=0;
+            var lap_t=0;
+			var sduration = 0;
 			for (var bid=0; bid<nbrd; bid++) {
                 for (var s=0; s<8; s++) {
                     sid = bid*8 + s;
                     var stationOn = jQuery("button#station"+sid).hasClass("on")
-                    if (idd && stationOn) {
-                        var dm = parseInt(jQuery("#tdm" + sid).val());
-                        var ds = parseInt(jQuery("#tds" + sid).val());
-                        var duration = dm*60 + ds;
-                        if (!(dm>=0 && ds>=0 && ds<60 && duration>0)) {
-                            alert($:{json.dumps(_('Error: Incorrect duration.'), ensure_ascii=False)});
-                            return;
-                        }
+					if (stationOn) {
+						if (idd) {
+							var dm = parseInt(jQuery("#tdm" + sid).val());
+							var ds = parseInt(jQuery("#tds" + sid).val());
+							sduration = dm*60 + ds;
+							if (!(dm>=0 && ds>=0 && ds<60 && sduration>0)) {
+								alert($:{json.dumps(_('Error: Incorrect duration.'), ensure_ascii=False)});
+								return;
+							}
+						} else {
+							   sduration = gduration;
+						}
+					} else {
+						sduration = 0;
+					}
+                    t += sduration;
+                    if (seq) {
+					    lap_t += sduration;
                     } else {
-                        duration = 0;
+					    lap_t = Math.max(lap_t, sduration);
                     }
-                    t += duration;
-					total_t += duration;
                     if(s < 7)
                         t += ",";
                 }
@@ -289,27 +322,14 @@ $code:
             }
             t += "]";
 
-            // process general duration
-            var dm = parseInt(jQuery("#tdm").val());
-            var ds = parseInt(jQuery("#tds").val());
-            var duration = dm*60 + ds;
-            if (!(dm>=0 && ds>=0 && ds<60 && duration>0)) {
-                alert($:{json.dumps(_('Error: Duration missing.'), ensure_ascii=False)});
-                return;
-            }
-
             // process time
             var startTime = parseTime("ts");
             if (jQuery("button#cRecurring").hasClass("on")) {
-				if (idd) {
-						var interval = total_t/60;;
-                    } else {
-						var interval = jQuery(".station.on").length * duration/60;
-				}
+				var interval = lap_t/60;
                 var endTime = startTime + interval;
             } else {
-                var endTime = parseTime("te");
                 var interval = parseTime("ti");
+                var endTime = parseTime("te");
             }
             if (startTime >= endTime) {
                 // Possible bug - can you run a program from 10PM to 2AM?
@@ -317,7 +337,7 @@ $code:
                 return;
             }
 
-            var v = "[" + en + "," + days + "," + dayInterval + "," + startTime + "," + endTime + "," + interval + "," + duration;
+            var v = "[" + en + "," + days + "," + dayInterval + "," + startTime + "," + endTime + "," + interval + "," + gduration;
             for (var i=0; i<nbrd; i++) {
                 v += "," + stations[i];
             }
