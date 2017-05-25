@@ -136,22 +136,21 @@ $code:
                     $ sid += 1
                     $if (gv.sd['show'][bid]>>s)&1 and bits&(1<<s):
                         <span class="stationName val">${snames[sid]}</span>
-                        $if gv.sd['idd']:
+                        $if gv.sd['idd'] > 0 :
                             $ duration += prog[-1][sid]
                         $else:
                             $ duration += prog[6]
+            $ lap_end = start + duration / 60
+            $ recurring = int(lap_end) < int(end)
 							
             </p>
             <p>$_('Starting'): <span class="val">${formatTime(two_digits(start/60) + ":" + two_digits(start%60))}</span>
-                <span ${"" if not (gv.sd['idd'] > 0) else "style=display:none"}>$_('for') <span class="val">${(duration/60>>0)}</span> mins<span class="val">${"" if (duration%60) == 0 else (" " + str(duration%60) + " secs")}</span></span>
                 <span ${"" if (gv.sd['idd'] > 0) else "style=display:none"}>$_('with individual station durations')</span></p>
-            $ recurring = int(start + duration/60) < int(end)
+                <p>$_('for')</b> <span class="val">${two_digits(duration/3600)}</span> hrs <span class="val">${two_digits(((duration/60)%60))}</span> mins <span class="val">${two_digits(duration%60)}</span> secs 
+                $_('until') <span class="val">${formatTime(two_digits(lap_end/60) + ":" + two_digits(lap_end%60))}</span></p>
             $if recurring:
                 <p>$_('Recurring every')</b> <span class="val">${two_digits(interval/60)}</span> hrs <span class="val">${two_digits(interval%60)}</span> mins
 				$_('until') <span class="val">${formatTime(two_digits(end/60) + ":" + two_digits(end%60))}</span></p>
-            $if not recurring and gv.sd['idd'] > 0:
-                <p>$_('for')</b> <span class="val">${two_digits(interval/60)}</span> hrs <span class="val">${two_digits(interval%60)}</span> mins <span class="val">${two_digits((interval%1)*60)}</span> secs 
-                $_('until') <span class="val">${formatTime(two_digits(end/60) + ":" + two_digits(end%60))}</span></p>
 
             <p>
                 <button class="cRunNow" data="${pid}">$_('Run Now')</button>
