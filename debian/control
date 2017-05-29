@@ -1,0 +1,12 @@
+Source: ospi
+Maintainer: Niv Gal Waizer <nivwiz@gmail.com>
+Section: misc
+Priority: optional
+Build-Depends: debhelper(>=8)
+
+Package: ospi
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Python Interval Program for OpenSprinkler Pi
+ This program, written by Dan Kimberling, is a Python port of the Arduino based micro-controller
+ OpenSprinkler interval program originally written by Ray Wang.
