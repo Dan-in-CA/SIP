@@ -96,11 +96,14 @@ def setup_pins():
             pin_sr_clk = gv.pin_map[7]
             pin_sr_noe = gv.pin_map[11]
             pin_sr_lat = gv.pin_map[15]
+            pin_tr = gv.pin_map[8]
+            
         elif gv.platform == 'bo':  # If this will run on Beagle Bone Black:
             pin_sr_dat = gv.pin_map[11]
             pin_sr_clk = gv.pin_map[13]
             pin_sr_noe = gv.pin_map[14]
             pin_sr_lat = gv.pin_map[12]
+            
     except AttributeError:
         pass
 
@@ -124,6 +127,11 @@ def setup_pins():
             GPIO.output(pin_sr_clk, GPIO.LOW)
             GPIO.output(pin_sr_dat, GPIO.LOW)
             GPIO.output(pin_sr_lat, GPIO.LOW)
+            
+            #  Uncomment the following 2 lines if using active low relay boards with shift registers and a transistor.
+#             GPIO.setup(pin_tr, GPIO.OUT)
+#             GPIO.output(pin_tr, GPIO.HIGH)            
+            
     except NameError:
         pass
 
@@ -198,7 +206,7 @@ def set_output():
 
     with gv.output_srvals_lock:
         gv.output_srvals = gv.srvals
-        gv.output_srvals = [1-i for i in gv.output_srvals]  #  Uncomment this line for active low relays      
+#         gv.output_srvals = [1-i for i in gv.output_srvals]  #  Uncomment this line for active low relays      
         disableShiftRegisterOutput()
         setShiftRegister(gv.output_srvals)  # gv.srvals stores shift register state
         enableShiftRegisterOutput()
