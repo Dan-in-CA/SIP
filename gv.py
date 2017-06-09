@@ -81,7 +81,8 @@ sd = {
     u"password": "e74a224d3277c87785d284286f230ae5f5ee940d",
     u"lang": u"default",
     u"idd": 0,
-    u"pigpio": 0
+    u"pigpio": 0,
+    u"alr":0
 }
 
 try:
@@ -149,6 +150,7 @@ options = [
     [_("Individual Duration"), "boolean", "idd", _("Allow each station to have its own rum time in programs."), _("Station Handling")],
     [_("Extension boards"), "int", "nbrd", _("Number of extension boards."), _("Station Handling")],
     [_("Station delay"), "int", "sdt", _("Station delay time (in seconds), between 0 and 240."), _("Station Handling")],
+    [_("Active-Low Relay"), "boolean", "alr", _("Using active-low relay boards connected through shift registers"), _("Station Handling")],
     [_("Master station"), "int", "mas",_( "Select master station."), _("Configure Master")],
     [_("Master on adjust"), "int", "mton", _("Master on delay (in seconds), between +0 and +60."), _("Configure Master")],
     [_("Master off adjust"), "int", "mtoff", _("Master off delay (in seconds), between -60 and +60."), _("Configure Master")],
