@@ -96,8 +96,6 @@ def setup_pins():
             pin_sr_clk = gv.pin_map[7]
             pin_sr_noe = gv.pin_map[11]
             pin_sr_lat = gv.pin_map[15]
-            pin_tr = gv.pin_map[8]
-            
         elif gv.platform == 'bo':  # If this will run on Beagle Bone Black:
             pin_sr_dat = gv.pin_map[11]
             pin_sr_clk = gv.pin_map[13]
@@ -126,10 +124,7 @@ def setup_pins():
             GPIO.output(pin_sr_noe, GPIO.HIGH)
             GPIO.output(pin_sr_clk, GPIO.LOW)
             GPIO.output(pin_sr_dat, GPIO.LOW)
-            GPIO.output(pin_sr_lat, GPIO.LOW)
-            if gv.sd['alr']:
-                GPIO.setup(pin_tr, GPIO.OUT)
-                GPIO.output(pin_tr, GPIO.HIGH)                        
+            GPIO.output(pin_sr_lat, GPIO.LOW)                      
     except NameError:
         pass
 
