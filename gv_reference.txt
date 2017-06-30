@@ -38,6 +38,7 @@ ir:[0] ignore rain bytes - contains bits per board for stations to ignore rain d
 iw:[0] ingore water level - contains bits per board for stations to ignore water level (both general scaling and plugin adjustments)
 rsn:0 Reset all stations
 nst:8 number of stations
+tz_offset:varies  local device time offset from UTC in seconds.
 
 for logging:
 lg:0 log runs if = "checked"
