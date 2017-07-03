@@ -159,7 +159,7 @@ def restart(wait=1, block=False):
         except Exception:
             pass
         gv.restarted = 0
-        subprocess.Popen('service sip restart'.split())
+        subprocess.Popen('systemctl restart sip.service'.split())
     else:
         t = Thread(target=restart, args=(wait, True))
         t.start()
