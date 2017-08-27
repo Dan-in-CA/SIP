@@ -356,20 +356,28 @@ class change_runonce(ProtectedPage):
             return
         gv.rovals = json.loads(qdict['t'])
         gv.rovals.pop()
+        for sid in range(gv.sd['nst']):
+            if gv.srvals[sid]:  # if currently on, log result
+                gv.lrun[0] = sid
+                gv.lrun[1] = gv.rs[sid][3]
+                gv.lrun[2] = int(gv.now - gv.rs[sid][0])
+                gv.lrun[3] = gv.now     # think this is unused
+                log_run()
+                report_station_completed(sid + 1)
         stations = [0] * gv.sd['nbrd']
         gv.ps = []  # program schedule (for display)
         gv.rs = []  # run schedule
-        for i in range(gv.sd['nst']):
+        for sid in range(gv.sd['nst']):
             gv.ps.append([0, 0])
             gv.rs.append([0, 0, 0, 0])
-        for i, v in enumerate(gv.rovals):
-            if v:  # if this element has a value
-                gv.rs[i][0] = gv.now
-                gv.rs[i][2] = v
-                gv.rs[i][3] = 98
-                gv.ps[i][0] = 98
-                gv.ps[i][1] = v
-                stations[i / 8] += 2 ** (i % 8)
+        for sid, dur in enumerate(gv.rovals):
+            if dur:  # if this element has a value
+                gv.rs[sid][0] = gv.now
+                gv.rs[sid][2] = dur
+                gv.rs[sid][3] = 98
+                gv.ps[sid][0] = 98
+                gv.ps[sid][1] = dur
+                stations[sid / 8] += 2 ** (sid % 8)
         schedule_stations(stations)
         raise web.seeother('/')
 

@@ -60,10 +60,10 @@ def timing_loop():
                                 sid = b * 8 + s  # station index
                                 if gv.sd['mas'] == sid + 1:
                                     continue  # skip if this is master station
-                                if gv.srvals[sid]:  # skip if currently on
+                                if gv.srvals[sid] and gv.sd['seq']:  # skip if currently on and sequential mode
                                     continue
 
-            				# station duration condionally scaled by "water level"
+                                # station duration conditionally scaled by "water level"
                                 if gv.sd['iw'][b] & 1 << s:
                                     duration_adj = 1.0
                                     if gv.sd['idd'] == 1:
@@ -84,14 +84,17 @@ def timing_loop():
                                         gv.ps[sid][0] = i + 1  # store program number for display
                                         gv.ps[sid][1] = duration
                                     else:  # concurrent mode
-                                        # If duration is shortter than any already set for this station
-                                        if duration < gv.rs[sid][2]:
-                                            continue
-                                        else:
-                                            gv.rs[sid][2] = duration
-                                            gv.rs[sid][3] = i + 1  # store program number
-                                            gv.ps[sid][0] = i + 1  # store program number for display
-                                            gv.ps[sid][1] = duration
+                                        if gv.srvals[sid]:  # if currently on, log result
+                                            gv.lrun[0] = sid
+                                            gv.lrun[1] = gv.rs[sid][3]
+                                            gv.lrun[2] = int(gv.now - gv.rs[sid][0])
+                                            gv.lrun[3] = gv.now     # think this is unused
+                                            log_run()
+                                            report_station_completed(sid + 1)
+                                        gv.rs[sid][2] = duration
+                                        gv.rs[sid][3] = i + 1  # store program number
+                                        gv.ps[sid][0] = i + 1  # store program number for display
+                                        gv.ps[sid][1] = duration
                         schedule_stations(p[7:7 + gv.sd['nbrd']])  # turns on gv.sd['bsy']
 
         if gv.sd['bsy']:
@@ -142,11 +145,12 @@ def timing_loop():
             if program_running:
                 if gv.sd['urs'] and gv.sd['rs']:  #  Stop stations if use rain sensor and rain detected.
                     stop_onrain()  # Clear schedule for stations that do not ignore rain.
-                for idx in range(len(gv.rs)):  # loop through program schedule (gv.ps)
-                    if gv.rs[idx][2] == 0:  # skip stations with no duration
+                for sid in range(len(gv.rs)):  # loop through program schedule (gv.ps)
+                    if gv.rs[sid][2] == 0:  # skip stations with no duration
                         continue
-                    if gv.srvals[idx]:  # If station is on, decrement time remaining display
-                        gv.ps[idx][1] -= 1
+                    if gv.srvals[sid]:  # If station is on, decrement time remaining display
+                        if gv.ps[sid][1] > 0:   # if time is left
+                            gv.ps[sid][1] -= 1
 
             if not program_running:
                 gv.srvals = [0] * (gv.sd['nst'])
@@ -163,7 +167,7 @@ def timing_loop():
             if (gv.sd['mas'] #  master is defined
                 and (gv.sd['mm'] or not gv.sd['seq']) #  manual or concurrent mode.
                 ):
-                for b in range(gv.sd['nbrd']):	# set stop time for master
+                for b in range(gv.sd['nbrd']):  # set stop time for master
                     for s in range(8):
                         sid = b * 8 + s
                         if (gv.sd['mas'] != sid + 1  # if not master

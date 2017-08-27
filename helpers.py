@@ -345,7 +345,9 @@ def log_run():
         duration = _('duration')
         strt = _('start')
         date = _('date')
-        if gv.lrun[1] == 98:
+        if gv.lrun[1] == 0:  # skip program 0
+            return
+        elif gv.lrun[1] == 98:
             pgr = _('Run-once')
         elif gv.lrun[1] == 99:
             pgr = _('Manual')
