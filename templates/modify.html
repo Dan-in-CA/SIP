@@ -325,7 +325,7 @@ $code:
             // process time
             var startTime = parseTime("ts");
             if (jQuery("button#cRecurring").hasClass("on")) {
-				var interval = lap_t/60;
+				var interval = Math.floor(lap_t/60);
                 var endTime = startTime + interval;
             } else {
                 var interval = parseTime("ti");
