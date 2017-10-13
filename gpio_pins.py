@@ -34,9 +34,17 @@ except ImportError:
         gv.pin_map.extend(['P9_'+str(i) for i in range(11,17)])
         gv.platform = 'bo'
     except ImportError:
-        gv.pin_map = [i for i in range(27)] # assume 26 pins all mapped.  Maybe we should not assume anything, but...
-        gv.platform = ''  # if no platform, allows program to still run.
-        print 'No GPIO module was loaded from GPIO Pins module'
+		try:		# ODROID-C2, prerequisite is to have installed wiringPi2 python library. see: http://odroid.com/dokuwiki/lib/exe/detail.php?id=en%3Ac1_tinkering&media=en:c1:tinkering.jpg
+			import wiringpi2 as GPIO
+			#pins = [24, 23, 22, 21, 14, 13, 12, 3, 2, 0, 7, 1, 4, 5, 6, 10, 11, 26, 27]
+			gv.pin_map = [0,0,0,0,0,0,0,7,0,0,0,11,12,13,0,15,16,0,18,19,0,21,22,23,24,0,26,0,0,29,0,31,32,33,0,35,36,0,0,0,0]
+			gv.pin_map = [0,0,0,0,0,0,0,7,0,0,0,0,1,2,0,3,4,0,5,12,0,13,6,14,10,0,11,0,0,21,0,22,26,23,0,24,27,0,0,0,0]
+			gv.platform = 'odroid-c2'
+			GPIO.wiringPiSetup()
+		except ImportError:
+			gv.pin_map = [i for i in range(27)] # assume 26 pins all mapped.  Maybe we should not assume anything, but...
+			gv.platform = ''  # if no platform, allows program to still run.
+			print 'No GPIO module was loaded from GPIO Pins module'
 
 from blinker import signal
 zone_change = signal('zone_change')
@@ -45,7 +53,7 @@ try:
     if gv.use_pigpio:
         import pigpio
         pi = pigpio.pi()
-    else:
+    elif gv.platform != 'odroid-c2':
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are 
 except Exception:
@@ -55,27 +63,57 @@ except Exception:
 global pin_rain_sense
 global pin_relay
 
+
+def set_pin_mode_output(pin):
+	if gv.use_pigpio:
+		pi.set_mode(pin, pigpio.OUTPUT)
+	elif gv.platform == 'odroid-c2':
+		GPIO.pinMode(pin, GPIO.GPIO.OUTPUT)
+	else:
+		GPIO.setup(pin, GPIO.OUT)
+
+def set_pin_high(pin):
+	if gv.use_pigpio:
+		pi.write(pin, 1)
+	elif gv.platform == 'odroid-c2':
+		GPIO.digitalWrite(pin, 1)
+	else:
+		GPIO.output(pin_sr_noe, GPIO.HIGH)
+
+def set_pin_low(pin):
+	if gv.use_pigpio:
+		pi.write(pin, 0)
+	elif gv.platform == 'odroid-c2':
+		GPIO.digitalWrite(pin, 0)
+	else:
+		GPIO.output(pin_sr_noe, GPIO.LOW)
+
 try:
-    if gv.platform == 'pi':  # If this will run on Raspberry Pi:
-        GPIO.setmode(GPIO.BOARD)
+    if gv.platform == 'pi' or gv.platform == 'odroid-c2':  # If this will run on Raspberry Pi:
+        if gv.platform == 'pi':
+		    GPIO.setmode(GPIO.BOARD)
         pin_rain_sense = gv.pin_map[8]
         pin_relay = gv.pin_map[10]
     elif gv.platform == 'bo':  # If this will run on Beagle Bone Black:
         pin_rain_sense = gv.pin_map[15]
         pin_relay = gv.pin_map[16]
 except AttributeError:
+    print "Error setting rain sensor pins"
     pass
 
 try:
     if gv.use_pigpio:
         pi.set_mode(pin_rain_sense, pigpio.INPUT)
         pi.set_pull_up_down(pin_rain_sense, pigpio.PUD_UP)
-        pi.set_mode(pin_relay, pigpio.OUTPUT)
-    else:      
+    elif gv.platform == 'odroid-c2':
+        GPIO.pinMode(pin_rain_sense, GPIO.GPIO.INPUT)
+    else:
         GPIO.setup(pin_rain_sense, GPIO.IN, pull_up_down = GPIO.PUD_UP)
-        GPIO.setup(pin_relay, GPIO.OUT)
+	set_pin_mode_output(pin_relay);
 except NameError:
+    print "Error setting rain sensor pins"
     pass
+
 
 def setup_pins():
     """
@@ -89,8 +127,8 @@ def setup_pins():
     global pi
 
     try:
-        if gv.platform == 'pi':  # If this will run on Raspberry Pi:
-            if not gv.use_pigpio:
+        if gv.platform == 'pi' or gv.platform == 'odroid-c2':  # If this will run on Raspberry Pi:
+            if not gv.use_pigpio and gv.platform != 'odroid-c2':
                 GPIO.setmode(GPIO.BOARD)  # IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
             pin_sr_dat = gv.pin_map[13]
             pin_sr_clk = gv.pin_map[7]
@@ -101,31 +139,21 @@ def setup_pins():
             pin_sr_clk = gv.pin_map[13]
             pin_sr_noe = gv.pin_map[14]
             pin_sr_lat = gv.pin_map[12]
-            
     except AttributeError:
-        pass
+		print "Failed setup GPIO pins for shift register operation"
+		pass
 
-    #### setup GPIO pins as output or input ####
+	#### setup GPIO pins as output or input ####
     try:
-        if gv.use_pigpio:
-            pi.set_mode(pin_sr_noe, pigpio.OUTPUT)
-            pi.set_mode(pin_sr_clk, pigpio.OUTPUT)
-            pi.set_mode(pin_sr_dat, pigpio.OUTPUT)
-            pi.set_mode(pin_sr_lat, pigpio.OUTPUT)
-            pi.write(pin_sr_noe, 1)
-            pi.write(pin_sr_clk, 0)
-            pi.write(pin_sr_dat, 0)
-            pi.write(pin_sr_lat, 0)
-        else:
-            GPIO.setup(pin_sr_noe, GPIO.OUT)
-            GPIO.setup(pin_sr_clk, GPIO.OUT)
-            GPIO.setup(pin_sr_dat, GPIO.OUT)
-            GPIO.setup(pin_sr_lat, GPIO.OUT)
-            GPIO.output(pin_sr_noe, GPIO.HIGH)
-            GPIO.output(pin_sr_clk, GPIO.LOW)
-            GPIO.output(pin_sr_dat, GPIO.LOW)
-            GPIO.output(pin_sr_lat, GPIO.LOW)                      
-    except NameError:
+		set_pin_mode_output(pin_sr_noe)
+		set_pin_mode_output(pin_sr_clk)
+		set_pin_mode_output(pin_sr_dat)
+		set_pin_mode_output(pin_sr_lat)
+		set_pin_high(pin_sr_noe)
+		set_pin_low(pin_sr_clk)
+		set_pin_low(pin_sr_clk)
+		set_pin_low(pin_sr_lat)
+    except PinSetupError:
         pass
 
 
@@ -139,10 +167,7 @@ def disableShiftRegisterOutput():
         if gv.use_gpio_pins:
             setup_pins()
     try:
-        if gv.use_pigpio:
-            pi.write(pin_sr_noe, 1)
-        else:
-            GPIO.output(pin_sr_noe, GPIO.HIGH)
+        set_pin_high(pin_sr_noe)
     except Exception:
         pass
 
@@ -152,10 +177,7 @@ def enableShiftRegisterOutput():
 
     global pi
     try:
-        if gv.use_pigpio:
-            pi.write(pin_sr_noe, 0)
-        else:
-            GPIO.output(pin_sr_noe, GPIO.LOW)
+        set_pin_low(pin_sr_noe)
     except Exception:
         pass
 
@@ -165,28 +187,16 @@ def setShiftRegister(srvals):
 
     global pi
     try:
-        if gv.use_pigpio:
-            pi.write(pin_sr_clk, 0)
-            pi.write(pin_sr_lat, 0)
-            for s in range(gv.sd['nst']):
-                pi.write(pin_sr_clk, 0)
-                if srvals[gv.sd['nst']-1-s]:
-                    pi.write(pin_sr_dat, 1)
-                else:
-                    pi.write(pin_sr_dat, 0)
-                pi.write(pin_sr_clk, 1)
-            pi.write(pin_sr_lat, 1)
-        else:
-            GPIO.output(pin_sr_clk, GPIO.LOW)
-            GPIO.output(pin_sr_lat, GPIO.LOW)
-            for s in range(gv.sd['nst']):
-                GPIO.output(pin_sr_clk, GPIO.LOW)
-                if srvals[gv.sd['nst']-1-s]:
-                    GPIO.output(pin_sr_dat, GPIO.HIGH)
-                else:
-                    GPIO.output(pin_sr_dat, GPIO.LOW)
-                GPIO.output(pin_sr_clk, GPIO.HIGH)
-            GPIO.output(pin_sr_lat, GPIO.HIGH)
+		set_pin_low(pin_sr_clk)
+		set_pin_low(pin_sr_lat)
+		for s in range(gv.sd['nst']):
+			set_pin_low(pin_sr_clk)
+			if srvals[gv.sd['nst']-1-s]:
+				set_pin_high(pin_sr_dat)
+			else:
+				set_pin_low(pin_sr_dat)
+			set_pin_high(pin_sr_clk)
+		set_pin_high(pin_sr_lat)
     except Exception:
         pass
 
