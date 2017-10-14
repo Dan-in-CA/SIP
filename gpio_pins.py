@@ -78,7 +78,7 @@ def set_pin_high(pin):
 	elif gv.platform == 'odroid-c2':
 		GPIO.digitalWrite(pin, 1)
 	else:
-		GPIO.output(pin_sr_noe, GPIO.HIGH)
+		GPIO.output(pin, GPIO.HIGH)
 
 def set_pin_low(pin):
 	if gv.use_pigpio:
@@ -86,7 +86,7 @@ def set_pin_low(pin):
 	elif gv.platform == 'odroid-c2':
 		GPIO.digitalWrite(pin, 0)
 	else:
-		GPIO.output(pin_sr_noe, GPIO.LOW)
+		GPIO.output(pin, GPIO.LOW)
 
 try:
     if gv.platform == 'pi' or gv.platform == 'odroid-c2':  # If this will run on Raspberry Pi:
