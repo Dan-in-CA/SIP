@@ -92,7 +92,7 @@ def reboot(wait=1, block=False):
         set_output()
         if gv.use_pigpio:
             pass
-        else:
+        elif gv.platform != 'odroid-c2':
             GPIO.cleanup()
         time.sleep(wait)
         try:
@@ -121,7 +121,7 @@ def poweroff(wait=1, block=False):
         set_output()
         if gv.use_pigpio:
             pass
-        else:
+        elif gv.platform != 'odroid-c2':
             GPIO.cleanup()
         time.sleep(wait)
         try:
@@ -151,7 +151,7 @@ def restart(wait=1, block=False):
         set_output()
         if gv.use_pigpio:
             pass
-        else:
+        elif gv.platform != 'odroid-c2':
             GPIO.cleanup()
         time.sleep(wait)
         try:
@@ -301,7 +301,7 @@ def get_cpu_temp(unit=None):
         if gv.platform == 'bo':
             res = os.popen('cat /sys/class/hwmon/hwmon0/device/temp1_input').readline()
             temp = str(int(float(res) / 1000))
-        elif gv.platform == 'pi':
+        elif gv.platform == 'pi' or gv.platform == 'odroid-c2':
             command = "cat /sys/class/thermal/thermal_zone0/temp"
             output = subprocess.check_output(command.split())
             temp = str(int(float(output) / 1000))
