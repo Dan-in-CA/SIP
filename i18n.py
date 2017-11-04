@@ -21,6 +21,7 @@ except:
 
 languages = ({
     "en_US": "English",
+    "af_AF": "Afrikaans",    
     "cs_CZ": "Czech",
     "fr_FR": "French",
     "de_DE": "German",
