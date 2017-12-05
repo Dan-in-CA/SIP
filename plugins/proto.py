@@ -1,4 +1,5 @@
 # !/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import web  # web.py framework
 import gv  # Get access to SIP's settings
@@ -15,7 +16,7 @@ urls.extend([
     ])
 
 # Add this plugin to the PLUGINS menu ['Menu Name', 'URL'], (Optional)
-gv.plugin_menu.append(['Proto Plugin', '/proto-sp'])
+gv.plugin_menu.append([_('Proto Plugin'), '/proto-sp'])
 
 def empty_function():  # Only a place holder
     """
