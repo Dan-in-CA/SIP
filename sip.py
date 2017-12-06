@@ -238,7 +238,9 @@ if __name__ == '__main__':
 
     #  Keep plugin manager at top of menu
     try:
-        gv.plugin_menu.pop(gv.plugin_menu.index(['Manage Plugins', '/plugins']))
+        for i, item in enumerate(gv.plugin_menu):
+            if '/plugins' in item:
+                gv.plugin_menu.pop(i)
     except Exception:
         pass
     
