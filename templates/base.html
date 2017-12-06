@@ -127,10 +127,10 @@ $code:
 
             jQuery(document).ready(function(){
                 jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + baseUrl + '/plugins\'">$_('Manage Plugins')</button><br/>');
-                $if len(gv.plugin_menu) > 0:
-                    jQuery.each(plugins, function() {
-                        jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\'' + baseUrl + ''+this[1]+'\'">'+this[0]+'</button><br/>');
-                    });
+                $if len(uplugin_menu) > 0:
+                	$for i, plugin in enumerate(uplugin_menu):
+                		
+                        jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\'' + baseUrl + '${plugin[1]}\'">${plugin[0]}</button><br/>');
                 $else:
                     jQuery('#pluginMenu').append('None<br/>');
 
