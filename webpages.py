@@ -333,7 +333,7 @@ class get_set_station(ProtectedPage):
                 gv.sd['bsy'] = 1
                 time.sleep(1)
             else:  # If status is off
-                gv.rs[sid][1] = gv.now
+                gv.rs[sid][1] = gv.now + 2
                 time.sleep(1)
             raise web.seeother('/')
         else:
