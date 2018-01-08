@@ -6,8 +6,8 @@ import calendar
 
 from helpers import get_cpu_temp, check_login, password_hash
 import web
-import gv  # Gain access to ospi's settings
-from urls import urls  # Gain access to ospi's URL list
+import gv  # Gain access to sip's settings
+from urls import urls  # Gain access to sip's URL list
 from webpages import ProtectedPage, WebPage
 
 ##############
@@ -34,7 +34,7 @@ class options(WebPage):  # /jo
         web.header('Cache-Control', 'no-cache')
         if check_login():
             jopts = {
-                "fwv": gv.ver_str+'-OSPi',
+                "fwv": gv.ver_str+'-SIP',
                 "tz": gv.sd['tz'],
                 "ext": gv.sd['nbrd'] - 1,
                 "seq": gv.sd['seq'],
@@ -51,7 +51,7 @@ class options(WebPage):  # /jo
             }
         else:
             jopts = {
-                "fwv": gv.ver_str+'-OSPi',
+                "fwv": gv.ver_str+'-SIP',
             }
 
         return json.dumps(jopts)

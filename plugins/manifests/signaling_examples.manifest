@@ -1,4 +1,4 @@
-Description: Includes example functions that are activated by event signals from the core ospi program
+Description: Includes example functions that are activated by event signals from the core SIP program
 Copyright 2014
 Author: Dan
 Email: dkimberling59@gmail.com
@@ -6,7 +6,7 @@ License: GNU GPL 3.0
 
 Requirements: Python blinker module (included with software distro)
 
-##### List all plugin files below preceded by a blank line [file_name.ext path] relative to OSPi directory #####
+##### List all plugin files below preceded by a blank line [file_name.ext path] relative to SIP directory #####
 
 signaling_examples.py plugins
 signaling_examples.manifest plugins/manifests
