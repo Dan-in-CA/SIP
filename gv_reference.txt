@@ -25,7 +25,7 @@ pwd:"b3BlbmRvb3I=" encoded password (default 'opendoor' shown here)
 loc:""	location (for weather) - not used
 rdst:0	rain delay stop time (unix time stamp)
 rs:0	rain sensed (bool)
-nopts:14 Number of optiions to be displayed
+nopts:14 Number of options to be displayed
 name:"SIP"	configurable name for system
 snlen:32 max size of station names
 idd:0   individual run times
@@ -61,7 +61,7 @@ gv.pd	program data - loaded from file at startup (list of lists)
 gv.ps	program schedule used for UI display (list of 2 element lists i.e. [program number, duration])
 gv.pon	program on (Holds program number of currently running program)
 gv.sbits	station bits, used to display stations that are on in UI (list of bytes, one byte per board)
-gv.rs	run schedule (list [scheduled start time, scheduled stop time, duration, program index])
+gv.rs	run schedule (list [scheduled start time, scheduled stop time, duration, program number])
 gv.lrun	last run, used to display log line on home page (list [station index, program number, duration, end time]) 
 gv.scount	station count, used in set station to track on stations with master association
 gv.plugin_menu list to hold a 2 element list for each plugin to be added to menu on home page (['menu text', 'url'])

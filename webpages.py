@@ -178,19 +178,30 @@ class change_options(ProtectedPage):
                 self.update_scount(qdict)
             gv.sd['nbrd'] = int(qdict['onbrd']) + 1
             gv.sd['nst'] = gv.sd['nbrd'] * 8
+            self.update_prog_lists('nbrd')
 
-        if 'ohtp' in qdict:
+        if 'ohtp' in qdict:            
             if 'htp' not in gv.sd or gv.sd['htp'] != int(qdict['ohtp']):
                 qdict['rbt'] = '1'  # force reboot with change in htp
             gv.sd['htp'] = int(qdict['ohtp'])
-
+            
+        if 'oidd' in qdict:
+#             if qdict['oidd'] == 'on':
+            idd_int = 1
+        else:
+            idd_int = 0
+        print "idd_int:, ", idd_int  
+        if idd_int != gv.sd['idd']:
+            gv.sd['idd'] = idd_int
+            self.update_prog_lists('idd')
+                
         for f in ['sdt', 'mas', 'mton', 'mtoff', 'wl', 'lr', 'tz']:
             if 'o'+f in qdict:
                 if f == 'mton'  and int(qdict['o'+f])<0: #handle values less than zero (temp fix)
                     raise web.seeother('/vo?errorCode=mton_minus')                 
                 gv.sd[f] = int(qdict['o'+f])
 
-        for f in ['ipas', 'tf', 'urs', 'seq', 'rst', 'lg', 'idd', 'pigpio', 'alr']:
+        for f in ['ipas', 'tf', 'urs', 'seq', 'rst', 'lg', 'pigpio', 'alr']: ###  'idd',
             if 'o'+f in qdict and (qdict['o'+f] == 'on' or qdict['o'+f] == '1'):
                 gv.sd[f] = 1
             else:
@@ -202,7 +213,6 @@ class change_options(ProtectedPage):
             gv.srvals = [0] * (gv.sd['nst'])
             set_output()
             report_rebooted()
-#            os.system('reboot')
             reboot()
 
         if 'rstrt' in qdict and qdict['rstrt'] == '1':
@@ -211,7 +221,13 @@ class change_options(ProtectedPage):
         raise web.seeother('/')
 
     def update_scount(self, qdict):
-        """Increase or decrease the number of stations displayed when number of expansion boards is changed in options."""
+        """
+        Increase or decrease the number of stations displayed when
+        number of expansion boards is changed in options.
+        
+        Increase or decrase the lengths of program 'duration_sec' and 'station_mask'
+        when number of expansion boards is changed
+        """
         if int(qdict['onbrd']) + 1 > gv.sd['nbrd']:  # Lengthen lists
             incr = int(qdict['onbrd']) - (gv.sd['nbrd'] - 1)
             for i in range(incr):
@@ -235,9 +251,6 @@ class change_options(ProtectedPage):
             gv.sd['ir'] = gv.sd['ir'][:(onbrd + 1)]
             gv.sd['iw'] = gv.sd['iw'][:(onbrd + 1)]
             gv.sd['show'] = gv.sd['show'][:(onbrd + 1)]
-            # unused variables
-            # nlst = gv.snames
-            # nlst = nlst[:8+(onbrd*8)]
             newlen = gv.sd['nst'] - decr * 8
             gv.srvals = gv.srvals[:newlen]
             gv.ps = gv.ps[:newlen]
@@ -247,6 +260,40 @@ class change_options(ProtectedPage):
         jsave(gv.snames, 'snames')
 
 
+    def update_prog_lists(self, change):
+        for p in gv.pd:
+            if change == 'idd' or change == 'nbrd': #  change length of p['duration_sec']
+                if not gv.sd['idd']:
+                    p['duration_sec'] = p['duration_sec'][:1] 
+                    if p['duration_sec'][0] == 0:
+                        p['enabled'] = 0 
+             
+                else:
+                    old_dur = None              
+                    if (change == 'idd'
+                        and gv.sd['idd']
+                        and len(p['duration_sec']) == 1 #  changed from !idd -> idd               
+                    ):
+                        old_dur = p['duration_sec'][0]
+                        p['duration_sec'][0] = 0                     
+                    if gv.sd['nst'] > len(p['duration_sec']):
+                        p['duration_sec'].extend([0] * (gv.sd['nst'] - len(p['duration_sec'])))
+                        if old_dur:
+                            for b in range (len(p['station_mask'])):  # set duration to old_dur for each active station.
+                                for s in range(8):
+                                    if p['station_mask'][b] & 1<<s:
+                                        p['duration_sec'][b * 8 + s] = old_dur
+                    elif gv.sd['nst'] < len(p['duration_sec']):
+                        p['duration_sec'] = p['duration_sec'][:gv.sd['nst']]
+            
+            if change == 'nbrd': #  change length of p['station_mask']
+                if gv.sd['nbrd'] > len(p['station_mask']):
+                    p['station_mask'].extend([0] * (gv.sd['nbrd'] - len(p['station_mask'])))
+                elif gv.sd['nbrd'] < len(p['station_mask']):
+                    p['station_mask'] = p['station_mask'][:gv.sd['nbrd']]
+        jsave(gv.pd, 'programData')
+        
+        
 class view_stations(ProtectedPage):
     """Open a page to view and edit a run once program."""
 
@@ -259,7 +306,6 @@ class change_stations(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-#        print "qdict from change stations: ", qdict
         for i in range(gv.sd['nbrd']):  # capture master associations
             if 'm' + str(i) in qdict:
                 try:
@@ -397,12 +443,11 @@ class modify_program(ProtectedPage):
         pid = int(qdict['pid'])
         prog = []
         if pid != -1:
-            mp = gv.pd[pid][:]  # Modified program
-            if mp[1] >= 128 and mp[2] > 1:  # If this is an interval program
+            mp = gv.pd[pid]  # Modified program
+            if mp['type'] == 'interval':
                 dse = int(gv.now / 86400)
                 # Convert absolute to relative days remaining for display
-                rel_rem = (((mp[1] - 128) + mp[2]) - (dse % mp[2])) % mp[2]
-                mp[1] = rel_rem + 128  # Update from saved value.
+                rel_rem = (((mp['day_mask']) + mp['interval_base_day']) - (dse % mp['interval_base_day'])) % mp['interval_base_day']
             prog = str(mp).replace(' ', '')
         return template_render.modify(pid, prog)
 
@@ -412,9 +457,12 @@ class change_program(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
+#         print "from wp < mp: ", qdict
         pnum = int(qdict['pid']) + 1  # program number
+#         cp = ast.literal_eval(qdict['v'])
         cp = json.loads(qdict['v'])
-        if cp[0] == 0 and pnum == gv.pon:  # if disabled and program is running
+        print "cp from wp < mp: ", cp
+        if cp['enabled'] == 0 and pnum == gv.pon:  # if disabled and program is running
             for i in range(len(gv.ps)):
                 if gv.ps[i][0] == pnum:
                     gv.ps[i] = [0, 0]
@@ -423,15 +471,15 @@ class change_program(ProtectedPage):
             for i in range(len(gv.rs)):
                 if gv.rs[i][3] == pnum:
                     gv.rs[i] = [0, 0, 0, 0]
-        if cp[1] >= 128 and cp[2] > 1:
+        if cp['type'] == 'interval':
             dse = int(gv.now / 86400)
-            ref = dse + cp[1] - 128
-            cp[1] = (ref % cp[2]) + 128
+            ref = dse + cp['day_mask'] # - 128
+            cp['day_mask'] = (ref % cp['interval_base_day']) # + 128
         if qdict['pid'] == '-1':  # add new program
             gv.pd.append(cp)
         else:
             gv.pd[int(qdict['pid'])] = cp  # replace program
-        jsave(gv.pd, 'programs')
+        jsave(gv.pd, 'programData')
         gv.sd['nprogs'] = len(gv.pd)
         report_program_change()
         raise web.seeother('/vp')
@@ -444,10 +492,10 @@ class delete_program(ProtectedPage):
         qdict = web.input()
         if qdict['pid'] == '-1':
             del gv.pd[:]
-            jsave(gv.pd, 'programs')
+            jsave(gv.pd, 'programData')
         else:
             del gv.pd[int(qdict['pid'])]
-        jsave(gv.pd, 'programs')
+        jsave(gv.pd, 'programData')
         gv.sd['nprogs'] = len(gv.pd)
         report_program_deleted()
         raise web.seeother('/vp')
@@ -458,8 +506,9 @@ class enable_program(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        gv.pd[int(qdict['pid'])][0] = int(qdict['enable'])
-        jsave(gv.pd, 'programs')
+        print "qdict from enable_prog: ", qdict
+        gv.pd[int(qdict['pid'])]['enabled'] = int(qdict['enable'])
+        jsave(gv.pd, 'programData')
         report_program_toggle()
         raise web.seeother('/vp')
 
@@ -488,8 +537,6 @@ class run_now(ProtectedPage):
         qdict = web.input()
         pid = int(qdict['pid'])
         p = gv.pd[int(qdict['pid'])]  # program data
-#        if not p[0]:  # if program is disabled
-#           Sraise web.seeother('/vp')
         stop_stations()
         extra_adjustment = plugin_adjustment()
         sid = -1
@@ -498,18 +545,18 @@ class run_now(ProtectedPage):
                 sid += 1  # station index
                 if sid + 1 == gv.sd['mas']:  # skip if this is master valve
                     continue
-                if p[7 + b] & 1 << s:  # if this station is scheduled in this program
+                if p['station_mask'][b] & 1 << s:  # if this station is scheduled in this program
                     if gv.sd['idd']:
-                        duration = p[-1][sid]
+                        duration = p['duration_sec'][sid]
                     else:
-                        duration = p[6]
+                        duration = p['duration_sec'][0]
                     if not gv.sd['iw'][b] & 1 << s:
                         duration = duration * gv.sd['wl'] / 100 * extra_adjustment
                     gv.rs[sid][2] = duration
                     gv.rs[sid][3] = pid + 1  # store program number in schedule
                     gv.ps[sid][0] = pid + 1  # store program number for display
                     gv.ps[sid][1] = duration  # duration
-        schedule_stations(p[7:7 + gv.sd['nbrd']])
+        schedule_stations(p['station_mask'])  # + gv.sd['nbrd']])
         raise web.seeother('/')
 
 
@@ -599,8 +646,6 @@ class api_log(ProtectedPage):
         data = []
 
         for event in records:
-            #event = ast.literal_eval(json.loads(r))
-
             # return any records starting on this date
             if 'date' not in qdict or event['date'] == thedate:
                 data.append(event)

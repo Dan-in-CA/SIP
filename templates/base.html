@@ -22,11 +22,12 @@ $code:
     months = json.dumps([_('January'), _('February'), _('March'), _('April'), _('May'), _('June'), _('July'), _('August'), _('September'), _('October'), _('November'), _('December')])
 
 <!DOCTYPE html>
-<html lang="en">
+<!-- <html lang="en"> -->
 <head>
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="x-ua-compatible" content="IE=edge">
+<!--     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge"> -->
     
   	<link rel="stylesheet" href="$app_path('/static/bootstrap-3.3.7/css/bootstrap.min.css')">
   	<link rel="stylesheet" href="$app_path('/static/bootstrap-timepicker/css/bootstrap-timepicker.min.css')">
@@ -116,7 +117,7 @@ $code:
             var mas = ${gv.sd['mas']};
             var nbrd = ${gv.sd['nbrd']};
             var plugins = $:{uplugin_menu};
-            var progs = $:{gv.pd};
+            var progs = $:{json.dumps(gv.pd, ensure_ascii=False)};
             var nprogs = ${len(gv.pd)};
             var sdt = ${gv.sd['sdt']};
             var seq = ${gv.sd['seq']};

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-
+import collections
 import i18n
-
 import datetime
 from threading import Thread
 import os
@@ -310,7 +309,6 @@ def get_cpu_temp(unit=None):
 
         if unit == 'F':
             return str(1.8 * float(temp) + 32)
-#            return str(9.0 / 5.0 * float(temp) + 32)
         elif unit is not None:
             return str(float(temp))
         else:
@@ -373,30 +371,35 @@ def prog_match(prog):
     """
     Test a program for current date and time match.
     """
-    if not prog[0]:
+    if not prog['enabled']:
         return 0  # Skip if program is not enabled
     devday = int(gv.now / 86400)  # Check day match
-    lt = time.gmtime(gv.now)
-    if (prog[1] >= 128) and (prog[2] > 1):  # Interval program
-        if (devday % prog[2]) != (prog[1] - 128):
+#     lt = time.gmtime(gv.now)
+    lt = gv.nowt
+    if prog['type'] == 'interval':
+        if (devday % prog['interval_base_day']) != (prog['day_mask']):
             return 0
     else:  # Weekday program
-        if not prog[1] - 128 & 1 << lt[6]:
+        if not prog['day_mask'] - 128 & 1 << lt.tm_wday:
             return 0
-        if prog[1] >= 128 and prog[2] == 0:  # even days
-            if lt[2] % 2 != 0:
+        if prog['type'] == 'evendays':
+            if lt.tm_mday % 2 != 0:
                 return 0
-        if prog[1] >= 128 and prog[2] == 1:  # Odd days
-            if lt[2] == 31 or (lt[1] == 2 and lt[2] == 29):
+        if prog['type'] == 'odddays':
+            if (lt.tm_mday == 31 
+                or ((lt.tm_mon == 2 and lt.tm_mday == 29))
+                ):
                 return 0
             elif lt[2] % 2 != 1:
-                return 0
+                return 0  
     this_minute = (lt[3] * 60) + lt[4]  # Check time match
-    if this_minute < prog[3] or this_minute >= prog[4]:
+    if (this_minute < prog['start_min'] 
+        or this_minute >= prog['stop_min']       
+        or prog['cycle_min'] == 0
+        ):
         return 0
-    if prog[5] == 0:
-        return 0
-    if ((this_minute - prog[3]) / prog[5]) * prog[5] == this_minute - prog[3]:
+    if ((this_minute - prog['start_min']) / prog['cycle_min']) * prog['cycle_min'] == this_minute - prog['start_min']:
+        print "##### Match found #####"
         return 1  # Program matched
     return 0
 
@@ -405,7 +408,9 @@ def schedule_stations(stations):
     """
     Schedule stations/valves/zones to run.
     """
-    if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']):  # If rain delay or rain detected by sensor
+    if (gv.sd['rd'] #  If rain delay or rain detected by sensor
+        or (gv.sd['urs'] and gv.sd['rs'])
+        ):
         rain = True
     else:
         rain = False
@@ -531,17 +536,22 @@ def station_names():
 
 def load_programs():
     """
-    Load program data into memory from /data/programs.json file if it exists.
-    otherwise create an empty programs data list (gv.pd).
+    Load program data into memory from /data/programData.json file if it exists.
+    Otherwise create an empty programs data list (gv.pd) or convert from old style format.
     
     """
     try:
-        with open('./data/programs.json', 'r') as pf:
+        with open('./data/programData.json', 'r') as pf:
             gv.pd = json.load(pf)
     except IOError:
-        gv.pd = []  # A config file -- return default and create file if not found.
-        with open('./data/programs.json', 'w') as pf:
-            json.dump(gv.pd, pf, indent=4, sort_keys=True)
+        #  Check if programs.json file exists (old format) and if so, run conversion
+        if os.path.isfile('./data/programs.json'):
+            import convert_progs
+            gv.pd = convert_progs.convert()
+        else:
+            gv.pd = []  # A config file -- create empty file if not found.
+        with open('./data/programData.json', 'w') as pf:
+            json.dump(gv.pd, pf, indent=4, sort_keys=True)        
     return gv.pd
 
 
