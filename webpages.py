@@ -461,7 +461,7 @@ class change_program(ProtectedPage):
         pnum = int(qdict['pid']) + 1  # program number
 #         cp = ast.literal_eval(qdict['v'])
         cp = json.loads(qdict['v'])
-        print "cp from wp < mp: ", cp
+        print "cp from wp line 464 < mp: ", cp
         if cp['enabled'] == 0 and pnum == gv.pon:  # if disabled and program is running
             for i in range(len(gv.ps)):
                 if gv.ps[i][0] == pnum:

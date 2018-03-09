@@ -10,11 +10,11 @@ if (typeof nbrd !== 'undefined'){var nst = nbrd*8}; // number of stations
 function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is scheduled for this date (displayScheduleDate) called from doSimulation
   // simminutes is minute count generated in doSimulation()
   // simdate is a JavaScript date object
-  simday = Math.floor(simdate/(1000*3600*24)) // The number of days since epoc
+  simday = Math.floor(simdate/ 86400)//(1000*3600*24)) // The number of days since epoc
   var wd,dn;// ,drem; // week day, Interval days, days remaining
   if(pd['enabled']==0)  return 0; // program not enabled, do not match
   if(pd['type'] == 'interval') { // if interval program... 
-    if(((simday)%pd['interval_base_day'])!=(pd['day_mask']&0x7f)) return 0; // remainder checking ##############	
+    if(((simday)%pd['interval_base_day'])!=pd['day_mask']) return 0; // remainder checking ##############	
   } else { // Not interval 
     wd=(simdate.getDay()+6)%7; // getDay assumes sunday is 0, converts to Monday is 0 (weekday index)
     if((pd['day_mask']&(1<<wd))==0) {
@@ -34,8 +34,13 @@ function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is schedu
     }
   }
   if(simminutes<pd['start_min'] || simminutes>=pd['stop_min'])  return 0; // if simulated time is before start time or after stop time, do not match
-  if(pd['type'] == 'interval') {
-      if(pd['cycle_min']==0)  return 0; // repeat time missing, do not match
+//  if(pd['type'] == 'interval') {
+//      if(pd['cycle_min']==0)  return 0; // repeat time missing, do not match
+//  }
+  if(pd['cycle_min']==0 
+		  && simminutes >= pd['start_min']
+		  && simminutes < pd['stop_min']) {
+	  return 1;
   }
   if(((simminutes-pd['start_min'])/pd['cycle_min']>>0)*pd['cycle_min'] == (simminutes-pd['start_min'])) { // if programmed to run now...
     return 1; // scheduled for displayScheduleDate
