@@ -34,7 +34,7 @@ class options(WebPage):  # /jo
         web.header('Cache-Control', 'no-cache')
         if check_login():
             jopts = {
-                "fwv": gv.ver_str+'-SIP',
+                "fwv": gv.ver_str+'-OSPi',
                 "tz": gv.sd['tz'],
                 "ext": gv.sd['nbrd'] - 1,
                 "seq": gv.sd['seq'],
@@ -51,7 +51,7 @@ class options(WebPage):  # /jo
             }
         else:
             jopts = {
-                "fwv": gv.ver_str+'-SIP',
+                "fwv": gv.ver_str+'-OSPi',
             }
 
         return json.dumps(jopts)
