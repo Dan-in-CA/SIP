@@ -19,6 +19,12 @@ July 2014
 ***********
 UPDATES
 ===========
+***********
+March 16 2018
+----------
+(Egidijus)
+
+Added support for ODROID-C2 board. See installation instruction : https://github.com/Dan-in-CA/SIP/wiki/Installation-(Odroid-C2)
 
 ***********
 August 15 2015
