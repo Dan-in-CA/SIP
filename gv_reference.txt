@@ -8,7 +8,8 @@ rbt:0	reboot (bool)
 
 from options:
 alr:0	active-low relay (for use with relay boards connected through shift registers)
-htp:80	http port the program will use
+htp:80	port to bind to for the HTTP server
+htip:"::" IP address to bind to for the HTTP server
 seq:1	sequential/concurrent operation (bool)
 sdt:0	station delay time
 mton:0	master on delay

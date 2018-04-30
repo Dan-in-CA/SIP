@@ -196,10 +196,10 @@ def timing_loop():
 class SIPApp(web.application):
     """Allow program to select HTTP port."""
 
-    def run(self, port=gv.sd['htp'], *middleware):  # get port number from options settings
+    def run(self, port=gv.sd['htp'], ip=gv.sd['htip'], *middleware):  # get port number from options settings
         func = self.wsgifunc(*middleware)
         func = ReverseProxied(func)
-        return web.httpserver.runsimple(func, ('0.0.0.0', port))
+        return web.httpserver.runsimple(func, (ip, port))
 
 
 app = SIPApp(urls, globals())
