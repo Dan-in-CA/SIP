@@ -30,6 +30,7 @@ languages = ({
 	"it_IT": "Italian",
     "sl_SL": "Slovenian",
     "es_ES": "Spanish",
+    "ta_TA": "Tamil",
 })
 
 
