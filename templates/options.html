@@ -103,7 +103,7 @@ $code:
             if datatype == "boolean":
                 output += "<input name='o" + name + "' type='checkbox' " + ("checked" if value>0 else "") + ">\n"
             elif datatype == "string":
-                output += "<input name='o" + name + "' type='text' size='31' maxlength='31' value=\"" + value + "\">\n"
+                output += "<input name='o" + name + "' type='text' size='39' maxlength='39' value=\"" + value + "\">\n"
             elif datatype == "password":
                 output += "<input name='" + name + "' type='password' size='31' maxlength='31'><span class='inputError' id='error" + name + "'></span>\n"
             elif name == "lang":
