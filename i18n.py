@@ -28,6 +28,7 @@ languages = ({
     "de_DE": "German",
 	"gr_GR": "Greek",
 	"it_IT": "Italian",
+    "pt_PT": "Portuguese",
     "sl_SL": "Slovenian",
     "es_ES": "Spanish",
     "ta_TA": "Tamil",
