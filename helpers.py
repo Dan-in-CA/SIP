@@ -93,7 +93,10 @@ def reboot(wait=1, block=False):
         if gv.use_pigpio:
             pass
         else:
-            GPIO.cleanup()
+            try:
+                GPIO.cleanup()
+            except NameError:
+                pass
         time.sleep(wait)
         try:
             print _('Rebooting...')
@@ -122,7 +125,10 @@ def poweroff(wait=1, block=False):
         if gv.use_pigpio:
             pass
         else:
-            GPIO.cleanup()
+            try:
+                GPIO.cleanup()
+            except NameError:
+                pass
         time.sleep(wait)
         try:
             print _('Powering off...')
@@ -152,7 +158,10 @@ def restart(wait=1, block=False):
         if gv.use_pigpio:
             pass
         else:
-            GPIO.cleanup()
+            try:
+                GPIO.cleanup()
+            except NameError:
+                pass
         time.sleep(wait)
         try:
             print _('Restarting...')
