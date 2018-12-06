@@ -4,8 +4,9 @@
 Description=SIP
 After=syslog.target network.target
 [Service]
-ExecStart=/usr/bin/python /home/pi/SIP/sip.py
+ExecStart=/usr/bin/python -u /home/pi/SIP/sip.py
 Restart=on-abort
 WorkingDirectory=/home/pi/SIP/
+SyslogIdentifier=sip
 [Install]
 WantedBy=multi-user.target
