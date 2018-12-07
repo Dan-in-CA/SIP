@@ -46,7 +46,7 @@ sd = {
     u"iw": [0],
     u"rsn": 0,
     u"htp": 80,
-    u"htip": u"0.0.0.0",
+    u"htip": u"::",
     u"nst": 8,
     u"rdst": 0,
     u"loc": u"",
