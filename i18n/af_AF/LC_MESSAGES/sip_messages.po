@@ -1,0 +1,1118 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2017-10-29 11:10+0200\n"
+"PO-Revision-Date: 2017-11-03 19:29+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 2.0.4\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: af_ZA\n"
+"X-Poedit-Bookmarks: -1,-1,-1,-1,-1,44,-1,-1,-1,-1\n"
+
+#: SIP/plugins\system_update.py:75
+msgid "Up-to-date."
+msgstr "Op-datum."
+
+#: SIP/plugins\system_update.py:78
+msgid "New version is available!"
+msgstr "Nuwe weergawe is beskikbaar!"
+
+#: SIP/plugins\system_update.py:79 SIP/plugins\system_update.py:84
+msgid "Available revision"
+msgstr "Beskikbare hersiening"
+
+#: SIP/plugins\system_update.py:80
+msgid "Changes"
+msgstr "Veranderinge"
+
+#: SIP/plugins\system_update.py:83
+msgid "Currently running revision"
+msgstr "Huidig werkende hersiening"
+
+#: SIP/plugins\system_update.py:95
+msgid "System update plug-in encountered error"
+msgstr "Fout met stelsel opgradeer inprop"
+
+#: SIP\gv.py:18
+msgid "Could not use git to determine version!"
+msgstr "Kan nie git gebruik om hersiening te bepaal!"
+
+#: SIP\gv.py:25
+msgid "Could not use git to determine date of last commit!"
+msgstr "Kan nie git gebruik om datum van laaste verandering te bepaal!"
+
+#: SIP\gv.py:133
+msgid "System name"
+msgstr "Stelsel naam"
+
+#: SIP\gv.py:133
+msgid "Unique name of this SIP system."
+msgstr "Unieke naam van SIP stelsel."
+
+#: SIP\gv.py:133 SIP\gv.py:134 SIP\gv.py:135 SIP\gv.py:137 SIP\gv.py:138
+#: SIP\gv.py:139
+msgid "System"
+msgstr "Stelsel"
+
+#: SIP\gv.py:134
+msgid "City name or zip code. Use comma or + in place of space."
+msgstr "Naam of code van Stad. Gebruik 'n komma of + in plaas van spasie."
+
+#: SIP\gv.py:134
+msgid "Location"
+msgstr "Posisie"
+
+#: SIP\gv.py:135
+msgid "Language"
+msgstr "Taal"
+
+#: SIP\gv.py:135
+msgid "Select language."
+msgstr "Kies Taal."
+
+#: SIP\gv.py:137
+msgid "24-hour clock"
+msgstr "24-uur horlosie"
+
+#: SIP\gv.py:137
+msgid "Display times in 24 hour format (as opposed to AM/PM style.)"
+msgstr "Wys tyd in 24 uur formaat (in teenstelling met VM/NM styl.)"
+
+#: SIP\gv.py:138
+msgid "HTTP port"
+msgstr "HTTP poort"
+
+#: SIP\gv.py:138
+msgid "HTTP port."
+msgstr "HTTP poort."
+
+#: SIP\gv.py:139
+msgid "Water Scaling"
+msgstr "Water Verhouding"
+
+#: SIP\gv.py:139
+msgid "Water scaling (as %), between 0 and 100."
+msgstr "Water verhouding (as %), tussen 0 en 100."
+
+#: SIP\gv.py:140
+msgid "Allow anonymous users to access the system without a password."
+msgstr "Laat anonieme gebruikers toe om stelsel sonder wagwoord te gebruik."
+
+#: SIP\gv.py:140
+msgid "Disable security"
+msgstr "Ontmagtig Sekuriteit"
+
+#: SIP\gv.py:140 SIP\gv.py:141 SIP\gv.py:142 SIP\gv.py:143
+msgid "Change Password"
+msgstr "Verander Wagwoord"
+
+#: SIP\gv.py:141
+msgid "Current password"
+msgstr "Huidige Wagwoord"
+
+#: SIP\gv.py:141
+msgid "Re-enter the current password."
+msgstr "Voer huidige wagwoord weer in."
+
+#: SIP\gv.py:142
+msgid "Enter a new password."
+msgstr "Tik nuwe wagwoord in."
+
+#: SIP\gv.py:142
+msgid "New password"
+msgstr "Nuwe wagwoord"
+
+#: SIP\gv.py:143
+msgid "Confirm password"
+msgstr "Bevestig wagwoord"
+
+#: SIP\gv.py:143
+msgid "Confirm the new password."
+msgstr "Bevestig nuwe wagwoord."
+
+#: SIP\gv.py:144
+msgid "Sequential"
+msgstr "Opeenvolgende"
+
+#: SIP\gv.py:144
+msgid "Sequential or concurrent running mode."
+msgstr "Opeenvolgende of gelyktydige werkende seleksie."
+
+#: SIP\gv.py:144 SIP\gv.py:145 SIP\gv.py:146
+msgid "Station Handling"
+msgstr "Stasie Hantering"
+
+#: SIP\gv.py:145
+msgid "Extension boards"
+msgstr "Bord Uitbreiding"
+
+#: SIP\gv.py:145
+msgid "Number of extension boards."
+msgstr "Nommer van uitgebreide borde."
+
+#: SIP\gv.py:146
+msgid "Station delay"
+msgstr "Stasie vertraging"
+
+#: SIP\gv.py:146
+msgid "Station delay time (in seconds), between 0 and 240."
+msgstr "Stasie vertraging tyd (in sekondes), tussen 0 en 240."
+
+#: SIP\gv.py:147
+msgid "Master station"
+msgstr "Hoof Stasie"
+
+#: SIP\gv.py:147
+msgid "Select master station."
+msgstr "Kies hoof stasie."
+
+#: SIP\gv.py:147 SIP\gv.py:148 SIP\gv.py:149
+msgid "Configure Master"
+msgstr "Verstel Hoof"
+
+#: SIP\gv.py:148
+msgid "Master on adjust"
+msgstr "Hoof aan verstel"
+
+#: SIP\gv.py:148
+msgid "Master on delay (in seconds), between +0 and +60."
+msgstr "Hoof aan vertraging (in sekondes), tussen +0 en + 60."
+
+#: SIP\gv.py:149
+msgid "Master off adjust"
+msgstr "Hoof af verstel"
+
+#: SIP\gv.py:149
+msgid "Master off delay (in seconds), between -60 and +60."
+msgstr "Hoof af vertraging (in sekondes), tussen -60 en + 60."
+
+#: SIP\gv.py:150
+msgid "Use rain sensor"
+msgstr "Gebruik reën sensor"
+
+#: SIP\gv.py:150
+msgid "Use rain sensor."
+msgstr "Gebruik reën sensor."
+
+#: SIP\gv.py:150 SIP\gv.py:151
+msgid "Rain Sensor"
+msgstr "Reën Sensor"
+
+#: SIP\gv.py:151
+msgid "Normally open"
+msgstr "Normaal Oop"
+
+#: SIP\gv.py:151
+msgid "Rain sensor type."
+msgstr "Reën sensor tipe."
+
+#: SIP\gv.py:152
+msgid "Enable logging"
+msgstr "Aktiveer aanmelding"
+
+#: SIP\gv.py:152
+msgid ""
+"Log all events - note that repetitive writing to an SD card can shorten its "
+"lifespan."
+msgstr ""
+"Teken alle gebeurtenisse aan - neem kennis dat herhaaldelike skryf na SD "
+"kaart kan lewenspan verkort."
+
+#: SIP\gv.py:152 SIP\gv.py:153
+msgid "Logging"
+msgstr "Aanmelding"
+
+#: SIP\gv.py:153
+msgid "Length of log to keep, 0=no limits."
+msgstr "Lengte van die aanmelding om the onthou, 0=geen beperking."
+
+#: SIP\gv.py:153
+msgid "Max log entries"
+msgstr "Maksimum aanmelding inskrywings"
+
+#: SIP\helpers.py:40
+msgid "Error: json module not found"
+msgstr "Fout: json module nie gevind nie"
+
+#: SIP\helpers.py:74
+msgid "Rebooting..."
+msgstr "Begin van voor af..."
+
+#: SIP\helpers.py:103
+msgid "Powering off..."
+msgstr "Skakel af..."
+
+#: SIP\helpers.py:133
+msgid "Restarting..."
+msgstr "Herlaai..."
+
+#: SIP\helpers.py:320 SIP\templates\base.html:101
+msgid "Run-once"
+msgstr "Hardloop een keer"
+
+#: SIP\helpers.py:322 SIP\templates\base.html:102 SIP\templates\home.html:219
+msgid "Manual"
+msgstr "Hand beheer"
+
+#: SIP\helpers.py:569
+msgid "Password"
+msgstr "Wagwoord"
+
+#: SIP\helpers.py:572
+msgid "Incorrect password, please try again"
+msgstr "Verkeerde wagwoord, prober weer"
+
+#: SIP\sip.py:29
+msgid "Starting timing loop"
+msgstr "Begin tydsberekining"
+
+#: SIP\sip.py:202
+msgid "plugins loaded:"
+msgstr "inproppe gelaai:"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:333
+msgid "Monday"
+msgstr "Maandag"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:334
+msgid "Tuesday"
+msgstr "Dinsdag"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:335
+msgid "Wednesday"
+msgstr "Woensdag"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:336
+msgid "Thursday"
+msgstr "Donderdag"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:337
+msgid "Friday"
+msgstr "Vrydag"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:338
+msgid "Saturday"
+msgstr "Saterdag"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:339
+msgid "Sunday"
+msgstr "Sondag"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:26
+msgid "January"
+msgstr "Januarie"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:30
+msgid "February"
+msgstr "Februarie"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:34
+msgid "March"
+msgstr "Maart"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:38
+msgid "April"
+msgstr "April"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:42
+msgid "May"
+msgstr "Mei"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:46
+msgid "June"
+msgstr "Junie"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:50
+msgid "July"
+msgstr "Julie"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:54
+msgid "August"
+msgstr "Augustus"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:58
+msgid "September"
+msgstr "September"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:62
+msgid "October"
+msgstr "Oktober"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:66
+msgid "November"
+msgstr "November"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:70
+msgid "December"
+msgstr "Desember"
+
+#: SIP\templates\base.html:103 SIP\templates\log.html:55
+#: SIP\templates\programs.html:122
+msgid "Program"
+msgstr "Program"
+
+#: SIP\templates\base.html:156
+msgid "Home"
+msgstr "Tuis"
+
+#: SIP\templates\base.html:157
+msgid "Define Programs"
+msgstr "Definieer Programme"
+
+#: SIP\templates\base.html:157
+msgid "Programs"
+msgstr "Programme"
+
+#: SIP\templates\base.html:158
+msgid "Define Run Once Program"
+msgstr "Defineer 'Hardloop een keer' Programme"
+
+#: SIP\templates\base.html:158
+msgid "Run Once"
+msgstr "Hardloop een keer"
+
+#: SIP\templates\base.html:159
+msgid "Access Plugins"
+msgstr "Toegang na Inproppe"
+
+#: SIP\templates\base.html:159
+msgid "Plugins"
+msgstr "Inproppe"
+
+#: SIP\templates\base.html:160
+msgid "Log"
+msgstr "Meld"
+
+#: SIP\templates\base.html:160
+msgid "View Log"
+msgstr "Beskou Aanmeldings"
+
+#: SIP\templates\base.html:161
+msgid "Options"
+msgstr "Opsies"
+
+#: SIP\templates\base.html:162
+msgid "Stations"
+msgstr "Stasies"
+
+#: SIP\templates\base.html:162 SIP\templates\stations.html:81
+msgid "Configure Stations"
+msgstr "Stasies Instel"
+
+#: SIP\templates\base.html:164
+msgid "Logout"
+msgstr "Teken uit"
+
+#: SIP\templates\base.html:174
+msgid "?"
+msgstr "?"
+
+#: SIP\templates\base.html:174 SIP\templates\proto.html:27
+#: SIP\templates\system_update.html:26
+msgid "Help"
+msgstr "Hulp"
+
+#: SIP\templates\base.html:176
+msgid "CPU Temp"
+msgstr "SPE Temperatuur"
+
+#: SIP\templates\base.html:176
+msgid "Click to toggle"
+msgstr "Klik om te skakel"
+
+#: SIP\templates\base.html:177
+msgid "Software"
+msgstr "Sagteware"
+
+#: SIP\templates\base.html:177
+msgid "version"
+msgstr "weergawe"
+
+#: SIP\templates\home.html:45
+msgid "Manual Mode"
+msgstr "Handbeheer Modus"
+
+#: SIP\templates\home.html:48 SIP\templates\runonce.html:53
+msgid "Run Once Program"
+msgstr "'Hardloop een keer' Program"
+
+#: SIP\templates\home.html:51
+msgid " for "
+msgstr " vir "
+
+#: SIP\templates\home.html:51
+msgid " on "
+msgstr " aan "
+
+#: SIP\templates\home.html:51
+msgid " ran "
+msgstr " hardloop "
+
+#: SIP\templates\home.html:75
+msgid "Master On"
+msgstr "Meester Aan"
+
+#: SIP\templates\home.html:77
+msgid "Master Off"
+msgstr "Meester Af"
+
+#: SIP\templates\home.html:82
+msgid "Suppressed by Rain Delay"
+msgstr "Onderdruk deur Reen vertraging"
+
+#: SIP\templates\home.html:85
+msgid "Suppressed by Rain Sensor"
+msgstr "Onderdruk deur Reen sensor"
+
+#: SIP\templates\home.html:88 SIP\templates\home.html:247
+#: SIP\templates\modify.html:352 SIP\templates\programs.html:120
+msgid "Off"
+msgstr "Af"
+
+#: SIP\templates\home.html:128
+msgid "Enter hours to delay"
+msgstr "Gee ure om te vertraag"
+
+#: SIP\templates\home.html:144
+msgid "Enter percentage adjustment"
+msgstr "Gee persentasie verstelling"
+
+#: SIP\templates\home.html:163 SIP\templates\runonce.html:25
+msgid "Timer values wrong: "
+msgstr "Tye verkeerd:"
+
+#: SIP\templates\home.html:209
+msgid "System Off"
+msgstr "Sisteem Af"
+
+#: SIP\templates\home.html:209
+msgid "System On"
+msgstr "Sisteem Aan"
+
+#: SIP\templates\home.html:211
+msgid "Level"
+msgstr "Vlak"
+
+#: SIP\templates\home.html:211
+msgid "Normal"
+msgstr "Normaal"
+
+#: SIP\templates\home.html:211
+msgid "Water Level"
+msgstr "Water Vlak"
+
+#: SIP\templates\home.html:213
+msgid "Active"
+msgstr "Aktief"
+
+#: SIP\templates\home.html:213
+msgid "Rain Delay"
+msgstr "Reen Vertraging"
+
+#: SIP\templates\home.html:217
+msgid "rain sensed"
+msgstr "reen opgemerk"
+
+#: SIP\templates\home.html:217 SIP\templates\log.html:46
+msgid "no"
+msgstr "nee"
+
+#: SIP\templates\home.html:219
+msgid "Auto"
+msgstr "Outomaties"
+
+#: SIP\templates\home.html:239
+msgid "On (Master)"
+msgstr "Aan (Meester)"
+
+#: SIP\templates\home.html:241
+msgid "Off (Master)"
+msgstr "Af (Meester)"
+
+#: SIP\templates\home.html:247 SIP\templates\modify.html:352
+#: SIP\templates\programs.html:118
+msgid "On"
+msgstr "Aan"
+
+#: SIP\templates\home.html:265
+msgid " Prev Day"
+msgstr " Vorige Dag"
+
+#: SIP\templates\home.html:266
+msgid "Today"
+msgstr "Vandag"
+
+#: SIP\templates\home.html:267
+msgid "Next Day"
+msgstr "Volgende Dag"
+
+#: SIP\templates\home.html:305
+msgid "loading..."
+msgstr "laai..."
+
+#: SIP\templates\home.html:334
+msgid "Stop All Stations"
+msgstr "Stop Alle Stasies"
+
+#: SIP\templates\home.html:337
+msgid "Program 1"
+msgstr "Program 1"
+
+#: SIP\templates\log.html:3
+msgid "SIP Log"
+msgstr "SIP Aanmeldding"
+
+#: SIP\templates\log.html:8 SIP\templates\plugins.html:46
+msgid "Enabled"
+msgstr "In staat"
+
+#: SIP\templates\log.html:11
+msgid "Disabled"
+msgstr "Nie in staat"
+
+#: SIP\templates\log.html:41
+msgid "Log "
+msgstr "Aanmelding "
+
+#: SIP\templates\log.html:46
+msgid " limit"
+msgstr " limiet"
+
+#: SIP\templates\log.html:46
+msgid "Total number of records: "
+msgstr "Totale hoeveelheid inskrywings:"
+
+#: SIP\templates\log.html:47
+msgid "Download log as "
+msgstr "Laai Aanmeldings af as "
+
+#: SIP\templates\log.html:51
+msgid "Date"
+msgstr "Datum"
+
+#: SIP\templates\log.html:52 SIP\templates\modify.html:292
+msgid "Start Time"
+msgstr "Begin Tyd"
+
+#: SIP\templates\log.html:53 SIP\templates\stations.html:85
+msgid "Station"
+msgstr "Stasie"
+
+#: SIP\templates\log.html:54 SIP\templates\modify.html:302
+msgid "Duration"
+msgstr "Duur"
+
+#: SIP\templates\log.html:73
+msgid "Refresh"
+msgstr "Verfris"
+
+#: SIP\templates\log.html:74
+msgid "Clear Log"
+msgstr "Verwyder Aanmelding"
+
+#: SIP\templates\login.html:3
+msgid "SIP Login"
+msgstr "SIP Inteken"
+
+#: SIP\templates\login.html:7 SIP\templates\login.html:10
+msgid "Login"
+msgstr "Inteken"
+
+#: SIP\templates\modify.html:3
+msgid "SIP Modify Program"
+msgstr "SIP Verander Program"
+
+#: SIP\templates\modify.html:66
+msgid "Error: Incorrect time input "
+msgstr "Fout: Verkeerde tyd gegee "
+
+#: SIP\templates\modify.html:78
+msgid "Please choose at least one weekday for the program to run."
+msgstr "Kies ten minste een weeksdag vir program om te hardloop."
+
+#: SIP\templates\modify.html:82
+msgid "Please choose at least one station to run in this program."
+msgstr "Kies ten minste een stasie om te hardloop in die program."
+
+#: SIP\templates\modify.html:228
+msgid "Error: starting in days wrong."
+msgstr "Fout: dae om te begin is verkeerd."
+
+#: SIP\templates\modify.html:249
+msgid "Error: Incorrect duration."
+msgstr "Fout: Verkeerde duur."
+
+#: SIP\templates\modify.html:263
+msgid "Error: Start time must be prior to end time."
+msgstr "Fout: Begin tyd moet voor eind tyd wees."
+
+#: SIP\templates\modify.html:283
+msgid "Edit Program #"
+msgstr "Verstel Program #"
+
+#: SIP\templates\modify.html:283 SIP\templates\programs.html:108
+msgid "Add a New Program"
+msgstr "Voeg Nuwe Program by"
+
+#: SIP\templates\modify.html:288
+msgid "Program Off"
+msgstr "Program Af"
+
+#: SIP\templates\modify.html:288
+msgid "Program On"
+msgstr "Program Aan"
+
+#: SIP\templates\modify.html:304
+msgid "Recurring"
+msgstr "Herhalind"
+
+#: SIP\templates\modify.html:304
+msgid "Single pass"
+msgstr "Enkelpas"
+
+#: SIP\templates\modify.html:306
+msgid "Every"
+msgstr "Alle"
+
+#: SIP\templates\modify.html:310
+msgid "Until"
+msgstr "Totdat"
+
+#: SIP\templates\modify.html:322
+msgid "Interval"
+msgstr "Interval"
+
+#: SIP\templates\modify.html:322
+msgid "Weekly"
+msgstr "Weekliks"
+
+#: SIP\templates\modify.html:327
+msgid "Select All"
+msgstr "Kies Alles"
+
+#: SIP\templates\modify.html:328
+msgid "Clear All"
+msgstr "Vee alles uit"
+
+#: SIP\templates\modify.html:359
+msgid "Water interval"
+msgstr "Water interval"
+
+#: SIP\templates\modify.html:375
+msgid "Starting in"
+msgstr "Begin in"
+
+#: SIP\templates\modify.html:389
+msgid "Any Day"
+msgstr "Enige Dag"
+
+#: SIP\templates\modify.html:389
+msgid "Restrict Day"
+msgstr "Beperkte Dag"
+
+#: SIP\templates\modify.html:391
+msgid "Even"
+msgstr "Gelyk"
+
+#: SIP\templates\modify.html:391
+msgid "Odd"
+msgstr "Ongelyk"
+
+#: SIP\templates\modify.html:392
+msgid "(except 31st and Feb 29th)"
+msgstr "(behalwe 31ste en Feb 29ste)"
+
+#: SIP\templates\modify.html:401
+msgid "Save"
+msgstr "Berg"
+
+#: SIP\templates\modify.html:402 SIP\templates\monthly.html:78
+#: SIP\templates\options.html:143 SIP\templates\plugins.html:69
+#: SIP\templates\plugins_repo.html:45 SIP\templates\proto.html:75
+#: SIP\templates\runonce.html:76 SIP\templates\stations.html:138
+#: SIP\templates\system_update.html:66
+msgid "Cancel"
+msgstr "Kanselleer"
+
+#: SIP\templates\monthly.html:3
+msgid "SIP Monthly Adjustments"
+msgstr "SIP Maandelikse Verstellings"
+
+#: SIP\templates\monthly.html:21
+msgid "Monthly Irrigation Adjustments"
+msgstr "Maandelikse Besproeing Verstellings"
+
+#: SIP\templates\monthly.html:22
+msgid "Enter an adjustment for each month (% irrigation time)"
+msgstr "Voer 'n aanpassing in vir elke maand (% besproeing tyd)"
+
+#: SIP\templates\monthly.html:77 SIP\templates\proto.html:74
+msgid "Submit"
+msgstr "Dien in"
+
+#: SIP\templates\options.html:3
+msgid "SIP Options"
+msgstr "SIP Opsies"
+
+#: SIP\templates\options.html:18 SIP\templates\options.html:19
+msgid "Hide Tooltips"
+msgstr "Versteek Gereedskapstippe"
+
+#: SIP\templates\options.html:19 SIP\templates\options.html:73
+msgid "Show Tooltips"
+msgstr "Wys Gereedskapstippe"
+
+#: SIP\templates\options.html:53
+msgid "The password given was incorrect."
+msgstr "Die gegewe wagwoord is verkeerd."
+
+#: SIP\templates\options.html:57
+msgid "Please enter a password."
+msgstr "Gee wagwoord asseblief."
+
+#: SIP\templates\options.html:61
+msgid "Passwords don't match, please re-enter."
+msgstr "Wagwoorde verskil, tik weer in asseblief."
+
+#: SIP\templates\options.html:72
+msgid "Edit Options"
+msgstr "Wysig Opsies"
+
+#: SIP\templates\options.html:101
+msgid "Default"
+msgstr "Standaard"
+
+#: SIP\templates\options.html:113
+msgid "None"
+msgstr "Geen"
+
+#: SIP\templates\options.html:129
+msgid "System Restart"
+msgstr "Sisteem Herstel"
+
+#: SIP\templates\options.html:131
+msgid "Restart"
+msgstr "Herstel"
+
+#: SIP\templates\options.html:131
+msgid "Restart software"
+msgstr "Sagteware Herstel"
+
+#: SIP\templates\options.html:132
+msgid "Reboot"
+msgstr "Trek skoene weer aan"
+
+#: SIP\templates\options.html:132
+msgid "Reboot hardware"
+msgstr "Trek hardeware skoene weer aan"
+
+#: SIP\templates\options.html:142 SIP\templates\stations.html:136
+msgid "Submit Changes"
+msgstr "Dien veranderinge in"
+
+#: SIP\templates\plugins.html:3
+msgid "SIP Plugin Manager"
+msgstr "SIP Inprop Bestuurder"
+
+#: SIP\templates\plugins.html:39
+msgid "Installed Plugins"
+msgstr "Ge-installeerde Inproppe"
+
+#: SIP\templates\plugins.html:40
+msgid "Browse More Plugins"
+msgstr "Snuffel vir meer Inproppe"
+
+#: SIP\templates\plugins.html:41
+msgid "Roll Your Own"
+msgstr "Doen Jou Eie"
+
+#: SIP\templates\plugins.html:45 SIP\templates\stations.html:86
+msgid "Name"
+msgstr "Naam"
+
+#: SIP\templates\plugins.html:47
+msgid "Uninstall?"
+msgstr "Verwyder?"
+
+#: SIP\templates\plugins.html:65
+msgid "CAUTION:"
+msgstr "WAARSKUWING:"
+
+#: SIP\templates\plugins.html:65
+msgid ""
+"Clicking UPDATE or UNINSTALL will restart the software and stop any running "
+"programs."
+msgstr ""
+"Aa Opgradeer of Verwyder geklik word sal die sagteware herstel word en "
+"enige stasies wat hardloop sal stop."
+
+#: SIP\templates\plugins.html:67
+msgid "Update Enabled"
+msgstr "Opdateer Ge-aktiveer"
+
+#: SIP\templates\plugins.html:68
+msgid "Uninstall"
+msgstr "Verwyder"
+
+#: SIP\templates\plugins_repo.html:3
+msgid "SIP Plugin Browser"
+msgstr "SIP Inprop Snuffelgids"
+
+#: SIP\templates\plugins_repo.html:26
+msgid "Available Plugins"
+msgstr "Beskikbare Inproppe"
+
+#: SIP\templates\plugins_repo.html:27
+msgid "Unless otherwise stated these plugins are licensed under GPL 3.0"
+msgstr ""
+"Tensy anders gespesifiseer is hierdie inproppe gelisensieer deur GPL 3.0"
+
+#: SIP\templates\plugins_repo.html:43
+msgid "install"
+msgstr "installeer"
+
+#: SIP\templates\plugins_repo.html:44
+msgid "Back"
+msgstr "Terug"
+
+#: SIP\templates\programs.html:3
+msgid "SIP Programs"
+msgstr "SIP Programme"
+
+#: SIP\templates\programs.html:18
+msgid "Every "
+msgstr "Elke "
+
+#: SIP\templates\programs.html:18 SIP\templates\programs.html:20
+msgid "days"
+msgstr "dae"
+
+#: SIP\templates\programs.html:20
+msgid "starting in"
+msgstr "begin na"
+
+#: SIP\templates\programs.html:23
+msgid "Every Weekday"
+msgstr "Elke Weeksdag"
+
+#: SIP\templates\programs.html:27
+msgid "Fri"
+msgstr "Vry"
+
+#: SIP\templates\programs.html:27
+msgid "Mon"
+msgstr "Maan"
+
+#: SIP\templates\programs.html:27
+msgid "Sat"
+msgstr "Sat"
+
+#: SIP\templates\programs.html:27
+msgid "Sun"
+msgstr "Son"
+
+#: SIP\templates\programs.html:27
+msgid "Thur"
+msgstr "Don"
+
+#: SIP\templates\programs.html:27
+msgid "Tue"
+msgstr "Dins"
+
+#: SIP\templates\programs.html:27
+msgid "Wed"
+msgstr "Woens"
+
+#: SIP\templates\programs.html:29
+msgid " (Even days only)"
+msgstr " (Gelyke dae alleenlik)"
+
+#: SIP\templates\programs.html:31
+msgid " (Odd days only)"
+msgstr " (Ongelyke dae alleenlik)"
+
+#: SIP\templates\programs.html:109
+msgid "Delete All"
+msgstr "Vee Alles Uit"
+
+#: SIP\templates\programs.html:128
+msgid "Run"
+msgstr "Hardloop"
+
+#: SIP\templates\programs.html:141
+msgid "Starting"
+msgstr "Begin"
+
+#: SIP\templates\programs.html:142
+msgid "for"
+msgstr "vir"
+
+#: SIP\templates\programs.html:145
+msgid "Recurring every"
+msgstr "Herhalende"
+
+#: SIP\templates\programs.html:146
+msgid "until"
+msgstr "totdat"
+
+#: SIP\templates\programs.html:149 SIP\templates\runonce.html:74
+msgid "Run Now"
+msgstr "Hardloop Nou"
+
+#: SIP\templates\programs.html:150
+msgid "Edit"
+msgstr "Wysig"
+
+#: SIP\templates\programs.html:151
+msgid "Delete"
+msgstr "Vee uit"
+
+#: SIP\templates\proto.html:4
+msgid "SIP Proto Plugin"
+msgstr "SIP Proto Inprop"
+
+#: SIP\templates\proto.html:30
+msgid "Example Check Boxes"
+msgstr "Voorbeelde van Kies Blokkies"
+
+#: SIP\templates\proto.html:37 SIP\templates\proto.html:38
+#: SIP\templates\proto.html:56 SIP\templates\proto.html:57
+msgid "Heading"
+msgstr "Opskrif"
+
+#: SIP\templates\proto.html:41
+msgid "Check Box 1"
+msgstr "Kies blokkie 1"
+
+#: SIP\templates\proto.html:45
+msgid "Check Box 2"
+msgstr "Kies blokkie 2"
+
+#: SIP\templates\proto.html:51
+msgid "Text Entry Fields"
+msgstr "Teks Inskrywing Velde"
+
+#: SIP\templates\proto.html:61
+msgid "Text Field 1"
+msgstr "Teks Veld 1"
+
+#: SIP\templates\proto.html:65
+msgid "Text Field 2"
+msgstr "Teks Veld 2"
+
+#: SIP\templates\restarting.html:3
+msgid "SIP Restarting"
+msgstr "SIP Herstelling"
+
+#: SIP\templates\restarting.html:30
+msgid "SIP is restarting"
+msgstr "SIP is besig om te herstel"
+
+#: SIP\templates\restarting.html:31
+msgid "This may take several seconds..."
+msgstr "Dit mag 'n paar sekondes neem..."
+
+#: SIP\templates\runonce.html:3
+msgid "SIP Run-Once"
+msgstr "SIP 'Hardloop een keer'"
+
+#: SIP\templates\runonce.html:35
+msgid "No station is scheduled to run"
+msgstr "Geen stasie is geskeduleer om te werk nie"
+
+#: SIP\templates\runonce.html:75
+msgid "Reset Time"
+msgstr "Herstel Tyd"
+
+#: SIP\templates\stations.html:3
+msgid "SIP Stations"
+msgstr "SIP stasies"
+
+#: SIP\templates\stations.html:87
+msgid "Enabled?"
+msgstr "Ge-aktiveer?"
+
+#: SIP\templates\stations.html:88
+msgid "Ignore Rain?"
+msgstr "Ignoreer Reen?"
+
+#: SIP\templates\stations.html:90
+msgid "Ignore Plugin adjustments?"
+msgstr "Ignoreer Inprop verstellings?"
+
+#: SIP\templates\stations.html:92
+msgid "Activate Master?"
+msgstr "Aktiveer Meester?"
+
+#: SIP\templates\stations.html:104 SIP\templates\stations.html:106
+msgid "(Master valve)"
+msgstr "(Meester klep)"
+
+#: SIP\templates\stations.html:137
+msgid "Reset Names"
+msgstr "Herstel name"
+
+#: SIP\templates\system_update.html:25
+msgid "SIP Software Updater"
+msgstr "SIP sagteware Opgradeerder"
+
+#: SIP\templates\system_update.html:28
+msgid ""
+"This plugin compares the local SIP version with the GitHub repository and "
+"can update the local software."
+msgstr ""
+"Hierdie inprop vergelyk die plaaslikie SIP weergawe met GitHub se berging "
+"en hou plaaslike sagteware op datum."
+
+#: SIP\templates\system_update.html:32
+msgid "Remote repository"
+msgstr "Afgelee bewaarplek"
+
+#: SIP\templates\system_update.html:38
+msgid "Local SIP version"
+msgstr "Plaaslike SIP weergawe"
+
+#: SIP\templates\system_update.html:44
+msgid "Local SIP date"
+msgstr "Plaaslike SIP datum"
+
+#: SIP\templates\system_update.html:53
+msgid "Refresh Status"
+msgstr "Verfris Status"
+
+#: SIP\templates\system_update.html:62
+msgid "Update SIP"
+msgstr "Opdateer"
+
+#: SIP\templates\system_update.html:64
+msgid "Up-to-date"
+msgstr "Op-datum"
+
+#: SIP\templates\system_update.html:65
+msgid "Restart SIP"
+msgstr "Begin SIP van vooraf"
+
+#: SIP\webpages.py:320
+msgid " not found."
+msgstr " nie gevind nie."
+
+#: SIP\webpages.py:320
+msgid "Station "
+msgstr "Stasie "
+
+#: SIP\webpages.py:338
+msgid "Manual mode not active."
+msgstr "Handbeheer nie aktief nie."
+
+#: SIP\webpages.py:606
+msgid "Date, Start Time, Zone, Duration, Program"
+msgstr "Datum, Begin Tyd, Sone, Duur, Program"

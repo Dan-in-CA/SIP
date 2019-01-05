@@ -23,7 +23,10 @@ for name in glob(join(basedir, '*.py')):
     if not module.startswith('_') and isidentifier(module) and not keyword.iskeyword(module):
         if os_name == "posix":
             st = os.stat(name)
-            if bool(st.st_mode & stat.S_IXGRP) or module == 'mobile_app' or module == 'plugin_manager':  # Load plugin if group permission is executable.
+            if (bool(st.st_mode & stat.S_IXGRP) 
+                or module == 'mobile_app' 
+                or module == 'plugin_manager'
+                ):  # Load plugin if group permission is executable.
                 try:
                     __import__(__name__+'.'+module)
                 except Exception as e:

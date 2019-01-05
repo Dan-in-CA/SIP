@@ -92,8 +92,11 @@ def reboot(wait=1, block=False):
         set_output()
         if gv.use_pigpio:
             pass
-        elif gv.platform != 'odroid-c2':
-            GPIO.cleanup()
+        else:
+            try:
+                GPIO.cleanup()
+            except NameError:
+                pass
         time.sleep(wait)
         try:
             print _('Rebooting...')
@@ -121,8 +124,11 @@ def poweroff(wait=1, block=False):
         set_output()
         if gv.use_pigpio:
             pass
-        elif gv.platform != 'odroid-c2':
-            GPIO.cleanup()
+        else:
+            try:
+                GPIO.cleanup()
+            except NameError:
+                pass
         time.sleep(wait)
         try:
             print _('Powering off...')
@@ -151,8 +157,11 @@ def restart(wait=1, block=False):
         set_output()
         if gv.use_pigpio:
             pass
-        elif gv.platform != 'odroid-c2':
-            GPIO.cleanup()
+        else:
+            try:
+                GPIO.cleanup()
+            except NameError:
+                pass
         time.sleep(wait)
         try:
             print _('Restarting...')

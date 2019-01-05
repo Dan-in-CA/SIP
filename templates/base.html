@@ -1,6 +1,13 @@
 $def with (content)
+
 $code:
     snames = gv.snames
+    
+$code:
+    uplugin_menu = []
+    for p, el in enumerate(gv.plugin_menu):
+        uel = [el[0].encode('utf-8'), el[1]]
+        uplugin_menu.append(uel)
 
 $code:
     def plugin_adjustment():
@@ -108,7 +115,7 @@ $code:
             var iw = ${gv.sd['iw']};
             var mas = ${gv.sd['mas']};
             var nbrd = ${gv.sd['nbrd']};
-            var plugins = $:{gv.plugin_menu};
+            var plugins = $:{uplugin_menu};
             var progs = $:{gv.pd};
             var nprogs = ${len(gv.pd)};
             var sdt = ${gv.sd['sdt']};
@@ -119,11 +126,11 @@ $code:
             var idd = $:{gv.sd['idd']};
 
             jQuery(document).ready(function(){
-                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + baseUrl + '/plugins\'">Manage Plugins</button><br/>');
-                $if len(gv.plugin_menu) > 0:
-                    jQuery.each(plugins, function() {
-                        jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\'' + baseUrl + ''+this[1]+'\'">'+this[0]+'</button><br/>');
-                    });
+                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + baseUrl + '/plugins\'">$_('Manage Plugins')</button><br/>');
+                $if len(uplugin_menu) > 0:
+                	$for i, plugin in enumerate(uplugin_menu):
+                		
+                        jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\'' + baseUrl + '${plugin[1]}\'">${plugin[0]}</button><br/>');
                 $else:
                     jQuery('#pluginMenu').append('None<br/>');
 

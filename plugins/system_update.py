@@ -1,4 +1,5 @@
-# !/usr/bin/env python
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 # this plugin checks sha on github and updates SIP from github
 
@@ -6,6 +7,7 @@ import time
 import subprocess
 import sys
 import traceback
+import json
 
 import web
 import gv  # Get access to SIP's settings
@@ -20,7 +22,7 @@ urls.extend(['/UPs', 'plugins.system_update.status_page',
              ])
 
 # Add this plugin to the home page plugins menu
-gv.plugin_menu.append(['System update', '/UPs'])
+gv.plugin_menu.append([_('System update'), '/UPs'])
 
 
 class StatusChecker():
@@ -105,21 +107,24 @@ def perform_update():
 
     command = "git config core.filemode true"
     subprocess.call(command.split())
-
-    command = "git checkout master"  # Make sure we are on the master branch
-    output = subprocess.check_output(command.split())
-
-    command = "git stash"  # stash any local changes
-    output = subprocess.check_output(command.split())
-
-    command = "git fetch --prune"
-    output = subprocess.check_output(command.split())
-
-    command = "git merge -X theirs origin/master"
-    output = subprocess.check_output(command.split())
-
-    command = "rm sessions/*"
+    
+    command = "git pull"
     subprocess.call(command.split())
+
+#     command = "git checkout master"  # Make sure we are on the master branch
+#     output = subprocess.check_output(command.split())
+
+#     command = "git stash"  # stash any local changes
+#     output = subprocess.check_output(command.split())
+
+#     command = "git fetch --prune"
+#     output = subprocess.check_output(command.split())
+# 
+#     command = "git merge -X theirs origin/master"
+#     output = subprocess.check_output(command.split())
+# 
+#     command = "rm sessions/*"
+#     subprocess.call(command.split())
 
 
 #    print 'Update result:', output #  For testing

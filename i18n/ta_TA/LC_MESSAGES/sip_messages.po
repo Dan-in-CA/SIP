@@ -1,0 +1,1186 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2017-12-04 09:09+Pacific Standard Time\n"
+"PO-Revision-Date: 2018-05-04 08:16-0700\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 2.0.7\n"
+"Last-Translator: Dan <dkimberling59@gmail.com>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: ta\n"
+
+#: SIP/plugins\plugin_manager.py:29
+msgid "Manage Plugins"
+msgstr "செருகிகளை நிர்வகி"
+
+#: SIP/plugins\system_update.py:23
+msgid "System update"
+msgstr "கட்டகத்தை புதுப்பிப்பு"
+
+#: SIP/plugins\system_update.py:75
+msgid "Up-to-date."
+msgstr "நடப்பிள் உள்ளது"
+
+#: SIP/plugins\system_update.py:78
+msgid "New version is available!"
+msgstr "புதிய பதிப்பு உள்ளது"
+
+#: SIP/plugins\system_update.py:79 SIP/plugins\system_update.py:84
+msgid "Available revision"
+msgstr "திருத்திய படிவம் உள்ளது"
+
+#: SIP/plugins\system_update.py:80
+msgid "Changes"
+msgstr "மாற்றங்கள்"
+
+#: SIP/plugins\system_update.py:83
+msgid "Currently running revision"
+msgstr "தற்போது தி௫த்தம் நடைபெறுகிறது"
+
+#: SIP/plugins\system_update.py:95
+msgid "System update plug-in encountered error"
+msgstr "கட்டகப் புதுக்கியமைப்பு செருகியில் தடை"
+
+#: SIP\gv.py:18
+msgid "Could not use git to determine version!"
+msgstr "பதிப்பை உறுதி செய்யமுடியவில்லை - ஜிட்"
+
+#: SIP\gv.py:25
+msgid "Could not use git to determine date of last commit!"
+msgstr "கடைசி ஒப்பிப்பை உறுதி செய்யமுடியவில்லை - ஜிட்"
+
+#: SIP\gv.py:137
+msgid "System name"
+msgstr "கட்டகப் பெயர்"
+
+#: SIP\gv.py:137
+msgid "Unique name of this SIP system."
+msgstr "பேண்தகு பாசன இயங்குதள(எச்.ஐ.பி) கட்டகத்தின் தனிப்பட்ட பெயர்"
+
+#: SIP\gv.py:137 SIP\gv.py:138 SIP\gv.py:139 SIP\gv.py:141 SIP\gv.py:142 SIP\gv.py:143 SIP\gv.py:144
+msgid "System"
+msgstr "கட்டகம்"
+
+#: SIP\gv.py:138
+msgid "City name or zip code. Use comma or + in place of space."
+msgstr "ஊர் பெயர்,தபால் இலக்கம்"
+
+#: SIP\gv.py:138
+msgid "Location"
+msgstr "இடம்"
+
+#: SIP\gv.py:139
+msgid "Language"
+msgstr "மொழி"
+
+#: SIP\gv.py:139
+msgid "Select language."
+msgstr "மொழியைத் தேர்ந்தெடு"
+
+#: SIP\gv.py:141
+msgid "24-hour clock"
+msgstr "24-மணி கடிகாரம்"
+
+#: SIP\gv.py:141
+msgid "Display times in 24 hour format (as opposed to AM/PM style.)"
+msgstr "காலம் : 24 மணி அளவில், முற்பகல் / பிற்பகல் அல்ல"
+
+#: SIP\gv.py:142
+msgid "HTTP port"
+msgstr "எச்.டீ.டீ.பி துறை"
+
+#: SIP\gv.py:142
+msgid "HTTP port."
+msgstr "எச்.டீ.டீ.பி துறை"
+
+#: SIP\gv.py:143
+msgid "GPIO Library to use. Default is RPi.GPIO"
+msgstr "ஜி.பி.ஐ.ஒ நூலக நடைமுறை. முன்னிருப்பு  ஆர்-பை ஜி.பி.ஐ.ஒ"
+
+#: SIP\gv.py:143
+msgid "Use pigpio"
+msgstr "பை ஜி.பி.ஐ.ஒ பிரயோகி"
+
+#: SIP\gv.py:144
+msgid "Water Scaling"
+msgstr "நீர் அளவை"
+
+#: SIP\gv.py:144
+msgid "Water scaling (as %), between 0 and 100."
+msgstr "நீர் அளவை, 0% முதல் 100% வரை."
+
+#: SIP\gv.py:145
+msgid "Allow anonymous users to access the system without a password."
+msgstr "கட்டகக் கடவுச்சொல் இல்லாத அனாமதேய நுழைவுகளை அனுமதி"
+
+#: SIP\gv.py:145
+msgid "Disable security"
+msgstr "பாதுகாப்பை செயலிளக்கு"
+
+#: SIP\gv.py:145 SIP\gv.py:146 SIP\gv.py:147 SIP\gv.py:148
+msgid "Change Password"
+msgstr "கடவுச்சொலை மாற்று"
+
+#: SIP\gv.py:146
+msgid "Current password"
+msgstr "நடப்புக் கடவுச்சொல்"
+
+#: SIP\gv.py:146
+msgid "Re-enter the current password."
+msgstr "நடப்புக் கடவுச்சொலை மறுபதிவு செய்க"
+
+#: SIP\gv.py:147
+msgid "Enter a new password."
+msgstr "புதுக் கடவுச்சொலைப் பதிவு செய்க"
+
+#: SIP\gv.py:147
+msgid "New password"
+msgstr "புதுக் கடவுச்சொல்"
+
+#: SIP\gv.py:148
+msgid "Confirm password"
+msgstr "கடவுச்சொலை உறுதிப்படுத்தவும்"
+
+#: SIP\gv.py:148
+msgid "Confirm the new password."
+msgstr "புதுக் கடவுச்சொலை உறுதிப்படுத்தவும்"
+
+#: SIP\gv.py:149
+msgid "Sequential"
+msgstr "தொடர்வரிசை"
+
+#: SIP\gv.py:149
+msgid "Sequential or concurrent running mode."
+msgstr "தொடர்வரிசை முறை (அல்லது) ஒருசேர் முறை"
+
+#: SIP\gv.py:149 SIP\gv.py:150 SIP\gv.py:151 SIP\gv.py:152 SIP\gv.py:153
+msgid "Station Handling"
+msgstr "நிலையம் கையாளுதல்"
+
+#: SIP\gv.py:150
+msgid "Allow each station to have its own run time in programs."
+msgstr "அந்த அந்த"
+
+#: SIP\gv.py:150
+msgid "Individual Duration"
+msgstr "தனிப்பட்ட கால வரையறை"
+
+#: SIP\gv.py:151
+msgid "Extension boards"
+msgstr "கிளை அட்டைகள்"
+
+#: SIP\gv.py:151
+msgid "Number of extension boards."
+msgstr "கிளை அட்டைகளின் என்னிக்கை"
+
+#: SIP\gv.py:152
+msgid "Station delay"
+msgstr "நிலையச் சுணக்கம்"
+
+#: SIP\gv.py:152
+msgid "Station delay time (in seconds), between 0 and 240."
+msgstr "நிலையச் சுணக்கம் (வினாடி) 0 முதல் 240"
+
+#: SIP\gv.py:153
+msgid "Active-Low Relay"
+msgstr " தாழ்வுச் செயல்பாடு அஞ்சல்ச் சுருள்"
+
+#: SIP\gv.py:153
+msgid "Using active-low relay boards connected through shift registers"
+msgstr "தாழ்வுச் செயல்பாடு அஞ்சல்ச்சுருள் அட்டைகளை பெயர்வுப் பதிவகம் வழியாக இனை."
+
+#: SIP\gv.py:154
+msgid "Master station"
+msgstr "முதன்மை நிலையம்"
+
+#: SIP\gv.py:154
+msgid "Select master station."
+msgstr "முதன்மை நிலையத்தை தேர்வு செய்"
+
+#: SIP\gv.py:154 SIP\gv.py:155 SIP\gv.py:156
+msgid "Configure Master"
+msgstr "முதன்மை நிலையத்தைக் கட்டமை"
+
+#: SIP\gv.py:155
+msgid "Master on adjust"
+msgstr "முதன்மை நிலைய துவக்க இசைவு"
+
+#: SIP\gv.py:155
+msgid "Master on delay (in seconds), between +0 and +60."
+msgstr "முதன்மை நிலைய துவக்க சுணக்கம் (வினாடி) +0 முதல் +60 வரை"
+
+#: SIP\gv.py:156
+msgid "Master off adjust"
+msgstr "முதன்மை நிலைய நிருத்த இசைவு"
+
+#: SIP\gv.py:156
+msgid "Master off delay (in seconds), between -60 and +60."
+msgstr "மூல நிலைய நிருத்தச் சுணக்கம் (வினாடி) -60 முதல் +60 வரை"
+
+#: SIP\gv.py:157
+msgid "Use rain sensor"
+msgstr "மழை மாணியை உபயோகி"
+
+#: SIP\gv.py:157
+msgid "Use rain sensor."
+msgstr "மழை மாணியை உபயோகி"
+
+#: SIP\gv.py:157 SIP\gv.py:158
+msgid "Rain Sensor"
+msgstr "மழை மாணி"
+
+#: SIP\gv.py:158
+msgid "Normally open"
+msgstr "ஏப்போதும் திறந்து"
+
+#: SIP\gv.py:158
+msgid "Rain sensor type."
+msgstr "மழை மாணியின் வகை"
+
+#: SIP\gv.py:159
+msgid "Enable logging"
+msgstr "செயற் பதிவுகளை அனுமதி"
+
+#: SIP\gv.py:159
+msgid "Log all events - note that repetitive writing to an SD card can shorten its lifespan."
+msgstr "அனைத்துச் சம்பவங்களையும் பதிவு செய். - குறிப்பு : நினைவட்டையின் வாழ்நாள் குறையும்"
+
+#: SIP\gv.py:159 SIP\gv.py:160
+msgid "Logging"
+msgstr "பதியப் படுகிறது"
+
+#: SIP\gv.py:160
+msgid "Length of log to keep, 0=no limits."
+msgstr "பதிவுகளின் என்னிக்கை, 0=முடிவில்லாப் பதிவு"
+
+#: SIP\gv.py:160
+msgid "Max log entries"
+msgstr "பதிவுகள் அதிகப்படி"
+
+#: SIP\helpers.py:41
+msgid "Error: json module not found"
+msgstr "பிழை: ஜெசன் கூடகம் கிட்டவில்லை"
+
+#: SIP\helpers.py:99
+msgid "Rebooting..."
+msgstr "மறுதொடக்கம்…."
+
+#: SIP\helpers.py:128
+msgid "Powering off..."
+msgstr "மின் நிறுத்தம் ஆகிறது"
+
+#: SIP\helpers.py:158
+msgid "Restarting..."
+msgstr "மறு துவக்கம் ஆகிறது"
+
+#: SIP\helpers.py:343
+msgid "program"
+msgstr "திட்டம்"
+
+#: SIP\helpers.py:344
+msgid "station"
+msgstr "நிலையம்"
+
+#: SIP\helpers.py:345
+msgid "duration"
+msgstr "கால வரை"
+
+#: SIP\helpers.py:346
+msgid "start"
+msgstr "துவக்கம்"
+
+#: SIP\helpers.py:347
+msgid "date"
+msgstr "தேதி"
+
+#: SIP\helpers.py:351 SIP\templates\base.html:116
+msgid "Run-once"
+msgstr "ஒருமுரை ஓட்டு"
+
+#: SIP\helpers.py:353 SIP\templates\base.html:117 SIP\templates\home.html:242
+msgid "Manual"
+msgstr "கையியக்கு முறை"
+
+#: SIP\helpers.py:601
+msgid "Password"
+msgstr "கடவுச்சொல்"
+
+#: SIP\helpers.py:604
+msgid "Incorrect password, please try again"
+msgstr "தவறான கடவுச்சொல், மீண்டும் முயற்ச்சிக்கவும்"
+
+#: SIP\sip.py:43
+msgid "Starting timing loop"
+msgstr "காலச் சுற்று துவங்குகிறது"
+
+#: SIP\sip.py:231
+msgid "plugins loaded:"
+msgstr "செருகிகள் ஏற்றப் பட்டுவிட்டது"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:408
+msgid "Monday"
+msgstr "திங்கள்"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:409
+msgid "Tuesday"
+msgstr "செவ்வாய்"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:410
+msgid "Wednesday"
+msgstr "புதன்"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:411
+msgid "Thursday"
+msgstr "வியாழன்"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:412
+msgid "Friday"
+msgstr "வெள்ளி"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:413
+msgid "Saturday"
+msgstr "சனி"
+
+#: SIP\templates\base.html:14 SIP\templates\modify.html:414
+msgid "Sunday"
+msgstr "ஞாயிறு"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:26
+msgid "January"
+msgstr "ஜனவரி மாதம்"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:30
+msgid "February"
+msgstr "பிப்ரவரி மாதம்"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:34
+msgid "March"
+msgstr "மார்ச் மாதம்"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:38
+msgid "April"
+msgstr "ஏப்ரல் மாதம்"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:42
+msgid "May"
+msgstr "மே மாதம்"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:46
+msgid "June"
+msgstr "ஜீன் மாதம்"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:50
+msgid "July"
+msgstr "ஜீலை மாதம்"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:54
+msgid "August"
+msgstr "ஆகஸ்டு மாதம்"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:58
+msgid "September"
+msgstr "செப்டம்பர் மாதம்"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:62
+msgid "October"
+msgstr "அக்டோபர் மாதம்"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:66
+msgid "November"
+msgstr "நவம்பர் மாதம்"
+
+#: SIP\templates\base.html:15 SIP\templates\monthly.html:70
+msgid "December"
+msgstr "டிசம்பர் மாதம்"
+
+#: SIP\templates\base.html:118 SIP\templates\log.html:55 SIP\templates\programs.html:122
+msgid "Program"
+msgstr "திட்டம்"
+
+#: SIP\templates\base.html:172
+msgid "Home"
+msgstr "வீடு"
+
+#: SIP\templates\base.html:173
+msgid "Define Programs"
+msgstr "திட்டங்கட்டங்களை வகு"
+
+#: SIP\templates\base.html:173
+msgid "Programs"
+msgstr "திட்டங்கள்"
+
+#: SIP\templates\base.html:174
+msgid "Define Run Once Program"
+msgstr "ஒருமுரை ஓட்டும் திட்டத்தை வகு"
+
+#: SIP\templates\base.html:174
+msgid "Run Once"
+msgstr "ஒருமுரை ஓட்டு"
+
+#: SIP\templates\base.html:175
+msgid "Access Plugins"
+msgstr "செருகிகளை அனுகு"
+
+#: SIP\templates\base.html:175
+msgid "Plugins"
+msgstr "செருகிகள்"
+
+#: SIP\templates\base.html:176
+msgid "Log"
+msgstr "பதிவுகள்"
+
+#: SIP\templates\base.html:176
+msgid "View Log"
+msgstr "பதிவுகளை பாற்க்கவும்"
+
+#: SIP\templates\base.html:177
+msgid "Options"
+msgstr "விருப்பங்கள்"
+
+#: SIP\templates\base.html:178
+msgid "Stations"
+msgstr "நிலயங்கள்"
+
+#: SIP\templates\base.html:178 SIP\templates\stations.html:81
+msgid "Configure Stations"
+msgstr "நிலையங்களை கட்டமை"
+
+#: SIP\templates\base.html:180
+msgid "Logout"
+msgstr "விடுபதிகை"
+
+#: SIP\templates\base.html:192
+msgid "?"
+msgstr "?"
+
+#: SIP\templates\base.html:192 SIP\templates\proto.html:27 SIP\templates\system_update.html:26
+msgid "Help"
+msgstr "உதவி"
+
+#: SIP\templates\base.html:200
+msgid "CPU Temp"
+msgstr "மையச் செயலியின்(சி.பி.யு) வெப்பம்"
+
+#: SIP\templates\base.html:200
+msgid "Click to toggle"
+msgstr "சுலற்ற/மாற்ற சுண்டவும்"
+
+#: SIP\templates\base.html:207
+msgid "Software"
+msgstr "மென்பொருள்"
+
+#: SIP\templates\base.html:207
+msgid "version"
+msgstr "பதிப்பு"
+
+#: SIP\templates\home.html:49
+msgid "Manual Mode"
+msgstr "கையியக்க முறை"
+
+#: SIP\templates\home.html:52 SIP\templates\runonce.html:57
+msgid "Run Once Program"
+msgstr "ஒருமுரை ஓட்டும் திட்டம்"
+
+#: SIP\templates\home.html:55
+msgid " for "
+msgstr "ஆக"
+
+#: SIP\templates\home.html:55
+msgid " on "
+msgstr "மேல்"
+
+#: SIP\templates\home.html:55
+msgid " ran "
+msgstr " ஓடியது "
+
+#: SIP\templates\home.html:79
+msgid "Master On"
+msgstr "மூல நிலையம் துவங்குகிறது"
+
+#: SIP\templates\home.html:81
+msgid "Master Off"
+msgstr "மூல நிலைய நிருத்தப்படுகிறது"
+
+#: SIP\templates\home.html:86
+msgid "Suppressed by Rain Delay"
+msgstr "மழை மாணியால் சுணக்கம்"
+
+#: SIP\templates\home.html:89
+msgid "Suppressed by Rain Sensor"
+msgstr "மழை மாணியால் தடை"
+
+#: SIP\templates\home.html:92 SIP\templates\home.html:270 SIP\templates\modify.html:429
+#: SIP\templates\programs.html:120
+msgid "Off"
+msgstr "நிறுத்து"
+
+#: SIP\templates\home.html:131
+msgid ""
+"SIP could not restart.\n"
+"Please restart the program from the command line."
+msgstr ""
+"எச்.ஐ.பி மறுதொடக்கம் செய்ய முடியவில்லை.\n"
+"கட்டளை வரிகளைக் கொண்டு நிரலை/திட்டத்தை மீண்டும் துவக்கவும்."
+
+#: SIP\templates\home.html:151
+msgid "Enter hours to delay"
+msgstr "தவக்கம்/தாமதம் பண்ண வேண்டிய மணிகள்"
+
+#: SIP\templates\home.html:154
+msgid "Delay must be a positive value"
+msgstr "தவக்கம்/தாமதம் மணிகள் + மதிப்பிள் வேண்டும்"
+
+#: SIP\templates\home.html:167
+msgid "Enter percentage adjustment"
+msgstr "சதவீதம்/விழுக்காடு(%) உட்புகுத்து"
+
+#: SIP\templates\home.html:186
+msgid "Timer values wrong"
+msgstr "கால இயக்கி மதிவு தவறு"
+
+#: SIP\templates\home.html:232
+msgid "System Off"
+msgstr "கட்டகம் "
+
+#: SIP\templates\home.html:232
+msgid "System On"
+msgstr "கட்டகம்"
+
+#: SIP\templates\home.html:234
+msgid "Level"
+msgstr "அளவு"
+
+#: SIP\templates\home.html:234
+msgid "Normal"
+msgstr "இயல்பான நிலை"
+
+#: SIP\templates\home.html:234
+msgid "Water Level"
+msgstr "நீர் அளவு"
+
+#: SIP\templates\home.html:236
+msgid "Active"
+msgstr "செயலில்"
+
+#: SIP\templates\home.html:236
+msgid "Rain Delay"
+msgstr "மழைச் சுணக்கம்"
+
+#: SIP\templates\home.html:240
+msgid "rain sensed"
+msgstr "மழை பொழிகிறது"
+
+#: SIP\templates\home.html:240 SIP\templates\log.html:46
+msgid "no"
+msgstr "இல்லை"
+
+#: SIP\templates\home.html:242
+msgid "Auto"
+msgstr "தானியங்கு"
+
+#: SIP\templates\home.html:262
+msgid "On (Master)"
+msgstr "துவக்கு (மூல நிலையம்)"
+
+#: SIP\templates\home.html:264
+msgid "Off (Master)"
+msgstr "நிறுத்து (மூல நிலையம்)"
+
+#: SIP\templates\home.html:270 SIP\templates\modify.html:429 SIP\templates\programs.html:118
+msgid "On"
+msgstr "துவக்கு"
+
+#: SIP\templates\home.html:288
+msgid " Prev Day"
+msgstr "நேற்று"
+
+#: SIP\templates\home.html:289
+msgid "Today"
+msgstr "இன்று"
+
+#: SIP\templates\home.html:290
+msgid "Next Day"
+msgstr "மறு நாள்"
+
+#: SIP\templates\home.html:328
+msgid "loading..."
+msgstr "ஏற்றம் பெறுகிறது"
+
+#: SIP\templates\home.html:357 SIP\templates\home.html:364 SIP\templates\home.html:366
+msgid "Stop All Stations"
+msgstr "அனைத்து நிலையங்களையும் நிறுத்து"
+
+#: SIP\templates\home.html:360
+msgid "Program 1"
+msgstr "திட்டம் 1"
+
+#: SIP\templates\log.html:3
+msgid "SIP Log"
+msgstr "SIP பதிவுகள்"
+
+#: SIP\templates\log.html:8 SIP\templates\plugins.html:46
+msgid "Enabled"
+msgstr "அனுமதி"
+
+#: SIP\templates\log.html:11
+msgid "Disabled"
+msgstr "முடக்கு"
+
+#: SIP\templates\log.html:41
+msgid "Log "
+msgstr "பதிவுகள்"
+
+#: SIP\templates\log.html:46
+msgid " limit"
+msgstr "வரம்பு"
+
+#: SIP\templates\log.html:46
+msgid "Total number of records: "
+msgstr "மொத்தப் பதிவுகள்"
+
+#: SIP\templates\log.html:47
+msgid "Download log as "
+msgstr "பதிவுகளை இரக்கு"
+
+#: SIP\templates\log.html:51
+msgid "Date"
+msgstr "தேதி"
+
+#: SIP\templates\log.html:52 SIP\templates\modify.html:366
+msgid "Start Time"
+msgstr "துவக்க நேரம்"
+
+#: SIP\templates\log.html:53 SIP\templates\stations.html:85
+msgid "Station"
+msgstr "நிலையம்"
+
+#: SIP\templates\log.html:54 SIP\templates\modify.html:376 SIP\templates\modify.html:407
+msgid "Duration"
+msgstr "கால வரை"
+
+#: SIP\templates\log.html:73
+msgid "Refresh"
+msgstr "புதுப்பி"
+
+#: SIP\templates\log.html:74
+msgid "Clear Log"
+msgstr "பதிவுகளை துடை"
+
+#: SIP\templates\login.html:3
+msgid "SIP Login"
+msgstr "எச்.ஐ.பி புகுபதிகை"
+
+#: SIP\templates\login.html:7 SIP\templates\login.html:10
+msgid "Login"
+msgstr "புகுபதிகை"
+
+#: SIP\templates\modify.html:3
+msgid "SIP Modify Program"
+msgstr "எச்.ஐ.பி மாற்றியமைப்புத் திட்டம்/நிரல்"
+
+#: SIP\templates\modify.html:100
+msgid "Error: Incorrect time input "
+msgstr "பிழை: தவரான காலம் புகுத்தப்பட்டுள்ளது."
+
+#: SIP\templates\modify.html:112
+msgid "Please choose at least one weekday for the program to run."
+msgstr "ஒரு நாளையாவது தேர்வுசெய்தால் தான் இத்திட்டம் ஓடும்."
+
+#: SIP\templates\modify.html:116
+msgid "Please choose at least one station to run in this program."
+msgstr "குறைந்தபட்சம் ஒரு நிலையத்தை தேர்வுசெய்தால் தான் இத்திட்டம் ஓடும்."
+
+#: SIP\templates\modify.html:262
+msgid "Error: starting in days wrong."
+msgstr "பிழை: தவறான நாட்களிள் தொடங்குகிறது."
+
+#: SIP\templates\modify.html:284
+msgid "Error: Duration missing."
+msgstr "பிழை: கால வரையறை இல்லை/இடப்படவில்லை."
+
+#: SIP\templates\modify.html:302
+msgid "Error: Incorrect duration."
+msgstr "பிழை: தவரான கால வரையறை."
+
+#: SIP\templates\modify.html:336
+msgid "Error: Start time must be prior to end time."
+msgstr "பிழை: தொடக்க நேரம் முடிவு நேரத்துக்கு முன் அமையவேண்டும்."
+
+#: SIP\templates\modify.html:357
+msgid "Edit Program #"
+msgstr "திட்டம் தொகுத்தல் #"
+
+#: SIP\templates\modify.html:357 SIP\templates\programs.html:108
+msgid "Add a New Program"
+msgstr "புதுத் திட்டம் சேற்த்து"
+
+#: SIP\templates\modify.html:362
+msgid "Program Off"
+msgstr "திட்டம் "
+
+#: SIP\templates\modify.html:362
+msgid "Program On"
+msgstr "திட்டம் "
+
+#: SIP\templates\modify.html:378
+msgid "Recurring"
+msgstr "தொடர்ச்சியான…"
+
+#: SIP\templates\modify.html:378
+msgid "Single pass"
+msgstr "ஒற்றை அனுமதி"
+
+#: SIP\templates\modify.html:380
+msgid "Every"
+msgstr "எல்லா"
+
+#: SIP\templates\modify.html:384
+msgid "Until"
+msgstr "வரை"
+
+#: SIP\templates\modify.html:396
+msgid "Interval"
+msgstr "இடைவெளி"
+
+#: SIP\templates\modify.html:396
+msgid "Weekly"
+msgstr "வாராந்திரம்"
+
+#: SIP\templates\modify.html:401
+msgid "Select All"
+msgstr "அனைத்தையும் தேர்ந்தெடு"
+
+#: SIP\templates\modify.html:402
+msgid "Clear All"
+msgstr "அனைத்தையும் வழுநீக்கு/துடை"
+
+#: SIP\templates\modify.html:440
+msgid "Water interval"
+msgstr "நீர்ப் பாசன இடைவெளி"
+
+#: SIP\templates\modify.html:456
+msgid "Starting in"
+msgstr "தொடங்குகிறது….."
+
+#: SIP\templates\modify.html:470
+msgid "Any Day"
+msgstr "எல்லா நாட்கலும்"
+
+#: SIP\templates\modify.html:470
+msgid "Restrict Day"
+msgstr "தடை நாட்கள்"
+
+#: SIP\templates\modify.html:472
+msgid "Even"
+msgstr "இரட்டைப்படை"
+
+#: SIP\templates\modify.html:472
+msgid "Odd"
+msgstr "ஒற்றைப்படை"
+
+#: SIP\templates\modify.html:473
+msgid "(except 31st and Feb 29th)"
+msgstr "31ம் தேதிகள் (மற்றும்) 29 பிப்ரவரி தவிர"
+
+#: SIP\templates\modify.html:482
+msgid "Save"
+msgstr "சேமி"
+
+#: SIP\templates\modify.html:483 SIP\templates\monthly.html:78 SIP\templates\options.html:155
+#: SIP\templates\plugins.html:69 SIP\templates\plugins_repo.html:45 SIP\templates\proto.html:75
+#: SIP\templates\runonce.html:86 SIP\templates\stations.html:138 SIP\templates\system_update.html:66
+msgid "Cancel"
+msgstr "இரத்து செய்"
+
+#: SIP\templates\monthly.html:3
+msgid "SIP Monthly Adjustments"
+msgstr "எச்.ஐ.பி மாதாந்திர சீரமைவு"
+
+#: SIP\templates\monthly.html:21
+msgid "Monthly Irrigation Adjustments"
+msgstr "மாதாந்திர நீர்ப்பாசன சீரமைவு"
+
+#: SIP\templates\monthly.html:22
+msgid "Enter an adjustment for each month (% irrigation time)"
+msgstr "அந்த அந்த"
+
+#: SIP\templates\monthly.html:77 SIP\templates\proto.html:74
+msgid "Submit"
+msgstr "சமார்ப்பி"
+
+#: SIP\templates\options.html:3
+msgid "SIP Options"
+msgstr "எச்.ஐ.பி விருப்பங்கள்"
+
+#: SIP\templates\options.html:24 SIP\templates\options.html:25
+msgid "Hide Tooltips"
+msgstr "உதவிக்குறிப்புகளை மறை"
+
+#: SIP\templates\options.html:25 SIP\templates\options.html:83
+msgid "Show Tooltips"
+msgstr "உதவிக்குறிப்புகளை காண்பி/காட்டு"
+
+#: SIP\templates\options.html:59
+msgid "The password given was incorrect."
+msgstr "தவறான கடவுச்சொல்."
+
+#: SIP\templates\options.html:63
+msgid "Please enter a password."
+msgstr "கடவுச்சொல் பதிவு செய்க"
+
+#: SIP\templates\options.html:67
+msgid "Passwords don't match, please re-enter."
+msgstr "தவறான கடவுச்சொல், மீண்டும் முயற்ச்சிக்கவும்"
+
+#: SIP\templates\options.html:71
+msgid "Must be 0 to +60, please re-enter."
+msgstr "மீண்டும் பதியவும், 0 முதல் +60 மட்டும்."
+
+#: SIP\templates\options.html:82
+msgid "Edit Options"
+msgstr "விருப்பங்களை தொகு"
+
+#: SIP\templates\options.html:111
+msgid "Default"
+msgstr "முன்னிருப்பு"
+
+#: SIP\templates\options.html:123
+msgid "None"
+msgstr "யா"
+
+#: SIP\templates\options.html:141
+msgid "System Restart"
+msgstr "கட்டகத்தை மறுதொடக்கு"
+
+#: SIP\templates\options.html:143
+msgid "Restart"
+msgstr "மறுதொடக்கு"
+
+#: SIP\templates\options.html:143
+msgid "Restart software"
+msgstr "மென்பொருள் மறுதொடக்கு"
+
+#: SIP\templates\options.html:144
+msgid "Reboot"
+msgstr "மறுதுவக்கு"
+
+#: SIP\templates\options.html:144
+msgid "Reboot hardware"
+msgstr "வன்பொருள் மறுதுவக்கு"
+
+#: SIP\templates\options.html:154 SIP\templates\stations.html:136
+msgid "Submit Changes"
+msgstr "மாற்றங்களைச் சமார்ப்பி"
+
+#: SIP\templates\plugins.html:3
+msgid "SIP Plugin Manager"
+msgstr "எ.ச்.ஐபி செருகி நிர்வாகி"
+
+#: SIP\templates\plugins.html:39
+msgid "Installed Plugins"
+msgstr "நிருவப்பட்டுள்ள் செருகிகள்"
+
+#: SIP\templates\plugins.html:40
+msgid "Browse More Plugins"
+msgstr "மேலும் செருகிகளுக்கு உலாவு"
+
+#: SIP\templates\plugins.html:41
+msgid "Roll Your Own"
+msgstr "தங்களுடைய சொந்த செருகி……"
+
+#: SIP\templates\plugins.html:45 SIP\templates\stations.html:86
+msgid "Name"
+msgstr "பெயர்"
+
+#: SIP\templates\plugins.html:47
+msgid "Uninstall?"
+msgstr "நீக்கிவிடு?"
+
+#: SIP\templates\plugins.html:65
+msgid "CAUTION:"
+msgstr "சாக்கிரதை:"
+
+#: SIP\templates\plugins.html:65
+msgid "Clicking UPDATE or UNINSTALL will restart the software and stop any running programs."
+msgstr ""
+"புதுபிப்பு அல்லது நீக்கம் என்பதைக் சொடுக்கினால்(கிளிக் செய்தால்), மென்பொருளை மறுதொடக்கம் செய்வதுடன் இயங்கும் திட்டங்கள்/"
+"நிரல்கள் நிற்க்கும்."
+
+#: SIP\templates\plugins.html:67
+msgid "Update Enabled"
+msgstr "புதுப்பிப்பு அனுமதிக்கப்பட்டுள்ள்து"
+
+#: SIP\templates\plugins.html:68
+msgid "Uninstall"
+msgstr "நீக்கு"
+
+#: SIP\templates\plugins_repo.html:3
+msgid "SIP Plugin Browser"
+msgstr "எ.ச்.ஐபி செருகி உலாவி"
+
+#: SIP\templates\plugins_repo.html:26
+msgid "Available Plugins"
+msgstr "உள்ள செருகிகள்"
+
+#: SIP\templates\plugins_repo.html:27
+msgid "Unless otherwise stated these plugins are licensed under GPL 3.0"
+msgstr "வேறெதுவும் கூறாவிட்டால் இந்தச் சொருகிகள் சாதாரன் பொது உரிமம் 3.0 (GPL 3.0) கீழ் பெறப்பட்டது."
+
+#: SIP\templates\plugins_repo.html:43
+msgid "install"
+msgstr "நிருவு"
+
+#: SIP\templates\plugins_repo.html:44
+msgid "Back"
+msgstr "பின்.."
+
+#: SIP\templates\programs.html:3
+msgid "SIP Programs"
+msgstr "எச்.ஐ.பி திட்டங்கள்"
+
+#: SIP\templates\programs.html:18
+msgid "Every "
+msgstr "எல்லா"
+
+#: SIP\templates\programs.html:18 SIP\templates\programs.html:20
+msgid "days"
+msgstr "தினங்கள்"
+
+#: SIP\templates\programs.html:20
+msgid "starting in"
+msgstr "தொடங்குகிறது….."
+
+#: SIP\templates\programs.html:23
+msgid "Every Weekday"
+msgstr "தினமும்"
+
+#: SIP\templates\programs.html:27
+msgid "Fri"
+msgstr "வெள்ளி"
+
+#: SIP\templates\programs.html:27
+msgid "Mon"
+msgstr "திங்கள்"
+
+#: SIP\templates\programs.html:27
+msgid "Sat"
+msgstr "சனி"
+
+#: SIP\templates\programs.html:27
+msgid "Sun"
+msgstr "ஞாயிறு"
+
+#: SIP\templates\programs.html:27
+msgid "Thur"
+msgstr "வியாழன்"
+
+#: SIP\templates\programs.html:27
+msgid "Tue"
+msgstr "செவ்வாய்"
+
+#: SIP\templates\programs.html:27
+msgid "Wed"
+msgstr "புத்ன்"
+
+#: SIP\templates\programs.html:29
+msgid " (Even days only)"
+msgstr "இரட்டைப்படை நாள் மட்டும்"
+
+#: SIP\templates\programs.html:31
+msgid " (Odd days only)"
+msgstr "ஒற்றைப்படை நாள் மட்டும்"
+
+#: SIP\templates\programs.html:109
+msgid "Delete All"
+msgstr "அனைத்தையும் அழி"
+
+#: SIP\templates\programs.html:128
+msgid "Run"
+msgstr "ஓட்டு"
+
+#: SIP\templates\programs.html:153
+msgid "Starting"
+msgstr "துவக்கப்படுகிறது"
+
+#: SIP\templates\programs.html:154
+msgid "with individual station durations"
+msgstr "நிலையம் தனிப்பட்ட கால வரையறையுடன்"
+
+#: SIP\templates\programs.html:155
+msgid "for"
+msgstr "பதிலாக"
+
+#: SIP\templates\programs.html:156 SIP\templates\programs.html:159
+msgid "until"
+msgstr "வரை"
+
+#: SIP\templates\programs.html:158
+msgid "Recurring every"
+msgstr "தினமும் "
+
+#: SIP\templates\programs.html:162 SIP\templates\runonce.html:84
+msgid "Run Now"
+msgstr "இப்போது ஓட்டு"
+
+#: SIP\templates\programs.html:163
+msgid "Edit"
+msgstr "தொகு"
+
+#: SIP\templates\programs.html:164
+msgid "Delete"
+msgstr "அழி"
+
+#: SIP\templates\proto.html:4
+msgid "SIP Proto Plugin"
+msgstr "ஆதிமுன்னோர் சார்ந்த எ.ச்.ஐபி செருகி"
+
+#: SIP\templates\proto.html:30
+msgid "Example Check Boxes"
+msgstr "மாதிரி தேர்வுப் பெட்டிகள்"
+
+#: SIP\templates\proto.html:37 SIP\templates\proto.html:38 SIP\templates\proto.html:56
+#: SIP\templates\proto.html:57
+msgid "Heading"
+msgstr "தலைப்பு"
+
+#: SIP\templates\proto.html:41
+msgid "Check Box 1"
+msgstr "தேர்வுப் பெட்டி 1"
+
+#: SIP\templates\proto.html:45
+msgid "Check Box 2"
+msgstr "தேர்வுப் பெட்டி"
+
+#: SIP\templates\proto.html:51
+msgid "Text Entry Fields"
+msgstr "எழுத்து பதியும் புலங்கள்"
+
+#: SIP\templates\proto.html:61
+msgid "Text Field 1"
+msgstr "எழுத்து புலம் 1"
+
+#: SIP\templates\proto.html:65
+msgid "Text Field 2"
+msgstr "எழுத்து புலம் 2"
+
+#: SIP\templates\restarting.html:3
+msgid "SIP Restarting"
+msgstr "எச்.ஐ.பி மறுதொடக்கம்…"
+
+#: SIP\templates\restarting.html:30
+msgid "SIP is restarting"
+msgstr "எச்.ஐ.பி மறுதொடக்கம் ஆகிறது…"
+
+#: SIP\templates\restarting.html:31
+msgid "This may take several seconds..."
+msgstr "இது சில நொடிகள் ஆகும்….."
+
+#: SIP\templates\runonce.html:3
+msgid "SIP Run-Once"
+msgstr "SIP ஒருமுரை ஓட்டு"
+
+#: SIP\templates\runonce.html:29
+msgid "Timer values wrong: "
+msgstr "மணி தவறாக உள்ளது:"
+
+#: SIP\templates\runonce.html:39
+msgid "No station is scheduled to run"
+msgstr "எந்த நிலயமும் ஓட்ட அட்டவனையில் இல்லை"
+
+#: SIP\templates\runonce.html:85
+msgid "Reset Time"
+msgstr "மணியை மீளமை"
+
+#: SIP\templates\stations.html:3
+msgid "SIP Stations"
+msgstr "எச்.ஐ.பி நிலயங்கள்"
+
+#: SIP\templates\stations.html:87
+msgid "Enabled?"
+msgstr "அனுமதித்து?"
+
+#: SIP\templates\stations.html:88
+msgid "Ignore Rain?"
+msgstr "மழையைப் சட்டை செயாதே?"
+
+#: SIP\templates\stations.html:90
+msgid "Ignore Plugin adjustments?"
+msgstr "செருகி சரிக்கட்டலை சட்டை செயாதே?"
+
+#: SIP\templates\stations.html:92
+msgid "Activate Master?"
+msgstr "முதன்மை நிலையத்தைச் செயல்படுத்து?"
+
+#: SIP\templates\stations.html:104 SIP\templates\stations.html:106
+msgid "(Master valve)"
+msgstr "முதன்மை நிலையம் அடைப்பிதழ்/ஓரதர்."
+
+#: SIP\templates\stations.html:137
+msgid "Reset Names"
+msgstr "பெயர்களை மீளமை"
+
+#: SIP\templates\system_update.html:25
+msgid "SIP Software Updater"
+msgstr "எச்.ஐ.பி மென் மேம்படுத்தான்"
+
+#: SIP\templates\system_update.html:28
+msgid ""
+"This plugin compares the local SIP version with the GitHub repository and can update the local "
+"software."
+msgstr "இந்த சொருகி உள்ளிடை எச்.ஐ.பி பதிப்பை ஜிட் களஞ்சியத்துடன் ஒப்பிட்டு, உள்ளிடை மென்பொருளை புதுப்பிக்கலாம்."
+
+#: SIP\templates\system_update.html:32
+msgid "Remote repository"
+msgstr "தொலைக் களஞ்சியம்"
+
+#: SIP\templates\system_update.html:38
+msgid "Local SIP version"
+msgstr "உள்ளிடை எச்.ஐ.பி பதிப்பு"
+
+#: SIP\templates\system_update.html:44
+msgid "Local SIP date"
+msgstr "உள்ளிடைத் தேதி"
+
+#: SIP\templates/\system_update.html:50
+msgid "Status"
+msgstr "நிலமை"
+
+#: SIP\templates\system_update.html:53
+msgid "Refresh Status"
+msgstr "நிலமையை புதுப்பி"
+
+#: SIP\templates\system_update.html:62
+msgid "Update SIP"
+msgstr "எச்.ஐ.பி நடப்பிற்கொனர்"
+
+#: SIP\templates\system_update.html:64
+msgid "Up-to-date"
+msgstr "நடப்பிள் உள்ளது"
+
+#: SIP\templates\system_update.html:65
+msgid "Restart SIP"
+msgstr "எச்.ஐ.பி(யை) மறுதொடக்கு"
+
+#: SIP\webpages.py:322
+msgid " not found."
+msgstr "காணவில்லை."
+
+#: SIP\webpages.py:322
+msgid "Station "
+msgstr "நிலையம்"
+
+#: SIP\webpages.py:340
+msgid "Manual mode not active."
+msgstr "“கையியக்க முறை செயல்பாட்டில் இல்லை”."
+
+#: SIP\webpages.py:622
+msgid "Date, Start Time, Zone, Duration, Program"
+msgstr "தேதி, துவக்க நேரம், பகுதி, கால வரை, திட்டம்"

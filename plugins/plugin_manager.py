@@ -1,4 +1,5 @@
 # !/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import json
 import re
@@ -25,8 +26,8 @@ urls.extend([
             '/pmr', 'plugins.plugin_manager.restart_page'
              ])
 
-# Add this plugin to the home page plugins menu
-gv.plugin_menu.append(['Manage Plugins', '/plugins'])
+# Add this plugin to the plugins menu
+gv.plugin_menu.append([_('Manage Plugins'), '/plugins'])
 
 def get_permissions():
     global installed
@@ -107,8 +108,6 @@ class update_plugins(ProtectedPage):
                     command = 'chmod g-x plugins/'+f
                     subprocess.call(command.split())
                 time.sleep(1)
-#            restart(1, True)
-#            return template_render.restarting('/')
             raise web.seeother('/restart')
         if qdict['btnId'] =="del":
             del_list = []
@@ -125,12 +124,8 @@ class update_plugins(ProtectedPage):
                         command = 'rm -f '+victim[1]+'/'+b_code
                         subprocess.call(command.split())
                     command = 'rm -f '+victim[1]+'/'+victim[0]
-#                    print 'command: ', command
                     subprocess.call(command.split())
-#            restart(1, True)
-#            return template_render.restarting('/')
             raise web.seeother('/restart')
-#        raise web.seeother('/')
 
 
 class browse_plugins(ProtectedPage):

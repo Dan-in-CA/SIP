@@ -4,797 +4,803 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "POT-Creation-Date: 2017-12-04 09:09+Pacific Standard Time\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2017-12-06 19:39+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ar_SA\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: ENCODING\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
-
+"X-Generator: Poedit 2.0.5\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
 
 #: SIP/plugins\plugin_manager.py:29
 msgid "Manage Plugins"
-msgstr ""
+msgstr "إدارة الملحقات"
 
 #: SIP/plugins\system_update.py:23
 msgid "System update"
-msgstr ""
+msgstr "تحديث النظام"
 
 #: SIP/plugins\system_update.py:75
 msgid "Up-to-date."
-msgstr ""
+msgstr "محدثة."
 
 #: SIP/plugins\system_update.py:78
 msgid "New version is available!"
-msgstr ""
+msgstr "!نسخة جديدة متاحة!"
 
 #: SIP/plugins\system_update.py:79 SIP/plugins\system_update.py:84
 msgid "Available revision"
-msgstr ""
+msgstr "النسخة المتاحة"
 
 #: SIP/plugins\system_update.py:80
 msgid "Changes"
-msgstr ""
+msgstr "التغييرات"
 
 #: SIP/plugins\system_update.py:83
 msgid "Currently running revision"
-msgstr ""
+msgstr "النسخة الحالية"
 
 #: SIP/plugins\system_update.py:95
 msgid "System update plug-in encountered error"
-msgstr ""
+msgstr "حدث خطأ في برنامج التحديث"
 
 #: SIP\gv.py:18
 msgid "Could not use git to determine version!"
-msgstr ""
+msgstr "لا يمكن استخدام بوابة git لتحديد إصدار!"
 
 #: SIP\gv.py:25
 msgid "Could not use git to determine date of last commit!"
-msgstr ""
+msgstr "لا يمكن استخدام بوابة git لتحديد تاريخ اخر تحديث!"
 
 #: SIP\gv.py:137
 msgid "System name"
-msgstr ""
+msgstr "اسم النظام"
 
 #: SIP\gv.py:137
 msgid "Unique name of this SIP system."
-msgstr ""
+msgstr "الاسم الفريد لهذا النظام SIP."
 
 #: SIP\gv.py:137 SIP\gv.py:138 SIP\gv.py:139 SIP\gv.py:141 SIP\gv.py:142
 #: SIP\gv.py:143 SIP\gv.py:144
 msgid "System"
-msgstr ""
+msgstr "النظام"
 
 #: SIP\gv.py:138
 msgid "City name or zip code. Use comma or + in place of space."
-msgstr ""
+msgstr "المدينة أو الرمز البريدي. استعمل الفاصلة أو + مكان الفراغ."
 
 #: SIP\gv.py:138
 msgid "Location"
-msgstr ""
+msgstr "الموقع"
 
 #: SIP\gv.py:139
 msgid "Language"
-msgstr ""
+msgstr "اللغة"
 
 #: SIP\gv.py:139
 msgid "Select language."
-msgstr ""
+msgstr "اختر اللغة."
 
 #: SIP\gv.py:141
 msgid "24-hour clock"
-msgstr ""
+msgstr "24 ساعة"
 
 #: SIP\gv.py:141
 msgid "Display times in 24 hour format (as opposed to AM/PM style.)"
-msgstr ""
+msgstr "عرض الوقت بصيغة 24 ساعة"
 
 #: SIP\gv.py:142
 msgid "HTTP port"
-msgstr ""
+msgstr "منفذ HTTP"
 
 #: SIP\gv.py:142
 msgid "HTTP port."
-msgstr ""
+msgstr "منفذ HTTP."
 
 #: SIP\gv.py:143
 msgid "GPIO Library to use. Default is RPi.GPIO"
-msgstr ""
+msgstr "مكتبة جبيو لاستخدام. القيمة الافتراضية هي RPi.GPIO"
 
 #: SIP\gv.py:143
 msgid "Use pigpio"
-msgstr ""
+msgstr "إستخدم مكتبة pigpio"
 
 #: SIP\gv.py:144
 msgid "Water Scaling"
-msgstr ""
+msgstr "زيادة معدل الري"
 
 #: SIP\gv.py:144
 msgid "Water scaling (as %), between 0 and 100."
-msgstr ""
+msgstr "زيادة معدل الري (%) من 0 إلى 100."
 
 #: SIP\gv.py:145
 msgid "Allow anonymous users to access the system without a password."
-msgstr ""
+msgstr "السماح للمستخدمين غير المسجلين بالدخول للنظام بدون كلمة سر."
 
 #: SIP\gv.py:145
 msgid "Disable security"
-msgstr ""
+msgstr "تعطيل خاصية الأمان"
 
 #: SIP\gv.py:145 SIP\gv.py:146 SIP\gv.py:147 SIP\gv.py:148
 msgid "Change Password"
-msgstr ""
+msgstr "تغيير كلمة السر"
 
 #: SIP\gv.py:146
 msgid "Current password"
-msgstr ""
+msgstr "كلمة السر الحالية"
 
 #: SIP\gv.py:146
 msgid "Re-enter the current password."
-msgstr ""
+msgstr "ادخل كلمة السر الحالية مرة أخرى."
 
 #: SIP\gv.py:147
 msgid "Enter a new password."
-msgstr ""
+msgstr "ادخل كلمة السر الجديدة."
 
 #: SIP\gv.py:147
 msgid "New password"
-msgstr ""
+msgstr "كلمة السر الجديدة"
 
 #: SIP\gv.py:148
 msgid "Confirm password"
-msgstr ""
+msgstr "ادخل كلمة السر مرة أخرى"
 
 #: SIP\gv.py:148
 msgid "Confirm the new password."
-msgstr ""
+msgstr "ادخل كلمة السر الجديدة مرة أخرى."
 
 #: SIP\gv.py:149
 msgid "Sequential"
-msgstr ""
+msgstr "تسلسلي"
 
 #: SIP\gv.py:149
 msgid "Sequential or concurrent running mode."
-msgstr ""
+msgstr "تسلسلي أو طريقة الري الحالية."
 
 #: SIP\gv.py:149 SIP\gv.py:150 SIP\gv.py:151 SIP\gv.py:152 SIP\gv.py:153
 msgid "Station Handling"
-msgstr ""
+msgstr "إعداد المحطات"
 
 #: SIP\gv.py:150
 msgid "Allow each station to have its own run time in programs."
-msgstr ""
+msgstr "السماح لكل محطة بوقت التشغيل الخاص بها في البرامج."
 
 #: SIP\gv.py:150
 msgid "Individual Duration"
-msgstr ""
+msgstr "الفترة الفردية"
 
 #: SIP\gv.py:151
 msgid "Extension boards"
-msgstr ""
+msgstr "لوحة التوسع"
 
 #: SIP\gv.py:151
 msgid "Number of extension boards."
-msgstr ""
+msgstr "عدد لوحات التوسع."
 
 #: SIP\gv.py:152
 msgid "Station delay"
-msgstr ""
+msgstr "زمن تأخير المحطة"
 
 #: SIP\gv.py:152
 msgid "Station delay time (in seconds), between 0 and 240."
-msgstr ""
+msgstr "زمن تأخير المحطة (ثانية) من 0 إلى 24."
 
 #: SIP\gv.py:153
 msgid "Active-Low Relay"
-msgstr ""
+msgstr "مرحِل غير فعال"
 
 #: SIP\gv.py:153
 msgid "Using active-low relay boards connected through shift registers"
-msgstr ""
+msgstr "استخدام لوحات مرحلات غير نشطة متصلة عن طريق تحويل السجل"
 
 #: SIP\gv.py:154
 msgid "Master station"
-msgstr ""
+msgstr "المحطة الرئيسية"
 
 #: SIP\gv.py:154
 msgid "Select master station."
-msgstr ""
+msgstr "اختر المحطة الرئيسية."
 
 #: SIP\gv.py:154 SIP\gv.py:155 SIP\gv.py:156
 msgid "Configure Master"
-msgstr ""
+msgstr "إعدادات المحطة الرئيسية"
 
 #: SIP\gv.py:155
 msgid "Master on adjust"
-msgstr ""
+msgstr "الرئيسية قابلة للتعديل"
 
 #: SIP\gv.py:155
 msgid "Master on delay (in seconds), between +0 and +60."
-msgstr ""
+msgstr "الرئيسية قابلة التأجيل (ثانية) من 0 إلى 60."
 
 #: SIP\gv.py:156
 msgid "Master off adjust"
-msgstr ""
+msgstr "الرئيسية  غير قابلة للتعديل"
 
 #: SIP\gv.py:156
 msgid "Master off delay (in seconds), between -60 and +60."
-msgstr ""
+msgstr "الرئيسية غير قابلة التأجيل (ثانية) من -60 إلى 60."
 
 #: SIP\gv.py:157
 msgid "Use rain sensor"
-msgstr ""
+msgstr "استخدم حساس المطر"
 
 #: SIP\gv.py:157
 msgid "Use rain sensor."
-msgstr ""
+msgstr "استخدم حساس المطر."
 
 #: SIP\gv.py:157 SIP\gv.py:158
 msgid "Rain Sensor"
-msgstr ""
+msgstr "حساس المطر"
 
 #: SIP\gv.py:158
 msgid "Normally open"
-msgstr ""
+msgstr "غير موصل"
 
 #: SIP\gv.py:158
 msgid "Rain sensor type."
-msgstr ""
+msgstr "نوع حساس المطر."
 
 #: SIP\gv.py:159
 msgid "Enable logging"
-msgstr ""
+msgstr "فعل حفظ البيانات"
 
 #: SIP\gv.py:159
-msgid "Log all events - note that repetitive writing to an SD card can shorten its lifespan."
-msgstr ""
+msgid ""
+"Log all events - note that repetitive writing to an SD card can shorten its "
+"lifespan."
+msgstr "احفظ كل البيانات - قد يؤدي إلى تقصير عمر كرت الذاكرة."
 
 #: SIP\gv.py:159 SIP\gv.py:160
 msgid "Logging"
-msgstr ""
+msgstr "جاري حفظ البيانات"
 
 #: SIP\gv.py:160
 msgid "Length of log to keep, 0=no limits."
-msgstr ""
+msgstr "حجم البيانات المراد حفظها. 0 تعني بلا تحديد."
 
 #: SIP\gv.py:160
 msgid "Max log entries"
-msgstr ""
+msgstr "اعلى حد لحفظ البيانات"
 
 #: SIP\helpers.py:41
 msgid "Error: json module not found"
-msgstr ""
+msgstr "خطأ: ملف json غير موجود"
 
 #: SIP\helpers.py:99
 msgid "Rebooting..."
-msgstr ""
+msgstr "جاري إعادة التشغيل..."
 
 #: SIP\helpers.py:128
 msgid "Powering off..."
-msgstr ""
+msgstr "جاري إطفاء الطاقة..."
 
 #: SIP\helpers.py:158
 msgid "Restarting..."
-msgstr ""
+msgstr "جاري إعادة التشغيل..."
 
 #: SIP\helpers.py:343
 msgid "program"
-msgstr ""
+msgstr "البرنامج"
 
 #: SIP\helpers.py:344
 msgid "station"
-msgstr ""
+msgstr "محطة"
 
 #: SIP\helpers.py:345
 msgid "duration"
-msgstr ""
+msgstr "فترة"
 
 #: SIP\helpers.py:346
 msgid "start"
-msgstr ""
+msgstr "البدء"
 
 #: SIP\helpers.py:347
 msgid "date"
-msgstr ""
+msgstr "التاريخ"
 
 #: SIP\helpers.py:351 SIP\templates\base.html:116
 msgid "Run-once"
-msgstr ""
+msgstr "تشغيل لمرة واحدة"
 
 #: SIP\helpers.py:353 SIP\templates\base.html:117 SIP\templates\home.html:242
 msgid "Manual"
-msgstr ""
+msgstr "يدوي"
 
 #: SIP\helpers.py:601
 msgid "Password"
-msgstr ""
+msgstr "كلمة السر"
 
 #: SIP\helpers.py:604
 msgid "Incorrect password, please try again"
-msgstr ""
+msgstr "كلمة السر غير صحيحة، الرجاء المحاولة مرة اخرى"
 
 #: SIP\sip.py:43
 msgid "Starting timing loop"
-msgstr ""
+msgstr "بدء دورة التوقيت"
 
 #: SIP\sip.py:231
 msgid "plugins loaded:"
-msgstr ""
+msgstr "تم تحميل الملحقات:"
 
 #: SIP\templates\base.html:14 SIP\templates\modify.html:408
 msgid "Monday"
-msgstr ""
+msgstr "الإثنين"
 
 #: SIP\templates\base.html:14 SIP\templates\modify.html:409
 msgid "Tuesday"
-msgstr ""
+msgstr "الثلاثاء"
 
 #: SIP\templates\base.html:14 SIP\templates\modify.html:410
 msgid "Wednesday"
-msgstr ""
+msgstr "الأربعاء"
 
 #: SIP\templates\base.html:14 SIP\templates\modify.html:411
 msgid "Thursday"
-msgstr ""
+msgstr "الخميس"
 
 #: SIP\templates\base.html:14 SIP\templates\modify.html:412
 msgid "Friday"
-msgstr ""
+msgstr "الجمعة"
 
 #: SIP\templates\base.html:14 SIP\templates\modify.html:413
 msgid "Saturday"
-msgstr ""
+msgstr "السبت"
 
 #: SIP\templates\base.html:14 SIP\templates\modify.html:414
 msgid "Sunday"
-msgstr ""
+msgstr "الأحد"
 
 #: SIP\templates\base.html:15 SIP\templates\monthly.html:26
 msgid "January"
-msgstr ""
+msgstr "يناير"
 
 #: SIP\templates\base.html:15 SIP\templates\monthly.html:30
 msgid "February"
-msgstr ""
+msgstr "فبراير"
 
 #: SIP\templates\base.html:15 SIP\templates\monthly.html:34
 msgid "March"
-msgstr ""
+msgstr "مارس"
 
 #: SIP\templates\base.html:15 SIP\templates\monthly.html:38
 msgid "April"
-msgstr ""
+msgstr "أبريل"
 
 #: SIP\templates\base.html:15 SIP\templates\monthly.html:42
 msgid "May"
-msgstr ""
+msgstr "مايو"
 
 #: SIP\templates\base.html:15 SIP\templates\monthly.html:46
 msgid "June"
-msgstr ""
+msgstr "يونيو"
 
 #: SIP\templates\base.html:15 SIP\templates\monthly.html:50
 msgid "July"
-msgstr ""
+msgstr "يوليو"
 
 #: SIP\templates\base.html:15 SIP\templates\monthly.html:54
 msgid "August"
-msgstr ""
+msgstr "أغسطس"
 
 #: SIP\templates\base.html:15 SIP\templates\monthly.html:58
 msgid "September"
-msgstr ""
+msgstr "سبتمبر"
 
 #: SIP\templates\base.html:15 SIP\templates\monthly.html:62
 msgid "October"
-msgstr ""
+msgstr "اكتوبر"
 
 #: SIP\templates\base.html:15 SIP\templates\monthly.html:66
 msgid "November"
-msgstr ""
+msgstr "نوفمبر"
 
 #: SIP\templates\base.html:15 SIP\templates\monthly.html:70
 msgid "December"
-msgstr ""
+msgstr "ديسمبر"
 
 #: SIP\templates\base.html:118 SIP\templates\log.html:55
 #: SIP\templates\programs.html:122
 msgid "Program"
-msgstr ""
+msgstr "البرنامج"
 
 #: SIP\templates\base.html:172
 msgid "Home"
-msgstr ""
+msgstr "الرئيسية"
 
 #: SIP\templates\base.html:173
 msgid "Define Programs"
-msgstr ""
+msgstr "تعريف برامج الري"
 
 #: SIP\templates\base.html:173
 msgid "Programs"
-msgstr ""
+msgstr "برامج"
 
 #: SIP\templates\base.html:174
 msgid "Define Run Once Program"
-msgstr ""
+msgstr "تعريف برنامج التشغيل لمرة واحدة"
 
 #: SIP\templates\base.html:174
 msgid "Run Once"
-msgstr ""
+msgstr "تشغيل لمرة واحدة"
 
 #: SIP\templates\base.html:175
 msgid "Access Plugins"
-msgstr ""
+msgstr "الدخول على الملحقات"
 
 #: SIP\templates\base.html:175
 msgid "Plugins"
-msgstr ""
+msgstr "الملحقات"
 
 #: SIP\templates\base.html:176
 msgid "Log"
-msgstr ""
+msgstr "سجل"
 
 #: SIP\templates\base.html:176
 msgid "View Log"
-msgstr ""
+msgstr "استعراض السجل"
 
 #: SIP\templates\base.html:177
 msgid "Options"
-msgstr ""
+msgstr "الخيارات"
 
 #: SIP\templates\base.html:178
 msgid "Stations"
-msgstr ""
+msgstr "المحطات"
 
 #: SIP\templates\base.html:178 SIP\templates\stations.html:81
 msgid "Configure Stations"
-msgstr ""
+msgstr "إعداد المحطات"
 
 #: SIP\templates\base.html:180
 msgid "Logout"
-msgstr ""
+msgstr "خروج"
 
 #: SIP\templates\base.html:192
 msgid "?"
-msgstr ""
+msgstr "؟"
 
 #: SIP\templates\base.html:192 SIP\templates\proto.html:27
 #: SIP\templates\system_update.html:26
 msgid "Help"
-msgstr ""
+msgstr "مساعدة"
 
 #: SIP\templates\base.html:200
 msgid "CPU Temp"
-msgstr ""
+msgstr "وقت المعالج"
 
 #: SIP\templates\base.html:200
 msgid "Click to toggle"
-msgstr ""
+msgstr "اضغط للتغيير"
 
 #: SIP\templates\base.html:207
 msgid "Software"
-msgstr ""
+msgstr "البرنامج"
 
 #: SIP\templates\base.html:207
 msgid "version"
-msgstr ""
+msgstr "نسخة"
 
 #: SIP\templates\home.html:49
 msgid "Manual Mode"
-msgstr ""
+msgstr "وضع يدوي"
 
 #: SIP\templates\home.html:52 SIP\templates\runonce.html:57
 msgid "Run Once Program"
-msgstr ""
+msgstr "برنامج التشغيل لمرة واحدة"
 
 #: SIP\templates\home.html:55
 msgid " for "
-msgstr ""
+msgstr " ل "
 
 #: SIP\templates\home.html:55
 msgid " on "
-msgstr ""
+msgstr " على "
 
 #: SIP\templates\home.html:55
 msgid " ran "
-msgstr ""
+msgstr " اشتغل "
 
 #: SIP\templates\home.html:79
 msgid "Master On"
-msgstr ""
+msgstr "الرئيسية شغالة"
 
 #: SIP\templates\home.html:81
 msgid "Master Off"
-msgstr ""
+msgstr "الرئيسية مطفأة"
 
 #: SIP\templates\home.html:86
 msgid "Suppressed by Rain Delay"
-msgstr ""
+msgstr "الغيت بتأخير المطر"
 
 #: SIP\templates\home.html:89
 msgid "Suppressed by Rain Sensor"
-msgstr ""
+msgstr "الغيت بحساس المطر"
 
 #: SIP\templates\home.html:92 SIP\templates\home.html:270
 #: SIP\templates\modify.html:429 SIP\templates\programs.html:120
 msgid "Off"
-msgstr ""
+msgstr "ايقاف"
 
 #: SIP\templates\home.html:131
 msgid ""
 "SIP could not restart.\n"
 "Please restart the program from the command line."
 msgstr ""
+"لم يتم إعادة تشغيل البرنامج. الرجاء إعادة تشغيل البرنامج من سطر الأوامر."
 
 #: SIP\templates\home.html:151
 msgid "Enter hours to delay"
-msgstr ""
+msgstr "ادخل وقت التأجيل بالساعة"
 
 #: SIP\templates\home.html:154
 msgid "Delay must be a positive value"
-msgstr ""
+msgstr "وقت التأجيل لا بد أن يكون موجب"
 
 #: SIP\templates\home.html:167
 msgid "Enter percentage adjustment"
-msgstr ""
+msgstr "ادخل نسبة التعديل المئوية"
 
 #: SIP\templates\home.html:186
 msgid "Timer values wrong"
-msgstr ""
+msgstr "جهاز ضبط الوقت قيم خاطئة"
 
 #: SIP\templates\home.html:232
 msgid "System Off"
-msgstr ""
+msgstr "إيقاف النظام"
 
 #: SIP\templates\home.html:232
 msgid "System On"
-msgstr ""
+msgstr "تشغيل النظام"
 
 #: SIP\templates\home.html:234
 msgid "Level"
-msgstr ""
+msgstr "المستوى"
 
 #: SIP\templates\home.html:234
 msgid "Normal"
-msgstr ""
+msgstr "عادي"
 
 #: SIP\templates\home.html:234
 msgid "Water Level"
-msgstr ""
+msgstr "مستوى الري"
 
 #: SIP\templates\home.html:236
 msgid "Active"
-msgstr ""
+msgstr "فعّال"
 
 #: SIP\templates\home.html:236
 msgid "Rain Delay"
-msgstr ""
+msgstr "التأخير بسبب المطر"
 
 #: SIP\templates\home.html:240
 msgid "rain sensed"
-msgstr ""
+msgstr "حساس المطر"
 
 #: SIP\templates\home.html:240 SIP\templates\log.html:46
 msgid "no"
-msgstr ""
+msgstr "لا"
 
 #: SIP\templates\home.html:242
 msgid "Auto"
-msgstr ""
+msgstr "آلي"
 
 #: SIP\templates\home.html:262
 msgid "On (Master)"
-msgstr ""
+msgstr "تشغيل المحطة الرئيسية"
 
 #: SIP\templates\home.html:264
 msgid "Off (Master)"
-msgstr ""
+msgstr "إيقاف المحطة الرئيسية"
 
 #: SIP\templates\home.html:270 SIP\templates\modify.html:429
 #: SIP\templates\programs.html:118
 msgid "On"
-msgstr ""
+msgstr "تشغيل"
 
 #: SIP\templates\home.html:288
 msgid " Prev Day"
-msgstr ""
+msgstr " اليوم السابق"
 
 #: SIP\templates\home.html:289
 msgid "Today"
-msgstr ""
+msgstr "اليوم"
 
 #: SIP\templates\home.html:290
 msgid "Next Day"
-msgstr ""
+msgstr "اليوم التالي"
 
 #: SIP\templates\home.html:328
 msgid "loading..."
-msgstr ""
+msgstr "يتم التحميل..."
 
 #: SIP\templates\home.html:357 SIP\templates\home.html:364
 #: SIP\templates\home.html:366
 msgid "Stop All Stations"
-msgstr ""
+msgstr "إيقاف جميع المحطات"
 
 #: SIP\templates\home.html:360
 msgid "Program 1"
-msgstr ""
+msgstr "البرنامج رقم 1"
 
 #: SIP\templates\log.html:3
 msgid "SIP Log"
-msgstr ""
+msgstr "سجل البرنامج"
 
 #: SIP\templates\log.html:8 SIP\templates\plugins.html:46
 msgid "Enabled"
-msgstr ""
+msgstr "تمكين"
 
 #: SIP\templates\log.html:11
 msgid "Disabled"
-msgstr ""
+msgstr "إيقاف"
 
 #: SIP\templates\log.html:41
 msgid "Log "
-msgstr ""
+msgstr "سجل "
 
 #: SIP\templates\log.html:46
 msgid " limit"
-msgstr ""
+msgstr " حد"
 
 #: SIP\templates\log.html:46
 msgid "Total number of records: "
-msgstr ""
+msgstr "عدد السجلات الكلي: "
 
 #: SIP\templates\log.html:47
 msgid "Download log as "
-msgstr ""
+msgstr "حفظ السجل باسم "
 
 #: SIP\templates\log.html:51
 msgid "Date"
-msgstr ""
+msgstr "التاريخ"
 
 #: SIP\templates\log.html:52 SIP\templates\modify.html:366
 msgid "Start Time"
-msgstr ""
+msgstr "وقت البدء"
 
 #: SIP\templates\log.html:53 SIP\templates\stations.html:85
 msgid "Station"
-msgstr ""
+msgstr "محطة"
 
 #: SIP\templates\log.html:54 SIP\templates\modify.html:376
 #: SIP\templates\modify.html:407
 msgid "Duration"
-msgstr ""
+msgstr "فترة"
 
 #: SIP\templates\log.html:73
 msgid "Refresh"
-msgstr ""
+msgstr "تحديث"
 
 #: SIP\templates\log.html:74
 msgid "Clear Log"
-msgstr ""
+msgstr "مسح السجل"
 
 #: SIP\templates\login.html:3
 msgid "SIP Login"
-msgstr ""
+msgstr "الدخول للبرنامج"
 
 #: SIP\templates\login.html:7 SIP\templates\login.html:10
 msgid "Login"
-msgstr ""
+msgstr "الدخول للبرنامج"
 
 #: SIP\templates\modify.html:3
 msgid "SIP Modify Program"
-msgstr ""
+msgstr "تعديل البرنامج"
 
 #: SIP\templates\modify.html:100
 msgid "Error: Incorrect time input "
-msgstr ""
+msgstr "خطأ: الوقت المدخل غير صحيح "
 
 #: SIP\templates\modify.html:112
 msgid "Please choose at least one weekday for the program to run."
-msgstr ""
+msgstr "الرجاء اختيار يوم واحد على الأقل ليعمل البرنامج."
 
 #: SIP\templates\modify.html:116
 msgid "Please choose at least one station to run in this program."
-msgstr ""
+msgstr "الرجاء اختيار محطة واحدة على الأقل ليعمل البرنامج."
 
 #: SIP\templates\modify.html:262
 msgid "Error: starting in days wrong."
-msgstr ""
+msgstr "خطأ: أيام البدء خاطئة."
 
 #: SIP\templates\modify.html:284
 msgid "Error: Duration missing."
-msgstr ""
+msgstr "خطا: فترة غير محددة."
 
 #: SIP\templates\modify.html:302
 msgid "Error: Incorrect duration."
-msgstr ""
+msgstr "خطا: فترة غير صحيحة."
 
 #: SIP\templates\modify.html:336
 msgid "Error: Start time must be prior to end time."
-msgstr ""
+msgstr "خطأ: وقت البدء يجب أن يكون قبل وقت النهاية."
 
 #: SIP\templates\modify.html:357
 msgid "Edit Program #"
-msgstr ""
+msgstr "تعديل البرنامج رقم#"
 
 #: SIP\templates\modify.html:357 SIP\templates\programs.html:108
 msgid "Add a New Program"
-msgstr ""
+msgstr "إضافة برنامج"
 
 #: SIP\templates\modify.html:362
 msgid "Program Off"
-msgstr ""
+msgstr "إيقاف البرنامج"
 
 #: SIP\templates\modify.html:362
 msgid "Program On"
-msgstr ""
+msgstr "تشغيل البرنامج"
 
 #: SIP\templates\modify.html:378
 msgid "Recurring"
-msgstr ""
+msgstr "متكرر"
 
 #: SIP\templates\modify.html:378
 msgid "Single pass"
-msgstr ""
+msgstr "مرة واحدة"
 
 #: SIP\templates\modify.html:380
 msgid "Every"
-msgstr ""
+msgstr "كل"
 
 #: SIP\templates\modify.html:384
 msgid "Until"
-msgstr ""
+msgstr "حتى"
 
 #: SIP\templates\modify.html:396
 msgid "Interval"
-msgstr ""
+msgstr "فترة"
 
 #: SIP\templates\modify.html:396
 msgid "Weekly"
-msgstr ""
+msgstr "أسبوعي"
 
 #: SIP\templates\modify.html:401
 msgid "Select All"
-msgstr ""
+msgstr "اختيار الكل"
 
 #: SIP\templates\modify.html:402
 msgid "Clear All"
-msgstr ""
+msgstr "مسح الكل"
 
 #: SIP\templates\modify.html:440
 msgid "Water interval"
-msgstr ""
+msgstr "فترة الري"
 
 #: SIP\templates\modify.html:456
 msgid "Starting in"
-msgstr ""
+msgstr "البدء خلال"
 
 #: SIP\templates\modify.html:470
 msgid "Any Day"
-msgstr ""
+msgstr "أي يوم"
 
 #: SIP\templates\modify.html:470
 msgid "Restrict Day"
-msgstr ""
+msgstr "حجب يوم"
 
 #: SIP\templates\modify.html:472
 msgid "Even"
-msgstr ""
+msgstr "زوجي"
 
 #: SIP\templates\modify.html:472
 msgid "Odd"
-msgstr ""
+msgstr "فردي"
 
 #: SIP\templates\modify.html:473
 msgid "(except 31st and Feb 29th)"
-msgstr ""
+msgstr "(ما عدا 31 و 29 فبراير)"
 
 #: SIP\templates\modify.html:482
 msgid "Save"
-msgstr ""
+msgstr "حفظ"
 
 #: SIP\templates\modify.html:483 SIP\templates\monthly.html:78
 #: SIP\templates\options.html:155 SIP\templates\plugins.html:69
@@ -802,386 +808,389 @@ msgstr ""
 #: SIP\templates\runonce.html:86 SIP\templates\stations.html:138
 #: SIP\templates\system_update.html:66
 msgid "Cancel"
-msgstr ""
+msgstr "إلغاء"
 
 #: SIP\templates\monthly.html:3
 msgid "SIP Monthly Adjustments"
-msgstr ""
+msgstr "التعديل الشهري"
 
 #: SIP\templates\monthly.html:21
 msgid "Monthly Irrigation Adjustments"
-msgstr ""
+msgstr "تعديل الري الشهري"
 
 #: SIP\templates\monthly.html:22
 msgid "Enter an adjustment for each month (% irrigation time)"
-msgstr ""
+msgstr "أدخل نسبة التعديل لكل شهر (% من وقت الري)"
 
 #: SIP\templates\monthly.html:77 SIP\templates\proto.html:74
 msgid "Submit"
-msgstr ""
+msgstr "حفظ"
 
 #: SIP\templates\options.html:3
 msgid "SIP Options"
-msgstr ""
+msgstr "خيارات"
 
 #: SIP\templates\options.html:24 SIP\templates\options.html:25
 msgid "Hide Tooltips"
-msgstr ""
+msgstr "إخفاء التلميحات"
 
 #: SIP\templates\options.html:25 SIP\templates\options.html:83
 msgid "Show Tooltips"
-msgstr ""
+msgstr "إظهار التلميحات"
 
 #: SIP\templates\options.html:59
 msgid "The password given was incorrect."
-msgstr ""
+msgstr "كلمة السر المدخلة غير صحيحة."
 
 #: SIP\templates\options.html:63
 msgid "Please enter a password."
-msgstr ""
+msgstr "ادخل كلمة السر."
 
 #: SIP\templates\options.html:67
 msgid "Passwords don't match, please re-enter."
-msgstr ""
+msgstr "كلمة السر غير متطابقة، الرجاء إعادة المحاولة."
 
 #: SIP\templates\options.html:71
 msgid "Must be 0 to +60, please re-enter."
-msgstr ""
+msgstr "لا بد أن يكون 0 إلى +60، الرجاء إعادة الإدخال."
 
 #: SIP\templates\options.html:82
 msgid "Edit Options"
-msgstr ""
+msgstr "خيارات التعديل"
 
 #: SIP\templates\options.html:111
 msgid "Default"
-msgstr ""
+msgstr "الإفتراضي"
 
 #: SIP\templates\options.html:123
 msgid "None"
-msgstr ""
+msgstr "بلا"
 
 #: SIP\templates\options.html:141
 msgid "System Restart"
-msgstr ""
+msgstr "إعادة تشغيل النظام"
 
 #: SIP\templates\options.html:143
 msgid "Restart"
-msgstr ""
+msgstr "إعادة التشغيل"
 
 #: SIP\templates\options.html:143
 msgid "Restart software"
-msgstr ""
+msgstr "إعادة تشغيل البرنامج"
 
 #: SIP\templates\options.html:144
 msgid "Reboot"
-msgstr ""
+msgstr "إعادة التشغيل"
 
 #: SIP\templates\options.html:144
 msgid "Reboot hardware"
-msgstr ""
+msgstr "إعادة تشغيل الجهاز"
 
 #: SIP\templates\options.html:154 SIP\templates\stations.html:136
 msgid "Submit Changes"
-msgstr ""
+msgstr "حفظ التغييرات"
 
 #: SIP\templates\plugins.html:3
 msgid "SIP Plugin Manager"
-msgstr ""
+msgstr "مدير الملحقات"
 
 #: SIP\templates\plugins.html:39
 msgid "Installed Plugins"
-msgstr ""
+msgstr "الملحقات المثبتة"
 
 #: SIP\templates\plugins.html:40
 msgid "Browse More Plugins"
-msgstr ""
+msgstr "استعراض ملحقات أخرى"
 
 #: SIP\templates\plugins.html:41
 msgid "Roll Your Own"
-msgstr ""
+msgstr "إضافة ملحقك الخاص"
 
 #: SIP\templates\plugins.html:45 SIP\templates\stations.html:86
 msgid "Name"
-msgstr ""
+msgstr "الإسم"
 
 #: SIP\templates\plugins.html:47
 msgid "Uninstall?"
-msgstr ""
+msgstr "إزالة التثبيت؟"
 
 #: SIP\templates\plugins.html:65
 msgid "CAUTION:"
-msgstr ""
+msgstr "تحذير:"
 
 #: SIP\templates\plugins.html:65
-msgid "Clicking UPDATE or UNINSTALL will restart the software and stop any running programs."
+msgid ""
+"Clicking UPDATE or UNINSTALL will restart the software and stop any running "
+"programs."
 msgstr ""
+"الضغط على تحديث أو إزالة التثبيت سيؤدي إلى إعادة تشغيل البرنامج وإيقاف "
+"برنامج الري الجاري."
 
 #: SIP\templates\plugins.html:67
 msgid "Update Enabled"
-msgstr ""
+msgstr "تمكين التحديث"
 
 #: SIP\templates\plugins.html:68
 msgid "Uninstall"
-msgstr ""
+msgstr "إزالة التثبيت"
 
 #: SIP\templates\plugins_repo.html:3
 msgid "SIP Plugin Browser"
-msgstr ""
+msgstr "استعراض الملحقات"
 
 #: SIP\templates\plugins_repo.html:26
 msgid "Available Plugins"
-msgstr ""
+msgstr "الملحقات المتاحة"
 
 #: SIP\templates\plugins_repo.html:27
 msgid "Unless otherwise stated these plugins are licensed under GPL 3.0"
-msgstr ""
+msgstr "مالم يتم ذكر نوع الترخيص فإن هذه الملحقات تخضع لرخصة GPL 3.0"
 
 #: SIP\templates\plugins_repo.html:43
 msgid "install"
-msgstr ""
+msgstr "تثبيت"
 
 #: SIP\templates\plugins_repo.html:44
 msgid "Back"
-msgstr ""
+msgstr "الرجوع"
 
 #: SIP\templates\programs.html:3
 msgid "SIP Programs"
-msgstr ""
+msgstr "برامج"
 
 #: SIP\templates\programs.html:18
 msgid "Every "
-msgstr ""
+msgstr "كل "
 
 #: SIP\templates\programs.html:18 SIP\templates\programs.html:20
 msgid "days"
-msgstr ""
+msgstr "أيام"
 
 #: SIP\templates\programs.html:20
 msgid "starting in"
-msgstr ""
+msgstr "البدء خلال"
 
 #: SIP\templates\programs.html:23
 msgid "Every Weekday"
-msgstr ""
+msgstr "كل يوم"
 
 #: SIP\templates\programs.html:27
 msgid "Fri"
-msgstr ""
+msgstr "ج"
 
 #: SIP\templates\programs.html:27
 msgid "Mon"
-msgstr ""
+msgstr "إث"
 
 #: SIP\templates\programs.html:27
 msgid "Sat"
-msgstr ""
+msgstr "س"
 
 #: SIP\templates\programs.html:27
 msgid "Sun"
-msgstr ""
+msgstr "أح"
 
 #: SIP\templates\programs.html:27
 msgid "Thur"
-msgstr ""
+msgstr "خ"
 
 #: SIP\templates\programs.html:27
 msgid "Tue"
-msgstr ""
+msgstr "ث"
 
 #: SIP\templates\programs.html:27
 msgid "Wed"
-msgstr ""
+msgstr "أر"
 
 #: SIP\templates\programs.html:29
 msgid " (Even days only)"
-msgstr ""
+msgstr " (الأيام الزوجية فقط)"
 
 #: SIP\templates\programs.html:31
 msgid " (Odd days only)"
-msgstr ""
+msgstr " (الأيام الفردية فقط)"
 
 #: SIP\templates\programs.html:109
 msgid "Delete All"
-msgstr ""
+msgstr "مسح الكل"
 
 #: SIP\templates\programs.html:128
 msgid "Run"
-msgstr ""
+msgstr "تشغيل"
 
 #: SIP\templates\programs.html:153
 msgid "Starting"
-msgstr ""
+msgstr "جاري البدء"
 
 #: SIP\templates\programs.html:154
 msgid "with individual station durations"
-msgstr ""
+msgstr "مع فترة لكل محطة"
 
 #: SIP\templates\programs.html:155
 msgid "for"
-msgstr ""
+msgstr "ل"
 
 #: SIP\templates\programs.html:156 SIP\templates\programs.html:159
 msgid "until"
-msgstr ""
+msgstr "حتى"
 
 #: SIP\templates\programs.html:158
 msgid "Recurring every"
-msgstr ""
+msgstr "متكرر كل"
 
 #: SIP\templates\programs.html:162 SIP\templates\runonce.html:84
 msgid "Run Now"
-msgstr ""
+msgstr "تشغيل الآن"
 
 #: SIP\templates\programs.html:163
 msgid "Edit"
-msgstr ""
+msgstr "تعديل"
 
 #: SIP\templates\programs.html:164
 msgid "Delete"
-msgstr ""
+msgstr "حذف"
 
 #: SIP\templates\proto.html:4
 msgid "SIP Proto Plugin"
-msgstr ""
+msgstr "ملحق افتراضي"
 
 #: SIP\templates\proto.html:30
 msgid "Example Check Boxes"
-msgstr ""
+msgstr "اختيار الأمثلة"
 
 #: SIP\templates\proto.html:37 SIP\templates\proto.html:38
 #: SIP\templates\proto.html:56 SIP\templates\proto.html:57
 msgid "Heading"
-msgstr ""
+msgstr "العنوان"
 
 #: SIP\templates\proto.html:41
 msgid "Check Box 1"
-msgstr ""
+msgstr "اختيار رقم 1"
 
 #: SIP\templates\proto.html:45
 msgid "Check Box 2"
-msgstr ""
+msgstr "اختيار رقم 2"
 
 #: SIP\templates\proto.html:51
 msgid "Text Entry Fields"
-msgstr ""
+msgstr "حقول إدخال النص"
 
 #: SIP\templates\proto.html:61
 msgid "Text Field 1"
-msgstr ""
+msgstr "نص رقم 1"
 
 #: SIP\templates\proto.html:65
 msgid "Text Field 2"
-msgstr ""
+msgstr "نص رقم 2"
 
 #: SIP\templates\restarting.html:3
 msgid "SIP Restarting"
-msgstr ""
+msgstr "جاري إعادة تشغيل البرنامج"
 
 #: SIP\templates\restarting.html:30
 msgid "SIP is restarting"
-msgstr ""
+msgstr "جاري إعادة تشغيل البرنامج"
 
 #: SIP\templates\restarting.html:31
 msgid "This may take several seconds..."
-msgstr ""
+msgstr "قد يستغرق ثواني..."
 
 #: SIP\templates\runonce.html:3
 msgid "SIP Run-Once"
-msgstr ""
+msgstr "تشغيل لمرة واحدة"
 
 #: SIP\templates\runonce.html:29
 msgid "Timer values wrong: "
-msgstr ""
+msgstr "قيم المؤقت خاطئة: "
 
 #: SIP\templates\runonce.html:39
 msgid "No station is scheduled to run"
-msgstr ""
+msgstr "لا يوجد محطة مجدولة"
 
 #: SIP\templates\runonce.html:85
 msgid "Reset Time"
-msgstr ""
+msgstr "إعادة تعيين الوقت"
 
 #: SIP\templates\stations.html:3
 msgid "SIP Stations"
-msgstr ""
+msgstr "المحطات"
 
 #: SIP\templates\stations.html:87
 msgid "Enabled?"
-msgstr ""
+msgstr "تمكين؟"
 
 #: SIP\templates\stations.html:88
 msgid "Ignore Rain?"
-msgstr ""
+msgstr "تجاهل المطر؟"
 
 #: SIP\templates\stations.html:90
 msgid "Ignore Plugin adjustments?"
-msgstr ""
+msgstr "تجاهل تعديل الملحق؟"
 
 #: SIP\templates\stations.html:92
 msgid "Activate Master?"
-msgstr ""
+msgstr "تشغيل المحطة الرئيسية؟"
 
 #: SIP\templates\stations.html:104 SIP\templates\stations.html:106
 msgid "(Master valve)"
-msgstr ""
+msgstr "(المحبس الرئيسي)"
 
 #: SIP\templates\stations.html:137
 msgid "Reset Names"
-msgstr ""
+msgstr "إعادة تعيين الأسماء"
 
 #: SIP\templates\system_update.html:25
 msgid "SIP Software Updater"
-msgstr ""
+msgstr "محدث البرنامح"
 
 #: SIP\templates\system_update.html:28
-msgid "This plugin compares the local SIP version with the GitHub repository and can update the local software."
+msgid ""
+"This plugin compares the local SIP version with the GitHub repository and "
+"can update the local software."
 msgstr ""
+"يقوم هذا الملحق بمقارنة البرنامج الحالي مع موقع المطور وبإمكانه تحديث "
+"البرنامج."
 
 #: SIP\templates\system_update.html:32
 msgid "Remote repository"
-msgstr ""
+msgstr "مخزن البرامج على الإنترنت"
 
 #: SIP\templates\system_update.html:38
 msgid "Local SIP version"
-msgstr ""
+msgstr "نسخة البرنامج المحلية"
 
 #: SIP\templates\system_update.html:44
 msgid "Local SIP date"
-msgstr ""
-
-#: SIP\templates/\system_update.html:50
-msgid "Status"
-msgstr ""
+msgstr "تاريخ البرنامج المحلي"
 
 #: SIP\templates\system_update.html:53
 msgid "Refresh Status"
-msgstr ""
+msgstr "حالة التحديث"
 
 #: SIP\templates\system_update.html:62
 msgid "Update SIP"
-msgstr ""
+msgstr "تحديث البرنامج"
 
 #: SIP\templates\system_update.html:64
 msgid "Up-to-date"
-msgstr ""
+msgstr "محدثة"
 
 #: SIP\templates\system_update.html:65
 msgid "Restart SIP"
-msgstr ""
+msgstr "أعد تشغيل البرنامج"
 
 #: SIP\webpages.py:322
 msgid " not found."
-msgstr ""
+msgstr " غير موجود."
 
 #: SIP\webpages.py:322
 msgid "Station "
-msgstr ""
+msgstr "محطة "
 
 #: SIP\webpages.py:340
 msgid "Manual mode not active."
-msgstr ""
+msgstr "الوضع اليدوي غير شغال."
 
 #: SIP\webpages.py:622
 msgid "Date, Start Time, Zone, Duration, Program"
-msgstr ""
-
+msgstr "التاريخ، وقت البدء، المنطقة، الفترة، البرنامج"
