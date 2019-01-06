@@ -12,7 +12,7 @@ alarm = signal('alarm_toggled')
 alarm.connect(notify_alarm_toggled)
 
 # Send an alarm!
-alarm.send("Example_Sender",txt="Just and example!")
+alarm.send("Example_Sender",txt="Just an example!")
 
 ### login ###
 def notify_login(name, **kw):

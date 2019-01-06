@@ -35,9 +35,10 @@ except ImportError:
         gv.platform = 'bo'
     except ImportError:
 		try:		# ODROID-C2, prerequisite is to have installed wiringPi2 python library. see: http://odroid.com/dokuwiki/lib/exe/detail.php?id=en%3Ac1_tinkering&media=en:c1:tinkering.jpg
-			import wiringpi2 as GPIO
+			import wiringpi as GPIO
 			#pins = [24, 23, 22, 21, 14, 13, 12, 3, 2, 0, 7, 1, 4, 5, 6, 10, 11, 26, 27]
-			gv.pin_map = [0,0,0,0,0,0,0,7,0,0,0,11,12,13,0,15,16,0,18,19,0,21,22,23,24,0,26,0,0,29,0,31,32,33,0,35,36,0,0,0,0]
+			# map 40 physical pins (1based) with 0 for pins that do not have a gpio number
+			#gv.pin_map = [0,0,0,0,0,0,0,7,0,0,0,11,12,13,0,15,16,0,18,19,0,21,22,23,24,0,26,0,0,29,0,31,32,33,0,35,36,0,0,0,0]
 			gv.pin_map = [0,0,0,0,0,0,0,7,0,0,0,0,1,2,0,3,4,0,5,12,0,13,6,14,10,0,11,0,0,21,0,22,26,23,0,24,27,0,0,0,0]
 			gv.platform = 'odroid-c2'
 			GPIO.wiringPiSetup()
@@ -153,7 +154,7 @@ def setup_pins():
 		set_pin_low(pin_sr_clk)
 		set_pin_low(pin_sr_clk)
 		set_pin_low(pin_sr_lat)
-    except PinSetupError:
+    except AttributeError:
         pass
 
 

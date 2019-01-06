@@ -4,25 +4,17 @@ $var title: $_('SIP Restarting')
 $var page: restart
 
 <script>
-    function checkPage() {
-        jQuery.ajax({
-            type: 'HEAD',
-            url: baseUrl + '/',
-            success: function() {
-                window.location.href = baseUrl + '/';
-            },
-            failure: function() {
-                setTimeout(function() {
-                    checkPage();
-                }, 1000);
-            }
-        });
-    }
+	var interval = null;	
+	function changePage() {
+		interval = setInterval(function() {
+	       jQuery.getScript("/static/scripts/goHome.js", function() {
+	    	   clearInterval(interval);
+	       });
+		}, 1000);
+};
 
     jQuery(document).ready(function(){
-        setTimeout(function() {
-            checkPage()
-        }, 3000);
+			changePage()
     });
 </script>
 

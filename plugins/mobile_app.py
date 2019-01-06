@@ -6,8 +6,8 @@ import calendar
 
 from helpers import get_cpu_temp, check_login, password_hash
 import web
-import gv  # Gain access to ospi's settings
-from urls import urls  # Gain access to ospi's URL list
+import gv  # Gain access to sip's settings
+from urls import urls  # Gain access to sip's URL list
 from webpages import ProtectedPage, WebPage
 
 ##############
