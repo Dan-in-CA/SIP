@@ -1,11 +1,12 @@
-#Service for SIP/OSPi running on Pidora (or other RHEL/Fedora variant) as a SystemD service
+#Service for SIP running on a SystemD service
 #
 [Unit]
 Description=SIP
 After=syslog.target network.target
 [Service]
-ExecStart=/usr/bin/python /home/pi/SIP/sip.py
+ExecStart=/usr/bin/python -u /home/pi/SIP/sip.py
 Restart=on-abort
 WorkingDirectory=/home/pi/SIP/
+SyslogIdentifier=sip
 [Install]
 WantedBy=multi-user.target

@@ -182,7 +182,7 @@ class change_options(ProtectedPage):
 
         if 'ohtp' in qdict:            
             if 'htp' not in gv.sd or gv.sd['htp'] != int(qdict['ohtp']):
-                qdict['rbt'] = '1'  # force reboot with change in htp
+                qdict['rstrt'] = '1'  # force restart with change in htp
             gv.sd['htp'] = int(qdict['ohtp'])
             
         if 'oidd' in qdict:
@@ -195,10 +195,15 @@ class change_options(ProtectedPage):
             gv.sd['idd'] = idd_int
             self.update_prog_lists('idd')
                 
+         if 'ohtip' in qdict:
+            if 'htip' not in gv.sd or gv.sd['htip'] != qdict['ohtip']:
+                qdict['rstrt'] = '1' # force restart with change in htip
+            gv.sd['htip'] = qdict['ohtip']
+                    
         for f in ['sdt', 'mas', 'mton', 'mtoff', 'wl', 'lr', 'tz']:
             if 'o'+f in qdict:
                 if f == 'mton'  and int(qdict['o'+f])<0: #handle values less than zero (temp fix)
-                    raise web.seeother('/vo?errorCode=mton_minus')                 
+                    raise web.seeother('/vo?errorCode=mton_minus')
                 gv.sd[f] = int(qdict['o'+f])
 
         for f in ['ipas', 'tf', 'urs', 'seq', 'rst', 'lg', 'pigpio', 'alr']: ###  'idd',
@@ -216,7 +221,7 @@ class change_options(ProtectedPage):
             reboot()
 
         if 'rstrt' in qdict and qdict['rstrt'] == '1':
-#            restart(2)
+            restart(2)
             raise web.seeother('/restart')
         raise web.seeother('/')
 
