@@ -195,7 +195,7 @@ class change_options(ProtectedPage):
             gv.sd['idd'] = idd_int
             self.update_prog_lists('idd')
                 
-         if 'ohtip' in qdict:
+        if 'ohtip' in qdict:
             if 'htip' not in gv.sd or gv.sd['htip'] != qdict['ohtip']:
                 qdict['rstrt'] = '1' # force restart with change in htip
             gv.sd['htip'] = qdict['ohtip']

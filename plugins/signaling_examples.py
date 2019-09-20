@@ -6,13 +6,13 @@ import gv
 
 ### Alarm Signal ###
 def notify_alarm_toggled(name, **kw):
-    print "ALARM from {}!: {}".format(name, kw['txt'])
+    print "Messge from {}!: {}".format(name, kw['txt'])
     
 alarm = signal('alarm_toggled')
 alarm.connect(notify_alarm_toggled)
 
 # Send an alarm!
-alarm.send("Example_Sender",txt="Just an example!")
+alarm.send("Signaling plugin",txt="Just an example!")
 
 ### login ###
 def notify_login(name, **kw):
@@ -89,7 +89,7 @@ station_names.connect(notify_station_names)
 #       - A program is run (Scheduled or "run now")
 #       - Stations are manually started with RunOnce
 def notify_station_scheduled(name, **kw):
-    print "Some Stations have been scheduled: {}".format(str(gv.rs))
+    print "Some Stations has been scheduled: {}".format(str(gv.rs))
 program_started = signal('stations_scheduled')
 program_started.connect(notify_station_scheduled)
 
