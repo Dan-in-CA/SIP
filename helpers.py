@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 import collections
 import i18n
 import datetime
@@ -21,6 +22,7 @@ from web import form
 
 import gv
 from web.session import sha1
+from functools import reduce
 
 try:
     from gpio_pins import GPIO, pin_rain_sense, pin_relay
@@ -28,7 +30,7 @@ try:
         import pigpio
         pi = pigpio.pi()
 except ImportError:
-    print 'error importing GPIO pins into helpers'
+    print('error importing GPIO pins into helpers')
     pass
 
 try:
@@ -37,7 +39,7 @@ except ImportError:
     try:
         import simplejson as json
     except ImportError:
-        print _("Error: json module not found")
+        print(_("Error: json module not found"))
         sys.exit()
 
 
@@ -78,12 +80,7 @@ def report_restart():
 def reboot(wait=1, block=False):
     """
     Reboots the Raspberry Pi from a new thread.
-    
-    @type wait: int
-    @param wait: length of time to wait before rebooting
-    @type block: bool
-    @param block: If True, clear output and perform reboot after wait.
-        Set to True at start of thread (recursive).
+    Set to True at start of thread (recursive).
     """
     if block:
         from gpio_pins import set_output
@@ -95,7 +92,7 @@ def reboot(wait=1, block=False):
             GPIO.cleanup()
         time.sleep(wait)
         try:
-            print _('Rebooting...')
+            print(_('Rebooting...'))
         except Exception:
             pass
         subprocess.Popen(['reboot'])
@@ -107,12 +104,7 @@ def reboot(wait=1, block=False):
 def poweroff(wait=1, block=False):
     """
     Powers off the Raspberry Pi from a new thread.
-    
-    @type wait: int or float
-    @param wait: number of seconds to wait before rebooting
-    @type block: bool
-    @param block: If True, clear output and perform reboot after wait.
-        Set to True at start of thread (recursive).
+    Set to True at start of thread (recursive).
     """
     if block:
         from gpio_pins import set_output
@@ -124,7 +116,7 @@ def poweroff(wait=1, block=False):
             GPIO.cleanup()
         time.sleep(wait)
         try:
-            print _('Powering off...')
+            print(_('Powering off...'))
         except Exception:
             pass
         subprocess.Popen(['poweroff'])
@@ -136,12 +128,7 @@ def poweroff(wait=1, block=False):
 def restart(wait=1, block=False):
     """
     Restarts the software from a new thread.
-    
-    @type wait: int
-    @param wait: length of time to wait before rebooting
-    @type block: bool
-    @param block: If True, clear output and perform reboot after wait.
-        Set to True at start of thread (recursive).
+    Set to True at start of thread (recursive).
     """
     if block:
         report_restart()
@@ -154,7 +141,7 @@ def restart(wait=1, block=False):
             GPIO.cleanup()
         time.sleep(wait)
         try:
-            print _('Restarting...')
+            print(_('Restarting...'))
         except Exception:
             pass
         gv.restarted = 0
@@ -167,9 +154,6 @@ def restart(wait=1, block=False):
 def uptime():
     """
     Returns UpTime for RPi
-    
-    @rtype: String
-    @return: Length of time System has been running.
     """
     string = 'Error 1: uptime'
 
@@ -276,9 +260,6 @@ def plugin_adjustment():
     
     The adjustment value output from a plugin must be 
     a unique element in the gv.sd dictionary with a key starting with 'wl_'
-    
-    @rtype:   float
-    @return:  Total irrigation time adjustments for all active plugins
     """
     duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith('wl_')]
     result = reduce(lambda x, y: x * y / 100, duration_adjustments, 1.0)
@@ -289,11 +270,6 @@ def get_cpu_temp(unit=None):
     """
     Reads and returns the temperature of the CPU if available.
     If unit is F, temperature is returned as Fahrenheit otherwise Celsius.
-    
-    @type unit: character
-    @param unit: F or C        
-    @rtype:   string
-    @return:  CPU temperature
     """
 
     try:
@@ -319,12 +295,7 @@ def get_cpu_temp(unit=None):
 
 def timestr(t):
     """
-    Convert duration in seconds to string in the form mm:ss.
-      
-    @type  t: int
-    @param t: duration in seconds
-    @rtype:   string
-    @return:  duration as "mm:ss"   
+    Convert duration in seconds to string in the form mm:ss. 
     """
     return str((t / 60 >> 0) / 10 >> 0) + str((t / 60 >> 0) % 10) + ":" + str((t % 60 >> 0) / 10 >> 0) + str(
         (t % 60 >> 0) % 10)
@@ -403,15 +374,15 @@ def prog_match(prog):
         and (this_minute >= prog['start_min'])
         and (this_minute < prog['stop_min'])
         ):
-        print "##### Match 1 found #####"
-        print "start: ", prog['start_min']
-        print "stop: ", prog['stop_min']
+        print("##### Match 1 found #####")
+        print("start: ", prog['start_min'])
+        print("stop: ", prog['stop_min'])
 #         print 'this_minute: ', this_minute
         return 1  # Program matched        
     elif ((prog['cycle_min'] != 0
            and (this_minute - prog['start_min']) / prog['cycle_min']) * prog['cycle_min'] == this_minute - prog['start_min']        
           ):
-        print "##### Match 2 found #####"
+        print("##### Match 2 found #####")
         return 1  # Program matched
     return 0
 
@@ -502,7 +473,7 @@ def stop_stations():
 
 def read_log():
     """
-    
+    Read data from irrigation log file.
     """
     result = []
     try:
@@ -521,9 +492,7 @@ def read_log():
 
 def jsave(data, fname):
     """
-    Save data to a json file.
-    
-    
+    Save data to a json file.  
     """
     with open('./data/' + fname + '.json', 'w') as f:
         json.dump(data, f, indent=4, sort_keys=True)
@@ -534,8 +503,7 @@ def station_names():
     Load station names from /data/stations.json file if it exists
     otherwise create file with defaults.
     
-    Return station names as a list.
-    
+    Return station names as a list. 
     """
     try:
         with open('./data/snames.json', 'r') as snf:
@@ -550,7 +518,6 @@ def load_programs():
     """
     Load program data into memory from /data/programData.json file if it exists.
     Otherwise create an empty programs data list (gv.pd) or convert from old style format.
-    
     """
     try:
         with open('./data/programData.json', 'r') as pf:
@@ -570,9 +537,6 @@ def load_programs():
 def password_salt():
     """
     Generate random number for use as salt for password encryption
-    
-    @rtype: string
-    @return: random value as 64 byte string.
     """
     return "".join(chr(random.randint(33, 127)) for _ in xrange(64))
 
@@ -580,11 +544,6 @@ def password_salt():
 def password_hash(password, salt):
     """
     Generate password hash using sha-1.
-    
-    @type: string
-    @param param: password
-    @type param: string
-    @param: salt 
     """
     return sha1(password + salt).hexdigest()
 
@@ -633,8 +592,6 @@ signin_form = form.Form(
 def get_input(qdict, key, default=None, cast=None):
     """
     Checks data returned from a UI web page.
-    
-    
     """
     result = default
     if key in qdict:
