@@ -30,16 +30,16 @@ for name in glob(join(basedir, '*.py')):
                 try:
                     __import__(__name__+'.'+module)
                 except Exception as e:
-                    print 'Ignoring exception while loading the {} plug-in.'.format(module)
-                    print e  # Provide feedback for plugin development
+                    print("Ignoring exception while loading the {} plug-in.".format(module))
+                    print(e)  # Provide feedback for plugin development
                 else:
                     __all__.append(module)       
         elif os_name == "nt":
             try:
                 __import__(__name__+'.'+module)
             except Exception as e:
-                print 'Ignoring exception while loading the {} plug-in.'.format(module)
-                print e  # Provide feedback for plugin development
+                print("Ignoring exception while loading the {} plug-in.".format(module))
+                print(e)  # Provide feedback for plugin development
             else:
                 __all__.append(module)
 __all__.sort()
