@@ -346,7 +346,6 @@ def prog_match(prog):
         return 0  # Skip if program is not enabled
     devday = int(gv.now / 86400)  # Check day match
     lt = time.gmtime(gv.now)
-#     lt = gv.nowt
     if prog['type'] == 'interval':
         if (devday % prog['interval_base_day']) != prog['day_mask']:
             return 0
@@ -364,10 +363,8 @@ def prog_match(prog):
             elif lt.tm_mday % 2 != 1:
                 return 0  
     this_minute = (lt.tm_hour * 60) + lt.tm_min  # Check time match
-#     print "this_minute: ", this_minute
     if (this_minute < prog['start_min'] 
         or this_minute >= prog['stop_min']       
-#         or prog['cycle_min'] == 0
         ):
         return 0
     if (prog['cycle_min'] == 0
@@ -377,7 +374,6 @@ def prog_match(prog):
         print("##### Match 1 found #####")
         print("start: ", prog['start_min'])
         print("stop: ", prog['stop_min'])
-#         print 'this_minute: ', this_minute
         return 1  # Program matched        
     elif ((prog['cycle_min'] != 0
            and (this_minute - prog['start_min']) / prog['cycle_min']) * prog['cycle_min'] == this_minute - prog['start_min']        

@@ -4,6 +4,7 @@
 
 ##############################
 #### Revision information ####
+from __future__ import print_function
 import subprocess
 from threading import RLock
 
@@ -15,14 +16,14 @@ try:
     revision = int(subprocess.check_output(['git', 'rev-list', '--count', 'HEAD']))
     ver_str = '%d.%d.%d' % (major_ver, minor_ver, (revision - old_count))
 except Exception:
-    print _('Could not use git to determine version!')
+    print(_('Could not use git to determine version!'))
     revision = 999
     ver_str = '%d.%d.%d' % (major_ver, minor_ver, revision)
 
 try:
     ver_date = subprocess.check_output(['git', 'log', '-1', '--format=%cd', '--date=short']).strip()
 except Exception:
-    print _('Could not use git to determine date of last commit!')
+    print(_('Could not use git to determine date of last commit!'))
     ver_date = '2015-01-09'
 
 #####################
@@ -101,7 +102,7 @@ if sd["pigpio"]:
         subprocess.check_output("pigpiod", stderr=subprocess.STDOUT)
         use_pigpio = True
     except Exception:
-        print "pigpio not found. Using RPi.GPIO"
+        print("pigpio not found. Using RPi.GPIO")
 else:
     use_pigpio = False       
 
@@ -138,7 +139,6 @@ options = [
     [_("System name"), "string", "name", _("Unique name of this SIP system."), _("System")],
     [_("Location"), "string", "loc", _("City name or zip code. Use comma or + in place of space."), _("System")],
     [_("Language"),"list","lang", _("Select language."),_("System")],
-#    [_("Time zone"), "int", "tz", _("Example: GMT-4:00, GMT+5:30 (effective after reboot.)"), _("System")],
     [_("24-hour clock"), "boolean", "tf", _("Display times in 24 hour format (as opposed to AM/PM style.)"), _("System")],
     [_("HTTP port"), "int", "htp", _("HTTP port."), _("System")],
     [_("HTTP IP addr"), "string", "htip", _("IP Address used for HTTP server socket.  IPv4 or IPv6 address"), _("System")],

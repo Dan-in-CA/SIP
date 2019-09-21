@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 import i18n
 
 import subprocess
@@ -40,7 +41,7 @@ gv.restarted = 1
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
     try:
-        print _('Starting timing loop') + '\n'
+        print(_('Starting timing loop') + '\n')
     except Exception:
         pass
     last_min = 0
@@ -230,11 +231,11 @@ if __name__ == '__main__':
     import plugins
 
     try:
-        print _('plugins loaded:')
+        print(_('plugins loaded:'))
     except Exception:
         pass
     for name in plugins.__all__:
-        print ' ', name
+        print(' ', name)
 
     gv.plugin_menu.sort(key=lambda entry: entry[0])
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 import os
 import re
 import time
@@ -104,7 +105,6 @@ class change_values(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        print 'qdict: ', qdict
         if 'rsn' in qdict and qdict['rsn'] == '1':
             stop_stations()
             raise web.seeother('/')
@@ -190,7 +190,6 @@ class change_options(ProtectedPage):
             idd_int = 1
         else:
             idd_int = 0
-        print "idd_int:, ", idd_int  
         if idd_int != gv.sd['idd']:
             gv.sd['idd'] = idd_int
             self.update_prog_lists('idd')
@@ -462,11 +461,8 @@ class change_program(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-#         print "from wp < mp: ", qdict
         pnum = int(qdict['pid']) + 1  # program number
-#         cp = ast.literal_eval(qdict['v'])
         cp = json.loads(qdict['v'])
-        print "cp from wp line 464 < mp: ", cp
         if cp['enabled'] == 0 and pnum == gv.pon:  # if disabled and program is running
             for i in range(len(gv.ps)):
                 if gv.ps[i][0] == pnum:
@@ -511,7 +507,6 @@ class enable_program(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        print "qdict from enable_prog: ", qdict
         gv.pd[int(qdict['pid'])]['enabled'] = int(qdict['enable'])
         jsave(gv.pd, 'programData')
         report_program_toggle()
