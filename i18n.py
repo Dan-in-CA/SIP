@@ -6,32 +6,32 @@ import locale
 import gettext
 import json
 
-__author__ = 'Dan'
+__author__ = u"Dan"
 
 try:
-    with open('./data/sd.json', 'r') as sdf:
+    with open(u"./data/sd.json", u"r") as sdf:
         sd_temp = json.load(sdf)
 except:
     pass
        
 try:
-    sd_lang = sd_temp['lang']
+    sd_lang = sd_temp[u"lang"]
 except:
-    sd_lang = 'default'
+    sd_lang = u"default"
 
 languages = ({
-    "en_US": "English",
-    "af_AF": "Afrikaans",
-    "ar_SA": "Arabic",   
-    "cs_CZ": "Czech",
-    "fr_FR": "French",
-    "de_DE": "German",
-	"gr_GR": "Greek",
-	"it_IT": "Italian",
-    "pt_PT": "Portuguese",
-    "sl_SL": "Slovenian",
-    "es_ES": "Spanish",
-    "ta_TA": "Tamil",
+    u"en_US": u"English",
+    u"af_AF": u"Afrikaans",
+    u"ar_SA": u"Arabic",   
+    u"cs_CZ": u"Czech",
+    u"fr_FR": u"French",
+    u"de_DE": u"German",
+	u"gr_GR": u"Greek",
+	u"it_IT": u"Italian",
+    u"pt_PT": u"Portuguese",
+    u"sl_SL": u"Slovenian",
+    u"es_ES": u"Spanish",
+    u"ta_TA": u"Tamil",
 })
 
 
@@ -47,21 +47,21 @@ def get_system_lang():
 curdir = os.path.abspath(os.path.dirname(__file__))
 
 # i18n directory.
-localedir = curdir + '/i18n'
+localedir = curdir + u"/i18n"
 
-gettext.install('sip_messages', localedir, unicode=True)
+gettext.install(u"sip_messages", localedir, unicode=True)
 
 sys_lang = get_system_lang()
 
-if sd_lang == 'default':
+if sd_lang == u"default":
     if sys_lang in languages:
         ui_lang = sys_lang
     else:
-        ui_lang = 'en_US'
+        ui_lang = u"en_US"
 else:
     ui_lang = sd_lang
 
 try:
-    gettext.translation('sip_messages', localedir, languages=[ui_lang]).install(True)
+    gettext.translation(u"sip_messages", localedir, languages=[ui_lang]).install(True)
 except IOError:
     pass

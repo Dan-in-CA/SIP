@@ -30,7 +30,7 @@ try:
         import pigpio
         pi = pigpio.pi()
 except ImportError:
-    print('error importing GPIO pins into helpers')
+    print(u"error importing GPIO pins into helpers")
     pass
 
 try:
@@ -39,14 +39,14 @@ except ImportError:
     try:
         import simplejson as json
     except ImportError:
-        print(_("Error: json module not found"))
+        print(_(u"Error: json module not found"))
         sys.exit()
 
 
 ##############################
 #### Function Definitions ####
 
-station_completed = signal('station_completed')
+station_completed = signal(u"station_completed")
 def report_station_completed(station):
     """
     Send blinker signal indicating that a station has completed.
@@ -54,15 +54,15 @@ def report_station_completed(station):
     """
     station_completed.send(station)
 
-stations_scheduled = signal('stations_scheduled')
+stations_scheduled = signal(u"stations_scheduled")
 def report_stations_scheduled(txt=None):
     """
     Send blinker signal indicating that stations had been scheduled.
     """
-    stations_scheduled.send('SIP',txt=txt)
+    stations_scheduled.send(u"SIP",txt=txt)
 
 
-rain_changed = signal('rain_changed')
+rain_changed = signal(u"rain_changed")
 def report_rain_changed(txt=None):
     """
     Send blinker signal indicating that rain sensor changed.
@@ -70,7 +70,7 @@ def report_rain_changed(txt=None):
     rain_changed.send()
 
 
-restarting = signal('restart') #: Signal to send on software restart
+restarting = signal(u"restart") #: Signal to send on software restart
 def report_restart():
     """
     Send blinker signal indicating system will restart.
@@ -84,7 +84,7 @@ def reboot(wait=1, block=False):
     """
     if block:
         from gpio_pins import set_output
-        gv.srvals = [0] * (gv.sd['nst'])
+        gv.srvals = [0] * (gv.sd[u"nst"])
         set_output()
         if gv.use_pigpio:
             pass
@@ -92,10 +92,10 @@ def reboot(wait=1, block=False):
             GPIO.cleanup()
         time.sleep(wait)
         try:
-            print(_('Rebooting...'))
+            print(_(u"Rebooting..."))
         except Exception:
             pass
-        subprocess.Popen(['reboot'])
+        subprocess.Popen([u"reboot"])
     else:
         t = Thread(target=reboot, args=(wait, True))
         t.start()
@@ -108,7 +108,7 @@ def poweroff(wait=1, block=False):
     """
     if block:
         from gpio_pins import set_output
-        gv.srvals = [0] * (gv.sd['nst'])
+        gv.srvals = [0] * (gv.sd[u"nst"])
         set_output()
         if gv.use_pigpio:
             pass
@@ -116,10 +116,10 @@ def poweroff(wait=1, block=False):
             GPIO.cleanup()
         time.sleep(wait)
         try:
-            print(_('Powering off...'))
+            print(_(u"Powering off..."))
         except Exception:
             pass
-        subprocess.Popen(['poweroff'])
+        subprocess.Popen([u"poweroff"])
     else:
         t = Thread(target=poweroff, args=(wait, True))
         t.start()
@@ -133,7 +133,7 @@ def restart(wait=1, block=False):
     if block:
         report_restart()
         from gpio_pins import set_output
-        gv.srvals = [0] * (gv.sd['nst'])
+        gv.srvals = [0] * (gv.sd[u"nst"])
         set_output()
         if gv.use_pigpio:
             pass
@@ -141,11 +141,11 @@ def restart(wait=1, block=False):
             GPIO.cleanup()
         time.sleep(wait)
         try:
-            print(_('Restarting...'))
+            print(_(u"Restarting..."))
         except Exception:
             pass
         gv.restarted = 0
-        subprocess.Popen('systemctl restart sip.service'.split())
+        subprocess.Popen(u"systemctl restart sip.service".split())
     else:
         t = Thread(target=restart, args=(wait, True))
         t.start()
@@ -155,11 +155,11 @@ def uptime():
     """
     Returns UpTime for RPi
     """
-    string = 'Error 1: uptime'
+    string = u"Error 1: uptime"
 
-    with open("/proc/uptime") as f:
+    with open(u"/proc/uptime") as f:
         total_sec = float(f.read().split()[0])
-        string = str(datetime.timedelta(seconds=total_sec)).split('.')[0]
+        string = str(datetime.timedelta(seconds=total_sec)).split(u".")[0]
 
     return string
 
@@ -169,14 +169,14 @@ def get_ip():
     Returns the IP address of the system if available.
     """
     try:
-        arg = 'ip route list'
+        arg = u"ip route list"
         p = subprocess.Popen(arg, shell=True, stdout=subprocess.PIPE)
         data = p.communicate()
         split_data = data[0].split()
-        ipaddr = split_data[split_data.index('src') + 1]
+        ipaddr = split_data[split_data.index(u"src") + 1]
         return ipaddr
     except:
-        return "No IP Settings"
+        return u"No IP Settings"
 
 
 def get_rpi_revision():
@@ -206,31 +206,31 @@ def check_rain():
     
     Handles normally open and normally closed rain sensors
     
-    Sets gv.sd['rs'] to 1 if rain is detected otherwise 0.
+    Sets gv.sd["rs"] to 1 if rain is detected otherwise 0.
     """
 
     global pi
     try:
-        if gv.sd['rst'] == 1:  # Rain sensor type normally open (default)
+        if gv.sd[u"rst"] == 1:  # Rain sensor type normally open (default)
             if gv.use_pigpio:
                 if not pi.read(pin_rain_sense):  # Rain detected
-                    gv.sd['rs'] = 1
+                    gv.sd[u"rs"] = 1
                 else:
-                    gv.sd['rs'] = 0
+                    gv.sd[u"rs"] = 0
             else:
-                if GPIO.input(pin_rain_sense) == gv.sd['rs']: #  Rain sensor changed, reading and gv.sd['rs'] are inverse.
+                if GPIO.input(pin_rain_sense) == gv.sd[u"rs"]: #  Rain sensor changed, reading and gv.sd["rs"] are inverse.
                     report_rain_changed()
-                    gv.sd['rs'] = 1 - gv.sd['rs'] #  toggle
-        elif gv.sd['rst'] == 0:  # Rain sensor type normally closed
+                    gv.sd[u"rs"] = 1 - gv.sd[u"rs"] #  toggle
+        elif gv.sd[u"rst"] == 0:  # Rain sensor type normally closed
             if gv.use_pigpio:
                 if pi.read(pin_rain_sense):  # Rain detected
-                    gv.sd['rs'] = 1
+                    gv.sd[u"rs"] = 1
                 else:
-                    gv.sd['rs'] = 0
+                    gv.sd[u"rs"] = 0
             else:
-                if GPIO.input(pin_rain_sense) != gv.sd['rs']:  # Rain sensor changed
+                if GPIO.input(pin_rain_sense) != gv.sd[u"rs"]:  # Rain sensor changed
                     report_rain_changed()
-                    gv.sd['rs'] = 1 - gv.sd['rs'] #  toggle
+                    gv.sd[u"rs"] = 1 - gv.sd[u"rs"] #  toggle
     except NameError:
         pass
 
@@ -241,15 +241,15 @@ def clear_mm():
     Clear manual mode settings and stop any running zones.
     """
     from gpio_pins import set_output
-    if gv.sd['mm']:
-        gv.sbits = [0] * (gv.sd['nbrd'] + 1)
+    if gv.sd[u"mm"]:
+        gv.sbits = [0] * (gv.sd[u"nbrd"] + 1)
         gv.ps = []
-        for i in range(gv.sd['nst']):
+        for i in range(gv.sd[u"nst"]):
             gv.ps.append([0, 0])
         gv.rs = []
-        for i in range(gv.sd['nst']):
+        for i in range(gv.sd[u"nst"]):
             gv.rs.append([0, 0, 0, 0])
-        gv.srvals = [0] * (gv.sd['nst'])
+        gv.srvals = [0] * (gv.sd[u"nst"])
         set_output()
     return
 
@@ -259,9 +259,9 @@ def plugin_adjustment():
     Sums irrigation time (water level) adjustments from multiple plugins.
     
     The adjustment value output from a plugin must be 
-    a unique element in the gv.sd dictionary with a key starting with 'wl_'
+    a unique element in the gv.sd dictionary with a key starting with "wl_"
     """
-    duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith('wl_')]
+    duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith(u"wl_")]
     result = reduce(lambda x, y: x * y / 100, duration_adjustments, 1.0)
     return result
 
@@ -273,31 +273,31 @@ def get_cpu_temp(unit=None):
     """
 
     try:
-        if gv.platform == 'bo':
-            res = os.popen('cat /sys/class/hwmon/hwmon0/device/temp1_input').readline()
+        if gv.platform == u"bo":
+            res = os.popen(u"cat /sys/class/hwmon/hwmon0/device/temp1_input").readline()
             temp = str(int(float(res) / 1000))
-        elif gv.platform == 'pi':
-            command = "cat /sys/class/thermal/thermal_zone0/temp"
+        elif gv.platform == u"pi":
+            command = u"cat /sys/class/thermal/thermal_zone0/temp"
             output = subprocess.check_output(command.split())
             temp = str(int(float(output) / 1000))
         else:
             temp = str(0)
 
-        if unit == 'F':
+        if unit == u"F":
             return str(1.8 * float(temp) + 32)
         elif unit is not None:
             return str(float(temp))
         else:
             return temp
     except Exception:
-        return '!!'
+        return u"!!"
 
 
 def timestr(t):
     """
     Convert duration in seconds to string in the form mm:ss. 
     """
-    return str((t / 60 >> 0) / 10 >> 0) + str((t / 60 >> 0) % 10) + ":" + str((t % 60 >> 0) / 10 >> 0) + str(
+    return str((t / 60 >> 0) / 10 >> 0) + str((t / 60 >> 0) % 10) + u":" + str((t % 60 >> 0) / 10 >> 0) + str(
         (t % 60 >> 0) % 10)
 
 
@@ -305,34 +305,34 @@ def log_run():
     """
     Add run data to json log file - most recent first.
     
-    If a record limit is specified (gv.sd['lr']) the number of records is truncated.  
+    If a record limit is specified (gv.sd["lr"]) the number of records is truncated.  
     """
 
-    if gv.sd['lg']:
-        program = _('program')
-        station = _('station')
-        duration = _('duration')
-        strt = _('start')
-        date = _('date')
+    if gv.sd[u"lg"]:
+        program = _(u"program")
+        station = _(u"station")
+        duration = _(u"duration")
+        strt = _(u"start")
+        date = _(u"date")
         if gv.lrun[1] == 0:  # skip program 0
             return
         elif gv.lrun[1] == 98:
-            pgr = _('Run-once')
+            pgr = _(u"Run-once")
         elif gv.lrun[1] == 99:
-            pgr = _('Manual')
+            pgr = _(u"Manual")
         else:
             pgr = str(gv.lrun[1])
         start = time.gmtime(gv.now - gv.lrun[2])
-        logline = '{"'+program+'":"' + pgr + '","'+station+'":' + str(gv.lrun[0]) + ',"'+duration+'":"' + timestr(
-            gv.lrun[2]) + '","'+strt+'":"' + time.strftime('%H:%M:%S","'+date+'":"%Y-%m-%d"', start) + '}'
+        logline = '{u"' + program + u'":"' + pgr + u'","'+station + u'":' + str(gv.lrun[0]) + u',"' + duration + u'":"' + timestr(
+            gv.lrun[2]) + u'","'+strt + u'":"' + time.strftime(u'%H:%M:%S","' + date + u'":"%Y-%m-%d"', start) + u'}'
         lines = []
-        lines.append(logline + '\n')
+        lines.append(logline + u"\n")
         log = read_log()
         for r in log:
-            lines.append(json.dumps(r) + '\n')
-        with codecs.open('./data/log.json', 'w', encoding='utf-8') as f:
-            if gv.sd['lr']:
-                f.writelines(lines[:gv.sd['lr']])
+            lines.append(json.dumps(r) + u"\n")
+        with codecs.open(u"./data/log.json", u"w", encoding=u"utf-8") as f:
+            if gv.sd[u"lr"]:
+                f.writelines(lines[:gv.sd[u"lr"]])
             else:
                 f.writelines(lines)
     return
@@ -342,20 +342,20 @@ def prog_match(prog):
     """
     Test a program for current date and time match.
     """
-    if not prog['enabled']:
+    if not prog[u"enabled"]:
         return 0  # Skip if program is not enabled
     devday = int(gv.now / 86400)  # Check day match
     lt = time.gmtime(gv.now)
-    if prog['type'] == 'interval':
-        if (devday % prog['interval_base_day']) != prog['day_mask']:
+    if prog[u"type"] == u"interval":
+        if (devday % prog[u"interval_base_day"]) != prog[u"day_mask"]:
             return 0
     else:  # Weekday program
-        if not prog['day_mask'] - 128 & 1 << lt.tm_wday:
+        if not prog[u"day_mask"] - 128 & 1 << lt.tm_wday:
             return 0
-        if prog['type'] == 'evendays':
+        if prog[u"type"] == u"evendays":
             if lt.tm_mday % 2 != 0:
                 return 0
-        if prog['type'] == 'odddays':
+        if prog[u"type"] == u"odddays":
             if (lt.tm_mday == 31 
                 or ((lt.tm_mon == 2 and lt.tm_mday == 29))
                 ):
@@ -363,22 +363,20 @@ def prog_match(prog):
             elif lt.tm_mday % 2 != 1:
                 return 0  
     this_minute = (lt.tm_hour * 60) + lt.tm_min  # Check time match
-    if (this_minute < prog['start_min'] 
-        or this_minute >= prog['stop_min']       
+    if (this_minute < prog[u"start_min"] 
+        or this_minute >= prog[u"stop_min"]       
         ):
         return 0
-    if (prog['cycle_min'] == 0
-        and (this_minute >= prog['start_min'])
-        and (this_minute < prog['stop_min'])
+    if (prog[u"cycle_min"] == 0
+        and (this_minute >= prog[u"start_min"])
+        and (this_minute < prog[u"stop_min"])
         ):
-        print("##### Match 1 found #####")
-        print("start: ", prog['start_min'])
-        print("stop: ", prog['stop_min'])
+#         print(u"##### Match 1 found #####")
         return 1  # Program matched        
-    elif ((prog['cycle_min'] != 0
-           and (this_minute - prog['start_min']) / prog['cycle_min']) * prog['cycle_min'] == this_minute - prog['start_min']        
+    elif ((prog[u"cycle_min"] != 0
+           and (this_minute - prog[u"start_min"]) / prog[u"cycle_min"]) * prog[u"cycle_min"] == this_minute - prog[u"start_min"]        
           ):
-        print("##### Match 2 found #####")
+#         print(u"##### Match 2 found #####")
         return 1  # Program matched
     return 0
 
@@ -387,23 +385,23 @@ def schedule_stations(stations):
     """
     Schedule stations/valves/zones to run.
     """
-    if (gv.sd['rd'] #  If rain delay or rain detected by sensor
-        or (gv.sd['urs'] and gv.sd['rs'])
+    if (gv.sd[u"rd"] #  If rain delay or rain detected by sensor
+        or (gv.sd[u"urs"] and gv.sd[u"rs"])
         ):
         rain = True
     else:
         rain = False
     accumulate_time = gv.now
-    if gv.sd['seq']:  # sequential mode, stations run one after another
+    if gv.sd[u"seq"]:  # sequential mode, stations run one after another
         for b in range(len(stations)):
             for s in range(8):
                 sid = b * 8 + s  # station index
                 if gv.rs[sid][2]:  # if station has a duration value
-                    if not rain or gv.sd['ir'][b] & 1 << s:  # if no rain or station ignores rain
+                    if not rain or gv.sd[u"ir"][b] & 1 << s:  # if no rain or station ignores rain
                         gv.rs[sid][0] = accumulate_time  # start at accumulated time
                         accumulate_time += gv.rs[sid][2]  # add duration
                         gv.rs[sid][1] = accumulate_time  # set new stop time
-                        accumulate_time += gv.sd['sdt']  # add station delay
+                        accumulate_time += gv.sd[u"sdt"]  # add station delay
                     else:
                         gv.sbits[b] &= ~1 << s
                         gv.ps[s] = [0, 0]
@@ -414,14 +412,14 @@ def schedule_stations(stations):
                 if not stations[b] & 1 << s:  # skip stations not in prog
                     continue
                 if gv.rs[sid][2]:  # if station has a duration value
-                    if not rain or gv.sd['ir'][b] & 1 << s:  # if no rain or station ignores rain
+                    if not rain or gv.sd[u"ir"][b] & 1 << s:  # if no rain or station ignores rain
                         gv.rs[sid][0] = gv.now  # accumulate_time # set start time
                         gv.rs[sid][1] = (gv.now + gv.rs[sid][2])  # set stop time
                     else:  # if rain and station does not ignore, clear station from display
                         gv.sbits[b] &= ~1 << s
                         gv.ps[s] = [0, 0]
     report_stations_scheduled()
-    gv.sd['bsy'] = 1
+    gv.sd[u"bsy"] = 1
     return
 
 
@@ -432,10 +430,10 @@ def stop_onrain():
 
     from gpio_pins import set_output
     do_set_output = False
-    for b in range(gv.sd['nbrd']):
+    for b in range(gv.sd[u"nbrd"]):
         for s in range(8):
             sid = b * 8 + s  # station index
-            if gv.sd['ir'][b] & 1 << s:  # if station ignores rain...
+            if gv.sd[u"ir"][b] & 1 << s:  # if station ignores rain...
                 continue
             elif not all(v == 0 for v in gv.rs[sid]):
                 gv.srvals[sid] = 0
@@ -454,16 +452,16 @@ def stop_stations():
     Stop all running stations, clear schedules.
     """
     from gpio_pins import set_output
-    gv.srvals = [0] * (gv.sd['nst'])
+    gv.srvals = [0] * (gv.sd[u"nst"])
     set_output()
     gv.ps = []
-    for i in range(gv.sd['nst']):
+    for i in range(gv.sd[u"nst"]):
         gv.ps.append([0, 0])
-    gv.sbits = [0] * (gv.sd['nbrd'] + 1)
+    gv.sbits = [0] * (gv.sd[u"nbrd"] + 1)
     gv.rs = []
-    for i in range(gv.sd['nst']):
+    for i in range(gv.sd[u"nst"]):
         gv.rs.append([0, 0, 0, 0])
-    gv.sd['bsy'] = 0
+    gv.sd[u"bsy"] = 0
     return
 
 
@@ -473,7 +471,7 @@ def read_log():
     """
     result = []
     try:
-        with io.open('./data/log.json') as logf:
+        with io.open(u"./data/log.json") as logf:
             records = logf.readlines()
             for i in records:
                 try:
@@ -490,7 +488,7 @@ def jsave(data, fname):
     """
     Save data to a json file.  
     """
-    with open('./data/' + fname + '.json', 'w') as f:
+    with open(u"./data/" + fname + u".json", u"w") as f:
         json.dump(data, f, indent=4, sort_keys=True)
 
 
@@ -502,11 +500,11 @@ def station_names():
     Return station names as a list. 
     """
     try:
-        with open('./data/snames.json', 'r') as snf:
+        with open(u"./data/snames.json", u"r") as snf:
             return json.load(snf)
     except IOError:
         stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08"]
-        jsave(stations, 'snames')
+        jsave(stations, u"snames")
         return stations
 
 
@@ -516,16 +514,16 @@ def load_programs():
     Otherwise create an empty programs data list (gv.pd) or convert from old style format.
     """
     try:
-        with open('./data/programData.json', 'r') as pf:
+        with open(u"./data/programData.json", u"r") as pf:
             gv.pd = json.load(pf)
     except IOError:
         #  Check if programs.json file exists (old format) and if so, run conversion
-        if os.path.isfile('./data/programs.json'):
+        if os.path.isfile(u"./data/programs.json"):
             import convert_progs
             gv.pd = convert_progs.convert()
         else:
             gv.pd = []  # A config file -- create empty file if not found.
-        with open('./data/programData.json', 'w') as pf:
+        with open(u"./data/programData.json", u"w") as pf:
             json.dump(gv.pd, pf, indent=4, sort_keys=True)        
     return gv.pd
 
@@ -554,32 +552,32 @@ def check_login(redirect=False):
     qdict = web.input()
 
     try:
-        if gv.sd['ipas'] == 1:
+        if gv.sd[u"ipas"] == 1:
             return True
 
-        if web.config._session.user == 'admin':
+        if web.config._session.user == u"admin":
             return True
     except KeyError:
         pass
 
-    if 'pw' in qdict:
-        if gv.sd['password'] == password_hash(qdict['pw'], gv.sd['salt']):
+    if u"pw" in qdict:
+        if gv.sd[u"password"] == password_hash(qdict[u"pw"], gv.sd[u"salt"]):
             return True
         if redirect:
             raise web.unauthorized()
         return False
 
     if redirect:
-        raise web.seeother('/login')
+        raise web.seeother(u"/login")
     return False
 
 
 signin_form = form.Form(
-    form.Password('password', description = _('Password') + ':'),
+    form.Password(u"password", description = _(u"Password") + u":"),
     validators=[
         form.Validator(
-            _("Incorrect password, please try again"),
-            lambda x: gv.sd['password'] == password_hash(x.password, gv.sd['salt'])
+            _(u"Incorrect password, please try again"),
+            lambda x: gv.sd[u"password"] == password_hash(x.password, gv.sd[u"salt"])
         )
     ]
 )
