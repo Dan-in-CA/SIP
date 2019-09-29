@@ -26,8 +26,10 @@ from functools import reduce
 
 try:
     from gpio_pins import GPIO, pin_rain_sense, pin_relay
+
     if gv.use_pigpio:
         import pigpio
+
         pi = pigpio.pi()
 except ImportError:
     print(u"error importing GPIO pins into helpers")
@@ -47,6 +49,8 @@ except ImportError:
 #### Function Definitions ####
 
 station_completed = signal(u"station_completed")
+
+
 def report_station_completed(station):
     """
     Send blinker signal indicating that a station has completed.
@@ -54,15 +58,20 @@ def report_station_completed(station):
     """
     station_completed.send(station)
 
+
 stations_scheduled = signal(u"stations_scheduled")
+
+
 def report_stations_scheduled(txt=None):
     """
     Send blinker signal indicating that stations had been scheduled.
     """
-    stations_scheduled.send(u"SIP",txt=txt)
+    stations_scheduled.send(u"SIP", txt = txt)
 
 
 rain_changed = signal(u"rain_changed")
+
+
 def report_rain_changed(txt=None):
     """
     Send blinker signal indicating that rain sensor changed.
@@ -70,12 +79,15 @@ def report_rain_changed(txt=None):
     rain_changed.send()
 
 
-restarting = signal(u"restart") #: Signal to send on software restart
+restarting = signal(u"restart")  #: Signal to send on software restart
+
+
 def report_restart():
     """
     Send blinker signal indicating system will restart.
     """
     restarting.send()
+
 
 def reboot(wait=1, block=False):
     """
@@ -84,6 +96,7 @@ def reboot(wait=1, block=False):
     """
     if block:
         from gpio_pins import set_output
+
         gv.srvals = [0] * (gv.sd[u"nst"])
         set_output()
         if gv.use_pigpio:
@@ -108,6 +121,7 @@ def poweroff(wait=1, block=False):
     """
     if block:
         from gpio_pins import set_output
+
         gv.srvals = [0] * (gv.sd[u"nst"])
         set_output()
         if gv.use_pigpio:
@@ -133,6 +147,7 @@ def restart(wait=1, block=False):
     if block:
         report_restart()
         from gpio_pins import set_output
+
         gv.srvals = [0] * (gv.sd[u"nst"])
         set_output()
         if gv.use_pigpio:
@@ -191,6 +206,7 @@ def get_rpi_revision():
     except ImportError:
         return 0
 
+
 def mkdir_p(path):
     try:
         os.makedirs(path)
@@ -199,6 +215,7 @@ def mkdir_p(path):
             pass
         else:
             raise
+
 
 def check_rain():
     """
@@ -218,9 +235,11 @@ def check_rain():
                 else:
                     gv.sd[u"rs"] = 0
             else:
-                if GPIO.input(pin_rain_sense) == gv.sd[u"rs"]: #  Rain sensor changed, reading and gv.sd["rs"] are inverse.
+                if (
+                    GPIO.input(pin_rain_sense) == gv.sd[u"rs"]
+                ):  #  Rain sensor changed, reading and gv.sd["rs"] are inverse.
                     report_rain_changed()
-                    gv.sd[u"rs"] = 1 - gv.sd[u"rs"] #  toggle
+                    gv.sd[u"rs"] = 1 - gv.sd[u"rs"]  #  toggle
         elif gv.sd[u"rst"] == 0:  # Rain sensor type normally closed
             if gv.use_pigpio:
                 if pi.read(pin_rain_sense):  # Rain detected
@@ -230,10 +249,9 @@ def check_rain():
             else:
                 if GPIO.input(pin_rain_sense) != gv.sd[u"rs"]:  # Rain sensor changed
                     report_rain_changed()
-                    gv.sd[u"rs"] = 1 - gv.sd[u"rs"] #  toggle
+                    gv.sd[u"rs"] = 1 - gv.sd[u"rs"]  #  toggle
     except NameError:
         pass
-
 
 
 def clear_mm():
@@ -241,6 +259,7 @@ def clear_mm():
     Clear manual mode settings and stop any running zones.
     """
     from gpio_pins import set_output
+
     if gv.sd[u"mm"]:
         gv.sbits = [0] * (gv.sd[u"nbrd"] + 1)
         gv.ps = []
@@ -279,7 +298,7 @@ def get_cpu_temp(unit=None):
         elif gv.platform == u"pi":
             command = u"cat /sys/class/thermal/thermal_zone0/temp"
             output = subprocess.check_output(command.split())
-            temp = str(int(float(output) / 1000))
+            temp = unicode(int(float(output) / 1000))
         else:
             temp = str(0)
 
@@ -297,8 +316,13 @@ def timestr(t):
     """
     Convert duration in seconds to string in the form mm:ss. 
     """
-    return str((t / 60 >> 0) / 10 >> 0) + str((t / 60 >> 0) % 10) + u":" + str((t % 60 >> 0) / 10 >> 0) + str(
-        (t % 60 >> 0) % 10)
+    return (
+        str((t / 60 >> 0) / 10 >> 0)
+        + str((t / 60 >> 0) % 10)
+        + u":"
+        + str((t % 60 >> 0) / 10 >> 0)
+        + str((t % 60 >> 0) % 10)
+    )
 
 
 def log_run():
@@ -323,8 +347,25 @@ def log_run():
         else:
             pgr = str(gv.lrun[1])
         start = time.gmtime(gv.now - gv.lrun[2])
-        logline = '{u"' + program + u'":"' + pgr + u'","'+station + u'":' + str(gv.lrun[0]) + u',"' + duration + u'":"' + timestr(
-            gv.lrun[2]) + u'","'+strt + u'":"' + time.strftime(u'%H:%M:%S","' + date + u'":"%Y-%m-%d"', start) + u'}'
+        logline = (
+            u'{"'
+            + program
+            + u'":"'
+            + pgr
+            + u'","'
+            + station
+            + u'":'
+            + str(gv.lrun[0])
+            + u',"'
+            + duration
+            + u'":"'
+            + timestr(gv.lrun[2])
+            + u'","'
+            + strt
+            + u'":"'
+            + time.strftime(u'%H:%M:%S","' + date + u'":"%Y-%m-%d"', start)
+            + u"}"
+        )
         lines = []
         lines.append(logline + u"\n")
         log = read_log()
@@ -332,7 +373,7 @@ def log_run():
             lines.append(json.dumps(r) + u"\n")
         with codecs.open(u"./data/log.json", u"w", encoding=u"utf-8") as f:
             if gv.sd[u"lr"]:
-                f.writelines(lines[:gv.sd[u"lr"]])
+                f.writelines(lines[: gv.sd[u"lr"]])
             else:
                 f.writelines(lines)
     return
@@ -356,27 +397,26 @@ def prog_match(prog):
             if lt.tm_mday % 2 != 0:
                 return 0
         if prog[u"type"] == u"odddays":
-            if (lt.tm_mday == 31 
-                or ((lt.tm_mon == 2 and lt.tm_mday == 29))
-                ):
+            if lt.tm_mday == 31 or ((lt.tm_mon == 2 and lt.tm_mday == 29)):
                 return 0
             elif lt.tm_mday % 2 != 1:
-                return 0  
+                return 0
     this_minute = (lt.tm_hour * 60) + lt.tm_min  # Check time match
-    if (this_minute < prog[u"start_min"] 
-        or this_minute >= prog[u"stop_min"]       
-        ):
+    if this_minute < prog[u"start_min"] or this_minute >= prog[u"stop_min"]:
         return 0
-    if (prog[u"cycle_min"] == 0
+    if (
+        prog[u"cycle_min"] == 0
         and (this_minute >= prog[u"start_min"])
         and (this_minute < prog[u"stop_min"])
-        ):
-#         print(u"##### Match 1 found #####")
-        return 1  # Program matched        
-    elif ((prog[u"cycle_min"] != 0
-           and (this_minute - prog[u"start_min"]) / prog[u"cycle_min"]) * prog[u"cycle_min"] == this_minute - prog[u"start_min"]        
-          ):
-#         print(u"##### Match 2 found #####")
+    ):
+        #         print(u"##### Match 1 found #####") #  test
+        return 1  # Program matched
+    elif (
+        prog[u"cycle_min"] != 0
+        and (this_minute - prog[u"start_min"]) / prog[u"cycle_min"]
+     * prog[u"cycle_min"] == this_minute - prog[u"start_min"]
+    ):
+        #         print(u"##### Match 2 found #####") #  test
         return 1  # Program matched
     return 0
 
@@ -385,9 +425,9 @@ def schedule_stations(stations):
     """
     Schedule stations/valves/zones to run.
     """
-    if (gv.sd[u"rd"] #  If rain delay or rain detected by sensor
-        or (gv.sd[u"urs"] and gv.sd[u"rs"])
-        ):
+    if gv.sd[u"rd"] or (  #  If rain delay or rain detected by sensor
+        gv.sd[u"urs"] and gv.sd[u"rs"]
+    ):
         rain = True
     else:
         rain = False
@@ -397,7 +437,10 @@ def schedule_stations(stations):
             for s in range(8):
                 sid = b * 8 + s  # station index
                 if gv.rs[sid][2]:  # if station has a duration value
-                    if not rain or gv.sd[u"ir"][b] & 1 << s:  # if no rain or station ignores rain
+                    if (
+                        not rain 
+                        or gv.sd[u"ir"][b] & 1 << s
+                    ):  # if no rain or station ignores rain
                         gv.rs[sid][0] = accumulate_time  # start at accumulated time
                         accumulate_time += gv.rs[sid][2]  # add duration
                         gv.rs[sid][1] = accumulate_time  # set new stop time
@@ -412,9 +455,12 @@ def schedule_stations(stations):
                 if not stations[b] & 1 << s:  # skip stations not in prog
                     continue
                 if gv.rs[sid][2]:  # if station has a duration value
-                    if not rain or gv.sd[u"ir"][b] & 1 << s:  # if no rain or station ignores rain
+                    if (
+                        not rain 
+                        or gv.sd[u"ir"][b] & 1 << s
+                    ):  # if no rain or station ignores rain
                         gv.rs[sid][0] = gv.now  # accumulate_time # set start time
-                        gv.rs[sid][1] = (gv.now + gv.rs[sid][2])  # set stop time
+                        gv.rs[sid][1] = gv.now + gv.rs[sid][2]  # set stop time
                     else:  # if rain and station does not ignore, clear station from display
                         gv.sbits[b] &= ~1 << s
                         gv.ps[s] = [0, 0]
@@ -429,6 +475,7 @@ def stop_onrain():
     """
 
     from gpio_pins import set_output
+
     do_set_output = False
     for b in range(gv.sd[u"nbrd"]):
         for s in range(8):
@@ -452,6 +499,7 @@ def stop_stations():
     Stop all running stations, clear schedules.
     """
     from gpio_pins import set_output
+
     gv.srvals = [0] * (gv.sd[u"nst"])
     set_output()
     gv.ps = []
@@ -520,11 +568,12 @@ def load_programs():
         #  Check if programs.json file exists (old format) and if so, run conversion
         if os.path.isfile(u"./data/programs.json"):
             import convert_progs
+
             gv.pd = convert_progs.convert()
         else:
             gv.pd = []  # A config file -- create empty file if not found.
         with open(u"./data/programData.json", u"w") as pf:
-            json.dump(gv.pd, pf, indent=4, sort_keys=True)        
+            json.dump(gv.pd, pf, indent=4, sort_keys=True)
     return gv.pd
 
 
@@ -544,6 +593,7 @@ def password_hash(password, salt):
 
 ########################
 #### Login Handling ####
+
 
 def check_login(redirect=False):
     """
@@ -573,13 +623,13 @@ def check_login(redirect=False):
 
 
 signin_form = form.Form(
-    form.Password(u"password", description = _(u"Password") + u":"),
+    form.Password(u"password", description=_(u"Password") + u":"),
     validators=[
         form.Validator(
             _(u"Incorrect password, please try again"),
-            lambda x: gv.sd[u"password"] == password_hash(x.password, gv.sd[u"salt"])
+            lambda x: gv.sd[u"password"] == password_hash(x.password, gv.sd[u"salt"]),
         )
-    ]
+    ],
 )
 
 

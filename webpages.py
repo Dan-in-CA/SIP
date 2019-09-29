@@ -16,39 +16,63 @@ from sip import template_render
 from blinker import signal
 
 loggedin = signal(u"loggedin")
+
+
 def report_login():
     loggedin.send()
 
+
 value_change = signal(u"value_change")
+
+
 def report_value_change():
     value_change.send()
 
+
 option_change = signal(u"option_change")
+
+
 def report_option_change():
     option_change.send()
 
+
 rebooted = signal(u"rebooted")
+
+
 def report_rebooted():
     rebooted.send()
 
+
 station_names = signal(u"station_names")
+
+
 def report_station_names():
     station_names.send()
 
+
 program_change = signal(u"program_change")
+
+
 def report_program_change():
     program_change.send()
 
+
 program_deleted = signal(u"program_deleted")
+
+
 def report_program_deleted():
     program_deleted.send()
 
+
 program_toggled = signal(u"program_toggled")
+
+
 def report_program_toggle():
     program_toggled.send()
 
 
 ### Web pages ######################
+
 
 class WebPage(object):
     def __init__(self):
@@ -83,6 +107,7 @@ class logout(WebPage):
         web.config._session.user = u"anonymous"
         raise web.seeother(u"/")
 
+
 class sw_restart(ProtectedPage):
     """Restart system."""
 
@@ -90,8 +115,10 @@ class sw_restart(ProtectedPage):
         restart(1)
         return template_render.restarting()
 
+
 ###########################
 #### Class Definitions ####
+
 
 class home(ProtectedPage):
     """Open Home page."""
@@ -117,7 +144,9 @@ class change_values(ProtectedPage):
             clear_mm()
         if u"rd" in qdict and qdict[u"rd"] != u"0" and qdict[u"rd"] != "":
             gv.sd[u"rd"] = int(float(qdict[u"rd"]))
-            gv.sd[u"rdst"] = int(gv.now + gv.sd[u"urd"] * 3600) # + 1  # +1 adds a smidge just so after a round trip the display hasn"t already counted down by a minute.
+            gv.sd[u"rdst"] = int(
+                gv.now + gv.sd[u"urd"] * 3600
+            )  # + 1  # +1 adds a smidge just so after a round trip the display hasn"t already counted down by a minute.
             stop_onrain()
         elif u"rd" in qdict and qdict[u"rd"] == u"0":
             gv.sd[u"rdst"] = 0
@@ -155,7 +184,9 @@ class change_options(ProtectedPage):
                         raise web.seeother(u"/vo?errorCode=pw_blank")
                     elif qdict[u"cpw"] != u"" and qdict[u"cpw"] == qdict[u"npw"]:
                         gv.sd[u"salt"] = password_salt()  # Make a new salt
-                        gv.sd[u"password"] = password_hash(qdict[u"npw"], gv.sd[u"salt"])
+                        gv.sd[u"password"] = password_hash(
+                            qdict[u"npw"], gv.sd[u"salt"]
+                        )
                     else:
                         raise web.seeother(u"/vo?errorCode=pw_mismatch")
                 else:
@@ -180,11 +211,11 @@ class change_options(ProtectedPage):
             gv.sd[u"nst"] = gv.sd[u"nbrd"] * 8
             self.update_prog_lists(u"nbrd")
 
-        if u"ohtp" in qdict:            
+        if u"ohtp" in qdict:
             if u"htp" not in gv.sd or gv.sd[u"htp"] != int(qdict[u"ohtp"]):
                 qdict[u"rstrt"] = u"1"  # force restart with change in htp
             gv.sd[u"htp"] = int(qdict[u"ohtp"])
-            
+
         if u"oidd" in qdict:
             idd_int = 1
         else:
@@ -192,20 +223,34 @@ class change_options(ProtectedPage):
         if idd_int != gv.sd[u"idd"]:
             gv.sd[u"idd"] = idd_int
             self.update_prog_lists(u"idd")
-                
+
         if u"ohtip" in qdict:
             if u"htip" not in gv.sd or gv.sd[u"htip"] != qdict[u"ohtip"]:
-                qdict[u"rstrt"] = u"1" # force restart with change in htip
+                qdict[u"rstrt"] = u"1"  # force restart with change in htip
             gv.sd[u"htip"] = qdict[u"ohtip"]
-                    
+
         for f in [u"sdt", u"mas", u"mton", u"mtoff", u"wl", u"lr", u"tz"]:
             if u"o" + f in qdict:
-                if f == u"mton"  and int(qdict[u"o" + f])<0: #handle values less than zero (temp fix)
+                if (
+                    f == u"mton" 
+                    and int(qdict[u"o" + f]) < 0
+                ):  # handle values less than zero (temp fix)
                     raise web.seeother(u"/vo?errorCode=mton_minus")
                 gv.sd[f] = int(qdict[u"o" + f])
 
-        for f in [u"ipas", u"tf", u"urs", u"seq", u"rst", u"lg", u"pigpio", u"alr"]: ###  "idd",
-            if u"o" + f in qdict and (qdict[u"o" + f] == u"on" or qdict[u"o" + f] == u"1"):
+        for f in [
+            u"ipas",
+            u"tf",
+            u"urs",
+            u"seq",
+            u"rst",
+            u"lg",
+            u"pigpio",
+            u"alr",
+        ]:  ###  "idd",
+            if u"o" + f in qdict and (
+                qdict[u"o" + f] == u"on" or qdict[u"o" + f] == u"1"
+            ):
                 gv.sd[f] = 1
             else:
                 gv.sd[f] = 0
@@ -239,7 +284,7 @@ class change_options(ProtectedPage):
                 gv.sd[u"iw"].append(0)
                 gv.sd[u"show"].append(255)
             ln = len(gv.snames)
-            for i in range(incr*8):
+            for i in range(incr * 8):
                 gv.snames.append(u"S" + u"{:0>2d}".format(i + 1 + ln))
             for i in range(incr * 8):
                 gv.srvals.append(0)
@@ -250,53 +295,62 @@ class change_options(ProtectedPage):
         elif int(qdict[u"onbrd"]) + 1 < gv.sd[u"nbrd"]:  # Shorten lists
             onbrd = int(qdict[u"onbrd"])
             decr = gv.sd[u"nbrd"] - (onbrd + 1)
-            gv.sd[u"mo"] = gv.sd[u"mo"][:(onbrd + 1)]
-            gv.sd[u"ir"] = gv.sd[u"ir"][:(onbrd + 1)]
-            gv.sd[u"iw"] = gv.sd[u"iw"][:(onbrd + 1)]
-            gv.sd[u"show"] = gv.sd[u"show"][:(onbrd + 1)]
+            gv.sd[u"mo"] = gv.sd[u"mo"][: (onbrd + 1)]
+            gv.sd[u"ir"] = gv.sd[u"ir"][: (onbrd + 1)]
+            gv.sd[u"iw"] = gv.sd[u"iw"][: (onbrd + 1)]
+            gv.sd[u"show"] = gv.sd[u"show"][: (onbrd + 1)]
             newlen = gv.sd[u"nst"] - decr * 8
             gv.srvals = gv.srvals[:newlen]
             gv.ps = gv.ps[:newlen]
             gv.rs = gv.rs[:newlen]
             gv.snames = gv.snames[:newlen]
-            gv.sbits = gv.sbits[:onbrd + 1]
+            gv.sbits = gv.sbits[: onbrd + 1]
         jsave(gv.snames, u"snames")
-
 
     def update_prog_lists(self, change):
         for p in gv.pd:
-            if change == u"idd" or change == u"nbrd": #  change length of p["duration_sec"]
+            if (
+                change == u"idd" 
+                or change == u"nbrd"
+            ):  #  change length of p["duration_sec"]
                 if not gv.sd[u"idd"]:
-                    p[u"duration_sec"] = p[u"duration_sec"][:1] 
+                    p[u"duration_sec"] = p[u"duration_sec"][:1]
                     if p[u"duration_sec"][0] == 0:
-                        p[u"enabled"] = 0 
-             
+                        p[u"enabled"] = 0
+
                 else:
-                    old_dur = None              
-                    if (change == u"idd"
+                    old_dur = None
+                    if (
+                        change == u"idd"
                         and gv.sd[u"idd"]
-                        and len(p[u"duration_sec"]) == 1 #  changed from !idd -> idd               
+                        and len(p[u"duration_sec"]) == 1  #  changed from !idd -> idd
                     ):
                         old_dur = p[u"duration_sec"][0]
-                        p[u"duration_sec"][0] = 0                     
+                        p[u"duration_sec"][0] = 0
                     if gv.sd[u"nst"] > len(p[u"duration_sec"]):
-                        p[u"duration_sec"].extend([0] * (gv.sd[u"nst"] - len(p[u"duration_sec"])))
+                        p[u"duration_sec"].extend(
+                            [0] * (gv.sd[u"nst"] - len(p[u"duration_sec"]))
+                        )
                         if old_dur:
-                            for b in range (len(p[u"station_mask"])):  # set duration to old_dur for each active station.
+                            for b in range(
+                                len(p[u"station_mask"])
+                            ):  # set duration to old_dur for each active station.
                                 for s in range(8):
-                                    if p[u"station_mask"][b] & 1<<s:
+                                    if p[u"station_mask"][b] & 1 << s:
                                         p[u"duration_sec"][b * 8 + s] = old_dur
                     elif gv.sd["nst"] < len(p[u"duration_sec"]):
-                        p[u"duration_sec"] = p[u"duration_sec"][:gv.sd[u"nst"]]
-            
-            if change == u"nbrd": #  change length of p["station_mask"]
+                        p[u"duration_sec"] = p[u"duration_sec"][: gv.sd[u"nst"]]
+
+            if change == u"nbrd":  #  change length of p["station_mask"]
                 if gv.sd[u"nbrd"] > len(p[u"station_mask"]):
-                    p[u"station_mask"].extend([0] * (gv.sd[u"nbrd"] - len(p[u"station_mask"])))
+                    p[u"station_mask"].extend(
+                        [0] * (gv.sd[u"nbrd"] - len(p[u"station_mask"]))
+                    )
                 elif gv.sd[u"nbrd"] < len(p[u"station_mask"]):
-                    p[u"station_mask"] = p[u"station_mask"][:gv.sd[u"nbrd"]]
+                    p[u"station_mask"] = p[u"station_mask"][: gv.sd[u"nbrd"]]
         jsave(gv.pd, u"programData")
-        
-        
+
+
 class view_stations(ProtectedPage):
     """Open a page to view and edit a run once program."""
 
@@ -332,7 +386,7 @@ class change_stations(ProtectedPage):
                     gv.sd[u"show"][i] = 255
             if u"d" + str(i) in qdict:
                 try:
-                    gv.sd[u"show"][i] = ~int(qdict[u"d" + str(i)])&255
+                    gv.sd[u"show"][i] = ~int(qdict[u"d" + str(i)]) & 255
                 except ValueError:
                     gv.sd[u"show"][i] = 255
         names = []
@@ -374,7 +428,9 @@ class get_set_station(ProtectedPage):
                 gv.rs[sid][0] = gv.now  # set start time to current time
                 if set_time > 0:  # if an optional duration time is given
                     gv.rs[sid][2] = set_time
-                    gv.rs[sid][1] = gv.rs[sid][0] + set_time  # stop time = start time + duration
+                    gv.rs[sid][1] = (
+                        gv.rs[sid][0] + set_time
+                    )  # stop time = start time + duration
                 else:
                     gv.rs[sid][1] = float(u"inf")  # stop time = infinity
                 gv.rs[sid][3] = 99  # set program index
@@ -401,7 +457,7 @@ class change_runonce(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        if not gv.sd[u"en"]:   # check operation status
+        if not gv.sd[u"en"]:  # check operation status
             return
         gv.rovals = json.loads(qdict[u"t"])
         gv.rovals.pop()
@@ -410,7 +466,7 @@ class change_runonce(ProtectedPage):
                 gv.lrun[0] = sid
                 gv.lrun[1] = gv.rs[sid][3]
                 gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-                gv.lrun[3] = gv.now     # think this is unused
+                gv.lrun[3] = gv.now  # think this is unused
                 log_run()
                 report_station_completed(sid + 1)
         stations = [0] * gv.sd[u"nbrd"]
@@ -450,7 +506,10 @@ class modify_program(ProtectedPage):
             if mp[u"type"] == u"interval":
                 dse = int(gv.now / 86400)
                 # Convert absolute to relative days remaining for display
-                rel_rem = (((mp[u"day_mask"]) + mp[u"interval_base_day"]) - (dse % mp[u"interval_base_day"])) % mp[u"interval_base_day"]
+                rel_rem = (
+                    ((mp[u"day_mask"]) + mp[u"interval_base_day"])
+                    - (dse % mp[u"interval_base_day"])
+                ) % mp[u"interval_base_day"]
             prog = str(mp).replace(u" ", u"")
         return template_render.modify(pid, prog)
 
@@ -473,8 +532,8 @@ class change_program(ProtectedPage):
                     gv.rs[i] = [0, 0, 0, 0]
         if cp[u"type"] == u"interval":
             dse = int(gv.now / 86400)
-            ref = dse + cp[u"day_mask"] # - 128
-            cp[u"day_mask"] = (ref % cp[u"interval_base_day"]) # + 128
+            ref = dse + cp[u"day_mask"]  # - 128
+            cp[u"day_mask"] = ref % cp[u"interval_base_day"]  # + 128
         if qdict[u"pid"] == u"-1":  # add new program
             gv.pd.append(cp)
         else:
@@ -544,7 +603,9 @@ class run_now(ProtectedPage):
                 sid += 1  # station index
                 if sid + 1 == gv.sd[u"mas"]:  # skip if this is master valve
                     continue
-                if p[u"station_mask"][b] & 1 << s:  # if this station is scheduled in this program
+                if (
+                    p[u"station_mask"][b] & 1 << s
+                ):  # if this station is scheduled in this program
                     if gv.sd[u"idd"]:
                         duration = p[u"duration_sec"][sid]
                     else:
@@ -585,8 +646,15 @@ class api_status(ProtectedPage):
                     sname = gv.snames[sid]
                     sbit = (gv.sbits[bid] >> s) & 1
                     irbit = (gv.sd[u"ir"][bid] >> s) & 1
-                    status = {u"station": sid, u"status": u"disabled", u"reason": u"", u"master": 0, u"programName": u"",
-                              u"remaining": 0, u"name": sname}
+                    status = {
+                        u"station": sid,
+                        u"status": u"disabled",
+                        u"reason": u"",
+                        u"master": 0,
+                        u"programName": u"",
+                        u"remaining": 0,
+                        u"name": sname,
+                    }
                     if gv.sd[u"en"] == 1:
                         if sbit:
                             status[u"status"] = u"on"
@@ -650,8 +718,12 @@ class api_log(ProtectedPage):
                 data.append(event)
                 # also return any records starting the day before and completing after midnight
             if event[u"date"] == prevdate:
-                if int(event[u"start"].split(":")[0]) * 60 + int(event[u"start"].split(u":")[1]) + int(
-                        event[u"duration"].split(u":")[0]) > 24 * 60:
+                if (
+                    int(event[u"start"].split(":")[0]) * 60
+                    + int(event[u"start"].split(u":")[1])
+                    + int(event[u"duration"].split(u":")[0])
+                    > 24 * 60
+                ):
                     data.append(event)
 
         web.header(u"Content-Type", u"application/json")
@@ -666,13 +738,25 @@ class water_log(ProtectedPage):
         data = _(u"Date, Start Time, Zone, Duration, Program") + u"\n"
         for r in records:
             event = ast.literal_eval(json.dumps(r))
-            data += event[u"date"] + u", " + event[u"start"] + u", " + str(event[u"station"] + 1) + u", " + event[
-                u"duration"] + ", " + event[u"program"] + u"\n"
+            data += (
+                event[u"date"]
+                + u", "
+                + event[u"start"]
+                + u", "
+                + str(event[u"station"] + 1)
+                + u", "
+                + event[u"duration"]
+                + ", "
+                + event[u"program"]
+                + u"\n"
+            )
 
         web.header(u"Content-Type", u"text/csv")
         return data
-    
+
+
 class rain_sensor_state(ProtectedPage):
     """Return rain sensor state."""
+
     def GET(self):
         return gv.sd[u"rs"]

@@ -17,12 +17,12 @@ from webpages import ProtectedPage
 from helpers import restart
 
 # Add a new url to open the data entry page.
-urls.extend([u"/UPs", u"plugins.system_update.status_page",
-             u"/UPu", u"plugins.system_update.update_page"
+urls.extend(["/UPs", "plugins.system_update.status_page",
+             "/UPu", "plugins.system_update.update_page"
              ])
 
 # Add this plugin to the home page plugins menu
-gv.plugin_menu.append([_(u"System update"), u"/UPs"])
+gv.plugin_menu.append([_(u"System update"), "/UPs"])
 
 
 class StatusChecker():
@@ -32,7 +32,7 @@ class StatusChecker():
             u"ver_str": gv.ver_str,
             u"ver_date": gv.ver_date,
             u"status": u"",
-            u"remote": "'None!",
+            u"remote": u"'None!",
             u"can_update": False}
 
         self._sleep_time = 0
@@ -59,18 +59,18 @@ class StatusChecker():
         command = u"git remote update"
         subprocess.call(command.split())
 
-        command = u"git config --get remote.origin.url"
+        command = b"git config --get remote.origin.url"
         remote = subprocess.check_output(command.split()).strip()
         if remote:
             self.status[u"remote"] = remote
 
-        command = u"git log -1 origin/master --format=%cd --date=short"
+        command = b"git log -1 origin/master --format=%cd --date=short"
         new_date = subprocess.check_output(command.split()).strip()
 
-        command = u"git rev-list origin/master --count"
+        command = b"git rev-list origin/master --count"
         new_revision = int(subprocess.check_output(command.split()))
 
-        command = u"git log HEAD..origin/master --oneline"
+        command =u"git log HEAD..origin/master --oneline"
         changes = u"  " + u"\n  ".join(subprocess.check_output(command.split()).split(u"\n"))
 
         if new_revision == gv.revision and new_date == gv.ver_date:
@@ -105,10 +105,10 @@ checker = StatusChecker()
 
 def perform_update():
 
-    command = u"git config core.filemode true"
+    command = b"git config core.filemode true"
     subprocess.call(command.split())
     
-    command = u"git pull"
+    command = b"git pull"
     subprocess.call(command.split())
 
 #     command = "git checkout master"  # Make sure we are on the master branch

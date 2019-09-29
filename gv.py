@@ -21,7 +21,9 @@ except Exception:
     ver_str = u"{}.{}.{}".format(major_ver, minor_ver, revision)
 
 try:
-    ver_date = subprocess.check_output([u"git", u"log", u"-1", u"--format=%cd", u"--date=short"]).strip()
+    ver_date = subprocess.check_output(
+        ["git", "log", "-1", "--format=%cd", "--date=short"]
+    ).strip()
 except Exception:
     print(_(u"Could not use git to determine date of last commit!"))
     ver_date = u"2015-01-09"
@@ -36,7 +38,9 @@ from calendar import timegm
 import json
 import time
 
-platform = ""  # must be done before the following import because gpio_pins will try to set it
+platform = (
+    ""
+)  # must be done before the following import because gpio_pins will try to set it
 
 # from helpers import password_salt, password_hash, load_programs, station_names
 
@@ -84,7 +88,7 @@ sd = {
     u"lang": u"default",
     u"idd": 0,
     u"pigpio": 0,
-    u"alr":0
+    u"alr": 0,
 }
 
 try:
@@ -104,13 +108,15 @@ if sd[u"pigpio"]:
     except Exception:
         print(u"pigpio not found. Using RPi.GPIO")
 else:
-    use_pigpio = False       
+    use_pigpio = False
 
 from helpers import load_programs, station_names
 
 nowt = time.localtime()
 now = timegm(nowt)
-tz_offset = int(time.time() - timegm(time.localtime())) # compatible with Javascript (negative tz shown as positive value)
+tz_offset = int(
+    time.time() - timegm(time.localtime())
+)  # compatible with Javascript (negative tz shown as positive value)
 plugin_menu = []  # Empty list of lists for plugin links (e.g. ["name", "URL"])
 
 srvals = [0] * (sd[u"nst"])  # Shift Register values
@@ -129,35 +135,173 @@ sbits = [0] * (sd[u"nbrd"] + 1)  # Used to display stations that are on in UI
 
 rs = []  # run schedule
 for j in range(sd[u"nst"]):
-    rs.append([0, 0, 0, 0])  # scheduled start time, scheduled stop time, duration, program index
+    rs.append(
+        [0, 0, 0, 0]
+    )  # scheduled start time, scheduled stop time, duration, program index
 
 lrun = [0, 0, 0, 0]  # station index, program number, duration, end time (Used in UI)
-scount = 0  # Station count, used in set station to track on stations with master association.
+scount = (
+    0
+)  # Station count, used in set station to track on stations with master association.
 use_gpio_pins = True
 
 options = [
-    [_(u"System name"), u"string", u"name", _(u"Unique name of this SIP system."), _(u"System")],
-    [_(u"Location"), u"string", u"loc", _(u"City name or zip code. Use comma or + in place of space."), _(u"System")],
+    [
+        _(u"System name"),
+        u"string",
+        u"name",
+        _(u"Unique name of this SIP system."),
+        _(u"System"),
+    ],
+    [
+        _(u"Location"),
+        u"string",
+        u"loc",
+        _(u"City name or zip code. Use comma or + in place of space."),
+        _(u"System"),
+    ],
     [_(u"Language"), u"list", u"lang", _(u"Select language."), _(u"System")],
-    [_(u"24-hour clock"), u"boolean", u"tf", _(u"Display times in 24 hour format (as opposed to AM/PM style.)"), _(u"System")],
+    [
+        _(u"24-hour clock"),
+        u"boolean",
+        u"tf",
+        _(u"Display times in 24 hour format (as opposed to AM/PM style.)"),
+        _(u"System"),
+    ],
     [_(u"HTTP port"), u"int", u"htp", _(u"HTTP port."), _(u"System")],
-    [_(u"HTTP IP addr"), u"string", u"htip", _(u"IP Address used for HTTP server socket.  IPv4 or IPv6 address"), _(u"System")],
-    [_(u"Use pigpio"), u"boolean", u"pigpio", _(u"GPIO Library to use. Default is RPi.GPIO"), _(u"System")],
-    [_(u"Water Scaling"), u"int", u"wl", _(u"Water scaling (as %), between 0 and 100."), _(u"System")],
-    [_(u"Disable security"), u"boolean", u"ipas", _(u"Allow anonymous users to access the system without a password."), _(u"Change Password")],
-    [_(u"Current password"), u"password", u"opw", _(u"Re-enter the current password."), _(u"Change Password")],
-    [_(u"New password"), u"password", u"npw", _(u"Enter a new password."), _(u"Change Password")],
-    [_(u"Confirm password"), u"password", u"cpw", _(u"Confirm the new password."), _(u"Change Password")],
-    [_(u"Sequential"), u"boolean", u"seq", _(u"Sequential or concurrent running mode."), _(u"Station Handling")],
-    [_(u"Individual Duration"), u"boolean", u"idd", _(u"Allow each station to have its own run time in programs."), _(u"Station Handling")],
-    [_(u"Station extensions"), u"int", u"nbrd", _(u"Add 8 stations for each extension."), _(u"Station Handling")],
-    [_(u"Station delay"), u"int", u"sdt", _(u"Station delay time (in seconds), between 0 and 240."), _(u"Station Handling")],
-    [_(u"Active-Low Relay"), u"boolean", u"alr", _(u"Using active-low relay boards connected through shift registers"), _(u"Station Handling")],
-    [_(u"Master station"), u"int", u"mas",_( u"Select master station."), _(u"Configure Master")],
-    [_(u"Master on adjust"), u"int", u"mton", _(u"Master on delay (in seconds), between +0 and +60."), _(u"Configure Master")],
-    [_(u"Master off adjust"), u"int", u"mtoff", _(u"Master off delay (in seconds), between -60 and +60."), _(u"Configure Master")],
-    [_(u"Use rain sensor"), u"boolean", u"urs", _(u"Use rain sensor."), _(u"Rain Sensor")],
-    [_(u"Normally open"), u"boolean", u"rst", _(u"Rain sensor type."), _(u"Rain Sensor")],
-    [_(u"Enable logging"), u"boolean", u"lg", _(u"Log all events - note that repetitive writing to an SD card can shorten its lifespan."), _(u"Logging")],
-    [_(u"Max log entries"), u"int", u"lr", _(u"Length of log to keep, 0=no limits."), _(u"Logging")]
+    [
+        _(u"HTTP IP addr"),
+        u"string",
+        u"htip",
+        _(u"IP Address used for HTTP server socket.  IPv4 or IPv6 address"),
+        _(u"System"),
+    ],
+    [
+        _(u"Use pigpio"),
+        u"boolean",
+        u"pigpio",
+        _(u"GPIO Library to use. Default is RPi.GPIO"),
+        _(u"System"),
+    ],
+    [
+        _(u"Water Scaling"),
+        u"int",
+        u"wl",
+        _(u"Water scaling (as %), between 0 and 100."),
+        _(u"System"),
+    ],
+    [
+        _(u"Disable security"),
+        u"boolean",
+        u"ipas",
+        _(u"Allow anonymous users to access the system without a password."),
+        _(u"Change Password"),
+    ],
+    [
+        _(u"Current password"),
+        u"password",
+        u"opw",
+        _(u"Re-enter the current password."),
+        _(u"Change Password"),
+    ],
+    [
+        _(u"New password"),
+        u"password",
+        u"npw",
+        _(u"Enter a new password."),
+        _(u"Change Password"),
+    ],
+    [
+        _(u"Confirm password"),
+        u"password",
+        u"cpw",
+        _(u"Confirm the new password."),
+        _(u"Change Password"),
+    ],
+    [
+        _(u"Sequential"),
+        u"boolean",
+        u"seq",
+        _(u"Sequential or concurrent running mode."),
+        _(u"Station Handling"),
+    ],
+    [
+        _(u"Individual Duration"),
+        u"boolean",
+        u"idd",
+        _(u"Allow each station to have its own run time in programs."),
+        _(u"Station Handling"),
+    ],
+    [
+        _(u"Station extensions"),
+        u"int",
+        u"nbrd",
+        _(u"Add 8 stations for each extension."),
+        _(u"Station Handling"),
+    ],
+    [
+        _(u"Station delay"),
+        u"int",
+        u"sdt",
+        _(u"Station delay time (in seconds), between 0 and 240."),
+        _(u"Station Handling"),
+    ],
+    [
+        _(u"Active-Low Relay"),
+        u"boolean",
+        u"alr",
+        _(u"Using active-low relay boards connected through shift registers"),
+        _(u"Station Handling"),
+    ],
+    [
+        _(u"Master station"),
+        u"int",
+        u"mas",
+        _(u"Select master station."),
+        _(u"Configure Master"),
+    ],
+    [
+        _(u"Master on adjust"),
+        u"int",
+        u"mton",
+        _(u"Master on delay (in seconds), between +0 and +60."),
+        _(u"Configure Master"),
+    ],
+    [
+        _(u"Master off adjust"),
+        u"int",
+        u"mtoff",
+        _(u"Master off delay (in seconds), between -60 and +60."),
+        _(u"Configure Master"),
+    ],
+    [
+        _(u"Use rain sensor"),
+        u"boolean",
+        u"urs",
+        _(u"Use rain sensor."),
+        _(u"Rain Sensor"),
+    ],
+    [
+        _(u"Normally open"),
+        u"boolean",
+        u"rst",
+        _(u"Rain sensor type."),
+        _(u"Rain Sensor"),
+    ],
+    [
+        _(u"Enable logging"),
+        u"boolean",
+        u"lg",
+        _(
+            u"Log all events - note that repetitive writing to an SD card can shorten its lifespan."
+        ),
+        _(u"Logging"),
+    ],
+    [
+        _(u"Max log entries"),
+        u"int",
+        u"lr",
+        _(u"Length of log to keep, 0=no limits."),
+        _(u"Logging"),
+    ],
 ]

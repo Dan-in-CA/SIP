@@ -13,26 +13,26 @@ try:
         sd_temp = json.load(sdf)
 except:
     pass
-       
+
 try:
     sd_lang = sd_temp[u"lang"]
 except:
     sd_lang = u"default"
 
-languages = ({
+languages = {
     u"en_US": u"English",
     u"af_AF": u"Afrikaans",
-    u"ar_SA": u"Arabic",   
+    u"ar_SA": u"Arabic",
     u"cs_CZ": u"Czech",
     u"fr_FR": u"French",
     u"de_DE": u"German",
-	u"gr_GR": u"Greek",
-	u"it_IT": u"Italian",
+    u"gr_GR": u"Greek",
+    u"it_IT": u"Italian",
     u"pt_PT": u"Portuguese",
     u"sl_SL": u"Slovenian",
     u"es_ES": u"Spanish",
     u"ta_TA": u"Tamil",
-})
+}
 
 
 def get_system_lang():
@@ -42,6 +42,7 @@ def get_system_lang():
         return lc
     else:
         return None
+
 
 # File location directory.
 curdir = os.path.abspath(os.path.dirname(__file__))

@@ -1,8 +1,9 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
- #### urls is used by web.py. When a GET request is received, the corresponding class is executed.
+#### urls is used by web.py. When a GET request is received, the corresponding class is executed.
 urls = [
+    # fmt: off
     u"/",   u"webpages.home",
     u"/cv", u"webpages.change_values",
     u"/vo", u"webpages.view_options",
@@ -30,4 +31,5 @@ urls = [
     u"/logout", u"webpages.logout",
     u"/restart", u"webpages.sw_restart",
     u"/rss", u"webpages.rain_sensor_state"
+    # fmt: on
 ]
