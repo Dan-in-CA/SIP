@@ -50,7 +50,7 @@ curdir = os.path.abspath(os.path.dirname(__file__))
 # i18n directory.
 localedir = curdir + u"/i18n"
 
-gettext.install(u"sip_messages", localedir, unicode=True)
+gettext.install(u"sip_messages", localedir) #  removed ", unicode = True" Seems OK - test
 
 sys_lang = get_system_lang()
 

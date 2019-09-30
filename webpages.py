@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
+# from builtins import map #  - test
+from builtins import str
+from builtins import range
+from builtins import object
 import os
 import re
 import time
@@ -104,7 +108,8 @@ class login(WebPage):
 
 class logout(WebPage):
     def GET(self):
-        web.config._session.user = u"anonymous"
+        web.config._session.user = u"anonymous" 
+        web.session.Session.kill(web.config._session)
         raise web.seeother(u"/")
 
 
@@ -150,7 +155,7 @@ class change_values(ProtectedPage):
             stop_onrain()
         elif u"rd" in qdict and qdict[u"rd"] == u"0":
             gv.sd[u"rdst"] = 0
-        for key in qdict.keys():
+        for key in list(qdict.keys()):
             try:
                 gv.sd[key] = int(qdict[key])
             except Exception:
@@ -482,7 +487,7 @@ class change_runonce(ProtectedPage):
                 gv.rs[sid][3] = 98
                 gv.ps[sid][0] = 98
                 gv.ps[sid][1] = dur
-                stations[sid / 8] += 2 ** (sid % 8)
+                stations[sid // 8] += 2 ** (sid % 8)
         schedule_stations(stations)
         raise web.seeother(u"/")
 
@@ -504,7 +509,7 @@ class modify_program(ProtectedPage):
         if pid != -1:
             mp = gv.pd[pid]  # Modified program
             if mp[u"type"] == u"interval":
-                dse = int(gv.now / 86400)
+                dse = int(gv.now // 86400)
                 # Convert absolute to relative days remaining for display
                 rel_rem = (
                     ((mp[u"day_mask"]) + mp[u"interval_base_day"])
@@ -531,7 +536,7 @@ class change_program(ProtectedPage):
                 if gv.rs[i][3] == pnum:
                     gv.rs[i] = [0, 0, 0, 0]
         if cp[u"type"] == u"interval":
-            dse = int(gv.now / 86400)
+            dse = int(gv.now // 86400)
             ref = dse + cp[u"day_mask"]  # - 128
             cp[u"day_mask"] = ref % cp[u"interval_base_day"]  # + 128
         if qdict[u"pid"] == u"-1":  # add new program
@@ -611,7 +616,7 @@ class run_now(ProtectedPage):
                     else:
                         duration = p[u"duration_sec"][0]
                     if not gv.sd[u"iw"][b] & 1 << s:
-                        duration = duration * gv.sd[u"wl"] / 100 * extra_adjustment
+                        duration = duration * gv.sd[u"wl"] // 100 * extra_adjustment
                     gv.rs[sid][2] = duration
                     gv.rs[sid][3] = pid + 1  # store program number in schedule
                     gv.ps[sid][0] = pid + 1  # store program number for display

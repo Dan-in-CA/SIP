@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
+from builtins import range
 import gv
 
 try:
@@ -252,7 +253,7 @@ try:
         GPIO.setwarnings(False)
         GPIO.setmode(
             GPIO.BOARD
-        )  # IO channels are identified by header connector pin numbers. Pin numbers are
+        )  # IO channels are identified by header connector pin numbers.
 except Exception:
     pass
 
@@ -284,7 +285,7 @@ except NameError:
 
 
 def setup_pins():
-    """
+    u"""
     Define and setup GPIO pins for shift register operation
     """
 
@@ -338,7 +339,7 @@ def setup_pins():
 
 
 def disableShiftRegisterOutput():
-    """Disable output from shift register."""
+    u"""Disable output from shift register."""
 
     global pi
     try:
@@ -356,7 +357,7 @@ def disableShiftRegisterOutput():
 
 
 def enableShiftRegisterOutput():
-    """Enable output from shift register."""
+    u"""Enable output from shift register."""
 
     global pi
     try:
@@ -369,7 +370,7 @@ def enableShiftRegisterOutput():
 
 
 def setShiftRegister(srvals):
-    """Set the state of each output pin on the shift register from the srvals list."""
+    u"""Set the state of each output pin on the shift register from the srvals list."""
 
     global pi
     try:
@@ -400,7 +401,7 @@ def setShiftRegister(srvals):
 
 
 def set_output():
-    """
+    u"""
     Activate triacs according to shift register state.
     If using SIP with shift registers and active low relays, uncomment the line indicated below.
     """

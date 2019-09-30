@@ -9,14 +9,17 @@ from webpages import ProtectedPage  # Needed for security
 import json  # for working with data file
 
 # Add new URLs to access classes in this plugin.
+# fmt: off
 urls.extend([
     u"/proto-sp", u"plugins.proto.settings",
     u"/proto-save", u"plugins.proto.save_settings"
 
     ])
+# fmt: on
 
 # Add this plugin to the PLUGINS menu ["Menu Name", "URL"], (Optional)
 gv.plugin_menu.append([_(u"Proto Plugin"), u"/proto-sp"])
+
 
 def empty_function():  # Only a place holder
     """
@@ -33,11 +36,14 @@ class settings(ProtectedPage):
 
     def GET(self):
         try:
-            with open(u"./data/proto.json", u"r") as f:  # Read settings from json file if it exists
+            with open(
+                u"./data/proto.json", u"r"
+            ) as f:  # Read settings from json file if it exists
                 settings = json.load(f)
         except IOError:  # If file does not exist return empty value
             settings = {}  # Default settings. can be list, dictionary, etc.
         return template_render.proto(settings)  # open settings page
+
 
 class save_settings(ProtectedPage):
     """
@@ -47,11 +53,14 @@ class save_settings(ProtectedPage):
     """
 
     def GET(self):
-        qdict = web.input()  # Dictionary of values returned as query string from settings page.
-#        print qdict  # for testing
+        qdict = (
+            web.input()
+        )  # Dictionary of values returned as query string from settings page.
+        #        print qdict  # for testing
         with open(u"./data/proto.json", u"w") as f:  # Edit: change name of json file
-             json.dump(qdict, f) # save to file
+            json.dump(qdict, f)  # save to file
         raise web.seeother(u"/")  # Return user to home page.
+
 
 #  Run when plugin is loaded
 empty_function()

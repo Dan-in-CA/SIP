@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
+from builtins import chr
+from builtins import str
+from builtins import range
 import collections
 import i18n
 import datetime
@@ -281,7 +284,7 @@ def plugin_adjustment():
     a unique element in the gv.sd dictionary with a key starting with "wl_"
     """
     duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith(u"wl_")]
-    result = reduce(lambda x, y: x * y / 100, duration_adjustments, 1.0)
+    result = reduce(lambda x, y: x * y // 100, duration_adjustments, 1.0)
     return result
 
 
@@ -293,19 +296,19 @@ def get_cpu_temp(unit=None):
 
     try:
         if gv.platform == u"bo":
-            res = os.popen(u"cat /sys/class/hwmon/hwmon0/device/temp1_input").readline()
-            temp = str(int(float(res) / 1000))
+            res = os.popen(b"cat /sys/class/hwmon/hwmon0/device/temp1_input").readline()
+            temp = u"" + str(int(res / 1000.0))
         elif gv.platform == u"pi":
-            command = u"cat /sys/class/thermal/thermal_zone0/temp"
+            command = b"cat /sys/class/thermal/thermal_zone0/temp"
             output = subprocess.check_output(command.split())
-            temp = unicode(int(float(output) / 1000))
+            temp = u"" + str(int(output / 1000.0))
         else:
-            temp = str(0)
+            temp = u"" + str(0)
 
         if unit == u"F":
-            return str(1.8 * float(temp) + 32)
+            return u"" + str(1.8 * float(temp) + 32)
         elif unit is not None:
-            return str(float(temp))
+            return u"" + str(float(temp))
         else:
             return temp
     except Exception:
@@ -317,10 +320,10 @@ def timestr(t):
     Convert duration in seconds to string in the form mm:ss. 
     """
     return (
-        str((t / 60 >> 0) / 10 >> 0)
-        + str((t / 60 >> 0) % 10)
+        str((t // 60 >> 0) // 10 >> 0)
+        + str((t // 60 >> 0) % 10)
         + u":"
-        + str((t % 60 >> 0) / 10 >> 0)
+        + str((t % 60 >> 0) // 10 >> 0)
         + str((t % 60 >> 0) % 10)
     )
 
@@ -345,7 +348,7 @@ def log_run():
         elif gv.lrun[1] == 99:
             pgr = _(u"Manual")
         else:
-            pgr = str(gv.lrun[1])
+            pgr = u"" + str(gv.lrun[1])
         start = time.gmtime(gv.now - gv.lrun[2])
         logline = (
             u'{"'
@@ -385,7 +388,7 @@ def prog_match(prog):
     """
     if not prog[u"enabled"]:
         return 0  # Skip if program is not enabled
-    devday = int(gv.now / 86400)  # Check day match
+    devday = int(gv.now // 86400)  # Check day match
     lt = time.gmtime(gv.now)
     if prog[u"type"] == u"interval":
         if (devday % prog[u"interval_base_day"]) != prog[u"day_mask"]:
@@ -413,7 +416,7 @@ def prog_match(prog):
         return 1  # Program matched
     elif (
         prog[u"cycle_min"] != 0
-        and (this_minute - prog[u"start_min"]) / prog[u"cycle_min"]
+        and (this_minute - prog[u"start_min"]) // prog[u"cycle_min"]
      * prog[u"cycle_min"] == this_minute - prog[u"start_min"]
     ):
         #         print(u"##### Match 2 found #####") #  test
@@ -581,7 +584,7 @@ def password_salt():
     """
     Generate random number for use as salt for password encryption
     """
-    return "".join(chr(random.randint(33, 127)) for _ in xrange(64))
+    return u"".join(chr(random.randint(33, 127)) for _ in range(64))
 
 
 def password_hash(password, salt):

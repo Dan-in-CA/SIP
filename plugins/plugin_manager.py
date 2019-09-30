@@ -19,6 +19,7 @@ from helpers import restart
 installed = []
 
 # Add new url(s).
+# fmt: off
 urls.extend([
             u"/plugins", u"plugins.plugin_manager.plugins",
             u"/upd-plugins", u"plugins.plugin_manager.update_plugins",
@@ -26,35 +27,37 @@ urls.extend([
             u"/inst-plugins", u"plugins.plugin_manager.install_plugins",
             u"/pmr", u"plugins.plugin_manager.restart_page"
              ])
-
+# fmt: on
 # Add this plugin to the plugins menu
 gv.plugin_menu.append([_(u"Manage Plugins"), u"/plugins"])
+
 
 def get_permissions():
     global installed
     try:
         permissions = []
         files = subprocess.check_output([u"ls", u"plugins"])
-        installed = [f for f in list(files.split(u"\n")) if re.match('[^_].+\.py$', f)]
+        installed = [f for f in list(files.split(u"\n")) if re.match("[^_].+\.py$", f)]
         pm = installed.index(u"plugin_manager.py")
-        del installed[pm] #  Remove this plugin from list
+        del installed[pm]  #  Remove this plugin from list
         for p in installed:
             mod = subprocess.check_output([u"stat", u"-c %a", u"plugins/" + p])
-            permissions.append(int(list(mod.strip())[1])%2)
+            permissions.append(int(list(mod.strip())[1]) % 2)
         settings = dict(zip(installed, permissions))
         return settings
     except IOError:
         settings = {}
         return settings
 
+
 def parse_manifest(plugin):
     try:
-        with open (u"plugins/manifests/" + plugin + u".manifest") as mf:
+        with open(u"plugins/manifests/" + plugin + u".manifest") as mf:
             mf_list = mf.readlines()
             sep = [i for i, s in enumerate(mf_list) if u"###" in s][0]
             desc = u"".join(mf_list[:sep]).rstrip()
-    #        print "description: ", desc
-            f_list = [line.strip() for line in mf_list[sep+2:]]
+            #        print "description: ", desc
+            f_list = [line.strip() for line in mf_list[sep + 2 :]]
             print(u"file list: ", f_list)
             return (desc, f_list)
     except IOError:
@@ -63,21 +66,25 @@ def parse_manifest(plugin):
 
 
 def get_readme():
-    response = urllib.urlopen(u"https://api.github.com/repos/Dan-in-CA/SIP_plugins/readme")
+    response = urllib.urlopen(
+        b"https://api.github.com/repos/Dan-in-CA/SIP_plugins/readme"
+    )
     data = response.read()
     d = json.loads(data)
     text = base64.b64decode(d[u"content"])
     t_list = text.split()
     sep = [i for i, s in enumerate(t_list) if u"***" in s][0]
-    plug_list = t_list[sep+1:]
+    plug_list = t_list[sep + 1 :]
     breaks = [i for i, s in enumerate(plug_list) if u"---" in s]
 
     plugs = {}
-    for i in  range(len(breaks)):
-        if i < len(breaks)-1:
-            plugs[plug_list[breaks[i]-1]] = u" ".join(plug_list[breaks[i]+1:breaks[i+1]-1])
+    for i in range(len(breaks)):
+        if i < len(breaks) - 1:
+            plugs[plug_list[breaks[i] - 1]] = u" ".join(
+                plug_list[breaks[i] + 1 : breaks[i + 1] - 1]
+            )
         else:
-            plugs[plug_list[breaks[i]-1]] = u" ".join(plug_list[breaks[i]+1:])
+            plugs[plug_list[breaks[i] - 1]] = u" ".join(plug_list[breaks[i] + 1 :])
     return plugs
 
 
@@ -90,6 +97,7 @@ class plugins(ProtectedPage):
         settings = get_permissions()
         return template_render.plugins(settings)
 
+
 class update_plugins(ProtectedPage):
     """
     Change plugin permissions or
@@ -99,7 +107,7 @@ class update_plugins(ProtectedPage):
     def GET(self):
         global installed
         qdict = web.input()
-#         print(u"qdict: ", qdict)
+        #         print(u"qdict: ", qdict) - test
         if qdict[u"btnId"] == u"upd":
             for f in installed:
                 if f in qdict:
@@ -138,6 +146,7 @@ class browse_plugins(ProtectedPage):
         plug_dict = get_readme()
         return template_render.plugins_repo(plug_dict)
 
+
 class install_plugins(ProtectedPage):
     """
     Install selected plugins from GitHub
@@ -145,20 +154,33 @@ class install_plugins(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-#         print(u"Install qdict: ", qdict)
+        # print(u"Install qdict: ", qdict) - test
         for p in qdict.keys():  # Get plugins to install
             print(p)
-#           https://raw.github.com/<username>/<repo>/<branch>/some_directory/file.r #### Example
-            response = urllib.urlopen(u"https://raw.github.com/Dan-in-CA/SIP_plugins/master/" + p + u"/" + p + u".manifest")
+            #  https://raw.github.com/<username>/<repo>/<branch>/some_directory/file.r #### Example
+            response = urllib.urlopen(
+                b"https://raw.github.com/Dan-in-CA/SIP_plugins/master/"
+                + p
+                + b"/"
+                + p
+                + b".manifest"
+            )
             data = response.readlines()
             sep = [i for i, s in enumerate(data) if u"###" in s][0]
-            file_list = [line.strip() for line in data[sep+2:]]
-            short_list = [x for x in file_list if not u"data" in x and not u"manifest" in x]
+            file_list = [line.strip() for line in data[sep + 2 :]]
+            short_list = [
+                x for x in file_list if not u"data" in x and not u"manifest" in x
+            ]
             with open(u"plugins/manifests/" + p + u".manifest", u"w") as new_mf:
                 new_mf.writelines(data)
             for f in short_list:
                 pf = f.split()
-                response = urllib.urlopen(u"https://raw.github.com/Dan-in-CA/SIP_plugins/master/" + p + u"/" + pf[0])
+                response = urllib.urlopen(
+                    b"https://raw.github.com/Dan-in-CA/SIP_plugins/master/"
+                    + p
+                    + b"/"
+                    + pf[0]
+                )
                 f_data = response.read()
                 with open(pf[1] + u"/" + pf[0], u"w") as next_file:
                     next_file.write(f_data)
