@@ -47,7 +47,7 @@ def convert():
     return pd
 
 
-if __name__ == u"__main__":
+if __name__ == "__main__":
     new_data = convert()
-    with open(u"./data/programData.json", u"w") as pf:
+    with open("./data/programData.json", "w") as pf:
         json.dump(new_data, pf, indent=4, sort_keys=True)

@@ -293,18 +293,17 @@ def get_cpu_temp(unit=None):
     Reads and returns the temperature of the CPU if available.
     If unit is F, temperature is returned as Fahrenheit otherwise Celsius.
     """
-
+#     print(u"starting get_cpu_temp()") #  test
     try:
         if gv.platform == u"bo":
             res = os.popen(b"cat /sys/class/hwmon/hwmon0/device/temp1_input").readline()
             temp = u"" + str(int(res / 1000.0))
         elif gv.platform == u"pi":
-            command = b"cat /sys/class/thermal/thermal_zone0/temp"
+            command = u"cat /sys/class/thermal/thermal_zone0/temp"
             output = subprocess.check_output(command.split())
             temp = u"" + str(int(output / 1000.0))
         else:
             temp = u"" + str(0)
-
         if unit == u"F":
             return u"" + str(1.8 * float(temp) + 32)
         elif unit is not None:
@@ -312,7 +311,7 @@ def get_cpu_temp(unit=None):
         else:
             return temp
     except Exception:
-        return u"!!"
+        return u""
 
 
 def timestr(t):

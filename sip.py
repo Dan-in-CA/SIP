@@ -121,7 +121,7 @@ def timing_loop():
                                             gv.lrun[0] = sid
                                             gv.lrun[1] = gv.rs[sid][3]
                                             gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-                                            gv.lrun[3] = gv.now  # think this is unused test
+#                                             gv.lrun[3] = gv.now  # think this is unused test
                                             log_run()
                                             report_station_completed(sid + 1)
                                         gv.rs[sid][2] = duration
@@ -148,7 +148,7 @@ def timing_loop():
                                 gv.lrun[0] = sid
                                 gv.lrun[1] = gv.rs[sid][3]
                                 gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-                                gv.lrun[3] = gv.now
+#                                 gv.lrun[3] = gv.now #  test
                                 log_run()
                                 report_station_completed(sid + 1)
                                 gv.pon = None  # Program has ended
@@ -256,7 +256,7 @@ if web.config.get(u"_session") is None:
         app, web.session.DiskStore(u"sessions"), initializer={u"user": u"anonymous"}
     )
 template_globals = {
-    u"gv": gv,
+    "gv": gv,
     u"str": str,
     u"eval": eval,
     u"session": web.config._session,

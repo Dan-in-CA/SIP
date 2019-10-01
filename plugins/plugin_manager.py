@@ -37,6 +37,7 @@ def get_permissions():
     try:
         permissions = []
         files = subprocess.check_output([u"ls", u"plugins"])
+        files = files.decode('utf-8')
         installed = [f for f in list(files.split(u"\n")) if re.match("[^_].+\.py$", f)]
         pm = installed.index(u"plugin_manager.py")
         del installed[pm]  #  Remove this plugin from list
@@ -107,7 +108,7 @@ class update_plugins(ProtectedPage):
     def GET(self):
         global installed
         qdict = web.input()
-        #         print(u"qdict: ", qdict) - test
+        #         print(u"qdict: ", qdict)
         if qdict[u"btnId"] == u"upd":
             for f in installed:
                 if f in qdict:
@@ -154,10 +155,10 @@ class install_plugins(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        # print(u"Install qdict: ", qdict) - test
+        #         print(u"Install qdict: ", qdict)
         for p in qdict.keys():  # Get plugins to install
             print(p)
-            #  https://raw.github.com/<username>/<repo>/<branch>/some_directory/file.r #### Example
+            #           https://raw.github.com/<username>/<repo>/<branch>/some_directory/file.r #### Example
             response = urllib.urlopen(
                 b"https://raw.github.com/Dan-in-CA/SIP_plugins/master/"
                 + p

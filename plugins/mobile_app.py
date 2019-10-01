@@ -97,7 +97,7 @@ class station_state(ProtectedPage):  # /js
         return json.dumps(jstate)
 
 
-class program_info(ProtectedPage):  # /jp
+class program_info(ProtectedPage):  # /jp ####  Needs to work with new program format #####
     """Returns program data as json."""
 
     def GET(self):

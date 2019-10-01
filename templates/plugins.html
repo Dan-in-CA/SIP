@@ -46,7 +46,7 @@ $var page: plugins
                 <th class="pluginEnabled">$_('Enabled')&nbsp;&nbsp;&nbsp;</th>
                 <th class="pluginDelete">$_('Uninstall?')</th>
             </tr>
-            $ names = settings.keys()
+            $ names = list(settings.keys())
             $names.sort()
             $for n in names:
                 <tr>

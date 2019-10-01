@@ -22,11 +22,10 @@ $code:
     months = json.dumps([_(u'January'), _(u'February'), _(u'March'), _(u'April'), _(u'May'), _(u'June'), _(u'July'), _(u'August'), _(u'September'), _(u'October'), _(u'November'), _(u'December')])
 
 <!DOCTYPE html>
-<!-- <html lang="en"> -->
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="x-ua-compatible" content="IE=edge"> -->
     
   	<link rel="stylesheet" href="$app_path('/static/bootstrap-3.3.7/css/bootstrap.min.css')">
@@ -53,7 +52,7 @@ $code:
     <meta name="theme-color" content="#ffffff">
 
     <link href="$app_path('/static/themes/' + gv.sd[u'theme'] + '/base.css')" rel="stylesheet" type="text/css"/>
-    <style type="text/css">
+    <style>
     	div {overflow-y: hidden;}
     	div.row {overflow-y: visible;}
         .bluebg {background-color:lightblue;}
@@ -85,10 +84,9 @@ $code:
         td.stationName {text-align:left; padding-left:1em;}
     </style>
     
-    <script src="$app_path('/static/scripts/jquery-3.1.0.min.js')"></script>
-    <script src="$app_path('/static/bootstrap-3.3.7/js/bootstrap.min.js')"></script>
-<!--     <script src="$app_path('/static/bootstrap-timepicker/js/bootstrap-timepicker.min.js')"></script> -->
-    <script src="$app_path('/static/bootstrap-timepicker/js/bootstrap-timepicker.js')"></script>
+    <script src="/static/scripts/jquery-3.1.0.min.js"></script>
+    <script src="/static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="/static/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
     
     
     <script>
@@ -98,7 +96,7 @@ $code:
         var timeFormat = ${gv.sd[u"tf"]};
         var dayList = $:{days};
         var monthList = $:{months};
-        var baseUrl = '${web.ctx.homepath}';
+        //var baseUrl = "";
 
         var cputemp = "${gv.cputemp}";
         var tempunit = "${gv.sd[u'tu']}";
@@ -127,11 +125,11 @@ $code:
             var idd = $:{gv.sd[u'idd']};
 
             jQuery(document).ready(function(){
-                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + baseUrl + '/plugins\'">$_('Manage Plugins')</button><br/>');
+                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + '/plugins\'">$_('Manage Plugins')</button><br/>');
                 $if len(uplugin_menu) > 0:
                 	$for i, plugin in enumerate(uplugin_menu):
                 		
-                        jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\'' + baseUrl + '${plugin[1]}\'">${plugin[0]}</button><br/>');
+                        jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\'' + '${plugin[1]}\'">${plugin[0]}</button><br/>');
                 $else:
                     jQuery('#pluginMenu').append('None<br/>');
 
@@ -205,7 +203,7 @@ $code:
             <div class="col-5-xs"></div>
               <div class="col-6-xs pull-right">
             <div class="col-1-xs"></div>              
-                <p class="text-xs-right text-nowrap">$_(u'CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_(u'Click to toggle'), ensure_ascii=False)} + ' Celsius &lt;&gt; Fahrenheit'></span></b></p>
+                <p class="text-xs-right text-nowrap">$_(u"CPU Temp"): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_(u'Click to toggle Celsius &lt;&gt; Fahrenheit'), ensure_ascii=False)}></span></b></p>
              </div>
           </div>     
             

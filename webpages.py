@@ -471,7 +471,7 @@ class change_runonce(ProtectedPage):
                 gv.lrun[0] = sid
                 gv.lrun[1] = gv.rs[sid][3]
                 gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-                gv.lrun[3] = gv.now  # think this is unused
+                gv.lrun[3] = gv.now  # think this is unused - test
                 log_run()
                 report_station_completed(sid + 1)
         stations = [0] * gv.sd[u"nbrd"]
