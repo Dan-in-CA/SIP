@@ -288,28 +288,31 @@ def plugin_adjustment():
     return result
 
 
-def get_cpu_temp(unit=None):
+def get_cpu_temp():
     """
-    Reads and returns the temperature of the CPU if available.
-    If unit is F, temperature is returned as Fahrenheit otherwise Celsius.
+    Reads and returns the Celsius temperature of the CPU if available.
+#     If unit is F, temperature is returned as Fahrenheit otherwise Celsius.
     """
-#     print(u"starting get_cpu_temp()") #  test
     try:
         if gv.platform == u"bo":
-            res = os.popen(b"cat /sys/class/hwmon/hwmon0/device/temp1_input").readline()
+            res = os.popen(u"cat /sys/class/hwmon/hwmon0/device/temp1_input").readline()
             temp = u"" + str(int(res / 1000.0))
         elif gv.platform == u"pi":
             command = u"cat /sys/class/thermal/thermal_zone0/temp"
-            output = subprocess.check_output(command.split())
-            temp = u"" + str(int(output / 1000.0))
+            output = int(subprocess.check_output(command.split()))
+            temp = int(output / 1000.0)
         else:
-            temp = u"" + str(0)
-        if unit == u"F":
-            return u"" + str(1.8 * float(temp) + 32)
-        elif unit is not None:
-            return u"" + str(float(temp))
-        else:
-            return temp
+#             temp = u"" + str(0)
+            return u""
+#         if unit == "F":
+# #             print("converting temp to F: ", temp)
+# #             return u"" + str((temp * 1.8) + 32)
+#             return u"" + str(temp)
+#         elif unit is not None:
+#             return u"" + str(temp)
+#         else:
+#             return temp
+        return u"" + str(temp)
     except Exception:
         return u""
 

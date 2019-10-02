@@ -17,17 +17,15 @@ from webpages import ProtectedPage
 from helpers import restart
 
 # Add a new url to open the data entry page.
-# fmt: off
-urls.extend([u"/UPs", u"plugins.system_update.status_page",
-             u"/UPu", u"plugins.system_update.update_page"
+urls.extend(["/UPs", "plugins.system_update.status_page",
+             "/UPu", "plugins.system_update.update_page"
              ])
-# fmt: on
 
 # Add this plugin to the home page plugins menu
 gv.plugin_menu.append([_(u"System update"), "/UPs"])
 
 
-class StatusChecker:
+class StatusChecker():
     def __init__(self):
 
         self.status = {
@@ -35,8 +33,7 @@ class StatusChecker:
             u"ver_date": gv.ver_date,
             u"status": u"",
             u"remote": u"'None!",
-            u"can_update": False,
-        }
+            u"can_update": False}
 
         self._sleep_time = 0
 
@@ -45,8 +42,7 @@ class StatusChecker:
             self.status[u"status"] += u"\n" + msg
         else:
             self.status[u"status"] = msg
-
-    #        print(msg) #  test
+#        print(msg) #  For testing
 
     def update(self):
         self._sleep_time = 0
@@ -63,43 +59,31 @@ class StatusChecker:
         command = u"git remote update"
         subprocess.call(command.split())
 
-        command = b"git config --get remote.origin.url"
+        command = u"git config --get remote.origin.url"
         remote = subprocess.check_output(command.split()).strip()
         if remote:
             self.status[u"remote"] = remote
 
-        command = b"git log -1 origin/master --format=%cd --date=short"
+        command = u"git log -1 origin/master --format=%cd --date=short"
         new_date = subprocess.check_output(command.split()).strip()
 
-        command = b"git rev-list origin/master --count"
+        command = u"git rev-list origin/master --count"
         new_revision = int(subprocess.check_output(command.split()))
 
-        command = b"git log HEAD..origin/master --oneline"
-        changes = u"  " + u"\n  ".join(
-            subprocess.check_output(command.split()).split(u"\n")
-        )
+        command =u"git log HEAD..origin/master --oneline"
+        changes = u"  " + u"\n  ".join(subprocess.check_output(command.split()).split(u"\n"))
 
         if new_revision == gv.revision and new_date == gv.ver_date:
             self.add_status(_(u"Up-to-date."))
             self.status[u"can_update"] = False
         elif new_revision > gv.revision:
             self.add_status(_(u"New version is available!"))
-            self.add_status(
-                _(u"Available revision")
-                + u": %d.%d.%d (%s)"
-                % (gv.major_ver, gv.minor_ver, new_revision - gv.old_count, new_date)
-            )
+            self.add_status(_(u"Available revision") + u": %d.%d.%d (%s)" % (gv.major_ver, gv.minor_ver, new_revision - gv.old_count, new_date))
             self.add_status(_(u"Changes") + u":\n" + changes)
             self.status[u"can_update"] = True
         else:
-            self.add_status(
-                _(u"Currently running revision")
-                + u": %d (%s)" % ((gv.revision - gv.old_count), gv.ver_date)
-            )
-            self.add_status(
-                _(u"Available revision")
-                + u": %d (%s)" % ((new_revision - gv.old_count), new_date)
-            )
+            self.add_status(_(u"Currently running revision") + u": %d (%s)" % ((gv.revision - gv.old_count), gv.ver_date))
+            self.add_status(_(u"Available revision") + u": %d (%s)" % ((new_revision - gv.old_count), new_date))
             self.status[u"can_update"] = False
 
     def run(self):
@@ -109,13 +93,8 @@ class StatusChecker:
 
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
-            err_string = u"".join(
-                traceback.format_exception(exc_type, exc_value, exc_traceback)
-            )
-            self.add_status(
-                _(u"System update plug-in encountered error") + u":\n" + err_string
-            )
-
+            err_string = u"".join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+            self.add_status(_(u"System update plug-in encountered error") + u":\n" + err_string)
 
 checker = StatusChecker()
 
@@ -126,12 +105,11 @@ checker = StatusChecker()
 
 def perform_update():
 
-    command = b"git config core.filemode true"
+    command = u"git config core.filemode true"
     subprocess.call(command.split())
-
-    command = b"git pull"
+    
+    command = u"git pull"
     subprocess.call(command.split())
-
 
 #     command = "git checkout master"  # Make sure we are on the master branch
 #     output = subprocess.check_output(command.split())
@@ -141,10 +119,10 @@ def perform_update():
 
 #     command = "git fetch --prune"
 #     output = subprocess.check_output(command.split())
-#
+# 
 #     command = "git merge -X theirs origin/master"
 #     output = subprocess.check_output(command.split())
-#
+# 
 #     command = "rm sessions/*"
 #     subprocess.call(command.split())
 
@@ -163,10 +141,10 @@ class status_page(ProtectedPage):
         checker.update_rev_data()
         return template_render.system_update(checker.status)
 
-
 class update_page(ProtectedPage):
     """Update SIP from github and return text message from command line."""
 
     def GET(self):
         perform_update()
         raise web.seeother(u"/restart")
+
