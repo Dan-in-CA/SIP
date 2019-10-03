@@ -17,12 +17,12 @@ from webpages import ProtectedPage
 from helpers import restart
 
 # Add a new url to open the data entry page.
-urls.extend(["/UPs", "plugins.system_update.status_page",
-             "/UPu", "plugins.system_update.update_page"
+urls.extend([u"/UPs", u"plugins.system_update.status_page",
+             u"/UPu", u"plugins.system_update.update_page"
              ])
 
 # Add this plugin to the home page plugins menu
-gv.plugin_menu.append([_(u"System update"), "/UPs"])
+gv.plugin_menu.append([_(u"System update"), u"/UPs"])
 
 
 class StatusChecker():
@@ -42,7 +42,7 @@ class StatusChecker():
             self.status[u"status"] += u"\n" + msg
         else:
             self.status[u"status"] = msg
-#        print(msg) #  For testing
+#        print(msg) #   test
 
     def update(self):
         self._sleep_time = 0

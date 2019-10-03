@@ -6,7 +6,7 @@ $code:
 $code:
     uplugin_menu = []
     for p, el in enumerate(gv.plugin_menu):
-        uel = [el[0].encode('utf-8'), el[1]]
+        uel = [el[0], el[1]]
         uplugin_menu.append(uel)
 
 $code:
@@ -102,7 +102,7 @@ $code:
         var tempunit = "${gv.sd[u'tu']}";
 
         $if content.page != 'login':
-            var snames = $:{[s.encode('utf-8') for s in snames]};
+            var snames = $:{json.dumps(gv.snames, ensure_ascii=False)};
             var lrun = ${gv.lrun};
             var rdst = ${gv.sd[u'rdst']}*1000;
             var ipas = ${gv.sd[u'ipas']};
@@ -110,11 +110,11 @@ $code:
             var mm = ${gv.sd[u'mm']};
             var rd = ${gv.sd[u'rd']};
             var wl = ${gv.sd[u'wl']};
-            var wlx = ${plugin_adjustment()};
+            var wlx = $:{plugin_adjustment()};
             var iw = ${gv.sd[u'iw']};
             var mas = ${gv.sd[u'mas']};
             var nbrd = ${gv.sd[u'nbrd']};
-            var plugins = $:{uplugin_menu};
+            var plugins = $:{json.dumps(gv.plugin_menu, ensure_ascii=False)};
             var progs = $:{json.dumps(gv.pd, ensure_ascii=False)};
             var nprogs = ${len(gv.pd)};
             var sdt = ${gv.sd[u'sdt']};

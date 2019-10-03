@@ -27,7 +27,7 @@ $var page: plugins_repo
     <p>$_('Unless otherwise stated these plugins are licensed under GPL 3.0')</p>
     <form id="installForm" action="${app_path('/inst-plugins')}" method="get">
         <table class="optionList">
-            $ pnames = p_vals.keys()
+            $ pnames = list(p_vals.keys())
             $pnames.sort()
             $for n in pnames:
             <tr>

@@ -312,7 +312,9 @@ def get_cpu_temp():
 #             return u"" + str(temp)
 #         else:
 #             return temp
-        return u"" + str(temp)
+#         print("Temp from helpers.py: ", temp) #  - test
+#         return u"" + str(temp)
+        return temp
     except Exception:
         return u""
 

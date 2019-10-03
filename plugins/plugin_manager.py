@@ -5,9 +5,13 @@ from __future__ import print_function
 import json
 import re
 import subprocess
-import urllib
 import base64
 import time
+try:
+    from urllib.request import urlopen, Request
+except ImportError:
+    from urllib2 import urlopen, Request, HTTPError
+
 
 import web
 import gv  # Get access to SIP's settings
@@ -37,12 +41,13 @@ def get_permissions():
     try:
         permissions = []
         files = subprocess.check_output([u"ls", u"plugins"])
-        files = files.decode('utf-8')
+        files = files.decode('utf-8') #  to unicode string
         installed = [f for f in list(files.split(u"\n")) if re.match("[^_].+\.py$", f)]
         pm = installed.index(u"plugin_manager.py")
         del installed[pm]  #  Remove this plugin from list
         for p in installed:
             mod = subprocess.check_output([u"stat", u"-c %a", u"plugins/" + p])
+            mod = mod.decode('utf-8')
             permissions.append(int(list(mod.strip())[1]) % 2)
         settings = dict(zip(installed, permissions))
         return settings
@@ -57,9 +62,7 @@ def parse_manifest(plugin):
             mf_list = mf.readlines()
             sep = [i for i, s in enumerate(mf_list) if u"###" in s][0]
             desc = u"".join(mf_list[:sep]).rstrip()
-            #        print "description: ", desc
-            f_list = [line.strip() for line in mf_list[sep + 2 :]]
-            print(u"file list: ", f_list)
+            f_list = [line.strip() for line in mf_list[int(sep) + 2 :]]
             return (desc, f_list)
     except IOError:
         print(u"parse_manifest IOError")
@@ -67,12 +70,12 @@ def parse_manifest(plugin):
 
 
 def get_readme():
-    response = urllib.urlopen(
-        b"https://api.github.com/repos/Dan-in-CA/SIP_plugins/readme"
+    response = urlopen(
+        u"https://api.github.com/repos/Dan-in-CA/SIP_plugins/readme"
     )
     data = response.read()
     d = json.loads(data)
-    text = base64.b64decode(d[u"content"])
+    text = base64.b64decode(d[u"content"]).decode('utf-8')
     t_list = text.split()
     sep = [i for i, s in enumerate(t_list) if u"***" in s][0]
     plug_list = t_list[sep + 1 :]
@@ -108,7 +111,6 @@ class update_plugins(ProtectedPage):
     def GET(self):
         global installed
         qdict = web.input()
-        #         print(u"qdict: ", qdict)
         if qdict[u"btnId"] == u"upd":
             for f in installed:
                 if f in qdict:
@@ -155,20 +157,19 @@ class install_plugins(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        #         print(u"Install qdict: ", qdict)
-        for p in qdict.keys():  # Get plugins to install
-            print(p)
+        for p in list(qdict.keys()):  # Get plugins to install
             #           https://raw.github.com/<username>/<repo>/<branch>/some_directory/file.r #### Example
-            response = urllib.urlopen(
-                b"https://raw.github.com/Dan-in-CA/SIP_plugins/master/"
+            response = urlopen(
+                u"https://raw.github.com/Dan-in-CA/SIP_plugins/master/"
                 + p
-                + b"/"
+                + u"/"
                 + p
-                + b".manifest"
-            )
+                + u".manifest"
+            )            
             data = response.readlines()
+            data = [i.decode('utf-8') for i in data]
             sep = [i for i, s in enumerate(data) if u"###" in s][0]
-            file_list = [line.strip() for line in data[sep + 2 :]]
+            file_list = [line.strip() for line in data[int(sep) + 2 :]]
             short_list = [
                 x for x in file_list if not u"data" in x and not u"manifest" in x
             ]
@@ -176,13 +177,13 @@ class install_plugins(ProtectedPage):
                 new_mf.writelines(data)
             for f in short_list:
                 pf = f.split()
-                response = urllib.urlopen(
-                    b"https://raw.github.com/Dan-in-CA/SIP_plugins/master/"
+                response = urlopen(
+                    u"https://raw.github.com/Dan-in-CA/SIP_plugins/master/"
                     + p
-                    + b"/"
+                    + u"/"
                     + pf[0]
                 )
-                f_data = response.read()
+                f_data = response.read().decode('utf-8')
                 with open(pf[1] + u"/" + pf[0], u"w") as next_file:
                     next_file.write(f_data)
         raise web.seeother(u"/plugins")
