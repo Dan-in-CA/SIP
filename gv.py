@@ -11,7 +11,7 @@ from threading import RLock
 
 major_ver = 3
 minor_ver = 2
-old_count = 747
+old_count = 747 #  update this to reset revision number.
 
 try:
     revision = int(subprocess.check_output([u"git", u"rev-list", u"--count", u"HEAD"]))
@@ -23,8 +23,9 @@ except Exception:
 
 try:
     ver_date = subprocess.check_output(
-        ["git", "log", "-1", "--format=%cd", "--date=short"]
+        [u"git", u"log", u"-1", u"--format=%cd", u"--date=short"]
     ).strip()
+    ver_date = ver_date.decode('utf-8')
 except Exception:
     print(_(u"Could not use git to determine date of last commit!"))
     ver_date = u"2015-01-09"

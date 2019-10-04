@@ -42,7 +42,6 @@ class StatusChecker():
             self.status[u"status"] += u"\n" + msg
         else:
             self.status[u"status"] = msg
-#        print(msg) #   test
 
     def update(self):
         self._sleep_time = 0
@@ -57,21 +56,25 @@ class StatusChecker():
         """Returns the update revision data."""
 
         command = u"git remote update"
-        subprocess.call(command.split())
+        subprocess.call(command.split()) #  housekeeping, no retruned data needed.
 
         command = u"git config --get remote.origin.url"
         remote = subprocess.check_output(command.split()).strip()
+        remote = remote.decode('utf-8')
         if remote:
             self.status[u"remote"] = remote
 
         command = u"git log -1 origin/master --format=%cd --date=short"
         new_date = subprocess.check_output(command.split()).strip()
+        new_date = new_date.decode('utf-8')
 
         command = u"git rev-list origin/master --count"
         new_revision = int(subprocess.check_output(command.split()))
 
         command =u"git log HEAD..origin/master --oneline"
-        changes = u"  " + u"\n  ".join(subprocess.check_output(command.split()).split(u"\n"))
+        log_H = (subprocess.check_output(command.split()))
+        log_H = log_H.decode('utf-8').split(u"\n")
+        changes = u"  " + u"\n  ".join(log_H)
 
         if new_revision == gv.revision and new_date == gv.ver_date:
             self.add_status(_(u"Up-to-date."))
@@ -110,24 +113,6 @@ def perform_update():
     
     command = u"git pull"
     subprocess.call(command.split())
-
-#     command = "git checkout master"  # Make sure we are on the master branch
-#     output = subprocess.check_output(command.split())
-
-#     command = "git stash"  # stash any local changes
-#     output = subprocess.check_output(command.split())
-
-#     command = "git fetch --prune"
-#     output = subprocess.check_output(command.split())
-# 
-#     command = "git merge -X theirs origin/master"
-#     output = subprocess.check_output(command.split())
-# 
-#     command = "rm sessions/*"
-#     subprocess.call(command.split())
-
-
-#    print("Update result:", output) #  For testing
 
 ################################################################################
 # Web pages:                                                                   #
