@@ -102,7 +102,7 @@ $code:
             var snames = $:{json.dumps(gv.snames, ensure_ascii=False)};
             var lrun = ${gv.lrun};
             var rdst = ${gv.sd[u'rdst']}*1000;
-            var ipas = ${gv.sd[u'ipas']};
+            var upas = ${gv.sd[u'upas']};
             var en = ${gv.sd[u'en']};
             var mm = ${gv.sd[u'mm']};
             var rd = ${gv.sd[u'rd']};
@@ -179,7 +179,7 @@ $code:
                         <button id="bLog" class="log${' here' if content.page=='log' else ''}" title=$:{json.dumps(_('View Log'), ensure_ascii=False)}>$_(u'Log')</button>
                         <button id="bOptions" class="options${' here' if content.page=='options' else ''}" title=$:{json.dumps(_('Options'), ensure_ascii=False)}>$_(u'Options')</button>
                         <button id="bStations" class="stations${' here' if content.page=='stations' else ''}" title=$:{json.dumps(_('Configure Stations'), ensure_ascii=False)}>$_(u'Stations')</button>
-                        $if not(gv.sd[u'ipas']):
+                        $if (gv.sd[u'upas']):
                             <button id="bLogout" class="logout" title=$:{json.dumps(_(u'Logout'), ensure_ascii=False)}>$_(u'Logout')</button>
                     </div>
 

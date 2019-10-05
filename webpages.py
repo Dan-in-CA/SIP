@@ -244,7 +244,7 @@ class change_options(ProtectedPage):
                 gv.sd[f] = int(qdict[u"o" + f])
 
         for f in [
-            u"ipas",
+            u"uSpas",
             u"tf",
             u"urs",
             u"seq",

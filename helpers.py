@@ -597,7 +597,6 @@ def password_hash(password):
     Generate password hash using sha256.
     """
     pwd_hash = sha256(password.encode()).hexdigest()
-    print("pwd_hash ", pwd_hash) #  test
     return pwd_hash
 
 
@@ -611,7 +610,7 @@ def check_login(redirect=False):
     """
     qdict = web.input()
     try:
-        if gv.sd[u"ipas"] == 1:
+        if gv.sd[u"upas"] == 0:
             return True
 
         if web.config._session.user == u"admin":

@@ -48,7 +48,7 @@ class options(WebPage):  # /jo
                 u"urs": gv.sd[u"urs"],
                 u"rso": gv.sd[u"rst"],
                 u"wl": gv.sd[u"wl"],
-                u"ipas": gv.sd[u"ipas"],
+                u"upas": gv.sd[u"upas"],
                 u"reset": gv.sd[u"rbt"],
                 u"lg": gv.sd[u"lg"]
             }
