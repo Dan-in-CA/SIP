@@ -24,7 +24,8 @@ import web
 from web import form
 
 import gv
-from web.session import sha1
+# from web.session import sha256 #  sha1 test
+from hashlib import sha256
 from functools import reduce
 
 try:
@@ -591,11 +592,13 @@ def password_salt():
     return u"".join(chr(random.randint(33, 127)) for _ in range(64))
 
 
-def password_hash(password, salt):
+def password_hash(password):
     """
-    Generate password hash using sha-1.
+    Generate password hash using sha256.
     """
-    return sha1(password + salt).hexdigest()
+    pwd_hash = sha256(password.encode()).hexdigest()
+    print("pwd_hash ", pwd_hash) #  test
+    return pwd_hash
 
 
 ########################
@@ -607,7 +610,6 @@ def check_login(redirect=False):
     Check login.
     """
     qdict = web.input()
-
     try:
         if gv.sd[u"ipas"] == 1:
             return True
@@ -617,8 +619,8 @@ def check_login(redirect=False):
     except KeyError:
         pass
 
-    if u"pw" in qdict:
-        if gv.sd[u"password"] == password_hash(qdict[u"pw"], gv.sd[u"salt"]):
+    if u"password" in qdict:
+        if gv.sd[u"password"] == password_hash(qdict[u"password"]):
             return True
         if redirect:
             raise web.unauthorized()
@@ -630,11 +632,14 @@ def check_login(redirect=False):
 
 
 signin_form = form.Form(
-    form.Password(u"password", description=_(u"Password") + u":"),
+    form.Password(
+        name=u'password', description=_(u"Password") + u":", value=u''
+        ),
+    
     validators=[
         form.Validator(
             _(u"Incorrect password, please try again"),
-            lambda x: gv.sd[u"password"] == password_hash(x.password, gv.sd[u"salt"]),
+            lambda x: gv.sd[u"password"] == password_hash(x.password),
         )
     ],
 )

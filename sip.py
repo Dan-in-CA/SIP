@@ -93,7 +93,7 @@ def timing_loop():
                                         duration = p[u"duration_sec"][0]
                                 else:
                                     duration_adj = (
-                                        gv.sdu[u"wl"] / 100.0
+                                        gv.sd[u"wl"] / 100.0
                                     ) * extra_adjustment
                                     if gv.sd[u"idd"]:
                                         duration = (
@@ -301,5 +301,16 @@ if __name__ == u"__main__":
         set_output()
 
     app.notfound = lambda: web.seeother(u"/")
+    
+    ###########################
+    #### For HTTPS (SSL):  ####
+
+    if gv.sd["ssl"]:
+        from cheroot.server import HTTPServer
+        from cheroot.ssl.builtin import BuiltinSSLAdapter   
+        HTTPServer.ssl_adapter = BuiltinSSLAdapter(
+            certificate='cert/SIP.crt',
+            private_key='cert/SIP.key'
+        )
 
     app.run()

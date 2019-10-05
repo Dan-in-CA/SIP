@@ -1,11 +1,11 @@
 $def with (errorCode)
 
-$var title: $_('SIP Options')
+$var title: $_(u"SIP Options")
 $var page: options
 $code:
 	opts = gv.options
 	languages = i18n.languages
-	langKeys = i18n.languages.keys()
+	langKeys = list(i18n.languages.keys())
 	langKeys.sort()
 	snames = gv.snames
 	
