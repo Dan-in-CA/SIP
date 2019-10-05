@@ -184,13 +184,13 @@ class change_options(ProtectedPage):
         qdict = web.input()
         if u"opw" in qdict and qdict[u"opw"] != u"":
             try:
-                if password_hash(qdict[u"opw"], gv.sd[u"salt"]) == gv.sd[u"password"]:
+                if password_hash(qdict[u"opw"]) == gv.sd[u"password"]:
                     if qdict[u"npw"] == u"":
                         raise web.seeother(u"/vo?errorCode=pw_blank")
                     elif qdict[u"cpw"] != u"" and qdict[u"cpw"] == qdict[u"npw"]:
-                        gv.sd[u"salt"] = password_salt()  # Make a new salt
+#                         gv.sd[u"salt"] = password_salt()  # Make a new salt -test
                         gv.sd[u"password"] = password_hash(
-                            qdict[u"npw"], gv.sd[u"salt"]
+                            qdict[u"npw"]
                         )
                     else:
                         raise web.seeother(u"/vo?errorCode=pw_mismatch")
@@ -244,7 +244,7 @@ class change_options(ProtectedPage):
                 gv.sd[f] = int(qdict[u"o" + f])
 
         for f in [
-            u"uSpas",
+            u"upas",
             u"tf",
             u"urs",
             u"seq",
