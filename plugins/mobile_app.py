@@ -219,11 +219,11 @@ class set_password:
         if not (u"pw" in qdict) or not (u"npw" in qdict) or not (u"cpw" in qdict):
             return json.dumps({u"result": 3})
 
-        if password_hash(qdict[u"pw"]) == gv.sd[u"passphrase"]:
+        if password_hash(qdict[u"pw"]) == gv.sd[u"password"]:
             if qdict[u"npw"] == "":
                 return json.dumps({u"result": 3})
             elif qdict[u"cpw"] != u"" and qdict[u"cpw"] == qdict[u"npw"]:
-                gv.sd[u"passphrase"] = password_hash(qdict[u"npw"])
+                gv.sd[u"password"] = password_hash(qdict[u"npw"])
             else:
                 return json.dumps({u"result": 4})
         else:

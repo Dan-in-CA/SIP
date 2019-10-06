@@ -585,11 +585,11 @@ def load_programs():
     return gv.pd
 
 
-def password_salt():
-    """
-    Generate random number for use as salt for password encryption
-    """
-    return u"".join(chr(random.randint(33, 127)) for _ in range(64))
+# def password_salt():
+#     """
+#     Generate random number for use as salt for password encryption
+#     """
+#     return u"".join(chr(random.randint(33, 127)) for _ in range(64))
 
 
 def password_hash(password):
@@ -609,6 +609,7 @@ def check_login(redirect=False):
     Check login.
     """
     qdict = web.input()
+    print("qdict from helpers :", qdict) #   - test
     try:
         if gv.sd[u"upas"] == 0:
             return True
