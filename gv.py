@@ -35,7 +35,7 @@ except Exception:
 
 # Settings Dictionary. A set of vars kept in memory and persisted in a file.
 # Edit this default dictionary definition to add or remove "key": "value" pairs or change defaults.
-# note old passwords stored in the "pwd" option will be lost - reverts to default password.
+# note old passphrases stored in the "pwd" option will be lost - reverts to default passphrase.
 from calendar import timegm
 import json
 import time
@@ -44,7 +44,7 @@ platform = (
     ""
 )  # must be done before the following import because gpio_pins will try to set it
 
-# from helpers import password_salt, password_hash, load_programs, station_names
+# from helpers import load_programs, station_names
 
 sd = {
     u"en": 1,
@@ -70,7 +70,6 @@ sd = {
     u"lg": 0,
     u"urs": 0,
     u"nopts": 13,
-#     u"password": u"",
     u"upas": 0,
     u"rst": 1,
     u"mm": 0,
@@ -84,7 +83,7 @@ sd = {
     u"name": u"SIP",
     u"theme": u"basic",
     u"show": [255],
-    u"password": u"12d4e6fc471fbe073df5a0678fcffb9f75b12161e4e3f6d1e1bd81ffb22163bf",
+    u"passphrase": u"12d4e6fc471fbe073df5a0678fcffb9f75b12161e4e3f6d1e1bd81ffb22163bf",
     u"lang": u"default",
     u"idd": 0,
     u"pigpio": 0,
@@ -192,35 +191,35 @@ options = [
         _(u"System"),
     ],
     [
-        _(u"Enable password"),
+        _(u"Enable passphrase"),
         u"boolean",
         u"upas",
-        _(u"Minimal security. \nPrevent anonymous users from accessing the system without a password. \n*** Default is opendoor ***"),
+        _(u"Minimal security. \nPrevent unauthorized users from accessing the system without a passphrase. \n*** Default is opendoor ***"),
         _(u"Security"),
     ],
     [
-        _(u"Current password"),
+        _(u"Current passphrase"),
         u"password",
         u"opw",
-        _(u"Re-enter the current password. \n*** Defalut is opendoor ***"),
+        _(u"Enter the current passphrase. \n*** Defalut is opendoor ***"),
         _(u"Security"),
     ],
     [
-        _(u"New password"),
+        _(u"New passphrase"),
         u"password",
         u"npw",
-        _(u"Enter a new password."),
+        _(u"Enter a new passphrase."),
         _(u"Security"),
     ],
     [
-        _(u"Confirm password"),
+        _(u"Confirm passphrase"),
         u"password",
         u"cpw",
-        _(u"Confirm the new password."),
+        _(u"Confirm the new passphrase."),
         _(u"Security"),
     ],
     [
-        _(u"Enable SSL"),
+        _(u"Enable SSL (HTTPS)"),
         u"boolean",
         u"ssl",
         _(u"Enable SSL encryption of SIP web interface"),

@@ -585,18 +585,11 @@ def load_programs():
     return gv.pd
 
 
-# def password_salt():
-#     """
-#     Generate random number for use as salt for password encryption
-#     """
-#     return u"".join(chr(random.randint(33, 127)) for _ in range(64))
-
-
-def password_hash(password):
+def password_hash(passphrase):
     """
-    Generate password hash using sha256.
+    Generate passphrase hash using sha256.
     """
-    pwd_hash = sha256(password.encode()).hexdigest()
+    pwd_hash = sha256(passphrase.encode()).hexdigest()
     return pwd_hash
 
 
@@ -609,7 +602,6 @@ def check_login(redirect=False):
     Check login.
     """
     qdict = web.input()
-    print("qdict from helpers :", qdict) #   - test
     try:
         if gv.sd[u"upas"] == 0:
             return True
@@ -620,7 +612,8 @@ def check_login(redirect=False):
         pass
 
     if u"password" in qdict:
-        if gv.sd[u"password"] == password_hash(qdict[u"password"]):
+        print("password in qdict") #   - test
+        if gv.sd[u"passphrase"] == password_hash(qdict[u"password"]):
             return True
         if redirect:
             raise web.unauthorized()
@@ -633,13 +626,13 @@ def check_login(redirect=False):
 
 signin_form = form.Form(
     form.Password(
-        name=u'password', description=_(u"Password") + u":", value=u''
+        name=u'password', description=_(u"Passphrase") + u":", value=u''
         ),
     
     validators=[
         form.Validator(
-            _(u"Incorrect password, please try again"),
-            lambda x: gv.sd[u"password"] == password_hash(x.password),
+            _(u"Incorrect passphrase, please try again"),
+            lambda x: gv.sd[u"passphrase"] == password_hash(x.password),
         )
     ],
 )

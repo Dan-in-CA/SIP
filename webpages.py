@@ -150,7 +150,7 @@ class change_values(ProtectedPage):
         if u"rd" in qdict and qdict[u"rd"] != u"0" and qdict[u"rd"] != "":
             gv.sd[u"rd"] = int(float(qdict[u"rd"]))
             gv.sd[u"rdst"] = int(
-                gv.now + gv.sd[u"urd"] * 3600
+                gv.now + gv.sd[u"rd"] * 3600
             )  # + 1  # +1 adds a smidge just so after a round trip the display hasn"t already counted down by a minute.
             stop_onrain()
         elif u"rd" in qdict and qdict[u"rd"] == u"0":
@@ -184,12 +184,11 @@ class change_options(ProtectedPage):
         qdict = web.input()
         if u"opw" in qdict and qdict[u"opw"] != u"":
             try:
-                if password_hash(qdict[u"opw"]) == gv.sd[u"password"]:
+                if password_hash(qdict[u"opw"]) == gv.sd[u"passphrase"]:
                     if qdict[u"npw"] == u"":
                         raise web.seeother(u"/vo?errorCode=pw_blank")
                     elif qdict[u"cpw"] != u"" and qdict[u"cpw"] == qdict[u"npw"]:
-#                         gv.sd[u"salt"] = password_salt()  # Make a new salt -test
-                        gv.sd[u"password"] = password_hash(
+                        gv.sd[u"passphrase"] = password_hash( #  Set new passphrase.
                             qdict[u"npw"]
                         )
                     else:
