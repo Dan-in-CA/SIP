@@ -1,0 +1,24 @@
+$def with()
+
+$var title: $_('Enabling SSL')
+$var page: enable_ssl
+
+<script>
+	var interval = null;	
+	function changePage() {
+		interval = setInterval(function() {
+	       jQuery.getScript("/static/scripts/goHome.js", function() {
+	    	   clearInterval(interval);
+	       });
+		}, 1000);
+};
+
+    jQuery(document).ready(function(){
+			changePage()
+    });
+</script>
+
+<div id="enssl">
+    <div class="title">$_('SIP is enabling SSL security')</div>
+    $_('This will take some time...')
+</div>

@@ -38,6 +38,7 @@ $code:
 <script>
     var priorRs = ${gv.sd[u"rs"]};
     var useRainsense = ${gv.sd[u"urs"]};
+    var devt = ${gv.now}
     
     function formatLogline(log) {
         var lrsid = lrun[0], lrpid = lrun[1], lrdur = lrun[2], lret = lrun[3];
@@ -51,8 +52,8 @@ $code:
         if (lrpid == 254 || lrpid == 98) {
             pname = $:{json.dumps(_('Run Once Program'), ensure_ascii=False)};
         }
-        var runDate = (new Date(lret*1000)).toString(); // + timezoneSuffix; //dk
-        return snames[lrsid] + $:{json.dumps(_(u' ran '), ensure_ascii=False)} + pname + $:{json.dumps(_(u' for '), ensure_ascii=False)} + (lrdur/60>>0) + "m" + (lrdur%60) + "s" + $:{json.dumps(_(u' on '), ensure_ascii=False)} + runDate;
+        var runDate = (new Date(lret * 1000)).toString(); // + timezoneSuffix; //dk
+        return snames[lrsid] + $:{json.dumps(_(u' ran '), ensure_ascii=False)} + pname + $:{json.dumps(_(u' for '), ensure_ascii=False)} + (lrdur / 60>>0) + "m" + (lrdur % 60) + "s" + $:{json.dumps(_(u' on '), ensure_ascii=False)} + runDate;
     }
 
     function updateStatus(status) {
@@ -62,7 +63,7 @@ $code:
             var classes = "stationStatus station_" + station.status;
             switch (station.reason) {
                 case "program" :
-                    var minutes = Math.floor(station.remaining/60);
+                    var minutes = Math.floor(station.remaining / 60);
                     var seconds = Math.floor(station.remaining - 60*minutes);
                     if (minutes < 10) {minutes = "0"+minutes;}
                     if (seconds < 10) {seconds = "0"+seconds;}
@@ -199,7 +200,7 @@ $code:
             displayProgram();
         });
         jQuery("button#pToday").click(function() {
-            var day = new Date()//dk
+            var day = new Date()  //dk
             displayScheduleDate.setDate(day.getDate());
             displayScheduleDate.setMonth(day.getMonth()); //dk
             displayProgram();
@@ -218,8 +219,8 @@ $code:
         var timerElement = jQuery("#" + timerId);
         var timerValue = parseFloat(timerElement.attr("data"));
         var remaining = timerValue - devt; //Date.now(); // DK change
-        var rHours = Math.floor(remaining/3600000);
-        var rMinutes = Math.floor((remaining%3600000)/60000);
+        var rHours = Math.floor(remaining / 3600000);
+        var rMinutes = Math.floor((remaining%3600000) / 60000);
         if (rHours <=0 && rMinutes <=0) {
             window.location = baseUrl + "/";
         } else {
@@ -233,11 +234,10 @@ $code:
     <br>
     <button id="cWaterLevel" class="toggle choice ${'on' if gv.sd[u'wl']==100 else 'off'}"><span class='toggleleft'>$_(u'Normal')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>${_(u'Water Level') if gv.sd[u'wl']==100 else str(gv.sd['wl']) + '%' + _('Level')}</span></button> ${'' if int(plugin_adjustment()) == 100 else ' Plugin adjustments: ' + plugin_adjustment_list() + ('' if gv.sd[u'wl']==100 and '*' not in plugin_adjustment_list() else ' - Total adjustment: ' + total_adjustment() + '%')}
     <br>
-    <button id="cRainDelay" class="toggle ${'off' if gv.sd[u'rd'] or (gv.sd[u'urs'] and gv.sd[u'rs']) else 'on'}"><span class='toggleleft'>$_(u'Active')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Rain Delay')</span></button> ${'' if gv.sd[u'rdst']-gv.now <= 0 else 'Rain delay time left: ' +  str((int(gv.sd[u'rdst']-gv.now)/3600)) + ':' + str(int((gv.sd['rdst']-gv.now)%3600/60)).zfill(2)}
-    $if gv.sd[u'rd']:
-        $:{'<span class="countdown" id="rainDelayCountdown" data="' + str(gv.sd['rdst']*1000) + '"></span>' if gv.sd[u'rd'] else ''}
+    <button id="cRainDelay" class="toggle ${'off' if gv.sd[u'rd'] or (gv.sd[u'urs'] and gv.sd[u'rs']) else 'on'}"><span class='toggleleft'>$_(u'Active')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Rain Delay')</span></button> ${u"" if gv.sd[u'rdst'] - gv.now <= 0 else u"Rain delay time left: " +  str((int(gv.sd[u'rdst'] - gv.now) // 3600)) + ':' + str(int((gv.sd[u'rdst'] - gv.now) % 3600 // 60)).zfill(2)}
+
     $if gv.sd[u'urs']:
-        <span class="rainsense">${'' if gv.sd[u'rs'] else _('no')} $_(u'rain sensed')</span>
+        <span class="rainsense">${u'' if gv.sd[u'rs'] else _(u'no')} $_(u'rain sensed')</span>
     <br>
     <button id="cManual" class="toggle choice ${'off' if gv.sd[u'mm'] else 'on'}"><span class='toggleleft'>$_(u'Auto')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Manual')</span></button>
 </div>

@@ -57,11 +57,11 @@ $code:
 
         switch (errorCode) {
             case "pw_wrong":
-                jQuery("#erroropw").text($:{json.dumps(_('The password given was incorrect.'), ensure_ascii=False)});
+                jQuery("#erroropw").text($:{json.dumps(_('The passphrase given was incorrect.'), ensure_ascii=False)});
                 jQuery("#erroropw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
                 break;
             case "pw_blank":
-                jQuery("#errornpw").text($:{json.dumps(_('Please enter a password.'), ensure_ascii=False)});
+                jQuery("#errornpw").text($:{json.dumps(_('Please enter a passphrase.'), ensure_ascii=False)});
                 jQuery("#errornpw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
                 break;
             case "pw_mismatch":

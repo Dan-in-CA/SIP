@@ -21,14 +21,14 @@ $code:
 				newhour = 12
 			if hour > 12:
 				newhour = hour-12
-			return str(newhour)  + t[2:] + (" am" if hour<12 else " pm")
+			return str(newhour) + t[2:] + (" am" if hour<12 else " pm")
 
 
 <script>
     // Initialize behaviors
     jQuery(document).ready(function(){
         jQuery("button#nRefresh").click(function(){
-            window.location= baseUrl + "/vl";
+            window.location = baseUrl + "/vl";
         });
         jQuery("button#nDeleteAll").click(function(){
             jQuery("form#df").submit();
@@ -43,7 +43,7 @@ $code:
 </div>
 
 <div id="log">
-    <p>$_('Total number of records: ')${len(records)} (${_("no") if gv.sd['lr']==0 else gv.sd['lr']}$_(' limit'))</p>
+    <p>$_('Total number of records: ')${len(records)} (${_("no") if gv.sd['lr'] == 0 else gv.sd['lr']}$_(' limit'))</p>
     <p>$_('Download log as ')<a href="$app_path('/wl')">csv</a>.</p>
 
     <table class="logList">
