@@ -67,8 +67,8 @@ def timing_loop():
             and not gv.sd[u"mm"]
             and (not gv.sd[u"bsy"] or not gv.sd[u"seq"])
         ):
-            if int(gv.now / 60) != last_min:  # only check programs once a minute
-                last_min = int(gv.now / 60)
+            if int(gv.now // 60) != last_min:  # only check programs once a minute
+                last_min = int(gv.now // 60)
                 extra_adjustment = plugin_adjustment()
                 for i, p in enumerate(gv.pd):  # get both index and prog item
                     if prog_match(p) and any(p[u"duration_sec"]):
@@ -93,7 +93,7 @@ def timing_loop():
                                         duration = p[u"duration_sec"][0]
                                 else:
                                     duration_adj = (
-                                        gv.sd[u"wl"] / 100.0
+                                        gv.sd[u"wl"] // 100.0
                                     ) * extra_adjustment
                                     if gv.sd[u"idd"]:
                                         duration = (
@@ -309,8 +309,8 @@ if __name__ == u"__main__":
         from cheroot.server import HTTPServer
         from cheroot.ssl.builtin import BuiltinSSLAdapter   
         HTTPServer.ssl_adapter = BuiltinSSLAdapter(
-            certificate='cert/SIP.crt',
-            private_key='cert/SIP.key'
+            certificate='cert/sip.crt',
+            private_key='cert/sip.key'
         )
 
     app.run()

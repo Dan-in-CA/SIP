@@ -612,7 +612,6 @@ def check_login(redirect=False):
         pass
 
     if u"password" in qdict:
-        print("password in qdict") #   - test
         if gv.sd[u"passphrase"] == password_hash(qdict[u"password"]):
             return True
         if redirect:

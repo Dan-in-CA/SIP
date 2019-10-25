@@ -331,7 +331,7 @@ $code:
 //				var interval = Math.ceil(lap_t / 60);
 //                var endTime = startTime + interval;
                 if (idd) {
-                	var endTime = startTime + idurations.reduce((a,b) => a + b, 0);
+                	var endTime = startTime + idurations.reduce((a,b) => a + b, 0) / 60;
                 } else {
                 	var endTime = startTime + (gduration / 60);
                 }	
@@ -398,7 +398,7 @@ $code:
                     <p><b>$_(u'Every'):</b> <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "tih" value = "${two_digits(program['cycle_min'] / 60)}"> :
                     <input class="timeInput numbersOnly" type = "text" size = "2" maxlength = "2" id = "tim" value="${two_digits(program['cycle_min'] % 60)}"> (hh:mm)</p>
                     <p>
-                    $ t = formatTime(two_digits(program[u"stop_min"] / 60) + ":" + two_digits(program[u"stop_min"] % 60))
+                    $ t = formatTime(two_digits(program[u"stop_min"] // 60) + ":" + two_digits(program[u"stop_min"] % 60))
                         <b>$_(u"Until"):</b> <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "teh" value = "${t.split(":")[0]}"> :
                         <input class="timeInput numbersOnly" type = "text" size = "2" maxlength = "2" id = "tem" value = "${t.split(":")[1][0:2]}">
                     $if tf:
