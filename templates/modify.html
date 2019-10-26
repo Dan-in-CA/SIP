@@ -4,72 +4,72 @@ $var title: $_('SIP Modify Program')
 $var page: programs
 
 $code:
-	def two_digits(n):
-		return '%02d' % int(n)
+    def two_digits(n):
+        return '%02d' % int(n)
 
-	snames = gv.snames
-	idd = int(gv.sd['idd'])
-	if pid < 0: #  A new program
-		program = {}
-		program['enabled'] = 1 
-		program['day_mask'] =  127 
-		program['interval_base_day'] = 0
-		program['start_min'] = 360
-		program['stop_min'] = 1080
-		program['cycle_min'] = 0
-		program['duration_sec'] = [[0], [0] * gv.sd['nst']][idd]
-		program['station_mask'] = [0] * gv.sd['nbrd']
-		program['type'] = 'alldays'
-		program['name'] = 'Unnamed'
+    snames = gv.snames
+    idd = int(gv.sd['idd'])
+    if pid < 0: #  A new program
+        program = {}
+        program['enabled'] = 1 
+        program['day_mask'] =  127 
+        program['interval_base_day'] = 0
+        program['start_min'] = 360
+        program['stop_min'] = 1080
+        program['cycle_min'] = 0
+        program['duration_sec'] = [[0], [0] * gv.sd['nst']][idd]
+        program['station_mask'] = [0] * gv.sd['nbrd']
+        program['type'] = 'alldays'
+        program['name'] = 'Unnamed'
 
-	else: #  An existing program
-		program = eval(prog)            ### format conversion
-	weekly = int(program['type'] in ['alldays', 'evendays', 'odddays'])
-	stationsShown = 0
-	for bid in range(gv.sd['nbrd']):		
-		boardShow = gv.sd['show'][bid]
-		for s in range(8):
-			stationsShown += (boardShow>>s) & 1
+    else: #  An existing program
+        program = eval(prog)            ### format conversion
+    weekly = int(program['type'] in ['alldays', 'evendays', 'odddays'])
+    stationsShown = 0
+    for bid in range(gv.sd['nbrd']):        
+        boardShow = gv.sd['show'][bid]
+        for s in range(8):
+            stationsShown += (boardShow>>s) & 1
 
-	duration = 0
-	sid = -1
-	for b in range(gv.sd['nbrd']):
-		for s in range(8):
-			sid += 1
-			if program['station_mask'][b] & (1 << s):
-				if gv.sd['seq']:
-					if idd:
-						duration += program['duration_sec'][sid]
-					else:
-						duration += program['duration_sec'][0]
-				else:
-					if idd :
-						duration = max(duration, program['duration_sec'][sid])
-					else:
-						duration = program['duration_sec'][0]
+    duration = 0
+    sid = -1
+    for b in range(gv.sd['nbrd']):
+        for s in range(8):
+            sid += 1
+            if program['station_mask'][b] & (1 << s):
+                if gv.sd['seq']:
+                    if idd:
+                        duration += program['duration_sec'][sid]
+                    else:
+                        duration += program['duration_sec'][0]
+                else:
+                    if idd :
+                        duration = max(duration, program['duration_sec'][sid])
+                    else:
+                        duration = program['duration_sec'][0]
 
-	# lap_end = program['start_min'] + duration // 60
-	# recurring = int(lap_end) < int(program['stop_min'])
-	
-	recurring = int(program['cycle_min'] != 0)
-	even = (program['type'] == 'evendays')
-	odd = (program['type'] == 'odddays')
-	tf = gv.sd['tf']
-	def formatTime(t):
-		if gv.sd['tf']:
-			return t
-		else:
-			hour = int(t[0:2])
-			newhour = hour
-			if hour == 0:
-				newhour = 12
-			if hour > 12:
-				newhour = hour-12
-			return str(newhour)  + t[2:] + (" am" if hour<12 else " pm")
+    # lap_end = program['start_min'] + duration // 60
+    # recurring = int(lap_end) < int(program['stop_min'])
+    
+    recurring = int(program['cycle_min'] != 0)
+    even = (program['type'] == 'evendays')
+    odd = (program['type'] == 'odddays')
+    tf = gv.sd['tf']
+    def formatTime(t):
+        if gv.sd['tf']:
+            return t
+        else:
+            hour = int(t[0:2])
+            newhour = hour
+            if hour == 0:
+                newhour = 12
+            if hour > 12:
+                newhour = hour-12
+            return str(newhour)  + t[2:] + (" am" if hour<12 else " pm")
 
 <script>
-		
-	var prog = JSON.parse($:{"'" + json.dumps(program) + "'"});   ///// format conversion
+        
+    var prog = JSON.parse($:{"'" + json.dumps(program) + "'"});   ///// format conversion
 
     // Helper functions
     function parseTime(prefix) { 
@@ -228,14 +228,14 @@ $code:
 
         jQuery("button#cSubmit").click(function(){
             var idd = ${gv.sd['idd']};
-        	var days = 0;
+            var days = 0;
             var dayInterval = 0;
             var i, s, sid;
           prog['enabled'] = jQuery("button#cProgramEnabled").hasClass("on") ? 1 : 0;
           
             // process days
             if (jQuery("button#cWeeklyInterval").hasClass("on")) {
-            	prog['type'] = 'alldays';
+                prog['type'] = 'alldays';
                 for (i=0; i<7; i++) {
                     if (jQuery("button#day"+i).hasClass("on")) {
                         days |= (1<<i);
@@ -250,8 +250,8 @@ $code:
                  }
              }
              } else {
-            	prog['type'] = 'interval';
-            	dayInterval = parseInt(jQuery("#intervalSelector .intervalSelect.distance0").text());
+                prog['type'] = 'interval';
+                dayInterval = parseInt(jQuery("#intervalSelector .intervalSelect.distance0").text());
                 days = parseInt(jQuery("#intervalDelaySelector .intervalSelect.distance0").text());
 
                 if (days < 0 || days >= dayInterval) {
@@ -275,43 +275,43 @@ $code:
             // process general duration
             var dm = parseInt(jQuery("#tdm").val());
             var ds = parseInt(jQuery("#tds").val());
-			if(!idd) {
+            if(!idd) {
             var gduration = dm * 60 + ds;
-	            if (!(dm >= 0 && ds >= 0 && ds < 60 && gduration > 0)) {
-	                alert($:{json.dumps(_(u"Error: Duration missing."), ensure_ascii=False)});
-	                return;
-	            }
+                if (!(dm >= 0 && ds >= 0 && ds < 60 && gduration > 0)) {
+                    alert($:{json.dumps(_(u"Error: Duration missing."), ensure_ascii=False)});
+                    return;
+                }
             }
 
             // Process individual station times
             var t = "[";
             var lap_t = 0;
-			var sduration = 0;
-			if(idd) {
-			for (var bid=0; bid<nbrd; bid++) {
+            var sduration = 0;
+            if(idd) {
+            for (var bid=0; bid<nbrd; bid++) {
                 for (var s = 0; s < 8; s ++) {
                     sid = bid * 8 + s;
                     var stationOn = jQuery("button#station"+sid).hasClass("on")
-					if (stationOn) {
-						if (idd) {
-							var dm = parseInt(jQuery("#tdm" + sid).val());
-							var ds = parseInt(jQuery("#tds" + sid).val());
-							sduration = dm * 60 + ds;
-							if (!(dm >= 0 && ds >= 0 && ds < 60 && sduration > 0)) {
-								alert($:{json.dumps(_('Error: Incorrect duration.'), ensure_ascii=False)});
-								return;
-							}
-						} else {
-							   sduration = gduration;
-						}
-					} else {
-						sduration = 0;
-					}
+                    if (stationOn) {
+                        if (idd) {
+                            var dm = parseInt(jQuery("#tdm" + sid).val());
+                            var ds = parseInt(jQuery("#tds" + sid).val());
+                            sduration = dm * 60 + ds;
+                            if (!(dm >= 0 && ds >= 0 && ds < 60 && sduration > 0)) {
+                                alert($:{json.dumps(_('Error: Incorrect duration.'), ensure_ascii=False)});
+                                return;
+                            }
+                        } else {
+                               sduration = gduration;
+                        }
+                    } else {
+                        sduration = 0;
+                    }
                     t += sduration;
                     if (seq) {
-					    lap_t += sduration;
+                        lap_t += sduration;
                     } else {
-					    lap_t = Math.max(lap_t, sduration);
+                        lap_t = Math.max(lap_t, sduration);
                     }
                     if(s < 7)
                         t += ",";
@@ -319,22 +319,22 @@ $code:
                 if (bid < (nbrd-1)) {
                     t += ",";
                 }
-			}
+            }
             t += "]";
             var idurations = JSON.parse(t)
-			}
+            }
 
             // process time
             var startTime = parseTime("ts");
             if (jQuery("button#cRecurring").hasClass("on")) {  //Single pass
-            	var interval = 0;
-//				var interval = Math.ceil(lap_t / 60);
+                var interval = 0;
+//              var interval = Math.ceil(lap_t / 60);
 //                var endTime = startTime + interval;
                 if (idd) {
-                	var endTime = startTime + idurations.reduce((a,b) => a + b, 0) / 60;
+                    var endTime = startTime + idurations.reduce((a,b) => a + b, 0) / 60;
                 } else {
-                	var endTime = startTime + (gduration / 60);
-                }	
+                    var endTime = startTime + (gduration / 60);
+                }   
             } else {                                           //recurring
                 var interval = parseTime("ti");
                 var endTime = parseTime("te");
@@ -345,18 +345,18 @@ $code:
                 return;
             }
 
-            var v = {};										//// format conversion
-			v['type'] = prog['type']; 
-			v['enabled'] = prog['enabled'];
-			v['day_mask'] = days;
-			v['interval_base_day'] = dayInterval;
- 			v['start_min'] = startTime;
-			v['stop_min'] = endTime;
-			v['cycle_min'] = interval;
-			v['duration_sec'] = [[gduration], idurations][idd]; // select one or the other
-			v['name'] = 'Unnamed';
-			v['station_mask']  = stations;
-//         var vs = JSON.stringify(v);						//// format conversion
+            var v = {};                                     //// format conversion
+            v['type'] = prog['type']; 
+            v['enabled'] = prog['enabled'];
+            v['day_mask'] = days;
+            v['interval_base_day'] = dayInterval;
+            v['start_min'] = startTime;
+            v['stop_min'] = endTime;
+            v['cycle_min'] = interval;
+            v['duration_sec'] = [[gduration], idurations][idd]; // select one or the other
+            v['name'] = 'Unnamed';
+            v['station_mask']  = stations;
+//         var vs = JSON.stringify(v);                      //// format conversion
          jQuery("form#mf input[name='v']").val(JSON.stringify(v));
          jQuery("form#mf").submit();
         });  
@@ -365,8 +365,8 @@ $code:
         });
     });
     
- var durationTime = ${two_digits(int(program['duration_sec'][0]) % 60)};
- var cycleTime = ${two_digits(program['cycle_min'] % 60)};
+var durationTime = ${two_digits(int(program['duration_sec'][0]) % 60)};
+var cycleTime = ${two_digits(program['cycle_min'] % 60)};
 
 </script>
 <div id="programs">

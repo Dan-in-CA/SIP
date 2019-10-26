@@ -66,14 +66,14 @@ $code:
         .program {line-height:22px}
         .strike {text-decoration:line-through;}
 
-        .progstation_on {background-color:#9AFA9A; color:black; font-size:10pt}
+        .progstation_on {background-color:rgb(154, 250, 154); color:black; font-size:10pt}
         .progstation_off {background-color:white; color:lightgray; font-size:10pt}
         button.cDisable.toggle {float:right; width:130px; margin:0px; padding:0px; background-color:transparent}
         button.cDisable.toggle span.toggleleft {width: 30px;}
         button.cDisable.toggle span.toggleright {width: 30px;}
 
         button#tooltip {height:24px;}
-        .tooltip {background-color:#FFF2B8; display:none; font-size:10pt; margin-left:4px;}
+        .tooltip {background-color:rgb(255, 242, 184); display:none; font-size:10pt; margin-left:4px;}
         .label {font-weight:bold; float:left; width:160px; text-align:right; padding-right:4px;}
 
         td.stationNumber, td.stationShow, td.stationIgnore, td.stationMaster {text-align:center;}
@@ -176,9 +176,9 @@ $code:
                         <button id="bPrograms" class="programs${' here' if content.page=='programs' else ''}" title=$:{json.dumps(_(u'Define Programs'), ensure_ascii=False)}>$_(u'Programs')</button>
                         <button id="bRunOnce" class="start${' here' if content.page=='runonce' else ''}" title=$:{json.dumps(_(u'Define Run Once Program'), ensure_ascii=False)}>$_(u'Run Once')</button>
                         <button id="bPlugins" class="plugins${' here' if content.page=='plugins' else ''}" title=$:{json.dumps(_(u'Access Plugins'), ensure_ascii=False)}>$_(u'Plugins')</button>
-                        <button id="bLog" class="log${' here' if content.page=='log' else ''}" title=$:{json.dumps(_('View Log'), ensure_ascii=False)}>$_(u'Log')</button>
-                        <button id="bOptions" class="options${' here' if content.page=='options' else ''}" title=$:{json.dumps(_('Options'), ensure_ascii=False)}>$_(u'Options')</button>
-                        <button id="bStations" class="stations${' here' if content.page=='stations' else ''}" title=$:{json.dumps(_('Configure Stations'), ensure_ascii=False)}>$_(u'Stations')</button>
+                        <button id="bLog" class="log${' here' if content.page=='log' else ''}" title=$:{json.dumps(_(u'View Log'), ensure_ascii=False)}>$_(u'Log')</button>
+                        <button id="bOptions" class="options${' here' if content.page=='options' else ''}" title=$:{json.dumps(_(u'Options'), ensure_ascii=False)}>$_(u'Options')</button>
+                        <button id="bStations" class="stations${' here' if content.page=='stations' else ''}" title=$:{json.dumps(_(u'Configure Stations'), ensure_ascii=False)}>$_(u'Stations')</button>
                         $if (gv.sd[u'upas']):
                             <button id="bLogout" class="logout" title=$:{json.dumps(_(u'Logout'), ensure_ascii=False)}>$_(u'Logout')</button>
                     </div>
@@ -200,8 +200,8 @@ $code:
             <div class="col-5-xs"></div>
               <div class="col-6-xs pull-right">
             <div class="col-1-xs"></div>              
-                <p class="text-xs-right text-nowrap">$_(u"CPU Temp"): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_(u'Click to toggle Celsius &lt;&gt; Fahrenheit'), ensure_ascii=False)}></span></b></p>
-             </div>
+                <p class="text-xs-right text-nowrap">$_(u'CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_(u'Click to toggle Celsius &lt;&gt; Fahrenheit'), ensure_ascii=False)}></span></b></p>
+            </div>
           </div>     
             
             
