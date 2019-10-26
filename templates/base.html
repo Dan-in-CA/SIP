@@ -122,7 +122,7 @@ $code:
             var idd = $:{gv.sd[u'idd']};
 
             jQuery(document).ready(function(){
-                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + '/plugins\'">$_('Manage Plugins')</button><br/>');
+                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + '/plugins\'">$_(u'Manage Plugins')</button><br/>');
                 $if len(uplugin_menu) > 0:
                 	$for i, plugin in enumerate(uplugin_menu):
                 		

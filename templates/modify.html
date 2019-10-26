@@ -1,6 +1,6 @@
 $def with (pid, prog)
 
-$var title: $_('SIP Modify Program')
+$var title: $_(u'SIP Modify Program')
 $var page: programs
 
 $code:
@@ -88,7 +88,7 @@ $code:
             }
         }
         if (!(h >= 0 && h < 24 && m >= 0 && m < 60)) {
-            alert($:{json.dumps(_('Error: Incorrect time input '), ensure_ascii=False)} + prefix + ".");
+            alert($:{json.dumps(_(u'Error: Incorrect time input '), ensure_ascii=False)} + prefix + ".");
             return -1;
         }
         return h * 60 + m;
@@ -100,11 +100,11 @@ $code:
         if (jQuery("button#cWeeklyInterval").hasClass("on") &&
             jQuery(".weekday.on").length < 1) {
             disableSubmit = true;
-            errorHint = $:{json.dumps(_('Please choose at least one weekday for the program to run.'), ensure_ascii=False)};
+            errorHint = $:{json.dumps(_(u'Please choose at least one weekday for the program to run.'), ensure_ascii=False)};
         }
         if (jQuery(".station.on").length < 1) {
             disableSubmit = true;
-            errorHint = $:{json.dumps(_('Please choose at least one station to run in this program.'), ensure_ascii=False)};
+            errorHint = $:{json.dumps(_(u'Please choose at least one station to run in this program.'), ensure_ascii=False)};
         }
         jQuery("button#cSubmit").prop("disabled", disableSubmit);
         jQuery("#errorHint").text(errorHint);
@@ -255,7 +255,7 @@ $code:
                 days = parseInt(jQuery("#intervalDelaySelector .intervalSelect.distance0").text());
 
                 if (days < 0 || days >= dayInterval) {
-                    alert($:{json.dumps(_('Error: starting in days wrong.'), ensure_ascii=False)});
+                    alert($:{json.dumps(_(u'Error: starting in days wrong.'), ensure_ascii=False)});
                     return;
                 }
              }
@@ -298,7 +298,7 @@ $code:
                             var ds = parseInt(jQuery("#tds" + sid).val());
                             sduration = dm * 60 + ds;
                             if (!(dm >= 0 && ds >= 0 && ds < 60 && sduration > 0)) {
-                                alert($:{json.dumps(_('Error: Incorrect duration.'), ensure_ascii=False)});
+                                alert($:{json.dumps(_(u'Error: Incorrect duration.'), ensure_ascii=False)});
                                 return;
                             }
                         } else {
@@ -341,7 +341,7 @@ $code:
             }
             if (startTime >= endTime) {
                 // Possible bug - can you run a program from 10PM to 2AM?
-                alert($:{json.dumps(_('Error: Start time must be prior to end time.'), ensure_ascii=False)});
+                alert($:{json.dumps(_(u'Error: Start time must be prior to end time.'), ensure_ascii=False)});
                 return;
             }
 
@@ -381,7 +381,7 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                 
                 $ t = formatTime(two_digits(program['start_min'] / 60) + ":" + two_digits(program['start_min'] % 60))
                 
-                    <b>$_('Start Time'):</b> <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "tsh" value = "${t.split(":")[0]}"> :
+                    <b>$_(u'Start Time'):</b> <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "tsh" value = "${t.split(":")[0]}"> :
                     <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "tsm" value = "${t.split(":")[1][0:2]}">
                 $if tf:
                     (hh:mm)
@@ -454,7 +454,7 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                                     <td class="showWeekly stationState ${status} station${sid} day${d}" $:{"" if weekly else "style='display:none'"}></td>
                                 $if firstTime:
                                     <td class="showInterval" $:{"style='display:none'" if weekly else ""} rowspan="${stationsShown}">
-                                        <p>$_('Water interval'):</p>
+                                        <p>$_(u'Water interval'):</p>
                                         <div id="intervalSelector" class="animatedSelector controlblock">
                                             <!--  Customize this with any set of intervals you like up to 127 -->
                                             <span class="intervalSelect ${"distance0" if weekly else ""}">2</span>
@@ -487,7 +487,7 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                         <button id="cRestrictions" class="toggle choice ${'off' if even or odd else 'on'}"><span class='toggleleft'>$_(u"Any Day")</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u"Restrict Day")</span></button>
                         <span id="evenodd" $:{u"" if even or odd else "style='display:none'"}>
                             <button id="cEvenOdd" class="toggle narrow choice ${'on' if even else 'off'}" ><span class='toggleleft'>$_(u"Even")</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u"Odd")</span></button>
-                            $_('(except 31st and Feb 29th)')</span>
+                            $_(u'(except 31st and Feb 29th)')</span>
                     </td>
                 </tr>
             </table>
