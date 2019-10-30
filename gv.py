@@ -88,7 +88,7 @@ sd = {
     u"idd": 0,
     u"pigpio": 0,
     u"alr": 0,
-    u"ssl": 1
+    u"ssl": 0
 }
 
 try:
