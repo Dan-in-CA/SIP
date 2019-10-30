@@ -24,7 +24,6 @@ import web
 from web import form
 
 import gv
-# from web.session import sha256 #  sha1 test
 from hashlib import sha256
 from functools import reduce
 
