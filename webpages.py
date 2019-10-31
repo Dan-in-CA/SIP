@@ -470,7 +470,7 @@ class change_runonce(ProtectedPage):
                 gv.lrun[0] = sid
                 gv.lrun[1] = gv.rs[sid][3]
                 gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-                gv.lrun[3] = gv.now  # think this is unused - test
+                gv.lrun[3] = gv.now #  start time
                 log_run()
                 report_station_completed(sid + 1)
         stations = [0] * gv.sd[u"nbrd"]
@@ -543,7 +543,8 @@ class change_program(ProtectedPage):
         else:
             gv.pd[int(qdict[u"pid"])] = cp  # replace program
         jsave(gv.pd, u"programData")
-        gv.sd[u"nprogs"] = len(gv.pd)
+#         gv.sd[u"nprogs"] = len(gv.pd) - test
+#         jsave(gv.sd, u"sd") - test
         report_program_change()
         raise web.seeother(u"/vp")
 
@@ -559,7 +560,7 @@ class delete_program(ProtectedPage):
         else:
             del gv.pd[int(qdict[u"pid"])]
         jsave(gv.pd, u"programData")
-        gv.sd[u"nprogs"] = len(gv.pd)
+#         gv.sd[u"nprogs"] = len(gv.pd) # - test
         report_program_deleted()
         raise web.seeother(u"/vp")
 

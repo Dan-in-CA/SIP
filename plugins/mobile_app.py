@@ -4,7 +4,7 @@ import datetime
 import string
 import calendar
 
-from helpers import get_cpu_temp, check_login, password_hash
+from helpers import get_cpu_temp, check_login #  , password_hash
 import web
 import gv  # Gain access to sip's settings
 from urls import urls  # Gain access to sip's URL list
@@ -97,29 +97,19 @@ class station_state(ProtectedPage):  # /js
         return json.dumps(jstate)
 
 
-class program_info(ProtectedPage):  # /jp ####  Needs to work with new program format #####
+class program_info(ProtectedPage):
     """Returns program data as json."""
 
     def GET(self):
-        lpd = []  # Local program data
-        dse = int(
-            (time.time() + ((gv.sd[u"tz"] / 4) - 12) * 3600) / 86400
-        )  # days since epoch
-        for p in gv.pd:
-            op = p[:]  # Make local copy of each program
-            if op[1] >= 128 and op[2] > 1:
-                rel_rem = (((op[1] - 128) + op[2]) - (dse % op[2])) % op[2]
-                op[1] = rel_rem + 128
-            lpd.append(op)
         web.header(b"Access-Control-Allow-Origin", b"*")
         web.header(b"Content-Type", b"application/json")
         web.header(b"Cache-Control", b"no-cache")
 # fmt: off
         jpinfo = {
-            u"nprogs": gv.sd[u"nprogs"] - 1,
+            u"nprogs": len(gv.pd),
             u"nboards": gv.sd[u"nbrd"],
             u"mnp": 9999,
-            u"pd": lpd
+            u"pd": gv.pd
         }
 # fmt: on
         return json.dumps(jpinfo)
