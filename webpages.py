@@ -525,6 +525,7 @@ class change_program(ProtectedPage):
         qdict = web.input()
         pnum = int(qdict[u"pid"]) + 1  # program number
         cp = json.loads(qdict[u"v"])
+        print("cp: ", cp)
         if cp[u"enabled"] == 0 and pnum == gv.pon:  # if disabled and program is running
             for i in range(len(gv.ps)):
                 if gv.ps[i][0] == pnum:

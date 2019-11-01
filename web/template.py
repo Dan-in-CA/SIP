@@ -28,18 +28,28 @@ Grammar:
     pyexpr -> <python expression>
 """
 from __future__ import print_function
-import ast
-import glob
-import os
-import re
-import sys
-import tokenize
 from io import open
 
+__all__ = [
+    "Template",
+    "Render",
+    "render",
+    "frender",
+    "ParseError",
+    "SecurityError",
+    "test",
+]
+
+import tokenize
+import os
+import sys
+import glob
+import ast
+
+from .utils import storage, safeunicode, safestr, re_compile
+from .webapi import config
 from .net import websafe
 from .py3helpers import PY2
-from .utils import re_compile, safestr, safeunicode, storage
-from .webapi import config
 
 if PY2:
     from UserDict import DictMixin
@@ -51,16 +61,6 @@ if PY2:
 
 else:
     from collections.abc import MutableMapping
-
-__all__ = [
-    "Template",
-    "Render",
-    "render",
-    "frender",
-    "ParseError",
-    "SecurityError",
-    "test",
-]
 
 
 def splitline(text):
@@ -141,7 +141,7 @@ class Parser:
             >>> read_var = Parser().read_var
             >>> read_var('var x=10\nfoo')
             (<var: x = 10>, 'foo')
-            >>> read_var('var x: hello $name\nfoo')  # doctest: +ALLOW_UNICODE
+            >>> read_var('var x: hello $name\nfoo')
             (<var: x = join_(u'hello ', escape_(name, True))>, 'foo')
         """
         line, text = splitline(text)
@@ -298,7 +298,6 @@ class Parser:
         def attr_access():
             from token import NAME  # python token constants
 
-            dot = tokens.lookahead()
             if tokens.lookahead2().type == NAME:
                 next(tokens)  # consume dot
                 identifier()
@@ -452,12 +451,15 @@ class Parser:
             >>> read_block_section = Parser().read_block_section
             >>> read_block_section('for i in range(10): hello $i\nfoo')
             (<block: 'for i in range(10):', [<line: [t'hello ', $i, t'\n']>]>, 'foo')
-            >>> read_block_section('for i in range(10):  $# inline comment\n hello $i\nfoo')
-            (<block: 'for i in range(10):', [<line: [t'hello ', $i, t'\n']>]>, 'foo')
             >>> read_block_section('for i in range(10):\n        hello $i\n    foo', begin_indent='    ')
             (<block: 'for i in range(10):', [<line: [t'hello ', $i, t'\n']>]>, '    foo')
             >>> read_block_section('for i in range(10):\n  hello $i\nfoo')
             (<block: 'for i in range(10):', [<line: [t'hello ', $i, t'\n']>]>, 'foo')
+
+        With inline comment:
+
+            >>> read_block_section('for i in range(10):  $# inline comment\n hello $i\nfoo')
+            (<block: 'for i in range(10):', []>, ' hello $i\nfoo')
         """
         line, text = splitline(text)
         stmt, line = self.read_statement(line)
@@ -1190,8 +1192,6 @@ def frender(path, **keywords):
 
 def compile_templates(root):
     """Compiles templates to python code."""
-    re_start = re_compile("^", re.M)
-
     for dirpath, dirnames, filenames in os.walk(root):
         filenames = [
             f
@@ -1234,7 +1234,7 @@ def compile_templates(root):
             out.write("join_ = %s._join; escape_ = %s._escape\n\n" % (name, name))
 
             # create template to make sure it compiles
-            t = Template(open(path, encoding="utf-8").read(), path)
+            Template(open(path, encoding="utf-8").read(), path)
         out.close()
 
 
@@ -1445,7 +1445,7 @@ class TemplateResult(MutableMapping):
         'foo'
         >>> d = TemplateResult()
         >>> d.extend([u'hello', u'world'])
-        >>> d  # doctest: +ALLOW_UNICODE
+        >>> d
         <TemplateResult: {'__body__': u'helloworld'}>
     """
 
@@ -1545,127 +1545,127 @@ def test():
 
     Simple tests.
 
-        >>> t('1')()  # doctest: +ALLOW_UNICODE
+        >>> t('1')()
         u'1\n'
-        >>> t('$def with ()\n1')()  # doctest: +ALLOW_UNICODE
+        >>> t('$def with ()\n1')()
         u'1\n'
-        >>> t('$def with (a)\n$a')(1)  # doctest: +ALLOW_UNICODE
+        >>> t('$def with (a)\n$a')(1)
         u'1\n'
-        >>> t('$def with (a=0)\n$a')(1)  # doctest: +ALLOW_UNICODE
+        >>> t('$def with (a=0)\n$a')(1)
         u'1\n'
-        >>> t('$def with (a=0)\n$a')(a=1)  # doctest: +ALLOW_UNICODE
+        >>> t('$def with (a=0)\n$a')(a=1)
         u'1\n'
 
     Test complicated expressions.
 
-        >>> t('$def with (x)\n$x.upper()')('hello')  # doctest: +ALLOW_UNICODE
+        >>> t('$def with (x)\n$x.upper()')('hello')
         u'HELLO\n'
-        >>> t('$(2 * 3 + 4 * 5)')()  # doctest: +ALLOW_UNICODE
+        >>> t('$(2 * 3 + 4 * 5)')()
         u'26\n'
-        >>> t('${2 * 3 + 4 * 5}')()  # doctest: +ALLOW_UNICODE
+        >>> t('${2 * 3 + 4 * 5}')()
         u'26\n'
-        >>> t('$def with (limit)\nkeep $(limit)ing.')('go')  # doctest: +ALLOW_UNICODE
+        >>> t('$def with (limit)\nkeep $(limit)ing.')('go')
         u'keep going.\n'
-        >>> t('$def with (a)\n$a.b[0]')(storage(b=[1]))  # doctest: +ALLOW_UNICODE
+        >>> t('$def with (a)\n$a.b[0]')(storage(b=[1]))
         u'1\n'
 
     Test html escaping.
 
-        >>> t('$def with (x)\n$x', filename='a.html')('<html>')  # doctest: +ALLOW_UNICODE
+        >>> t('$def with (x)\n$x', filename='a.html')('<html>')
         u'&lt;html&gt;\n'
-        >>> t('$def with (x)\n$x', filename='a.txt')('<html>')  # doctest: +ALLOW_UNICODE
+        >>> t('$def with (x)\n$x', filename='a.txt')('<html>')
         u'<html>\n'
 
     Test if, for and while.
 
-        >>> t('$if 1: 1')()  # doctest: +ALLOW_UNICODE
+        >>> t('$if 1: 1')()
         u'1\n'
-        >>> t('$if 1:\n    1')()  # doctest: +ALLOW_UNICODE
+        >>> t('$if 1:\n    1')()
         u'1\n'
-        >>> t('$if 1:\n    1\\')()  # doctest: +ALLOW_UNICODE
+        >>> t('$if 1:\n    1\\')()
         u'1'
-        >>> t('$if 0: 0\n$elif 1: 1')()  # doctest: +ALLOW_UNICODE
+        >>> t('$if 0: 0\n$elif 1: 1')()
         u'1\n'
-        >>> t('$if 0: 0\n$elif None: 0\n$else: 1')()  # doctest: +ALLOW_UNICODE
+        >>> t('$if 0: 0\n$elif None: 0\n$else: 1')()
         u'1\n'
-        >>> t('$if 0 < 1 and 1 < 2: 1')()  # doctest: +ALLOW_UNICODE
+        >>> t('$if 0 < 1 and 1 < 2: 1')()
         u'1\n'
-        >>> t('$for x in [1, 2, 3]: $x')()  # doctest: +ALLOW_UNICODE
+        >>> t('$for x in [1, 2, 3]: $x')()
         u'1\n2\n3\n'
-        >>> t('$def with (d)\n$for k, v in d.items(): $k')({1: 1})  # doctest: +ALLOW_UNICODE
+        >>> t('$def with (d)\n$for k, v in d.items(): $k')({1: 1})
         u'1\n'
-        >>> t('$for x in [1, 2, 3]:\n\t$x')()  # doctest: +ALLOW_UNICODE
+        >>> t('$for x in [1, 2, 3]:\n\t$x')()
         u'    1\n    2\n    3\n'
-        >>> t('$def with (a)\n$while a and a.pop():1')([1, 2, 3])  # doctest: +ALLOW_UNICODE
+        >>> t('$def with (a)\n$while a and a.pop():1')([1, 2, 3])
         u'1\n1\n1\n'
 
     The space after : must be ignored.
 
-        >>> t('$if True: foo')()  # doctest: +ALLOW_UNICODE
+        >>> t('$if True: foo')()
         u'foo\n'
 
     Test loop.xxx.
 
-        >>> t("$for i in range(5):$loop.index, $loop.parity")()  # doctest: +ALLOW_UNICODE
+        >>> t("$for i in range(5):$loop.index, $loop.parity")()
         u'1, odd\n2, even\n3, odd\n4, even\n5, odd\n'
-        >>> t("$for i in range(2):\n    $for j in range(2):$loop.parent.parity $loop.parity")()  # doctest: +ALLOW_UNICODE
+        >>> t("$for i in range(2):\n    $for j in range(2):$loop.parent.parity $loop.parity")()
         u'odd odd\nodd even\neven odd\neven even\n'
 
     Test assignment.
 
-        >>> t('$ a = 1\n$a')()  # doctest: +ALLOW_UNICODE
+        >>> t('$ a = 1\n$a')()
         u'1\n'
-        >>> t('$ a = [1]\n$a[0]')()  # doctest: +ALLOW_UNICODE
+        >>> t('$ a = [1]\n$a[0]')()
         u'1\n'
-        >>> t('$ a = {1: 1}\n$list(a.keys())[0]')()  # doctest: +ALLOW_UNICODE
+        >>> t('$ a = {1: 1}\n$list(a.keys())[0]')()
         u'1\n'
-        >>> t('$ a = []\n$if not a: 1')()  # doctest: +ALLOW_UNICODE
+        >>> t('$ a = []\n$if not a: 1')()
         u'1\n'
-        >>> t('$ a = {}\n$if not a: 1')()  # doctest: +ALLOW_UNICODE
+        >>> t('$ a = {}\n$if not a: 1')()
         u'1\n'
-        >>> t('$ a = -1\n$a')()  # doctest: +ALLOW_UNICODE
+        >>> t('$ a = -1\n$a')()
         u'-1\n'
-        >>> t('$ a = "1"\n$a')()  # doctest: +ALLOW_UNICODE
+        >>> t('$ a = "1"\n$a')()
         u'1\n'
 
     Test comments.
 
-        >>> t('$# 0')()  # doctest: +ALLOW_UNICODE
+        >>> t('$# 0')()
         u'\n'
-        >>> t('hello$#comment1\nhello$#comment2')()  # doctest: +ALLOW_UNICODE
+        >>> t('hello$#comment1\nhello$#comment2')()
         u'hello\nhello\n'
-        >>> t('$#comment0\nhello$#comment1\nhello$#comment2')()  # doctest: +ALLOW_UNICODE
+        >>> t('$#comment0\nhello$#comment1\nhello$#comment2')()
         u'\nhello\nhello\n'
 
     Test unicode.
 
-        >>> t('$def with (a)\n$a')(u'\u203d')  # doctest: +ALLOW_UNICODE
+        >>> t('$def with (a)\n$a')(u'\u203d')
         u'\u203d\n'
-        >>> t(u'$def with (a)\n$a $:a')(u'\u203d')  # doctest: +ALLOW_UNICODE
+        >>> t(u'$def with (a)\n$a $:a')(u'\u203d')
         u'\u203d \u203d\n'
-        >>> t(u'$def with ()\nfoo')()  # doctest: +ALLOW_UNICODE
+        >>> t(u'$def with ()\nfoo')()
         u'foo\n'
         >>> def f(x): return x
         ...
-        >>> t(u'$def with (f)\n$:f("x")')(f)  # doctest: +ALLOW_UNICODE
+        >>> t(u'$def with (f)\n$:f("x")')(f)
         u'x\n'
-        >>> t('$def with (f)\n$:f("x")')(f)  # doctest: +ALLOW_UNICODE
+        >>> t('$def with (f)\n$:f("x")')(f)
         u'x\n'
 
     Test dollar escaping.
 
-        >>> t("Stop, $$money isn't evaluated.")()  # doctest: +ALLOW_UNICODE
+        >>> t("Stop, $$money isn't evaluated.")()
         u"Stop, $money isn't evaluated.\n"
-        >>> t("Stop, \$money isn't evaluated.")()  # doctest: +ALLOW_UNICODE
+        >>> t("Stop, \$money isn't evaluated.")()
         u"Stop, $money isn't evaluated.\n"
 
     Test space sensitivity.
 
-        >>> t('$def with (x)\n$x')(1)  # doctest: +ALLOW_UNICODE
+        >>> t('$def with (x)\n$x')(1)
         u'1\n'
-        >>> t('$def with(x ,y)\n$x')(1, 1)  # doctest: +ALLOW_UNICODE
+        >>> t('$def with(x ,y)\n$x')(1, 1)
         u'1\n'
-        >>> t('$(1 + 2*3 + 4)')()  # doctest: +ALLOW_UNICODE
+        >>> t('$(1 + 2*3 + 4)')()
         u'11\n'
 
     Make sure globals are working.
@@ -1673,13 +1673,13 @@ def test():
         >>> t('$x')()
         Traceback (most recent call last):
             ...
-        NameError: name 'x' is not defined
-        >>> t('$x', globals={'x': 1})()  # doctest: +ALLOW_UNICODE
+        NameError: global name 'x' is not defined
+        >>> t('$x', globals={'x': 1})()
         u'1\n'
 
     Can't change globals.
 
-        >>> t('$ x = 2\n$x', globals={'x': 1})()  # doctest: +ALLOW_UNICODE
+        >>> t('$ x = 2\n$x', globals={'x': 1})()
         u'2\n'
         >>> t('$ x = x + 1\n$x', globals={'x': 1})()
         Traceback (most recent call last):
@@ -1688,35 +1688,35 @@ def test():
 
     Make sure builtins are customizable.
 
-        >>> t('$min(1, 2)')()  # doctest: +ALLOW_UNICODE
+        >>> t('$min(1, 2)')()
         u'1\n'
         >>> t('$min(1, 2)', builtins={})()
         Traceback (most recent call last):
             ...
-        NameError: name 'min' is not defined
+        NameError: global name 'min' is not defined
 
     Test vars.
 
         >>> x = t('$var x: 1')()
-        >>> x.x  # doctest: +ALLOW_UNICODE
+        >>> x.x
         u'1'
         >>> x = t('$var x = 1')()
         >>> x.x
         1
         >>> x = t('$var x:  \n    foo\n    bar')()
-        >>> x.x  # doctest: +ALLOW_UNICODE
+        >>> x.x
         u'foo\nbar\n'
 
     Test BOM chars.
 
-        >>> t('\xef\xbb\xbf$def with(x)\n$x')('foo')  # doctest: +ALLOW_UNICODE
+        >>> t('\xef\xbb\xbf$def with(x)\n$x')('foo')
         u'foo\n'
 
     Test for with weird cases.
 
-        >>> t('$for i in range(10)[1:5]:\n    $i')()  # doctest: +ALLOW_UNICODE
+        >>> t('$for i in range(10)[1:5]:\n    $i')()
         u'1\n2\n3\n4\n'
-        >>> t("$for k, v in sorted({'a': 1, 'b': 2}.items()):\n    $k $v", globals={'sorted':sorted})()  # doctest: +ALLOW_UNICODE
+        >>> t("$for k, v in sorted({'a': 1, 'b': 2}.items()):\n    $k $v", globals={'sorted':sorted})()
         u'a 1\nb 2\n'
 
     Test for syntax error.
@@ -1733,7 +1733,7 @@ def test():
     Test datetime.
 
         >>> import datetime
-        >>> t("$def with (date)\n$date.strftime('%m %Y')")(datetime.datetime(2009, 1, 1))  # doctest: +ALLOW_UNICODE
+        >>> t("$def with (date)\n$date.strftime('%m %Y')")(datetime.datetime(2009, 1, 1))
         u'01 2009\n'
 
     """
@@ -1741,8 +1741,6 @@ def test():
 
 
 if __name__ == "__main__":
-    import sys
-
     if "--compile" in sys.argv:
         compile_templates(sys.argv[2])
     else:
