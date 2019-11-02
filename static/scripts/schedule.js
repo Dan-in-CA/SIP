@@ -10,11 +10,11 @@ if (typeof nbrd !== 'undefined'){var nst = nbrd*8}; // number of stations
 function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is scheduled for this date (displayScheduleDate) called from doSimulation
   // simminutes is minute count generated in doSimulation()
   // simdate is a JavaScript date object
-  simday = Math.floor(simdate/ 86400)//(1000*3600*24)) // The number of days since epoc
+  simday = Math.floor(simdate/(1000*3600*24)) // The number of days since epoc
   var wd,dn;// ,drem; // week day, Interval days, days remaining
   if(pd['enabled']==0)  return 0; // program not enabled, do not match
   if(pd['type'] == 'interval') { // if interval program... 
-    if(((simday)%pd['interval_base_day'])!=pd['day_mask']) return 0; // remainder checking ##############	
+    if(((simday)%pd['interval_base_day'])!=pd['day_mask']) return 0; // remainder checking	
   } else { // Not interval 
     wd=(simdate.getDay()+6)%7; // getDay assumes sunday is 0, converts to Monday is 0 (weekday index)
     if((pd['day_mask']&(1<<wd))==0) {

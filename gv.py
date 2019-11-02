@@ -76,7 +76,6 @@ sd = {
     u"mo": [0],
     u"rbt": 0,
     u"mtoff": 0,
-#     u"nprogs": 0, # - test
     u"nbrd": 1,
     u"tu": u"C",
     u"snlen": 32,
@@ -87,8 +86,7 @@ sd = {
     u"lang": u"default",
     u"idd": 0,
     u"pigpio": 0,
-    u"alr": 0,
-    u"ssl": 0
+    u"alr": 0
 }
 
 try:

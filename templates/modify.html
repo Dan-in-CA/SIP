@@ -88,7 +88,7 @@ $code:
             }
         }
         if (!(h >= 0 && h < 24 && m >= 0 && m < 60)) {
-            alert($:{json.dumps(_(u'Error: Incorrect time input '), ensure_ascii=False)} + prefix + ".");
+            alert($:{json.dumps(_(u'Incorrect time input '), ensure_ascii=False)} + prefix + ".");
             return -1;
         }
         return h * 60 + m;
@@ -255,7 +255,7 @@ $code:
                 days = parseInt(jQuery("#intervalDelaySelector .intervalSelect.distance0").text());
 
                 if (days < 0 || days >= dayInterval) {
-                    alert($:{json.dumps(_(u'Error: starting in days wrong.'), ensure_ascii=False)});
+                    alert($:{json.dumps(_(u'Starting in days wrong.'), ensure_ascii=False)});
                     return;
                 }
              }
@@ -278,7 +278,7 @@ $code:
             if(!idd) {
             var gduration = dm * 60 + ds;
                 if (!(dm >= 0 && ds >= 0 && ds < 60 && gduration > 0)) {
-                    alert($:{json.dumps(_(u"Error: Duration missing."), ensure_ascii=False)});
+                    alert($:{json.dumps(_(u"Please enter a Duration to continue."), ensure_ascii=False)});
                     return;
                 }
             }
@@ -298,7 +298,7 @@ $code:
                             var ds = parseInt(jQuery("#tds" + sid).val());
                             sduration = dm * 60 + ds;
                             if (!(dm >= 0 && ds >= 0 && ds < 60 && sduration > 0)) {
-                                alert($:{json.dumps(_(u'Error: Incorrect duration.'), ensure_ascii=False)});
+                                alert($:{json.dumps(_(u'Duration must be later than start.'), ensure_ascii=False)});
                                 return;
                             }
                         } else {
@@ -341,7 +341,7 @@ $code:
             }
             if (startTime >= endTime) {
                 // Possible bug - can you run a program from 10PM to 2AM?
-                alert($:{json.dumps(_(u'Error: Start time must be prior to end time.'), ensure_ascii=False)});
+                alert($:{json.dumps(_(u'End time must be later than start time.'), ensure_ascii=False)});
                 return;
             }
 

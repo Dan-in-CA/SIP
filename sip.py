@@ -305,12 +305,12 @@ if __name__ == u"__main__":
     ###########################
     #### For HTTPS (SSL):  ####
 
-    if gv.sd["ssl"]:
+    if gv.sd["htp"] == 443:
         from cheroot.server import HTTPServer
         from cheroot.ssl.builtin import BuiltinSSLAdapter   
         HTTPServer.ssl_adapter = BuiltinSSLAdapter(
-            certificate='cert/sip.crt',
-            private_key='cert/sip.key'
+            certificate='/usr/lib/ssl/certs/SIP.crt',
+            private_key='/usr/lib/ssl/private/SIP.key'
         )
 
     app.run()
