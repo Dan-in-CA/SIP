@@ -5,7 +5,7 @@
 ##############################
 #### Revision information ####
 from __future__ import print_function
-from builtins import range
+from future.builtins import range
 import subprocess
 from threading import RLock
 

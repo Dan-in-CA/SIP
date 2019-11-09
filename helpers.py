@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
-from builtins import chr
-from builtins import str
-from builtins import range
+from future.builtins import chr
+from future.builtins import str
+from future.builtins import range
 import collections
 import i18n
 import datetime

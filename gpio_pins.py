@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
-from builtins import range
+from future.builtins import range
 import gv
 
 try:
