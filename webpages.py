@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
-# from builtins import map #  - test
-from builtins import str
-from builtins import range
-from builtins import object
+from future.builtins import map #  - test
+from future.builtins import str
+from future.builtins import range
+from future.builtins import object
 import os
 import re
 import time
