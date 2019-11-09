@@ -9,9 +9,9 @@ The core program is very versatile and there is a growing number of available pl
 ### Software support:
 Starting with version 4 ( currently the Py3_WIP branch ), SIP can run under Python 2.7 and Python 3.\
 Most of the required Python packages and modules such as web.py and Cheroot are included in SIP's GitHub repository.\
-Installing SIP by cloning from GitHub enables easy upgrades via `git pull` on the command line or by using the included `System Update` plugin.
+Installing SIP by cloning from GitHub enables easy upgrades via `git pull` on the command line or by using the included `System_Update` plugin.
 
-To install, simply clone SIP into the /home/pi/ directory of your Raspberry Pi:  
+To install, simply clone SIP into the /home/pi/ directory of your Raspberry Pi:\
 `sudo git clone https://github.com/Dan-in-CA/SIP.git`\
 If you are running Raspbian Lite you may need to install git first with:\
 `sudo apt-get install git`.\
