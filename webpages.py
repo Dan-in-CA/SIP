@@ -370,7 +370,7 @@ class change_stations(ProtectedPage):
         for i in range(gv.sd[u"nbrd"]):  # capture master associations
             if u"m" + str(i) in qdict:
                 try:
-                    gv.sd[u"umo"][i] = int(qdict[u"m" + str(i)])
+                    gv.sd[u"mo"][i] = int(qdict[u"m" + str(i)])
                 except ValueError:
                     gv.sd[u"mo"][i] = 0
             if u"i" + str(i) in qdict:
