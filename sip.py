@@ -265,6 +265,7 @@ template_globals = {
     u"i18n": i18n,
     u"app_path": lambda p: web.ctx.homepath + p,
     u"web": web,
+    u"round": round,
 }
 
 template_render = web.template.render(

@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import zip
+from builtins import range
 import json
 import re
 import subprocess
@@ -10,7 +14,9 @@ import time
 try:
     from urllib.request import urlopen, Request
 except ImportError:
-    from urllib2 import urlopen, Request, HTTPError
+#     from urllib2 import urlopen, Request, HTTPError
+    from urllib.request import urlopen, Request
+    from urllib.error import HTTPError
 
 
 import web
@@ -41,15 +47,15 @@ def get_permissions():
     try:
         permissions = []
         files = subprocess.check_output([u"ls", u"plugins"])
-        files = files.decode('utf-8') #  to unicode string
+        files = files.decode(u'utf-8') #  to unicode string
         installed = [f for f in list(files.split(u"\n")) if re.match("[^_].+\.py$", f)]
         pm = installed.index(u"plugin_manager.py")
         del installed[pm]  #  Remove this plugin from list
         for p in installed:
             mod = subprocess.check_output([u"stat", u"-c %a", u"plugins/" + p])
-            mod = mod.decode('utf-8')
+            mod = mod.decode(u'utf-8')
             permissions.append(int(list(mod.strip())[1]) % 2)
-        settings = dict(zip(installed, permissions))
+        settings = dict(list(zip(installed, permissions)))
         return settings
     except IOError:
         settings = {}
@@ -75,7 +81,7 @@ def get_readme():
     )
     data = response.read()
     d = json.loads(data)
-    text = base64.b64decode(d[u"content"]).decode('utf-8')
+    text = base64.b64decode(d[u"content"]).decode(u'utf-8')
     t_list = text.split()
     sep = [i for i, s in enumerate(t_list) if u"***" in s][0]
     plug_list = t_list[sep + 1 :]
@@ -123,7 +129,7 @@ class update_plugins(ProtectedPage):
             raise web.seeother(u"/restart")
         if qdict[u"btnId"] == u"del":
             del_list = []
-            for k in qdict.keys():  # Get plugins to delete
+            for k in list(qdict.keys()):  # Get plugins to delete
                 if k[:3] == u"del":
                     del_list.append(k[4:])
             for p in del_list:  # get files to delete for each plugin in list
@@ -167,7 +173,7 @@ class install_plugins(ProtectedPage):
                 + u".manifest"
             )            
             data = response.readlines()
-            data = [i.decode('utf-8') for i in data]
+            data = [i.decode(u'utf-8') for i in data]
             sep = [i for i, s in enumerate(data) if u"###" in s][0]
             file_list = [line.strip() for line in data[int(sep) + 2 :]]
             short_list = [
@@ -183,9 +189,14 @@ class install_plugins(ProtectedPage):
                     + u"/"
                     + pf[0]
                 )
-                f_data = response.read().decode('utf-8')
-                with open(pf[1] + u"/" + pf[0], u"w") as next_file:
-                    next_file.write(f_data)
+                try:
+                    f_data = response.read().decode(u'utf-8')
+                    with open(pf[1] + u"/" + pf[0], u"w") as next_file:
+                        next_file.write(f_data)
+                except UnicodeDecodeError:
+                    f_data = response.read()
+                    with open(pf[1] + u"/" + pf[0], u"wb") as next_file:
+                        next_file.write(f_data)
         raise web.seeother(u"/plugins")
 
     class restart_page(ProtectedPage):
