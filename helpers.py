@@ -4,6 +4,7 @@ from __future__ import print_function
 from future.builtins import chr
 from future.builtins import str
 from future.builtins import range
+import six
 import collections
 import i18n
 import datetime
@@ -163,7 +164,10 @@ def restart(wait=1, block=False):
         except Exception:
             pass
         gv.restarted = 0
-        subprocess.Popen(u"systemctl restart sip.service".split())
+        if six.PY2:
+            subprocess.Popen(u"systemctl restart sip.service".split())
+        elif six.PY3:
+            subprocess.Popen(u"systemctl restart sip3.service".split())    
     else:
         t = Thread(target=restart, args=(wait, True))
         t.start()
