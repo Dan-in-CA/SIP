@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from builtins import range
+from future.builtins import range
 import json
 
 prog_keys = [
