@@ -250,10 +250,9 @@ class SIPApp(web.application):
 app = SIPApp(urls, globals())
 #  disableShiftRegisterOutput()
 web.config.debug = False  # Improves page load speed #  test - uncomment for production
-if web.config.get(u"_session") is None:
-    web.config._session = web.session.Session(
-        app, web.session.DiskStore(u"sessions"), initializer={u"user": u"anonymous"}
-    )
+web.config._session = web.session.Session(
+    app, web.session.DiskStore(u"sessions"), initializer={u"user": u"anonymous"}
+)
 template_globals = {
     "gv": gv,
     u"str": str,
