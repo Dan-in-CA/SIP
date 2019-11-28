@@ -1,28 +1,29 @@
 $def with (errorCode)
 
-$var title: $_('SIP Options')
+$var title: $_(u"SIP Options")
 $var page: options
 $code:
 	opts = gv.options
 	languages = i18n.languages
-	langKeys = i18n.languages.keys()
+	langKeys = list(i18n.languages.keys())
 	langKeys.sort()
 	snames = gv.snames
 	
 <style type="text/css">
     button#tooltip {height:24px;}
-    .optTooltip {background-color:#FFF2B8; display:none; font-size:10pt; margin-left:4px;}
+    .optTooltip {background-color:rgb(255, 242, 184); display:none; font-size:10pt; margin-left:4px;}
     .optLabel {font-weight:bold; float:left; width:160px; text-align:right; padding-right:4px;}
 </style>	
 
 <script>
     var errorCode = "${errorCode}";
+    
     // Initialize behaviors
     jQuery(document).ready(function(){
 
         jQuery("button#tooltips").click(function(){
-            var visible = jQuery(this).text() == $:{json.dumps(_('Hide Tooltips'), ensure_ascii=False)};
-            jQuery(this).text(visible ? $:{json.dumps(_('Show Tooltips'), ensure_ascii=False)} : $:{json.dumps(_('Hide Tooltips'), ensure_ascii=False)});
+            var visible = jQuery(this).text() == $:{json.dumps(_(u'Hide Tooltips'), ensure_ascii=False)};
+            jQuery(this).text(visible ? $:{json.dumps(_(u'Show Tooltips'), ensure_ascii=False)} : $:{json.dumps(_(u'Hide Tooltips'), ensure_ascii=False)});
             jQuery(".optTooltip").toggle();
         });
 
@@ -56,19 +57,19 @@ $code:
 
         switch (errorCode) {
             case "pw_wrong":
-                jQuery("#erroropw").text($:{json.dumps(_('The password given was incorrect.'), ensure_ascii=False)});
+                jQuery("#erroropw").text($:{json.dumps(_(u'The passphrase given was incorrect.'), ensure_ascii=False)});
                 jQuery("#erroropw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
                 break;
             case "pw_blank":
-                jQuery("#errornpw").text($:{json.dumps(_('Please enter a password.'), ensure_ascii=False)});
+                jQuery("#errornpw").text($:{json.dumps(_(u'Please enter a passphrase.'), ensure_ascii=False)});
                 jQuery("#errornpw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
                 break;
             case "pw_mismatch":
-                jQuery("#errorcpw").text($:{json.dumps(_("Passwords don't match, please re-enter."), ensure_ascii=False)});
+                jQuery("#errorcpw").text($:{json.dumps(_(u"Passwords don't match, please re-enter."), ensure_ascii=False)});
                 jQuery("#errorcpw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
                 break;
             case "mton_minus":
-                jQuery("#errormton").text($:{json.dumps(_("Must be 0 to +60, please re-enter."), ensure_ascii=False)});
+                jQuery("#errormton").text($:{json.dumps(_(u"Must be 0 to +60, please re-enter."), ensure_ascii=False)});
                 jQuery("#errormton").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
                 break;                 
         }
@@ -79,8 +80,8 @@ $code:
 
 </script>
 <div id="options">
-    <div class="title">$_('Edit Options')</div>
-    <button id="tooltips">$_('Show Tooltips')</button>
+    <div class="title">$_(u'Edit Options')</div>
+    <button id="tooltips">$_(u'Show Tooltips')</button>
     <form name="of" action="${app_path('/co')}" method="get">
     $code:
         output = ""
@@ -108,7 +109,7 @@ $code:
                 output += "<input name='" + name + "' type='password' size='31' maxlength='31'><span class='inputError' id='error" + name + "'></span>\n"
             elif name == "lang":
                 output += "<select name= 'olang'>\n"
-                output += "<option " + ("selected " if value=='default' else "") + "value='default'>"+_('Default')+"</option>\n"
+                output += "<option " + ("selected " if value=='default' else "") + "value='default'>"+_(u'Default')+"</option>\n"
                 for L in langKeys:
                     output += "<option " + ("selected " if value==L else "") + "value='"+L+"'>"+languages[L]+"</option>\n"
                 output += "</select>\n"
@@ -120,7 +121,7 @@ $code:
                 output += "<input name='th' type='text' size='3' maxlength='3' value='"+ th +"'>:<input name='tq' type='text' size='3' maxlength='3' value='" + tq + "'>\n"
             elif name == "mas":
                 output += "<select name='omas'>\n"
-                output += "<option " + ("selected " if value==0 else "") + "value='0'>"+_('None')+"</option>\n"
+                output += "<option " + ("selected " if value==0 else "") + "value='0'>"+_(u'None')+"</option>\n"
                 for i in range(gv.sd['nst']):
                     bid = i // 8
                     sid = i % 8
@@ -138,10 +139,10 @@ $code:
 
             output += "<span class='optTooltip'>" + tooltip + "</span>\n"
             output += "</div>\n\n"
-        output += categoryCloser + "<div class='category collapsible collapsed'><h4>"+_('System Restart')+"</h4>"
+        output += categoryCloser + "<div class='category collapsible collapsed'><h4>"+_(u'System Restart')+"</h4>"
         output += "<div class='option'>"
-        output += "&nbsp;<button id='cRestart' class='restart danger' title=" + json.dumps(_('Restart software'), ensure_ascii=False)+">" + _('Restart')+"</button>"
-        output += "&nbsp;<button id='cReboot' class='reboot danger' title=" + json.dumps(_('Reboot hardware'), ensure_ascii=False) + ">" + _('Reboot')+"</button>"
+        output += "&nbsp;<button id='cRestart' class='restart danger' title=" + json.dumps(_(u'Restart software'), ensure_ascii=False)+">" + _(u'Restart SIP')+"</button>"
+        output += "&nbsp;<button id='cReboot' class='reboot danger' title=" + json.dumps(_(u'Reboot hardware'), ensure_ascii=False) + ">" + _(u'Reboot')+"</button>"
         output += "</div>\n"
         output += categoryCloser
     $:{output}
@@ -151,6 +152,6 @@ $code:
 </div>
 
 <div id="controls">
-    <button id='cSubmit' class="submit">$_('Submit Changes')</button>
-    <button id='cCancel' class="cancel danger">$_('Cancel')</button>
+    <button id='cSubmit' class="submit">$_(u'Submit Changes')</button>
+    <button id='cCancel' class="cancel danger">$_(u'Cancel')</button>
 </div>

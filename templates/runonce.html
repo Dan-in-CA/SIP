@@ -1,6 +1,6 @@
 $def with ()
 
-$var title: $_('SIP Run-Once')
+$var title: $_(u'SIP Run-Once')
 $var page: runonce
 $code:
 	snames = gv.snames
@@ -26,7 +26,7 @@ $code:
                 mm = (strmm=="" || strmm==undefined ? 0 : parseInt(strmm));
                 ss = (strss=="" || strss==undefined ? 0 : parseInt(strss));
                 if (!(mm >= 0 && ss >= 0 && ss < 60)) {
-                    alert($:{json.dumps(_('Timer values wrong: '), ensure_ascii=False)} + strmm + ":" + strss);
+                    alert($:{json.dumps(_(u'Timer values wrong: '), ensure_ascii=False)} + strmm + ":" + strss);
                     return;
                 }
                 if (mm*60+ss > 0) {
@@ -36,10 +36,10 @@ $code:
             }
             comm += "0]";
             if (!matchfound) {
-                alert($:{json.dumps(_('No station is scheduled to run'), ensure_ascii=False)});
+                alert($:{json.dumps(_(u'No station is scheduled to run'), ensure_ascii=False)});
                 return;
             }
-            window.location = baseUrl + comm;
+            window.location = comm;
         });
 
         jQuery("button#cResetTime").click(function(){
@@ -47,14 +47,14 @@ $code:
         });
 
         jQuery("button#cCancel").click(function(){
-            window.location= baseUrl + "/";
+            window.location = "/";
         });
 
     });
 </script>
 
 <div id="runonce">
-    <div class="title">$_('Run Once Program')</div>
+    <div class="title">$_(u'Run Once Program')</div>
     <form name="rf" action="${app_path('/cr')}" method="get">
         <table class="stationList">
             $for bid in range(0, gv.sd['nbrd']):
@@ -81,7 +81,7 @@ $code:
 
 
 <div id="controls">
-    <button id="cRunNow" class="submit"><b>$_('Run Now')</b></button>
-    <button id="cResetTime" class="refresh">$_('Reset Time')</button>
-    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
+    <button id="cRunNow" class="submit"><b>$_(u'Run Now')</b></button>
+    <button id="cResetTime" class="refresh">$_(u'Reset Time')</button>
+    <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>
 </div>

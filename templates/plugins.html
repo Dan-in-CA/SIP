@@ -1,6 +1,6 @@
 $def with(settings)
 
-$var title: $_('SIP Plugin Manager')
+$var title: $_(u'SIP Plugin Manager')
 $var page: plugins
 
 
@@ -36,17 +36,17 @@ $var page: plugins
 </script>
 
 <div id="plugin">
-    <div class="title">$_('Installed Plugins')
-    <button class="execute" id="browsePlugins" type="button" >$_('Browse More Plugins')</button>
-    <button class="execute" id="writePlugins" type="button" >$_('Roll Your Own')</button></div>
+    <div class="title">$_(u'Installed Plugins')
+    <button class="execute" id="browsePlugins" type="button" >$_(u'Browse More Plugins')</button>
+    <button class="execute" id="writePlugins" type="button" >$_(u'Roll Your Own')</button></div>
     <form id="pluginForm" action="${app_path('/upd-plugins')}" method="get">
         <table class="optionList" id="installedList">
             <tr>
-                <th class="pluginName">$_('Name')</th>
-                <th class="pluginEnabled">$_('Enabled')&nbsp;&nbsp;&nbsp;</th>
-                <th class="pluginDelete">$_('Uninstall?')</th>
+                <th class="pluginName">$_(u'Name')</th>
+                <th class="pluginEnabled">$_(u'Enabled')&nbsp;&nbsp;&nbsp;</th>
+                <th class="pluginDelete">$_(u'Uninstall?')</th>
             </tr>
-            $ names = settings.keys()
+            $ names = list(settings.keys())
             $names.sort()
             $for n in names:
                 <tr>
@@ -62,9 +62,9 @@ $var page: plugins
         <input type="hidden" name="btnId" id="btnId">
     </form>
 </div>
-<div><b>$_('CAUTION:')</b> $_('Clicking UPDATE or UNINSTALL will restart the software and stop any running programs.')</div>
+<div><b>$_(u'CAUTION:')</b> $_(u'Clicking UPDATE or UNINSTALL will restart the software and stop any running programs.')</div>
 <div id="controls">
-    <button id="cSubmit" class="submit"><b>$_('Update Enabled')</b></button>
-    <button id="cDelete" class="submit danger"><b>$_('Uninstall')</b></button>
-    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
+    <button id="cSubmit" class="submit"><b>$_(u'Update Enabled')</b></button>
+    <button id="cDelete" class="submit danger"><b>$_(u'Uninstall')</b></button>
+    <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>
 </div>

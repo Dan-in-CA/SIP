@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2017-12-04 09:09+Pacific Standard Time\n"
+"POT-Creation-Date: 2019-10-26 09:10+PDT\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,1173 +15,1167 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: SIP/plugins\plugin_manager.py:29
-msgid "Manage Plugins"
-msgstr ""
-
-#: SIP/plugins\system_update.py:23
-msgid "System update"
-msgstr ""
-
-#: SIP/plugins\system_update.py:75
-msgid "Up-to-date."
-msgstr ""
-
-#: SIP/plugins\system_update.py:78
-msgid "New version is available!"
-msgstr ""
-
-#: SIP/plugins\system_update.py:79 SIP/plugins\system_update.py:84
-msgid "Available revision"
-msgstr ""
-
-#: SIP/plugins\system_update.py:80
-msgid "Changes"
-msgstr ""
-
-#: SIP/plugins\system_update.py:83
-msgid "Currently running revision"
-msgstr ""
-
-#: SIP/plugins\system_update.py:95
-msgid "System update plug-in encountered error"
-msgstr ""
-
-#: SIP\gv.py:18
+#: SIP/gv.py:20
 msgid "Could not use git to determine version!"
 msgstr ""
 
-#: SIP\gv.py:25
+#: SIP/gv.py:30
 msgid "Could not use git to determine date of last commit!"
 msgstr ""
 
-#: SIP\gv.py:137
+#: SIP/gv.py:150
 msgid "System name"
 msgstr ""
 
-#: SIP\gv.py:137
+#: SIP/gv.py:153
 msgid "Unique name of this SIP system."
 msgstr ""
 
-#: SIP\gv.py:137 SIP\gv.py:138 SIP\gv.py:139 SIP\gv.py:141 SIP\gv.py:142
-#: SIP\gv.py:143 SIP\gv.py:144
+#: SIP/gv.py:154 SIP/gv.py:161 SIP/gv.py:163 SIP/gv.py:169 SIP/gv.py:171
+#: SIP/gv.py:177 SIP/gv.py:184 SIP/gv.py:191
 msgid "System"
 msgstr ""
 
-#: SIP\gv.py:138
-msgid "City name or zip code. Use comma or + in place of space."
-msgstr ""
-
-#: SIP\gv.py:138
+#: SIP/gv.py:157
 msgid "Location"
 msgstr ""
 
-#: SIP\gv.py:139
+#: SIP/gv.py:160
+msgid "City name or zip code. Use comma or + in place of space."
+msgstr ""
+
+#: SIP/gv.py:163
 msgid "Language"
 msgstr ""
 
-#: SIP\gv.py:139
+#: SIP/gv.py:163
 msgid "Select language."
 msgstr ""
 
-#: SIP\gv.py:141
+#: SIP/gv.py:165
 msgid "24-hour clock"
 msgstr ""
 
-#: SIP\gv.py:141
+#: SIP/gv.py:168
 msgid "Display times in 24 hour format (as opposed to AM/PM style.)"
 msgstr ""
 
-#: SIP\gv.py:142
+#: SIP/gv.py:171
 msgid "HTTP port"
 msgstr ""
 
-#: SIP\gv.py:142
+#: SIP/gv.py:171
 msgid "HTTP port."
 msgstr ""
 
-#: SIP\gv.py:143
-msgid "GPIO Library to use. Default is RPi.GPIO"
+#: SIP/gv.py:173
+msgid "HTTP IP addr"
 msgstr ""
 
-#: SIP\gv.py:143
+#: SIP/gv.py:176
+msgid "IP Address used for HTTP server socket.  IPv4 or IPv6 address"
+msgstr ""
+
+#: SIP/gv.py:180
 msgid "Use pigpio"
 msgstr ""
 
-#: SIP\gv.py:144
+#: SIP/gv.py:183
+msgid "GPIO Library to use. Default is RPi.GPIO"
+msgstr ""
+
+#: SIP/gv.py:187
 msgid "Water Scaling"
 msgstr ""
 
-#: SIP\gv.py:144
+#: SIP/gv.py:190
 msgid "Water scaling (as %), between 0 and 100."
 msgstr ""
 
-#: SIP\gv.py:145
-msgid "Allow anonymous users to access the system without a password."
+#: SIP/gv.py:194
+msgid "Enable passphrase"
 msgstr ""
 
-#: SIP\gv.py:145
-msgid "Disable security"
+#: SIP/gv.py:197
+msgid ""
+"Minimal security. \n"
+"Prevent unauthorized users from accessing the system without a passphrase. \n"
+"*** Default is opendoor ***"
 msgstr ""
 
-#: SIP\gv.py:145 SIP\gv.py:146 SIP\gv.py:147 SIP\gv.py:148
-msgid "Change Password"
+#: SIP/gv.py:198 SIP/gv.py:205 SIP/gv.py:212 SIP/gv.py:219 SIP/helpers.py:628
+msgid "Passphrase"
 msgstr ""
 
-#: SIP\gv.py:146
-msgid "Current password"
+#: SIP/gv.py:201
+msgid "Current passphrase"
 msgstr ""
 
-#: SIP\gv.py:146
-msgid "Re-enter the current password."
+#: SIP/gv.py:204
+msgid ""
+"Enter the current passphrase. \n"
+"*** Defalut is opendoor ***"
 msgstr ""
 
-#: SIP\gv.py:147
-msgid "Enter a new password."
+#: SIP/gv.py:208
+msgid "New passphrase"
 msgstr ""
 
-#: SIP\gv.py:147
-msgid "New password"
+#: SIP/gv.py:211
+msgid "Enter a new passphrase."
 msgstr ""
 
-#: SIP\gv.py:148
-msgid "Confirm password"
+#: SIP/gv.py:215
+msgid "Confirm passphrase"
 msgstr ""
 
-#: SIP\gv.py:148
-msgid "Confirm the new password."
+#: SIP/gv.py:218
+msgid "Confirm the new passphrase."
 msgstr ""
 
-#: SIP\gv.py:149
+#: SIP/gv.py:229
 msgid "Sequential"
 msgstr ""
 
-#: SIP\gv.py:149
+#: SIP/gv.py:232
 msgid "Sequential or concurrent running mode."
 msgstr ""
 
-#: SIP\gv.py:149 SIP\gv.py:150 SIP\gv.py:151 SIP\gv.py:152 SIP\gv.py:153
+#: SIP/gv.py:233 SIP/gv.py:240 SIP/gv.py:247 SIP/gv.py:254 SIP/gv.py:261
 msgid "Station Handling"
 msgstr ""
 
-#: SIP\gv.py:150
-msgid "Allow each station to have its own run time in programs."
-msgstr ""
-
-#: SIP\gv.py:150
+#: SIP/gv.py:236
 msgid "Individual Duration"
 msgstr ""
 
-#: SIP\gv.py:151
-msgid "Extension boards"
+#: SIP/gv.py:239
+msgid "Allow each station to have its own run time in programs."
 msgstr ""
 
-#: SIP\gv.py:151
-msgid "Number of extension boards."
+#: SIP/gv.py:243
+msgid "Station extensions"
 msgstr ""
 
-#: SIP\gv.py:152
+#: SIP/gv.py:246
+msgid "Add 8 stations for each extension."
+msgstr ""
+
+#: SIP/gv.py:250
 msgid "Station delay"
 msgstr ""
 
-#: SIP\gv.py:152
+#: SIP/gv.py:253
 msgid "Station delay time (in seconds), between 0 and 240."
 msgstr ""
 
-#: SIP\gv.py:153
+#: SIP/gv.py:257
 msgid "Active-Low Relay"
 msgstr ""
 
-#: SIP\gv.py:153
+#: SIP/gv.py:260
 msgid "Using active-low relay boards connected through shift registers"
 msgstr ""
 
-#: SIP\gv.py:154
+#: SIP/gv.py:264
 msgid "Master station"
 msgstr ""
 
-#: SIP\gv.py:154
+#: SIP/gv.py:267
 msgid "Select master station."
 msgstr ""
 
-#: SIP\gv.py:154 SIP\gv.py:155 SIP\gv.py:156
+#: SIP/gv.py:268 SIP/gv.py:275 SIP/gv.py:282
 msgid "Configure Master"
 msgstr ""
 
-#: SIP\gv.py:155
+#: SIP/gv.py:271
 msgid "Master on adjust"
 msgstr ""
 
-#: SIP\gv.py:155
+#: SIP/gv.py:274
 msgid "Master on delay (in seconds), between +0 and +60."
 msgstr ""
 
-#: SIP\gv.py:156
+#: SIP/gv.py:278
 msgid "Master off adjust"
 msgstr ""
 
-#: SIP\gv.py:156
+#: SIP/gv.py:281
 msgid "Master off delay (in seconds), between -60 and +60."
 msgstr ""
 
-#: SIP\gv.py:157
+#: SIP/gv.py:285
 msgid "Use rain sensor"
 msgstr ""
 
-#: SIP\gv.py:157
+#: SIP/gv.py:288
 msgid "Use rain sensor."
 msgstr ""
 
-#: SIP\gv.py:157 SIP\gv.py:158
+#: SIP/gv.py:289 SIP/gv.py:296
 msgid "Rain Sensor"
 msgstr ""
 
-#: SIP\gv.py:158
+#: SIP/gv.py:292
 msgid "Normally open"
 msgstr ""
 
-#: SIP\gv.py:158
+#: SIP/gv.py:295
 msgid "Rain sensor type."
 msgstr ""
 
-#: SIP\gv.py:159
+#: SIP/gv.py:299
 msgid "Enable logging"
 msgstr ""
 
-#: SIP\gv.py:159
+#: SIP/gv.py:302
 msgid "Log all events - note that repetitive writing to an SD card can shorten its lifespan."
 msgstr ""
 
-#: SIP\gv.py:159 SIP\gv.py:160
+#: SIP/gv.py:305 SIP/gv.py:312
 msgid "Logging"
 msgstr ""
 
-#: SIP\gv.py:160
-msgid "Length of log to keep, 0=no limits."
-msgstr ""
-
-#: SIP\gv.py:160
+#: SIP/gv.py:308
 msgid "Max log entries"
 msgstr ""
 
-#: SIP\helpers.py:41
+#: SIP/gv.py:311
+msgid "Length of log to keep, 0=no limits."
+msgstr ""
+
+#: SIP/helpers.py:48
 msgid "Error: json module not found"
 msgstr ""
 
-#: SIP\helpers.py:99
+#: SIP/helpers.py:112
 msgid "Rebooting..."
 msgstr ""
 
-#: SIP\helpers.py:128
+#: SIP/helpers.py:137
 msgid "Powering off..."
 msgstr ""
 
-#: SIP\helpers.py:158
+#: SIP/helpers.py:163
 msgid "Restarting..."
 msgstr ""
 
-#: SIP\helpers.py:343
+#: SIP/helpers.py:344
 msgid "program"
 msgstr ""
 
-#: SIP\helpers.py:344
+#: SIP/helpers.py:345
 msgid "station"
 msgstr ""
 
-#: SIP\helpers.py:345
+#: SIP/helpers.py:346
 msgid "duration"
 msgstr ""
 
-#: SIP\helpers.py:346
+#: SIP/helpers.py:347
 msgid "start"
 msgstr ""
 
-#: SIP\helpers.py:347
+#: SIP/helpers.py:348
 msgid "date"
 msgstr ""
 
-#: SIP\helpers.py:351 SIP\templates\base.html:116
+#: SIP/helpers.py:352 SIP/templates/base.html:119
 msgid "Run-once"
 msgstr ""
 
-#: SIP\helpers.py:353 SIP\templates\base.html:117 SIP\templates\home.html:242
+#: SIP/helpers.py:354 SIP/templates/base.html:120 SIP/templates/home.html:242
 msgid "Manual"
 msgstr ""
 
-#: SIP\helpers.py:601
-msgid "Password"
+#: SIP/helpers.py:633
+msgid "Incorrect passphrase, please try again"
 msgstr ""
 
-#: SIP\helpers.py:604
-msgid "Incorrect password, please try again"
+#: SIP/plugins/plugin_manager.py:36
+msgid "Manage Plugins"
 msgstr ""
 
-#: SIP\sip.py:43
+#: SIP/plugins/proto.py:21
+msgid "Proto Plugin"
+msgstr ""
+
+#: SIP/plugins/system_update.py:25
+msgid "System update"
+msgstr ""
+
+#: SIP/plugins/system_update.py:80
+msgid "Up-to-date."
+msgstr ""
+
+#: SIP/plugins/system_update.py:83
+msgid "New version is available!"
+msgstr ""
+
+#: SIP/plugins/system_update.py:84 SIP/plugins/system_update.py:89
+msgid "Available revision"
+msgstr ""
+
+#: SIP/plugins/system_update.py:85
+msgid "Changes"
+msgstr ""
+
+#: SIP/plugins/system_update.py:88
+msgid "Currently running revision"
+msgstr ""
+
+#: SIP/plugins/system_update.py:100
+msgid "System update plug-in encountered error"
+msgstr ""
+
+#: SIP/sip.py:54
 msgid "Starting timing loop"
 msgstr ""
 
-#: SIP\sip.py:231
+#: SIP/sip.py:283
 msgid "plugins loaded:"
 msgstr ""
 
-#: SIP\templates\base.html:14 SIP\templates\modify.html:408
+#: SIP/templates/base.html:18 SIP/templates/modify.html:426
 msgid "Monday"
 msgstr ""
 
-#: SIP\templates\base.html:14 SIP\templates\modify.html:409
+#: SIP/templates/base.html:18 SIP/templates/modify.html:427
 msgid "Tuesday"
 msgstr ""
 
-#: SIP\templates\base.html:14 SIP\templates\modify.html:410
+#: SIP/templates/base.html:18 SIP/templates/modify.html:428
 msgid "Wednesday"
 msgstr ""
 
-#: SIP\templates\base.html:14 SIP\templates\modify.html:411
+#: SIP/templates/base.html:18 SIP/templates/modify.html:429
 msgid "Thursday"
 msgstr ""
 
-#: SIP\templates\base.html:14 SIP\templates\modify.html:412
+#: SIP/templates/base.html:18 SIP/templates/modify.html:430
 msgid "Friday"
 msgstr ""
 
-#: SIP\templates\base.html:14 SIP\templates\modify.html:413
+#: SIP/templates/base.html:18 SIP/templates/modify.html:431
 msgid "Saturday"
 msgstr ""
 
-#: SIP\templates\base.html:14 SIP\templates\modify.html:414
+#: SIP/templates/base.html:18 SIP/templates/modify.html:432
 msgid "Sunday"
 msgstr ""
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:26
+#: SIP/templates/base.html:19 SIP/templates/monthly.html:26
 msgid "January"
 msgstr ""
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:30
+#: SIP/templates/base.html:19 SIP/templates/monthly.html:30
 msgid "February"
 msgstr ""
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:34
+#: SIP/templates/base.html:19 SIP/templates/monthly.html:34
 msgid "March"
 msgstr ""
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:38
+#: SIP/templates/base.html:19 SIP/templates/monthly.html:38
 msgid "April"
 msgstr ""
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:42
+#: SIP/templates/base.html:19 SIP/templates/monthly.html:42
 msgid "May"
 msgstr ""
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:46
+#: SIP/templates/base.html:19 SIP/templates/monthly.html:46
 msgid "June"
 msgstr ""
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:50
+#: SIP/templates/base.html:19 SIP/templates/monthly.html:50
 msgid "July"
 msgstr ""
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:54
+#: SIP/templates/base.html:19 SIP/templates/monthly.html:54
 msgid "August"
 msgstr ""
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:58
+#: SIP/templates/base.html:19 SIP/templates/monthly.html:58
 msgid "September"
 msgstr ""
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:62
+#: SIP/templates/base.html:19 SIP/templates/monthly.html:62
 msgid "October"
 msgstr ""
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:66
+#: SIP/templates/base.html:19 SIP/templates/monthly.html:66
 msgid "November"
 msgstr ""
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:70
+#: SIP/templates/base.html:19 SIP/templates/monthly.html:70
 msgid "December"
 msgstr ""
 
-#: SIP\templates\base.html:118 SIP\templates\log.html:55
-#: SIP\templates\programs.html:122
+#: SIP/templates/base.html:121 SIP/templates/log.html:55
+#: SIP/templates/programs.html:125
 msgid "Program"
 msgstr ""
 
-#: SIP\templates\base.html:172
+#: SIP/templates/base.html:175
 msgid "Home"
 msgstr ""
 
-#: SIP\templates\base.html:173
+#: SIP/templates/base.html:176
 msgid "Define Programs"
 msgstr ""
 
-#: SIP\templates\base.html:173
+#: SIP/templates/base.html:176
 msgid "Programs"
 msgstr ""
 
-#: SIP\templates\base.html:174
+#: SIP/templates/base.html:177
 msgid "Define Run Once Program"
 msgstr ""
 
-#: SIP\templates\base.html:174
+#: SIP/templates/base.html:177
 msgid "Run Once"
 msgstr ""
 
-#: SIP\templates\base.html:175
+#: SIP/templates/base.html:178
 msgid "Access Plugins"
 msgstr ""
 
-#: SIP\templates\base.html:175
+#: SIP/templates/base.html:178
 msgid "Plugins"
 msgstr ""
 
-#: SIP\templates\base.html:176
+#: SIP/templates/base.html:179
 msgid "Log"
 msgstr ""
 
-#: SIP\templates\base.html:176
+#: SIP/templates/base.html:179
 msgid "View Log"
 msgstr ""
 
-#: SIP\templates\base.html:177
+#: SIP/templates/base.html:180
 msgid "Options"
 msgstr ""
 
-#: SIP\templates\base.html:178
+#: SIP/templates/base.html:181
 msgid "Stations"
 msgstr ""
 
-#: SIP\templates\base.html:178 SIP\templates\stations.html:81
+#: SIP/templates/base.html:181 SIP/templates/stations.html:81
 msgid "Configure Stations"
 msgstr ""
 
-#: SIP\templates\base.html:180
+#: SIP/templates/base.html:183
 msgid "Logout"
 msgstr ""
 
-#: SIP\templates\base.html:192
+#: SIP/templates/base.html:195
 msgid "?"
 msgstr ""
 
-#: SIP\templates\base.html:192 SIP\templates\proto.html:27
-#: SIP\templates\system_update.html:26
+#: SIP/templates/base.html:195 SIP/templates/proto.html:27
+#: SIP/templates/system_update.html:26
 msgid "Help"
 msgstr ""
 
-#: SIP\templates\base.html:200
+#: SIP/templates/base.html:203
 msgid "CPU Temp"
 msgstr ""
 
-#: SIP\templates\base.html:200
-msgid "Click to toggle"
+#: SIP/templates/base.html:203
+msgid "Click to toggle Celsius &lt;&gt; Fahrenheit"
 msgstr ""
 
-#: SIP\templates\base.html:207
+#: SIP/templates/base.html:210
 msgid "Software"
 msgstr ""
 
-#: SIP\templates\base.html:207
+#: SIP/templates/base.html:210
 msgid "version"
 msgstr ""
 
-#: SIP\templates\home.html:49
+#: SIP/templates/home.html:50
 msgid "Manual Mode"
 msgstr ""
 
-#: SIP\templates\home.html:52 SIP\templates\runonce.html:57
+#: SIP/templates/home.html:53 SIP/templates/runonce.html:57
 msgid "Run Once Program"
 msgstr ""
 
-#: SIP\templates\home.html:55
+#: SIP/templates/home.html:56
 msgid " for "
 msgstr ""
 
-#: SIP\templates\home.html:55
+#: SIP/templates/home.html:56
 msgid " on "
 msgstr ""
 
-#: SIP\templates\home.html:55
+#: SIP/templates/home.html:56
 msgid " ran "
 msgstr ""
 
-#: SIP\templates\home.html:79
+#: SIP/templates/home.html:80
 msgid "Master On"
 msgstr ""
 
-#: SIP\templates\home.html:81
+#: SIP/templates/home.html:82
 msgid "Master Off"
 msgstr ""
 
-#: SIP\templates\home.html:86
+#: SIP/templates/home.html:87
 msgid "Suppressed by Rain Delay"
 msgstr ""
 
-#: SIP\templates\home.html:89
+#: SIP/templates/home.html:90
 msgid "Suppressed by Rain Sensor"
 msgstr ""
 
-#: SIP\templates\home.html:92 SIP\templates\home.html:270
-#: SIP\templates\modify.html:429 SIP\templates\programs.html:120
+#: SIP/templates/home.html:93 SIP/templates/home.html:270
+#: SIP/templates/modify.html:446 SIP/templates/programs.html:123
 msgid "Off"
 msgstr ""
 
-#: SIP\templates\home.html:131
-msgid ""
-"SIP could not restart.\n"
-"Please restart the program from the command line."
-msgstr ""
-
-#: SIP\templates\home.html:151
+#: SIP/templates/home.html:152
 msgid "Enter hours to delay"
 msgstr ""
 
-#: SIP\templates\home.html:154
-msgid "Delay must be a positive value"
-msgstr ""
-
-#: SIP\templates\home.html:167
+#: SIP/templates/home.html:168
 msgid "Enter percentage adjustment"
 msgstr ""
 
-#: SIP\templates\home.html:186
-msgid "Timer values wrong"
-msgstr ""
-
-#: SIP\templates\home.html:232
-msgid "System Off"
-msgstr ""
-
-#: SIP\templates\home.html:232
-msgid "System On"
-msgstr ""
-
-#: SIP\templates\home.html:234
-msgid "Level"
-msgstr ""
-
-#: SIP\templates\home.html:234
-msgid "Normal"
-msgstr ""
-
-#: SIP\templates\home.html:234
-msgid "Water Level"
-msgstr ""
-
-#: SIP\templates\home.html:236
-msgid "Active"
-msgstr ""
-
-#: SIP\templates\home.html:236
-msgid "Rain Delay"
-msgstr ""
-
-#: SIP\templates\home.html:240
-msgid "rain sensed"
-msgstr ""
-
-#: SIP\templates\home.html:240 SIP\templates\log.html:46
-msgid "no"
-msgstr ""
-
-#: SIP\templates\home.html:242
-msgid "Auto"
-msgstr ""
-
-#: SIP\templates\home.html:262
-msgid "On (Master)"
-msgstr ""
-
-#: SIP\templates\home.html:264
-msgid "Off (Master)"
-msgstr ""
-
-#: SIP\templates\home.html:270 SIP\templates\modify.html:429
-#: SIP\templates\programs.html:118
-msgid "On"
-msgstr ""
-
-#: SIP\templates\home.html:288
-msgid " Prev Day"
-msgstr ""
-
-#: SIP\templates\home.html:289
-msgid "Today"
-msgstr ""
-
-#: SIP\templates\home.html:290
-msgid "Next Day"
-msgstr ""
-
-#: SIP\templates\home.html:328
-msgid "loading..."
-msgstr ""
-
-#: SIP\templates\home.html:357 SIP\templates\home.html:364
-#: SIP\templates\home.html:366
-msgid "Stop All Stations"
-msgstr ""
-
-#: SIP\templates\home.html:360
-msgid "Program 1"
-msgstr ""
-
-#: SIP\templates\log.html:3
-msgid "SIP Log"
-msgstr ""
-
-#: SIP\templates\log.html:8 SIP\templates\plugins.html:46
-msgid "Enabled"
-msgstr ""
-
-#: SIP\templates\log.html:11
-msgid "Disabled"
-msgstr ""
-
-#: SIP\templates\log.html:41
-msgid "Log "
-msgstr ""
-
-#: SIP\templates\log.html:46
-msgid " limit"
-msgstr ""
-
-#: SIP\templates\log.html:46
-msgid "Total number of records: "
-msgstr ""
-
-#: SIP\templates\log.html:47
-msgid "Download log as "
-msgstr ""
-
-#: SIP\templates\log.html:51
-msgid "Date"
-msgstr ""
-
-#: SIP\templates\log.html:52 SIP\templates\modify.html:366
-msgid "Start Time"
-msgstr ""
-
-#: SIP\templates\log.html:53 SIP\templates\stations.html:85
-msgid "Station"
-msgstr ""
-
-#: SIP\templates\log.html:54 SIP\templates\modify.html:376
-#: SIP\templates\modify.html:407
-msgid "Duration"
-msgstr ""
-
-#: SIP\templates\log.html:73
-msgid "Refresh"
-msgstr ""
-
-#: SIP\templates\log.html:74
-msgid "Clear Log"
-msgstr ""
-
-#: SIP\templates\login.html:3
-msgid "SIP Login"
-msgstr ""
-
-#: SIP\templates\login.html:7 SIP\templates\login.html:10
-msgid "Login"
-msgstr ""
-
-#: SIP\templates\modify.html:3
-msgid "SIP Modify Program"
-msgstr ""
-
-#: SIP\templates\modify.html:100
-msgid "Error: Incorrect time input "
-msgstr ""
-
-#: SIP\templates\modify.html:112
-msgid "Please choose at least one weekday for the program to run."
-msgstr ""
-
-#: SIP\templates\modify.html:116
-msgid "Please choose at least one station to run in this program."
-msgstr ""
-
-#: SIP\templates\modify.html:262
-msgid "Error: starting in days wrong."
-msgstr ""
-
-#: SIP\templates\modify.html:284
-msgid "Error: Duration missing."
-msgstr ""
-
-#: SIP\templates\modify.html:302
-msgid "Error: Incorrect duration."
-msgstr ""
-
-#: SIP\templates\modify.html:336
-msgid "Error: Start time must be prior to end time."
-msgstr ""
-
-#: SIP\templates\modify.html:357
-msgid "Edit Program #"
-msgstr ""
-
-#: SIP\templates\modify.html:357 SIP\templates\programs.html:108
-msgid "Add a New Program"
-msgstr ""
-
-#: SIP\templates\modify.html:362
-msgid "Program Off"
-msgstr ""
-
-#: SIP\templates\modify.html:362
-msgid "Program On"
-msgstr ""
-
-#: SIP\templates\modify.html:378
-msgid "Recurring"
-msgstr ""
-
-#: SIP\templates\modify.html:378
-msgid "Single pass"
-msgstr ""
-
-#: SIP\templates\modify.html:380
-msgid "Every"
-msgstr ""
-
-#: SIP\templates\modify.html:384
-msgid "Until"
-msgstr ""
-
-#: SIP\templates\modify.html:396
-msgid "Interval"
-msgstr ""
-
-#: SIP\templates\modify.html:396
-msgid "Weekly"
-msgstr ""
-
-#: SIP\templates\modify.html:401
-msgid "Select All"
-msgstr ""
-
-#: SIP\templates\modify.html:402
-msgid "Clear All"
-msgstr ""
-
-#: SIP\templates\modify.html:440
-msgid "Water interval"
-msgstr ""
-
-#: SIP\templates\modify.html:456
-msgid "Starting in"
-msgstr ""
-
-#: SIP\templates\modify.html:470
-msgid "Any Day"
-msgstr ""
-
-#: SIP\templates\modify.html:470
-msgid "Restrict Day"
-msgstr ""
-
-#: SIP\templates\modify.html:472
-msgid "Even"
-msgstr ""
-
-#: SIP\templates\modify.html:472
-msgid "Odd"
-msgstr ""
-
-#: SIP\templates\modify.html:473
-msgid "(except 31st and Feb 29th)"
-msgstr ""
-
-#: SIP\templates\modify.html:482
-msgid "Save"
-msgstr ""
-
-#: SIP\templates\modify.html:483 SIP\templates\monthly.html:78
-#: SIP\templates\options.html:155 SIP\templates\plugins.html:69
-#: SIP\templates\plugins_repo.html:45 SIP\templates\proto.html:75
-#: SIP\templates\runonce.html:86 SIP\templates\stations.html:138
-#: SIP\templates\system_update.html:66
-msgid "Cancel"
-msgstr ""
-
-#: SIP\templates\monthly.html:3
-msgid "SIP Monthly Adjustments"
-msgstr ""
-
-#: SIP\templates\monthly.html:21
-msgid "Monthly Irrigation Adjustments"
-msgstr ""
-
-#: SIP\templates\monthly.html:22
-msgid "Enter an adjustment for each month (% irrigation time)"
-msgstr ""
-
-#: SIP\templates\monthly.html:77 SIP\templates\proto.html:74
-msgid "Submit"
-msgstr ""
-
-#: SIP\templates\options.html:3
-msgid "SIP Options"
-msgstr ""
-
-#: SIP\templates\options.html:24 SIP\templates\options.html:25
-msgid "Hide Tooltips"
-msgstr ""
-
-#: SIP\templates\options.html:25 SIP\templates\options.html:83
-msgid "Show Tooltips"
-msgstr ""
-
-#: SIP\templates\options.html:59
-msgid "The password given was incorrect."
-msgstr ""
-
-#: SIP\templates\options.html:63
-msgid "Please enter a password."
-msgstr ""
-
-#: SIP\templates\options.html:67
-msgid "Passwords don't match, please re-enter."
-msgstr ""
-
-#: SIP\templates\options.html:71
-msgid "Must be 0 to +60, please re-enter."
-msgstr ""
-
-#: SIP\templates\options.html:82
-msgid "Edit Options"
-msgstr ""
-
-#: SIP\templates\options.html:111
-msgid "Default"
-msgstr ""
-
-#: SIP\templates\options.html:123
-msgid "None"
-msgstr ""
-
-#: SIP\templates\options.html:141
-msgid "System Restart"
-msgstr ""
-
-#: SIP\templates\options.html:143
-msgid "Restart"
-msgstr ""
-
-#: SIP\templates\options.html:143
-msgid "Restart software"
-msgstr ""
-
-#: SIP\templates\options.html:144
-msgid "Reboot"
-msgstr ""
-
-#: SIP\templates\options.html:144
-msgid "Reboot hardware"
-msgstr ""
-
-#: SIP\templates\options.html:154 SIP\templates\stations.html:136
-msgid "Submit Changes"
-msgstr ""
-
-#: SIP\templates\plugins.html:3
-msgid "SIP Plugin Manager"
-msgstr ""
-
-#: SIP\templates\plugins.html:39
-msgid "Installed Plugins"
-msgstr ""
-
-#: SIP\templates\plugins.html:40
-msgid "Browse More Plugins"
-msgstr ""
-
-#: SIP\templates\plugins.html:41
-msgid "Roll Your Own"
-msgstr ""
-
-#: SIP\templates\plugins.html:45 SIP\templates\stations.html:86
-msgid "Name"
-msgstr ""
-
-#: SIP\templates\plugins.html:47
-msgid "Uninstall?"
-msgstr ""
-
-#: SIP\templates\plugins.html:65
-msgid "CAUTION:"
-msgstr ""
-
-#: SIP\templates\plugins.html:65
-msgid "Clicking UPDATE or UNINSTALL will restart the software and stop any running programs."
-msgstr ""
-
-#: SIP\templates\plugins.html:67
-msgid "Update Enabled"
-msgstr ""
-
-#: SIP\templates\plugins.html:68
-msgid "Uninstall"
-msgstr ""
-
-#: SIP\templates\plugins_repo.html:3
-msgid "SIP Plugin Browser"
-msgstr ""
-
-#: SIP\templates\plugins_repo.html:26
-msgid "Available Plugins"
-msgstr ""
-
-#: SIP\templates\plugins_repo.html:27
-msgid "Unless otherwise stated these plugins are licensed under GPL 3.0"
-msgstr ""
-
-#: SIP\templates\plugins_repo.html:43
-msgid "install"
-msgstr ""
-
-#: SIP\templates\plugins_repo.html:44
-msgid "Back"
-msgstr ""
-
-#: SIP\templates\programs.html:3
-msgid "SIP Programs"
-msgstr ""
-
-#: SIP\templates\programs.html:18
-msgid "Every "
-msgstr ""
-
-#: SIP\templates\programs.html:18 SIP\templates\programs.html:20
-msgid "days"
-msgstr ""
-
-#: SIP\templates\programs.html:20
-msgid "starting in"
-msgstr ""
-
-#: SIP\templates\programs.html:23
-msgid "Every Weekday"
-msgstr ""
-
-#: SIP\templates\programs.html:27
-msgid "Fri"
-msgstr ""
-
-#: SIP\templates\programs.html:27
-msgid "Mon"
-msgstr ""
-
-#: SIP\templates\programs.html:27
-msgid "Sat"
-msgstr ""
-
-#: SIP\templates\programs.html:27
-msgid "Sun"
-msgstr ""
-
-#: SIP\templates\programs.html:27
-msgid "Thur"
-msgstr ""
-
-#: SIP\templates\programs.html:27
-msgid "Tue"
-msgstr ""
-
-#: SIP\templates\programs.html:27
-msgid "Wed"
-msgstr ""
-
-#: SIP\templates\programs.html:29
-msgid " (Even days only)"
-msgstr ""
-
-#: SIP\templates\programs.html:31
-msgid " (Odd days only)"
-msgstr ""
-
-#: SIP\templates\programs.html:109
-msgid "Delete All"
-msgstr ""
-
-#: SIP\templates\programs.html:128
-msgid "Run"
-msgstr ""
-
-#: SIP\templates\programs.html:153
-msgid "Starting"
-msgstr ""
-
-#: SIP\templates\programs.html:154
-msgid "with individual station durations"
-msgstr ""
-
-#: SIP\templates\programs.html:155
-msgid "for"
-msgstr ""
-
-#: SIP\templates\programs.html:156 SIP\templates\programs.html:159
-msgid "until"
-msgstr ""
-
-#: SIP\templates\programs.html:158
-msgid "Recurring every"
-msgstr ""
-
-#: SIP\templates\programs.html:162 SIP\templates\runonce.html:84
-msgid "Run Now"
-msgstr ""
-
-#: SIP\templates\programs.html:163
-msgid "Edit"
-msgstr ""
-
-#: SIP\templates\programs.html:164
-msgid "Delete"
-msgstr ""
-
-#: SIP\templates\proto.html:4
-msgid "SIP Proto Plugin"
-msgstr ""
-
-#: SIP\templates\proto.html:30
-msgid "Example Check Boxes"
-msgstr ""
-
-#: SIP\templates\proto.html:37 SIP\templates\proto.html:38
-#: SIP\templates\proto.html:56 SIP\templates\proto.html:57
-msgid "Heading"
-msgstr ""
-
-#: SIP\templates\proto.html:41
-msgid "Check Box 1"
-msgstr ""
-
-#: SIP\templates\proto.html:45
-msgid "Check Box 2"
-msgstr ""
-
-#: SIP\templates\proto.html:51
-msgid "Text Entry Fields"
-msgstr ""
-
-#: SIP\templates\proto.html:61
-msgid "Text Field 1"
-msgstr ""
-
-#: SIP\templates\proto.html:65
-msgid "Text Field 2"
-msgstr ""
-
-#: SIP\templates\restarting.html:3
-msgid "SIP Restarting"
-msgstr ""
-
-#: SIP\templates\restarting.html:30
-msgid "SIP is restarting"
-msgstr ""
-
-#: SIP\templates\restarting.html:31
-msgid "This may take several seconds..."
-msgstr ""
-
-#: SIP\templates\runonce.html:3
-msgid "SIP Run-Once"
-msgstr ""
-
-#: SIP\templates\runonce.html:29
+#: SIP/templates/home.html:187 SIP/templates/runonce.html:29
 msgid "Timer values wrong: "
 msgstr ""
 
-#: SIP\templates\runonce.html:39
+#: SIP/templates/home.html:233
+msgid "System Off"
+msgstr ""
+
+#: SIP/templates/home.html:233
+msgid "System On"
+msgstr ""
+
+#: SIP/templates/home.html:235
+msgid "Level"
+msgstr ""
+
+#: SIP/templates/home.html:235
+msgid "Normal"
+msgstr ""
+
+#: SIP/templates/home.html:235
+msgid "Water Level"
+msgstr ""
+
+#: SIP/templates/home.html:237
+msgid "Active"
+msgstr ""
+
+#: SIP/templates/home.html:237
+msgid "Rain Delay"
+msgstr ""
+
+#: SIP/templates/home.html:240
+msgid "rain sensed"
+msgstr ""
+
+#: SIP/templates/home.html:240 SIP/templates/log.html:46
+msgid "no"
+msgstr ""
+
+#: SIP/templates/home.html:242
+msgid "Auto"
+msgstr ""
+
+#: SIP/templates/home.html:262
+msgid "On (Master)"
+msgstr ""
+
+#: SIP/templates/home.html:264
+msgid "Off (Master)"
+msgstr ""
+
+#: SIP/templates/home.html:270 SIP/templates/modify.html:446
+#: SIP/templates/programs.html:121
+msgid "On"
+msgstr ""
+
+#: SIP/templates/home.html:288
+msgid " Prev Day"
+msgstr ""
+
+#: SIP/templates/home.html:289
+msgid "Today"
+msgstr ""
+
+#: SIP/templates/home.html:290
+msgid "Next Day"
+msgstr ""
+
+#: SIP/templates/home.html:328
+msgid "loading..."
+msgstr ""
+
+#: SIP/templates/home.html:361
+msgid "Stop All Stations"
+msgstr ""
+
+#: SIP/templates/log.html:3
+msgid "SIP Log"
+msgstr ""
+
+#: SIP/templates/log.html:8 SIP/templates/plugins.html:46
+msgid "Enabled"
+msgstr ""
+
+#: SIP/templates/log.html:11
+msgid "Disabled"
+msgstr ""
+
+#: SIP/templates/log.html:41
+msgid "Log "
+msgstr ""
+
+#: SIP/templates/log.html:46
+msgid " limit"
+msgstr ""
+
+#: SIP/templates/log.html:46
+msgid "Total number of records: "
+msgstr ""
+
+#: SIP/templates/log.html:47
+msgid "Download log as "
+msgstr ""
+
+#: SIP/templates/log.html:51
+msgid "Date"
+msgstr ""
+
+#: SIP/templates/log.html:52 SIP/templates/modify.html:384
+msgid "Start Time"
+msgstr ""
+
+#: SIP/templates/log.html:53 SIP/templates/stations.html:85
+msgid "Station"
+msgstr ""
+
+#: SIP/templates/log.html:54 SIP/templates/modify.html:394
+#: SIP/templates/modify.html:425
+msgid "Duration"
+msgstr ""
+
+#: SIP/templates/log.html:73
+msgid "Refresh"
+msgstr ""
+
+#: SIP/templates/log.html:74
+msgid "Clear Log"
+msgstr ""
+
+#: SIP/templates/login.html:3
+msgid "SIP Login"
+msgstr ""
+
+#: SIP/templates/login.html:7 SIP/templates/login.html:10
+msgid "Login"
+msgstr ""
+
+#: SIP/templates/modify.html:3
+msgid "SIP Modify Program"
+msgstr ""
+
+#: SIP/templates/modify.html:91
+msgid "Error: Incorrect time input "
+msgstr ""
+
+#: SIP/templates/modify.html:103
+msgid "Please choose at least one weekday for the program to run."
+msgstr ""
+
+#: SIP/templates/modify.html:107
+msgid "Please choose at least one station to run in this program."
+msgstr ""
+
+#: SIP/templates/modify.html:258
+msgid "Error: starting in days wrong."
+msgstr ""
+
+#: SIP/templates/modify.html:281
+msgid "Error: Duration missing."
+msgstr ""
+
+#: SIP/templates/modify.html:301
+msgid "Error: Incorrect duration."
+msgstr ""
+
+#: SIP/templates/modify.html:344
+msgid "Error: Start time must be prior to end time."
+msgstr ""
+
+#: SIP/templates/modify.html:373
+msgid "Edit Program #"
+msgstr ""
+
+#: SIP/templates/modify.html:373 SIP/templates/programs.html:111
+msgid "Add a New Program"
+msgstr ""
+
+#: SIP/templates/modify.html:378
+msgid "Program Off"
+msgstr ""
+
+#: SIP/templates/modify.html:378
+msgid "Program On"
+msgstr ""
+
+#: SIP/templates/modify.html:396
+msgid "Recurring"
+msgstr ""
+
+#: SIP/templates/modify.html:396
+msgid "Single pass"
+msgstr ""
+
+#: SIP/templates/modify.html:398
+msgid "Every"
+msgstr ""
+
+#: SIP/templates/modify.html:402
+msgid "Until"
+msgstr ""
+
+#: SIP/templates/modify.html:414
+msgid "Interval"
+msgstr ""
+
+#: SIP/templates/modify.html:414
+msgid "Weekly"
+msgstr ""
+
+#: SIP/templates/modify.html:419
+msgid "Select All"
+msgstr ""
+
+#: SIP/templates/modify.html:420
+msgid "Clear All"
+msgstr ""
+
+#: SIP/templates/modify.html:457
+msgid "Water interval"
+msgstr ""
+
+#: SIP/templates/modify.html:473
+msgid "Starting in"
+msgstr ""
+
+#: SIP/templates/modify.html:487
+msgid "Any Day"
+msgstr ""
+
+#: SIP/templates/modify.html:487
+msgid "Restrict Day"
+msgstr ""
+
+#: SIP/templates/modify.html:489
+msgid "Even"
+msgstr ""
+
+#: SIP/templates/modify.html:489
+msgid "Odd"
+msgstr ""
+
+#: SIP/templates/modify.html:490
+msgid "(except 31st and Feb 29th)"
+msgstr ""
+
+#: SIP/templates/modify.html:499
+msgid "Save"
+msgstr ""
+
+#: SIP/templates/modify.html:500 SIP/templates/monthly.html:78
+#: SIP/templates/options.html:156 SIP/templates/plugins.html:69
+#: SIP/templates/plugins_repo.html:45 SIP/templates/proto.html:75
+#: SIP/templates/runonce.html:86 SIP/templates/stations.html:138
+#: SIP/templates/system_update.html:66
+msgid "Cancel"
+msgstr ""
+
+#: SIP/templates/monthly.html:3
+msgid "SIP Monthly Adjustments"
+msgstr ""
+
+#: SIP/templates/monthly.html:21
+msgid "Monthly Irrigation Adjustments"
+msgstr ""
+
+#: SIP/templates/monthly.html:22
+msgid "Enter an adjustment for each month (% irrigation time)"
+msgstr ""
+
+#: SIP/templates/monthly.html:77 SIP/templates/proto.html:74
+msgid "Submit"
+msgstr ""
+
+#: SIP/templates/options.html:3
+msgid "SIP Options"
+msgstr ""
+
+#: SIP/templates/options.html:25 SIP/templates/options.html:26
+msgid "Hide Tooltips"
+msgstr ""
+
+#: SIP/templates/options.html:26 SIP/templates/options.html:84
+msgid "Show Tooltips"
+msgstr ""
+
+#: SIP/templates/options.html:60
+msgid "The passphrase given was incorrect."
+msgstr ""
+
+#: SIP/templates/options.html:64
+msgid "Please enter a passphrase."
+msgstr ""
+
+#: SIP/templates/options.html:68
+msgid "Passwords don't match, please re-enter."
+msgstr ""
+
+#: SIP/templates/options.html:72
+msgid "Must be 0 to +60, please re-enter."
+msgstr ""
+
+#: SIP/templates/options.html:83
+msgid "Edit Options"
+msgstr ""
+
+#: SIP/templates/options.html:112
+msgid "Default"
+msgstr ""
+
+#: SIP/templates/options.html:124
+msgid "None"
+msgstr ""
+
+#: SIP/templates/options.html:142
+msgid "System Restart"
+msgstr ""
+
+#: SIP/templates/options.html:144
+msgid "Restart"
+msgstr ""
+
+#: SIP/templates/options.html:144
+msgid "Restart software"
+msgstr ""
+
+#: SIP/templates/options.html:145
+msgid "Reboot"
+msgstr ""
+
+#: SIP/templates/options.html:145
+msgid "Reboot hardware"
+msgstr ""
+
+#: SIP/templates/options.html:155 SIP/templates/stations.html:136
+msgid "Submit Changes"
+msgstr ""
+
+#: SIP/templates/plugins.html:3
+msgid "SIP Plugin Manager"
+msgstr ""
+
+#: SIP/templates/plugins.html:39
+msgid "Installed Plugins"
+msgstr ""
+
+#: SIP/templates/plugins.html:40
+msgid "Browse More Plugins"
+msgstr ""
+
+#: SIP/templates/plugins.html:41
+msgid "Roll Your Own"
+msgstr ""
+
+#: SIP/templates/plugins.html:45 SIP/templates/stations.html:86
+msgid "Name"
+msgstr ""
+
+#: SIP/templates/plugins.html:47
+msgid "Uninstall?"
+msgstr ""
+
+#: SIP/templates/plugins.html:65
+msgid "CAUTION:"
+msgstr ""
+
+#: SIP/templates/plugins.html:65
+msgid "Clicking UPDATE or UNINSTALL will restart the software and stop any running programs."
+msgstr ""
+
+#: SIP/templates/plugins.html:67
+msgid "Update Enabled"
+msgstr ""
+
+#: SIP/templates/plugins.html:68
+msgid "Uninstall"
+msgstr ""
+
+#: SIP/templates/plugins_repo.html:3
+msgid "SIP Plugin Browser"
+msgstr ""
+
+#: SIP/templates/plugins_repo.html:26
+msgid "Available Plugins"
+msgstr ""
+
+#: SIP/templates/plugins_repo.html:27
+msgid "Unless otherwise stated these plugins are licensed under GPL 3.0"
+msgstr ""
+
+#: SIP/templates/plugins_repo.html:43
+msgid "install"
+msgstr ""
+
+#: SIP/templates/plugins_repo.html:44
+msgid "Back"
+msgstr ""
+
+#: SIP/templates/programs.html:3
+msgid "SIP Programs"
+msgstr ""
+
+#: SIP/templates/programs.html:21
+msgid "Every "
+msgstr ""
+
+#: SIP/templates/programs.html:21 SIP/templates/programs.html:23
+msgid "days"
+msgstr ""
+
+#: SIP/templates/programs.html:23
+msgid "starting in"
+msgstr ""
+
+#: SIP/templates/programs.html:26
+msgid "Every Weekday"
+msgstr ""
+
+#: SIP/templates/programs.html:30
+msgid "Fri"
+msgstr ""
+
+#: SIP/templates/programs.html:30
+msgid "Mon"
+msgstr ""
+
+#: SIP/templates/programs.html:30
+msgid "Sat"
+msgstr ""
+
+#: SIP/templates/programs.html:30
+msgid "Sun"
+msgstr ""
+
+#: SIP/templates/programs.html:30
+msgid "Thur"
+msgstr ""
+
+#: SIP/templates/programs.html:30
+msgid "Tue"
+msgstr ""
+
+#: SIP/templates/programs.html:30
+msgid "Wed"
+msgstr ""
+
+#: SIP/templates/programs.html:32
+msgid " (Even days only)"
+msgstr ""
+
+#: SIP/templates/programs.html:34
+msgid " (Odd days only)"
+msgstr ""
+
+#: SIP/templates/programs.html:112
+msgid "Delete All"
+msgstr ""
+
+#: SIP/templates/programs.html:131
+msgid "Run"
+msgstr ""
+
+#: SIP/templates/programs.html:156
+msgid "Starting"
+msgstr ""
+
+#: SIP/templates/programs.html:157
+msgid "with individual station durations"
+msgstr ""
+
+#: SIP/templates/programs.html:158
+msgid "for"
+msgstr ""
+
+#: SIP/templates/programs.html:160 SIP/templates/programs.html:165
+msgid "until"
+msgstr ""
+
+#: SIP/templates/programs.html:164
+msgid "Recurring every"
+msgstr ""
+
+#: SIP/templates/programs.html:168 SIP/templates/runonce.html:84
+msgid "Run Now"
+msgstr ""
+
+#: SIP/templates/programs.html:169
+msgid "Edit"
+msgstr ""
+
+#: SIP/templates/programs.html:170
+msgid "Delete"
+msgstr ""
+
+#: SIP/templates/proto.html:4
+msgid "SIP Proto Plugin"
+msgstr ""
+
+#: SIP/templates/proto.html:30
+msgid "Example Check Boxes"
+msgstr ""
+
+#: SIP/templates/proto.html:37 SIP/templates/proto.html:38
+#: SIP/templates/proto.html:56 SIP/templates/proto.html:57
+msgid "Heading"
+msgstr ""
+
+#: SIP/templates/proto.html:41
+msgid "Check Box 1"
+msgstr ""
+
+#: SIP/templates/proto.html:45
+msgid "Check Box 2"
+msgstr ""
+
+#: SIP/templates/proto.html:51
+msgid "Text Entry Fields"
+msgstr ""
+
+#: SIP/templates/proto.html:61
+msgid "Text Field 1"
+msgstr ""
+
+#: SIP/templates/proto.html:65
+msgid "Text Field 2"
+msgstr ""
+
+#: SIP/templates/restarting.html:3
+msgid "SIP Restarting"
+msgstr ""
+
+#: SIP/templates/restarting.html:22
+msgid "SIP is restarting"
+msgstr ""
+
+#: SIP/templates/restarting.html:23
+msgid "This may take several seconds..."
+msgstr ""
+
+#: SIP/templates/runonce.html:3
+msgid "SIP Run-Once"
+msgstr ""
+
+#: SIP/templates/runonce.html:39
 msgid "No station is scheduled to run"
 msgstr ""
 
-#: SIP\templates\runonce.html:85
+#: SIP/templates/runonce.html:85
 msgid "Reset Time"
 msgstr ""
 
-#: SIP\templates\stations.html:3
+#: SIP/templates/stations.html:3
 msgid "SIP Stations"
 msgstr ""
 
-#: SIP\templates\stations.html:87
+#: SIP/templates/stations.html:87
 msgid "Enabled?"
 msgstr ""
 
-#: SIP\templates\stations.html:88
+#: SIP/templates/stations.html:88
 msgid "Ignore Rain?"
 msgstr ""
 
-#: SIP\templates\stations.html:90
+#: SIP/templates/stations.html:90
 msgid "Ignore Plugin adjustments?"
 msgstr ""
 
-#: SIP\templates\stations.html:92
+#: SIP/templates/stations.html:92
 msgid "Activate Master?"
 msgstr ""
 
-#: SIP\templates\stations.html:104 SIP\templates\stations.html:106
+#: SIP/templates/stations.html:104 SIP/templates/stations.html:106
 msgid "(Master valve)"
 msgstr ""
 
-#: SIP\templates\stations.html:137
+#: SIP/templates/stations.html:137
 msgid "Reset Names"
 msgstr ""
 
-#: SIP\templates\system_update.html:25
+#: SIP/templates/system_update.html:25
 msgid "SIP Software Updater"
 msgstr ""
 
-#: SIP\templates\system_update.html:28
+#: SIP/templates/system_update.html:28
 msgid "This plugin compares the local SIP version with the GitHub repository and can update the local software."
 msgstr ""
 
-#: SIP\templates\system_update.html:32
+#: SIP/templates/system_update.html:32
 msgid "Remote repository"
 msgstr ""
 
-#: SIP\templates\system_update.html:38
+#: SIP/templates/system_update.html:38
 msgid "Local SIP version"
 msgstr ""
 
-#: SIP\templates\system_update.html:44
+#: SIP/templates/system_update.html:44
 msgid "Local SIP date"
 msgstr ""
 
-#: SIP\templates/\system_update.html:50
+#: SIP/templates/system_update.html:50
 msgid "Status"
 msgstr ""
 
-#: SIP\templates\system_update.html:53
+#: SIP/templates/system_update.html:53
 msgid "Refresh Status"
 msgstr ""
 
-#: SIP\templates\system_update.html:62
+#: SIP/templates/system_update.html:62
 msgid "Update SIP"
 msgstr ""
 
-#: SIP\templates\system_update.html:64
+#: SIP/templates/system_update.html:64
 msgid "Up-to-date"
 msgstr ""
 
-#: SIP\templates\system_update.html:65
+#: SIP/templates/system_update.html:65
 msgid "Restart SIP"
 msgstr ""
 
-#: SIP\webpages.py:322
+#: SIP/webpages.py:429
 msgid " not found."
 msgstr ""
 
-#: SIP\webpages.py:322
+#: SIP/webpages.py:429
 msgid "Station "
 msgstr ""
 
-#: SIP\webpages.py:340
+#: SIP/webpages.py:449
 msgid "Manual mode not active."
 msgstr ""
 
-#: SIP\webpages.py:622
+#: SIP/webpages.py:742
 msgid "Date, Start Time, Zone, Duration, Program"
 msgstr ""
 

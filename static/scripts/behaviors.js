@@ -49,6 +49,8 @@ jQuery(document).ready(function(){
 		jQuery("#heat").html((tempunit == "F" ? Math.round(10*(9/5*cputemp+32))/10 : cputemp) + "&deg;" + tempunit);		
 	}
 	
+	
+	
 	jQuery("button#bHome").click(function(){
 		window.location = baseUrl + "/";
 	});

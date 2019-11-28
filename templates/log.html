@@ -1,14 +1,14 @@
 $def with (records)
 
-$var title: $_('SIP Log')
+$var title: $_(u'SIP Log')
 $var page: log
 $code:
 	snames = gv.snames
 	if gv.sd['lg'] == 1:
-		log_state = _("Enabled")
+		log_state = _(u"Enabled")
 		log_option = "checked"
 	else:
-		log_state = _("Disabled")
+		log_state = _(u"Disabled")
 		log_option = ""
 		
 	def formatTime(t):
@@ -21,14 +21,14 @@ $code:
 				newhour = 12
 			if hour > 12:
 				newhour = hour-12
-			return str(newhour)  + t[2:] + (" am" if hour<12 else " pm")
+			return str(newhour) + t[2:] + (" am" if hour<12 else " pm")
 
 
 <script>
     // Initialize behaviors
     jQuery(document).ready(function(){
         jQuery("button#nRefresh").click(function(){
-            window.location= baseUrl + "/vl";
+            window.location = baseUrl + "/vl";
         });
         jQuery("button#nDeleteAll").click(function(){
             jQuery("form#df").submit();
@@ -38,21 +38,21 @@ $code:
 </script>
 
 <div id="options">
-    <div class="title">$_('Log ')$log_state</div>
+    <div class="title">$_(u'Log ')$log_state</div>
     <form method="get" action="${app_path('/cl')}" name="df" id="df"></form>
 </div>
 
 <div id="log">
-    <p>$_('Total number of records: ')${len(records)} (${_("no") if gv.sd['lr']==0 else gv.sd['lr']}$_(' limit'))</p>
-    <p>$_('Download log as ')<a href="$app_path('/wl')">csv</a>.</p>
+    <p>$_(u'Total number of records: ')${len(records)} (${_(u"no") if gv.sd['lr'] == 0 else gv.sd['lr']}$_(u' limit'))</p>
+    <p>$_(u'Download log as ')<a href="$app_path('/wl')">csv</a>.</p>
 
     <table class="logList">
         <tr class="log_rec">
-            <th>$_('Date')</th>
-            <th>$_('Start Time')</th>
-            <th>$_('Station')</th>
-            <th>$_('Duration')</th>
-            <th>$_('Program')</th>
+            <th>$_(u'Date')</th>
+            <th>$_(u'Start Time')</th>
+            <th>$_(u'Station')</th>
+            <th>$_(u'Duration')</th>
+            <th>$_(u'Program')</th>
         </tr>
         $ odd = 1
         $for r in records:
@@ -70,6 +70,6 @@ $code:
 </div>
 
 <div id="controls">
-    <button id="nRefresh" class="refresh">$_('Refresh')</button>
-    <button id="nDeleteAll" class="delete danger">$_('Clear Log')</button>
+    <button id="nRefresh" class="refresh">$_(u'Refresh')</button>
+    <button id="nDeleteAll" class="delete danger">$_(u'Clear Log')</button>
 </div>

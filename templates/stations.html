@@ -1,6 +1,6 @@
 $def with ()
 
-$var title: $_('SIP Stations')
+$var title: $_(u'SIP Stations')
 $var page: stations
 $code:
 	snames = gv.snames
@@ -78,18 +78,18 @@ $code:
 
 </script>
 <div id="stations">
-    <div class="title">$_('Configure Stations')</div>
+    <div class="title">$_(u'Configure Stations')</div>
     <form id="sf" name="sf" action="$app_path('/cs')" method="get">
         <table class="stationList">
             <tr>
-                <th class="stationNumber">$_('Station')</th>
-                <th class="stationName">$_('Name')</th>
-                <th class="stationShow">$_('Enabled?')&nbsp;&nbsp;</th>
-                <th class="stationIgnore">$_('Ignore Rain?')&nbsp;&nbsp;</th>
+                <th class="stationNumber">$_(u'Station')</th>
+                <th class="stationName">$_(u'Name')</th>
+                <th class="stationShow">$_(u'Enabled?')&nbsp;&nbsp;</th>
+                <th class="stationIgnore">$_(u'Ignore Rain?')&nbsp;&nbsp;</th>
                 $#$if 'wl_weather' in gv.sd or 'et' in gv.plugin_data:
-                    <th class="stationIgnoreWL">$_('Ignore Plugin adjustments?')&nbsp;&nbsp;</th>
+                    <th class="stationIgnoreWL">$_(u'Ignore Plugin adjustments?')&nbsp;&nbsp;</th>
                 $if gv.sd['mas'] > 0:
-                    <th class="stationMaster">$_('Activate Master?')</th>
+                    <th class="stationMaster">$_(u'Activate Master?')</th>
             </tr>
             $for bid in range(0,gv.sd['nbrd']):
                 $for s in range(0,8):
@@ -101,9 +101,9 @@ $code:
                         </td>
                         $if sid == gv.sd['mas'] - 1:
                             $if 'wl_weather' in gv.sd:
-                                <td class="stationMaster" colspan="4">$_('(Master valve)')</td>
+                                <td class="stationMaster" colspan="4">$_(u'(Master valve)')</td>
                             $else:
-                                <td class="stationMaster" colspan="3">$_('(Master valve)')</td>
+                                <td class="stationMaster" colspan="3">$_(u'(Master valve)')</td>
                         $else:
                             <td class="stationShow">
                                 <input type="checkbox" ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}">
@@ -133,7 +133,7 @@ $code:
 </div>
 
 <div id="controls">
-    <button id="cSubmit" class="submit">$_('Submit Changes')</button>
-    <button id="cResetNames" class="refresh">$_('Reset Names')</button>
-    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
+    <button id="cSubmit" class="submit">$_(u'Submit Changes')</button>
+    <button id="cResetNames" class="refresh">$_(u'Reset Names')</button>
+    <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>
 </div>
