@@ -7,7 +7,7 @@ SIP has also been used to control pumps, lights, and other Irrigation related eq
 The core program is very versatile and there is a growing number of available plugins for added functionality.
 
 ### Software support:
-Starting with version 4 ( currently the Py3_WIP branch ), SIP can run under Python 2.7 and Python 3.\
+Starting with version 4, SIP can run under Python 2.7 and Python 3.\
 Most of the required Python packages and modules such as web.py and Cheroot are included in SIP's GitHub repository.\
 Installing SIP by cloning from GitHub enables easy upgrades via `git pull` on the command line or by using the included `System_Update` plugin.
 

@@ -9,9 +9,9 @@ from future.builtins import range
 import subprocess
 from threading import RLock
 
-major_ver = 3
-minor_ver = 2
-old_count = 747 #  update this to reset revision number.
+major_ver = 4
+minor_ver = 0
+old_count = 868 #  update this to reset revision number.
 
 try:
     revision = int(subprocess.check_output([u"git", u"rev-list", u"--count", u"HEAD"]))
