@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2019-10-26 09:10+PDT\n"
+"POT-Creation-Date: 2019-11-28 10:56+PST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,225 +23,225 @@ msgstr ""
 msgid "Could not use git to determine date of last commit!"
 msgstr ""
 
-#: SIP/gv.py:150
+#: SIP/gv.py:148
 msgid "System name"
 msgstr ""
 
-#: SIP/gv.py:153
+#: SIP/gv.py:151
 msgid "Unique name of this SIP system."
 msgstr ""
 
-#: SIP/gv.py:154 SIP/gv.py:161 SIP/gv.py:163 SIP/gv.py:169 SIP/gv.py:171
-#: SIP/gv.py:177 SIP/gv.py:184 SIP/gv.py:191
+#: SIP/gv.py:152 SIP/gv.py:159 SIP/gv.py:161 SIP/gv.py:167 SIP/gv.py:169
+#: SIP/gv.py:175 SIP/gv.py:182 SIP/gv.py:189
 msgid "System"
 msgstr ""
 
-#: SIP/gv.py:157
+#: SIP/gv.py:155
 msgid "Location"
 msgstr ""
 
-#: SIP/gv.py:160
+#: SIP/gv.py:158
 msgid "City name or zip code. Use comma or + in place of space."
 msgstr ""
 
-#: SIP/gv.py:163
+#: SIP/gv.py:161
 msgid "Language"
 msgstr ""
 
-#: SIP/gv.py:163
+#: SIP/gv.py:161
 msgid "Select language."
 msgstr ""
 
-#: SIP/gv.py:165
+#: SIP/gv.py:163
 msgid "24-hour clock"
 msgstr ""
 
-#: SIP/gv.py:168
+#: SIP/gv.py:166
 msgid "Display times in 24 hour format (as opposed to AM/PM style.)"
 msgstr ""
 
-#: SIP/gv.py:171
+#: SIP/gv.py:169
 msgid "HTTP port"
 msgstr ""
 
-#: SIP/gv.py:171
+#: SIP/gv.py:169
 msgid "HTTP port."
 msgstr ""
 
-#: SIP/gv.py:173
+#: SIP/gv.py:171
 msgid "HTTP IP addr"
 msgstr ""
 
-#: SIP/gv.py:176
+#: SIP/gv.py:174
 msgid "IP Address used for HTTP server socket.  IPv4 or IPv6 address"
 msgstr ""
 
-#: SIP/gv.py:180
+#: SIP/gv.py:178
 msgid "Use pigpio"
 msgstr ""
 
-#: SIP/gv.py:183
+#: SIP/gv.py:181
 msgid "GPIO Library to use. Default is RPi.GPIO"
 msgstr ""
 
-#: SIP/gv.py:187
+#: SIP/gv.py:185
 msgid "Water Scaling"
 msgstr ""
 
-#: SIP/gv.py:190
+#: SIP/gv.py:188
 msgid "Water scaling (as %), between 0 and 100."
 msgstr ""
 
-#: SIP/gv.py:194
+#: SIP/gv.py:192
 msgid "Enable passphrase"
 msgstr ""
 
-#: SIP/gv.py:197
+#: SIP/gv.py:195
 msgid ""
 "Minimal security. \n"
 "Prevent unauthorized users from accessing the system without a passphrase. \n"
 "*** Default is opendoor ***"
 msgstr ""
 
-#: SIP/gv.py:198 SIP/gv.py:205 SIP/gv.py:212 SIP/gv.py:219 SIP/helpers.py:628
-msgid "Passphrase"
+#: SIP/gv.py:196 SIP/gv.py:203 SIP/gv.py:210 SIP/gv.py:217
+msgid "Manage Passphrase"
 msgstr ""
 
-#: SIP/gv.py:201
+#: SIP/gv.py:199
 msgid "Current passphrase"
 msgstr ""
 
-#: SIP/gv.py:204
+#: SIP/gv.py:202
 msgid ""
 "Enter the current passphrase. \n"
 "*** Defalut is opendoor ***"
 msgstr ""
 
-#: SIP/gv.py:208
+#: SIP/gv.py:206
 msgid "New passphrase"
 msgstr ""
 
-#: SIP/gv.py:211
+#: SIP/gv.py:209
 msgid "Enter a new passphrase."
 msgstr ""
 
-#: SIP/gv.py:215
+#: SIP/gv.py:213
 msgid "Confirm passphrase"
 msgstr ""
 
-#: SIP/gv.py:218
+#: SIP/gv.py:216
 msgid "Confirm the new passphrase."
 msgstr ""
 
-#: SIP/gv.py:229
+#: SIP/gv.py:227
 msgid "Sequential"
 msgstr ""
 
-#: SIP/gv.py:232
+#: SIP/gv.py:230
 msgid "Sequential or concurrent running mode."
 msgstr ""
 
-#: SIP/gv.py:233 SIP/gv.py:240 SIP/gv.py:247 SIP/gv.py:254 SIP/gv.py:261
+#: SIP/gv.py:231 SIP/gv.py:238 SIP/gv.py:245 SIP/gv.py:252 SIP/gv.py:259
 msgid "Station Handling"
 msgstr ""
 
-#: SIP/gv.py:236
+#: SIP/gv.py:234
 msgid "Individual Duration"
 msgstr ""
 
-#: SIP/gv.py:239
+#: SIP/gv.py:237
 msgid "Allow each station to have its own run time in programs."
 msgstr ""
 
-#: SIP/gv.py:243
+#: SIP/gv.py:241
 msgid "Station extensions"
 msgstr ""
 
-#: SIP/gv.py:246
+#: SIP/gv.py:244
 msgid "Add 8 stations for each extension."
 msgstr ""
 
-#: SIP/gv.py:250
+#: SIP/gv.py:248
 msgid "Station delay"
 msgstr ""
 
-#: SIP/gv.py:253
+#: SIP/gv.py:251
 msgid "Station delay time (in seconds), between 0 and 240."
 msgstr ""
 
-#: SIP/gv.py:257
+#: SIP/gv.py:255
 msgid "Active-Low Relay"
 msgstr ""
 
-#: SIP/gv.py:260
+#: SIP/gv.py:258
 msgid "Using active-low relay boards connected through shift registers"
 msgstr ""
 
-#: SIP/gv.py:264
+#: SIP/gv.py:262
 msgid "Master station"
 msgstr ""
 
-#: SIP/gv.py:267
+#: SIP/gv.py:265
 msgid "Select master station."
 msgstr ""
 
-#: SIP/gv.py:268 SIP/gv.py:275 SIP/gv.py:282
+#: SIP/gv.py:266 SIP/gv.py:273 SIP/gv.py:280
 msgid "Configure Master"
 msgstr ""
 
-#: SIP/gv.py:271
+#: SIP/gv.py:269
 msgid "Master on adjust"
 msgstr ""
 
-#: SIP/gv.py:274
+#: SIP/gv.py:272
 msgid "Master on delay (in seconds), between +0 and +60."
 msgstr ""
 
-#: SIP/gv.py:278
+#: SIP/gv.py:276
 msgid "Master off adjust"
 msgstr ""
 
-#: SIP/gv.py:281
+#: SIP/gv.py:279
 msgid "Master off delay (in seconds), between -60 and +60."
 msgstr ""
 
-#: SIP/gv.py:285
+#: SIP/gv.py:283
 msgid "Use rain sensor"
 msgstr ""
 
-#: SIP/gv.py:288
+#: SIP/gv.py:286
 msgid "Use rain sensor."
 msgstr ""
 
-#: SIP/gv.py:289 SIP/gv.py:296
+#: SIP/gv.py:287 SIP/gv.py:294
 msgid "Rain Sensor"
 msgstr ""
 
-#: SIP/gv.py:292
+#: SIP/gv.py:290
 msgid "Normally open"
 msgstr ""
 
-#: SIP/gv.py:295
+#: SIP/gv.py:293
 msgid "Rain sensor type."
 msgstr ""
 
-#: SIP/gv.py:299
+#: SIP/gv.py:297
 msgid "Enable logging"
 msgstr ""
 
-#: SIP/gv.py:302
+#: SIP/gv.py:300
 msgid "Log all events - note that repetitive writing to an SD card can shorten its lifespan."
 msgstr ""
 
-#: SIP/gv.py:305 SIP/gv.py:312
+#: SIP/gv.py:303 SIP/gv.py:310
 msgid "Logging"
 msgstr ""
 
-#: SIP/gv.py:308
+#: SIP/gv.py:306
 msgid "Max log entries"
 msgstr ""
 
-#: SIP/gv.py:311
+#: SIP/gv.py:309
 msgid "Length of log to keep, 0=no limits."
 msgstr ""
 
@@ -261,39 +261,43 @@ msgstr ""
 msgid "Restarting..."
 msgstr ""
 
-#: SIP/helpers.py:344
+#: SIP/helpers.py:347
 msgid "program"
 msgstr ""
 
-#: SIP/helpers.py:345
+#: SIP/helpers.py:348
 msgid "station"
 msgstr ""
 
-#: SIP/helpers.py:346
+#: SIP/helpers.py:349
 msgid "duration"
 msgstr ""
 
-#: SIP/helpers.py:347
+#: SIP/helpers.py:350
 msgid "start"
 msgstr ""
 
-#: SIP/helpers.py:348
+#: SIP/helpers.py:351
 msgid "date"
 msgstr ""
 
-#: SIP/helpers.py:352 SIP/templates/base.html:119
+#: SIP/helpers.py:355 SIP/templates/base.html:119
 msgid "Run-once"
 msgstr ""
 
-#: SIP/helpers.py:354 SIP/templates/base.html:120 SIP/templates/home.html:242
+#: SIP/helpers.py:357 SIP/templates/base.html:120 SIP/templates/home.html:242
 msgid "Manual"
 msgstr ""
 
-#: SIP/helpers.py:633
+#: SIP/helpers.py:631
+msgid "Passphrase"
+msgstr ""
+
+#: SIP/helpers.py:636
 msgid "Incorrect passphrase, please try again"
 msgstr ""
 
-#: SIP/plugins/plugin_manager.py:36
+#: SIP/plugins/plugin_manager.py:42
 msgid "Manage Plugins"
 msgstr ""
 
@@ -329,11 +333,11 @@ msgstr ""
 msgid "System update plug-in encountered error"
 msgstr ""
 
-#: SIP/sip.py:54
+#: SIP/sip.py:53
 msgid "Starting timing loop"
 msgstr ""
 
-#: SIP/sip.py:283
+#: SIP/sip.py:282
 msgid "plugins loaded:"
 msgstr ""
 
@@ -365,52 +369,52 @@ msgstr ""
 msgid "Sunday"
 msgstr ""
 
-#: SIP/templates/base.html:19 SIP/templates/monthly.html:26
-msgid "January"
-msgstr ""
-
-#: SIP/templates/base.html:19 SIP/templates/monthly.html:30
-msgid "February"
-msgstr ""
-
-#: SIP/templates/base.html:19 SIP/templates/monthly.html:34
-msgid "March"
-msgstr ""
-
-#: SIP/templates/base.html:19 SIP/templates/monthly.html:38
+#: SIP/templates/base.html:19
 msgid "April"
 msgstr ""
 
-#: SIP/templates/base.html:19 SIP/templates/monthly.html:42
-msgid "May"
-msgstr ""
-
-#: SIP/templates/base.html:19 SIP/templates/monthly.html:46
-msgid "June"
-msgstr ""
-
-#: SIP/templates/base.html:19 SIP/templates/monthly.html:50
-msgid "July"
-msgstr ""
-
-#: SIP/templates/base.html:19 SIP/templates/monthly.html:54
+#: SIP/templates/base.html:19
 msgid "August"
 msgstr ""
 
-#: SIP/templates/base.html:19 SIP/templates/monthly.html:58
-msgid "September"
+#: SIP/templates/base.html:19
+msgid "December"
 msgstr ""
 
-#: SIP/templates/base.html:19 SIP/templates/monthly.html:62
-msgid "October"
+#: SIP/templates/base.html:19
+msgid "February"
 msgstr ""
 
-#: SIP/templates/base.html:19 SIP/templates/monthly.html:66
+#: SIP/templates/base.html:19
+msgid "January"
+msgstr ""
+
+#: SIP/templates/base.html:19
+msgid "July"
+msgstr ""
+
+#: SIP/templates/base.html:19
+msgid "June"
+msgstr ""
+
+#: SIP/templates/base.html:19
+msgid "March"
+msgstr ""
+
+#: SIP/templates/base.html:19
+msgid "May"
+msgstr ""
+
+#: SIP/templates/base.html:19
 msgid "November"
 msgstr ""
 
-#: SIP/templates/base.html:19 SIP/templates/monthly.html:70
-msgid "December"
+#: SIP/templates/base.html:19
+msgid "October"
+msgstr ""
+
+#: SIP/templates/base.html:19
+msgid "September"
 msgstr ""
 
 #: SIP/templates/base.html:121 SIP/templates/log.html:55
@@ -687,7 +691,7 @@ msgid "SIP Modify Program"
 msgstr ""
 
 #: SIP/templates/modify.html:91
-msgid "Error: Incorrect time input "
+msgid "Incorrect time input "
 msgstr ""
 
 #: SIP/templates/modify.html:103
@@ -699,19 +703,19 @@ msgid "Please choose at least one station to run in this program."
 msgstr ""
 
 #: SIP/templates/modify.html:258
-msgid "Error: starting in days wrong."
+msgid "Starting in days wrong."
 msgstr ""
 
 #: SIP/templates/modify.html:281
-msgid "Error: Duration missing."
+msgid "Please enter a Duration to continue."
 msgstr ""
 
 #: SIP/templates/modify.html:301
-msgid "Error: Incorrect duration."
+msgid "Duration must be later than start."
 msgstr ""
 
 #: SIP/templates/modify.html:344
-msgid "Error: Start time must be prior to end time."
+msgid "End time must be later than start time."
 msgstr ""
 
 #: SIP/templates/modify.html:373
@@ -794,28 +798,11 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: SIP/templates/modify.html:500 SIP/templates/monthly.html:78
-#: SIP/templates/options.html:156 SIP/templates/plugins.html:69
-#: SIP/templates/plugins_repo.html:45 SIP/templates/proto.html:75
-#: SIP/templates/runonce.html:86 SIP/templates/stations.html:138
-#: SIP/templates/system_update.html:66
+#: SIP/templates/modify.html:500 SIP/templates/options.html:156
+#: SIP/templates/plugins.html:69 SIP/templates/plugins_repo.html:45
+#: SIP/templates/proto.html:75 SIP/templates/runonce.html:86
+#: SIP/templates/stations.html:138 SIP/templates/system_update.html:66
 msgid "Cancel"
-msgstr ""
-
-#: SIP/templates/monthly.html:3
-msgid "SIP Monthly Adjustments"
-msgstr ""
-
-#: SIP/templates/monthly.html:21
-msgid "Monthly Irrigation Adjustments"
-msgstr ""
-
-#: SIP/templates/monthly.html:22
-msgid "Enter an adjustment for each month (% irrigation time)"
-msgstr ""
-
-#: SIP/templates/monthly.html:77 SIP/templates/proto.html:74
-msgid "Submit"
 msgstr ""
 
 #: SIP/templates/options.html:3
@@ -863,11 +850,11 @@ msgid "System Restart"
 msgstr ""
 
 #: SIP/templates/options.html:144
-msgid "Restart"
+msgid "Restart software"
 msgstr ""
 
-#: SIP/templates/options.html:144
-msgid "Restart software"
+#: SIP/templates/options.html:144 SIP/templates/system_update.html:65
+msgid "Restart SIP"
 msgstr ""
 
 #: SIP/templates/options.html:145
@@ -1071,6 +1058,10 @@ msgstr ""
 msgid "Text Field 2"
 msgstr ""
 
+#: SIP/templates/proto.html:74
+msgid "Submit"
+msgstr ""
+
 #: SIP/templates/restarting.html:3
 msgid "SIP Restarting"
 msgstr ""
@@ -1159,10 +1150,6 @@ msgstr ""
 msgid "Up-to-date"
 msgstr ""
 
-#: SIP/templates/system_update.html:65
-msgid "Restart SIP"
-msgstr ""
-
 #: SIP/webpages.py:429
 msgid " not found."
 msgstr ""
@@ -1175,7 +1162,7 @@ msgstr ""
 msgid "Manual mode not active."
 msgstr ""
 
-#: SIP/webpages.py:742
+#: SIP/webpages.py:744
 msgid "Date, Start Time, Zone, Duration, Program"
 msgstr ""
 
