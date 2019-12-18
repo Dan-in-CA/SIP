@@ -428,7 +428,9 @@ class get_set_station(ProtectedPage):
             else:
                 return _(u"Station ") + str(sid + 1) + _(u" not found.")
         elif gv.sd[u"mm"]:
-            if set_to:  # if status is
+            if set_to:  # if status is on
+                if gv.sd[u"seq"]:
+                    stop_stations()
                 gv.rs[sid][0] = gv.now  # set start time to current time
                 if set_time > 0:  # if an optional duration time is given
                     gv.rs[sid][2] = set_time
