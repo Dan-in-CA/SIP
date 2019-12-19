@@ -430,7 +430,20 @@ class get_set_station(ProtectedPage):
         elif gv.sd[u"mm"]:
             if set_to:  # if status is on
                 if gv.sd[u"seq"]:
-                    stop_stations()
+                    if gv.sd["mas"]: # if a master is set
+                        for i in range(gv.sd[u"nst"]):
+                            if i != gv.sd["mas"] - 1:
+                                gv.srvals[i] = 0
+                                gv.rs[i] = [0, 0, 0, 0]
+                                gv.ps[i] = [0, 0]
+                        set_output()
+                        sb_byte = gv.sd["mas"] // 8
+                        gv.sbits[sb_byte] = 1 << (gv.sd["mas"] % 8) -1
+                        for b in range(len(gv.sbits)):
+                            if b != sb_byte:
+                                gv.sbits[b] = 0
+                    else:
+                      stop_stations() 
                 gv.rs[sid][0] = gv.now  # set start time to current time
                 if set_time > 0:  # if an optional duration time is given
                     gv.rs[sid][2] = set_time
