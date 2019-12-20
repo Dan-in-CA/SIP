@@ -437,8 +437,8 @@ class get_set_station(ProtectedPage):
                                 gv.rs[i] = [0, 0, 0, 0]
                                 gv.ps[i] = [0, 0]
                         set_output()
-                        sb_byte = gv.sd["mas"] // 8
-                        gv.sbits[sb_byte] = 1 << (gv.sd["mas"] % 8) -1
+                        sb_byte = (gv.sd["mas"] - 1) // 8
+                        gv.sbits[sb_byte] = 1 << (gv.sd["mas"] - 1) % 8
                         for b in range(len(gv.sbits)):
                             if b != sb_byte:
                                 gv.sbits[b] = 0
