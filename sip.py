@@ -167,7 +167,8 @@ def timing_loop():
                                     gv.rs[masid][0] = gv.rs[sid][0] + gv.sd[u"mton"]
                                     gv.rs[masid][1] = gv.rs[sid][1] + gv.sd[u"mtoff"]
                                     gv.rs[masid][3] = gv.rs[sid][3]
-                            elif gv.sd[u"mas"] == sid + 1:
+                            elif gv.sd[u"mas"] == sid + 1: # if this is master 
+                                masid = gv.sd[u"mas"] - 1  # master index
                                 gv.sbits[b] |= 1 << sid
                                 gv.srvals[masid] = 1
                                 set_output()
