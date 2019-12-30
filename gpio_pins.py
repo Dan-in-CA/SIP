@@ -1,235 +1,18 @@
 # -*- coding: utf-8 -*-
 
+# Python 2/3 compatibility imports
 from __future__ import print_function
 from future.builtins import range
-import gv
 
+# local module imports
+from blinker import signal
+import gv
 try:
     import RPi.GPIO as GPIO
-
     gv.platform = u"pi"
-    rev = GPIO.RPI_REVISION
-    if rev == 1:
-        # map 26 physical pins (1based) with 0 for pins that do not have a gpio number
-        if gv.use_pigpio:
-            gv.pin_map = [
-                0,
-                0,
-                0,
-                0,
-                0,
-                1,
-                0,
-                4,
-                14,
-                0,
-                15,
-                17,
-                18,
-                21,
-                0,
-                22,
-                23,
-                0,
-                24,
-                10,
-                0,
-                9,
-                25,
-                11,
-                8,
-                0,
-                7,
-            ]
-        else:
-            gv.pin_map = [
-                0,
-                0,
-                0,
-                0,
-                0,
-                5,
-                0,
-                7,
-                8,
-                0,
-                10,
-                11,
-                12,
-                13,
-                0,
-                15,
-                16,
-                0,
-                18,
-                19,
-                0,
-                21,
-                22,
-                23,
-                24,
-                0,
-                26,
-            ]
-    elif rev == 2:
-        # map 26 physical pins (1based) with 0 for pins that do not have a gpio number
-        if gv.use_pigpio:
-            gv.pin_map = [
-                0,
-                0,
-                0,
-                2,
-                0,
-                3,
-                0,
-                4,
-                14,
-                0,
-                15,
-                17,
-                18,
-                27,
-                0,
-                22,
-                23,
-                0,
-                24,
-                10,
-                0,
-                9,
-                25,
-                11,
-                8,
-                0,
-                7,
-            ]
-        else:
-            gv.pin_map = [
-                0,
-                0,
-                0,
-                0,
-                0,
-                5,
-                0,
-                7,
-                8,
-                0,
-                10,
-                11,
-                12,
-                13,
-                0,
-                15,
-                16,
-                0,
-                18,
-                19,
-                0,
-                21,
-                22,
-                23,
-                24,
-                0,
-                26,
-            ]
-    elif rev == 3:
-        # map 40 physical pins (1based) with 0 for pins that do not have a gpio number
-        if gv.use_pigpio:
-            gv.pin_map = [
-                0,
-                0,
-                0,
-                2,
-                0,
-                3,
-                0,
-                4,
-                14,
-                0,
-                15,
-                17,
-                18,
-                27,
-                0,
-                22,
-                23,
-                0,
-                24,
-                10,
-                0,
-                9,
-                25,
-                11,
-                8,
-                0,
-                7,
-                0,
-                0,
-                5,
-                0,
-                6,
-                12,
-                13,
-                0,
-                19,
-                16,
-                26,
-                20,
-                0,
-                21,
-            ]
-        else:
-            gv.pin_map = [
-                0,
-                0,
-                0,
-                3,
-                0,
-                5,
-                0,
-                7,
-                8,
-                0,
-                10,
-                11,
-                12,
-                13,
-                0,
-                15,
-                16,
-                0,
-                18,
-                19,
-                0,
-                21,
-                22,
-                23,
-                24,
-                0,
-                26,
-                0,
-                0,
-                29,
-                0,
-                31,
-                32,
-                33,
-                0,
-                35,
-                36,
-                37,
-                38,
-                0,
-                40,
-            ]
-    else:
-        print(u"Unknown pi pin revision.  Using pin mapping for rev 3")
-
 except ImportError:
     try:
-        import Adafruit_BBIO.GPIO as GPIO  # Required for accessing General Purpose Input Output pins on Beagle Bone Black
-
+        import Adafruit_BBIO.GPIO as GPIO  # Required for accessing GPIO pins on Beagle Bone Black
         gv.pin_map = [None] * 11  # map only the pins we are using
         gv.pin_map.extend([u"P9_" + str(i) for i in range(11, 17)])
         gv.platform = u"bo"
@@ -238,9 +21,136 @@ except ImportError:
             i for i in range(27)
         ]  # assume 26 pins all mapped.  Maybe we should not assume anything, but...
         gv.platform = ""  # if no platform, allows program to still run.
-        print(u"No GPIO module was loaded from GPIO Pins module")
-
-from blinker import signal
+        print(u"No GPIO module was loaded from GPIO Pins module") 
+           
+# fmt: off
+if gv.platform == u"pi":    
+    rev = GPIO.RPI_REVISION
+    if rev == 1:
+        # map 26 physical pins (1 based) with 0 for pins that do not have a gpio number
+        if gv.use_pigpio:
+            gv.pin_map = [ #  BMC numbering 
+                0, #  offset for 1 based numbering
+                0,  0,
+                0,  0,
+                1,  0,
+                4,  14,
+                0,  15,
+                17, 18,
+                21, 0,
+                22, 23,
+                0,  24,
+                10, 0,
+                9,  25,
+                11, 8,
+                0,  7,
+            ]
+        else:
+            gv.pin_map = [ #  Board numbering
+                0, #  offset for 1 based numbering
+                0,  0,
+                0,  0,
+                5,  0,
+                7,  8,
+                0,  10,
+                11, 12,
+                13, 0,
+                15, 16,
+                0,  18,
+                19, 0,
+                21, 22,
+                23, 24,
+                0,  26,
+            ]
+    elif rev == 2:
+        # map 26 physical pins (1 based) with 0 for pins that do not have a gpio number
+        if gv.use_pigpio:
+            gv.pin_map = [ #  BMC numbering
+                0, #  offset for 1 based numbering
+                0,  0,
+                2,  0,
+                3,  0,
+                4,  14,
+                0,  15,
+                17, 18,
+                27, 0,
+                22, 23,
+                0,  24,
+                10, 0,
+                9,  25,
+                11, 8,
+                0,  7,
+            ]
+        else:
+            gv.pin_map = [#  Board numbering
+                0, #  offset for 1 based numbering
+                0,  0,
+                0,  0,
+                5,  0,
+                7,  8,
+                0,  10,
+                11, 12,
+                13, 0,
+                15, 16,
+                0,  18,
+                19, 0,
+                21, 22,
+                23, 24,
+                0,  26,
+            ]
+    elif rev == 3:
+        # map 40 physical pins (1 based) with 0 for pins that do not have a gpio number
+        if gv.use_pigpio:
+            gv.pin_map = [ #  BMC numbering
+                0, #  offset for 1 based numbering
+                0,  0,
+                2,  0,
+                3,  0,
+                4,  14,
+                0,  15,
+                17, 18,
+                27, 0,
+                22, 23,
+                0,  24,
+                10, 0,
+                9,  25,
+                11, 8,
+                0,  7,
+                0,  0,
+                5,  0,
+                6,  12,
+                13, 0,
+                19, 16,
+                26, 20,
+                0,  21,
+            ]
+        else:
+            gv.pin_map = [#  Board numbering
+                0, #  offset for 1 based numbering
+                0,  0,
+                3,  0,
+                5,  0,
+                7,  8,
+                0,  10,
+                11, 12,
+                13, 0,
+                15, 16,
+                0,  18,
+                19, 0,
+                21, 22,
+                23, 24,
+                0,  26,
+                0,  0,
+                29, 0,
+                31, 32,
+                33, 0,
+                35, 36,
+                37, 38,
+                0,  40,
+            ]
+    else:
+        print(u"Unknown pi pin revision.  Using pin mapping for rev 3")
+# fmt: on
 
 zone_change = signal(u"zone_change")
 
@@ -253,7 +163,7 @@ try:
         GPIO.setwarnings(False)
         GPIO.setmode(
             GPIO.BOARD
-        )  # IO channels are identified by header connector pin numbers.
+        )  # IO channels are referenced by header connector pin numbers.
 except Exception:
     pass
 
@@ -285,7 +195,7 @@ except NameError:
 
 
 def setup_pins():
-    u"""
+    """
     Define and setup GPIO pins for shift register operation
     """
 
@@ -339,7 +249,7 @@ def setup_pins():
 
 
 def disableShiftRegisterOutput():
-    u"""Disable output from shift register."""
+    """Disable output from shift register."""
 
     global pi
     try:
@@ -357,7 +267,7 @@ def disableShiftRegisterOutput():
 
 
 def enableShiftRegisterOutput():
-    u"""Enable output from shift register."""
+    """Enable output from shift register."""
 
     global pi
     try:
@@ -370,7 +280,7 @@ def enableShiftRegisterOutput():
 
 
 def setShiftRegister(srvals):
-    u"""Set the state of each output pin on the shift register from the srvals list."""
+    """Set the state of each output pin on the shift register from the srvals list."""
 
     global pi
     try:
@@ -401,9 +311,8 @@ def setShiftRegister(srvals):
 
 
 def set_output():
-    u"""
-    Activate triacs according to shift register state.
-    If using SIP with shift registers and active low relays, uncomment the line indicated below.
+    """
+    Activate pins according to gv.srvals.
     """
 
     with gv.output_srvals_lock:

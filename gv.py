@@ -1,14 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# Python 2/3 compatibility imports
+from __future__ import print_function
+from future.builtins import range
+
+# standard library imports
+from calendar import timegm
+import json
+import subprocess
+from threading import RLock
+import time
 
 ##############################
 #### Revision information ####
-from __future__ import print_function
-from future.builtins import range
-import subprocess
-from threading import RLock
-
 major_ver = 4
 minor_ver = 0
 old_count = 868 #  update this to reset revision number.
@@ -36,15 +41,6 @@ except Exception:
 # Settings Dictionary. A set of vars kept in memory and persisted in a file.
 # Edit this default dictionary definition to add or remove "key": "value" pairs or change defaults.
 # note old passphrases stored in the "pwd" option will be lost - reverts to default passphrase.
-from calendar import timegm
-import json
-import time
-
-platform = (
-    ""
-)  # must be done before the following import because gpio_pins will try to set it
-
-# from helpers import load_programs, station_names
 
 sd = {
     u"en": 1,
@@ -116,7 +112,6 @@ tz_offset = int(
     time.time() - timegm(time.localtime())
 )  # compatible with Javascript (negative tz shown as positive value)
 plugin_menu = []  # Empty list of lists for plugin links (e.g. ["name", "URL"])
-
 srvals = [0] * (sd[u"nst"])  # Shift Register values
 output_srvals = [0] * (sd[u"nst"])  # Shift Register values last set by set_output()
 output_srvals_lock = RLock()
@@ -124,6 +119,7 @@ rovals = [0] * sd[u"nbrd"] * 7  # Run Once durations
 snames = station_names()  # Load station names from file
 pd = load_programs()  # Load program data from file
 plugin_data = {}  # Empty dictionary to hold plugin based global data
+
 ps = []  # Program schedule (used for UI display)
 for i in range(sd[u"nst"]):
     ps.append([0, 0])
@@ -216,13 +212,6 @@ options = [
         _(u"Confirm the new passphrase."),
         _(u"Manage Passphrase"),
     ],
-#     [
-#         _(u"Enable SSL (HTTPS)"),
-#         u"boolean",
-#         u"ssl",
-#         _(u"Enable SSL encryption of SIP web interface"),
-#         _(u"Manage Passphrase"),
-#     ],
     [
         _(u"Sequential"),
         u"boolean",

@@ -58,7 +58,7 @@ gv.srvals	shift register values, used to turn zones on or off (list of one byte 
 gv.output_srvals	shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
 gv.outpu_srvals_lock  a mutex used whenever gv.output_srvals must be accessed atomically
 gv.rovals	run once values - list of duration times in seconds for a run once program (list, length = number of statons)
-gv.pd	program data - loaded from file at startup (list of lists)
+gv.pd	program data - loaded from file at startup (list of dicts)
 gv.ps	program schedule used for UI display (list of 2 element lists i.e. [program number, duration])
 gv.pon	program on (Holds program number of currently running program)
 gv.sbits	station bits, used to display stations that are on in UI (list of bytes, one byte per board)

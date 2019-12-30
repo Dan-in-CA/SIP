@@ -1,51 +1,44 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Python 2/3 compatibility imports
 from __future__ import print_function
 from __future__ import division
 from future import standard_library
 standard_library.install_aliases()
 from future.builtins import range
-# from past.utils import old_div # - test
-import i18n
 
-import subprocess
-import json
+# standard library imports
 import ast
+from calendar import timegm
+import i18n
+import json
+import subprocess
+import sys
+from threading import Thread
 import time
 
-# import thread
-import _thread
-from calendar import timegm
-import sys
-
-sys.path.append(u"./plugins")
-
-import web  # the Web.py module. See webpy.org (Enables the Python SIP web interface)
-
+# local module imports
 import gv
+from gpio_pins import set_output
 from helpers import (
-    report_station_completed,
+    check_rain,
+    get_rpi_revision,
+    jsave,
+    log_run,        
     plugin_adjustment,
     prog_match,
+    report_station_completed,    
     schedule_stations,
-    log_run,
+    station_names,    
     stop_onrain,
-    check_rain,
-    jsave,
-    station_names,
-    get_rpi_revision,
 )
-from urls import urls  # Provides access to URLs for UI pages
-from gpio_pins import set_output
 from ReverseProxied import ReverseProxied
+from urls import urls  # Provides access to URLs for UI pages
+import web  # the Web.py module. See webpy.org (Enables the Python SIP web interface)
 
-# do not call set output until plugins are loaded because it should NOT be called
-# if gv.use_gpio_pins is False (which is set in relay board plugin.
-# set_output()
-
+sys.path.append(u"./plugins")
 gv.restarted = 1
-
 
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
@@ -250,7 +243,7 @@ class SIPApp(web.application):
 
 app = SIPApp(urls, globals())
 #  disableShiftRegisterOutput()
-web.config.debug = False  # Improves page load speed #  test - uncomment for production
+web.config.debug = False  # Improves page load speed
 web.config._session = web.session.Session(
     app, web.session.DiskStore(u"sessions"), initializer={u"user": u"anonymous"}
 )
@@ -295,7 +288,9 @@ if __name__ == u"__main__":
                 gv.plugin_menu.pop(i)
     except Exception:
         pass
-    _thread.start_new_thread(timing_loop, ())
+    tl = Thread(target=timing_loop)
+    tl.daemon = True
+    tl.start()
 
     if gv.use_gpio_pins:
         set_output()

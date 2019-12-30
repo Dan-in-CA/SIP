@@ -1,82 +1,67 @@
 # -*- coding: utf-8 -*-
 
+# Python 2/3 compatibility imports
 from __future__ import print_function
-from future.builtins import map #  - test
+from future.builtins import map
 from future.builtins import str
 from future.builtins import range
 from future.builtins import object
-import os
-import re
-import time
-import datetime
-import web
-import io
-import ast
 
+# standard library imports
+import ast
+import datetime
+import io
+import time
+
+# local module imports
+from blinker import signal
+from gpio_pins import set_output
 import gv
 from helpers import *
-from gpio_pins import set_output
 from sip import template_render
-from blinker import signal
+import web
 
 loggedin = signal(u"loggedin")
-
-
 def report_login():
     loggedin.send()
 
 
 value_change = signal(u"value_change")
-
-
 def report_value_change():
     value_change.send()
 
 
 option_change = signal(u"option_change")
-
-
 def report_option_change():
     option_change.send()
 
 
 rebooted = signal(u"rebooted")
-
-
 def report_rebooted():
     rebooted.send()
 
 
 station_names = signal(u"station_names")
-
-
 def report_station_names():
     station_names.send()
 
 
 program_change = signal(u"program_change")
-
-
 def report_program_change():
     program_change.send()
 
 
 program_deleted = signal(u"program_deleted")
-
-
 def report_program_deleted():
     program_deleted.send()
 
 
 program_toggled = signal(u"program_toggled")
-
-
 def report_program_toggle():
     program_toggled.send()
 
 
 ### Web pages ######################
-
 
 class WebPage(object):
     def __init__(self):
@@ -251,7 +236,7 @@ class change_options(ProtectedPage):
             u"lg",
             u"pigpio",
             u"alr",
-        ]:  ###  "idd",
+        ]:
             if u"o" + f in qdict and (
                 qdict[u"o" + f] == u"on" or qdict[u"o" + f] == u"1"
             ):
@@ -559,8 +544,6 @@ class change_program(ProtectedPage):
         else:
             gv.pd[int(qdict[u"pid"])] = cp  # replace program
         jsave(gv.pd, u"programData")
-#         gv.sd[u"nprogs"] = len(gv.pd) - test
-#         jsave(gv.sd, u"sd") - test
         report_program_change()
         raise web.seeother(u"/vp")
 
@@ -576,7 +559,6 @@ class delete_program(ProtectedPage):
         else:
             del gv.pd[int(qdict[u"pid"])]
         jsave(gv.pd, u"programData")
-#         gv.sd[u"nprogs"] = len(gv.pd) # - test
         report_program_deleted()
         raise web.seeother(u"/vp")
 

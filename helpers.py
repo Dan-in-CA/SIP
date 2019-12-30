@@ -1,53 +1,42 @@
 # -*- coding: utf-8 -*-
 
+# Python 2/3 compatibility imports
 from __future__ import print_function
 from future.builtins import chr
 from future.builtins import str
 from future.builtins import range
 import six
-import collections
-import i18n
-import datetime
-from threading import Thread
-import os
-import errno
-import random
-import sys
-import time
-import subprocess
-import io
-import codecs
-import ast
-from web.webapi import seeother
-from blinker import signal
 
+# standard library imports
+import ast
+import codecs
+import datetime
+import errno
+from functools import reduce
+from hashlib import sha256
+import io
+import json
+import os
+import subprocess
+import sys
+from threading import Thread
+import time
+
+# local module imports
+from blinker import signal
+import gv
+import i18n
+from web.webapi import seeother
 import web
 from web import form
-
-import gv
-from hashlib import sha256
-from functools import reduce
-
 try:
     from gpio_pins import GPIO, pin_rain_sense, pin_relay
-
     if gv.use_pigpio:
         import pigpio
-
         pi = pigpio.pi()
 except ImportError:
     print(u"error importing GPIO pins into helpers")
     pass
-
-try:
-    import json
-except ImportError:
-    try:
-        import simplejson as json
-    except ImportError:
-        print(_(u"Error: json module not found"))
-        sys.exit()
-
 
 ##############################
 #### Function Definitions ####
@@ -226,10 +215,8 @@ def mkdir_p(path):
 
 def check_rain():
     """
-    Checks status of an installed rain sensor.
-    
+    Checks status of an installed rain sensor.  
     Handles normally open and normally closed rain sensors
-    
     Sets gv.sd["rs"] to 1 if rain is detected otherwise 0.
     """
 
@@ -306,18 +293,7 @@ def get_cpu_temp():
             output = int(subprocess.check_output(command.split()))
             temp = int(output / 1000.0)
         else:
-#             temp = u"" + str(0)
             return u""
-#         if unit == "F":
-# #             print("converting temp to F: ", temp)
-# #             return u"" + str((temp * 1.8) + 32)
-#             return u"" + str(temp)
-#         elif unit is not None:
-#             return u"" + str(temp)
-#         else:
-#             return temp
-#         print("Temp from helpers.py: ", temp) #  - test
-#         return u"" + str(temp)
         return temp
     except Exception:
         return u""
@@ -338,8 +314,7 @@ def timestr(t):
 
 def log_run():
     """
-    Add run data to json log file - most recent first.
-    
+    Add run data to json log file - most recent first.    
     If a record limit is specified (gv.sd["lr"]) the number of records is truncated.  
     """
 
@@ -420,14 +395,12 @@ def prog_match(prog):
         and (this_minute >= prog[u"start_min"])
         and (this_minute < prog[u"stop_min"])
     ):
-        #         print(u"##### Match 1 found #####") #  test
         return 1  # Program matched
     elif (
         prog[u"cycle_min"] != 0
         and (this_minute - prog[u"start_min"]) // prog[u"cycle_min"]
      * prog[u"cycle_min"] == this_minute - prog[u"start_min"]
     ):
-        #         print(u"##### Match 2 found #####") #  test
         return 1  # Program matched
     return 0
 

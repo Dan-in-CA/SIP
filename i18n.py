@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # encoding: utf-8
 
-import os
-import locale
 import gettext
 import json
+import locale
+import os
 
 __author__ = u"Dan"
 
@@ -50,7 +50,7 @@ curdir = os.path.abspath(os.path.dirname(__file__))
 # i18n directory.
 localedir = curdir + u"/i18n"
 
-gettext.install(u"sip_messages", localedir) #  removed ", unicode = True" Seems OK - test
+gettext.install(u"sip_messages", localedir)
 
 sys_lang = get_system_lang()
 
