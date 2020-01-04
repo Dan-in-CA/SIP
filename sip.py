@@ -4,9 +4,9 @@
 # Python 2/3 compatibility imports
 from __future__ import print_function
 from __future__ import division
-from future import standard_library
-standard_library.install_aliases()
-from future.builtins import range
+from six.moves import range
+# from future import standard_library
+# standard_library.install_aliases()
 
 # standard library imports
 import ast

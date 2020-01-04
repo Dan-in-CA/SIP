@@ -2,7 +2,7 @@
 
 # Python 2/3 compatibility imports
 from __future__ import print_function
-from future.builtins import range
+from six.moves import range
 
 # local module imports
 from blinker import signal

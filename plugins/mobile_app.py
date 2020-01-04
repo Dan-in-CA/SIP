@@ -1,13 +1,16 @@
-import json
-import time
-import datetime
-import string
-import calendar
 
+# standard library imports
+import calendar
+import datetime
+import json
+import string
+import time
+
+# local module imports
 from helpers import get_cpu_temp, check_login #  , password_hash
-import web
 import gv  # Gain access to sip's settings
 from urls import urls  # Gain access to sip's URL list
+import web
 from webpages import ProtectedPage, WebPage
 
 ##############

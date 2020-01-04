@@ -1,30 +1,29 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Python 2/3 compatibility imports
 from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
-from future.builtins import zip
-from future.builtins import range
-import json
-import re
-import subprocess
-import base64
-import time
+from six.moves import zip
+from six.moves import range
 try:
     from urllib.request import urlopen, Request
 except ImportError:
-#     from urllib2 import urlopen, Request, HTTPError
-    from urllib.request import urlopen, Request
-    from urllib.error import HTTPError
+    from six.moves.urllib.request import urlopen, Request
 
+# standard library imports
+import base64
+import json
+import re
+import subprocess
+import time
 
-import web
+# local module imports
 import gv  # Get access to SIP's settings
-from urls import urls  # Get access to SIP's URLs
-from sip import template_render
-from webpages import ProtectedPage
 from helpers import restart
+from sip import template_render
+from urls import urls  # Get access to SIP's URLs
+import web
+from webpages import ProtectedPage
 
 installed = []
 

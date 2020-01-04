@@ -3,18 +3,20 @@
 
 # this plugin checks sha on github and updates SIP from github
 
-import time
+# standard library imports
+import json
 import subprocess
 import sys
+import time
 import traceback
-import json
 
-import web
+# local module imports
 import gv  # Get access to SIP's settings
-from urls import urls  # Get access to SIP's URLsimport errno
-from sip import template_render
-from webpages import ProtectedPage
 from helpers import restart
+from sip import template_render
+from urls import urls  # Get access to SIP's URLsimport errno
+import web
+from webpages import ProtectedPage
 
 # Add a new url to open the data entry page.
 urls.extend([u"/UPs", u"plugins.system_update.status_page",

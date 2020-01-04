@@ -2,10 +2,8 @@
 
 # Python 2/3 compatibility imports
 from __future__ import print_function
-from future.builtins import chr
-from future.builtins import str
-from future.builtins import range
 import six
+from six.moves import range
 
 # standard library imports
 import ast

@@ -3,7 +3,7 @@
 
 # Python 2/3 compatibility imports
 from __future__ import print_function
-from future.builtins import range
+from six.moves import range
 
 # standard library imports
 from calendar import timegm
