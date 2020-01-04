@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.5\n"
 "POT-Creation-Date: 2019-11-28 10:56+PST\n"
-"PO-Revision-Date: 2020-01-03 11:38-0800\n"
+"PO-Revision-Date: 2020-01-04 00:24+0100\n"
 "Last-Translator: Dan <dkimberling59@gmail.com>\n"
 "Language-Team: dkimberling59@gmail.com\n"
 "Language: de_DE\n"
@@ -19,13 +19,13 @@ msgstr ""
 
 #: SIP/gv.py:20
 msgid "Could not use git to determine version!"
-msgstr "Git konnte nicht verwendet werden um die Version zu ermitteln."
+msgstr "Git konnte nicht verwendet werden um die Version zu ermitteln!"
 
 #: SIP/gv.py:30
 msgid "Could not use git to determine date of last commit!"
 msgstr ""
 "Git konnte nicht verwendet werden um das letzte Aktualisierungsdatum zu "
-"ermitteln."
+"ermitteln!"
 
 #: SIP/gv.py:148
 msgid "System name"
@@ -33,7 +33,7 @@ msgstr "System Name"
 
 #: SIP/gv.py:151
 msgid "Unique name of this SIP system."
-msgstr "Eindeutige Bezeichnung des SIP-Systems"
+msgstr "Eindeutige Bezeichnung des SIP-Systems."
 
 #: SIP/gv.py:152 SIP/gv.py:159 SIP/gv.py:161 SIP/gv.py:167 SIP/gv.py:169
 #: SIP/gv.py:175 SIP/gv.py:182 SIP/gv.py:189
@@ -46,7 +46,7 @@ msgstr "Standort"
 
 #: SIP/gv.py:158
 msgid "City name or zip code. Use comma or + in place of space."
-msgstr "Ortsname oder PLZ. Benutze \",\" oder \"+\" anstatt Leerzeichen"
+msgstr "Ortsname oder PLZ. Benutze \",\" oder \"+\" anstatt Leerzeichen."
 
 #: SIP/gv.py:161
 msgid "Language"
@@ -54,7 +54,7 @@ msgstr "Sprache"
 
 #: SIP/gv.py:161
 msgid "Select language."
-msgstr "Wähle Sprache"
+msgstr "Sprachauswahl"
 
 #: SIP/gv.py:163
 msgid "24-hour clock"
@@ -86,7 +86,7 @@ msgstr "Verwende pigpio-Bibliothek"
 
 #: SIP/gv.py:181
 msgid "GPIO Library to use. Default is RPi.GPIO"
-msgstr "Verwende GPIO-Bibliothek. Vorgabe ist RPi.GPIO-Bibliothek!"
+msgstr "Verwende GPIO-Bibliothek. Standardvorgabe ist RPi.GPIO-Bibliothek"
 
 #: SIP/gv.py:185
 msgid "Water Scaling"
@@ -117,7 +117,7 @@ msgstr "Passwort ändern"
 
 #: SIP/gv.py:199
 msgid "Current passphrase"
-msgstr "aktuelles Passwort"
+msgstr "Aktuelles Passwort"
 
 #: SIP/gv.py:202
 msgid ""
@@ -151,7 +151,7 @@ msgstr "Nacheinander oder gleichzeitiger Betriebsmodus"
 
 #: SIP/gv.py:231 SIP/gv.py:238 SIP/gv.py:245 SIP/gv.py:252 SIP/gv.py:259
 msgid "Station Handling"
-msgstr "Stationen Handhabung"
+msgstr "Einstellungen der Stationen"
 
 #: SIP/gv.py:234
 msgid "Individual Duration"
@@ -159,15 +159,15 @@ msgstr "Individuelle Laufzeit"
 
 #: SIP/gv.py:237
 msgid "Allow each station to have its own run time in programs."
-msgstr "Erlaube jeder Station ihre eigene Laufzeit in Programmen"
+msgstr "Erlaube jeder Station ihre eigene Laufzeit in Programmen."
 
 #: SIP/gv.py:241
 msgid "Station extensions"
-msgstr "Stationen-Erweiterungen"
+msgstr "Stationserweiterungen"
 
 #: SIP/gv.py:244
 msgid "Add 8 stations for each extension."
-msgstr "Ergänze 8 Stationen für jede Relais-Erweiterung"
+msgstr "Zusätzlich 8 weiter Stationen für jedes Relais-Erweiterungsmodul"
 
 #: SIP/gv.py:248
 msgid "Station delay"
@@ -175,7 +175,7 @@ msgstr "Stationsverzögerung"
 
 #: SIP/gv.py:251
 msgid "Station delay time (in seconds), between 0 and 240."
-msgstr "Stations-verzögerungszeit (in Sekunden), zwischen 0 und 240."
+msgstr "Verzögerungszeit der Stationen (in Sekunden), zwischen 0 und 240."
 
 #: SIP/gv.py:255
 msgid "Active-Low Relay"
@@ -232,7 +232,7 @@ msgstr "Normal geöffnet"
 
 #: SIP/gv.py:293
 msgid "Rain sensor type."
-msgstr "Regensensor Typ"
+msgstr "Regensensor-Typ"
 
 #: SIP/gv.py:297
 msgid "Enable logging"
@@ -308,7 +308,7 @@ msgstr "Kennwort"
 
 #: SIP/helpers.py:636
 msgid "Incorrect passphrase, please try again"
-msgstr "Falsches Passwort, bitte erneut versuchen."
+msgstr "Falsches Passwort, bitte erneut versuchen!"
 
 #: SIP/plugins/plugin_manager.py:42
 msgid "Manage Plugins"
@@ -320,11 +320,11 @@ msgstr "SIP Protokoll Plugin"
 
 #: SIP/plugins/system_update.py:25
 msgid "System update"
-msgstr "System Name"
+msgstr "Systemaktualisierung"
 
 #: SIP/plugins/system_update.py:80
 msgid "Up-to-date."
-msgstr "Aktuell"
+msgstr "Aktuell!"
 
 #: SIP/plugins/system_update.py:83
 msgid "New version is available!"
@@ -344,7 +344,7 @@ msgstr "Aktuell laufende Überarbeitung"
 
 #: SIP/plugins/system_update.py:100
 msgid "System update plug-in encountered error"
-msgstr "Fehlfunktion Plug-In Systemupdate "
+msgstr "Fehlfunktion Plug-In Systemupdate"
 
 #: SIP/sip.py:53
 msgid "Starting timing loop"
@@ -465,7 +465,7 @@ msgstr "Plugins"
 
 #: SIP/templates/base.html:179
 msgid "Log"
-msgstr "Protokoll "
+msgstr "Protokoll"
 
 #: SIP/templates/base.html:179
 msgid "View Log"
@@ -522,15 +522,15 @@ msgstr "Schnellstart-Programm"
 
 #: SIP/templates/home.html:56
 msgid " for "
-msgstr "für"
+msgstr " für "
 
 #: SIP/templates/home.html:56
 msgid " on "
-msgstr "Ein"
+msgstr " ein "
 
 #: SIP/templates/home.html:56
 msgid " ran "
-msgstr "lief"
+msgstr " lief "
 
 #: SIP/templates/home.html:80
 msgid "Master On"
@@ -559,11 +559,11 @@ msgstr "Verzögerung eingeben (in Stunden)"
 
 #: SIP/templates/home.html:168
 msgid "Enter percentage adjustment"
-msgstr "Einstellung in Prozent eingeben."
+msgstr "Einstellung in Prozent eingeben"
 
 #: SIP/templates/home.html:187 SIP/templates/runonce.html:29
 msgid "Timer values wrong: "
-msgstr "Zeitwerte falsch:"
+msgstr "Zeitwerte falsch: "
 
 #: SIP/templates/home.html:233
 msgid "System Off"
@@ -574,7 +574,6 @@ msgid "System On"
 msgstr "System An"
 
 #: SIP/templates/home.html:235
-#, fuzzy
 msgid "Level"
 msgstr "Stand"
 
@@ -621,7 +620,7 @@ msgstr "An"
 
 #: SIP/templates/home.html:288
 msgid " Prev Day"
-msgstr "Vorheriger Tag"
+msgstr " Vorheriger Tag"
 
 #: SIP/templates/home.html:289
 msgid "Today"
@@ -657,7 +656,7 @@ msgstr "Protokoll "
 
 #: SIP/templates/log.html:46
 msgid " limit"
-msgstr "Limit"
+msgstr " Limit"
 
 #: SIP/templates/log.html:46
 msgid "Total number of records: "
@@ -706,7 +705,7 @@ msgstr "SIP Programmänderung"
 
 #: SIP/templates/modify.html:91
 msgid "Incorrect time input "
-msgstr "Fehler: Falsche Zeit eingegeben"
+msgstr "Fehler: Falsche Zeit eingegeben "
 
 #: SIP/templates/modify.html:103
 msgid "Please choose at least one weekday for the program to run."
@@ -720,7 +719,7 @@ msgstr ""
 
 #: SIP/templates/modify.html:258
 msgid "Starting in days wrong."
-msgstr "Fehler: Startzeit in Tagen ist falsch"
+msgstr "Fehler: Startzeit in Tagen ist falsch!"
 
 #: SIP/templates/modify.html:281
 msgid "Please enter a Duration to continue."
@@ -764,7 +763,7 @@ msgstr "Alle"
 
 #: SIP/templates/modify.html:402
 msgid "Until"
-msgstr "Bis zu"
+msgstr "Bis"
 
 #: SIP/templates/modify.html:414
 msgid "Interval"
@@ -847,7 +846,7 @@ msgstr "Passwort stimmt nicht, bitte erneut versuchen."
 
 #: SIP/templates/options.html:72
 msgid "Must be 0 to +60, please re-enter."
-msgstr "Passwort stimmt nicht, bitte erneut versuchen."
+msgstr "Muss zwischen 0 und +60 liegen, bitte erneut versuchen."
 
 #: SIP/templates/options.html:83
 msgid "Edit Options"
@@ -919,7 +918,7 @@ msgid ""
 "programs."
 msgstr ""
 "Auswahl von UPDATE oder DEINSTALLATION stoppt alle laufenden Programme und "
-"startet neu"
+"startet neu!"
 
 #: SIP/templates/plugins.html:67
 msgid "Update Enabled"
@@ -948,7 +947,7 @@ msgstr "Installiere"
 
 #: SIP/templates/plugins_repo.html:44
 msgid "Back"
-msgstr "zurück"
+msgstr "Zurück"
 
 #: SIP/templates/programs.html:3
 msgid "SIP Programs"
@@ -956,7 +955,7 @@ msgstr "SIP Programme"
 
 #: SIP/templates/programs.html:21
 msgid "Every "
-msgstr "Jeden"
+msgstr "Jeden "
 
 #: SIP/templates/programs.html:21 SIP/templates/programs.html:23
 msgid "days"
@@ -1000,15 +999,15 @@ msgstr "Mit"
 
 #: SIP/templates/programs.html:32
 msgid " (Even days only)"
-msgstr "(Nur gerade Tage)"
+msgstr " (Nur gerade Tage)"
 
 #: SIP/templates/programs.html:34
 msgid " (Odd days only)"
-msgstr "(Nur ungerade Tage)"
+msgstr " (Nur ungerade Tage)"
 
 #: SIP/templates/programs.html:112
 msgid "Delete All"
-msgstr "alles löschen"
+msgstr "Alles löschen"
 
 #: SIP/templates/programs.html:131
 msgid "Run"
@@ -1032,11 +1031,11 @@ msgstr "bis"
 
 #: SIP/templates/programs.html:164
 msgid "Recurring every"
-msgstr "immer wiederkehrend"
+msgstr "Immer wiederkehrend"
 
 #: SIP/templates/programs.html:168 SIP/templates/runonce.html:84
 msgid "Run Now"
-msgstr "jetzt starten"
+msgstr "Jetzt starten"
 
 #: SIP/templates/programs.html:169
 msgid "Edit"
@@ -1044,7 +1043,7 @@ msgstr "Bearbeiten"
 
 #: SIP/templates/programs.html:170
 msgid "Delete"
-msgstr "löschen"
+msgstr "Löschen"
 
 #: SIP/templates/proto.html:4
 msgid "SIP Proto Plugin"
@@ -1101,7 +1100,7 @@ msgstr "SIP Schnellstart"
 
 #: SIP/templates/runonce.html:39
 msgid "No station is scheduled to run"
-msgstr "Es wurde keine Station zum Start geplant."
+msgstr "Es wurde keine Station zum Start geplant!"
 
 #: SIP/templates/runonce.html:85
 msgid "Reset Time"
@@ -1121,7 +1120,7 @@ msgstr "Regen ignorieren?"
 
 #: SIP/templates/stations.html:90
 msgid "Ignore Plugin adjustments?"
-msgstr "Ignorier Plugin-Einstellungen?"
+msgstr "Ignoriere Plugin-Einstellungen?"
 
 #: SIP/templates/stations.html:92
 msgid "Activate Master?"
@@ -1149,7 +1148,7 @@ msgstr ""
 
 #: SIP/templates/system_update.html:32
 msgid "Remote repository"
-msgstr "entfernte Quelle"
+msgstr "Entfernte Quelle"
 
 #: SIP/templates/system_update.html:38
 msgid "Local SIP version"
@@ -1177,15 +1176,15 @@ msgstr "Auf dem neusten Stand"
 
 #: SIP/webpages.py:429
 msgid " not found."
-msgstr "nicht gefunden."
+msgstr " nicht gefunden."
 
 #: SIP/webpages.py:429
 msgid "Station "
-msgstr "Station"
+msgstr "Station "
 
 #: SIP/webpages.py:449
 msgid "Manual mode not active."
-msgstr "Manueller Modus nicht aktiv"
+msgstr "Manueller Modus nicht aktiv."
 
 #: SIP/webpages.py:744
 msgid "Date, Start Time, Zone, Duration, Program"
