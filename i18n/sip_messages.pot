@@ -2,18 +2,19 @@
 # Copyright (C) YEAR ORGANIZATION
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2020-01-03 10:50+PST\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2020-01-09 14:04-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: ENCODING\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
-
+"X-Generator: Poedit 2.2.4\n"
 
 #: SIP/gv.py:25
 msgid "Could not use git to determine version!"
@@ -36,7 +37,8 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-#: SIP/gv.py:151
+#: SIP/gv.py:151 SIP/templates/weather_level_adj.html:117
+#: plugin_translate/weather_level_adj.html:117
 msgid "Location"
 msgstr ""
 
@@ -230,7 +232,9 @@ msgid "Enable logging"
 msgstr ""
 
 #: SIP/gv.py:289
-msgid "Log all events - note that repetitive writing to an SD card can shorten its lifespan."
+msgid ""
+"Log all events - note that repetitive writing to an SD card can shorten its "
+"lifespan."
 msgstr ""
 
 #: SIP/gv.py:292 SIP/gv.py:299
@@ -245,55 +249,55 @@ msgstr ""
 msgid "Length of log to keep, 0=no limits."
 msgstr ""
 
-#: SIP/helpers.py:101
+#: SIP/helpers.py:99
 msgid "Rebooting..."
 msgstr ""
 
-#: SIP/helpers.py:126
+#: SIP/helpers.py:124
 msgid "Powering off..."
 msgstr ""
 
-#: SIP/helpers.py:152
+#: SIP/helpers.py:150
 msgid "Restarting..."
 msgstr ""
 
-#: SIP/helpers.py:322
+#: SIP/helpers.py:320
 msgid "program"
 msgstr ""
 
-#: SIP/helpers.py:323
+#: SIP/helpers.py:321
 msgid "station"
 msgstr ""
 
-#: SIP/helpers.py:324
+#: SIP/helpers.py:322
 msgid "duration"
 msgstr ""
 
-#: SIP/helpers.py:325
+#: SIP/helpers.py:323
 msgid "start"
 msgstr ""
 
-#: SIP/helpers.py:326
+#: SIP/helpers.py:324
 msgid "date"
 msgstr ""
 
-#: SIP/helpers.py:330 SIP/templates/base.html:119
+#: SIP/helpers.py:328 SIP/templates/base.html:119
 msgid "Run-once"
 msgstr ""
 
-#: SIP/helpers.py:332 SIP/templates/base.html:120 SIP/templates/home.html:242
+#: SIP/helpers.py:330 SIP/templates/base.html:120 SIP/templates/home.html:242
 msgid "Manual"
 msgstr ""
 
-#: SIP/helpers.py:604
+#: SIP/helpers.py:602
 msgid "Passphrase"
 msgstr ""
 
-#: SIP/helpers.py:609
+#: SIP/helpers.py:607
 msgid "Incorrect passphrase, please try again"
 msgstr ""
 
-#: SIP/plugins/plugin_manager.py:42
+#: SIP/plugins/plugin_manager.py:41
 msgid "Manage Plugins"
 msgstr ""
 
@@ -301,32 +305,165 @@ msgstr ""
 msgid "Proto Plugin"
 msgstr ""
 
-#: SIP/plugins/system_update.py:25
+#: SIP/plugins/signaling_examples.py:14
+#: plugin_translate/signaling_examples.py:14
+msgid "Messge from "
+msgstr ""
+
+#: SIP/plugins/signaling_examples.py:25
+#: plugin_translate/signaling_examples.py:25
+msgid "someone logged in"
+msgstr ""
+
+#: SIP/plugins/signaling_examples.py:33
+#: plugin_translate/signaling_examples.py:33
+msgid "Option settings changed in gv.sd"
+msgstr ""
+
+#: SIP/plugins/signaling_examples.py:43
+#: plugin_translate/signaling_examples.py:43
+msgid "Programs changed"
+msgstr ""
+
+#: SIP/plugins/signaling_examples.py:52
+#: plugin_translate/signaling_examples.py:52
+msgid "Program deleted"
+msgstr ""
+
+#: SIP/plugins/signaling_examples.py:61
+#: plugin_translate/signaling_examples.py:61
+msgid "Program toggled on or off"
+msgstr ""
+
+#: SIP/plugins/signaling_examples.py:70
+#: plugin_translate/signaling_examples.py:70
+msgid "Rain changed (from plugin)"
+msgstr ""
+
+#: SIP/plugins/signaling_examples.py:79
+#: plugin_translate/signaling_examples.py:79
+msgid "System rebooted"
+msgstr ""
+
+#: SIP/plugins/signaling_examples.py:87
+#: plugin_translate/signaling_examples.py:87
+msgid "System is restarting"
+msgstr ""
+
+#: SIP/plugins/signaling_examples.py:95
+#: plugin_translate/signaling_examples.py:95
+msgid "Station names changed"
+msgstr ""
+
+#: SIP/plugins/signaling_examples.py:107
+#: plugin_translate/signaling_examples.py:107
+msgid "Some Stations has been scheduled: "
+msgstr ""
+
+#: SIP/plugins/signaling_examples.py:115
+#: plugin_translate/signaling_examples.py:115
+msgid "run completed"
+msgstr ""
+
+#: SIP/plugins/signaling_examples.py:115 SIP/webpages.py:412
+#: plugin_translate/signaling_examples.py:115
+msgid "Station "
+msgstr ""
+
+#: SIP/plugins/signaling_examples.py:123
+#: plugin_translate/signaling_examples.py:123
+msgid "Controller values changed in gv.sd"
+msgstr ""
+
+#: SIP/plugins/signaling_examples.py:133
+#: plugin_translate/signaling_examples.py:133
+msgid "zones changed"
+msgstr ""
+
+#: SIP/plugins/system_update.py:27
 msgid "System update"
 msgstr ""
 
-#: SIP/plugins/system_update.py:80
+#: SIP/plugins/system_update.py:82
 msgid "Up-to-date."
 msgstr ""
 
-#: SIP/plugins/system_update.py:83
+#: SIP/plugins/system_update.py:85
 msgid "New version is available!"
 msgstr ""
 
-#: SIP/plugins/system_update.py:84 SIP/plugins/system_update.py:89
+#: SIP/plugins/system_update.py:86 SIP/plugins/system_update.py:91
 msgid "Available revision"
 msgstr ""
 
-#: SIP/plugins/system_update.py:85
+#: SIP/plugins/system_update.py:87
 msgid "Changes"
 msgstr ""
 
-#: SIP/plugins/system_update.py:88
+#: SIP/plugins/system_update.py:90
 msgid "Currently running revision"
 msgstr ""
 
-#: SIP/plugins/system_update.py:100
+#: SIP/plugins/system_update.py:102
 msgid "System update plug-in encountered error"
+msgstr ""
+
+#: SIP/plugins/weather_level_adj.py:67 plugin_translate/weather_level_adj.py:67
+msgid "Weather-based Water Level"
+msgstr ""
+
+#: SIP/plugins/weather_level_adj.py:121
+#: plugin_translate/weather_level_adj.py:121
+msgid "Checking weather status"
+msgstr ""
+
+#: SIP/plugins/weather_level_adj.py:188 SIP/plugins/weather_level_adj.py:223
+#: plugin_translate/weather_level_adj.py:188
+#: plugin_translate/weather_level_adj.py:223
+msgid "Current temperature"
+msgstr ""
+
+#: SIP/plugins/weather_level_adj.py:194 SIP/plugins/weather_level_adj.py:229
+#: SIP/templates/weather_level_adj.html:111
+#: plugin_translate/weather_level_adj.html:111
+#: plugin_translate/weather_level_adj.py:194
+#: plugin_translate/weather_level_adj.py:229
+msgid "Daily irrigation"
+msgstr ""
+
+#: SIP/plugins/weather_level_adj.py:199 SIP/plugins/weather_level_adj.py:234
+#: plugin_translate/weather_level_adj.py:199
+#: plugin_translate/weather_level_adj.py:234
+msgid "Total rainfall"
+msgstr ""
+
+#: SIP/plugins/weather_level_adj.py:204 SIP/plugins/weather_level_adj.py:239
+#: plugin_translate/weather_level_adj.py:204
+#: plugin_translate/weather_level_adj.py:239
+msgid "Water needed"
+msgstr ""
+
+#: SIP/plugins/weather_level_adj.py:204 SIP/plugins/weather_level_adj.py:239
+#: plugin_translate/weather_level_adj.py:204
+#: plugin_translate/weather_level_adj.py:239
+msgid "days)"
+msgstr ""
+
+#: SIP/plugins/weather_level_adj.py:212 SIP/plugins/weather_level_adj.py:246
+#: plugin_translate/weather_level_adj.py:212
+#: plugin_translate/weather_level_adj.py:246
+msgid "Irrigation needed"
+msgstr ""
+
+#: SIP/plugins/weather_level_adj.py:217 SIP/plugins/weather_level_adj.py:251
+#: plugin_translate/weather_level_adj.py:217
+#: plugin_translate/weather_level_adj.py:251
+msgid "Weather Adjustment"
+msgstr ""
+
+#: SIP/plugins/weather_level_adj.py:266
+#: plugin_translate/weather_level_adj.py:266
+msgid "Weather-based water level encountered error"
 msgstr ""
 
 #: SIP/sip.py:46
@@ -365,51 +502,51 @@ msgstr ""
 msgid "Sunday"
 msgstr ""
 
-#: SIP/templates/base.html:19
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:37
 msgid "April"
 msgstr ""
 
-#: SIP/templates/base.html:19
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:53
 msgid "August"
 msgstr ""
 
-#: SIP/templates/base.html:19
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:69
 msgid "December"
 msgstr ""
 
-#: SIP/templates/base.html:19
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:29
 msgid "February"
 msgstr ""
 
-#: SIP/templates/base.html:19
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:25
 msgid "January"
 msgstr ""
 
-#: SIP/templates/base.html:19
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:49
 msgid "July"
 msgstr ""
 
-#: SIP/templates/base.html:19
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:45
 msgid "June"
 msgstr ""
 
-#: SIP/templates/base.html:19
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:33
 msgid "March"
 msgstr ""
 
-#: SIP/templates/base.html:19
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:41
 msgid "May"
 msgstr ""
 
-#: SIP/templates/base.html:19
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:65
 msgid "November"
 msgstr ""
 
-#: SIP/templates/base.html:19
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:61
 msgid "October"
 msgstr ""
 
-#: SIP/templates/base.html:19
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:57
 msgid "September"
 msgstr ""
 
@@ -475,7 +612,10 @@ msgid "?"
 msgstr ""
 
 #: SIP/templates/base.html:195 SIP/templates/proto.html:27
-#: SIP/templates/system_update.html:26
+#: SIP/templates/system_update.html:26 SIP/templates/weather_level_adj.html:51
+#: plugin_translate/cli_control.html:33 plugin_translate/mqtt_slave.html:25
+#: plugin_translate/relay_board.html:25
+#: plugin_translate/weather_level_adj.html:51
 msgid "Help"
 msgstr ""
 
@@ -568,7 +708,8 @@ msgstr ""
 msgid "Water Level"
 msgstr ""
 
-#: SIP/templates/home.html:237
+#: SIP/templates/home.html:237 plugin_translate/relay_board.html:48
+#: plugin_translate/relay_board.html:54
 msgid "Active"
 msgstr ""
 
@@ -626,6 +767,7 @@ msgid "SIP Log"
 msgstr ""
 
 #: SIP/templates/log.html:8 SIP/templates/plugins.html:46
+#: plugin_translate/pulse.html:64
 msgid "Enabled"
 msgstr ""
 
@@ -658,6 +800,7 @@ msgid "Start Time"
 msgstr ""
 
 #: SIP/templates/log.html:53 SIP/templates/stations.html:85
+#: plugin_translate/cli_control.html:48
 msgid "Station"
 msgstr ""
 
@@ -798,6 +941,13 @@ msgstr ""
 #: SIP/templates/plugins.html:69 SIP/templates/plugins_repo.html:45
 #: SIP/templates/proto.html:75 SIP/templates/runonce.html:86
 #: SIP/templates/stations.html:138 SIP/templates/system_update.html:66
+#: SIP/templates/weather_level_adj.html:139
+#: plugin_translate/cli_control.html:75 plugin_translate/monthly.html:77
+#: plugin_translate/mqtt.html:66 plugin_translate/mqtt_schedule.html:44
+#: plugin_translate/mqtt_slave.html:62 plugin_translate/mqtt_zones.html:45
+#: plugin_translate/pulse.html:88 plugin_translate/relay_16.html:68
+#: plugin_translate/relay_board.html:61
+#: plugin_translate/weather_level_adj.html:139
 msgid "Cancel"
 msgstr ""
 
@@ -894,7 +1044,9 @@ msgid "CAUTION:"
 msgstr ""
 
 #: SIP/templates/plugins.html:65
-msgid "Clicking UPDATE or UNINSTALL will restart the software and stop any running programs."
+msgid ""
+"Clicking UPDATE or UNINSTALL will restart the software and stop any running "
+"programs."
 msgstr ""
 
 #: SIP/templates/plugins.html:67
@@ -1054,7 +1206,13 @@ msgstr ""
 msgid "Text Field 2"
 msgstr ""
 
-#: SIP/templates/proto.html:74
+#: SIP/templates/proto.html:74 SIP/templates/weather_level_adj.html:138
+#: plugin_translate/cli_control.html:74 plugin_translate/monthly.html:76
+#: plugin_translate/mqtt.html:65 plugin_translate/mqtt_schedule.html:43
+#: plugin_translate/mqtt_slave.html:61 plugin_translate/mqtt_zones.html:44
+#: plugin_translate/pulse.html:87 plugin_translate/relay_16.html:67
+#: plugin_translate/relay_board.html:60
+#: plugin_translate/weather_level_adj.html:138
 msgid "Submit"
 msgstr ""
 
@@ -1115,7 +1273,9 @@ msgid "SIP Software Updater"
 msgstr ""
 
 #: SIP/templates/system_update.html:28
-msgid "This plugin compares the local SIP version with the GitHub repository and can update the local software."
+msgid ""
+"This plugin compares the local SIP version with the GitHub repository and "
+"can update the local software."
 msgstr ""
 
 #: SIP/templates/system_update.html:32
@@ -1130,7 +1290,8 @@ msgstr ""
 msgid "Local SIP date"
 msgstr ""
 
-#: SIP/templates/system_update.html:50
+#: SIP/templates/system_update.html:50 SIP/templates/weather_level_adj.html:129
+#: plugin_translate/weather_level_adj.html:129
 msgid "Status"
 msgstr ""
 
@@ -1146,19 +1307,293 @@ msgstr ""
 msgid "Up-to-date"
 msgstr ""
 
-#: SIP/webpages.py:414
+#: SIP/templates/weather_level_adj.html:12
+#: plugin_translate/weather_level_adj.html:12
+msgid "SIP Weather-based Water Level"
+msgstr ""
+
+#: SIP/templates/weather_level_adj.html:50
+#: plugin_translate/weather_level_adj.html:50
+msgid "Weather-based Water Level "
+msgstr ""
+
+#: SIP/templates/weather_level_adj.html:53
+#: plugin_translate/weather_level_adj.html:53
+msgid ""
+"When Automatic Water Level Adjustment is enabled, the weather will be "
+"checked every hour and the water level will be adjusted accordingly."
+msgstr ""
+
+#: SIP/templates/weather_level_adj.html:54
+#: plugin_translate/weather_level_adj.html:54
+msgid ""
+"Additionally, when the low temperature cutoff is enabled the the sprinklers "
+"will not run when the temperature at the last hourly check was below the set "
+"temperature."
+msgstr ""
+
+#: SIP/templates/weather_level_adj.html:59
+#: plugin_translate/weather_level_adj.html:59
+msgid "Use Automatic Water Level Adjustment"
+msgstr ""
+
+#: SIP/templates/weather_level_adj.html:65
+#: plugin_translate/weather_level_adj.html:65
+msgid "Use low temperature cutoff"
+msgstr ""
+
+#: SIP/templates/weather_level_adj.html:71
+#: plugin_translate/weather_level_adj.html:71
+msgid "Preferred Units"
+msgstr ""
+
+#: SIP/templates/weather_level_adj.html:81
+#: plugin_translate/weather_level_adj.html:81
+msgid "Low temperature cutoff"
+msgstr ""
+
+#: SIP/templates/weather_level_adj.html:87
+#: plugin_translate/weather_level_adj.html:87
+msgid "Min percentage"
+msgstr ""
+
+#: SIP/templates/weather_level_adj.html:93
+#: plugin_translate/weather_level_adj.html:93
+msgid "Max percentage"
+msgstr ""
+
+#: SIP/templates/weather_level_adj.html:99
+#: plugin_translate/weather_level_adj.html:99
+msgid "History days used"
+msgstr ""
+
+#: SIP/templates/weather_level_adj.html:105
+#: plugin_translate/weather_level_adj.html:105
+msgid "Forecast days used"
+msgstr ""
+
+#: SIP/templates/weather_level_adj.html:123
+#: plugin_translate/weather_level_adj.html:123
+msgid "Openweather API Key"
+msgstr ""
+
+#: SIP/webpages.py:412
 msgid " not found."
 msgstr ""
 
-#: SIP/webpages.py:414
-msgid "Station "
-msgstr ""
-
-#: SIP/webpages.py:449
+#: SIP/webpages.py:447
 msgid "Manual mode not active."
 msgstr ""
 
-#: SIP/webpages.py:740
+#: SIP/webpages.py:738
 msgid "Date, Start Time, Zone, Duration, Program"
 msgstr ""
 
+#: plugin_translate/cli_control.html:3
+msgid "SIP CLI Plugin"
+msgstr ""
+
+#: plugin_translate/cli_control.html:44
+msgid "Cl Commands"
+msgstr ""
+
+#: plugin_translate/cli_control.html:49
+msgid "Start Command"
+msgstr ""
+
+#: plugin_translate/cli_control.html:50
+msgid "Stop Command"
+msgstr ""
+
+#: plugin_translate/monthly.html:3
+msgid "OpenSprinkler Pi Monthly Adjustments"
+msgstr ""
+
+#: plugin_translate/monthly.html:20
+msgid "Monthly Irrigation Adjustments"
+msgstr ""
+
+#: plugin_translate/monthly.html:21
+msgid "Enter an adjustment for each month (% irrigation time)"
+msgstr ""
+
+#: plugin_translate/mqtt.html:3
+msgid "SIP MQTT Plugin"
+msgstr ""
+
+#: plugin_translate/mqtt.html:36
+msgid "MQTT Broker Host"
+msgstr ""
+
+#: plugin_translate/mqtt.html:40
+msgid "MQTT Broker Port"
+msgstr ""
+
+#: plugin_translate/mqtt.html:44
+msgid "MQTT Broker Username"
+msgstr ""
+
+#: plugin_translate/mqtt.html:48
+msgid "MQTT Broker Password"
+msgstr ""
+
+#: plugin_translate/mqtt.html:52
+msgid "MQTT Publish up/down topic"
+msgstr ""
+
+#: plugin_translate/mqtt.html:57
+msgid "MQTT Client ID"
+msgstr ""
+
+#: plugin_translate/mqtt_schedule.html:3
+msgid "SIP MQTT Schedule Plugin"
+msgstr ""
+
+#: plugin_translate/mqtt_schedule.html:34
+msgid "Scheduling topic"
+msgstr ""
+
+#: plugin_translate/mqtt_slave.html:3
+msgid "SIP MQTT Slave Plugin"
+msgstr ""
+
+#: plugin_translate/mqtt_slave.html:40 plugin_translate/mqtt_zones.html:35
+msgid "Zone topic"
+msgstr ""
+
+#: plugin_translate/mqtt_slave.html:46
+msgid "First station number"
+msgstr ""
+
+#: plugin_translate/mqtt_slave.html:52
+msgid "Station count"
+msgstr ""
+
+#: plugin_translate/mqtt_zones.html:4
+msgid "SIP MQTT Zones Plugin"
+msgstr ""
+
+#: plugin_translate/pulse.html:4
+msgid "SIP Pulse Circuit"
+msgstr ""
+
+#: plugin_translate/pulse.html:55
+msgid ""
+"Pulse a circuit with a 2.5 Hz signal for 30 sec to discover the location of "
+"the valve"
+msgstr ""
+
+#: plugin_translate/pulse.html:56
+msgid "Click \"SUBMIT\" to save enabled stations"
+msgstr ""
+
+#: plugin_translate/pulse.html:63
+msgid "Circuit"
+msgstr ""
+
+#: plugin_translate/pulse.html:83
+msgid "Stop Pulsing"
+msgstr ""
+
+#: plugin_translate/relay_16.html:3
+msgid "SIP - Relay 16 Settings"
+msgstr ""
+
+#: plugin_translate/relay_16.html:24
+msgid "Relay 16 Settings"
+msgstr ""
+
+#: plugin_translate/relay_16.html:25
+msgid "Setup Help"
+msgstr ""
+
+#: plugin_translate/relay_16.html:27
+msgid "This plugin allows SIP to control relay boards with up to 16 relays."
+msgstr ""
+
+#: plugin_translate/relay_16.html:33
+msgid "Enable relays"
+msgstr ""
+
+#: plugin_translate/relay_16.html:37 plugin_translate/relay_16.html:61
+#: plugin_translate/relay_16.html:62 plugin_translate/relay_board.html:31
+#: plugin_translate/relay_board.html:54 plugin_translate/relay_board.html:55
+msgid "Relay channels"
+msgstr ""
+
+#: plugin_translate/relay_16.html:47
+msgid ""
+"Number of relays connected to the Raspberry Pi /(relay boards are commonly "
+"1, 2, 4, 8, 16)"
+msgstr ""
+
+#: plugin_translate/relay_16.html:51
+msgid "Trigger Level"
+msgstr ""
+
+#: plugin_translate/relay_16.html:54
+msgid "Low"
+msgstr ""
+
+#: plugin_translate/relay_16.html:55
+msgid "High"
+msgstr ""
+
+#: plugin_translate/relay_16.html:56 plugin_translate/relay_board.html:51
+msgid ""
+"Active low means the relay turns on when the input is low and turns off when "
+"the input is high. Active high does the opposite."
+msgstr ""
+
+#: plugin_translate/relay_16.html:61
+msgid "Trigger level"
+msgstr ""
+
+#: plugin_translate/relay_16.html:61 plugin_translate/relay_board.html:54
+msgid "IMPORTANT"
+msgstr ""
+
+#: plugin_translate/relay_16.html:61 plugin_translate/relay_board.html:54
+msgid "If"
+msgstr ""
+
+#: plugin_translate/relay_16.html:61 plugin_translate/relay_board.html:54
+msgid "is changed"
+msgstr ""
+
+#: plugin_translate/relay_16.html:61 plugin_translate/relay_board.html:54
+msgid ""
+"to prevent all the relays being switched on, and possibly damaging the power "
+"supply."
+msgstr ""
+
+#: plugin_translate/relay_16.html:61 plugin_translate/relay_board.html:54
+msgid "will be set to"
+msgstr ""
+
+#: plugin_translate/relay_16.html:62 plugin_translate/relay_board.html:55
+msgid ""
+"After verifying that the first relay is off, return to this page and set"
+msgstr ""
+
+#: plugin_translate/relay_16.html:62 plugin_translate/relay_board.html:55
+msgid "to the correct number."
+msgstr ""
+
+#: plugin_translate/relay_board.html:3
+msgid "SIP - Relay Board Settings"
+msgstr ""
+
+#: plugin_translate/relay_board.html:24
+msgid "Relay Board Settings"
+msgstr ""
+
+#: plugin_translate/relay_board.html:27
+msgid "A plugin for using relay boards to control sprinkler valves."
+msgstr ""
+
+#: plugin_translate/relay_board.html:46
+msgid ""
+"Number of relays connected to the Raspberry Pi /(relay boards are commonly "
+"2, 4, 8/)"
+msgstr ""
