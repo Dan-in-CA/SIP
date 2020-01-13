@@ -119,6 +119,8 @@ rovals = [0] * sd[u"nbrd"] * 7  # Run Once durations
 snames = station_names()  # Load station names from file
 pd = load_programs()  # Load program data from file
 plugin_data = {}  # Empty dictionary to hold plugin based global data
+plugFtr = []  # Empty dictionary to hold plugin data for display in footer
+plugStn = []  # Empty dictionary to hold plugin data for display on timeline
 
 ps = []  # Program schedule (used for UI display)
 for i in range(sd[u"nst"]):

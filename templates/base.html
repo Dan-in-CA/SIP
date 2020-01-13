@@ -79,6 +79,9 @@ $code:
         td.stationNumber, td.stationShow, td.stationIgnore, td.stationMaster {text-align:center;}
         td.stationIgnoreWL {text-align:center;}
         td.stationName {text-align:left; padding-left:1em;}
+        
+        .piDatFooter {background-color:white; color:black; font-size:12pt; margin-bottom:10px; padding:0px 4px 0px 4px;}
+        
     </style>
     
     <script src="/static/scripts/jquery-3.4.1.min.js"></script>
@@ -129,6 +132,10 @@ $code:
                         jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\'' + '${plugin[1]}\'">${plugin[0]}</button><br/>');
                 $else:
                     jQuery('#pluginMenu').append('None<br/>');
+                	
+                $if gv.plugFtr:
+                	$for i, d in enumerate(gv.plugFtr):
+                	     jQuery("#plugFtrPars").append( "<p>${gv.plugFtr[i]["label"] + ": " + str(gv.plugFtr[i]["val"])}</p>" );                	
 
                 jQuery("#bPlugins").click(function(e) {
                     var btn = jQuery("#bPlugins");
@@ -188,13 +195,17 @@ $code:
             </div>
         </div>
         <div class="footer container">
-          <div class="row">
-          <div class="col-10-xs"></div>
-            <div class="col-2-xs pull-right">
-                $if content.page != u'login':
-                <button id="bHelp" class="help" title=$:{json.dumps(_(u'Help'), ensure_ascii=False)}>$_(u'?')</button>
-            </div>
-          </div>
+          $if content.page != u'login':
+              $if (gv.plugFtr):
+                  <div class="row">              
+                      <div class="col-12-xs col-xs-offset-4 piDatFooter" id="plugFtrPars"></div> <!--div for plugin data display -->
+                  </div>
+              <div class="row">
+                  <div class="col-5-xs"></div>
+                  <div class="col-5-xs pull-right">
+                    <button id="bHelp" class="help" title=$:{json.dumps(_(u'Help'), ensure_ascii=False)}>$_(u'?')</button>
+                  </div>
+              </div>
           
           <div class="row">
             <div class="col-5-xs"></div>
