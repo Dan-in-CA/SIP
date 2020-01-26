@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-from __future__ import division
-from future.builtins import range
+from __future__ import print_function\
 import json
 import gv
 
@@ -50,10 +48,10 @@ def convert():
         elif new_prog[u"interval_base_day"] >= 2:
             new_prog[u"type"] = u"interval"
             new_prog[u"day_mask"] &= ~128  #  clear high bit
-        if ((new_prog[u"start_min"] + (sum(new_prog[u"duration_sec"]) / 60)) >= new_prog[u"stop_min"]):
+        if ((new_prog[u"start_min"] + (sum(new_prog[u"duration_sec"]) // 60)) >= new_prog[u"stop_min"]):
             new_prog[u"cycle_min"] = 0
         if old_data[i][5]>= new_prog[u"stop_min"]:
-           new_prog[u"stop_min"] =  new_prog[u"start_min"] + (sum(new_prog[u"duration_sec"]) / 60)
+           new_prog[u"stop_min"] =  new_prog[u"start_min"] + (sum(new_prog[u"duration_sec"]) // 60)
            new_prog[u"cycle_min"] = 0  
         pd.append(new_prog)
     return pd
