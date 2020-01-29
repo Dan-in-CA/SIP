@@ -97,34 +97,11 @@ def timing_loop():
                                 if (
                                     p[u"station_mask"][b] & 1 << s
                                 ):  # if this station is scheduled in this program
-                                    if gv.sd[u"seq"]:  # sequential mode
-                                        gv.rs[sid][2] = duration
-                                        gv.rs[sid][3] = (
-                                            i + 1
-                                        )  # store program number for scheduling
-                                        gv.ps[sid][0] = (
-                                            i + 1
-                                        )  # store program number for display
-                                        gv.ps[sid][1] = duration
-                                    else:  # concurrent mode
-                                        if gv.srvals[
-                                            sid
-                                        ]:  # if currently on, log result
-                                            gv.lrun[0] = sid
-                                            gv.lrun[1] = gv.rs[sid][3]
-                                            gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-#                                             gv.lrun[3] = gv.now  # think this is unused test
-                                            log_run()
-                                            report_station_completed(sid + 1)
-                                        gv.rs[sid][2] = duration
-                                        gv.rs[sid][3] = i + 1  # store program number
-                                        gv.ps[sid][0] = (
-                                            i + 1
-                                        )  # store program number for display
-                                        gv.ps[sid][1] = duration
-                        schedule_stations(
-                            p[u"station_mask"]
-                        )  # turns on gv.sd["bsy"] -- [:gv.sd["nbrd"]]
+                                    gv.rs[sid][2] = duration
+                                    gv.rs[sid][3] = i + 1  # program number for scheduling
+                                    gv.ps[sid][0] = i + 1  # program number for display
+                                    gv.ps[sid][1] = duration
+                        schedule_stations(p[u"station_mask"])  # turns on gv.sd["bsy"]
 
         if gv.sd[u"bsy"]:
             for b in range(gv.sd[u"nbrd"]):  # Check each station once a second
@@ -140,7 +117,8 @@ def timing_loop():
                                 gv.lrun[0] = sid
                                 gv.lrun[1] = gv.rs[sid][3]
                                 gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-#                                 gv.lrun[3] = gv.now #  test
+                                gv.lrun[3] = gv.now #  test
+                                print(u"logging @ time check")
                                 log_run()
                                 report_station_completed(sid + 1)
                                 gv.pon = None  # Program has ended

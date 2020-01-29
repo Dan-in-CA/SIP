@@ -11,16 +11,14 @@ function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is schedu
   // simminutes is minute count generated in doSimulation()
   // simdate is a JavaScript date object
   simday = Math.floor(simdate/(1000*3600*24)) // The number of days since epoc
-  var wd,dn;// ,drem; // week day, Interval days, days remaining
+  var wd,dn;
   if(pd['enabled']==0)  return 0; // program not enabled, do not match
   if(pd['type'] == 'interval') { // if interval program... 
     if(((simday)%pd['interval_base_day'])!=pd['day_mask']) return 0; // remainder checking	
   } else { // Not interval 
     wd=(simdate.getDay()+6)%7; // getDay assumes sunday is 0, converts to Monday is 0 (weekday index)
-    if((pd['day_mask']&(1<<wd))==0) {
-//    	console.log('weekday did not match');
-    	return 0; // weekday checking  	
-    }   
+    if((pd['day_mask']&(1<<wd))==0) return 0; // weekday checking  
+//    	console.log('weekday did not match');  
     dt=simdate.getDate(); // set dt = day of the month
     if(pd['type'] == 'evendays') { // even day checking...
 //    	console.log('even days did not match');
@@ -33,18 +31,16 @@ function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is schedu
       else if (!(dt%2)) return 0; // if even day, do not match
     }
   }
-  if(simminutes<pd['start_min'] || simminutes>=pd['stop_min'])  return 0; // if simulated time is before start time or after stop time, do not match
-//  if(pd['type'] == 'interval') {
-//      if(pd['cycle_min']==0)  return 0; // repeat time missing, do not match
-//  }
-  if(pd['cycle_min']==0 
-		  && simminutes >= pd['start_min']
-		  && simminutes < pd['stop_min']) {
-	  return 1;
+  if(simminutes<pd['start_min'] || simminutes>=pd['stop_min']) return 0; // if simulated time is before start time or after stop time, do not match
+  
+  if((pd['cycle_min']==0)  
+     && (simminutes == pd['start_min'])) {
+   return 1;
   }
-  if(((simminutes-pd['start_min'])/pd['cycle_min']>>0)*pd['cycle_min'] == (simminutes-pd['start_min'])) { // if programmed to run now...
-    return 1; // scheduled for displayScheduleDate
-  }
+  else if((pd['cycle_min']!=0)
+     && ((simminutes-pd['start_min'])/pd['cycle_min']>>0)*pd['cycle_min'] == (simminutes-pd['start_min'])) { // if programmed to run now...
+  return 1; // scheduled for displayScheduleDate
+  } 
   return 0;  // no match found
 }
 
@@ -61,12 +57,13 @@ function doSimulation() { // Create schedule by a full program simulation, was d
     st_array[sid]=0;pid_array[sid]=0;et_array[sid]=0; // initilize element[station index]=0 for start time, program, end time 
   }
   do { // check through every program
+//	  console.log("sarting do looop");	  
     busy=0;
     endmin=0;
     match_found=0;
     for(pid=0;pid<nprogs;pid++) { //for each program
       var pd=progs[pid]; //progs=program array, pd=program element at this index (program data)
-//      console.log("pd: " + JSON.stringify(pd))
+//      console.log("pd: " + JSON.stringify(pd));
       if(scheduledThisDate(pd,simminutes,simdate)) { //call scheduledThisDate function, if scheduled...
         for(sid=0;sid<nst;sid++) { //for each station...
           bid=sid>>3;s=sid%8; //set board index (bid) and station number per board (s) from station index (sid) 
@@ -75,7 +72,7 @@ function doSimulation() { // Create schedule by a full program simulation, was d
         	  if(!idd==1) { //not individual station times
         	   var duration=pd['duration_sec'][0]; // get the program duration
 //            if(idd==1)  //is individual station time
-        	  } else {var duration=pd['duration_sec'][sid]; // get the station duration
+        	  } else {var duration=pd['duration_sec'][sid];
         	  }  //get the station duration
             et_array[sid]=duration; // Set duration for this station
             if (iw[bid]&(1<<s) == 0) { // adjust duration by water level
@@ -102,9 +99,9 @@ function doSimulation() { // Create schedule by a full program simulation, was d
         }//for
       } else { // if operation is concurrent...
         for(sid=0;sid<nst;sid++) { // for each station...
-          if(et_array[sid]) { // if an end time is set...
+          if(et_array[sid]) { // if an end time is set...  
             st_array[sid]=simminutes*60; // set start time for this station to simminutes converted to seconds
-            et_array[sid]=simminutes*60+et_array[sid]; // set end time for this station to end time shifted by start time
+            et_array[sid]+=simminutes*60; // set end time for this station to end time shifted by start time
             if ((et_array[sid]/60)>endmin) {endmin = Math.ceil((et_array[sid]/60))} // update endmin to whole minute
             busy=1; // set system busy flag - prevents new scheduleing until current schedule is complete
           }//if(et_array)
