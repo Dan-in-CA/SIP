@@ -101,7 +101,7 @@ station_names.connect(notify_station_names)
 #       - A program is run (Scheduled or "run now")
 #       - Stations are manually started with RunOnce
 def notify_station_scheduled(name, **kw):
-    print(u"Some Stations has been scheduled: {}".format(str(gv.rs)))
+    print(u"Some Stations have been scheduled: {}".format(str(gv.rs)))
 
 
 program_started = signal(u"stations_scheduled")
