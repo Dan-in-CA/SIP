@@ -273,7 +273,7 @@ def plugin_adjustment():
     a unique element in the gv.sd dictionary with a key starting with "wl_"
     """
     duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith(u"wl_")]
-    result = reduce(lambda x, y: x * y / 100, duration_adjustments, 1.0)
+    result = reduce(lambda x, y: x * y / 100.0, duration_adjustments, 1.0)
     return result
 
 
