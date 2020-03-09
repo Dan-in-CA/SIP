@@ -237,6 +237,8 @@ template_globals = {
     u"app_path": lambda p: web.ctx.homepath + p,
     u"web": web,
     u"round": round,
+    u"time": time,
+    u"timegm": timegm,
 }
 
 template_render = web.template.render(
