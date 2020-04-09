@@ -591,8 +591,8 @@ def check_login(redirect=False):
     except KeyError:
         pass
 
-    if u"password" in qdict:
-        if gv.sd[u"passphrase"] == password_hash(qdict[u"password"]):
+    if u"pw" in qdict:
+        if gv.sd[u"passphrase"] == password_hash(qdict[u"pw"]):
             return True
         if redirect:
             raise web.unauthorized()
