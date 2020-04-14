@@ -79,7 +79,7 @@ def get_readme():
         u"https://api.github.com/repos/Dan-in-CA/SIP_plugins/readme"
     )
     data = response.read()
-    d = json.loads(data)
+    d = json.loads(data.decode('utf-8'))
     text = base64.b64decode(d[u"content"]).decode(u'utf-8')
     t_list = text.split()
     sep = [i for i, s in enumerate(t_list) if u"***" in s][0]
