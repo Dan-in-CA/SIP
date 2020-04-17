@@ -317,11 +317,11 @@ def log_run():
     """
 
     if gv.sd[u"lg"]:
-        program = _(u"program")
-        station = _(u"station")
-        duration = _(u"duration")
-        strt = _(u"start")
-        date = _(u"date")
+        program = "program" #  _(u"program")
+        station = "station" #  _(u"station")
+        duration = "duration" #  _(u"duration")
+        strt = "start" #  _(u"start")
+        date = "date" #  _(u"date")
         if gv.lrun[1] == 0:  # skip program 0
             return
         elif gv.lrun[1] == 98:
