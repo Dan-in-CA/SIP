@@ -1,34 +1,37 @@
 $def with ()
 
-$var title: $_('SIP Programs')
+$var title: $_(u'SIP Programs')
 $var page: programs
 $code:
     snames = gv.snames
     nprogs = len(gv.pd)
+    
+    #if gv.sd['idd'] and (gv.sd['nst'] > len(program['duration_sec'])):
+	#	program['duration_sec'].extend([0] * (gv.sd['nst'] - len(program['duration_sec'])))
 
     def two_digits(n):
         return '%02d' % int(n)
     
     def pdays(days, dayInterval):
         output = ""
-        if (days&0x80) and (dayInterval>1): # this is an interval program
+        if prog['type'] == 'interval':
             days = days&0x7f
             dse = int(gv.now/86400) # days since epoc
             daysRemaining = ((days + dayInterval)-(dse % dayInterval)) % dayInterval
-            output += _("Every ") + str(dayInterval) + " " + _("days")
+            output += _(u"Every ") + str(dayInterval) + " " + _(u"days")
             if daysRemaining:
-                output += ", " + _('starting in') + " " + str(daysRemaining) + " " + _('days') + "."
-        else: # this is a weekly program 
+                output += ", " + _(u'starting in') + " " + str(daysRemaining) + " " + _(u'days') + "."
+        else: 
             if days == 127:
-                output += _("Every Weekday")
+                output += _(u"Every Weekday")
             else:
                 for d in range(0,7):
                     if days & (1<<d):
-                        output += " " + [_("Mon"),_("Tue"),_("Wed"),_("Thur"),_("Fri"),_("Sat"),_("Sun")][d]
-        if (days&0x80) and (dayInterval==0):
-            output += _(' (Even days only)')
-        if (days&0x80) and (dayInterval==1):
-            output += _(' (Odd days only)')
+                        output += " " + [_(u"Mon"),_(u"Tue"),_(u"Wed"),_(u"Thur"),_(u"Fri"),_(u"Sat"),_(u"Sun")][d]
+        if prog['type'] == 'evendays':
+            output += _(u' (Even days only)')
+        if prog['type'] == 'odddays':
+            output += _(u' (Odd days only)')
         return output
 
     def formatTime(t):
@@ -105,63 +108,66 @@ $code:
      <input type="hidden" name="enable">
 </form>
 <div id="controls">
-    <button id="nAdd" class="add" data="-1">$_('Add a New Program')</button>
-    <button id="nDelAll" class="deleteAll danger" data="-1">$_('Delete All')</button>
+    <button id="nAdd" class="add" data="-1">$_(u'Add a New Program')</button>
+    <button id="nDelAll" class="deleteAll danger" data="-1">$_(u'Delete All')</button>
 </div>
 
 <div id="programs">
-    $for pid in range(0,nprogs):
+    $for pid in range(nprogs):
         $ prog = gv.pd[pid]
-        <div id="p${pid}" class="controlBlock program ${'disabled' if prog[0] == 0 else ''}">
+        <div id="p${pid}" class="controlBlock program ${'disabled' if prog['enabled'] == 0 else ''}">
          <p>
-             <button class="cDisable toggle ${'off' if prog[0] == 0 else 'on'}" data="${pid}">
-                 <span class='toggleleft'>$_('On')</span>
+             <button class="cDisable toggle ${'off' if prog['enabled'] == 0 else 'on'}" data="${pid}">
+                 <span class='toggleleft'>$_(u'On')</span>
                  <span class='togglesep'>&nbsp;</span>
-                 <span class='toggleright'>$_('Off')</span>
+                 <span class='toggleright'>$_(u'Off')</span>
              </button>
-        $_('Program') ${pid+1}: <span class="val">${pdays(prog[1], prog[2])}</span></b>
+        $_(u'Program') ${pid+1}: <span class="val">${pdays(prog['day_mask'], prog['interval_base_day'])}</span></b>
          </p>
-            $ start = prog[3]
-            $ end = prog[4]
-            $ interval = prog[5]
+            $ start = prog['start_min']
+            $ end = prog['stop_min']
+            $ interval = prog['cycle_min']
             $ duration = 0
-            <p class="stationList">$_('Run'):
+            <p class="stationList">$_(u'Run'):
 			$ sid = -1
             $for bid in range(gv.sd['nbrd']):
-                $if len(prog) >= 8 + bid and isinstance(prog[7 + bid], int):
-                    $ bits = prog[7 + bid]
+                $if len(prog) >= 8 + bid and isinstance(prog['station_mask'][bid], int):
+                    $ bits = prog['station_mask'][bid]
                 $else:
                     $ bits = 0
                 $for s in range(8):
                     $ sid += 1
-                    $if (gv.sd['show'][bid]>>s)&1 and bits&(1<<s):
+                    $if (gv.sd['show'][bid]>>s)&1 and bits&(1 << s):
                         <span class="stationName val">${snames[sid]}</span>
                         $if gv.sd['seq'] :
                             $if gv.sd['idd'] :
-                                $ duration += prog[-1][sid]
+                                $ duration += prog['duration_sec'][sid]
                             $else:
-                                $ duration += prog[6]
+                                $ duration = prog['duration_sec'][0]
                         $else:
                             $if gv.sd['idd'] :
-                                $ duration = max(duration, prog[-1][sid])
+                                $ duration = max(duration, prog['duration_sec'][sid])
                             $else:
-                                $ duration = prog[6]
+                                $ duration = prog['duration_sec'][0]
             $ lap_end = start + duration / 60
-            $ recurring = int(lap_end) < int(end)
+            $ recurring = prog['cycle_min'] > 0 #  int(lap_end) < int(end)
 							
             </p>
-            <p>$_('Starting'): <span class="val">${formatTime(two_digits(start/60) + ":" + two_digits(start%60))}</span>
-                <span ${"" if (gv.sd['idd'] > 0) else "style=display:none"}>$_('with individual station durations')</span></p>
-                <p>$_('for')</b> <span class="val">${two_digits(duration/3600)}</span> hrs <span class="val">${two_digits(((duration/60)%60))}</span> mins <span class="val">${two_digits(duration%60)}</span> secs 
-                $_('until') <span class="val">${formatTime(two_digits(lap_end/60) + ":" + two_digits(lap_end%60))}</span></p>
+            <p>$_(u'Starting'): <span class="val">${formatTime(two_digits(start/60) + ":" + two_digits(start%60))}</span>
+                <span ${"" if (gv.sd['idd'] > 0) else "style=display:none"}>$_(u'with individual station durations')</span></p>
+                <p>$_(u'for')</b> <span class="val">${two_digits(duration/3600)}</span> hrs <span class="val">${two_digits(((duration/60)%60))}</span> mins <span class="val">${two_digits(duration%60)}</span> secs 
+            $if not recurring:    
+                $_(u'until') <span class="val">${formatTime(two_digits(lap_end/60) + ":" + two_digits(lap_end%60))}</span></p>
+            $else:
+                </p>
             $if recurring:
-                <p>$_('Recurring every')</b> <span class="val">${two_digits(interval/60)}</span> hrs <span class="val">${two_digits(interval%60)}</span> mins
-				$_('until') <span class="val">${formatTime(two_digits(end/60) + ":" + two_digits(end%60))}</span></p>
+                <p>$_(u'Recurring every')</b> <span class="val">${two_digits(interval/60)}</span> hrs <span class="val">${two_digits(interval%60)}</span> mins
+				$_(u'until') <span class="val">${formatTime(two_digits(end/60) + ":" + two_digits(end%60))}</span></p>
 
             <p>
-                <button class="cRunNow" data="${pid}">$_('Run Now')</button>
-                <button class="cModify" data="${pid}">$_('Edit')</button>
-                <button class="cDelete danger" data="${pid}">$_('Delete')</button>
+                <button class="cRunNow" data="${pid}">$_(u'Run Now')</button>
+                <button class="cModify" data="${pid}">$_(u'Edit')</button>
+                <button class="cDelete danger" data="${pid}">$_(u'Delete')</button>
             </p>
         </div>
 </div>

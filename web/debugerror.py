@@ -2,7 +2,7 @@
 pretty debug errors
 (part of web.py)
 
-portions adapted from Django <djangoproject.com> 
+portions adapted from Django <djangoproject.com>
 Copyright (c) 2005, the Lawrence Journal-World
 Used under the modified BSD license:
 http://www.xfree86.org/3.3.6/COPYRIGHT2.html#5
@@ -10,16 +10,32 @@ http://www.xfree86.org/3.3.6/COPYRIGHT2.html#5
 
 __all__ = ["debugerror", "djangoerror", "emailerrors"]
 
-import sys, urlparse, pprint, traceback
-from template import Template
-from net import websafe
-from utils import sendmail, safestr
-import webapi as web
+import os
+import os.path
+import sys
+import pprint
+import traceback
+from .template import Template
+from .net import websafe
+from .utils import sendmail, safestr
+from . import webapi as web
+from .py3helpers import PY2
 
-import os, os.path
+if PY2:
+
+    def update_globals_template(t, globals):
+        t.t.func_globals.update(globals)
+
+
+else:
+
+    def update_globals_template(t, globals):
+        t.t.__globals__.update(globals)
+
+
 whereami = os.path.join(os.getcwd(), __file__)
 whereami = os.path.sep.join(whereami.split(os.path.sep)[:-1])
-djangoerror_t = """\
+djangoerror_t = r"""\
 $def with (exception_type, exception_value, frames)
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
@@ -38,11 +54,11 @@ $def with (exception_type, exception_value, frames)
     h2 span { font-size:80%; color:#666; font-weight:normal; }
     h3 { margin:1em 0 .5em 0; }
     h4 { margin:0 0 .5em 0; font-weight: normal; }
-    table { 
+    table {
         border:1px solid #ccc; border-collapse: collapse; background:white; }
     tbody td, tbody th { vertical-align:top; padding:2px 3px; }
-    thead th { 
-        padding:1px 6px 1px 3px; background:#fefefe; text-align:left; 
+    thead th {
+        padding:1px 6px 1px 3px; background:#fefefe; text-align:left;
         font-weight:normal; font-size:11px; border:1px solid #ddd; }
     tbody th { text-align:right; color:#666; padding-right:.5em; }
     table.vars { margin:5px 0 2px 40px; }
@@ -50,14 +66,14 @@ $def with (exception_type, exception_value, frames)
     table td.code { width:100%;}
     table td.code div { overflow:hidden; }
     table.source th { color:#666; }
-    table.source td { 
+    table.source td {
         font-family:monospace; white-space:pre; border-bottom:1px solid #eee; }
     ul.traceback { list-style-type:none; }
     ul.traceback li.frame { margin-bottom:1em; }
     div.context { margin: 10px 0; }
-    div.context ol { 
+    div.context ol {
         padding-left:30px; margin:0 10px; list-style-position: inside; }
-    div.context ol li { 
+    div.context ol li {
         font-family:monospace; white-space:pre; color:#666; cursor:pointer; }
     div.context ol.context-line li { color:black; background-color:#ccc; }
     div.context ol.context-line li span { float: right; }
@@ -79,7 +95,7 @@ $def with (exception_type, exception_value, frames)
   <script type="text/javascript">
   //<!--
     function getElementsByClassName(oElm, strTagName, strClassName){
-        // Written by Jonathan Snook, http://www.snook.ca/jon; 
+        // Written by Jonathan Snook, http://www.snook.ca/jon;
         // Add-ons by Robert Nyman, http://www.robertnyman.com
         var arrElements = (strTagName == "*" && document.all)? document.all :
         oElm.getElementsByTagName(strTagName);
@@ -128,10 +144,10 @@ $def with (exception_type, exception_value, frames)
 <body>
 
 $def dicttable (d, kls='req', id=None):
-    $ items = d and d.items() or []
+    $ items = d and list(d.items()) or []
     $items.sort()
     $:dicttable_items(items, kls, id)
-        
+
 $def dicttable_items(items, kls='req', id=None):
     $if items:
         <table class="$kls"
@@ -176,7 +192,7 @@ $for frame in frames:
                 <li onclick="toggle('pre$frame.id', 'post$frame.id')">$line</li>
             </ol>
       </div>
-    
+
     $if frame.vars:
         <div class="commands">
         <a href='#' onclick="return varToggle(this, '$frame.id')"><span>&#x25b6;</span> Local vars</a>
@@ -197,7 +213,7 @@ $if ctx.output or ctx.headers:
     <p class="req" style="padding-bottom: 2em"><code>
     $ctx.output
     </code></p>
-  
+
 <h2>Request information</h2>
 
 <h3>INPUT</h3>
@@ -227,6 +243,7 @@ $:dicttable(ctx.env)
 
 djangoerror_r = None
 
+
 def djangoerror():
     def _get_lines_from_file(filename, lineno, context_lines):
         """
@@ -238,16 +255,16 @@ def djangoerror():
             lower_bound = max(0, lineno - context_lines)
             upper_bound = lineno + context_lines
 
-            pre_context = \
-                [line.strip('\n') for line in source[lower_bound:lineno]]
-            context_line = source[lineno].strip('\n')
-            post_context = \
-                [line.strip('\n') for line in source[lineno + 1:upper_bound]]
+            pre_context = [line.strip("\n") for line in source[lower_bound:lineno]]
+            context_line = source[lineno].strip("\n")
+            post_context = [
+                line.strip("\n") for line in source[lineno + 1 : upper_bound]
+            ]
 
             return lower_bound, pre_context, context_line, post_context
         except (OSError, IOError, IndexError):
-            return None, [], None, []    
-    
+            return None, [], None, []
+
     exception_type, exception_value, tback = sys.exc_info()
     frames = []
     while tback is not None:
@@ -257,59 +274,71 @@ def djangoerror():
 
         # hack to get correct line number for templates
         lineno += tback.tb_frame.f_locals.get("__lineoffset__", 0)
-        
-        pre_context_lineno, pre_context, context_line, post_context = \
-            _get_lines_from_file(filename, lineno, 7)
 
-        if '__hidetraceback__' not in tback.tb_frame.f_locals:
-            frames.append(web.storage({
-                'tback': tback,
-                'filename': filename,
-                'function': function,
-                'lineno': lineno,
-                'vars': tback.tb_frame.f_locals,
-                'id': id(tback),
-                'pre_context': pre_context,
-                'context_line': context_line,
-                'post_context': post_context,
-                'pre_context_lineno': pre_context_lineno,
-            }))
+        pre_context_lineno, pre_context, context_line, post_context = _get_lines_from_file(
+            filename, lineno, 7
+        )
+
+        if "__hidetraceback__" not in tback.tb_frame.f_locals:
+            frames.append(
+                web.storage(
+                    {
+                        "tback": tback,
+                        "filename": filename,
+                        "function": function,
+                        "lineno": lineno,
+                        "vars": tback.tb_frame.f_locals,
+                        "id": id(tback),
+                        "pre_context": pre_context,
+                        "context_line": context_line,
+                        "post_context": post_context,
+                        "pre_context_lineno": pre_context_lineno,
+                    }
+                )
+            )
         tback = tback.tb_next
     frames.reverse()
-    urljoin = urlparse.urljoin
+
     def prettify(x):
-        try: 
+        try:
             out = pprint.pformat(x)
-        except Exception, e: 
-            out = '[could not display: <' + e.__class__.__name__ + \
-                  ': '+str(e)+'>]'
+        except Exception as e:
+            out = "[could not display: <" + e.__class__.__name__ + ": " + str(e) + ">]"
         return out
-        
+
     global djangoerror_r
     if djangoerror_r is None:
         djangoerror_r = Template(djangoerror_t, filename=__file__, filter=websafe)
-        
+
     t = djangoerror_r
-    globals = {'ctx': web.ctx, 'web':web, 'dict':dict, 'str':str, 'prettify': prettify}
-    t.t.func_globals.update(globals)
+    globals = {
+        "ctx": web.ctx,
+        "web": web,
+        "dict": dict,
+        "str": str,
+        "prettify": prettify,
+    }
+    update_globals_template(t, globals)
     return t(exception_type, exception_value, frames)
+
 
 def debugerror():
     """
     A replacement for `internalerror` that presents a nice page with lots
     of debug information for the programmer.
 
-    (Based on the beautiful 500 page from [Django](http://djangoproject.com/), 
+    (Based on the beautiful 500 page from [Django](http://djangoproject.com/),
     designed by [Wilson Miner](http://wilsonminer.com/).)
     """
     return web._InternalError(djangoerror())
 
+
 def emailerrors(to_address, olderror, from_address=None):
     """
-    Wraps the old `internalerror` handler (pass as `olderror`) to 
+    Wraps the old `internalerror` handler (pass as `olderror`) to
     additionally email all errors to `to_address`, to aid in
     debugging production websites.
-    
+
     Emails contain a normal text traceback as well as an
     attachment containing the nice `debugerror` page.
     """
@@ -320,35 +349,33 @@ def emailerrors(to_address, olderror, from_address=None):
         tb = sys.exc_info()
         error_name = tb[0]
         error_value = tb[1]
-        tb_txt = ''.join(traceback.format_exception(*tb))
+        tb_txt = "".join(traceback.format_exception(*tb))
         path = web.ctx.path
-        request = web.ctx.method + ' ' + web.ctx.home + web.ctx.fullpath
-        
+        request = web.ctx.method + " " + web.ctx.home + web.ctx.fullpath
+
         message = "\n%s\n\n%s\n\n" % (request, tb_txt)
-        
+
         sendmail(
             "your buggy site <%s>" % from_address,
             "the bugfixer <%s>" % to_address,
             "bug: %(error_name)s: %(error_value)s (%(path)s)" % locals(),
             message,
-            attachments=[
-                dict(filename="bug.html", content=safestr(djangoerror()))
-            ],
+            attachments=[dict(filename="bug.html", content=safestr(djangoerror()))],
         )
         return error
-    
+
     return emailerrors_internal
 
+
 if __name__ == "__main__":
-    urls = (
-        '/', 'index'
-    )
-    from application import application
+    urls = ("/", "index")
+    from .application import application
+
     app = application(urls, globals())
     app.internalerror = debugerror
-    
+
     class index:
         def GET(self):
-            thisdoesnotexist
+            thisdoesnotexist  # noqa: F821
 
     app.run()

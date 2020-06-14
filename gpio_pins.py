@@ -1,62 +1,177 @@
 # -*- coding: utf-8 -*-
 
-import gv
+# Python 2/3 compatibility imports
+from __future__ import print_function
+from six.moves import range
 
+# local module imports
+from blinker import signal
+import gv
 try:
     import RPi.GPIO as GPIO
-    gv.platform = 'pi'
-    rev = GPIO.RPI_REVISION
-    if rev == 1:
-        # map 26 physical pins (1based) with 0 for pins that do not have a gpio number
-        if gv.use_pigpio:
-            gv.pin_map = [0,0,0,0,0,1,0,4,14,0,15,17,18,21,0,22,23,0,24,10,0,9,25,11,8,0,7]
-        else:
-            gv.pin_map = [0,0,0,0,0,5,0,7,8,0,10,11,12,13,0,15,16,0,18,19,0,21,22,23,24,0,26]
-    elif rev == 2:
-        # map 26 physical pins (1based) with 0 for pins that do not have a gpio number
-        if gv.use_pigpio:
-            gv.pin_map = [0,0,0,2,0,3,0,4,14,0,15,17,18,27,0,22,23,0,24,10,0,9,25,11,8,0,7]
-        else:
-            gv.pin_map = [0,0,0,0,0,5,0,7,8,0,10,11,12,13,0,15,16,0,18,19,0,21,22,23,24,0,26]
-    elif rev == 3:
-        # map 40 physical pins (1based) with 0 for pins that do not have a gpio number
-        if gv.use_pigpio:
-            gv.pin_map = [0,0,0,2,0,3,0,4,14,0,15,17,18,27,0,22,23,0,24,10,0,9,25,11,8,0,7,0,0,5,0,6,12,13,0,19,16,26,20,0,21]
-        else:
-            gv.pin_map = [0,0,0,3,0,5,0,7,8,0,10,11,12,13,0,15,16,0,18,19,0,21,22,23,24,0,26,0,0,29,0,31,32,33,0,35,36,37,38,0,40]
-    else:
-        print 'Unknown pi pin revision.  Using pin mapping for rev 3'
-
+    gv.platform = u"pi"
 except ImportError:
     try:
-        import Adafruit_BBIO.GPIO as GPIO  # Required for accessing General Purpose Input Output pins on Beagle Bone Black
-        gv.pin_map = [None]*11 # map only the pins we are using
-        gv.pin_map.extend(['P9_'+str(i) for i in range(11,17)])
-        gv.platform = 'bo'
+        import Adafruit_BBIO.GPIO as GPIO  # Required for accessing GPIO pins on Beagle Bone Black
+        gv.pin_map = [None] * 11  # map only the pins we are using
+        gv.pin_map.extend([u"P9_" + str(i) for i in range(11, 17)])
+        gv.platform = u"bo"
     except ImportError:
-		try:		# ODROID-C2, prerequisite is to have installed wiringPi2 python library. see: http://odroid.com/dokuwiki/lib/exe/detail.php?id=en%3Ac1_tinkering&media=en:c1:tinkering.jpg
-			import wiringpi as GPIO
-			#pins = [24, 23, 22, 21, 14, 13, 12, 3, 2, 0, 7, 1, 4, 5, 6, 10, 11, 26, 27]
-			# map 40 physical pins (1based) with 0 for pins that do not have a gpio number
-			#gv.pin_map = [0,0,0,0,0,0,0,7,0,0,0,11,12,13,0,15,16,0,18,19,0,21,22,23,24,0,26,0,0,29,0,31,32,33,0,35,36,0,0,0,0]
-			gv.pin_map = [0,0,0,0,0,0,0,7,0,0,0,0,1,2,0,3,4,0,5,12,0,13,6,14,10,0,11,0,0,21,0,22,26,23,0,24,27,0,0,0,0]
-			gv.platform = 'odroid-c2'
-			GPIO.wiringPiSetup()
-		except ImportError:
-			gv.pin_map = [i for i in range(27)] # assume 26 pins all mapped.  Maybe we should not assume anything, but...
-			gv.platform = ''  # if no platform, allows program to still run.
-			print 'No GPIO module was loaded from GPIO Pins module'
+        try:		# ODROID-C2, prerequisite is to have installed wiringPi2 python library. see: http://odroid.com/dokuwiki/lib/exe/detail.php?id=en%3Ac1_tinkering&media=en:c1:tinkering.jpg
+            import wiringpi as GPIO
+            #pins = [24, 23, 22, 21, 14, 13, 12, 3, 2, 0, 7, 1, 4, 5, 6, 10, 11, 26, 27]
+            # map 40 physical pins (1based) with 0 for pins that do not have a gpio number
+            gv.pin_map = [0,0,0,0,0,0,0,7,0,0,0,0,1,2,0,3,4,0,5,12,0,13,6,14,10,0,11,0,0,21,0,22,26,23,0,24,27,0,0,0,0]
+            gv.platform = u"odroid-c2"
+            GPIO.wiringPiSetup()
+        except ImportError:        
+            gv.pin_map = [
+                i for i in range(27)
+            ]  # assume 26 pins all mapped.  Maybe we should not assume anything, but...
+            gv.platform = ""  # if no platform, allows program to still run.
+            print(u"No GPIO module was loaded from GPIO Pins module") 
 
-from blinker import signal
-zone_change = signal('zone_change')
+# fmt: off
+if gv.platform == u"pi":    
+    rev = GPIO.RPI_REVISION
+    if rev == 1:
+        # map 26 physical pins (1 based) with 0 for pins that do not have a gpio number
+        if gv.use_pigpio:
+            gv.pin_map = [ #  BMC numbering 
+                0, #  offset for 1 based numbering
+                0,  0,
+                0,  0,
+                1,  0,
+                4,  14,
+                0,  15,
+                17, 18,
+                21, 0,
+                22, 23,
+                0,  24,
+                10, 0,
+                9,  25,
+                11, 8,
+                0,  7,
+            ]
+        else:
+            gv.pin_map = [ #  Board numbering
+                0, #  offset for 1 based numbering
+                0,  0,
+                0,  0,
+                5,  0,
+                7,  8,
+                0,  10,
+                11, 12,
+                13, 0,
+                15, 16,
+                0,  18,
+                19, 0,
+                21, 22,
+                23, 24,
+                0,  26,
+            ]
+    elif rev == 2:
+        # map 26 physical pins (1 based) with 0 for pins that do not have a gpio number
+        if gv.use_pigpio:
+            gv.pin_map = [ #  BMC numbering
+                0, #  offset for 1 based numbering
+                0,  0,
+                2,  0,
+                3,  0,
+                4,  14,
+                0,  15,
+                17, 18,
+                27, 0,
+                22, 23,
+                0,  24,
+                10, 0,
+                9,  25,
+                11, 8,
+                0,  7,
+            ]
+        else:
+            gv.pin_map = [#  Board numbering
+                0, #  offset for 1 based numbering
+                0,  0,
+                0,  0,
+                5,  0,
+                7,  8,
+                0,  10,
+                11, 12,
+                13, 0,
+                15, 16,
+                0,  18,
+                19, 0,
+                21, 22,
+                23, 24,
+                0,  26,
+            ]
+    elif rev == 3:
+        # map 40 physical pins (1 based) with 0 for pins that do not have a gpio number
+        if gv.use_pigpio:
+            gv.pin_map = [ #  BMC numbering
+                0, #  offset for 1 based numbering
+                0,  0,
+                2,  0,
+                3,  0,
+                4,  14,
+                0,  15,
+                17, 18,
+                27, 0,
+                22, 23,
+                0,  24,
+                10, 0,
+                9,  25,
+                11, 8,
+                0,  7,
+                0,  0,
+                5,  0,
+                6,  12,
+                13, 0,
+                19, 16,
+                26, 20,
+                0,  21,
+            ]
+        else:
+            gv.pin_map = [#  Board numbering
+                0, #  offset for 1 based numbering
+                0,  0,
+                3,  0,
+                5,  0,
+                7,  8,
+                0,  10,
+                11, 12,
+                13, 0,
+                15, 16,
+                0,  18,
+                19, 0,
+                21, 22,
+                23, 24,
+                0,  26,
+                0,  0,
+                29, 0,
+                31, 32,
+                33, 0,
+                35, 36,
+                37, 38,
+                0,  40,
+            ]
+    else:
+        print(u"Unknown pi pin revision.  Using pin mapping for rev 3")
+# fmt: on
+
+zone_change = signal(u"zone_change")
 
 try:
     if gv.use_pigpio:
         import pigpio
+
         pi = pigpio.pi()
-    elif gv.platform != 'odroid-c2':
+    elif gv.platform != u"odroid-c2":
         GPIO.setwarnings(False)
-        GPIO.setmode(GPIO.BOARD) #IO channels are identified by header connector pin numbers. Pin numbers are 
+        GPIO.setmode(
+            GPIO.BOARD
+        )  # IO channels are referenced by header connector pin numbers.
 except Exception:
     pass
 
@@ -68,7 +183,7 @@ global pin_relay
 def set_pin_mode_output(pin):
 	if gv.use_pigpio:
 		pi.set_mode(pin, pigpio.OUTPUT)
-	elif gv.platform == 'odroid-c2':
+	elif gv.platform == u"odroid-c2":
 		GPIO.pinMode(pin, GPIO.GPIO.OUTPUT)
 	else:
 		GPIO.setup(pin, GPIO.OUT)
@@ -76,7 +191,7 @@ def set_pin_mode_output(pin):
 def set_pin_high(pin):
 	if gv.use_pigpio:
 		pi.write(pin, 1)
-	elif gv.platform == 'odroid-c2':
+	elif gv.platform == u"odroid-c2":
 		GPIO.digitalWrite(pin, 1)
 	else:
 		GPIO.output(pin, GPIO.HIGH)
@@ -84,35 +199,35 @@ def set_pin_high(pin):
 def set_pin_low(pin):
 	if gv.use_pigpio:
 		pi.write(pin, 0)
-	elif gv.platform == 'odroid-c2':
+	elif gv.platform == u"odroid-c2":
 		GPIO.digitalWrite(pin, 0)
 	else:
 		GPIO.output(pin, GPIO.LOW)
 
 try:
-    if gv.platform == 'pi' or gv.platform == 'odroid-c2':  # If this will run on Raspberry Pi:
-        if gv.platform == 'pi':
-		    GPIO.setmode(GPIO.BOARD)
+    if gv.platform == u"pi" or gv.platform == u"odroid-c2":  # If this will run on Raspberry Pi:
+        GPIO.setmode(GPIO.BOARD)
         pin_rain_sense = gv.pin_map[8]
         pin_relay = gv.pin_map[10]
-    elif gv.platform == 'bo':  # If this will run on Beagle Bone Black:
+    elif gv.platform == u"bo":  # If this will run on Beagle Bone Black:
         pin_rain_sense = gv.pin_map[15]
         pin_relay = gv.pin_map[16]
 except AttributeError:
-    print "Error setting rain sensor pins"
-    pass
+	print(u"Error setting rain sensor pins")
+	pass
 
 try:
     if gv.use_pigpio:
         pi.set_mode(pin_rain_sense, pigpio.INPUT)
         pi.set_pull_up_down(pin_rain_sense, pigpio.PUD_UP)
-    elif gv.platform == 'odroid-c2':
+        pi.set_mode(pin_relay, pigpio.OUTPUT)
+    elif gv.platform == u"odroid-c2":
         GPIO.pinMode(pin_rain_sense, GPIO.GPIO.INPUT)
     else:
-        GPIO.setup(pin_rain_sense, GPIO.IN, pull_up_down = GPIO.PUD_UP)
-	set_pin_mode_output(pin_relay);
+        GPIO.setup(pin_rain_sense, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(pin_relay, GPIO.OUT)
 except NameError:
-    print "Error setting rain sensor pins"
+    print(u"Error setting rain sensor pins")
     pass
 
 
@@ -128,33 +243,35 @@ def setup_pins():
     global pi
 
     try:
-        if gv.platform == 'pi' or gv.platform == 'odroid-c2':  # If this will run on Raspberry Pi:
-            if not gv.use_pigpio and gv.platform != 'odroid-c2':
-                GPIO.setmode(GPIO.BOARD)  # IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
+        if gv.platform == u"pi" or gv.platform == u"odroid-c2":  # If this will run on Raspberry Pi:
+            if not gv.use_pigpio and  gv.platform != u"odroid-c2":
+                GPIO.setmode(
+                    GPIO.BOARD
+                )  # IO channels are identified by header connector pin numbers. Pin numbers are always the same regardless of Raspberry Pi board revision.
             pin_sr_dat = gv.pin_map[13]
             pin_sr_clk = gv.pin_map[7]
             pin_sr_noe = gv.pin_map[11]
             pin_sr_lat = gv.pin_map[15]
-        elif gv.platform == 'bo':  # If this will run on Beagle Bone Black:
+        elif gv.platform == u"bo":  # If this will run on Beagle Bone Black:
             pin_sr_dat = gv.pin_map[11]
             pin_sr_clk = gv.pin_map[13]
             pin_sr_noe = gv.pin_map[14]
             pin_sr_lat = gv.pin_map[12]
     except AttributeError:
-		print "Failed setup GPIO pins for shift register operation"
+		print(u"Failed setup GPIO pins for shift register operation")
 		pass
 
 	#### setup GPIO pins as output or input ####
     try:
-		set_pin_mode_output(pin_sr_noe)
-		set_pin_mode_output(pin_sr_clk)
-		set_pin_mode_output(pin_sr_dat)
-		set_pin_mode_output(pin_sr_lat)
-		set_pin_high(pin_sr_noe)
-		set_pin_low(pin_sr_clk)
-		set_pin_low(pin_sr_clk)
-		set_pin_low(pin_sr_lat)
-    except AttributeError:
+        set_pin_mode_output(pin_sr_noe)
+        set_pin_mode_output(pin_sr_clk)
+        set_pin_mode_output(pin_sr_dat)
+        set_pin_mode_output(pin_sr_lat)
+        set_pin_high(pin_sr_noe)
+        set_pin_low(pin_sr_clk)
+        set_pin_low(pin_sr_dat)
+        set_pin_low(pin_sr_lat)
+    except NameError:
         pass
 
 
@@ -204,14 +321,15 @@ def setShiftRegister(srvals):
 
 def set_output():
     """
-    Activate triacs according to shift register state.
-    If using SIP with shift registers and active low relays, uncomment the line indicated below.
+    Activate pins according to gv.srvals.
     """
 
     with gv.output_srvals_lock:
         gv.output_srvals = gv.srvals
-        if gv.sd['alr']:
-            gv.output_srvals = [1-i for i in gv.output_srvals] #  invert logic of shift registers    
+        if gv.sd[u"alr"]:
+            gv.output_srvals = [
+                1 - i for i in gv.output_srvals
+            ]  #  invert logic of shift registers
         disableShiftRegisterOutput()
         setShiftRegister(gv.output_srvals)  # gv.srvals stores shift register state
         enableShiftRegisterOutput()

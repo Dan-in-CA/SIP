@@ -22,35 +22,35 @@ $var page: system_update
 </script>
 
 <div id="plugin">
-    <div class="title">$_('SIP Software Updater')
-    <button class="execute" id="docButton" type="button" >$_('Help')</button>
+    <div class="title">$_(u'SIP Software Updater')
+    <button class="execute" id="docButton" type="button" >$_(u'Help')</button>
     </div>
-    <!--<p>$_('This plugin compares the local SIP version with the GitHub repository and can update the local software.')</p>-->
+    <!--<p>$_(u'This plugin compares the local SIP version with the GitHub repository and can update the local software.')</p>-->
     <form id="pluginForm" action="${app_path('/UPsr')}" method="get">
         <table class="optionList">
             <tr>
-                <td style='text-transform: none;'><b>$_('Remote repository'):</b></td>
+                <td style='text-transform: none;'><b>$_(u'Remote repository'):</b></td>
                 <td>
                      $m_vals["remote"]
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'><b>$_('Local SIP version'):</b></td>
+                <td style='text-transform: none;'><b>$_(u'Local SIP version'):</b></td>
                 <td>
                      $m_vals["ver_str"]
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'><b>$_('Local SIP date'):</b></td>
+                <td style='text-transform: none;'><b>$_(u'Local SIP date'):</b></td>
                 <td>
                      $m_vals["ver_date"]
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>$_('Status'):</td>
+                <td style='text-transform: none;'>$_(u'Status'):</td>
                 <td>
                     <textarea style="font-family: monospace;" rows="7" cols="100" readonly>$m_vals['status']</textarea><br/>
-                    <!--<button id="cRefresh" class="refresh">$_('Refresh Status')</button>-->
+                    <!--<button id="cRefresh" class="refresh">$_(u'Refresh Status')</button>-->
                 </td>
             </tr>
             
@@ -59,9 +59,9 @@ $var page: system_update
 </div>
 <div id="controls">
     $if m_vals['can_update']:
-        <button id="cUpdate" class="options"><b>$_('Update SIP')</b></button>
+        <button id="cUpdate" class="options"><b>$_(u'Update SIP')</b></button>
     $else:
-        <button id="cUpToDate" class="cancel"><b>$_('Up-to-date')</b></button>
-    <!--<button id="cReboot" class="reboot danger">$_('Restart SIP')</button>-->
-    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
+        <button id="cUpToDate" class="cancel"><b>$_(u'Up-to-date')</b></button>
+    <!--<button id="cReboot" class="reboot danger">$_(u'Restart SIP')</button>-->
+    <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>
 </div>

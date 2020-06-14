@@ -1,226 +1,245 @@
-# Translation file for OpenSprinkler Pi (ospi).
-# Copyright (C) 2014
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.1.5\n"
-"POT-Creation-Date: 2016-04-29 09:37-0700\n"
-"PO-Revision-Date: 2016-04-29 09:39-0700\n"
-"Last-Translator: Dan <dkimberling59@gmail.com>\n"
-"Language-Team: dkimberling59@gmail.com\n"
-"Language: de_DE\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2020-01-09 10:10+PST\n"
+"PO-Revision-Date: 2020-01-09 20:49+0100\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 2.2.4\n"
+"Last-Translator: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.4\n"
+"Language: de_DE\n"
 
-#: SIP/plugins\system_update.py:75
-msgid "Up-to-date."
-msgstr ""
-
-#: SIP/plugins\system_update.py:78
-msgid "New version is available!"
-msgstr ""
-
-#: SIP/plugins\system_update.py:79 SIP/plugins\system_update.py:84
-msgid "Available revision"
-msgstr ""
-
-#: SIP/plugins\system_update.py:80
-msgid "Changes"
-msgstr ""
-
-#: SIP/plugins\system_update.py:83
-msgid "Currently running revision"
-msgstr ""
-
-#: SIP/plugins\system_update.py:95
-msgid "System update plug-in encountered error"
-msgstr ""
-
-#: SIP\gv.py:18
+#: SIP/gv.py:25
 msgid "Could not use git to determine version!"
-msgstr "Git konnte nicht verwendet werden um die Version zu ermitteln."
+msgstr "Git konnte nicht verwendet werden um die Version zu ermitteln!"
 
-#: SIP\gv.py:25
+#: SIP/gv.py:35
 msgid "Could not use git to determine date of last commit!"
 msgstr ""
 "Git konnte nicht verwendet werden um das letzte Aktualisierungsdatum zu "
-"ermitteln."
+"ermitteln!"
 
-#: SIP\gv.py:133
+#: SIP/gv.py:144
 msgid "System name"
 msgstr "System Name"
 
-#: SIP\gv.py:133
+#: SIP/gv.py:147
 msgid "Unique name of this SIP system."
-msgstr ""
+msgstr "Eindeutige Bezeichnung des SIP-Systems."
 
-#: SIP\gv.py:133 SIP\gv.py:134 SIP\gv.py:135 SIP\gv.py:137 SIP\gv.py:138
-#: SIP\gv.py:139
+#: SIP/gv.py:148 SIP/gv.py:155 SIP/gv.py:157 SIP/gv.py:163 SIP/gv.py:165
+#: SIP/gv.py:171 SIP/gv.py:178 SIP/gv.py:185
 msgid "System"
 msgstr "System"
 
-#: SIP\gv.py:134
-msgid "City name or zip code. Use comma or + in place of space."
-msgstr "Ortsname oder PLZ. Benutze \",\" oder \"+\" anstatt Leerzeichen"
-
-#: SIP\gv.py:134
+#: SIP/gv.py:151 SIP/templates/weather_level_adj.html:117
+#: plugin_translate/weather_level_adj.html:117
 msgid "Location"
 msgstr "Standort"
 
-#: SIP\gv.py:135
+#: SIP/gv.py:154
+msgid "City name or zip code. Use comma or + in place of space."
+msgstr "Ortsname oder PLZ. Benutze \",\" oder \"+\" anstatt Leerzeichen."
+
+#: SIP/gv.py:157
 msgid "Language"
 msgstr "Sprache"
 
-#: SIP\gv.py:135
+#: SIP/gv.py:157
 msgid "Select language."
-msgstr ""
+msgstr "Sprachauswahl"
 
-#: SIP\gv.py:137
+#: SIP/gv.py:159
 msgid "24-hour clock"
 msgstr "24-Stunden Anzeige"
 
-#: SIP\gv.py:137
+#: SIP/gv.py:162
 msgid "Display times in 24 hour format (as opposed to AM/PM style.)"
 msgstr "Anzeige im 24h Format (anstatt AM/PM Format)"
 
-#: SIP\gv.py:138
+#: SIP/gv.py:165
 msgid "HTTP port"
 msgstr "HTTP  port"
 
-#: SIP\gv.py:138
+#: SIP/gv.py:165
 msgid "HTTP port."
-msgstr ""
+msgstr "HTTP  port."
 
-#: SIP\gv.py:139
+#: SIP/gv.py:167
+msgid "HTTP IP addr"
+msgstr "HTTP IP Adresse"
+
+#: SIP/gv.py:170
+msgid "IP Address used for HTTP server socket.  IPv4 or IPv6 address"
+msgstr "IP-Adresse des SIP-Servers. IPv4 oder IPv6-Adresse möglich"
+
+#: SIP/gv.py:174
+msgid "Use pigpio"
+msgstr "Verwende pigpio-Bibliothek"
+
+#: SIP/gv.py:177
+msgid "GPIO Library to use. Default is RPi.GPIO"
+msgstr "Verwende GPIO-Bibliothek. Standardvorgabe ist RPi.GPIO-Bibliothek"
+
+#: SIP/gv.py:181
 msgid "Water Scaling"
-msgstr "Wasser-Reduzierung"
+msgstr "Wassermenge"
 
-#: SIP\gv.py:139
+#: SIP/gv.py:184
 msgid "Water scaling (as %), between 0 and 100."
+msgstr "Wassermenge (in%), zw. 0 und 100"
+
+#: SIP/gv.py:188
+msgid "Enable passphrase"
+msgstr "Aktiviere Passwortabfrage"
+
+#: SIP/gv.py:191
+msgid ""
+"Minimal security. \n"
+"Prevent unauthorized users from accessing the system without a passphrase. \n"
+"*** Default is opendoor ***"
 msgstr ""
+"Minimale Sicherheit.\n"
+"Verhindern Sie, dass nicht authorisierte Benutzer ohne ein Passwort auf das "
+"System zugreifen können!\n"
+"*** Initialpasswort ist opendoor **"
 
-#: SIP\gv.py:140
-msgid "Allow anonymous users to access the system without a password."
-msgstr "Erlaubt unbefugten Nutzern den Zugang zum System ohne Passwortabfrage."
-
-#: SIP\gv.py:140
-msgid "Disable security"
-msgstr "Passwortabfrage"
-
-#: SIP\gv.py:140 SIP\gv.py:141 SIP\gv.py:142 SIP\gv.py:143
-msgid "Change Password"
+#: SIP/gv.py:192 SIP/gv.py:199 SIP/gv.py:206 SIP/gv.py:213
+msgid "Manage Passphrase"
 msgstr "Passwort ändern"
 
-#: SIP\gv.py:141
-msgid "Current password"
-msgstr "aktuelles Passwort"
+#: SIP/gv.py:195
+msgid "Current passphrase"
+msgstr "Aktuelles Passwort"
 
-#: SIP\gv.py:141
-msgid "Re-enter the current password."
-msgstr "aktuelles Passwort wiederholen"
+#: SIP/gv.py:198
+msgid ""
+"Enter the current passphrase. \n"
+"*** Defalut is opendoor ***"
+msgstr "Eingabe aktuelles Passwort. ***Initialpasswort ist opendoor***"
 
-#: SIP\gv.py:142
-msgid "Enter a new password."
-msgstr "Neues Passwort eingeben."
-
-#: SIP\gv.py:142
-msgid "New password"
+#: SIP/gv.py:202
+msgid "New passphrase"
 msgstr "Neues Passwort"
 
-#: SIP\gv.py:143
-msgid "Confirm password"
+#: SIP/gv.py:205
+msgid "Enter a new passphrase."
+msgstr "Neues Passwort eingeben."
+
+#: SIP/gv.py:209
+msgid "Confirm passphrase"
 msgstr "PW bestätigen"
 
-#: SIP\gv.py:143
-msgid "Confirm the new password."
+#: SIP/gv.py:212
+msgid "Confirm the new passphrase."
 msgstr "Neues Passwort bestätigen."
 
-#: SIP\gv.py:144
+#: SIP/gv.py:216
 msgid "Sequential"
 msgstr "Nacheinander"
 
-#: SIP\gv.py:144
+#: SIP/gv.py:219
 msgid "Sequential or concurrent running mode."
 msgstr "Nacheinander oder gleichzeitiger Betriebsmodus"
 
-#: SIP\gv.py:144 SIP\gv.py:145 SIP\gv.py:146
+#: SIP/gv.py:220 SIP/gv.py:227 SIP/gv.py:234 SIP/gv.py:241 SIP/gv.py:248
 msgid "Station Handling"
-msgstr "Stationen Handhabung"
+msgstr "Einstellungen der Stationen"
 
-#: SIP\gv.py:145
-msgid "Extension boards"
-msgstr "Erweiterungsplatine"
+#: SIP/gv.py:223
+msgid "Individual Duration"
+msgstr "Individuelle Laufzeit"
 
-#: SIP\gv.py:145
-msgid "Number of extension boards."
-msgstr "Anzahl von Erweiterungsplatinen."
+#: SIP/gv.py:226
+msgid "Allow each station to have its own run time in programs."
+msgstr "Erlaube jeder Station ihre eigene Laufzeit in Programmen."
 
-#: SIP\gv.py:146
+#: SIP/gv.py:230
+msgid "Station extensions"
+msgstr "Stationserweiterungen"
+
+#: SIP/gv.py:233
+msgid "Add 8 stations for each extension."
+msgstr "Zusätzlich 8 weiter Stationen für jedes Relais-Erweiterungsmodul"
+
+#: SIP/gv.py:237
 msgid "Station delay"
 msgstr "Stationsverzögerung"
 
-#: SIP\gv.py:146
+#: SIP/gv.py:240
 msgid "Station delay time (in seconds), between 0 and 240."
-msgstr "Stations-verzögerungszeit (in Sekunden), zwischen 0 und 240."
+msgstr "Verzögerungszeit der Stationen (in Sekunden), zwischen 0 und 240."
 
-#: SIP\gv.py:147
+#: SIP/gv.py:244
+msgid "Active-Low Relay"
+msgstr "Low-Pegel Relais"
+
+#: SIP/gv.py:247
+msgid "Using active-low relay boards connected through shift registers"
+msgstr ""
+"Auswahl von Low-Pegel-Relaiskarten, die über Schieberegister verbunden sind"
+
+#: SIP/gv.py:251
 msgid "Master station"
 msgstr "Haupt-Station"
 
-#: SIP\gv.py:147
+#: SIP/gv.py:254
 msgid "Select master station."
 msgstr "Wähle eine Haupt-Station."
 
-#: SIP\gv.py:147 SIP\gv.py:148 SIP\gv.py:149
+#: SIP/gv.py:255 SIP/gv.py:262 SIP/gv.py:269
 msgid "Configure Master"
 msgstr "Konfiguriere Haupt-Station"
 
-#: SIP\gv.py:148
+#: SIP/gv.py:258
 msgid "Master on adjust"
 msgstr "Einschaltverzögerung"
 
-#: SIP\gv.py:148
+#: SIP/gv.py:261
 msgid "Master on delay (in seconds), between +0 and +60."
 msgstr "Einschaltverzögerung (in Sekunden), zwischen -60 und +60."
 
-#: SIP\gv.py:149
+#: SIP/gv.py:265
 msgid "Master off adjust"
 msgstr "Ausschaltverzögerung"
 
-#: SIP\gv.py:149
+#: SIP/gv.py:268
 msgid "Master off delay (in seconds), between -60 and +60."
 msgstr "Ausschaltverzögerung (in Sekunden), zwischen -60 und +60."
 
-#: SIP\gv.py:150
+#: SIP/gv.py:272
 msgid "Use rain sensor"
-msgstr "Regensensor"
+msgstr "Benutze Regensensor"
 
-#: SIP\gv.py:150
+#: SIP/gv.py:275
 msgid "Use rain sensor."
 msgstr "Benutze Regensensor."
 
-#: SIP\gv.py:150 SIP\gv.py:151
+#: SIP/gv.py:276 SIP/gv.py:283
 msgid "Rain Sensor"
 msgstr "Regensensor"
 
-#: SIP\gv.py:151
+#: SIP/gv.py:279
 msgid "Normally open"
 msgstr "Normal geöffnet"
 
-#: SIP\gv.py:151
+#: SIP/gv.py:282
 msgid "Rain sensor type."
-msgstr "Regensensor Typ"
+msgstr "Regensensor-Typ"
 
-#: SIP\gv.py:152
+#: SIP/gv.py:286
 msgid "Enable logging"
-msgstr "Ereignisprotokoll"
+msgstr "Aktiviere Protokollierung"
 
-#: SIP\gv.py:152
+#: SIP/gv.py:289
 msgid ""
 "Log all events - note that repetitive writing to an SD card can shorten its "
 "lifespan."
@@ -228,1215 +247,1392 @@ msgstr ""
 "Alle Ereignisse protokollieren - Beachte dass ein wiederholtes Beschreiben "
 "der SD Karte die Lebensdauer verkürzt."
 
-#: SIP\gv.py:152 SIP\gv.py:153
+#: SIP/gv.py:292 SIP/gv.py:299
 msgid "Logging"
 msgstr "Ereignisprotokoll"
 
-#: SIP\gv.py:153
+#: SIP/gv.py:295
+msgid "Max log entries"
+msgstr "Max. Anzahl Einträge"
+
+#: SIP/gv.py:298
 msgid "Length of log to keep, 0=no limits."
 msgstr "Länge (Anzahl) des Protokolls, 0=keine Begrenzung."
 
-#: SIP\gv.py:153
-msgid "Max log entries"
-msgstr "Anzahl Einträge"
-
-#: SIP\helpers.py:40
-msgid "Error: json module not found"
-msgstr "Fehler: json Modul wurde nicht gefunden"
-
-#: SIP\helpers.py:74
+#: SIP/helpers.py:99
 msgid "Rebooting..."
 msgstr "Bootvorgang..."
 
-#: SIP\helpers.py:103
+#: SIP/helpers.py:124
 msgid "Powering off..."
 msgstr "Abschalten..."
 
-#: SIP\helpers.py:133
+#: SIP/helpers.py:150
 msgid "Restarting..."
 msgstr "Neustarten..."
 
-#: SIP\helpers.py:320 SIP\templates\base.html:101
+#: SIP/helpers.py:320
+msgid "program"
+msgstr "Programm"
+
+#: SIP/helpers.py:321
+msgid "station"
+msgstr "Station "
+
+#: SIP/helpers.py:322
+msgid "duration"
+msgstr "Dauer"
+
+#: SIP/helpers.py:323
+msgid "start"
+msgstr "Neustart soft"
+
+#: SIP/helpers.py:324
+msgid "date"
+msgstr "Datum"
+
+#: SIP/helpers.py:328 SIP/templates/base.html:119
 msgid "Run-once"
 msgstr "Schnellstart"
 
-#: SIP\helpers.py:322 SIP\templates\base.html:102 SIP\templates\home.html:219
+#: SIP/helpers.py:330 SIP/templates/base.html:120 SIP/templates/home.html:242
 msgid "Manual"
 msgstr "Manuell"
 
-#: SIP\helpers.py:569
-msgid "Password"
-msgstr "Passwort"
+#: SIP/helpers.py:602
+msgid "Passphrase"
+msgstr "Kennwort"
 
-#: SIP\helpers.py:572
-msgid "Incorrect password, please try again"
-msgstr "Falsches Passwort, bitte erneut versuchen."
+#: SIP/helpers.py:607
+msgid "Incorrect passphrase, please try again"
+msgstr "Falsches Passwort, bitte erneut versuchen!"
 
-#: SIP\sip.py:29
+#: SIP/plugins/plugin_manager.py:41
+msgid "Manage Plugins"
+msgstr "Verfügbare Plugins"
+
+#: SIP/plugins/proto.py:21
+msgid "Proto Plugin"
+msgstr "SIP Protokoll Plugin"
+
+#: SIP/plugins/signaling_examples.py:14
+#: plugin_translate/signaling_examples.py:14
+msgid "Messge from "
+msgstr "Nachricht von "
+
+#: SIP/plugins/signaling_examples.py:25
+#: plugin_translate/signaling_examples.py:25
+msgid "someone logged in"
+msgstr "jemand hat sich angemeldet"
+
+#: SIP/plugins/signaling_examples.py:33
+#: plugin_translate/signaling_examples.py:33
+msgid "Option settings changed in gv.sd"
+msgstr "Optionseinstellungen in gv.sd geändert"
+
+#: SIP/plugins/signaling_examples.py:43
+#: plugin_translate/signaling_examples.py:43
+msgid "Programs changed"
+msgstr "Programme geändert"
+
+#: SIP/plugins/signaling_examples.py:52
+#: plugin_translate/signaling_examples.py:52
+msgid "Program deleted"
+msgstr "Programm gelöscht"
+
+#: SIP/plugins/signaling_examples.py:61
+#: plugin_translate/signaling_examples.py:61
+msgid "Program toggled on or off"
+msgstr "Programm ein- oder ausgeschaltet"
+
+#: SIP/plugins/signaling_examples.py:70
+#: plugin_translate/signaling_examples.py:70
+msgid "Rain changed (from plugin)"
+msgstr "Niederschlagserkennung geändert (durch Plugin)"
+
+#: SIP/plugins/signaling_examples.py:79
+#: plugin_translate/signaling_examples.py:79
+msgid "System rebooted"
+msgstr "System startete neu"
+
+#: SIP/plugins/signaling_examples.py:87
+#: plugin_translate/signaling_examples.py:87
+msgid "System is restarting"
+msgstr "System startet neu"
+
+#: SIP/plugins/signaling_examples.py:95
+#: plugin_translate/signaling_examples.py:95
+msgid "Station names changed"
+msgstr "Stationsnamen geändert"
+
+#: SIP/plugins/signaling_examples.py:107
+#: plugin_translate/signaling_examples.py:107
+msgid "Some Stations has been scheduled: "
+msgstr "Einige Stationen wurden geplant:"
+
+#: SIP/plugins/signaling_examples.py:115
+#: plugin_translate/signaling_examples.py:115
+msgid "run completed"
+msgstr "Lauf abgeschlossen"
+
+#: SIP/plugins/signaling_examples.py:115 SIP/webpages.py:412
+#: plugin_translate/signaling_examples.py:115
+msgid "Station "
+msgstr "Station"
+
+#: SIP/plugins/signaling_examples.py:123
+#: plugin_translate/signaling_examples.py:123
+msgid "Controller values changed in gv.sd"
+msgstr "Reglerwerte in gv.sd geändert"
+
+#: SIP/plugins/signaling_examples.py:133
+#: plugin_translate/signaling_examples.py:133
+msgid "zones changed"
+msgstr "Zonen geändert"
+
+#: SIP/plugins/system_update.py:27
+msgid "System update"
+msgstr "Systemaktualisierung"
+
+#: SIP/plugins/system_update.py:82
+msgid "Up-to-date."
+msgstr "Aktuell!"
+
+#: SIP/plugins/system_update.py:85
+msgid "New version is available!"
+msgstr "Neue Version verfügbar!"
+
+#: SIP/plugins/system_update.py:86 SIP/plugins/system_update.py:91
+msgid "Available revision"
+msgstr "Verfügbare Überarbeitung"
+
+#: SIP/plugins/system_update.py:87
+msgid "Changes"
+msgstr "Änderungen"
+
+#: SIP/plugins/system_update.py:90
+msgid "Currently running revision"
+msgstr "Aktuell laufende Überarbeitung"
+
+#: SIP/plugins/system_update.py:102
+msgid "System update plug-in encountered error"
+msgstr "Fehlfunktion Plug-In Systemupdate"
+
+#: SIP/plugins/weather_level_adj.py:67 plugin_translate/weather_level_adj.py:67
+msgid "Weather-based Water Level"
+msgstr "Wetterprognosen-basierende Bewässerung "
+
+#: SIP/plugins/weather_level_adj.py:121
+#: plugin_translate/weather_level_adj.py:121
+msgid "Checking weather status"
+msgstr "Wetterabfrage läuft..."
+
+#: SIP/plugins/weather_level_adj.py:188 SIP/plugins/weather_level_adj.py:223
+#: plugin_translate/weather_level_adj.py:188
+#: plugin_translate/weather_level_adj.py:223
+msgid "Current temperature"
+msgstr "Aktuelle Temperatur"
+
+#: SIP/plugins/weather_level_adj.py:194 SIP/plugins/weather_level_adj.py:229
+#: SIP/templates/weather_level_adj.html:111
+#: plugin_translate/weather_level_adj.html:111
+#: plugin_translate/weather_level_adj.py:194
+#: plugin_translate/weather_level_adj.py:229
+msgid "Daily irrigation"
+msgstr "Tägliche Bewässerung"
+
+#: SIP/plugins/weather_level_adj.py:199 SIP/plugins/weather_level_adj.py:234
+#: plugin_translate/weather_level_adj.py:199
+#: plugin_translate/weather_level_adj.py:234
+msgid "Total rainfall"
+msgstr "Gesamte Niederschlagsmenge "
+
+#: SIP/plugins/weather_level_adj.py:204 SIP/plugins/weather_level_adj.py:239
+#: plugin_translate/weather_level_adj.py:204
+#: plugin_translate/weather_level_adj.py:239
+msgid "Water needed"
+msgstr "benötigte Wassermenge"
+
+#: SIP/plugins/weather_level_adj.py:204 SIP/plugins/weather_level_adj.py:239
+#: plugin_translate/weather_level_adj.py:204
+#: plugin_translate/weather_level_adj.py:239
+msgid "days)"
+msgstr "Tage)"
+
+#: SIP/plugins/weather_level_adj.py:212 SIP/plugins/weather_level_adj.py:246
+#: plugin_translate/weather_level_adj.py:212
+#: plugin_translate/weather_level_adj.py:246
+msgid "Irrigation needed"
+msgstr "benötigte Bewässerung"
+
+#: SIP/plugins/weather_level_adj.py:217 SIP/plugins/weather_level_adj.py:251
+#: plugin_translate/weather_level_adj.py:217
+#: plugin_translate/weather_level_adj.py:251
+msgid "Weather Adjustment"
+msgstr "Einstellung Wetterprognosen-Bewässerung"
+
+#: SIP/plugins/weather_level_adj.py:266
+#: plugin_translate/weather_level_adj.py:266
+msgid "Weather-based water level encountered error"
+msgstr "SIP Wetterprognosen-Bewässerung"
+
+#: SIP/sip.py:46
 msgid "Starting timing loop"
-msgstr "Wiederholungsschleife starten"
+msgstr "Starte Wiederholung"
 
-#: SIP\sip.py:202
+#: SIP/sip.py:276
 msgid "plugins loaded:"
 msgstr "Geladene Plugins:"
 
-#: SIP\templates\base.html:14 SIP\templates\modify.html:333
+#: SIP/templates/base.html:18 SIP/templates/modify.html:426
 msgid "Monday"
 msgstr "Montag"
 
-#: SIP\templates\base.html:14 SIP\templates\modify.html:334
+#: SIP/templates/base.html:18 SIP/templates/modify.html:427
 msgid "Tuesday"
 msgstr "Dienstag"
 
-#: SIP\templates\base.html:14 SIP\templates\modify.html:335
+#: SIP/templates/base.html:18 SIP/templates/modify.html:428
 msgid "Wednesday"
 msgstr "Mittwoch"
 
-#: SIP\templates\base.html:14 SIP\templates\modify.html:336
+#: SIP/templates/base.html:18 SIP/templates/modify.html:429
 msgid "Thursday"
 msgstr "Donnerstag"
 
-#: SIP\templates\base.html:14 SIP\templates\modify.html:337
+#: SIP/templates/base.html:18 SIP/templates/modify.html:430
 msgid "Friday"
 msgstr "Freitag"
 
-#: SIP\templates\base.html:14 SIP\templates\modify.html:338
+#: SIP/templates/base.html:18 SIP/templates/modify.html:431
 msgid "Saturday"
 msgstr "Samstag"
 
-#: SIP\templates\base.html:14 SIP\templates\modify.html:339
+#: SIP/templates/base.html:18 SIP/templates/modify.html:432
 msgid "Sunday"
 msgstr "Sonntag"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:26
-msgid "January"
-msgstr "Januar"
-
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:30
-msgid "February"
-msgstr "Februar"
-
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:34
-msgid "March"
-msgstr "März"
-
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:38
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:37
 msgid "April"
 msgstr "April"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:42
-msgid "May"
-msgstr "Mai"
-
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:46
-msgid "June"
-msgstr "Juni"
-
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:50
-msgid "July"
-msgstr "Juli"
-
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:54
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:53
 msgid "August"
 msgstr "August"
 
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:58
-msgid "September"
-msgstr "September"
-
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:62
-msgid "October"
-msgstr "Oktober"
-
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:66
-msgid "November"
-msgstr "November"
-
-#: SIP\templates\base.html:15 SIP\templates\monthly.html:70
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:69
 msgid "December"
 msgstr "Dezember"
 
-#: SIP\templates\base.html:103 SIP\templates\log.html:55
-#: SIP\templates\programs.html:122
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:29
+msgid "February"
+msgstr "Februar"
+
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:25
+msgid "January"
+msgstr "Januar"
+
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:49
+msgid "July"
+msgstr "Juli"
+
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:45
+msgid "June"
+msgstr "Juni"
+
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:33
+msgid "March"
+msgstr "März"
+
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:41
+msgid "May"
+msgstr "Mai"
+
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:65
+msgid "November"
+msgstr "November"
+
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:61
+msgid "October"
+msgstr "Oktober"
+
+#: SIP/templates/base.html:19 plugin_translate/monthly.html:57
+msgid "September"
+msgstr "September"
+
+#: SIP/templates/base.html:121 SIP/templates/log.html:55
+#: SIP/templates/programs.html:125
 msgid "Program"
 msgstr "Programm"
 
-#: SIP\templates\base.html:156
+#: SIP/templates/base.html:175
 msgid "Home"
 msgstr "Home"
 
-#: SIP\templates\base.html:157
+#: SIP/templates/base.html:176
 msgid "Define Programs"
 msgstr "Erstelle Programme"
 
-#: SIP\templates\base.html:157
+#: SIP/templates/base.html:176
 msgid "Programs"
 msgstr "Programme"
 
-#: SIP\templates\base.html:158
+#: SIP/templates/base.html:177
 msgid "Define Run Once Program"
 msgstr "Erstelle einmaliges Programm"
 
-#: SIP\templates\base.html:158
+#: SIP/templates/base.html:177
 msgid "Run Once"
 msgstr "Schnellstart"
 
-#: SIP\templates\base.html:159
+#: SIP/templates/base.html:178
 msgid "Access Plugins"
-msgstr ""
+msgstr "Plug-In Zugang"
 
-#: SIP\templates\base.html:159
+#: SIP/templates/base.html:178
 msgid "Plugins"
 msgstr "Plugins"
 
-#: SIP\templates\base.html:160
+#: SIP/templates/base.html:179
 msgid "Log"
 msgstr "Protokoll "
 
-#: SIP\templates\base.html:160
+#: SIP/templates/base.html:179
 msgid "View Log"
 msgstr "Protokoll anzeigen"
 
-#: SIP\templates\base.html:161
+#: SIP/templates/base.html:180
 msgid "Options"
 msgstr "Optionen"
 
-#: SIP\templates\base.html:162
+#: SIP/templates/base.html:181
 msgid "Stations"
 msgstr "Stationen"
 
-#: SIP\templates\base.html:162 SIP\templates\stations.html:81
+#: SIP/templates/base.html:181 SIP/templates/stations.html:81
 msgid "Configure Stations"
 msgstr "Konfiguriere Stationen"
 
-#: SIP\templates\base.html:164
+#: SIP/templates/base.html:183
 msgid "Logout"
 msgstr "Ausloggen"
 
-#: SIP\templates\base.html:174
+#: SIP/templates/base.html:195
 msgid "?"
-msgstr ""
+msgstr "?"
 
-#: SIP\templates\base.html:174 SIP\templates\proto.html:27
-#: SIP\templates\system_update.html:26
+#: SIP/templates/base.html:195 SIP/templates/proto.html:27
+#: SIP/templates/system_update.html:26 SIP/templates/weather_level_adj.html:51
+#: plugin_translate/cli_control.html:33 plugin_translate/mqtt_slave.html:25
+#: plugin_translate/relay_board.html:25
+#: plugin_translate/weather_level_adj.html:51
 msgid "Help"
-msgstr ""
+msgstr "Hilfe"
 
-#: SIP\templates\base.html:176
+#: SIP/templates/base.html:203
 msgid "CPU Temp"
 msgstr "CPU Temperatur"
 
-#: SIP\templates\base.html:176
-msgid "Click to toggle"
-msgstr "Klicken zum schalten"
+#: SIP/templates/base.html:203
+msgid "Click to toggle Celsius &lt;&gt; Fahrenheit"
+msgstr "Umschalten zwischen Celsius und Fahrenheit"
 
-#: SIP\templates\base.html:177
+#: SIP/templates/base.html:210
 msgid "Software"
 msgstr "Software"
 
-#: SIP\templates\base.html:177
+#: SIP/templates/base.html:210
 msgid "version"
 msgstr "Version"
 
-#: SIP\templates\home.html:45
+#: SIP/templates/home.html:50
 msgid "Manual Mode"
 msgstr "Manueller Modus"
 
-#: SIP\templates\home.html:48 SIP\templates\runonce.html:53
+#: SIP/templates/home.html:53 SIP/templates/runonce.html:57
 msgid "Run Once Program"
-msgstr "Einmalig ausführen"
+msgstr "Schnellstart-Programm"
 
-#: SIP\templates\home.html:51
+#: SIP/templates/home.html:56
 msgid " for "
-msgstr "für"
+msgstr " für "
 
-#: SIP\templates\home.html:51
+#: SIP/templates/home.html:56
 msgid " on "
-msgstr "Ein"
+msgstr " ein "
 
-#: SIP\templates\home.html:51
+#: SIP/templates/home.html:56
 msgid " ran "
-msgstr "lief"
+msgstr " lief "
 
-#: SIP\templates\home.html:75
+#: SIP/templates/home.html:80
 msgid "Master On"
 msgstr "Haupt-Station AN"
 
-#: SIP\templates\home.html:77
+#: SIP/templates/home.html:82
 msgid "Master Off"
 msgstr "Haupt-Station AUS"
 
-#: SIP\templates\home.html:82
+#: SIP/templates/home.html:87
 msgid "Suppressed by Rain Delay"
-msgstr "Unterdrückt durch Regen Verzögerung"
+msgstr "Unterdrückt durch Regen"
 
-#: SIP\templates\home.html:85
+#: SIP/templates/home.html:90
 msgid "Suppressed by Rain Sensor"
 msgstr "Unterdrückt von Regensensor"
 
-#: SIP\templates\home.html:88 SIP\templates\home.html:247
-#: SIP\templates\modify.html:352 SIP\templates\programs.html:120
+#: SIP/templates/home.html:93 SIP/templates/home.html:270
+#: SIP/templates/modify.html:446 SIP/templates/programs.html:123
 msgid "Off"
 msgstr "Aus"
 
-#: SIP\templates\home.html:128
+#: SIP/templates/home.html:152
 msgid "Enter hours to delay"
 msgstr "Verzögerung eingeben (in Stunden)"
 
-#: SIP\templates\home.html:144
+#: SIP/templates/home.html:168
 msgid "Enter percentage adjustment"
-msgstr "Einstellung in Prozent eingeben."
+msgstr "Einstellung in Prozent eingeben"
 
-#: SIP\templates\home.html:163 SIP\templates\runonce.html:25
+#: SIP/templates/home.html:187 SIP/templates/runonce.html:29
 msgid "Timer values wrong: "
-msgstr "Zeitwerte falsch:"
+msgstr "Zeitwerte falsch: "
 
-#: SIP\templates\home.html:209
+#: SIP/templates/home.html:233
 msgid "System Off"
 msgstr "System Aus"
 
-#: SIP\templates\home.html:209
+#: SIP/templates/home.html:233
 msgid "System On"
 msgstr "System An"
 
-#: SIP\templates\home.html:211
+#: SIP/templates/home.html:235
 msgid "Level"
-msgstr "Level"
+msgstr "Stand"
 
-#: SIP\templates\home.html:211
+#: SIP/templates/home.html:235
 msgid "Normal"
 msgstr "Normal"
 
-#: SIP\templates\home.html:211
+#: SIP/templates/home.html:235
 msgid "Water Level"
 msgstr "Niederschlag"
 
-#: SIP\templates\home.html:213
+#: SIP/templates/home.html:237 plugin_translate/relay_board.html:48
+#: plugin_translate/relay_board.html:54
 msgid "Active"
 msgstr "Aktiv"
 
-#: SIP\templates\home.html:213
+#: SIP/templates/home.html:237
 msgid "Rain Delay"
 msgstr "Verzögerung bei Regen"
 
-#: SIP\templates\home.html:217
+#: SIP/templates/home.html:240
 msgid "rain sensed"
 msgstr "Regen erkannt"
 
-#: SIP\templates\home.html:217 SIP\templates\log.html:46
+#: SIP/templates/home.html:240 SIP/templates/log.html:46
 msgid "no"
-msgstr "nein"
+msgstr "Kein"
 
-#: SIP\templates\home.html:219
+#: SIP/templates/home.html:242
 msgid "Auto"
 msgstr "Automatisch"
 
-#: SIP\templates\home.html:239
+#: SIP/templates/home.html:262
 msgid "On (Master)"
 msgstr "An (Haupt-Station)"
 
-#: SIP\templates\home.html:241
+#: SIP/templates/home.html:264
 msgid "Off (Master)"
 msgstr "Aus (Haupt-Station)"
 
-#: SIP\templates\home.html:247 SIP\templates\modify.html:352
-#: SIP\templates\programs.html:118
+#: SIP/templates/home.html:270 SIP/templates/modify.html:446
+#: SIP/templates/programs.html:121
 msgid "On"
-msgstr "An"
+msgstr "Ein"
 
-#: SIP\templates\home.html:265
+#: SIP/templates/home.html:288
 msgid " Prev Day"
-msgstr "Vorheriger Tag"
+msgstr " Vorheriger Tag"
 
-#: SIP\templates\home.html:266
+#: SIP/templates/home.html:289
 msgid "Today"
 msgstr "Heute"
 
-#: SIP\templates\home.html:267
+#: SIP/templates/home.html:290
 msgid "Next Day"
 msgstr "Nächster Tag"
 
-#: SIP\templates\home.html:305
+#: SIP/templates/home.html:328
 msgid "loading..."
 msgstr "lädt..."
 
-#: SIP\templates\home.html:334
+#: SIP/templates/home.html:361
 msgid "Stop All Stations"
 msgstr "Alle Stationen stoppen"
 
-#: SIP\templates\home.html:337
-msgid "Program 1"
-msgstr "Programm 1"
-
-#: SIP\templates\log.html:3
+#: SIP/templates/log.html:3
 msgid "SIP Log"
-msgstr ""
+msgstr "SIP-Protokoll"
 
-#: SIP\templates\log.html:8 SIP\templates\plugins.html:46
+#: SIP/templates/log.html:8 SIP/templates/plugins.html:46
+#: plugin_translate/pulse.html:64
 msgid "Enabled"
 msgstr "Aktiviert"
 
-#: SIP\templates\log.html:11
+#: SIP/templates/log.html:11
 msgid "Disabled"
 msgstr "Deaktiviert"
 
-#: SIP\templates\log.html:41
+#: SIP/templates/log.html:41
 msgid "Log "
-msgstr "Protokoll "
+msgstr "Protokoll"
 
-#: SIP\templates\log.html:46
+#: SIP/templates/log.html:46
 msgid " limit"
-msgstr "Limit"
+msgstr " Limit"
 
-#: SIP\templates\log.html:46
+#: SIP/templates/log.html:46
 msgid "Total number of records: "
-msgstr "Anzahl von Einträgen: "
+msgstr "Gesamtanzahl von Einträgen: "
 
-#: SIP\templates\log.html:47
+#: SIP/templates/log.html:47
 msgid "Download log as "
 msgstr "Protokoll herunterladen als "
 
-#: SIP\templates\log.html:51
+#: SIP/templates/log.html:51
 msgid "Date"
 msgstr "Datum"
 
-#: SIP\templates\log.html:52 SIP\templates\modify.html:292
+#: SIP/templates/log.html:52 SIP/templates/modify.html:384
 msgid "Start Time"
-msgstr "Start Zeit"
+msgstr "Startzeit"
 
-#: SIP\templates\log.html:53 SIP\templates\stations.html:85
+#: SIP/templates/log.html:53 SIP/templates/stations.html:85
+#: plugin_translate/cli_control.html:48
 msgid "Station"
-msgstr "Station"
+msgstr "Station "
 
-#: SIP\templates\log.html:54 SIP\templates\modify.html:302
+#: SIP/templates/log.html:54 SIP/templates/modify.html:394
+#: SIP/templates/modify.html:425
 msgid "Duration"
 msgstr "Dauer"
 
-#: SIP\templates\log.html:73
+#: SIP/templates/log.html:73
 msgid "Refresh"
 msgstr "Aktualisieren"
 
-#: SIP\templates\log.html:74
+#: SIP/templates/log.html:74
 msgid "Clear Log"
 msgstr "Protokolle löschen"
 
-#: SIP\templates\login.html:3
+#: SIP/templates/login.html:3
 msgid "SIP Login"
-msgstr ""
+msgstr "SIP Login"
 
-#: SIP\templates\login.html:7 SIP\templates\login.html:10
+#: SIP/templates/login.html:7 SIP/templates/login.html:10
 msgid "Login"
 msgstr "Login"
 
-#: SIP\templates\modify.html:3
+#: SIP/templates/modify.html:3
 msgid "SIP Modify Program"
-msgstr ""
+msgstr "SIP Programmänderung"
 
-#: SIP\templates\modify.html:66
-msgid "Error: Incorrect time input "
-msgstr "Fehler: Falsche Zeit eingegeben"
+#: SIP/templates/modify.html:91
+msgid "Incorrect time input "
+msgstr "Fehler: Falsche Zeit eingegeben "
 
-#: SIP\templates\modify.html:78
+#: SIP/templates/modify.html:103
 msgid "Please choose at least one weekday for the program to run."
 msgstr ""
-"Bitte wähle mindestens ein Tag pro Woche aus, damit das Programm laufen kann."
+"Bitte wähle mindestens einen Wochentag aus, damit das Programm laufen kann."
 
-#: SIP\templates\modify.html:82
+#: SIP/templates/modify.html:107
 msgid "Please choose at least one station to run in this program."
 msgstr ""
 "Bitte wähle mindestens eine Station aus, damit das Programm laufen kann."
 
-#: SIP\templates\modify.html:228
-msgid "Error: starting in days wrong."
-msgstr "Fehler: Startzeit in Tagen ist falsch"
+#: SIP/templates/modify.html:258
+msgid "Starting in days wrong."
+msgstr "Fehler: Startzeit in Tagen ist falsch!"
 
-#: SIP\templates\modify.html:249
-msgid "Error: Incorrect duration."
-msgstr "Fehler: Falsche Dauer"
+#: SIP/templates/modify.html:281
+msgid "Please enter a Duration to continue."
+msgstr "Bitte eine Laufzeit eingeben um fortzufahren."
 
-#: SIP\templates\modify.html:263
-msgid "Error: Start time must be prior to end time."
+#: SIP/templates/modify.html:301
+msgid "Duration must be later than start."
+msgstr "Laufzeit muss nach Startzeit liegen."
+
+#: SIP/templates/modify.html:344
+msgid "End time must be later than start time."
 msgstr "Fehler: Die Startzeit muss vor der Endzeit liegen."
 
-#: SIP\templates\modify.html:283
+#: SIP/templates/modify.html:373
 msgid "Edit Program #"
 msgstr "Programm bearbeiten #"
 
-#: SIP\templates\modify.html:283 SIP\templates\programs.html:108
+#: SIP/templates/modify.html:373 SIP/templates/programs.html:111
 msgid "Add a New Program"
 msgstr "Neues Programm erstellen"
 
-#: SIP\templates\modify.html:288
+#: SIP/templates/modify.html:378
 msgid "Program Off"
 msgstr "Programm Aus"
 
-#: SIP\templates\modify.html:288
+#: SIP/templates/modify.html:378
 msgid "Program On"
 msgstr "Programm An"
 
-#: SIP\templates\modify.html:304
+#: SIP/templates/modify.html:396
 msgid "Recurring"
 msgstr "Wiederkehrend"
 
-#: SIP\templates\modify.html:304
+#: SIP/templates/modify.html:396
 msgid "Single pass"
 msgstr "Einmalig"
 
-#: SIP\templates\modify.html:306
+#: SIP/templates/modify.html:398
 msgid "Every"
-msgstr "Beginn"
+msgstr "Alle"
 
-#: SIP\templates\modify.html:310
+#: SIP/templates/modify.html:402
 msgid "Until"
-msgstr "Ende"
+msgstr "Bis"
 
-#: SIP\templates\modify.html:322
+#: SIP/templates/modify.html:414
 msgid "Interval"
 msgstr "Intervall"
 
-#: SIP\templates\modify.html:322
+#: SIP/templates/modify.html:414
 msgid "Weekly"
 msgstr "Wöchentlich"
 
-#: SIP\templates\modify.html:327
+#: SIP/templates/modify.html:419
 msgid "Select All"
 msgstr "Alle auswählen"
 
-#: SIP\templates\modify.html:328
+#: SIP/templates/modify.html:420
 msgid "Clear All"
 msgstr "Alle löschen"
 
-#: SIP\templates\modify.html:359
+#: SIP/templates/modify.html:457
 msgid "Water interval"
-msgstr "Alle ... Tage"
+msgstr "Beregnung alle ... Tage"
 
-#: SIP\templates\modify.html:375
+#: SIP/templates/modify.html:473
 msgid "Starting in"
-msgstr "Startet in"
+msgstr "Startet davon am ... Tag"
 
-#: SIP\templates\modify.html:389
+#: SIP/templates/modify.html:487
 msgid "Any Day"
 msgstr "Jeden Tag"
 
-#: SIP\templates\modify.html:389
+#: SIP/templates/modify.html:487
 msgid "Restrict Day"
 msgstr "Bestimmte Tage"
 
-#: SIP\templates\modify.html:391
+#: SIP/templates/modify.html:489
 msgid "Even"
 msgstr "Gerade"
 
-#: SIP\templates\modify.html:391
+#: SIP/templates/modify.html:489
 msgid "Odd"
 msgstr "Ungerade"
 
-#: SIP\templates\modify.html:392
+#: SIP/templates/modify.html:490
 msgid "(except 31st and Feb 29th)"
 msgstr "(außer 31. eines Monats und 29.Feb.)"
 
-#: SIP\templates\modify.html:401
+#: SIP/templates/modify.html:499
 msgid "Save"
 msgstr "Speichern"
 
-#: SIP\templates\modify.html:402 SIP\templates\monthly.html:78
-#: SIP\templates\options.html:143 SIP\templates\plugins.html:69
-#: SIP\templates\plugins_repo.html:45 SIP\templates\proto.html:75
-#: SIP\templates\runonce.html:76 SIP\templates\stations.html:138
-#: SIP\templates\system_update.html:66
+#: SIP/templates/modify.html:500 SIP/templates/options.html:156
+#: SIP/templates/plugins.html:69 SIP/templates/plugins_repo.html:45
+#: SIP/templates/proto.html:75 SIP/templates/runonce.html:86
+#: SIP/templates/stations.html:138 SIP/templates/system_update.html:66
+#: SIP/templates/weather_level_adj.html:139
+#: plugin_translate/cli_control.html:75 plugin_translate/monthly.html:77
+#: plugin_translate/mqtt.html:66 plugin_translate/mqtt_schedule.html:44
+#: plugin_translate/mqtt_slave.html:62 plugin_translate/mqtt_zones.html:45
+#: plugin_translate/pulse.html:88 plugin_translate/relay_16.html:68
+#: plugin_translate/relay_board.html:61
+#: plugin_translate/weather_level_adj.html:139
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: SIP\templates\monthly.html:3
-msgid "SIP Monthly Adjustments"
-msgstr ""
-
-#: SIP\templates\monthly.html:21
-msgid "Monthly Irrigation Adjustments"
-msgstr "Monatliche Bewässerungs Einstellungen"
-
-#: SIP\templates\monthly.html:22
-msgid "Enter an adjustment for each month (% irrigation time)"
-msgstr "Einstellung (in % Bewässerungszeit) für jeden Monat eingeben."
-
-#: SIP\templates\monthly.html:77 SIP\templates\proto.html:74
-msgid "Submit"
-msgstr "Absenden"
-
-#: SIP\templates\options.html:3
+#: SIP/templates/options.html:3
 msgid "SIP Options"
-msgstr ""
+msgstr "SIP Optionen"
 
-#: SIP\templates\options.html:18 SIP\templates\options.html:19
+#: SIP/templates/options.html:25 SIP/templates/options.html:26
 msgid "Hide Tooltips"
 msgstr "Verberge Tipps"
 
-#: SIP\templates\options.html:19 SIP\templates\options.html:73
+#: SIP/templates/options.html:26 SIP/templates/options.html:84
 msgid "Show Tooltips"
 msgstr "Zeige Tipps"
 
-#: SIP\templates\options.html:53
-msgid "The password given was incorrect."
+#: SIP/templates/options.html:60
+msgid "The passphrase given was incorrect."
 msgstr "Das eingegebene Passwort ist falsch."
 
-#: SIP\templates\options.html:57
-msgid "Please enter a password."
+#: SIP/templates/options.html:64
+msgid "Please enter a passphrase."
 msgstr "Bitte Passwort eingeben."
 
-#: SIP\templates\options.html:61
+#: SIP/templates/options.html:68
 msgid "Passwords don't match, please re-enter."
 msgstr "Passwort stimmt nicht, bitte erneut versuchen."
 
-#: SIP\templates\options.html:72
+#: SIP/templates/options.html:72
+msgid "Must be 0 to +60, please re-enter."
+msgstr "Muss zwischen 0 und +60 liegen, bitte erneut versuchen."
+
+#: SIP/templates/options.html:83
 msgid "Edit Options"
 msgstr "Optionen ändern"
 
-#: SIP\templates\options.html:101
+#: SIP/templates/options.html:112
 msgid "Default"
 msgstr "Standard"
 
-#: SIP\templates\options.html:113
+#: SIP/templates/options.html:124
 msgid "None"
 msgstr "Keine"
 
-#: SIP\templates\options.html:129
+#: SIP/templates/options.html:142
 msgid "System Restart"
 msgstr "System Neustart"
 
-#: SIP\templates\options.html:131
-msgid "Restart"
-msgstr "Neustart soft"
-
-#: SIP\templates\options.html:131
+#: SIP/templates/options.html:144
 msgid "Restart software"
 msgstr "Neustart Software"
 
-#: SIP\templates\options.html:132
+#: SIP/templates/options.html:144 SIP/templates/system_update.html:65
+msgid "Restart SIP"
+msgstr "SIP Neustart"
+
+#: SIP/templates/options.html:145
 msgid "Reboot"
 msgstr "Neustart hard"
 
-#: SIP\templates\options.html:132
+#: SIP/templates/options.html:145
 msgid "Reboot hardware"
 msgstr "Neustart Hardware"
 
-#: SIP\templates\options.html:142 SIP\templates\stations.html:136
+#: SIP/templates/options.html:155 SIP/templates/stations.html:136
 msgid "Submit Changes"
 msgstr "Änderungen speichern"
 
-#: SIP\templates\plugins.html:3
+#: SIP/templates/plugins.html:3
 msgid "SIP Plugin Manager"
-msgstr ""
+msgstr "SIP Plugin Manager"
 
-#: SIP\templates\plugins.html:39
+#: SIP/templates/plugins.html:39
 msgid "Installed Plugins"
-msgstr ""
+msgstr "Installierte Plugins"
 
-#: SIP\templates\plugins.html:40
+#: SIP/templates/plugins.html:40
 msgid "Browse More Plugins"
-msgstr ""
+msgstr "Suche mehr Plugins"
 
-#: SIP\templates\plugins.html:41
+#: SIP/templates/plugins.html:41
 msgid "Roll Your Own"
-msgstr ""
+msgstr "Baue dein eigenes"
 
-#: SIP\templates\plugins.html:45 SIP\templates\stations.html:86
+#: SIP/templates/plugins.html:45 SIP/templates/stations.html:86
 msgid "Name"
 msgstr "Name"
 
-#: SIP\templates\plugins.html:47
+#: SIP/templates/plugins.html:47
 msgid "Uninstall?"
-msgstr ""
+msgstr "Deinstallieren?"
 
-#: SIP\templates\plugins.html:65
+#: SIP/templates/plugins.html:65
 msgid "CAUTION:"
-msgstr ""
+msgstr "ACHTUNG:"
 
-#: SIP\templates\plugins.html:65
+#: SIP/templates/plugins.html:65
 msgid ""
 "Clicking UPDATE or UNINSTALL will restart the software and stop any running "
 "programs."
 msgstr ""
+"Auswahl von UPDATE oder DEINSTALLATION stoppt alle laufenden Programme und "
+"startet neu!"
 
-#: SIP\templates\plugins.html:67
+#: SIP/templates/plugins.html:67
 msgid "Update Enabled"
-msgstr ""
+msgstr "Starte Updates"
 
-#: SIP\templates\plugins.html:68
+#: SIP/templates/plugins.html:68
 msgid "Uninstall"
-msgstr ""
+msgstr "Deinstallation"
 
-#: SIP\templates\plugins_repo.html:3
+#: SIP/templates/plugins_repo.html:3
 msgid "SIP Plugin Browser"
-msgstr ""
+msgstr "SIP Plugin Browser"
 
-#: SIP\templates\plugins_repo.html:26
+#: SIP/templates/plugins_repo.html:26
 msgid "Available Plugins"
-msgstr ""
+msgstr "Verfügbare Plugins"
 
-#: SIP\templates\plugins_repo.html:27
+#: SIP/templates/plugins_repo.html:27
 msgid "Unless otherwise stated these plugins are licensed under GPL 3.0"
 msgstr ""
+"Falls nicht anders angegeben sind diese Plugins unter der GPL.3.0 lizensiert"
 
-#: SIP\templates\plugins_repo.html:43
+#: SIP/templates/plugins_repo.html:43
 msgid "install"
-msgstr ""
+msgstr "Installiere"
 
-#: SIP\templates\plugins_repo.html:44
+#: SIP/templates/plugins_repo.html:44
 msgid "Back"
-msgstr "zurück"
+msgstr "Zurück"
 
-#: SIP\templates\programs.html:3
+#: SIP/templates/programs.html:3
 msgid "SIP Programs"
-msgstr ""
+msgstr "SIP Programme"
 
-#: SIP\templates\programs.html:18
+#: SIP/templates/programs.html:21
 msgid "Every "
-msgstr "Jeden"
+msgstr "Jeden "
 
-#: SIP\templates\programs.html:18 SIP\templates\programs.html:20
+#: SIP/templates/programs.html:21 SIP/templates/programs.html:23
 msgid "days"
 msgstr "Tage"
 
-#: SIP\templates\programs.html:20
+#: SIP/templates/programs.html:23
 msgid "starting in"
 msgstr "startet in"
 
-#: SIP\templates\programs.html:23
+#: SIP/templates/programs.html:26
 msgid "Every Weekday"
 msgstr "Jeden Wochentag"
 
-#: SIP\templates\programs.html:27
+#: SIP/templates/programs.html:30
 msgid "Fri"
 msgstr "Fre"
 
-#: SIP\templates\programs.html:27
+#: SIP/templates/programs.html:30
 msgid "Mon"
 msgstr "Mon"
 
-#: SIP\templates\programs.html:27
+#: SIP/templates/programs.html:30
 msgid "Sat"
 msgstr "Sam"
 
-#: SIP\templates\programs.html:27
+#: SIP/templates/programs.html:30
 msgid "Sun"
 msgstr "Son"
 
-#: SIP\templates\programs.html:27
+#: SIP/templates/programs.html:30
 msgid "Thur"
 msgstr "Don"
 
-#: SIP\templates\programs.html:27
+#: SIP/templates/programs.html:30
 msgid "Tue"
 msgstr "Die"
 
-#: SIP\templates\programs.html:27
+#: SIP/templates/programs.html:30
 msgid "Wed"
 msgstr "Mit"
 
-#: SIP\templates\programs.html:29
+#: SIP/templates/programs.html:32
 msgid " (Even days only)"
-msgstr "(Nur gerade Tage)"
+msgstr " (Nur gerade Tage)"
 
-#: SIP\templates\programs.html:31
+#: SIP/templates/programs.html:34
 msgid " (Odd days only)"
-msgstr "(Nur ungerade Tage)"
+msgstr " (Nur ungerade Tage)"
 
-#: SIP\templates\programs.html:109
+#: SIP/templates/programs.html:112
 msgid "Delete All"
-msgstr "alles löschen"
+msgstr "Alles löschen"
 
-#: SIP\templates\programs.html:128
+#: SIP/templates/programs.html:131
 msgid "Run"
 msgstr "Läuft"
 
-#: SIP\templates\programs.html:141
+#: SIP/templates/programs.html:156
 msgid "Starting"
 msgstr "Startet"
 
-#: SIP\templates\programs.html:142
+#: SIP/templates/programs.html:157
+msgid "with individual station durations"
+msgstr "mit individueller Stationen-Laufzeit"
+
+#: SIP/templates/programs.html:158
 msgid "for"
-msgstr ""
+msgstr "für"
 
-#: SIP\templates\programs.html:145
-msgid "Recurring every"
-msgstr "immer Wiederkehrend"
-
-#: SIP\templates\programs.html:146
+#: SIP/templates/programs.html:160 SIP/templates/programs.html:165
 msgid "until"
-msgstr ""
+msgstr "bis"
 
-#: SIP\templates\programs.html:149 SIP\templates\runonce.html:74
+#: SIP/templates/programs.html:164
+msgid "Recurring every"
+msgstr "Wiederkehrend jeden"
+
+#: SIP/templates/programs.html:168 SIP/templates/runonce.html:84
 msgid "Run Now"
-msgstr "jetzt starten"
+msgstr "Jetzt starten"
 
-#: SIP\templates\programs.html:150
+#: SIP/templates/programs.html:169
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: SIP\templates\programs.html:151
+#: SIP/templates/programs.html:170
 msgid "Delete"
-msgstr "löschen"
+msgstr "Löschen"
 
-#: SIP\templates\proto.html:4
+#: SIP/templates/proto.html:4
 msgid "SIP Proto Plugin"
-msgstr ""
+msgstr "SIP Protokoll Plugin"
 
-#: SIP\templates\proto.html:30
+#: SIP/templates/proto.html:30
 msgid "Example Check Boxes"
-msgstr ""
+msgstr "Beispiel Kontrollkästchen"
 
-#: SIP\templates\proto.html:37 SIP\templates\proto.html:38
-#: SIP\templates\proto.html:56 SIP\templates\proto.html:57
+#: SIP/templates/proto.html:37 SIP/templates/proto.html:38
+#: SIP/templates/proto.html:56 SIP/templates/proto.html:57
 msgid "Heading"
-msgstr ""
+msgstr "Überschrift"
 
-#: SIP\templates\proto.html:41
+#: SIP/templates/proto.html:41
 msgid "Check Box 1"
-msgstr ""
+msgstr "Kontrollkästchen 1"
 
-#: SIP\templates\proto.html:45
+#: SIP/templates/proto.html:45
 msgid "Check Box 2"
-msgstr ""
+msgstr "Kontrollkästchen 2"
 
-#: SIP\templates\proto.html:51
+#: SIP/templates/proto.html:51
 msgid "Text Entry Fields"
-msgstr ""
+msgstr "Texteingabefeld"
 
-#: SIP\templates\proto.html:61
+#: SIP/templates/proto.html:61
 msgid "Text Field 1"
-msgstr ""
+msgstr "Texteingabefeld 1"
 
-#: SIP\templates\proto.html:65
+#: SIP/templates/proto.html:65
 msgid "Text Field 2"
-msgstr ""
+msgstr "Texteingabefeld 2"
 
-#: SIP\templates\restarting.html:3
+#: SIP/templates/proto.html:74 SIP/templates/weather_level_adj.html:138
+#: plugin_translate/cli_control.html:74 plugin_translate/monthly.html:76
+#: plugin_translate/mqtt.html:65 plugin_translate/mqtt_schedule.html:43
+#: plugin_translate/mqtt_slave.html:61 plugin_translate/mqtt_zones.html:44
+#: plugin_translate/pulse.html:87 plugin_translate/relay_16.html:67
+#: plugin_translate/relay_board.html:60
+#: plugin_translate/weather_level_adj.html:138
+msgid "Submit"
+msgstr "Absenden"
+
+#: SIP/templates/restarting.html:3
 msgid "SIP Restarting"
-msgstr ""
+msgstr "SIP Neustart"
 
-#: SIP\templates\restarting.html:30
+#: SIP/templates/restarting.html:22
 msgid "SIP is restarting"
-msgstr ""
+msgstr "SIP startet neu"
 
-#: SIP\templates\restarting.html:31
+#: SIP/templates/restarting.html:23
 msgid "This may take several seconds..."
-msgstr ""
+msgstr "Ein paar Sekunden Geduld..."
 
-#: SIP\templates\runonce.html:3
+#: SIP/templates/runonce.html:3
 msgid "SIP Run-Once"
-msgstr ""
+msgstr "SIP Schnellstart"
 
-#: SIP\templates\runonce.html:35
+#: SIP/templates/runonce.html:39
 msgid "No station is scheduled to run"
-msgstr "Es wurde keine Station zum Start geplant."
+msgstr "Es wurde keine Station zum Start geplant!"
 
-#: SIP\templates\runonce.html:75
+#: SIP/templates/runonce.html:85
 msgid "Reset Time"
-msgstr "Zurücksetzen"
+msgstr "Zeit zurücksetzen"
 
-#: SIP\templates\stations.html:3
+#: SIP/templates/stations.html:3
 msgid "SIP Stations"
-msgstr ""
+msgstr "SIP Stationen"
 
-#: SIP\templates\stations.html:87
+#: SIP/templates/stations.html:87
 msgid "Enabled?"
 msgstr "Aktiviert?"
 
-#: SIP\templates\stations.html:88
+#: SIP/templates/stations.html:88
 msgid "Ignore Rain?"
-msgstr "Regen ignorieren?"
+msgstr "Regenerkennung ignorieren?"
 
-#: SIP\templates\stations.html:90
+#: SIP/templates/stations.html:90
 msgid "Ignore Plugin adjustments?"
-msgstr ""
+msgstr "Ignoriere Plugin-Einstellungen?"
 
-#: SIP\templates\stations.html:92
+#: SIP/templates/stations.html:92
 msgid "Activate Master?"
-msgstr "Haupt-Station aktiv?"
+msgstr "Haupt-Station aktivieren?"
 
-#: SIP\templates\stations.html:104 SIP\templates\stations.html:106
+#: SIP/templates/stations.html:104 SIP/templates/stations.html:106
 msgid "(Master valve)"
 msgstr "(Haupt-Station)"
 
-#: SIP\templates\stations.html:137
+#: SIP/templates/stations.html:137
 msgid "Reset Names"
 msgstr "Namen zurücksetzen"
 
-#: SIP\templates\system_update.html:25
+#: SIP/templates/system_update.html:25
 msgid "SIP Software Updater"
-msgstr ""
+msgstr "SIP-Softwareaktualisierung"
 
-#: SIP\templates\system_update.html:28
+#: SIP/templates/system_update.html:28
 msgid ""
 "This plugin compares the local SIP version with the GitHub repository and "
 "can update the local software."
 msgstr ""
+"Dieses Plugin vergleicht die lokale SIP-Version mit dem GitHub-Repository "
+"und kann die lokale Software aktualisieren."
 
-#: SIP\templates\system_update.html:32
+#: SIP/templates/system_update.html:32
 msgid "Remote repository"
-msgstr "entfernte Quelle"
+msgstr "Entfernte Quelle"
 
-#: SIP\templates\system_update.html:38
+#: SIP/templates/system_update.html:38
 msgid "Local SIP version"
-msgstr ""
+msgstr "Lokale SIP-Version"
 
-#: SIP\templates\system_update.html:44
+#: SIP/templates/system_update.html:44
 msgid "Local SIP date"
-msgstr ""
+msgstr "Datum der lokalen SIP-Version"
 
-#: SIP\templates\system_update.html:53
+#: SIP/templates/system_update.html:50 SIP/templates/weather_level_adj.html:129
+#: plugin_translate/weather_level_adj.html:129
+msgid "Status"
+msgstr "Status"
+
+#: SIP/templates/system_update.html:53
 msgid "Refresh Status"
-msgstr ""
+msgstr "Status aktualisieren"
 
-#: SIP\templates\system_update.html:62
+#: SIP/templates/system_update.html:62
 msgid "Update SIP"
-msgstr ""
+msgstr "SIP aktualisieren"
 
-#: SIP\templates\system_update.html:64
+#: SIP/templates/system_update.html:64
 msgid "Up-to-date"
 msgstr "Auf dem neusten Stand"
 
-#: SIP\templates\system_update.html:65
-msgid "Restart SIP"
+#: SIP/templates/weather_level_adj.html:12
+#: plugin_translate/weather_level_adj.html:12
+msgid "SIP Weather-based Water Level"
+msgstr "SIP Wetterprognosen-Bewässerung"
+
+#: SIP/templates/weather_level_adj.html:50
+#: plugin_translate/weather_level_adj.html:50
+msgid "Weather-based Water Level "
+msgstr "Wetterprognosen-basierende Bewässerung "
+
+#: SIP/templates/weather_level_adj.html:53
+#: plugin_translate/weather_level_adj.html:53
+msgid ""
+"When Automatic Water Level Adjustment is enabled, the weather will be "
+"checked every hour and the water level will be adjusted accordingly."
 msgstr ""
+"Wenn die Wetterprognosen-Bewässerung aktiviert ist, wird die "
+"Wettervorhersage stündlich überprüft und die Bewässerung entsprechend "
+"angepasst."
 
-#: SIP\webpages.py:320
+#: SIP/templates/weather_level_adj.html:54
+#: plugin_translate/weather_level_adj.html:54
+msgid ""
+"Additionally, when the low temperature cutoff is enabled the the sprinklers "
+"will not run when the temperature at the last hourly check was below the set "
+"temperature."
+msgstr ""
+"Bei Aktivierung der Abschaltung bei Temperatur-Unterschreitung wird die "
+"Bewässerung nicht gestartet, falls die Temperatur bei der letzten "
+"stündlichen Überprüfung unter der eingestellten Temperatur lag."
+
+#: SIP/templates/weather_level_adj.html:59
+#: plugin_translate/weather_level_adj.html:59
+msgid "Use Automatic Water Level Adjustment"
+msgstr "Aktiviere angepasste Bewässerung"
+
+#: SIP/templates/weather_level_adj.html:65
+#: plugin_translate/weather_level_adj.html:65
+msgid "Use low temperature cutoff"
+msgstr "Aktiviere Abschaltung bei Temperatur-Unterschreitung"
+
+#: SIP/templates/weather_level_adj.html:71
+#: plugin_translate/weather_level_adj.html:71
+msgid "Preferred Units"
+msgstr "Bevorzugte Einheiten"
+
+#: SIP/templates/weather_level_adj.html:81
+#: plugin_translate/weather_level_adj.html:81
+msgid "Low temperature cutoff"
+msgstr "Auslösewert Temperatur-Unterschreitung"
+
+#: SIP/templates/weather_level_adj.html:87
+#: plugin_translate/weather_level_adj.html:87
+msgid "Min percentage"
+msgstr "Mindestprozentsatz"
+
+#: SIP/templates/weather_level_adj.html:93
+#: plugin_translate/weather_level_adj.html:93
+msgid "Max percentage"
+msgstr "Maximaler Prozentsatz"
+
+#: SIP/templates/weather_level_adj.html:99
+#: plugin_translate/weather_level_adj.html:99
+msgid "History days used"
+msgstr "Anzahl Tage zurückliegend"
+
+#: SIP/templates/weather_level_adj.html:105
+#: plugin_translate/weather_level_adj.html:105
+msgid "Forecast days used"
+msgstr "Anzahl Prognosetage"
+
+#: SIP/templates/weather_level_adj.html:123
+#: plugin_translate/weather_level_adj.html:123
+msgid "Openweather API Key"
+msgstr "Openweather API Key"
+
+#: SIP/webpages.py:412
 msgid " not found."
-msgstr "nicht gefunden."
+msgstr " nicht gefunden."
 
-#: SIP\webpages.py:320
-msgid "Station "
-msgstr "Station"
-
-#: SIP\webpages.py:338
+#: SIP/webpages.py:447
 msgid "Manual mode not active."
-msgstr "Manueller Modus nicht aktiv"
+msgstr "Manueller Modus nicht aktiv."
 
-#: SIP\webpages.py:606
+#: SIP/webpages.py:738
 msgid "Date, Start Time, Zone, Duration, Program"
 msgstr "Datum, Startzeit, Zone, Dauer, Programm"
 
-#~ msgid "Unique name of this OpenSprinkler system."
-#~ msgstr "Individueller Name von diesem OpenSprinkler System."
-
-#~ msgid "Select language (effective after restart.)"
-#~ msgstr "Sprache wählen (Neustart erforderlich)"
-
-#~ msgid "Example: GMT-4:00, GMT+5:30 (effective after reboot.)"
-#~ msgstr "Beispiel: GMT -4:00, GMT+5:30 (Neustart erforderlich)"
-
-#~ msgid "Time zone"
-#~ msgstr "Zeitzone"
-
-#~ msgid "HTTP port (effective after reboot.)"
-#~ msgstr "HTTP  port (Neustart erforderlich)"
-
-#~ msgid "Acces Plugins"
-#~ msgstr "Verwalte Plugins"
-
-#~ msgid "OpenSprinkler Pi Email adjustments"
-#~ msgstr "OpenSprinkler Pi Email Einstellungen"
-
-#~ msgid "Email adjustments"
-#~ msgstr "Email Einstellungen"
-
-#~ msgid ""
-#~ "This plugin can send E-mails. For this plugin you need a GMail account as "
-#~ "provider."
-#~ msgstr ""
-#~ "Dieses Plugin kann keine Email senden. Für dieses Plugin wird ein GMail "
-#~ "Account benötigt."
-
-#~ msgid "Send email with file log.csv after power on"
-#~ msgstr ""
-#~ "Sendet eine Email mit Protokoll Datei (log.csv) nach dem Einschalten."
-
-#~ msgid "Send email if rain is detected"
-#~ msgstr "Sendet eine Email, wenn Regen erkannt wurde."
-
-#~ msgid "Sends email if program has run"
-#~ msgstr "Sendet eine Email, wenn das Programm läuft."
-
-#~ msgid "Your GMail username"
-#~ msgstr "Dein GMail Benutzername"
-
-#~ msgid "Status"
-#~ msgstr "Status"
-
-#~ msgid "OpenSprinkler Pi LCD settings"
-#~ msgstr "OpenSprinkler Pi LCD Einstellungen"
-
-#~ msgid "LCD settings"
-#~ msgstr "LCD Einstellungen"
-
-#~ msgid ""
-#~ "This plugin sends data to I2C for LCD 16x2 char with PCF8574. Visit for "
-#~ "more: www.pihrt.com/elektronika/258-moje-rapsberry-pi-i2c-lcd-16x2."
-#~ msgstr ""
-#~ "Diese Plugin sendet Daten zum I2C für LCD 16x2 mit PCF8574. Mehr Infos "
-#~ "unter: www.pihrt.com/elektronika/258-moje-rapsberry-pi-i2c-lcd-16x2"
-
-#~ msgid "Range adress"
-#~ msgstr "Bereichs-Adresse"
-
-#~ msgid "Compatible with HD44780 LCD 16x2 controller."
-#~ msgstr "Kompatibel mit HD44780 LCD 16x2 controller."
-
-#~ msgid "OpenSprinkler Pi Log"
-#~ msgstr "OpenSprinkler Pi Protokoll"
-
-#~ msgid "OpenSprinkler Pi Login"
-#~ msgstr "Anmelden am OpenSprinkler Pi "
-
-#~ msgid "OpenSprinkler Pi Modify Program"
-#~ msgstr "OpenSprinkler Pi modifiziertes Programm"
-
-#~ msgid "OpenSprinkler Pi Monthly Adjustments"
-#~ msgstr "OpenSprinkler Pi Monats Einstellungen"
-
-#~ msgid "OpenSprinkler Pi Options"
-#~ msgstr "OpenSprinkler Pi Optionen"
-
-#~ msgid "OpenSprinkler Pi PCF8591 voltage and temperature adjustments"
-#~ msgstr "OpenSprinkler Pi PCF8591 Spannungs- und Temperatur- Einstellungen"
-
-#~ msgid "PCF8591 voltage and temperature adjustments"
-#~ msgstr "PCF8591 Spannungs- und Temperatur- Einstellungen"
-
-#~ msgid ""
-#~ "For this plugin is needed enabled I2C bus and connected I2C A/D converter "
-#~ "PCF8591 on I2C adress 0x48."
-#~ msgstr ""
-#~ "Für dieses Plugin wird der I2C Bus, verbunden mit I2C A/D converter "
-#~ "PCF8591 auf I2C Adresse  0x48 benötigt."
-
-#~ msgid ""
-#~ "For measure temperature use temp probe LM35D (0-100 &deg;C) on AD0-3 "
-#~ "converter."
-#~ msgstr ""
-#~ "Für eine Temperaturmessung wird LM35D (0-100 &deg;C) am AD0-3 converter "
-#~ "benötigt."
-
-#~ msgid " log file."
-#~ msgstr "Protokoll Datei"
-
-#~ msgid "Use PCF8591"
-#~ msgstr "Benutze PCF8591"
-
-#~ msgid "Maximum number of records"
-#~ msgstr "Maximale Anzahl von Aufnahmen"
-
-#~ msgid "(0 = unlimited)"
-#~ msgstr "(0= unendlich)"
-
-#~ msgid "Time loop for logging"
-#~ msgstr "Wiederholungsschleife für das Protokoll"
-
-#~ msgid "minutes (0 = logging disabled)"
-#~ msgstr "Minuten (0 = Protoll inaktiv)"
-
-#~ msgid "Label for input AD0:"
-#~ msgstr "Beschriftung für Eingang AD0:"
-
-#~ msgid " measure as voltage "
-#~ msgstr "Spannungsmessung"
-
-#~ msgid "Label for input AD1"
-#~ msgstr "Beschriftung für Eingang AD1:"
-
-#~ msgid "Label for input AD2"
-#~ msgstr "Beschriftung für Eingang AD2:"
-
-#~ msgid "Read value"
-#~ msgstr "Wert lesen"
-
-#~ msgid "Output DA voltage"
-#~ msgstr "Ausgang DA Spannung"
-
-#~ msgid "OpenSprinkler Pi Pressure monitor settings"
-#~ msgstr "OpenSprinkler Pi Druck-Einstellungs Monitor"
-
-#~ msgid "Pressure monitor settings"
-#~ msgstr "Druck-Einstellungs Monitor"
-
-#~ msgid ""
-#~ "This plugin checked pressure in pipe, if master station is switched on "
-#~ "must be activated pressure sensor. "
-#~ msgstr ""
-#~ "Dieses Plugin misst den Druck in der Rohrleitung, wenn die Haupt-Station "
-#~ "aktiv ist wird der Drucksensor angeregt."
-
-#~ msgid ""
-#~ "If is not sensor activated in a certain time, switches off all station  "
-#~ "and sends email with error. Prevent safety for master station pump."
-#~ msgstr ""
-#~ "Wenn der Sensor innerhalb einer Überwachungszeit nicht anspricht, werden "
-#~ "alle Stationen abgeschalten und eine Email mit Fehlermeldung gesendet. "
-#~ "Zum Schutz der Pumpe."
-
-#~ msgid "Use pressure sensor for master station"
-#~ msgstr "Benutze einen Drucksensor für die Haupt-Station"
-
-#~ msgid "(Pressure sensor is connected between GPIO pin 22 and ground)"
-#~ msgstr "(Der Drucksensor wird an GPIO pin 22 und Masse angeschlossen.)"
-
-#~ msgid "Send email with error"
-#~ msgstr "Sende Email mit Fehlermeldung"
-
-#~ msgid "(For this function required email plugin)"
-#~ msgstr "(Für diese Funktion wird ein Email Plugin benötigt)"
-
-#~ msgid "Max time to activate pressure sensor"
-#~ msgstr "Max. Zeit bis der Drucksensor angesprochen haben muss."
-
-#~ msgid "(max 999 seconds)"
-#~ msgstr "(max. 999 sekunden)"
-
-#~ msgid "Pressure sensor"
-#~ msgstr "Drucksensor"
-
-#~ msgid "OpenSprinkler Pi Programs"
-#~ msgstr "OpenSprinkler Pi Programme"
-
-#~ msgid "OpenSprinkler Pi Restarting"
-#~ msgstr "OpenSprinkler Pi startet neu"
-
-#~ msgid "ospi is restarting"
-#~ msgstr "Ospi startet neu..."
-
-#~ msgid "You will be redirected as soon as possible..."
-#~ msgstr "Du wirst so schnell wie möglich wieder verbunden..."
-
-#~ msgid "OpenSprinkler Pi Run-Once"
-#~ msgstr "OpenSprinkler Pi wird einmalig ausgeführt"
-
-#~ msgid "OpenSprinkler Pi SMS adjustments"
-#~ msgstr "OpenSprinkler Pi SMS Einstellungen"
-
-#~ msgid "SMS adjustments"
-#~ msgstr "SMS Einstellungen"
-
-#~ msgid ""
-#~ "For this plugin is needed to SMS modem with the telephone service "
-#~ "provider."
-#~ msgstr "Für dieses Plugin wird ein SMS Modul benötigt."
-
-#~ msgid ""
-#~ "For more information visit the www.pihrt.com/elektronika/259-moje-"
-#~ "rapsberry-pi-sms-ovladani-rpi for instructions."
-#~ msgstr ""
-#~ "Für mehr Informationen besuche www.pihrt.com/elektronika/259-moje-"
-#~ "rapsberry-pi-sms-ovladani-rpi "
-
-#~ msgid "Use SMS modem"
-#~ msgstr "Benutze SMS Modul"
-
-#~ msgid "Number 1"
-#~ msgstr "Nummer 1"
-
-#~ msgid "Number 2"
-#~ msgstr "Nummer 2"
-
-#~ msgid "Command for info"
-#~ msgstr "Befehl für Info"
-
-#~ msgid "Command for stop irrigation"
-#~ msgstr "Befehl zum Bewässerungsstop"
-
-#~ msgid "Command for start irrigation"
-#~ msgstr "Befehl zum Bewässerungsstart"
-
-#~ msgid "Command for reboot system"
-#~ msgstr "Befehl zum Neustart"
-
-#~ msgid "Command for power off system"
-#~ msgstr "Befehl zum abschalten des Systems"
-
-#~ msgid "Command for update OSPi from GITHUB"
-#~ msgstr "Befehl zum Aktualisieren des Ospi über GITHUB"
-
-#~ msgid "OpenSprinkler Pi Stations"
-#~ msgstr "OpenSprinkler Pi Stationen"
-
-#~ msgid "OpenSprinkler Pi System update from GitHub"
-#~ msgstr "OpenSprinkler Pi System Aktualisierung von GitHub"
-
-#~ msgid "System update from github"
-#~ msgstr "System Aktualisierung von GITHUB"
-
-#~ msgid ""
-#~ "This plugin compares the local copy with the remote repository and can "
-#~ "automatically update the local copy."
-#~ msgstr ""
-#~ "Dieses Plugin vergleicht die lokale Kopie mit der aktuellen Version von "
-#~ "GITHUB und kann automatisch eine Aktualisierung ausführen."
-
-#~ msgid "Local ospi version"
-#~ msgstr "Lokale Ospi Version"
-
-#~ msgid "Local ospi date"
-#~ msgstr "Lokales Ospi Datum"
-
-#~ msgid "Update Status"
-#~ msgstr "Aktualisierungs Status"
-
-#~ msgid "Update ospi"
-#~ msgstr "Aktualisiere Ospi"
-
-#~ msgid "Restart ospi"
-#~ msgstr "Neustart Ospi"
-
-#~ msgid "OpenSprinkler Pi Weather-based Rain Delay"
-#~ msgstr "OpenSprinkler Pi Wetter-basierte Regenverzögerung"
-
-#~ msgid "Weather-based Rain Delay"
-#~ msgstr "Wetter-basierte Regenverzögerung"
-
-#~ msgid ""
-#~ "When weather-based rain delay is enabled, the weather will be checked for "
-#~ "rain every hour. If the weather reports any condition suggesting rain, a "
-#~ "rain delay is automatically issued using the below set delay duration."
-#~ msgstr ""
-#~ "Wenn Wetter-basierte Regenverzögerung aktiviert ist, wird stündlich der "
-#~ "Wetterbericht ausgewertet. Sollte der Wetterbericht Regen vorhersagen, "
-#~ "wird die Bewässerung um die eingestellte Zeitdauer ausgesetzt."
-
-#~ msgid "Use Automatic Rain Delay"
-#~ msgstr "Benutze automatische Regenverzögerung"
-
-#~ msgid "Delay Duration (hours)"
-#~ msgstr "Verzögerungsdauer (in Stunden)"
-
-#~ msgid "Weather Provider"
-#~ msgstr "Wetterdienst"
-
-#~ msgid "Wunderground API Key"
-#~ msgstr "Wunderground API Schlüssel"
-
-#~ msgid "OpenSprinkler Pi Weather-based Water Level"
-#~ msgstr "OpenSprinkler Pi Niederschlags-vorhersage"
-
-#~ msgid "Weather-based Water Level"
-#~ msgstr "Wetterdienst-basierter Niederschlag (Level)"
-
-#~ msgid ""
-#~ "When weather-based water level is enabled, the weather will be checked "
-#~ "every hour and the water level will be adjusted accordingly."
-#~ msgstr ""
-#~ "Wenn Wetterdienst-basierter Niederschlag (Level) aktiviert ist, wird "
-#~ "stündlich der Wetterbericht ausgewertet. Je nach dem wieviel Regen "
-#~ "vorhergesagt wird,, wird die Bewässerungszeit angepasst."
-
-#~ msgid "Use Automatic Water Level Adjustment"
-#~ msgstr "Benutze Automatische Niederschlagsvorhersage"
-
-#~ msgid "Min percentage"
-#~ msgstr "Min Prozent"
-
-#~ msgid "Max percentage"
-#~ msgstr "Max Prozent"
-
-#~ msgid "History days used"
-#~ msgstr "Vergangenheitswerte werden benutzt"
-
-#~ msgid "Forecast days used"
-#~ msgstr "Vorhersagewerte werden benutzt"
+#: plugin_translate/cli_control.html:3
+msgid "SIP CLI Plugin"
+msgstr "SIP Terminal Plugin"
+
+#: plugin_translate/cli_control.html:44
+msgid "Cl Commands"
+msgstr "Terminal-Befehle"
+
+#: plugin_translate/cli_control.html:49
+msgid "Start Command"
+msgstr "Anweisung starten"
+
+#: plugin_translate/cli_control.html:50
+msgid "Stop Command"
+msgstr "Anweisung stoppen"
+
+#: plugin_translate/monthly.html:3
+msgid "OpenSprinkler Pi Monthly Adjustments"
+msgstr "OpenSprinkler Pi - Monatliche Vorgabewerte"
+
+#: plugin_translate/monthly.html:20
+msgid "Monthly Irrigation Adjustments"
+msgstr "Monatliche Bewässerungsanpassung"
+
+#: plugin_translate/monthly.html:21
+msgid "Enter an adjustment for each month (% irrigation time)"
+msgstr "Einstellung der Bewässerungszeit (in % ) für jeden Monat eingeben"
+
+#: plugin_translate/mqtt.html:3
+msgid "SIP MQTT Plugin"
+msgstr "SIP MQTT Plugin"
+
+#: plugin_translate/mqtt.html:36
+msgid "MQTT Broker Host"
+msgstr "MQTT Server"
+
+#: plugin_translate/mqtt.html:40
+msgid "MQTT Broker Port"
+msgstr "MQTT Broker Port"
+
+#: plugin_translate/mqtt.html:44
+msgid "MQTT Broker Username"
+msgstr "MQTT Broker Username"
+
+#: plugin_translate/mqtt.html:48
+msgid "MQTT Broker Password"
+msgstr "MQTT Broker Password"
+
+#: plugin_translate/mqtt.html:52
+msgid "MQTT Publish up/down topic"
+msgstr "MQTT Publish up/down topic"
+
+#: plugin_translate/mqtt.html:57
+msgid "MQTT Client ID"
+msgstr "MQTT Client ID"
+
+#: plugin_translate/mqtt_schedule.html:3
+msgid "SIP MQTT Schedule Plugin"
+msgstr "SIP MQTT Planungs-Plugin"
+
+#: plugin_translate/mqtt_schedule.html:34
+msgid "Scheduling topic"
+msgstr "Scheduling topic"
+
+#: plugin_translate/mqtt_slave.html:3
+msgid "SIP MQTT Slave Plugin"
+msgstr "SIP MQTT Slave Plugin"
+
+#: plugin_translate/mqtt_slave.html:40 plugin_translate/mqtt_zones.html:35
+msgid "Zone topic"
+msgstr "Zone topic"
+
+#: plugin_translate/mqtt_slave.html:46
+msgid "First station number"
+msgstr "Erste Stationsnummer"
+
+#: plugin_translate/mqtt_slave.html:52
+msgid "Station count"
+msgstr "Stationsanzahl"
+
+#: plugin_translate/mqtt_zones.html:4
+msgid "SIP MQTT Zones Plugin"
+msgstr "SIP MQTT Zones Plugin"
+
+#: plugin_translate/pulse.html:4
+msgid "SIP Pulse Circuit"
+msgstr "SIP Impulsschaltung"
+
+#: plugin_translate/pulse.html:55
+msgid ""
+"Pulse a circuit with a 2.5 Hz signal for 30 sec to discover the location of "
+"the valve"
+msgstr ""
+"Schaltet einen 2,5 Hz - Impuls für 30 Sekunden, um dadurch die Standorte der "
+"Ventile zu finden."
+
+#: plugin_translate/pulse.html:56
+msgid "Click \"SUBMIT\" to save enabled stations"
+msgstr "Drücke \"SUBMIT\" um die aktivierten Stationen zu speichern"
+
+#: plugin_translate/pulse.html:63
+msgid "Circuit"
+msgstr "Schaltung"
+
+#: plugin_translate/pulse.html:83
+msgid "Stop Pulsing"
+msgstr "Stoppe Impulse"
+
+#: plugin_translate/relay_16.html:3
+msgid "SIP - Relay 16 Settings"
+msgstr "SIP - 16fach-Relais Einstellungen"
+
+#: plugin_translate/relay_16.html:24
+msgid "Relay 16 Settings"
+msgstr "16fach-Relais Einstellungen"
+
+#: plugin_translate/relay_16.html:25
+msgid "Setup Help"
+msgstr "Einrichtungshilfe"
+
+#: plugin_translate/relay_16.html:27
+msgid "This plugin allows SIP to control relay boards with up to 16 relays."
+msgstr ""
+"Mit diesem Plugin kann SIP Relaisplatinen mit bis zu 16 Relais steuern."
+
+#: plugin_translate/relay_16.html:33
+msgid "Enable relays"
+msgstr "Aktiviere Relais"
+
+#: plugin_translate/relay_16.html:37 plugin_translate/relay_16.html:61
+#: plugin_translate/relay_16.html:62 plugin_translate/relay_board.html:31
+#: plugin_translate/relay_board.html:54 plugin_translate/relay_board.html:55
+msgid "Relay channels"
+msgstr "Relaisanzahl"
+
+#: plugin_translate/relay_16.html:47
+msgid ""
+"Number of relays connected to the Raspberry Pi /(relay boards are commonly "
+"1, 2, 4, 8, 16)"
+msgstr ""
+"Anzahl der mit dem RaspberryPi verbundenen Relais (Relaisplatinen besitzen "
+"gewöhnlicherweise 1, 2, 4, 8, 16)"
+
+#: plugin_translate/relay_16.html:51
+msgid "Trigger Level"
+msgstr "Auslösewert"
+
+#: plugin_translate/relay_16.html:54
+msgid "Low"
+msgstr "Unten"
+
+#: plugin_translate/relay_16.html:55
+msgid "High"
+msgstr "Oben"
+
+#: plugin_translate/relay_16.html:56 plugin_translate/relay_board.html:51
+msgid ""
+"Active low means the relay turns on when the input is low and turns off when "
+"the input is high. Active high does the opposite."
+msgstr ""
+"\"Active Low\" bedeutet, dass das Relais eingeschaltet wird, wenn der "
+"Eingang \"Low\" ist, und ausgeschaltet wird, wenn der Eingang \"High\" ist. "
+"\"Active High\" macht das Gegenteil."
+
+#: plugin_translate/relay_16.html:61
+msgid "Trigger level"
+msgstr "Auslösewert"
+
+#: plugin_translate/relay_16.html:61 plugin_translate/relay_board.html:54
+msgid "IMPORTANT"
+msgstr "WICHTIG"
+
+#: plugin_translate/relay_16.html:61 plugin_translate/relay_board.html:54
+msgid "If"
+msgstr "Wenn"
+
+#: plugin_translate/relay_16.html:61 plugin_translate/relay_board.html:54
+msgid "is changed"
+msgstr "geändert wurde"
+
+#: plugin_translate/relay_16.html:61 plugin_translate/relay_board.html:54
+msgid ""
+"to prevent all the relays being switched on, and possibly damaging the power "
+"supply."
+msgstr ""
+"um zu verhindern, dass alle Relais gleichzeitig geschaltet werden und "
+"dadurch das Netzteil beschädigt wird."
+
+#: plugin_translate/relay_16.html:61 plugin_translate/relay_board.html:54
+msgid "will be set to"
+msgstr "-Wert wird zurückgesetzt auf "
+
+#: plugin_translate/relay_16.html:62 plugin_translate/relay_board.html:55
+msgid ""
+"After verifying that the first relay is off, return to this page and set"
+msgstr ""
+"Nach der Überprüfung, ob das erste Relais ausgeschaltet ist, setze wieder "
+"die "
+
+#: plugin_translate/relay_16.html:62 plugin_translate/relay_board.html:55
+msgid "to the correct number."
+msgstr "auf den richtigen Wert."
+
+#: plugin_translate/relay_board.html:3
+msgid "SIP - Relay Board Settings"
+msgstr "SIP - Relaisplatinen Einstellungen"
+
+#: plugin_translate/relay_board.html:24
+msgid "Relay Board Settings"
+msgstr "Relaisplatinen Einstellungen"
+
+#: plugin_translate/relay_board.html:27
+msgid "A plugin for using relay boards to control sprinkler valves."
+msgstr ""
+"Ein Plugin zur Verwendung von Relaisplatinen zur Steuerung von "
+"Bewässerungsventilen"
+
+#: plugin_translate/relay_board.html:46
+msgid ""
+"Number of relays connected to the Raspberry Pi /(relay boards are commonly "
+"2, 4, 8/)"
+msgstr ""
+"Anzahl der mit dem RaspberryPi verbundenen Relais (Relaisplatinen besitzen "
+"gewöhnlicherweise 1, 2, 4, 8/)"
