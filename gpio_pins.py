@@ -18,7 +18,7 @@ except ImportError:
         gv.platform = u"bo"
     except ImportError:
         try:		# ODROID-C2, prerequisite is to have installed wiringPi2 python library. see: http://odroid.com/dokuwiki/lib/exe/detail.php?id=en%3Ac1_tinkering&media=en:c1:tinkering.jpg
-            import wiringpi as GPIO
+            import odroid_wiringpi as GPIO
             #pins = [24, 23, 22, 21, 14, 13, 12, 3, 2, 0, 7, 1, 4, 5, 6, 10, 11, 26, 27]
             # map 40 physical pins (1based) with 0 for pins that do not have a gpio number
             gv.pin_map = [0,0,0,0,0,0,0,7,0,0,0,0,1,2,0,3,4,0,5,12,0,13,6,14,10,0,11,0,0,21,0,22,26,23,0,24,27,0,0,0,0]
@@ -205,13 +205,16 @@ def set_pin_low(pin):
 		GPIO.output(pin, GPIO.LOW)
 
 try:
-    if gv.platform == u"pi" or gv.platform == u"odroid-c2":  # If this will run on Raspberry Pi:
+    if gv.platform == u"pi":  # If this will run on Raspberry Pi:
         GPIO.setmode(GPIO.BOARD)
         pin_rain_sense = gv.pin_map[8]
         pin_relay = gv.pin_map[10]
     elif gv.platform == u"bo":  # If this will run on Beagle Bone Black:
         pin_rain_sense = gv.pin_map[15]
         pin_relay = gv.pin_map[16]
+    elif gv.platform == u"odroid-c2":
+        pin_rain_sense = gv.pin_map[8]
+        pin_relay = gv.pin_map[10]        
 except AttributeError:
 	print(u"Error setting rain sensor pins")
 	pass
@@ -258,10 +261,10 @@ def setup_pins():
             pin_sr_noe = gv.pin_map[14]
             pin_sr_lat = gv.pin_map[12]
     except AttributeError:
-		print(u"Failed setup GPIO pins for shift register operation")
-		pass
+        print(u"Failed setup GPIO pins for shift register operation")
+        pass
 
-	#### setup GPIO pins as output or input ####
+    #### setup GPIO pins as output or input ####
     try:
         set_pin_mode_output(pin_sr_noe)
         set_pin_mode_output(pin_sr_clk)
@@ -305,16 +308,16 @@ def setShiftRegister(srvals):
 
     global pi
     try:
-		set_pin_low(pin_sr_clk)
-		set_pin_low(pin_sr_lat)
-		for s in range(gv.sd['nst']):
-			set_pin_low(pin_sr_clk)
-			if srvals[gv.sd['nst']-1-s]:
-				set_pin_high(pin_sr_dat)
-			else:
-				set_pin_low(pin_sr_dat)
-			set_pin_high(pin_sr_clk)
-		set_pin_high(pin_sr_lat)
+        set_pin_low(pin_sr_clk)
+        set_pin_low(pin_sr_lat)
+        for s in range(gv.sd['nst']):
+            set_pin_low(pin_sr_clk)
+            if srvals[gv.sd['nst']-1-s]:
+                set_pin_high(pin_sr_dat)
+            else:
+                set_pin_low(pin_sr_dat)
+            set_pin_high(pin_sr_clk)
+        set_pin_high(pin_sr_lat)
     except Exception:
         pass
 
