@@ -1,33 +1,35 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
- #### urls is used by web.py. When a GET request is received, the corresponding class is executed.
+#### urls is used by web.py. When a GET request is received, the corresponding class is executed.
 urls = [
-    '/',  'webpages.home',
-    '/cv', 'webpages.change_values',
-    '/vo', 'webpages.view_options',
-    '/co', 'webpages.change_options',
-    '/vs', 'webpages.view_stations',
-    '/cs', 'webpages.change_stations',
-    '/sn', 'webpages.get_set_station',
-    '/vr', 'webpages.view_runonce',
-    '/cr', 'webpages.change_runonce',
-    '/vp', 'webpages.view_programs',
-    '/mp', 'webpages.modify_program',
-    '/cp', 'webpages.change_program',
-    '/dp', 'webpages.delete_program',
-    '/ep', 'webpages.enable_program',
-    '/vl', 'webpages.view_log',
-    '/cl', 'webpages.clear_log',
-    '/lo', 'webpages.log_options',
-    '/rp', 'webpages.run_now',
-    '/ttu', 'webpages.toggle_temp',
-    '/rev', 'webpages.show_revision',
-    '/wl', 'webpages.water_log',
-    '/api/status', 'webpages.api_status',
-    '/api/log', 'webpages.api_log',
-    '/login', 'webpages.login',
-    '/logout', 'webpages.logout',
-    '/restart', 'webpages.sw_restart',
-    '/rss', 'webpages.rain_sensor_state'
+    # fmt: off
+    u"/",   u"webpages.home",
+    u"/cv", u"webpages.change_values",
+    u"/vo", u"webpages.view_options",
+    u"/co", u"webpages.change_options",
+    u"/vs", u"webpages.view_stations",
+    u"/cs", u"webpages.change_stations",
+    u"/sn", u"webpages.get_set_station",
+    u"/vr", u"webpages.view_runonce",
+    u"/cr", u"webpages.change_runonce",
+    u"/vp", u"webpages.view_programs",
+    u"/mp", u"webpages.modify_program",
+    u"/cp", u"webpages.change_program",
+    u"/dp", u"webpages.delete_program",
+    u"/ep", u"webpages.enable_program",
+    u"/vl", u"webpages.view_log",
+    u"/cl", u"webpages.clear_log",
+    u"/lo", u"webpages.log_options",
+    u"/rp", u"webpages.run_now",
+    u"/ttu", u"webpages.toggle_temp",
+    u"/rev", u"webpages.show_revision",
+    u"/wl",  u"webpages.water_log",
+    u"/api/status", u"webpages.api_status",
+    u"/api/log", u"webpages.api_log",
+    u"/login",  u"webpages.login",
+    u"/logout", u"webpages.logout",
+    u"/restart", u"webpages.sw_restart",
+    u"/rss", u"webpages.rain_sensor_state"
+    # fmt: on
 ]

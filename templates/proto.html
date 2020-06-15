@@ -1,7 +1,7 @@
 $def with(settings)
 <!-- Edit: Replace "proto_vals" with settings values for your plugin if used-->
 
-$var title: $_('SIP Proto Plugin') <!--Edit: Title to show on browser tab-->
+$var title: $_(u'SIP Proto Plugin') <!--Edit: Title to show on browser tab-->
 $var page: proto_plugin  <!--Edit: page name, used internally-->
 <script>
 
@@ -24,45 +24,45 @@ $var page: proto_plugin  <!--Edit: page name, used internally-->
 
 <div id="plugin">
     <div class="title">Proto Plugin  <!--Edit: User page heading, Make relevant to your plugin-->
-    <button class="execute" id="docButton" type="button" >$_('Help')</button>
+    <button class="execute" id="docButton" type="button" >$_(u'Help')</button>
     </div>
 
-    <p>$_('Example Check Boxes')</p>
+    <p>$_(u'Example Check Boxes')</p>
     <form id="pluginForm" action="${app_path('/proto-save')}" method="get"> <!--Edit: Replace "proto-save" with URL of plugin's class for saving settings-->
 
         <table class="optionList">
 
             <!--Check boxes-->
             <thead>
-                <th class="stationNumber">$_('Heading')</th>  <!--Edit: Optional-->
-                <th class="stationNumber">$_('Heading')</th>  <!--Edit: Optional-->
+                <th class="stationNumber">$_(u'Heading')</th>  <!--Edit: Optional-->
+                <th class="stationNumber">$_(u'Heading')</th>  <!--Edit: Optional-->
             </thead>
             <tr>
-                <td style='text-transform: none;'>$_('Check Box 1'):</td>  <!--Edit-->
+                <td style='text-transform: none;'>$_(u'Check Box 1'):</td>  <!--Edit-->
                 <td><input type="checkbox" name="check-1"  ${"checked" if 'check-1' in settings else ""}></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>$_('Check Box 2'):</td>  <!--Edit-->
+                <td style='text-transform: none;'>$_(u'Check Box 2'):</td>  <!--Edit-->
                 <td><input type="checkbox" name="check-2" ${"checked" if 'check-2' in settings else ""}></td>
             </tr>
 
         </table></br>
 
-        <p>$_('Text Entry Fields')</p>  <!--Edit-->
+        <p>$_(u'Text Entry Fields')</p>  <!--Edit-->
         <table class="optionList">
 
             <!--Text fields-->
             <thead>
-                <th class="stationNumber">$_('Heading')</th>  <!--Edit: Optional-->
-                <th class="stationNumber">$_('Heading')</th>  <!--Edit: Optional-->
+                <th class="stationNumber">$_(u'Heading')</th>  <!--Edit: Optional-->
+                <th class="stationNumber">$_(u'Heading')</th>  <!--Edit: Optional-->
             </thead>
 
             <tr>
-                <td style='text-transform: none;'>$_('Text Field 1'):</td>  <!--Edit-->
+                <td style='text-transform: none;'>$_(u'Text Field 1'):</td>  <!--Edit-->
                 <td><input type="text" name="text-1" value="${settings['text-1'] if 'text-1' in settings else '' }"></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>$_('Text Field 2'):</td>  <!--Edit-->
+                <td style='text-transform: none;'>$_(u'Text Field 2'):</td>  <!--Edit-->
                 <td><input type="text" name="text-2" value="${settings['text-2'] if 'text-2' in settings else ''}"></td>
             </tr>
 
@@ -71,7 +71,7 @@ $var page: proto_plugin  <!--Edit: page name, used internally-->
     </form>
 
 <div id="controls">
-    <button id="cSubmit" class="submit"><b>$_('Submit')</b></button>
-    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
+    <button id="cSubmit" class="submit"><b>$_(u'Submit')</b></button>
+    <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>
 </div>
 </div>

@@ -1,4 +1,4 @@
-#Service for SIP/OSPi running on Pidora (or other RHEL/Fedora variant) as a SystemD service
+#Service for SIP running on a SystemD service
 #
 [Unit]
 Description=SIP

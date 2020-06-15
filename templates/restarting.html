@@ -1,6 +1,6 @@
 $def with()
 
-$var title: $_('SIP Restarting')
+$var title: $_(u'SIP Restarting')
 $var page: restart
 
 <script>
@@ -13,12 +13,12 @@ $var page: restart
 		}, 1000);
 };
 
-    jQuery(document).ready(function(){
+	jQuery(document).ready(function(){
 			changePage()
     });
 </script>
 
 <div id="restarting">
-    <div class="title">$_('SIP is restarting')</div>
-    $_('This may take several seconds...')
+    <div class="title">$_(u'SIP is restarting')</div>
+    $_(u'This may take several seconds...')
 </div>
