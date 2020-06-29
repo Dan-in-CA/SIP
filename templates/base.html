@@ -26,13 +26,13 @@ $code:
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="x-ua-compatible" content="IE=edge"> 
-    
-  	<link rel="stylesheet" href="$app_path('/static/bootstrap-3.3.7/css/bootstrap.min.css')">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+
+  	<link rel="stylesheet" href="$app_path('/static/dist/css/app.css')">
   	<link rel="stylesheet" href="$app_path('/static/bootstrap-timepicker/css/bootstrap-timepicker.min.css')">
-    
+
     <title>${content.title + (" - " + gv.sd[u'name'] if gv.sd[u'name'] != u"SIP" else "")}</title>
-    
+
     <link rel="apple-touch-icon" sizes="57x57" href="$app_path('/static/images/apple-icon-57x57.png')">
     <link rel="apple-touch-icon" sizes="60x60" href="$app_path('/static/images/apple-icon-60x60.png')">
     <link rel="apple-touch-icon" sizes="72x72" href="$app_path('/static/images/apple-icon-72x72.png')">
@@ -82,16 +82,16 @@ $code:
         td.stationNumber, td.stationShow, td.stationIgnore, td.stationMaster {text-align:center;}
         td.stationIgnoreWL {text-align:center;}
         td.stationName {text-align:left; padding-left:1em;}
-        
+
         .piDatFooter {background-color:white; color:black; font-size:12pt; margin-bottom:10px; padding:0px 4px 0px 4px;}
-        
+
     </style>
-    
-    <script src="/static/scripts/jquery-3.4.1.min.js"></script>
-    <script src="/static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+
+    <script src="/static/dist/js/app.min.js"></script>
     <script src="/static/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
-    
-    
+
+
     <script>
         // Variables set server-side
         var devTzOffset = ${deviceOffset} * 1000
@@ -131,14 +131,14 @@ $code:
                 jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + '/plugins\'">$_(u'Manage Plugins')</button><br/>');
                 $if len(uplugin_menu) > 0:
                 	$for i, plugin in enumerate(uplugin_menu):
-                		
+
                         jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\'' + '${plugin[1]}\'">${plugin[0]}</button><br/>');
                 $else:
                     jQuery('#pluginMenu').append('None<br/>');
-                	
+
                 $if gv.plugFtr:
                 	$for i, d in enumerate(gv.plugFtr):
-                	     jQuery("#plugFtrPars").append( "<p>${gv.plugFtr[i]["label"] + ": " + str(gv.plugFtr[i]["val"])}</p>" );                	
+                	     jQuery("#plugFtrPars").append( "<p>${gv.plugFtr[i]["label"] + ": " + str(gv.plugFtr[i]["val"])}</p>" );
 
                 jQuery("#bPlugins").click(function(e) {
                     var btn = jQuery("#bPlugins");
@@ -200,7 +200,7 @@ $code:
         <div class="footer container">
           $if content.page != u'login':
               $if (gv.plugFtr):
-                  <div class="row">              
+                  <div class="row">
                       <div class="col-12-xs col-xs-offset-4 piDatFooter" id="plugFtrPars"></div> <!--div for plugin data display -->
                   </div>
               <div class="row">
@@ -209,22 +209,22 @@ $code:
                     <button id="bHelp" class="help" title=$:{json.dumps(_(u'Help'), ensure_ascii=False)}>$_(u'?')</button>
                   </div>
               </div>
-          
+
           <div class="row">
             <div class="col-5-xs"></div>
               <div class="col-6-xs pull-right">
-            <div class="col-1-xs"></div>              
+            <div class="col-1-xs"></div>
                 <p class="text-xs-right text-nowrap">$_(u'CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_(u'Click to toggle Celsius &lt;&gt; Fahrenheit'), ensure_ascii=False)}></span></b></p>
             </div>
-          </div>     
-            
-            
-          <div class="row"> 
-              <div class="col-12-xs pull-right"> 
+          </div>
+
+
+          <div class="row">
+              <div class="col-12-xs pull-right">
                 <p class="text-xs-right text-nowrap"><a target="_blank" href="https://github.com/Dan-in-CA/sip">$_(u'Software')</a> $_(u'version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
               </div>
           </div>
-          
+
         </div>
     </div>
 </body>
