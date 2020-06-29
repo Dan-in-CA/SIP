@@ -13,10 +13,17 @@ import ast
 from calendar import timegm
 import i18n
 import json
+import os  # - test
 import subprocess
 import sys
 from threading import Thread
 import time
+
+sip_path = os.path.dirname(os.path.abspath(__file__))  # - test
+# print("sip_path: ", sip_path)  # - test
+# print("working directory: ", os.getcwd())  # - test
+os.chdir(sip_path)
+# print("changed working directory: ", os.getcwd())  # - test
 
 # local module imports
 import gv
@@ -39,6 +46,16 @@ import web  # the Web.py module. See webpy.org (Enables the Python SIP web inter
 
 sys.path.append(u"./plugins")
 gv.restarted = 1
+
+# import os  # - test
+# sip_path = os.path.dirname(os.path.abspath(__file__))  # - test
+# print("sip_path: ", sip_path)  # - test
+# 
+# print("working directory: ", os.getcwd())  # - test
+# os.chdir(sip_path)
+# print("working directory again: ", os.getcwd())  # - test
+
+
 
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
@@ -276,6 +293,8 @@ if __name__ == u"__main__":
         set_output()
 
     app.notfound = lambda: web.seeother(u"/")
+    
+#     print("sip_path: ", sip_path)  # - test
     
     ###########################
     #### For HTTPS (SSL):  ####
