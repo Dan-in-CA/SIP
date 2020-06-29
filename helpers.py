@@ -273,7 +273,7 @@ def plugin_adjustment():
     a unique element in the gv.sd dictionary with a key starting with "wl_"
     """
     duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith(u"wl_")]
-    result = reduce(lambda x, y: x * y / 100, duration_adjustments, 1.0)
+    result = reduce(lambda x, y: x * y / 100.0, duration_adjustments, 1.0)
     return result
 
 
@@ -317,11 +317,11 @@ def log_run():
     """
 
     if gv.sd[u"lg"]:
-        program = _(u"program")
-        station = _(u"station")
-        duration = _(u"duration")
-        strt = _(u"start")
-        date = _(u"date")
+        program = "program" #  _(u"program")
+        station = "station" #  _(u"station")
+        duration = "duration" #  _(u"duration")
+        strt = "start" #  _(u"start")
+        date = "date" #  _(u"date")
         if gv.lrun[1] == 0:  # skip program 0
             return
         elif gv.lrun[1] == 98:
@@ -591,8 +591,8 @@ def check_login(redirect=False):
     except KeyError:
         pass
 
-    if u"password" in qdict:
-        if gv.sd[u"passphrase"] == password_hash(qdict[u"password"]):
+    if u"pw" in qdict:
+        if gv.sd[u"passphrase"] == password_hash(qdict[u"pw"]):
             return True
         if redirect:
             raise web.unauthorized()

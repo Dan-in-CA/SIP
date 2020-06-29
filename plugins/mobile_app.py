@@ -81,7 +81,7 @@ class cur_settings(ProtectedPage):  # /jc
             u"sbits": gv.sbits,
             u"ps": gv.ps,
             u"lrun": gv.lrun,
-            u"ct": get_cpu_temp(gv.sd[u"tu"]),
+            u"ct": get_cpu_temp(),
             u"tu": gv.sd[u"tu"]
         }
 # fmt: on

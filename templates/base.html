@@ -18,6 +18,9 @@ $code:
     days= json.dumps([_(u'Sunday'), _(u'Monday'), _(u'Tuesday'), _(u'Wednesday'), _(u'Thursday'), _(u'Friday'), _(u'Saturday')])
     months = json.dumps([_(u'January'), _(u'February'), _(u'March'), _(u'April'), _(u'May'), _(u'June'), _(u'July'), _(u'August'), _(u'September'), _(u'October'), _(u'November'), _(u'December')])
 
+$code:
+    deviceOffset = int(time.time() - timegm(time.localtime()))
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,7 +94,7 @@ $code:
     
     <script>
         // Variables set server-side
-        var devTzOffset = ${gv.tz_offset}*1000;
+        var devTzOffset = ${deviceOffset} * 1000
         var cliTzOffset = new Date().getTimezoneOffset() * 60 * 1000;
         var timeFormat = ${gv.sd[u"tf"]};
         var dayList = $:{days};
