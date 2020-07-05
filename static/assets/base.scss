@@ -1,0 +1,25 @@
+//Bootstrap styles
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;700&display=swap');
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/mixins";
+@import "styles/variables";
+@import "~bootstrap/scss/bootstrap";
+
+$fa-font-path: "../fonts/fontAwesome";
+@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "~@fortawesome/fontawesome-free/scss/regular.scss";
+@import "~@fortawesome/fontawesome-free/scss/solid.scss";
+
+$btn-primary-bg: theme-color('primary');
+$btn-primary-color: color-yiq($btn-primary-bg);
+$border-radius-base: $border-radius;
+$gray-lighter: $gray-600;
+$gray-light: $gray-800;
+$screen-sm-min: breakpoint-min('sm');
+$screen-md-min: breakpoint-min('md');
+$screen-lg-min: breakpoint-min('lg');
+@import "~eonasdan-bootstrap-datetimepicker/src/sass/bootstrap-datetimepicker-build";
+
+
+@import "./styles/base";

@@ -18,3 +18,4 @@ web/
 !/plugins/plugin_manager.py
 /plugins/manifests/*
 !/plugins/manifests/proto.manifest
+/static/node_modules/

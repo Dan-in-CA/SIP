@@ -2,19 +2,20 @@ $def with ()
 
 $var title: $_(u'SIP Run-Once')
 $var page: runonce
+$var header: $_(u'Run Once Program')
 $code:
 	snames = gv.snames
-	
+
 <script>
     // Initialize behaviors
     jQuery(document).ready(function(){
-		
-    	jQuery('#timepicker1').timepicker({
-    		showHours: false   	
-    	});
-    	
-        jQuery("button#cRunNow").click(function(){
-            var comm="/cr?&t=[";
+
+    	// jQuery('#timepicker').datetimepicker({
+        //
+    	// });
+
+        jQuery("form").submit(function(e){
+            var comm="[";
             var sid,strmm,strss,mm,ss,matchfound=0;
             for (sid=0; sid<nbrd*8; sid++) {
                 if (sid+1 == mas) {
@@ -26,8 +27,8 @@ $code:
                 mm = (strmm=="" || strmm==undefined ? 0 : parseInt(strmm));
                 ss = (strss=="" || strss==undefined ? 0 : parseInt(strss));
                 if (!(mm >= 0 && ss >= 0 && ss < 60)) {
-                    alert($:{json.dumps(_(u'Timer values wrong: '), ensure_ascii=False)} + strmm + ":" + strss);
-                    return;
+                    alert($:{json_dump(_(u'Timer values wrong: '))} + strmm + ":" + strss);
+                    e.preventDefault();
                 }
                 if (mm*60+ss > 0) {
                     matchfound=1;
@@ -37,51 +38,50 @@ $code:
             comm += "0]";
             if (!matchfound) {
                 alert($:{json.dumps(_(u'No station is scheduled to run'), ensure_ascii=False)});
-                return;
+                e.preventDefault();
             }
-            window.location = comm;
-        });
+            jQuery('input[name="t"]').val(comm);
 
-        jQuery("button#cResetTime").click(function(){
-            jQuery("input[type='text']").val(0);
-        });
 
-        jQuery("button#cCancel").click(function(){
-            window.location = "/";
         });
 
     });
 </script>
 
-<div id="runonce">
-    <div class="title">$_(u'Run Once Program')</div>
-    <form name="rf" action="${app_path('/cr')}" method="get">
-        <table class="stationList">
-            $for bid in range(0, gv.sd['nbrd']):
-                $for s in range(0,8):
-                    $ sid = bid*8 + s
-                    $ show = (gv.sd['show'][bid]>>s)&1
-                    $if show == 1 and sid+1 != gv.sd['mas']:
-                        <tr>
-                            <td class='station_name'>${snames[sid]}</td>
-                            <td>
-                                <input type="text" size="3" maxlength="3" value="0" name="mm${sid}">:
-                                <input type="text" size="2" maxlength="2" value="0" name="ss${sid}"> (mm:ss)
-                            </td>
-                        </tr>
 
-        </table>
+<form action="${app_path('/cr')}" method="post">
+        $for bid in range(0, gv.sd['nbrd']):
+            $for s in range(0,8):
+                $ sid = bid*8 + s
+                $ show = (gv.sd['show'][bid]>>s)&1
+                $if show == 1 and sid+1 != gv.sd['mas']:
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label text-right font-weight-bold">${snames[sid]}</label>
+                        <div class="input-group align-items-center col-4">
+                            <input type="number"  min="0" max="60" class="form-control" value="0" name="mm${sid}"
+                                   placeholder="minutes"/>
+                            <span class="input-group-text px-1 rounded-0">:</span>
+                            <input type="number" min="0" max="59" class="form-control" value="0" name="ss{sid}"
+                                   placeholder="seconds"/>
+                        </div>
+                        <div class="col-auto col-form-label text-muted">(mm:ss)</div>
+                    </div>
 
-    </form>
-<!--         <div class="input-group bootstrap-timepicker timepicker"> -->
-<!--             <input id="timepicker1" type="text" class="form-control input-small"> -->
-<!--             <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span> -->
-<!--         </div> -->
-</div>
+    <!--    <div class="row mt-4">-->
+<!--        <div class="form-group col-sm-6">-->
+<!--            <div class="input-group date"  id="timepicker">-->
+<!--                <span class="input-group-prepend"><span class="input-group-text"><i class="far fa-clock"></i></span></span>-->
+<!--                <input type='text'  class="form-control"/>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<input type="hidden" name="t" value="[]"></input>
+    <div class="mt-5">
+        <button type="submit" class="btn btn-success my-1">$_(u'Run Now')</button>
+        <button type="reset" class="btn btn-danger  my-1">$_(u'Reset Time')</button>
+        <a href="${app_path('/')}" class="btn btn-secondary  my-1">$_(u'Cancel')</a>
+    </div>
+
+</form>
 
 
-<div id="controls">
-    <button id="cRunNow" class="submit"><b>$_(u'Run Now')</b></button>
-    <button id="cResetTime" class="refresh">$_(u'Reset Time')</button>
-    <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>
-</div>

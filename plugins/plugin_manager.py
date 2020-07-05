@@ -115,34 +115,38 @@ class update_plugins(ProtectedPage):
 
     def GET(self):
         global installed
+
         qdict = web.input()
-        if qdict[u"btnId"] == u"upd":
-            for f in installed:
-                if f in qdict:
-                    command = u"chmod g+x plugins/" + f
-                    subprocess.call(command.split())
-                else:
-                    command = u"chmod g-x plugins/" + f
-                    subprocess.call(command.split())
-                time.sleep(1)
+        action = qdict[u"action"]
+        plugin = qdict[u"plugin"]
+
+        if action == u"enable" and plugin in installed:
+            command = u"chmod g+x plugins/" + plugin
+            subprocess.call(command.split())
             raise web.seeother(u"/restart")
-        if qdict[u"btnId"] == u"del":
-            del_list = []
-            for k in list(qdict.keys()):  # Get plugins to delete
-                if k[:3] == u"del":
-                    del_list.append(k[4:])
-            for p in del_list:  # get files to delete for each plugin in list
-                name = p.split(u".")[0]
-                desc, files = parse_manifest(name)
-                for f in files:
-                    victim = f.split()
-                    if victim[0][-3:] == u".py":
-                        b_code = victim[0].replace(u".py", u".pyc")
-                        command = u"rm -f " + victim[1] + u"/" + b_code
-                        subprocess.call(command.split())
-                    command = u"rm -f " + victim[1] + u"/" + victim[0]
-                    subprocess.call(command.split())
+
+        if action == u"disable" and plugin in installed:
+            command = u"chmod g-x plugins/" + plugin
+            subprocess.call(command.split())
+            time.sleep(1)
             raise web.seeother(u"/restart")
+
+        if action == u"uninstall" and plugin in installed:
+            name = plugin.split(u".")[0] # get files to delete for each plugin in list
+            desc, files = parse_manifest(name)
+            for f in files:
+                victim = f.split()
+                if victim[0][-3:] == u".py":
+                    b_code = victim[0].replace(u".py", u".pyc")
+                    command = u"rm -f " + victim[1] + u"/" + b_code
+                    subprocess.call(command.split())
+                command = u"rm -f " + victim[1] + u"/" + victim[0]
+                subprocess.call(command.split())
+
+
+            raise web.seeother(u"/restart")
+
+
 
 
 class browse_plugins(ProtectedPage):
@@ -152,7 +156,9 @@ class browse_plugins(ProtectedPage):
 
     def GET(self):
         plug_dict = get_readme()
-        return template_render.plugins_repo(plug_dict)
+        settings = get_permissions()
+        listAll= {'list': plug_dict, 'settings':settings}
+        return template_render.plugins_repo(listAll)
 
 
 class install_plugins(ProtectedPage):
@@ -170,7 +176,7 @@ class install_plugins(ProtectedPage):
                 + u"/"
                 + p
                 + u".manifest"
-            )            
+            )
             data = response.readlines()
             data = [i.decode(u'utf-8') for i in data]
             sep = [i for i, s in enumerate(data) if u"###" in s][0]

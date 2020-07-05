@@ -36,13 +36,13 @@ $grays: map-merge(
 
 
 $darkgreen: #397F19;
-$blue:    #2E3959 !default;
+$blue: #3b4a7e !default;
 $indigo:  #6610f2 !default;
 $purple:  #6f42c1 !default;
 $pink:    #e83e8c !default;
 $red:     #7D1921 !default;
 $orange:  #fd7e14 !default;
-$yellow:  #F7F1CD !default;
+$yellow:  #ffc107 !default;
 $green:   #32A620 !default;
 $teal:    #20c997 !default;
 $cyan:    #17a2b8 !default;
@@ -747,8 +747,8 @@ $navbar-dark-toggler-icon-bg:       url("data:image/svg+xml,<svg xmlns='http://w
 $navbar-dark-toggler-border-color:  rgba($white, .1) !default;
 
 $navbar-light-color:                rgba($black, .5) !default;
-$navbar-light-hover-color:          rgba($black, .7) !default;
-$navbar-light-active-color:         rgba($black, .9) !default;
+$navbar-light-hover-color:          rgba(theme-color('primary'), .7) !default;
+$navbar-light-active-color:         rgba(theme-color('primary'), .9) !default;
 $navbar-light-disabled-color:       rgba($black, .3) !default;
 $navbar-light-toggler-icon-bg:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='#{$navbar-light-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>") !default;
 $navbar-light-toggler-border-color: rgba($black, .1) !default;

@@ -1,24 +1,17 @@
-$def with()
+$def with(redirectTo)
 
 $var title: $_(u'SIP Restarting')
 $var page: restart
+$var header: $_(u'SIP is restarting')
 
 <script>
-	var interval = null;	
-	function changePage() {
-		interval = setInterval(function() {
-	       jQuery.getScript("/static/scripts/goHome.js", function() {
-	    	   clearInterval(interval);
-	       });
-		}, 1000);
-};
+    setTimeout(function () {
+        window.location.href = '${redirectTo}';
+    }, 1000);
 
-	jQuery(document).ready(function(){
-			changePage()
-    });
 </script>
 
-<div id="restarting">
-    <div class="title">$_(u'SIP is restarting')</div>
+
+<div>
     $_(u'This may take several seconds...')
 </div>

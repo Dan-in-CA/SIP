@@ -2,6 +2,7 @@ $def with ()
 
 $var title: $_(u'SIP Stations')
 $var page: stations
+$var header: $_(u'Configure Stations')
 $code:
 	snames = gv.snames
 
@@ -10,7 +11,7 @@ $code:
     // Initialize behaviors
     jQuery(document).ready(function(){
 
-        jQuery("button#cSubmit").click(function(){
+        jQuery("form").submit(function(event){
             if (mas>0) {
                 var s, bid, sid, vm;
                 for (bid=0; bid<nbrd; bid++) {
@@ -58,9 +59,11 @@ $code:
                 jQuery("#i"+bid).val(vi);
                 jQuery("#sh"+bid).val(vs);
                 jQuery("#w"+bid).val(vw);
+
             }
-            jQuery("#sf").submit();
+
         });
+
         jQuery("button#cResetNames").click(function(){
             jQuery("input[type='text']").each(function () {
                 jQuery(this).val("S" + (parseInt(jQuery(this).attr("name").substring(1)) + 1));
@@ -70,70 +73,76 @@ $code:
             });
         });
 
-        jQuery("button#cCancel").click(function(){
-            window.location= baseUrl + "/";
-        });
-
     });
 
 </script>
-<div id="stations">
-    <div class="title">$_(u'Configure Stations')</div>
-    <form id="sf" name="sf" action="$app_path('/cs')" method="get">
-        <table class="stationList">
-            <tr>
-                <th class="stationNumber">$_(u'Station')</th>
-                <th class="stationName">$_(u'Name')</th>
-                <th class="stationShow">$_(u'Enabled?')&nbsp;&nbsp;</th>
-                <th class="stationIgnore">$_(u'Ignore Rain?')&nbsp;&nbsp;</th>
-                $#$if 'wl_weather' in gv.sd or 'et' in gv.plugin_data:
-                    <th class="stationIgnoreWL">$_(u'Ignore Plugin adjustments?')&nbsp;&nbsp;</th>
-                $if gv.sd['mas'] > 0:
-                    <th class="stationMaster">$_(u'Activate Master?')</th>
-            </tr>
-            $for bid in range(0,gv.sd['nbrd']):
-                $for s in range(0,8):
-                    $ sid = bid*8 + s;
-                    <tr>
-                        <td class="stationNumber">${sid + 1}</td>
-                        <td class="stationName">
-                            <input type="text" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid}" id="n${sid}">
-                        </td>
-                        $if sid == gv.sd['mas'] - 1:
-                            $if 'wl_weather' in gv.sd:
-                                <td class="stationMaster" colspan="4">$_(u'(Master valve)')</td>
-                            $else:
-                                <td class="stationMaster" colspan="3">$_(u'(Master valve)')</td>
+
+<form id="sf" name="sf" class="container" action="$app_path('/cs')" method="get">
+
+        <div class="row font-weight-bold">
+            <div class="col-1 text-right stationNumber">$_(u'No')</div>
+            <div class="col-4 stationName">$_(u'Name')</div>
+            <div class="col-2 stationShow">$_(u'Enabled?')&nbsp;&nbsp;</div>
+            <div class="col-2 stationIgnore">$_(u'Ignore Rain?')&nbsp;&nbsp;</div>
+            $#$if 'wl_weather' in gv.sd or 'et' in gv.plugin_data:
+                <div class="col-2 stationIgnoreWL">$_(u'Ignore Plugin adjustments?')&nbsp;&nbsp;</div>
+            $if gv.sd['mas'] > 0:
+                <div class="col-2 stationMaster">$_(u'Activate Master?')</div>
+        </div>
+        $for bid in range(0,gv.sd['nbrd']):
+            $for s in range(0,8):
+                $ sid = bid*8 + s;
+                <div class="row my-2">
+                    <div class="col-1 text-right stationNumber">${sid + 1}</div>
+                    <div class="col-4 stationName">
+                        <input type="text" class="form-control" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid}" id="n${sid}">
+                    </div>
+                    $if sid == gv.sd['mas'] - 1:
+                        $if 'wl_weather' in gv.sd:
+                            <div class="col-2 stationMaster text-center" >$_(u'(Master valve)')</div>
                         $else:
-                            <td class="stationShow">
-                                <input type="checkbox" ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}">
-                            </td>
-                            <td class="stationIgnore">
-                                <input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">
-                            </td>
-                            $# $if 'wl_weather' in gv.sd or 'et' in gv.plugin_data:
-                                <td class="stationIgnoreWL">
-                                    <input type="checkbox" ${"checked" if gv.sd['iw'][bid]&(1<<s) else ""} id="wlc${sid}">
-                                </td>
-                        $if gv.sd['mas'] > 0 and gv.sd['mas'] != sid+1:
-                            <td class="stationMaster">
-                                <input type="checkbox" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}">
-                            </td>
-                    </tr>
-        </table>
+                            <div class="col-2 stationMaster text-center" >$_(u'(Master valve)')</div>
+                    $else:
+                        <div class="col-2 stationShow text-center">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox"  ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}" name="show${sid}">
+                                <label class="custom-control-label" for="show${sid}"> </label>
+                            </div>
+                        </div>
+                        <div class="col-2 stationIgnore text-center">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox"   ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}"name="rc${sid}">
+                                <label class="custom-control-label" for="rc${sid}"> </label>
+                            </div>
 
-        <p></p>
+                        </div>
+                        $# $if 'wl_weather' in gv.sd or 'et' in gv.plugin_data:
+                            <div class="col-2 stationIgnoreWL text-center">
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" ${"checked" if gv.sd['iw'][bid]&(1<<s) else ""} id="wlc${sid}" name="wlc${sid}">
+                                    <label class="custom-control-label" for="wlc${sid}"> </label>
+                                </div>
+                            </div>
+                    $if gv.sd['mas'] > 0 and gv.sd['mas'] != sid+1:
+                        <div class="col-2 stationMaster text-center">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox"  ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}" name="mc${sid}">
+                                <label class="custom-control-label" for="mc${sid}"> </label>
+                            </div>
+                        </div>
+                </div>
 
-        $for bid in range(gv.sd['nbrd']):
-            <input type="hidden" id="i${bid}" name="i${bid}"/>
-            <input type="hidden" id="sh${bid}" name="sh${bid}"/>
-            <input type="hidden" id="w${bid}" name="w${bid}"/>
-            <input type="hidden" id="m${bid}" name="m${bid}"/>
-    </form>
-</div>
+    $for bid in range(gv.sd['nbrd']):
+        <input type="hidden" id="i${bid}" name="i${bid}"/>
+        <input type="hidden" id="sh${bid}" name="sh${bid}"/>
+        <input type="hidden" id="w${bid}" name="w${bid}"/>
+        <input type="hidden" id="m${bid}" name="m${bid}"/>
 
-<div id="controls">
-    <button id="cSubmit" class="submit">$_(u'Submit Changes')</button>
-    <button id="cResetNames" class="refresh">$_(u'Reset Names')</button>
-    <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>
-</div>
+    <div class="mt-5">
+        <button class="btn btn-success" type="submit">$_(u'Submit Changes')</button>
+        <button id="cResetNames" class="btn btn-warning">$_(u'Reset Names')</button>
+        <a href="${app_path('/')}" class="btn btn-secondary">$_(u'Cancel')</a>
+    </div>
+</form>
+
+

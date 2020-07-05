@@ -2,6 +2,7 @@ $def with (records)
 
 $var title: $_(u'SIP Log')
 $var page: log
+
 $code:
 	snames = gv.snames
 	if gv.sd['lg'] == 1:
@@ -10,7 +11,7 @@ $code:
 	else:
 		log_state = _(u"Disabled")
 		log_option = ""
-		
+
 	def formatTime(t):
 		if gv.sd['tf']:
 			return t
@@ -24,29 +25,15 @@ $code:
 			return str(newhour) + t[2:] + (" am" if hour<12 else " pm")
 
 
-<script>
-    // Initialize behaviors
-    jQuery(document).ready(function(){
-        jQuery("button#nRefresh").click(function(){
-            window.location = baseUrl + "/vl";
-        });
-        jQuery("button#nDeleteAll").click(function(){
-            jQuery("form#df").submit();
-        });
-    });
 
-</script>
+$var header: $_(u'Log ')$log_state
 
-<div id="options">
-    <div class="title">$_(u'Log ')$log_state</div>
-    <form method="get" action="${app_path('/cl')}" name="df" id="df"></form>
-</div>
-
-<div id="log">
+<div>
     <p>$_(u'Total number of records: ')${len(records)} (${_(u"no") if gv.sd['lr'] == 0 else gv.sd['lr']}$_(u' limit'))</p>
-    <p>$_(u'Download log as ')<a href="$app_path('/wl')">csv</a>.</p>
+    <p>$_(u'Download log as ')<a class="btn btn-link font-weight-bold py-0 px-1" href="$app_path('/wl')">csv</a>.</p>
 
-    <table class="logList">
+    <div class="table-responsive">
+    <table class="table table-striped  table-hover  table-sm">
         <tr class="log_rec">
             <th>$_(u'Date')</th>
             <th>$_(u'Start Time')</th>
@@ -66,10 +53,13 @@ $code:
             </tr>
             $ odd = 1 - odd
     </table>
-
+    </div>
 </div>
 
-<div id="controls">
-    <button id="nRefresh" class="refresh">$_(u'Refresh')</button>
-    <button id="nDeleteAll" class="delete danger">$_(u'Clear Log')</button>
+<div class="d-flex" >
+    <a class="btn btn-success mr-2 mb-2" href="/vl">$_(u'Refresh')</a>
+
+    <form method="get" action="${app_path('/cl')}" name="df" id="df">
+        <button type="submit" class="btn btn-danger">$_(u'Clear Log')</button>
+    </form>
 </div>

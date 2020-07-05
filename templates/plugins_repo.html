@@ -1,46 +1,41 @@
-$def with(p_vals)
+$def with(listAll)
 
 $var title: $_(u'SIP Plugin Browser')
 $var page: plugins_repo
-
-
-<script>
-
-    // Initialize behaviors
-    jQuery(document).ready(function(){
-
-        jQuery("#cSubmit").click(function() {
-            jQuery("#installForm").submit();
-        });
-        jQuery("#cBack").click(function() {
-            window.location= baseUrl + "/plugins";
-        });
-        jQuery("button#cCancel").click(function(){
-            window.location= baseUrl + "/";
-        });
-
-    });
-</script>
+$var header: $_(u'Available Plugins')
 
 <div id="plugin_repo">
-    <div class="title">$_(u'Available Plugins')</div>
+
+
     <p>$_(u'Unless otherwise stated these plugins are licensed under GPL 3.0')</p>
-    <form id="installForm" action="${app_path('/inst-plugins')}" method="get">
-        <table class="optionList">
-            $ pnames = list(p_vals.keys())
+
+    <form id="installForm" class="container" action="${app_path('/inst-plugins')}" method="get">
+
+            $ pnames = list(listAll['list'].keys())
             $pnames.sort()
             $for n in pnames:
-            <tr>
-				<td style='font-weight: bold;'><input type="checkbox" name=${n}> ${n}</td>
-            </tr>
-            <tr>
-                <td style='text-transform: none;'>${p_vals[n]}</td>
-            </tr>
-        </table>
+
+
+            <div class="row mb-4">
+                <div class="form-group col-12 col-md-4">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="${n}"  name="${n}"  ${"disabled" if n+'.py' in listAll['settings'].keys() else ""} >
+                        <label class="custom-control-label font-weight-bold" for="${n}">${n}</label>
+                        $if n+'.py' in listAll['settings'].keys():
+                            <div class="small text-success">$_(u'Is installed')</div>
+
+                    </div>
+                </div>
+                <div class="form-group col">
+                    <div  class="form-text text-muted small">${listAll['list'][n]}</div>
+                </div>
+            </div>
+
+
+        <div class="mt-5">
+            <button id="cSubmit" class="btn btn-primary">$_(u'Install')</button>
+            <a class="btn btn-secondary" href="${app_path(u'/plugins')}">$_(u'Back')</a>
+            <a class="btn btn-secondary" href="${app_path(u'/')}">$_(u'Cancel')</a>
+        </div>
     </form>
-</div>
-<div id="controls">
-    <button id="cSubmit" class="submit"><b>$_(u'install')</b></button>
-    <button id="cBack" class="cancel danger"><b>$_(u'Back')</b></button>
-    <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>
 </div>

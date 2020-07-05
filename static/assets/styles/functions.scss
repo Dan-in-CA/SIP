@@ -1,0 +1,3 @@
+@function img-url($img){
+  @return url("../icons/#{$img}");
+}

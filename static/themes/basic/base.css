@@ -180,7 +180,7 @@ div#status {
 	width: 36px;
 	text-transform:uppercase;
 	text-align: right;
-	
+
 }
 #deviceDate {
 	margin-top:16px;
@@ -374,8 +374,8 @@ table.stationList {
 	border-collapse: separate;
 }
 td.station_name {
-	text-align: right; 
-	padding: 0px 12px; 
+	text-align: right;
+	padding: 0px 12px;
 	color: #2E3959;
 	font-weight: 700;
 	width: 12em;
@@ -430,17 +430,6 @@ td.dayOn {
 }
 
 
-table.logList {
-	padding: 4px;
-	margin: 1em 0em;
-}
-table.logList td {
-	padding: 0px 12px;
-}
-table.logList th {
-	padding: 0px 12px;
-	border-bottom: 2px solid #2E3959;
-}
 
 /******** Interval Selector Styles **********/
 
@@ -452,7 +441,7 @@ table.logList th {
 .intervalSelect {
 	line-height: 60px;
 	border-radius: 12pt;
-	padding: 3px;	
+	padding: 3px;
 	cursor: pointer;
 }
 .intervalSelect.distance0 {
@@ -461,7 +450,7 @@ table.logList th {
 }
 .intervalSelect:hover {
 	border: 2px solid #32A620;
-}	
+}
 .intervalSelect.distance1 {
 }
 .intervalSelect.distance2 {
@@ -525,7 +514,7 @@ td.stationSchedule {
 	height:28px;
 }
 .nowMarker.on {
-	background-color: #397F19;	
+	background-color: #397F19;
 }
 .scheduleMarker .markerDetail {
 	display:none;
@@ -579,7 +568,7 @@ td.stationSchedule {
 }
 
 #displayScheduleDate {
-	text-transform:none;	
+	text-transform:none;
 }
 
 #legend span {

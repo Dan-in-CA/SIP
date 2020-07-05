@@ -1,5 +1,6 @@
-@use './variables' as *;
-
+@import "./functions" ;
+@import "~bootstrap/scss/functions";
+@import './variables';
 
 /******** Overall Layout Styles **********/
 
@@ -137,48 +138,48 @@ div#status {
   background-color: $primary;
   opacity: .85;
 }
-
-#deviceTime span {
-  display: inline-block;
-  position: relative;
-}
-
-#deviceTime span.time {
-  text-align: right;
-  font-size: 42pt;
-  top: 6px;
-  width: 160px;
-  letter-spacing: -3px;
-}
-
-#deviceTime span.sep {
-  font-size: 36px;
-  top: -.25em;
-}
-
-#deviceTime span.second {
-  text-align: left;
-  font-size: 18pt;
-  top: -16px;
-  width: 36px;
-  letter-spacing: -1px;
-}
-
-#deviceTime span.ampm {
-  position: relative;
-  top: 6px;
-  left: -38px;
-  font-size: 18pt;
-  width: 36px;
-  text-transform: uppercase;
-  text-align: right;
-
-}
-
-#deviceDate {
-  margin-top: 16px;
-  font-weight: 400;
-}
+//
+//#deviceTime span {
+//  display: inline-block;
+//  position: relative;
+//}
+//
+//#deviceTime span.time {
+//  text-align: right;
+//  font-size: 42pt;
+//  top: 6px;
+//  width: 160px;
+//  letter-spacing: -3px;
+//}
+//
+//#deviceTime span.sep {
+//  font-size: 36px;
+//  top: -.25em;
+//}
+//
+//#deviceTime span.second {
+//  text-align: left;
+//  font-size: 18pt;
+//  top: -16px;
+//  width: 36px;
+//  letter-spacing: -1px;
+//}
+//
+//#deviceTime span.ampm {
+//  position: relative;
+//  top: 6px;
+//  left: -38px;
+//  font-size: 18pt;
+//  width: 36px;
+//  text-transform: uppercase;
+//  text-align: right;
+//
+//}
+//
+//#deviceDate {
+//  margin-top: 16px;
+//  font-weight: 400;
+//}
 
 .countdown, .rainsense {
   color: $danger;
@@ -195,24 +196,24 @@ div#status {
   margin-bottom: 16px;
 }
 
-#nav button {
-  padding: 9px 18px;
-  margin-right: 8px;
-  font-family: Quicksand, sans-serif;
-  text-transform: uppercase;
-  font-size: 16pt;
-  font-weight: 400;
-  color: white;
-  background-color: $info;
-  border: 0px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-#nav button.here {
-  background-color: $green;
-  height: 54px;
-}
+//#nav button {
+//  padding: 9px 18px;
+//  margin-right: 8px;
+//  font-family: Quicksand, sans-serif;
+//  text-transform: uppercase;
+//  font-size: 16pt;
+//  font-weight: 400;
+//  color: white;
+//  background-color: $info;
+//  border: 0px;
+//  border-radius: 8px;
+//  cursor: pointer;
+//}
+//
+//#nav button.here {
+//  background-color: $green;
+//  height: 54px;
+//}
 
 #nav button.home {
   background-image: img-url('home.png');
@@ -228,16 +229,8 @@ div#status {
 button {
   padding: 4px 12px;
   font-family: Quicksand, sans-serif;
-  font-size: 12pt;
-  font-weight: 400;
-  text-transform: uppercase;
-  text-align: center;
-  line-height: 14pt;
   color: white;
   background-color: $primary;
-  border: 0px;
-  border-radius: 12px;
-  cursor: pointer;
 }
 
 button:hover {
@@ -455,20 +448,6 @@ td.dayOn {
   border-radius: 8px;
 }
 
-
-table.logList {
-  padding: 4px;
-  margin: 1em 0em;
-}
-
-table.logList td {
-  padding: 0px 12px;
-}
-
-table.logList th {
-  padding: 0px 12px;
-  border-bottom: 2px solid $info;
-}
 
 /******** Interval Selector Styles **********/
 
@@ -719,37 +698,38 @@ td.stationSchedule {
     padding: 0;
     display: inline-block;
   }
-  #deviceTime {
-    float: left;
-  }
-  #deviceTime span.time {
-    font-size: 22pt;
-    width: 120px;
-    letter-spacing: 0px;
-    padding-right: 2px;
-    margin-bottom: 4px;
-  }
-  #deviceTime span.sep {
-    font-size: 16pt;
-  }
-  #deviceTime span.second, #deviceTime span.ampm {
-    font-size: 10pt;
-  }
-  #deviceTime span.second {
-    top: -5px;
-    left: auto;
-  }
-  #deviceTime span.ampm {
-    left: -55px;
-  }
-  #deviceDate {
-    float: right;
-    padding: 0 5px 5px 5px;
-  }
 
-  button {
-    font-size: 9pt;
-  }
+
+
+  //#deviceTime {
+  //  float: left;
+  //}
+  //#deviceTime span.time {
+  //  font-size: 22pt;
+  //  width: 120px;
+  //  letter-spacing: 0px;
+  //  padding-right: 2px;
+  //  margin-bottom: 4px;
+  //}
+  //#deviceTime span.sep {
+  //  font-size: 16pt;
+  //}
+  //#deviceTime span.second, #deviceTime span.ampm {
+  //  font-size: 10pt;
+  //}
+  //#deviceTime span.second {
+  //  top: -5px;
+  //  left: auto;
+  //}
+  //#deviceTime span.ampm {
+  //  left: -55px;
+  //}
+  //#deviceDate {
+  //  float: right;
+  //  padding: 0 5px 5px 5px;
+  //}
+
+
 
   #nav button {
     padding: 4px 12px;

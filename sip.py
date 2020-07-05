@@ -32,13 +32,15 @@ from helpers import (
     check_rain,
     get_rpi_revision,
     jsave,
-    log_run,        
+    log_run,
     plugin_adjustment,
     prog_match,
-    report_station_completed,    
+    report_station_completed,
     schedule_stations,
-    station_names,    
+    station_names,
     stop_onrain,
+    transform_temp,
+    slugify
 )
 from ReverseProxied import ReverseProxied
 from urls import urls  # Provides access to URLs for UI pages
@@ -50,7 +52,7 @@ gv.restarted = 1
 # import os  # - test
 # sip_path = os.path.dirname(os.path.abspath(__file__))  # - test
 # print("sip_path: ", sip_path)  # - test
-# 
+#
 # print("working directory: ", os.getcwd())  # - test
 # os.chdir(sip_path)
 # print("working directory again: ", os.getcwd())  # - test
@@ -88,7 +90,7 @@ def timing_loop():
                                 if gv.sd[u"mas"] == sid + 1:
                                     continue  # skip, this is master station
                                 if (
-                                    gv.srvals[sid] 
+                                    gv.srvals[sid]
                                     and gv.sd[u"seq"]
                                 ):  # skip if currently on and sequential mode
                                     continue
@@ -155,7 +157,7 @@ def timing_loop():
                                     gv.rs[masid][0] = gv.rs[sid][0] + gv.sd[u"mton"]
                                     gv.rs[masid][1] = gv.rs[sid][1] + gv.sd[u"mtoff"]
                                     gv.rs[masid][3] = gv.rs[sid][3]
-                            elif gv.sd[u"mas"] == sid + 1: # if this is master 
+                            elif gv.sd[u"mas"] == sid + 1: # if this is master
                                 masid = gv.sd[u"mas"] - 1  # master index
                                 gv.sbits[b] |= 1 << sid
                                 gv.srvals[masid] = 1
@@ -224,6 +226,13 @@ def timing_loop():
         time.sleep(1)
         #### End of timing loop ####
 
+def json_dump(string):
+    """
+    Checks HTTP_REFERER
+    """
+    return json.dumps(string, ensure_ascii=False)
+
+
 
 class SIPApp(web.application):
     """Allow program to select HTTP port."""
@@ -246,6 +255,9 @@ template_globals = {
     "gv": gv,
     u"str": str,
     u"eval": eval,
+    u"json_dump": json_dump,
+    u"slugify": slugify,
+    u"transform_temp": transform_temp,
     u"session": web.config._session,
     u"json": json,
     u"ast": ast,
@@ -293,15 +305,15 @@ if __name__ == u"__main__":
         set_output()
 
     app.notfound = lambda: web.seeother(u"/")
-    
+
 #     print("sip_path: ", sip_path)  # - test
-    
+
     ###########################
     #### For HTTPS (SSL):  ####
 
     if gv.sd["htp"] == 443:
         from cheroot.server import HTTPServer
-        from cheroot.ssl.builtin import BuiltinSSLAdapter   
+        from cheroot.ssl.builtin import BuiltinSSLAdapter
         HTTPServer.ssl_adapter = BuiltinSSLAdapter(
             certificate='/usr/lib/ssl/certs/SIP.crt',
             private_key='/usr/lib/ssl/private/SIP.key'

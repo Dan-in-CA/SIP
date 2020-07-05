@@ -15,21 +15,20 @@ $code:
         return '%.0f' % result
 
 $code:
-    days= json.dumps([_(u'Sunday'), _(u'Monday'), _(u'Tuesday'), _(u'Wednesday'), _(u'Thursday'), _(u'Friday'), _(u'Saturday')])
-    months = json.dumps([_(u'January'), _(u'February'), _(u'March'), _(u'April'), _(u'May'), _(u'June'), _(u'July'), _(u'August'), _(u'September'), _(u'October'), _(u'November'), _(u'December')])
+    days= json_dump([_(u'Sunday'), _(u'Monday'), _(u'Tuesday'), _(u'Wednesday'), _(u'Thursday'), _(u'Friday'), _(u'Saturday')])
+    months = json_dump([_(u'January'), _(u'February'), _(u'March'), _(u'April'), _(u'May'), _(u'June'), _(u'July'), _(u'August'), _(u'September'), _(u'October'), _(u'November'), _(u'December')])
 
 $code:
     deviceOffset = int(time.time() - timegm(time.localtime()))
 
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="IE=edge">
 
-  	<link rel="stylesheet" href="$app_path('/static/dist/css/app.css')">
-  	<link rel="stylesheet" href="$app_path('/static/bootstrap-timepicker/css/bootstrap-timepicker.min.css')">
+  	<link rel="stylesheet" href="$app_path('/static/dist/css/base.css')">
 
     <title>${content.title + (" - " + gv.sd[u'name'] if gv.sd[u'name'] != u"SIP" else "")}</title>
 
@@ -51,45 +50,10 @@ $code:
     <meta name="msapplication-TileImage" content="$app_path('/static/images/ms-icon-144x144.png')">
     <meta name="theme-color" content="#ffffff">
 
-    <link href="$app_path('/static/themes/' + gv.sd[u'theme'] + '/base.css')" rel="stylesheet" type="text/css"/>
-    <style>
-    	div {overflow-y: hidden;}
-    	div.row {overflow-y: visible;}
-        .bluebg {background-color:lightblue;}
-        .opOn, .wlOn, .rsOff {color:green;}
-        .opOff, .wlOff, .rsOn {color:red;}
-        .rdOff {color:black;}
-        .rdOn {color:red;}
-        .rsNA, .station_waiting {color:gray;}
-        .station_disabled {color:gray;}
-
-        #lastRun {color:gray;}
-        #stations {width:100%;}
-        #pluginMenu {display: none; z-index: 99}
-        .program {line-height:22px}
-        .strike {text-decoration:line-through;}
-
-        .progstation_on {background-color:rgb(154, 250, 154); color:black; font-size:10pt}
-        .progstation_off {background-color:white; color:lightgray; font-size:10pt}
-        button.cDisable.toggle {float:right; width:130px; margin:0px; padding:0px; background-color:transparent}
-        button.cDisable.toggle span.toggleleft {width: 30px;}
-        button.cDisable.toggle span.toggleright {width: 30px;}
-
-        button#tooltip {height:24px;}
-        .tooltip {background-color:rgb(255, 242, 184); display:none; font-size:10pt; margin-left:4px;}
-        .label {font-weight:bold; float:left; width:160px; text-align:right; padding-right:4px;}
-
-        td.stationNumber, td.stationShow, td.stationIgnore, td.stationMaster {text-align:center;}
-        td.stationIgnoreWL {text-align:center;}
-        td.stationName {text-align:left; padding-left:1em;}
-
-        .piDatFooter {background-color:white; color:black; font-size:12pt; margin-bottom:10px; padding:0px 4px 0px 4px;}
-
-    </style>
+<!--    <link href="$app_path('/static/dist/css/themes/' + gv.sd[u'theme'] + '.css')" rel="stylesheet" type="text/css"/>-->
 
 
-    <script src="/static/dist/js/app.min.js"></script>
-    <script src="/static/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+    <script src="/static/dist/js/app.js"></script>
 
 
     <script>
@@ -101,11 +65,8 @@ $code:
         var monthList = $:{months};
         var baseUrl = "";
 
-        var cputemp = "${gv.cputemp}";
-        var tempunit = "${gv.sd[u'tu']}";
-
         $if content.page != 'login':
-            var snames = $:{json.dumps(gv.snames, ensure_ascii=False)};
+            var snames = $:{json_dump(gv.snames)};
             var lrun = ${gv.lrun};
             var rdst = ${gv.sd[u'rdst']}*1000;
             var upas = ${gv.sd[u'upas']};
@@ -117,115 +78,147 @@ $code:
             var iw = ${gv.sd[u'iw']};
             var mas = ${gv.sd[u'mas']};
             var nbrd = ${gv.sd[u'nbrd']};
-            var plugins = $:{json.dumps(gv.plugin_menu, ensure_ascii=False)};
-            var progs = $:{json.dumps(gv.pd, ensure_ascii=False)};
+            var plugins = $:{json_dump(gv.plugin_menu)};
+            var progs = $:{json_dump(gv.pd)};
             var nprogs = ${len(gv.pd)};
             var sdt = ${gv.sd[u'sdt']};
             var seq = ${gv.sd[u'seq']};
-            var run_once = $:{json.dumps(_(u'Run-once'), ensure_ascii=False)};
-            var man = $:{json.dumps(_(u'Manual'), ensure_ascii=False)};
-            var program = $:{json.dumps(_(u'Program'), ensure_ascii=False)};
+            var run_once = $:{json_dump(_(u'Run-once'))};
+            var man = $:{json_dump(_(u'Manual'))};
+            var program = $:{json_dump(_(u'Program'))};
             var idd = $:{gv.sd[u'idd']};
 
-            jQuery(document).ready(function(){
-                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + '/plugins\'">$_(u'Manage Plugins')</button><br/>');
-                $if len(uplugin_menu) > 0:
-                	$for i, plugin in enumerate(uplugin_menu):
 
-                        jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\'' + '${plugin[1]}\'">${plugin[0]}</button><br/>');
-                $else:
-                    jQuery('#pluginMenu').append('None<br/>');
-
-                $if gv.plugFtr:
-                	$for i, d in enumerate(gv.plugFtr):
-                	     jQuery("#plugFtrPars").append( "<p>${gv.plugFtr[i]["label"] + ": " + str(gv.plugFtr[i]["val"])}</p>" );
-
-                jQuery("#bPlugins").click(function(e) {
-                    var btn = jQuery("#bPlugins");
-                    jQuery("#pluginMenu").css({
-                        position: 'absolute',
-                        top: btn.offset().top + btn.outerHeight() + 10,
-                        left: btn.offset().left
-                    }).slideToggle();
-                    e.stopPropagation();
-                });
-
-                jQuery(document).click(function(){
-                    jQuery("#pluginMenu").slideUp();
-                });
-            });
     </script>
-    <script src="$app_path('/static/scripts/behaviors.js')"></script>
-    <script src="$app_path('/static/scripts/schedule.js')"></script>
-    <script src="$app_path('/static/scripts/intervalSelect.js')"></script>
+
 </head>
 <body>
-    <div class="content">
-        <form name="tt" action="${app_path(u'/ttu')}" method="get">
-            <input type="hidden" name="tunit">
-        </form>
-
-        <div id="pluginMenu">
-        </div>
+    <div class="d-flex flex-column min-vh-100">
 
         <div class="header">
             <div class="title">${gv.sd[u'name'] if gv.sd[u'name'] != u"SIP" else u""}</div>
         </div>
 
-        <div class="body">
-            <div id="status">
-                <p id="deviceTime"><span class="time"></span><span class="second"></span><span class="ampm"></span></p>
-                <p id="deviceDate"></p>
-            </div>
+        <main class="container-fluid">
+            <div class="row">
+                <div class="col-12 col-md-2 text-white">
+                    <div id="deviceTime" class="collapse">
+                        <div class="d-flex mt-3">
+                           <div class="d-flex">
+                               <span class="hour h1 mb-0"></span>
+                               <span class="sep h1 mb-0">:</span>
+                               <span class="minute h1 mb-0"></span>
+                               <span class="small second"></span>
+                           </div>
+                            <span class="ampm align-self-end"></span>
+                        </div>
+                        <div class="date h5 mt-2"></div>
+                    </div>
+                </div>
 
-            <div class="panel">
+            <div class="col-12 col-md">
 
                 $if content.page != 'login':
-                    <div id="nav">
-                        <button id="bHome" class="home${' here' if content.page=='home' else ''}" title=$:{json.dumps(_(u'Home'), ensure_ascii=False)}>$_(u'Home')</button>
-                        <button id="bPrograms" class="programs${' here' if content.page=='programs' else ''}" title=$:{json.dumps(_(u'Define Programs'), ensure_ascii=False)}>$_(u'Programs')</button>
-                        <button id="bRunOnce" class="start${' here' if content.page=='runonce' else ''}" title=$:{json.dumps(_(u'Define Run Once Program'), ensure_ascii=False)}>$_(u'Run Once')</button>
-                        <button id="bPlugins" class="plugins${' here' if content.page=='plugins' else ''}" title=$:{json.dumps(_(u'Access Plugins'), ensure_ascii=False)}>$_(u'Plugins')</button>
-                        <button id="bLog" class="log${' here' if content.page=='log' else ''}" title=$:{json.dumps(_(u'View Log'), ensure_ascii=False)}>$_(u'Log')</button>
-                        <button id="bOptions" class="options${' here' if content.page=='options' else ''}" title=$:{json.dumps(_(u'Options'), ensure_ascii=False)}>$_(u'Options')</button>
-                        <button id="bStations" class="stations${' here' if content.page=='stations' else ''}" title=$:{json.dumps(_(u'Configure Stations'), ensure_ascii=False)}>$_(u'Stations')</button>
-                        $if (gv.sd[u'upas']):
-                            <button id="bLogout" class="logout" title=$:{json.dumps(_(u'Logout'), ensure_ascii=False)}>$_(u'Logout')</button>
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light mt-3">
+                        <a class="navbar-brand ${' active' if content.page=='home' else ''}" href="/"  title=$:{json_dump(_(u'Home'))}>
+                            <i class="fas fa-lg fa-home mr-2"></i>$_(u'Home')
+                        </a>
+
+
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="mainMenu">
+                            <ul class="navbar-nav w-100">
+                                <li class="nav-item ${' active' if content.page=='programs' else ''}">
+                                    <a href="/vp" class="nav-link" title=$:{json_dump(_(u'Define Programs'))}>$_(u'Programs')</a>
+                                </li>
+                                <li class="nav-item  ${' active' if content.page=='runonce' else ''}">
+                                    <a href="/vr" class="nav-link" title=$:{json_dump(_(u'Define Run Once Program'))}>$_(u'Run Once')</a>
+                                </li>
+                                <li class="nav-item  ${' active' if content.page=='stations' else ''}">
+                                    <a href="/vs" class="nav-link" title=$:{json_dump(_(u'Configure Stations'))}>$_(u'Stations')</a>
+                                </li>
+                                <li class="nav-item ml-auto  ${' active' if content.page=='log' else ''}">
+                                    <a href="/vl" class="nav-link" title=$:{json_dump(_(u'View Log'))}>$_(u'Log')</a>
+                                </li>
+                                <li class="nav-item  ${' active' if content.page=='options' else ''}">
+                                    <a href="/vo" class="nav-link" title=$:{json_dump(_(u'Options'))}>$_(u'Options')</a>
+                                </li>
+                                <li class=" nav-item dropdown  ${' active' if content.page=='plugins' else ''}">
+                                    <a href="" class="nav-link dropdown-toggle"  id="pluginsDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                        title=$:{json_dump(_(u'Access Plugins'))}> $_(u'Plugins')
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="pluginsDropDown">
+
+                                        <a class="dropdown-item" href="plugins">$_(u'Manage Plugins')</a>
+
+                                        $if len(uplugin_menu) > 0:
+                                            $for i, plugin in enumerate(uplugin_menu):
+                                                <a class="dropdown-item" href="${plugin[1]}">${plugin[0]}</a>
+
+                                        $else:
+                                            <a class="dropdown-item disabled" href="#">$_(u'None')</a>
+
+
+                                    </div>
+                                </li>
+
+
+                                $if (gv.sd[u'upas']):
+                                <li class="nav-item ml-md-auto ">
+                                    <a href="/logout" class="nav-link" title=$:{json_dump(_(u'Logout'))}>$_(u'Logout')</a>
+                                </li>
+
+                            </ul>
+
                     </div>
+                </nav>
 
-                $:{content}
+
+                <div class="card mt-3 mb-4">
+                    <div class="card-body">
+                        $if 'header' in content :
+                            <div class="h1 mb-5 border-bottom">${content.header}</div>
+
+                        $:{content}
+                    </div>
+                </div>
 
             </div>
-        </div>
-        <div class="footer container">
-          $if content.page != u'login':
-              $if (gv.plugFtr):
-                  <div class="row">
-                      <div class="col-12-xs col-xs-offset-4 piDatFooter" id="plugFtrPars"></div> <!--div for plugin data display -->
-                  </div>
-              <div class="row">
-                  <div class="col-5-xs"></div>
-                  <div class="col-5-xs pull-right">
-                    <button id="bHelp" class="help" title=$:{json.dumps(_(u'Help'), ensure_ascii=False)}>$_(u'?')</button>
-                  </div>
-              </div>
-
-          <div class="row">
-            <div class="col-5-xs"></div>
-              <div class="col-6-xs pull-right">
-            <div class="col-1-xs"></div>
-                <p class="text-xs-right text-nowrap">$_(u'CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_(u'Click to toggle Celsius &lt;&gt; Fahrenheit'), ensure_ascii=False)}></span></b></p>
             </div>
-          </div>
+        </main>
+        <footer class="mt-auto pt-2 bg-light">
+            <div class="container">
+                $if content.page != u'login':
+                    $if (gv.plugFtr):
+                        <div class="row">
+                        $for i, d in enumerate(gv.plugFtr):
+                            <span class="badge badge-info">${gv.plugFtr[i]["label"] + ": " + str(gv.plugFtr[i]["val"])}</span>
+
+                        </div>
 
 
-          <div class="row">
-              <div class="col-12-xs pull-right">
-                <p class="text-xs-right text-nowrap"><a target="_blank" href="https://github.com/Dan-in-CA/sip">$_(u'Software')</a> $_(u'version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
-              </div>
-          </div>
 
-        </div>
+
+                    <div class="row">
+                        <div class="col-12 col-md my-3">
+                            <a href="https://github.com/Dan-in-CA/SIP/wiki"  target="_blank"  class="btn btn-link" title=$:{json_dump(_(u'Help'))}>$_(u'? (help)')</a>
+                        </div>
+                        <div class="col-12 col-md my-3">
+                            <form name="tt" action="${app_path(u'/ttu')}" method="get">
+                                <input type="hidden" name="tunit" value="${gv.sd[u'tu']}">
+                                <div class="text-nowrap">$_(u'CPU Temp'):
+                                    <button type="submit" class="font-weight-bold btn-link btn" title=$:{json_dump(_(u'Click to toggle Celsius &lt;&gt; Fahrenheit'))}>${transform_temp(gv.cputemp,'C', gv.sd[u'tu'])} ${gv.sd[u'tu']}</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-12 col-md my-3 text-right">
+                            <p class="text-nowrap"><a class="text-" target="_blank" href="https://github.com/Dan-in-CA/sip">$_(u'Software')</a> $_(u'version'): <strong>${gv.ver_str} (${gv.ver_date})</strong></p>
+                        </div>
+                 </div>
+            </div>
+        </footer>
     </div>
 </body>
 </html>

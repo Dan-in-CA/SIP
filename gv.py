@@ -138,6 +138,15 @@ scount = (
 )  # Station count, used in set station to track on stations with master association.
 use_gpio_pins = True
 
+option_groups = [
+                _(u"System"),
+                _(u"Manage Passphrase"),
+                _(u"Station Handling"),
+                _(u"Configure Master"),
+                _(u"Rain Sensor"),
+                _(u"Logging"),
+ ]
+
 options = [
     [
         _(u"System name"),

@@ -2,40 +2,28 @@ $def with (errorCode)
 
 $var title: $_(u"SIP Options")
 $var page: options
+$var header: $_(u'Edit Options')
 $code:
 	opts = gv.options
+	opt_groups = gv.option_groups
 	languages = i18n.languages
 	langKeys = list(i18n.languages.keys())
 	langKeys.sort()
 	snames = gv.snames
-	
-<style type="text/css">
-    button#tooltip {height:24px;}
-    .optTooltip {background-color:rgb(255, 242, 184); display:none; font-size:10pt; margin-left:4px;}
-    .optLabel {font-weight:bold; float:left; width:160px; text-align:right; padding-right:4px;}
-</style>	
+
 
 <script>
     var errorCode = "${errorCode}";
-    
+
     // Initialize behaviors
     jQuery(document).ready(function(){
 
-        jQuery("button#tooltips").click(function(){
-            var visible = jQuery(this).text() == $:{json.dumps(_(u'Hide Tooltips'), ensure_ascii=False)};
-            jQuery(this).text(visible ? $:{json.dumps(_(u'Show Tooltips'), ensure_ascii=False)} : $:{json.dumps(_(u'Hide Tooltips'), ensure_ascii=False)});
-            jQuery(".optTooltip").toggle();
+        jQuery("#js-showTooltips").click(function(){
+            var visible = jQuery(this).text() == $:{json_dump(_(u'Hide Tooltips'))};
+            jQuery(this).text(visible ? $:{json_dump(_(u'Show Tooltips'))} : $:{json_dump(_(u'Hide Tooltips'))});
+            jQuery(".js-tooltip").toggle();
         });
 
-        jQuery("button#cReboot").click(function(){
-            jQuery("input[name='rbt']").val(1);
-            jQuery("form[name='of']").submit();
-        });
-
-        jQuery("button#cRestart").click(function(){
-            jQuery("input[name='rstrt']").val(1);
-            jQuery("form[name='of']").submit();
-        });
 
         jQuery("button#cSubmit").click(function(){
             // process time zone value
@@ -47,111 +35,138 @@ $code:
             jQuery("form[name='of']").submit();
         });
 
-        jQuery("button#cCancel").click(function(){
-            window.location= baseUrl + "/";
-        });
 
-        jQuery(".collapsible h4").click(function(event){
-            jQuery(this).parent(".category").toggleClass("expanded").toggleClass("collapsed");
-        });
 
-        switch (errorCode) {
-            case "pw_wrong":
-                jQuery("#erroropw").text($:{json.dumps(_(u'The passphrase given was incorrect.'), ensure_ascii=False)});
-                jQuery("#erroropw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
-                break;
-            case "pw_blank":
-                jQuery("#errornpw").text($:{json.dumps(_(u'Please enter a passphrase.'), ensure_ascii=False)});
-                jQuery("#errornpw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
-                break;
-            case "pw_mismatch":
-                jQuery("#errorcpw").text($:{json.dumps(_(u"Passwords don't match, please re-enter."), ensure_ascii=False)});
-                jQuery("#errorcpw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
-                break;
-            case "mton_minus":
-                jQuery("#errormton").text($:{json.dumps(_(u"Must be 0 to +60, please re-enter."), ensure_ascii=False)});
-                jQuery("#errormton").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
-                break;                 
+        if(errorCode){
+            var id
+            var text;
+            switch (errorCode) {
+                case "pw_wrong":
+                   id=  "#erroropw";
+                   text=$:{json_dump(_(u'The passphrase given was incorrect.'))}
+                   break;
+                case "pw_blank":
+                    id="#errornpw";
+                    text=$:{json_dump(_(u'Please enter a passphrase.'))}
+                    break;
+                case "pw_mismatch":
+                    id="#errorcpw";
+                    text=$:{json_dump(_(u"Passwords don't match, please re-enter."))};
+                    break;
+                case "mton_minus":
+                    id= "#errormton";
+                    text=$:{json_dump(_(u"Must be 0 to +60, please re-enter."))};
+                    break;
+            }
+         jQuery(id).text(text).addClass('d-block').parents('.collapse').collapse('show')
         }
-
-        jQuery(".collapsible h4").first().parent(".category").toggleClass("expanded").toggleClass("collapsed");
 
     });
 
 </script>
 <div id="options">
-    <div class="title">$_(u'Edit Options')</div>
-    <button id="tooltips">$_(u'Show Tooltips')</button>
+   <div class="text-right mb-4">
+       <button class="btn btn-outline-info " id="js-showTooltips" >$_(u'Show Tooltips')</button>
+   </div>
     <form name="of" action="${app_path('/co')}" method="get">
-    $code:
-        output = ""
-        oldcategory = ""
-        categoryCloser = ""
-        for opt in opts:
-            label = opt[0]
-            datatype = opt[1]
-            if datatype != "password":
-                value = gv.sd[opt[2]]
-            name = opt[2]
-            tooltip = opt[3]
-            category = opt[4]
+        <div id="options-accordion">
+        $code:
+            output = ""
+            oldcategory = ""
+            categoryCloser = ""
+            for opt_group in opt_groups:
+                output +=  "<div class='card'>"
+                output +=  "<div class='d-flex justify-content-between align-items-center card-header bg-info text-white py-1'  data-toggle='collapse' data-target='#"+slugify(opt_group)+"' >"
+                output +=  "<h4 class='mb-0'>" + opt_group + "</h4><i class='fas fa-lg fa-angle-down'></i>"
+                output +=  "</div>"
+                output +=  "<div  id='"+slugify(opt_group)+"' class='collapse' data-parent='#options-accordion'>"
+                output +=  "<div class='card-body'>"
+                for opt in opts:
+                    label = opt[0]
+                    datatype = opt[1]
+                    if datatype != "password":
+                        value = gv.sd[opt[2]]
+                    name = opt[2]
+                    tooltip = opt[3]
+                    category = opt[4]
+                    if category != opt_group:
+                        continue
+                    output += "<div class='form-group mb-4' title='" + tooltip + "'>"
+                    if datatype != "boolean":
+                        output  +=  "<label for='o"+slugify(name)+"'>" + label + "</label>"
+                    if datatype == "boolean":
+                        output += "<div class='custom-control custom-checkbox'>"
+                        output += "<input name='o" + name + "'  id='o"+slugify(name)+"' class='custom-control-input' type='checkbox' " + ("checked" if value>0 else "") + ">"
+                        output += "<label class='custom-control-label' for='o"+slugify(name)+"'>" + label + "</label>"
+                        output += "</div>"
+                    elif datatype == "string":
+                        output += "<input name='o" + name + "' type='text' class='form-control' size='39' maxlength='39' value=\"" + value + "\">\n"
+                    elif datatype == "password":
+                        output += "<input name='" + name + "' type='password'  class='form-control' size='31' maxlength='31'><span class='invalid-feedback' id='error" + name + "'></span>\n"
+                    elif name == "lang":
+                        output += "<select class='custom-select' name= 'olang'>\n"
+                        output += "<option " + ("selected " if value=='default' else "") + "value='default'>"+_(u'Default')+"</option>\n"
+                        for L in langKeys:
+                            output += "<option " + ("selected " if value==L else "") + "value='"+L+"'>"+languages[L]+"</option>\n"
+                        output += "</select>\n"
+                    elif name == "tz":
+                        output += "<input name='otz' type='hidden' value='0'>\n"
+                        tz = value - 48
+                        th = ("+" if tz>=0 else "-") + str(abs(tz)/4>>0)
+                        tq = str((abs(tz)%4)*15/10>>0) + str((abs(tz)%4)*15%10)
+                        output += "<input name='th' type='text' size='3' maxlength='3' value='"+ th +"'>:<input name='tq' type='text' size='3' maxlength='3' value='" + tq + "'>\n"
+                    elif name == "mas":
+                        output += "<select class='custom-select' name='omas'>\n"
+                        output += "<option " + ("selected " if value==0 else "") + "value='0'>"+_(u'None')+"</option>\n"
+                        for i in range(gv.sd['nst']):
+                            bid = i // 8
+                            sid = i % 8
+                            if (gv.sd['show'][bid]>>sid)&1 == 1:
+                                output += "<option " + ("selected " if value==i+1 else "") + "value='" + str(i+1) + "'>" + snames[i] + "  (Station " + str(i+1) + ")</option>\n"
+                        output += "</select>\n"
+                    elif name == "htp":
+                        output += "<input name='ohtp'  class='form-control' type='number' size='5' maxlength='5' value='" + str(value) + "'>\n"
+                    elif name == "nbrd":
+                        output += "<input name='onbrd'  class='form-control' type='number' size='3' maxlength='3' value='" + str(value - 1) + "'>\n"
+                    elif name == "mton":
+                        output += "<input name='omton' class='form-control' type='number' size='3'  maxlength='3' value='" + str(value) + "'><span class='inputError' id='error" + name + "'></span>\n"
+                    else:
+                        output += "<input name='o" + name + "'  class='form-control' type='number' size='3' maxlength='3' value='" + str(value) + "'>\n"
 
-            if category != oldcategory:
-                output += categoryCloser + "<div class='category collapsible collapsed'><h4>" + category + "</h4>"
-                categoryCloser = "</div>"
-            oldcategory = category
-            output += "<div class='option' title='" + tooltip + "'><span class='optLabel'>" + label + ":</span>\n"
-            if datatype == "boolean":
-                output += "<input name='o" + name + "' type='checkbox' " + ("checked" if value>0 else "") + ">\n"
-            elif datatype == "string":
-                output += "<input name='o" + name + "' type='text' size='39' maxlength='39' value=\"" + value + "\">\n"
-            elif datatype == "password":
-                output += "<input name='" + name + "' type='password' size='31' maxlength='31'><span class='inputError' id='error" + name + "'></span>\n"
-            elif name == "lang":
-                output += "<select name= 'olang'>\n"
-                output += "<option " + ("selected " if value=='default' else "") + "value='default'>"+_(u'Default')+"</option>\n"
-                for L in langKeys:
-                    output += "<option " + ("selected " if value==L else "") + "value='"+L+"'>"+languages[L]+"</option>\n"
-                output += "</select>\n"
-            elif name == "tz":
-                output += "<input name='otz' type='hidden' value='0'>\n"
-                tz = value - 48
-                th = ("+" if tz>=0 else "-") + str(abs(tz)/4>>0)
-                tq = str((abs(tz)%4)*15/10>>0) + str((abs(tz)%4)*15%10)
-                output += "<input name='th' type='text' size='3' maxlength='3' value='"+ th +"'>:<input name='tq' type='text' size='3' maxlength='3' value='" + tq + "'>\n"
-            elif name == "mas":
-                output += "<select name='omas'>\n"
-                output += "<option " + ("selected " if value==0 else "") + "value='0'>"+_(u'None')+"</option>\n"
-                for i in range(gv.sd['nst']):
-                    bid = i // 8
-                    sid = i % 8
-                    if (gv.sd['show'][bid]>>sid)&1 == 1:
-                        output += "<option " + ("selected " if value==i+1 else "") + "value='" + str(i+1) + "'>" + snames[i] + "  (Station " + str(i+1) + ")</option>\n"
-                output += "</select>\n"
-            elif name == "htp":
-                output += "<input name='ohtp' type='text' size='5' maxlength='5' value='" + str(value) + "'>\n"
-            elif name == "nbrd":
-                output += "<input name='onbrd' type='text' size='3' maxlength='3' value='" + str(value - 1) + "'>\n"           
-            elif name == "mton":    
-                output += "<input name='omton' type='text' size='3' maxlength='3' value='" + str(value) + "'><span class='inputError' id='error" + name + "'></span>\n"           
-            else:
-                output += "<input name='o" + name + "' type='text' size='3' maxlength='3' value='" + str(value) + "'>\n"
+                    output += "<div class='js-tooltip valid-feedback '>" + tooltip + "</div>\n"
+                    output += "</div>\n\n"
 
-            output += "<span class='optTooltip'>" + tooltip + "</span>\n"
-            output += "</div>\n\n"
-        output += categoryCloser + "<div class='category collapsible collapsed'><h4>"+_(u'System Restart')+"</h4>"
-        output += "<div class='option'>"
-        output += "&nbsp;<button id='cRestart' class='restart danger' title=" + json.dumps(_(u'Restart software'), ensure_ascii=False)+">" + _(u'Restart SIP')+"</button>"
-        output += "&nbsp;<button id='cReboot' class='reboot danger' title=" + json.dumps(_(u'Reboot hardware'), ensure_ascii=False) + ">" + _(u'Reboot')+"</button>"
-        output += "</div>\n"
-        output += categoryCloser
-    $:{output}
-        <input type="hidden" name="rbt" value="0">
-        <input type="hidden" name="rstrt" value="0">
+                output += "</div>"
+                output += "</div>"
+                output += "</div>"
+        $:{output}
+
+
     </form>
+    <div class="card mt-5 mb-4 alert-info">
+        <h3 class="pt-2 my-0 px-5 text-info">${_(u"System Restart")}</h3>
+        <div class="card-body d-flex justify-content-center">
+            <div class=" m-2">
+                <form name="of" action="${app_path('/co')}" method="get">
+                    <button class="btn btn-danger">${_(u"Restart SIP")}</button>
+                    <div class="js-tooltip valid-feedback">${ _(u"Restart software")}</div>
+                    <input type="hidden" name="rbt" value="1">
+                </form>
+            </div>
+            <div class=" m-2">
+                <form name="of" action="${app_path('/co')}" method="get">
+                    <button class="btn btn-danger">${_(u"Reboot")}</button>
+                    <div class="js-tooltip valid-feedback">${ _(u"Reboot hardware")}</div>
+                    <input type="hidden" name="rstrt" value="1">
+                </form>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 
-<div id="controls">
-    <button id='cSubmit' class="submit">$_(u'Submit Changes')</button>
-    <button id='cCancel' class="cancel danger">$_(u'Cancel')</button>
+<div class="">
+    <button id="cSubmit" class="btn btn-success">$_(u'Submit Changes')</button>
+    <a href="${app_path('/')}" class="btn btn-secondary  my-1">$_(u'Cancel')</a>
 </div>
