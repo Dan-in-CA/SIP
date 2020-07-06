@@ -18,7 +18,6 @@ import gv
 from helpers import *
 from sip import template_render
 import web
-from pprint import pprint
 
 loggedin = signal(u"loggedin")
 def report_login():
@@ -459,7 +458,7 @@ class view_runonce(ProtectedPage):
 class change_runonce(ProtectedPage):
     """Start a Run Once program. This will override any running program."""
 
-    def POST(self):
+    def GET(self):
         qdict = web.input()
         if not gv.sd[u"en"]:  # check operation status
             return
@@ -633,7 +632,6 @@ class toggle_temp(ProtectedPage):
             gv.sd[u"tu"] = u"C"
         jsave(gv.sd, u"sd")
         raise redirect_back()
-
 
 
 class api_status(ProtectedPage):

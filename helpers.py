@@ -644,10 +644,9 @@ def transform_temp(temp, from_unit='C', to_unit='F'):
     if from_unit == 'C' and to_unit == 'F':
         temp =   ( 9 / 5 * temp ) + 32
     if from_unit == 'F' and to_unit == 'C':
-        temp =  ( temp  - 32 ) * 5 / 9
+        temp =  ( temp  - 32 ) * 5 / 9r
 
     return round(temp, 2)
 
 def slugify(text, delim = "-"):
     return re.sub(r'[\W_]+', str(delim) ,  text, re.UNICODE)
-
