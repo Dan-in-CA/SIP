@@ -2,11 +2,14 @@ $def with (form)
 
 $var title: $_(u"SIP Login")
 $var page: login
+$var header: $_(u"SIP Login")
 
-<div class="panel" style="height:300px; padding-top:100px; padding-left: 50px">
-    <div class="title">$_(u"Login")</div>
-    <form name="login" method="POST">
+<div class="text-center">
+    <div class="h1 mb-4">$_(u"Login")</div>
+    <form name="login" method="POST" class="d-flex flex-wrap justify-content-center">
         $:form.render()
-    <button id="cSubmit" class="submit"><b>$_(u"Login")</b></button>        
+    <div class="w-100 my-4">
+        <button type="submit" class="btn-success btn">$_(u"Login")</button>
+    </div>
     </form>
 </div>

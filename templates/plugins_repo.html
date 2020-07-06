@@ -33,7 +33,9 @@ $var header: $_(u'Available Plugins')
 
 
         <div class="mt-5">
-            <button id="cSubmit" class="btn btn-primary">$_(u'Install')</button>
+            $if len(pnames) > 0:
+                <button id="cSubmit" class="btn btn-primary">$_(u'Install')</button>
+
             <a class="btn btn-secondary" href="${app_path(u'/plugins')}">$_(u'Back')</a>
             <a class="btn btn-secondary" href="${app_path(u'/')}">$_(u'Cancel')</a>
         </div>

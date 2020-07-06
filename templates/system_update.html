@@ -1,67 +1,76 @@
 $def with(m_vals)
 
-$var title: SIP Update from GitHub
+$var title: $_(u'SIP Update from GitHub')
 $var page: system_update
-<script>
+$var header: $_(u'SIP Software Updater')
 
-    // Initialize behaviors
-    jQuery(document).ready(function(){
 
-    	jQuery("button#cUpdate").click(function(){
-            window.location= baseUrl + "/UPu";
-        });
-
-        jQuery("button#cCancel").click(function(){
-            window.location= baseUrl + "/";
-    	});
-
-        jQuery("button#docButton").click(function(){
-            window.open(baseUrl + "/static/docs/plugins/system_update-docs.html", "_blank");
-        });
-    });
-</script>
-
-<div id="plugin">
-    <div class="title">$_(u'SIP Software Updater')
-    <button class="execute" id="docButton" type="button" >$_(u'Help')</button>
+<div class="d-flex justify-content-end mb-4">
+    <button data-toggle="collapse" data-target="#plugin-info" class="btn btn-info btn-sm" >
+        <i class="fas fa-question-circle mr-2"></i>$_(u'Help')
+    </button>
+</div>
+<div class="collapse" id="plugin-info">
+    <div class="card card-body mb-5">
+        <div class="h4">$_(u'SIP System updater plugin')</div>
+        <div>
+            <p>$_(u'This plugin compares the local SIP version with the GitHub repository and can update the local software.')</p>
+            <p>$_(u'It fetches version information from the GitHub SIP repository when the plugin is opened. This may take several seconds to complete depending on the speed of your internet connection.')</p>
+            <p>$_(u'You should then be presented with information about whether a new version of the software is available and what changes have been made.')</p>
+        </div>
+        <hr class="my-4">
+        <div>
+            <div class="h4">$_(u'To update SIP')</div>
+            <ul>
+                <li>$_(u'Click the "UPDATE SIP" button at the lower left of the screen')</li>
+                <li>$_(u'If the Home screen does not appear after several seconds, click your browser`s refresh button.')</li>
+            </ul>
+            <p>$_(u'When you have been returned to the home screen, you should see the latest version number and date in the page footer.')
+            </p>
+        </div>
     </div>
-    <!--<p>$_(u'This plugin compares the local SIP version with the GitHub repository and can update the local software.')</p>-->
-    <form id="pluginForm" action="${app_path('/UPsr')}" method="get">
-        <table class="optionList">
-            <tr>
-                <td style='text-transform: none;'><b>$_(u'Remote repository'):</b></td>
-                <td>
-                     $m_vals["remote"]
-                </td>
-            </tr>
-            <tr>
-                <td style='text-transform: none;'><b>$_(u'Local SIP version'):</b></td>
-                <td>
-                     $m_vals["ver_str"]
-                </td>
-            </tr>
-            <tr>
-                <td style='text-transform: none;'><b>$_(u'Local SIP date'):</b></td>
-                <td>
-                     $m_vals["ver_date"]
-                </td>
-            </tr>
-            <tr>
-                <td style='text-transform: none;'>$_(u'Status'):</td>
-                <td>
-                    <textarea style="font-family: monospace;" rows="7" cols="100" readonly>$m_vals['status']</textarea><br/>
-                    <!--<button id="cRefresh" class="refresh">$_(u'Refresh Status')</button>-->
-                </td>
-            </tr>
-            
-        </table>
-    </form>
 </div>
-<div id="controls">
+
+<form id="pluginForm" action="${app_path('/UPsr')}" method="get" class="border-info border rounded p-3">
+    <div class="container">
+        <div class="row">
+
+            <label class="col-12 col-md col-form-label font-weight-bold text-md-right">$_(u'Remote repository'):</label>
+            <div class="col-12 col-md">
+                $m_vals["remote"]
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-12 col-md  col-form-label font-weight-bold text-md-right">$_(u'Local SIP version'):</label>
+            <div class="col-12 col-md">
+                $m_vals["ver_str"]
+            </div>
+        </div>
+        <div class="row">
+
+            <label class="col-12 col-md  col-form-label font-weight-bold text-md-right">$_(u'Local SIP date'):</label>
+            <div class="col-12 col-md">
+                $m_vals["ver_date"]
+            </div>
+
+        </div>
+        <div class="row">
+            <label class="col-12 col-md  col-form-label font-weight-bold text-md-right">$_(u'Status'):</label>
+            <div class="col-12 col-md">
+                <textarea class="form-control" rows="7" readonly>$m_vals['status']</textarea>
+            </div>
+
+        </div>
+
+    </div>
+</form>
+
+<div class="mt-4">
     $if m_vals['can_update']:
-        <button id="cUpdate" class="options"><b>$_(u'Update SIP')</b></button>
+        <button type="submit" class="btn btn-success">$_(u'Update SIP')</button>
     $else:
-        <button id="cUpToDate" class="cancel"><b>$_(u'Up-to-date')</b></button>
-    <!--<button id="cReboot" class="reboot danger">$_(u'Restart SIP')</button>-->
-    <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>
+        <button class="btn btn-success" disabled>$_(u'SIP is updated')</button>
+
+    <a class="btn btn-secondary" href="${app_path(u'/')}">$_(u'Cancel')</a>
 </div>
+
