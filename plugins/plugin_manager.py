@@ -20,6 +20,7 @@ import time
 # local module imports
 import gv  # Get access to SIP's settings
 from helpers import restart
+from helpers import push_error
 from sip import template_render
 from urls import urls  # Get access to SIP's URLs
 import web
@@ -56,7 +57,8 @@ def get_permissions():
             permissions.append(int(list(mod.strip())[1]) % 2)
         settings = dict(list(zip(installed, permissions)))
         return settings
-    except IOError:
+    except IOError as e:
+        push_error(u"get_permissions IOError", e)
         settings = {}
         return settings
 
@@ -69,31 +71,36 @@ def parse_manifest(plugin):
             desc = u"".join(mf_list[:sep]).rstrip()
             f_list = [line.strip() for line in mf_list[int(sep) + 2 :]]
             return (desc, f_list)
-    except IOError:
-        print(u"parse_manifest IOError")
+    except IOError as e:
+        push_error(u"parse_manifest IOError", e)
         return (u"", [])
 
 
 def get_readme():
-    response = urlopen(
-        u"https://api.github.com/repos/Dan-in-CA/SIP_plugins/readme"
-    )
-    data = response.read()
-    d = json.loads(data.decode('utf-8'))
-    text = base64.b64decode(d[u"content"]).decode(u'utf-8')
-    t_list = text.split()
-    sep = [i for i, s in enumerate(t_list) if u"***" in s][0]
-    plug_list = t_list[sep + 1 :]
-    breaks = [i for i, s in enumerate(plug_list) if u"---" in s]
-
     plugs = {}
-    for i in range(len(breaks)):
-        if i < len(breaks) - 1:
-            plugs[plug_list[breaks[i] - 1]] = u" ".join(
-                plug_list[breaks[i] + 1 : breaks[i + 1] - 1]
-            )
-        else:
-            plugs[plug_list[breaks[i] - 1]] = u" ".join(plug_list[breaks[i] + 1 :])
+    try:
+        response = urlopen(
+            u"https://api.github.com/repos/Dan-in-CA/SIP_plugins/readme"
+        )
+        data = response.read()
+        d = json.loads(data.decode('utf-8'))
+        text = base64.b64decode(d[u"content"]).decode(u'utf-8')
+        t_list = text.split()
+        sep = [i for i, s in enumerate(t_list) if u"***" in s][0]
+        plug_list = t_list[sep + 1 :]
+        breaks = [i for i, s in enumerate(plug_list) if u"---" in s]
+
+
+        for i in range(len(breaks)):
+            if i < len(breaks) - 1:
+                plugs[plug_list[breaks[i] - 1]] = u" ".join(
+                    plug_list[breaks[i] + 1 : breaks[i + 1] - 1]
+                )
+            else:
+                plugs[plug_list[breaks[i] - 1]] = u" ".join(plug_list[breaks[i] + 1 :])
+    except IOError as e:
+        push_error(U"We couldn't get readme file for github", e)
+
     return plugs
 
 

@@ -40,7 +40,9 @@ from helpers import (
     station_names,
     stop_onrain,
     transform_temp,
-    slugify
+    slugify,
+    get_errors,
+    clear_errors
 )
 from ReverseProxied import ReverseProxied
 from urls import urls  # Provides access to URLs for UI pages
@@ -258,6 +260,8 @@ template_globals = {
     u"json_dump": json_dump,
     u"slugify": slugify,
     u"transform_temp": transform_temp,
+    u"get_errors": get_errors,
+    u"clear_errors": clear_errors,
     u"session": web.config._session,
     u"json": json,
     u"ast": ast,

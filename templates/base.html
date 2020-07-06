@@ -187,7 +187,23 @@ $code:
 
 
                 <div class="card mt-3 mb-4">
-                    <div class="card-body">
+                    <div class="card-body px-2 px-sm-3">
+                        $if len(get_errors()) > 0:
+                            <div class="alert alert-warning border-danger mb-5" role="alert">
+                                <h4 class="alert-heading">
+                                    <i class="text-danger fas fa-exclamation-triangle mr-2"></i>$_(u'Some Errors have Occurred')
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </h4>
+                            $for error in get_errors():
+                                <p><span class="font-weight-bold">${error['title']}:</span> <span>${error['message']}</span></p>
+
+                            </div>
+
+                        $clear_errors()
+
+
                         $if 'header' in content :
                             <div class="h1 mb-5 border-bottom">${content.header}</div>
 

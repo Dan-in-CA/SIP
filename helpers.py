@@ -518,7 +518,8 @@ def read_log():
                     rec = json.loads(i)
                 result.append(rec)
         return result
-    except IOError:
+    except IOError as e:
+        push_error(u"read_log IOError", e)
         return result
 
 
@@ -540,7 +541,8 @@ def station_names():
     try:
         with open(u"./data/snames.json", u"r") as snf:
             return json.load(snf)
-    except IOError:
+    except IOError as e:
+        push_error(u"station_names function", e)
         stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08"]
         jsave(stations, u"snames")
         return stations
@@ -644,9 +646,43 @@ def transform_temp(temp, from_unit='C', to_unit='F'):
     if from_unit == 'C' and to_unit == 'F':
         temp =   ( 9 / 5 * temp ) + 32
     if from_unit == 'F' and to_unit == 'C':
-        temp =  ( temp  - 32 ) * 5 / 9r
+        temp =  ( temp  - 32 ) * 5 / 9
 
     return round(temp, 2)
 
 def slugify(text, delim = "-"):
     return re.sub(r'[\W_]+', str(delim) ,  text, re.UNICODE)
+
+def push_error(title, message):
+    """
+    Push errors on a global variable in order to show them on interface
+    """
+
+    print(title, message)
+    errors= globals()['errors'] if 'errors' in globals().keys() else []
+    error= dict()
+    error['title']= title
+    error['message']= message
+    errors.append(error)
+    globals()['errors'] = errors
+
+    return
+
+
+def get_errors():
+    """
+    get global errors
+    """
+
+    return globals()['errors'] if 'errors' in globals().keys() else []
+
+
+def clear_errors():
+    """
+    clear global errors
+    """
+
+    if 'errors' in globals().keys():
+        del globals()['errors'][:]
+
+    return
