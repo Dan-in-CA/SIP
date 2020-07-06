@@ -5,51 +5,32 @@ $var page: plugins
 $var header: $_(u'Installed Plugins')
 
 
-<script>
-
-    // Initialize behaviors
-    jQuery(document).ready(function () {
-
-        jQuery("button#cSubmit").click(function () {
-            jQuery("#btnId").val("upd");
-            jQuery("#pluginForm").submit();
-        });
-
-        jQuery("button#cDelete").click(function () {
-                jQuery("#btnId").val("del");
-                jQuery("#pluginForm").submit();
-            }
-        );
-
-
-    });
-
-</script>
-
-<div class="d-flex justify-content-end">
-    <a class="btn btn-info m-1" href="${app_path('/browse-plugins')}">$_(u'Browse More Plugins')</a>
-    <a class="btn btn-info m-1" href="https://github.com/Dan-in-CA/SIP_plugins/wiki/introduction" target="_blank">$_(u'Roll Your Own')</a>
+<div class="d-flex justify-content-end flex-wrap">
+    <a class="btn btn-sm btn-info m-1" href="${app_path('/browse-plugins')}">$_(u'Browse More Plugins')</a>
+    <a class="btn btn-sm btn-info m-1" href="https://github.com/Dan-in-CA/SIP_plugins/wiki/introduction" target="_blank">$_(u'Roll Your Own')</a>
 </div>
 <div class="container mt-4 card">
 
-    <div class="row card-header font-weight-bold">
+    <div class="row card-header font-weight-bold d-none d-md-block">
         <div class="col text-md-right">$_(u'Name')</div>
-        <div class="col-2 text-center d-none d-md-block">$_(u'Enabled')</div>
+        <div class="col-2 text-center">$_(u'Enabled')</div>
         <div class="col text-center text-danger"></div>
 
     </div>
-    <div class="card-body">
+    <div class="card-body px-0">
         $ names = list(settings.keys())
         $names.sort()
         $for n in names:
             <div class="row my-4 my-md-2 align-items-center">
                 <div class="col text-md-right font-weight-bold mb-2">${n.split('.')[0]}</div>
-                <div class="col-2 text-center">
+                <div class="col-auto text-center">
                        $if settings[n]:
                             <i class="far fa-check-circle text-success fa-lg"></i>
+                        $else:
+                            <i class="far fa-stop-circle text-warning fa-lg"></i>
 
                 </div>
-                <div class="col-12 col-md d-flex align-items-center">
+                <div class="col-12 col-md d-flex flex-wrap justify-content-start justify-content-sm-center align-items-center">
                     <form action="${app_path('/upd-plugins')}" method="get" class="m-1">
                         <input type="hidden" name="action" value="enable"/>
                         <input type="hidden" name="plugin" value="${n}"/>

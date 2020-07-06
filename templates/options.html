@@ -80,7 +80,7 @@ $code:
                 output +=  "<h4 class='mb-0'>" + opt_group + "</h4><i class='fas fa-lg fa-angle-down ml-2'></i>"
                 output +=  "</div>"
                 output +=  "<div  id='"+slugify(opt_group)+"' class='collapse' data-parent='#options-accordion'>"
-                output +=  "<div class='card-body'>"
+                output +=  "<div class='card-body '>"
                 for opt in opts:
                     label = opt[0]
                     datatype = opt[1]
@@ -144,7 +144,7 @@ $code:
 
     </form>
     <div class="card mt-5 mb-4 alert-info">
-        <h3 class="pt-2 my-0 px-5 text-info">${_(u"System Restart")}</h3>
+        <h3 class="pt-2 my-0 px-sm-5 text-info">${_(u"System Restart")}</h3>
         <div class="card-body d-flex flex-wrap flex-sm-nowrapp justify-content-center">
             <div class=" m-2">
                 <form name="of" action="${app_path('/co')}" method="get">

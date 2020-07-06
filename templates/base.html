@@ -95,31 +95,41 @@ $code:
 <body>
     <div class="d-flex flex-column min-vh-100">
 
-        <div class="header">
-            <div class="title">${gv.sd[u'name'] if gv.sd[u'name'] != u"SIP" else u""}</div>
-        </div>
+        <header class="container-fluid bg-success">
+            <div class="row py-1 align-items-center">
+                <div class="col-md-2 col-4">
+                    <img src="/static/dist/icons/logo.png" class="img-fluid"/>
+                </div>
+                <div class="col">
+                    <h1 class="text-white text-center">${gv.sd[u'name'] if gv.sd[u'name'] != u"SIP" else u"TEST"}</h1>
+                </div>
+            </div>
+
+        </header>
 
         <main class="container-fluid px-1 px-md-4">
             <div class="row">
                 <div class="col-12 col-md-2 text-white">
                     <div id="deviceTime" class="collapse">
-                        <div class="d-flex mt-3">
-                           <div class="d-flex">
-                               <span class="hour h1 mb-0"></span>
-                               <span class="sep h1 mb-0">:</span>
-                               <span class="minute h1 mb-0"></span>
-                               <span class="small second"></span>
-                           </div>
-                            <span class="ampm align-self-end"></span>
+                        <div class="row align-items-end">
+                            <div class="col-auto col-md-12 d-flex mt-3">
+                                <div class="d-flex">
+                                    <span class="hour h1 mb-0"></span>
+                                    <span class="sep h1 mb-0">:</span>
+                                    <span class="minute h1 mb-0"></span>
+                                    <span class="small second"></span>
+                                </div>
+                                <span class="ampm align-self-end"></span>
+                            </div>
+                            <div class="col date h5 mt-2 mb-0"></div>
                         </div>
-                        <div class="date h5 mt-2"></div>
                     </div>
                 </div>
 
             <div class="col-12 col-md">
 
                 $if content.page != 'login':
-                    <nav class="navbar navbar-expand-lg navbar-light bg-light mt-3">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light mt-3 px-1 px-sm-4">
                         <a class="navbar-brand ${' active' if content.page=='home' else ''}" href="/"  title=$:{json_dump(_(u'Home'))}>
                             <i class="fas fa-lg fa-home mr-2"></i>$_(u'Home')
                         </a>
@@ -128,7 +138,7 @@ $code:
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="collapse navbar-collapse" id="mainMenu">
+                        <div class="collapse navbar-collapse px-1 px-md-0" id="mainMenu">
                             <ul class="navbar-nav w-100">
                                 <li class="nav-item ${' active' if content.page=='programs' else ''}">
                                     <a href="/vp" class="nav-link" title=$:{json_dump(_(u'Define Programs'))}>$_(u'Programs')</a>
@@ -139,7 +149,7 @@ $code:
                                 <li class="nav-item  ${' active' if content.page=='stations' else ''}">
                                     <a href="/vs" class="nav-link" title=$:{json_dump(_(u'Configure Stations'))}>$_(u'Stations')</a>
                                 </li>
-                                <li class="nav-item ml-auto  ${' active' if content.page=='log' else ''}">
+                                <li class="nav-item ml-lg-auto  ${' active' if content.page=='log' else ''}">
                                     <a href="/vl" class="nav-link" title=$:{json_dump(_(u'View Log'))}>$_(u'Log')</a>
                                 </li>
                                 <li class="nav-item  ${' active' if content.page=='options' else ''}">
@@ -202,10 +212,10 @@ $code:
 
 
                     <div class="row">
-                        <div class="col-12 col-md my-3">
-                            <a href="https://github.com/Dan-in-CA/SIP/wiki"  target="_blank"  class="btn btn-link" title=$:{json_dump(_(u'Help'))}>$_(u'? (help)')</a>
+                        <div class="col-auto col-sm my-1">
+                            <a href="https://github.com/Dan-in-CA/SIP/wiki"  target="_blank"  class="btn btn-link px-1" title=$:{json_dump(_(u'Help'))}> <i class="fas fa-question-circle mr-2"></i>$_(u'(wiki)')</a>
                         </div>
-                        <div class="col-12 col-md my-3">
+                        <div class="col col-sm my-1">
                             <form name="tt" action="${app_path(u'/ttu')}" method="get">
                                 <input type="hidden" name="tunit" value="${gv.sd[u'tu']}">
                                 <div class="text-nowrap">$_(u'CPU Temp'):
@@ -213,8 +223,9 @@ $code:
                                 </div>
                             </form>
                         </div>
-                        <div class="col-12 col-md my-3 text-right">
-                            <p class="text-nowrap"><a class="text-" target="_blank" href="https://github.com/Dan-in-CA/sip">$_(u'Software')</a> $_(u'version'): <strong>${gv.ver_str} (${gv.ver_date})</strong></p>
+                        <div class="col-12 col-md my-1 text-right">
+                            <a class="" target="_blank" href="https://github.com/Dan-in-CA/sip">$_(u'Software')</a>
+                            <span> $_(u'version'): </span><strong>${gv.ver_str} (${gv.ver_date})</strong>
                         </div>
                  </div>
             </div>
