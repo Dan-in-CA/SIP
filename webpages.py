@@ -10,6 +10,8 @@ import ast
 import datetime
 import io
 import time
+import pprint
+
 
 # local module imports
 from blinker import signal
@@ -142,7 +144,8 @@ class change_values(ProtectedPage):
         for key in list(qdict.keys()):
             try:
                 gv.sd[key] = int(qdict[key])
-            except Exception:
+            except Exception as e:
+                push_error(u"change_values Exception", e)
                 pass
         jsave(gv.sd, u"sd")
         report_value_change()
@@ -166,6 +169,8 @@ class change_options(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
+        print(json.dumps(qdict, indent=4))
+
         if u"opw" in qdict and qdict[u"opw"] != u"":
             try:
                 if password_hash(qdict[u"opw"]) == gv.sd[u"passphrase"]:
@@ -179,11 +184,15 @@ class change_options(ProtectedPage):
                         raise web.seeother(u"/vo?errorCode=pw_mismatch")
                 else:
                     raise web.seeother(u"/vo?errorCode=pw_wrong")
-            except KeyError:
+            except KeyError as e:
+                push_error(u"change_options KeyError", e)
                 pass
 
         for f in [u"name"]:
             if u"o" + f in qdict:
+                print('--------')
+                print(f)
+                print('----------')
                 gv.sd[f] = qdict[u"o" + f]
 
         for f in [u"loc", u"lang"]:
@@ -387,7 +396,7 @@ class change_stations(ProtectedPage):
         jsave(names, u"snames")
         jsave(gv.sd, u"sd")
         report_station_names()
-        raise web.seeother(u"/")
+        raise redirect_back()
 
 
 class get_set_station(ProtectedPage):

@@ -79,55 +79,59 @@ $code:
 
 <form id="sf" name="sf" class="container" action="$app_path('/cs')" method="get">
 
-        <div class="row font-weight-bold">
+        <div class="row font-weight-bold text-center d-none d-lg-flex">
             <div class="col-1 text-right stationNumber">$_(u'No')</div>
-            <div class="col-4 stationName">$_(u'Name')</div>
-            <div class="col-2 stationShow">$_(u'Enabled?')&nbsp;&nbsp;</div>
-            <div class="col-2 stationIgnore">$_(u'Ignore Rain?')&nbsp;&nbsp;</div>
+            <div class="col-4 text-left stationName">$_(u'Name')</div>
+            <div class="col stationShow">$_(u'Enabled?')</div>
+            <div class="col stationIgnore">$_(u'Ignore Rain?')</div>
             $#$if 'wl_weather' in gv.sd or 'et' in gv.plugin_data:
-                <div class="col-2 stationIgnoreWL">$_(u'Ignore Plugin adjustments?')&nbsp;&nbsp;</div>
+                <div class="col stationIgnoreWL">$_(u'Ignore Plugin adjustments?')</div>
             $if gv.sd['mas'] > 0:
-                <div class="col-2 stationMaster">$_(u'Activate Master?')</div>
+                <div class="col stationMaster">$_(u'Activate Master?')</div>
         </div>
         $for bid in range(0,gv.sd['nbrd']):
             $for s in range(0,8):
                 $ sid = bid*8 + s;
-                <div class="row my-2">
-                    <div class="col-1 text-right stationNumber">${sid + 1}</div>
-                    <div class="col-4 stationName">
+                <div class="row my-lg-2 my-5 align-items-center ">
+                    <div class="col-12 col-sm-2 col-lg-1 text-lg-right font-weight-bold h5 stationNumber"><span class="d-lg-none">$_(u'No'): </span> ${sid + 1}</div>
+                    <div class="col-12 col-sm-9 col-lg-4 stationName mb-2 mb-lg-0">
                         <input type="text" class="form-control" size="${gv.sd['snlen']}" maxlength="${gv.sd['snlen']}" value="${snames[sid]}" name="s${sid}" id="n${sid}">
                     </div>
                     $if sid == gv.sd['mas'] - 1:
                         $if 'wl_weather' in gv.sd:
-                            <div class="col-2 stationMaster text-center" >$_(u'(Master valve)')</div>
+                            <div class="col-12 col-sm-6 col-lg stationMaster  mt-1 mt-lg-0 " >
+                                <div class="p-1 font-weight-bold text-light bg-info">$_(u'Master valve')</div>
+                            </div>
                         $else:
-                            <div class="col-2 stationMaster text-center" >$_(u'(Master valve)')</div>
+                            <div class="col-12 col-sm-6 col-lg stationMaster mt-1 mt-lg-0 " >
+                                <div class="p-1 font-weight-bold text-light bg-info">$_(u'Master valve')</div>
+                            </div>
                     $else:
-                        <div class="col-2 stationShow text-center">
+                        <div class="col-12 col-sm-6 col-lg stationShow text-lg-center mt-1 mt-lg-0 ">
                             <div class="custom-control custom-checkbox">
-                                <input class="custom-control-input" type="checkbox"  ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}" name="show${sid}">
-                                <label class="custom-control-label" for="show${sid}"> </label>
+                                <input class="custom-control-input" type="checkbox"  id="show${sid}" name="show${sid}" ${"checked" if gv.sd['show'][bid]&(1<<s) else ""}>
+                                <label class="custom-control-label" for="show${sid}"><span class="d-lg-none">$_(u'Enabled?')</span></label>
                             </div>
                         </div>
-                        <div class="col-2 stationIgnore text-center">
+                        <div class="col-12 col-sm-6 col-lg stationIgnore text-lg-center mt-1 mt-lg-0 ">
                             <div class="custom-control custom-checkbox">
-                                <input class="custom-control-input" type="checkbox"   ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}"name="rc${sid}">
-                                <label class="custom-control-label" for="rc${sid}"> </label>
+                                <input class="custom-control-input" type="checkbox"  id="rc${sid}"name="rc${sid}   ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""}">
+                                <label class="custom-control-label" for="rc${sid}"><span class="d-lg-none">$_(u'Ignore Rain?')</span></label>
                             </div>
 
                         </div>
                         $# $if 'wl_weather' in gv.sd or 'et' in gv.plugin_data:
-                            <div class="col-2 stationIgnoreWL text-center">
+                            <div class="col-12 col-sm-6 col-lg stationIgnoreWL text-lg-center mt-1 mt-lg-0 ">
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" ${"checked" if gv.sd['iw'][bid]&(1<<s) else ""} id="wlc${sid}" name="wlc${sid}">
-                                    <label class="custom-control-label" for="wlc${sid}"> </label>
+                                    <input class="custom-control-input" type="checkbox"  id="wlc${sid}" name="wlc${sid}" ${"checked" if gv.sd['iw'][bid]&(1<<s) else ""}>
+                                    <label class="custom-control-label" for="wlc${sid}"><span class="d-lg-none">$_(u'Ignore Plugin adjustments?')</span></label>
                                 </div>
                             </div>
                     $if gv.sd['mas'] > 0 and gv.sd['mas'] != sid+1:
-                        <div class="col-2 stationMaster text-center">
+                        <div class="col-12 col-sm-6 col-lg stationMaster text-lg-center mt-1 mt-lg-0 ">
                             <div class="custom-control custom-checkbox">
-                                <input class="custom-control-input" type="checkbox"  ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}" name="mc${sid}">
-                                <label class="custom-control-label" for="mc${sid}"> </label>
+                                <input class="custom-control-input" type="checkbox" id="mc${sid}" name="mc${sid}" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} >
+                                <label class="custom-control-label" for="mc${sid}"><span class="d-lg-none">$_(u'Activate Master?')</span></label>
                             </div>
                         </div>
                 </div>
@@ -139,9 +143,9 @@ $code:
         <input type="hidden" id="m${bid}" name="m${bid}"/>
 
     <div class="mt-5">
-        <button class="btn btn-success" type="submit">$_(u'Submit Changes')</button>
-        <button id="cResetNames" class="btn btn-warning">$_(u'Reset Names')</button>
-        <a href="${app_path('/')}" class="btn btn-secondary">$_(u'Cancel')</a>
+        <button class="btn btn-success my-1" type="submit">$_(u'Submit Changes')</button>
+        <button  class="my-1 btn btn-danger">$_(u'Reset Names')</button>
+        <a href="${app_path('/')}" class="my-1 btn btn-secondary">$_(u'Cancel')</a>
     </div>
 </form>
 

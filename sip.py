@@ -42,7 +42,9 @@ from helpers import (
     transform_temp,
     slugify,
     get_errors,
-    clear_errors
+    push_error,
+    clear_errors,
+    restart
 )
 from ReverseProxied import ReverseProxied
 from urls import urls  # Provides access to URLs for UI pages
@@ -287,7 +289,8 @@ if __name__ == u"__main__":
 
     try:
         print(_(u"plugins loaded:"))
-    except Exception:
+    except Exception as e:
+        push_error(u"Import plugins error", e)
         pass
     for name in plugins.__all__:
         print(u" ", name)
@@ -299,7 +302,8 @@ if __name__ == u"__main__":
         for i, item in enumerate(gv.plugin_menu):
             if u"/plugins" in item:
                 gv.plugin_menu.pop(i)
-    except Exception:
+    except Exception as e:
+        push_error(u"Creating plugins menu", e)
         pass
     tl = Thread(target=timing_loop)
     tl.daemon = True
@@ -316,11 +320,18 @@ if __name__ == u"__main__":
     #### For HTTPS (SSL):  ####
 
     if gv.sd["htp"] == 443:
-        from cheroot.server import HTTPServer
-        from cheroot.ssl.builtin import BuiltinSSLAdapter
-        HTTPServer.ssl_adapter = BuiltinSSLAdapter(
-            certificate='/usr/lib/ssl/certs/SIP.crt',
-            private_key='/usr/lib/ssl/private/SIP.key'
-        )
+        try:
+            from cheroot.server import HTTPServer
+            from cheroot.ssl.builtin import BuiltinSSLAdapter
+            HTTPServer.ssl_adapter = BuiltinSSLAdapter(
+                certificate='/usr/lib/ssl/certs/SIP.crt',
+                private_key='/usr/lib/ssl/private/SIP.key'
+            )
+        except IOError as e:
+            gv.sd[u"htp"] = int(80)
+            jsave(gv.sd, u"sd")
+            push_error(u"SSL error", e)
+            restart(2)
+
 
     app.run()

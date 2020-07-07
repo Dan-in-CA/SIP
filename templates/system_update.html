@@ -6,11 +6,11 @@ $var header: $_(u'SIP Software Updater')
 
 
 <div class="d-flex justify-content-end mb-4">
-    <button data-toggle="collapse" data-target="#plugin-info" class="btn btn-info btn-sm" >
+    <button data-toggle="collapse" data-target="#update_plugin-info" class="btn btn-info btn-sm" >
         <i class="fas fa-question-circle mr-2"></i>$_(u'Help')
     </button>
 </div>
-<div class="collapse" id="plugin-info">
+<div class="collapse" id="update-plugin-info">
     <div class="card card-body mb-5">
         <div class="h4">$_(u'SIP System updater plugin')</div>
         <div>
@@ -36,20 +36,20 @@ $var header: $_(u'SIP Software Updater')
         <div class="row">
 
             <label class="col-12 col-md col-form-label font-weight-bold text-md-right">$_(u'Remote repository'):</label>
-            <div class="col-12 col-md">
+            <div class="col-12 col-md col-form-label ">
                 $m_vals["remote"]
             </div>
         </div>
         <div class="row">
             <label class="col-12 col-md  col-form-label font-weight-bold text-md-right">$_(u'Local SIP version'):</label>
-            <div class="col-12 col-md">
+            <div class="col-12 col-md  col-form-label ">
                 $m_vals["ver_str"]
             </div>
         </div>
         <div class="row">
 
             <label class="col-12 col-md  col-form-label font-weight-bold text-md-right">$_(u'Local SIP date'):</label>
-            <div class="col-12 col-md">
+            <div class="col-12 col-md  col-form-label ">
                 $m_vals["ver_date"]
             </div>
 
