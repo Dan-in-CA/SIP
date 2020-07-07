@@ -3,6 +3,7 @@
 
 import web  # web.py framework
 import gv  # Get access to SIP's settings
+from helpers import *
 from urls import urls  # Get access to SIP's URLs
 from sip import template_render  #  Needed for working with web.py templates
 from webpages import ProtectedPage  # Needed for security
@@ -59,7 +60,7 @@ class save_settings(ProtectedPage):
         #        print qdict  # for testing
         with open(u"./data/proto.json", u"w") as f:  # Edit: change name of json file
             json.dump(qdict, f)  # save to file
-        raise web.seeother(u"/")  # Return user to home page.
+        raise redirect_back()  # Return user to home page.
 
 
 #  Run when plugin is loaded

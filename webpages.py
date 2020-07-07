@@ -91,7 +91,7 @@ class login(WebPage):
 
 class logout(WebPage):
     def GET(self):
-        web.config._session.user = u"anonymous" 
+        web.config._session.user = u"anonymous"
         web.session.Session.kill(web.config._session)
         raise web.seeother(u"/")
 
@@ -219,7 +219,7 @@ class change_options(ProtectedPage):
         for f in [u"sdt", u"mas", u"mton", u"mtoff", u"wl", u"lr", u"tz"]:
             if u"o" + f in qdict:
                 if (
-                    f == u"mton" 
+                    f == u"mton"
                     and int(qdict[u"o" + f]) < 0
                 ):  # handle values less than zero (temp fix)
                     raise web.seeother(u"/vo?errorCode=mton_minus")
@@ -253,13 +253,13 @@ class change_options(ProtectedPage):
         if u"rstrt" in qdict and qdict[u"rstrt"] == u"1":
             restart(2)
             raise web.seeother(u"/restart")
-        raise web.seeother(u"/")
+        raise redirect_back()
 
     def update_scount(self, qdict):
         """
         Increase or decrease the number of stations displayed when
         number of expansion boards is changed in options.
-        
+
         Increase or decrase the lengths of program "duration_sec" and "station_mask"
         when number of expansion boards is changed
         """
@@ -297,7 +297,7 @@ class change_options(ProtectedPage):
     def update_prog_lists(self, change):
         for p in gv.pd:
             if (
-                change == u"idd" 
+                change == u"idd"
                 or change == u"nbrd"
             ):  #  change length of p["duration_sec"]
                 if not gv.sd[u"idd"]:
@@ -386,7 +386,7 @@ class change_stations(ProtectedPage):
         jsave(names, u"snames")
         jsave(gv.sd, u"sd")
         report_station_names()
-        raise web.seeother(u"/")
+        raise redirect_back()
 
 
 class get_set_station(ProtectedPage):
@@ -426,7 +426,7 @@ class get_set_station(ProtectedPage):
                             if b != sb_byte:
                                 gv.sbits[b] = 0
                     else:
-                      stop_stations() 
+                      stop_stations()
                 gv.rs[sid][0] = gv.now  # set start time to current time
                 if set_time > 0:  # if an optional duration time is given
                     gv.rs[sid][2] = set_time
@@ -486,7 +486,7 @@ class change_runonce(ProtectedPage):
                 gv.ps[sid][1] = dur
                 stations[sid // 8] += 2 ** (sid % 8)
         schedule_stations(stations)
-        raise web.seeother(u"/")
+        raise redirect_back()
 
 
 class view_programs(ProtectedPage):
@@ -630,7 +630,7 @@ class toggle_temp(ProtectedPage):
         else:
             gv.sd[u"tu"] = u"C"
         jsave(gv.sd, u"sd")
-        raise web.seeother(u"/")
+        raise redirect_back()
 
 
 class api_status(ProtectedPage):
