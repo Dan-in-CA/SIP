@@ -237,6 +237,7 @@ class change_options(ProtectedPage):
             u"lg",
             u"pigpio",
             u"alr",
+            u"show_errors",
         ]:
             if u"o" + f in qdict and (
                 qdict[u"o" + f] == u"on" or qdict[u"o" + f] == u"1"

@@ -82,7 +82,8 @@ sd = {
     u"lang": u"default",
     u"idd": 0,
     u"pigpio": 0,
-    u"alr": 0
+    u"alr": 0,
+    u"show_errors": 0
 }
 
 try:
@@ -181,6 +182,13 @@ options = [
         u"int",
         u"wl",
         _(u"Water scaling (as %), between 0 and 100."),
+        _(u"System"),
+    ],
+    [
+        _(u"Show logged errors"),
+        u"boolean",
+        u"show_errors",
+        _(u"Append an alert box that informs about errors during the processes. (Developer usage) "),
         _(u"System"),
     ],
     [

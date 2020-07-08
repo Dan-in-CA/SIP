@@ -196,7 +196,7 @@ $code:
                 $:{content}
 
 
-                $if len(get_errors()) > 0:
+                $if  gv.sd[u'show_errors'] & len(get_errors()) > 0:
                 <div class="alert alert-warning border-danger mb-5" role="alert">
                     <h4 class="alert-heading">
                         <i class="text-danger fas fa-exclamation-triangle mr-2"></i>$_(u'Some Errors have Occurred')
