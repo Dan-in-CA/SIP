@@ -516,8 +516,7 @@ def read_log():
                     rec = json.loads(i)
                 result.append(rec)
         return result
-    except IOError as e:
-        push_error(u"read_log IOError", e)
+    except IOError:
         return result
 
 
