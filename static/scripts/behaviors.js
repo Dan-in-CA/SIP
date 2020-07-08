@@ -52,25 +52,25 @@ jQuery(document).ready(function(){
 	
 	
 	jQuery("button#bHome").click(function(){
-		window.location = baseUrl + "/";
+		window.location = "/";
 	});
 	jQuery("button#bOptions").click(function(){
-		window.location = baseUrl + "/vo";
+		window.location = "/vo";
 	});
 	jQuery("button#bStations").click(function(){
-		window.location = baseUrl + "/vs";
+		window.location = "/vs";
 	});
 	jQuery("button#bPrograms").click(function(){
-		window.location = baseUrl + "/vp";
+		window.location = "/vp";
 	});
 	jQuery("button#bRunOnce").click(function(){
-		window.location = baseUrl + "/vr";
+		window.location = "/vr";
 	});
 	jQuery("button#bLog").click(function(){
-		window.location = baseUrl + "/vl";
+		window.location = "/vl";
 	});
 	jQuery("button#bLogout").click(function(){
-		window.location = baseUrl + "/logout";
+		window.location = "/logout";
 	});
 
     jQuery("button#bHelp").click(function(){

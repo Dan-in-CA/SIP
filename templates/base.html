@@ -28,30 +28,30 @@ $code:
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="IE=edge"> 
     
-  	<link rel="stylesheet" href="$app_path('/static/bootstrap-3.3.7/css/bootstrap.min.css')">
-  	<link rel="stylesheet" href="$app_path('/static/bootstrap-timepicker/css/bootstrap-timepicker.min.css')">
+  	<link rel="stylesheet" href="static/bootstrap-3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="static/bootstrap-timepicker/css/bootstrap-timepicker.min.css">
     
     <title>${content.title + (" - " + gv.sd[u'name'] if gv.sd[u'name'] != u"SIP" else "")}</title>
     
-    <link rel="apple-touch-icon" sizes="57x57" href="$app_path('/static/images/apple-icon-57x57.png')">
-    <link rel="apple-touch-icon" sizes="60x60" href="$app_path('/static/images/apple-icon-60x60.png')">
-    <link rel="apple-touch-icon" sizes="72x72" href="$app_path('/static/images/apple-icon-72x72.png')">
-    <link rel="apple-touch-icon" sizes="76x76" href="$app_path('/static/images/apple-icon-76x76.png')">
-    <link rel="apple-touch-icon" sizes="114x114" href="$app_path('/static/images/apple-icon-114x114.png')">
-    <link rel="apple-touch-icon" sizes="120x120" href="$app_path('/static/images/apple-icon-120x120.png')">
-    <link rel="apple-touch-icon" sizes="144x144" href="$app_path('/static/images/apple-icon-144x144.png')">
-    <link rel="apple-touch-icon" sizes="152x152" href="$app_path('/static/images/apple-icon-152x152.png')">
-    <link rel="apple-touch-icon" sizes="180x180" href="$app_path('/static/images/apple-icon-180x180.png')">
-    <link rel="icon" type="image/png" sizes="192x192"  href="$app_path('/static/images/android-icon-192x192.png')">
-    <link rel="icon" type="image/png" sizes="32x32" href="$app_path('/static/images/favicon-32x32.png')">
-    <link rel="icon" type="image/png" sizes="96x96" href="$app_path('/static/images/favicon-96x96.png')">
-    <link rel="icon" type="image/png" sizes="16x16" href="$app_path('/static/images/favicon-16x16.png')">
-    <link rel="manifest" href="$app_path('/static/images/manifest.json')">
+    <link rel="apple-touch-icon" sizes="57x57" href="static/images/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="static/images/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="static/images/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="static/images/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="static/images/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="static/images/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="static/images/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="static/images/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="static/images/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="static/images/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="static/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="static/images/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="static/images/favicon-16x16.png">
+    <link rel="manifest" href="static/images/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="$app_path('/static/images/ms-icon-144x144.png')">
+    <meta name="msapplication-TileImage" content="static/images/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
-    <link href="$app_path('/static/themes/' + gv.sd[u'theme'] + '/base.css')" rel="stylesheet" type="text/css"/>
+    <link href="${'static/themes/' + gv.sd[u'theme'] + '/base.css'}" rel="stylesheet" type="text/css"/>
     <style>
     	div {overflow-y: hidden;}
     	div.row {overflow-y: visible;}
@@ -87,9 +87,9 @@ $code:
         
     </style>
     
-    <script src="/static/scripts/jquery-3.4.1.min.js"></script>
-    <script src="/static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script src="/static/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+    <script src="static/scripts/jquery-3.4.1.min.js"></script>
+    <script src="static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="static/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
     
     
     <script>
@@ -155,13 +155,13 @@ $code:
                 });
             });
     </script>
-    <script src="$app_path('/static/scripts/behaviors.js')"></script>
-    <script src="$app_path('/static/scripts/schedule.js')"></script>
-    <script src="$app_path('/static/scripts/intervalSelect.js')"></script>
+    <script src="static/scripts/behaviors.js"></script>
+    <script src="static/scripts/schedule.js"></script>
+    <script src="static/scripts/intervalSelect.js"></script>
 </head>
 <body>
     <div class="content">
-        <form name="tt" action="${app_path(u'/ttu')}" method="get">
+        <form name="tt" action="/ttu" method="get">
             <input type="hidden" name="tunit">
         </form>
 
