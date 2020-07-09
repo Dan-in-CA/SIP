@@ -128,7 +128,7 @@ $code:
                 elif name == "nbrd":
                     output += "<input name='onbrd'  class='form-control' type='number' size='3' maxlength='3' value='" + str(value - 1) + "'>\n"
                 elif name == "mton":
-                    output += "<input name='omton' class='form-control' type='number' size='3'  maxlength='3' value='" + str(value) + "'><span class='inputError' id='error" + name + "'></span>\n"
+                    output += "<input name='omton' class='form-control' type='number' size='3'  maxlength='3' value='" + str(value) + "'><span class='text-danger' id='error" + name + "'></span>\n"
                 else:
                     output += "<input name='o" + name + "'  class='form-control' type='number' size='3' maxlength='3' value='" + str(value) + "'>\n"
 

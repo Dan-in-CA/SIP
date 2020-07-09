@@ -107,12 +107,12 @@ $code:
 
         </header>
 
-        <main class="container-fluid px-1 px-md-4">
+        <main class="container-fluid px-1 px-md-3 flex-grow-1">
             <div class="row">
-                <div class="col-12 col-md-2 text-white">
-                    <div id="deviceTime" class="collapse">
-                        <div class="row align-items-end">
-                            <div class="col-auto col-md-12 d-flex mt-3">
+                <div class="col-12 col-md-2 text-white  c-bgImg c-bgImg--grass ">
+                    <div id="deviceTime" class="collapse" style="background: #06b0069e;">
+                        <div class="row  py-3" >
+                            <div class="col-auto col-md-12 d-flex ">
                                 <div class="d-flex">
                                     <span class="hour h1 mb-0"></span>
                                     <span class="sep h1 mb-0">:</span>
@@ -139,7 +139,7 @@ $code:
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse px-1 px-md-0" id="mainMenu">
-                            <ul class="navbar-nav w-100">
+                            <ul class="navbar-nav w-100 h5">
                                 <li class="nav-item ${' active' if content.page=='programs' else ''}">
                                     <a href="/vp" class="nav-link" title=$:{json_dump(_(u'Define Programs'))}>$_(u'Programs')</a>
                                 </li>
@@ -205,7 +205,7 @@ $code:
 
 
                         $if 'header' in content :
-                            <div class="h1 mb-5 border-bottom">${content.header}</div>
+                            <h1 class="text-dark mb-5 border-bottom">${content.header}</h1>
 
                         $:{content}
                     </div>
@@ -223,9 +223,6 @@ $code:
                             <span class="badge badge-info">${gv.plugFtr[i]["label"] + ": " + str(gv.plugFtr[i]["val"])}</span>
 
                         </div>
-
-
-
 
                     <div class="row">
                         <div class="col-auto col-sm my-1">

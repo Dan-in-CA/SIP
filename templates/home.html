@@ -39,7 +39,7 @@ $code:
     var priorRs = ${gv.sd[u"rs"]};
     var useRainsense = ${gv.sd[u"urs"]};
     var devt = ${gv.now}
-    
+
     function formatLogline(log) {
         var lrsid = lrun[0], lrpid = lrun[1], lrdur = lrun[2], lret = lrun[3];
         if (lrpid == 0) {
@@ -119,19 +119,19 @@ $code:
 	    	}
     	})
     }
-    
+
     var restarted = ${gv.restarted};
-    
+
     // Initialize behaviors
     jQuery(document).ready(function(){
     	if(useRainsense){
     		var rainCheck = setInterval(rainChange, 1000);
     	}
-    	
+
         if(restarted == 0) {
         	alert("SIP could not restart.\nPlease restart the program from the command line.");
         }
-    	
+
         $if gv.sd['mm'] == 0:
             statusTimer();
 
@@ -286,9 +286,9 @@ $else:
                     <span id="displayScheduleDate"></span>
                 </td>
                 <td colspan="16" style="text-align:right">
-                    <button id="pPrev" class="execute">&lt;&lt;$_(u' Prev Day')</button>
-                    <button id="pToday" class="execute">$_(u'Today')</button>
-                    <button id="pNext" class="execute">$_(u'Next Day') &gt;&gt;</button>
+                    <button id="pPrev" class="btn btn-info btn-sm">&lt;&lt;$_(u' Prev Day')</button>
+                    <button id="pToday" class="btn btn-info btn-sm">$_(u'Today')</button>
+                    <button id="pNext" class="btn btn-info btn-sm">$_(u'Next Day') &gt;&gt;</button>
                 </td>
             </tr>
             <tr><td colspan="2">
@@ -359,7 +359,7 @@ $else:
             </tr>
         </table>
     </div>
-		 <button id="pStopAll" class="execute delete">$_(u'Stop All Stations')</button>
+		 <button id="pStopAll" class="btn btn-info">$_(u'Stop All Stations')</button>
 </div>
 
 <div id="controls">

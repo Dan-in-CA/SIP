@@ -76,7 +76,7 @@ hr {
 
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
 }
 
 p {
@@ -359,7 +359,7 @@ template {
 
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
   font-weight: 500;
   line-height: 1.2;
 }
@@ -3218,7 +3218,7 @@ input[type=button].btn-block {
 .dropdown-item:hover, .dropdown-item:focus {
   color: #16181b;
   text-decoration: none;
-  background-color: #f8f9fa;
+  background-color: rgba(57, 127, 25, 0.4);
 }
 .dropdown-item.active, .dropdown-item:active {
   color: #fff;
@@ -3549,8 +3549,8 @@ input[type=button].btn-block {
 }
 .custom-control-input:checked ~ .custom-control-label::before {
   color: #fff;
-  border-color: #397F19;
-  background-color: #397F19;
+  border-color: #3b4a7e;
+  background-color: #3b4a7e;
 }
 .custom-control-input:focus ~ .custom-control-label::before {
   box-shadow: 0 0 0 0.2rem rgba(57, 127, 25, 0.25);
@@ -3942,7 +3942,7 @@ input[type=button].btn-block {
 
 .nav-link {
   display: block;
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1.2rem;
 }
 .nav-link:hover, .nav-link:focus {
   text-decoration: none;
@@ -4017,7 +4017,7 @@ input[type=button].btn-block {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
+  padding: 0 1rem;
 }
 .navbar .container,
 .navbar .container-fluid,
@@ -4032,8 +4032,8 @@ input[type=button].btn-block {
 }
 .navbar-brand {
   display: inline-block;
-  padding-top: 0.3359375rem;
-  padding-bottom: 0.3359375rem;
+  padding-top: 0.6359375rem;
+  padding-bottom: 0.6359375rem;
   margin-right: 1rem;
   font-size: 1.09375rem;
   line-height: inherit;
@@ -4061,8 +4061,8 @@ input[type=button].btn-block {
 
 .navbar-text {
   display: inline-block;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
 }
 
 .navbar-collapse {
@@ -4301,16 +4301,16 @@ input[type=button].btn-block {
 }
 
 .navbar-light .navbar-brand {
-  color: rgba(57, 127, 25, 0.9);
+  color: #343a40;
 }
 .navbar-light .navbar-brand:hover, .navbar-light .navbar-brand:focus {
-  color: rgba(57, 127, 25, 0.9);
+  color: #397F19;
 }
 .navbar-light .navbar-nav .nav-link {
   color: rgba(0, 0, 0, 0.5);
 }
 .navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:focus {
-  color: rgba(57, 127, 25, 0.7);
+  color: #fff;
 }
 .navbar-light .navbar-nav .nav-link.disabled {
   color: rgba(0, 0, 0, 0.3);
@@ -4319,7 +4319,7 @@ input[type=button].btn-block {
 .navbar-light .navbar-nav .active > .nav-link,
 .navbar-light .navbar-nav .nav-link.show,
 .navbar-light .navbar-nav .nav-link.active {
-  color: rgba(57, 127, 25, 0.9);
+  color: #fff;
 }
 .navbar-light .navbar-toggler {
   color: rgba(0, 0, 0, 0.5);
@@ -4332,10 +4332,10 @@ input[type=button].btn-block {
   color: rgba(0, 0, 0, 0.5);
 }
 .navbar-light .navbar-text a {
-  color: rgba(57, 127, 25, 0.9);
+  color: #fff;
 }
 .navbar-light .navbar-text a:hover, .navbar-light .navbar-text a:focus {
-  color: rgba(57, 127, 25, 0.9);
+  color: #fff;
 }
 
 .navbar-dark .navbar-brand {
@@ -9836,7 +9836,7 @@ button.bg-dark:focus {
   font-weight: 400 !important;
 }
 
-.font-weight-bold {
+.font-weight-bold, .val {
   font-weight: 700 !important;
 }
 
@@ -9852,11 +9852,11 @@ button.bg-dark:focus {
   color: #fff !important;
 }
 
-.text-primary {
+.text-primary, .val {
   color: #397F19 !important;
 }
 
-a.text-primary:hover, a.text-primary:focus {
+a.text-primary:hover, a.val:hover, a.text-primary:focus, a.val:focus {
   color: #1c3f0c !important;
 }
 
@@ -16386,67 +16386,6 @@ readers do not read off random characters that represent icons */
 }
 
 /******** Overall Layout Styles **********/
-div.header {
-  background-image: url("../icons/logo.png");
-  background-repeat: no-repeat;
-  background-position: 64px 8px;
-  background-color: #32A620;
-  height: 80px;
-}
-
-div.header div.title {
-  font-family: "Quicksand", sans-serif;
-  font-size: 24pt;
-  text-transform: uppercase;
-  text-align: right;
-  color: white;
-  padding-top: 35px;
-  padding-right: 16px;
-}
-
-div.header div.titlenote {
-  font-size: 10pt;
-  color: white;
-  padding-left: 8px;
-}
-
-div.footer {
-  background-image: url("../icons/grass.jpg");
-  background-position: top right -220px;
-  background-repeat: no-repeat;
-  background-color: #32A620;
-  color: white;
-  /* 	text-align: right; */
-  padding: 16px 160px;
-  font-size: 9pt;
-  clear: both;
-  width: 100%;
-}
-
-div.content {
-  background-color: #FCFAEB;
-  color: black;
-}
-
-div.body {
-  margin: 0px;
-  margin-bottom: -20px;
-  padding: 0px;
-  background-image: url("../icons/grass.jpg");
-}
-
-div.panel {
-  margin-left: 240px;
-  padding: 12px;
-  background-color: white;
-}
-
-div.panel div.title {
-  font-weight: 700;
-  font-size: 20pt;
-  margin-bottom: 8px;
-}
-
 div.controlblock {
   border: 3px solid #3b4a7e;
   border-radius: 12px;
@@ -16465,10 +16404,6 @@ span.stationName:last-child:after {
   content: "";
 }
 
-.program {
-  width: 50%;
-}
-
 .program p:first-child {
   background-color: #3b4a7e;
   color: white;
@@ -16484,14 +16419,6 @@ span.stationName:last-child:after {
 }
 
 /******** General Global Styles **********/
-#errorHint {
-  color: #7D1921;
-}
-
-.inputError {
-  color: #7D1921;
-}
-
 .showInterval {
   text-align: center;
 }
@@ -16500,45 +16427,12 @@ span.stationName:last-child:after {
   color: white;
 }
 
-.val {
-  font-weight: 700;
-  color: #397F19;
-}
-
-/******** Clock Styles **********/
-div#status {
-  float: left;
-  width: 240px;
-  text-align: center;
-  color: white;
-  font-family: "Quicksand", sans-serif;
-  font-weight: 300;
-  padding-top: 23px;
-  padding-bottom: 12px;
-  background-color: #397F19;
-  opacity: 0.85;
-}
-
 .countdown, .rainsense {
   color: #7D1921;
   font-family: Quicksand, sans-serif;
   font-size: 12pt;
   font-weight: 700;
   text-transform: uppercase;
-}
-
-/******** Navigation Button Styles **********/
-#nav {
-  margin-bottom: 16px;
-}
-
-#nav button.home {
-  background-image: url("../icons/home.png");
-  background-repeat: no-repeat;
-  background-position: center center;
-  text-indent: -99999em;
-  overflow: hidden;
-  width: 40px;
 }
 
 /******** Button Styles **********/
@@ -16668,25 +16562,6 @@ input.timeInput {
 }
 
 /******** Station Table Styles **********/
-table.optionList {
-  border: 3px solid #3b4a7e;
-  border-radius: 12px;
-  padding: 4px;
-  border-spacing: 0px;
-  empty-cells: show;
-  border-collapse: separate;
-}
-
-td.pluginName {
-  text-align: right;
-  padding: 0px 12px;
-  color: #3b4a7e;
-  font-weight: 700;
-  width: 12em;
-  height: 30px;
-  white-space: nowrap;
-}
-
 table.stationList {
   background-color: white;
   border: 3px solid #3b4a7e;
@@ -16786,43 +16661,6 @@ td.dayOn {
   border: 2px solid #32A620;
 }
 
-/******** Collapsible Styles **********/
-.collapsible h4 {
-  color: white;
-  background-color: #3b4a7e;
-  background-repeat: no-repeat;
-  background-position: 3px center;
-  padding: 4px 4px 4px 24px;
-  margin: 3px 0px 0px 0px;
-}
-
-.collapsible.collapsed h4 {
-  background-image: url("../icons/collapsed.png");
-}
-
-.collapsible.expanded h4 {
-  background-image: url("../icons/expanded.png");
-}
-
-.collapsible.collapsed div {
-  display: none;
-}
-
-.collapsible.expanded div {
-  border-right: 3px solid #3b4a7e;
-  border-left: 3px solid #3b4a7e;
-}
-
-.collapsible.expanded div:last-child {
-  border-bottom: 3px solid #3b4a7e;
-}
-
-.option {
-  margin: 0px;
-  padding: 6px 0px;
-  clear: both;
-}
-
 /******** Timeline Styles **********/
 td.stationSchedule {
   padding: 0px;
@@ -16916,24 +16754,6 @@ td.stationSchedule {
   background-image: url("../icons/whitestripes.png");
 }
 
-.showDetails {
-  position: absolute;
-  width: 90px;
-  top: 100%;
-  left: 0px;
-  color: white;
-  z-index: 100;
-  border-radius: 6px;
-  display: inline-block;
-  font-size: 10pt;
-  margin: 3px;
-  padding: 3px;
-}
-
-.systemInfo {
-  margin-right: -5px;
-}
-
 .scheduleMarker.showDetails {
   border: 1px solid black;
 }
@@ -16949,75 +16769,7 @@ td.stationSchedule {
   font-size: 9pt;
 }
 
-#pluginLinks {
-  list-style-type: none;
-  padding: 0;
-}
-
-#pluginMgr {
-  background-color: #397F19;
-  font-weight: 700;
-}
-
-#browsePlugins {
-  background-color: #397F19;
-  /*font-weight: 700;*/
-  margin-left: 50px;
-}
-
-#writePlugins {
-  background-color: #397F19;
-  /*font-weight: 700;*/
-  margin-left: 50px;
-}
-
-#pluginMenu {
-  border: 3px solid #3b4a7e;
-  border-radius: 12px;
-  padding: 4px;
-  border-spacing: 0px;
-  background-color: white;
-}
-
 @media only screen and (max-width: 1024px) {
-  body {
-    font-size: 10pt;
-  }
-
-  div.option .input {
-    padding-left: 20px;
-  }
-
-  div.panel {
-    margin-left: 0;
-    margin-top: -4pt;
-  }
-
-  div.panel div.title {
-    font-size: 14pt;
-  }
-
-  div.header div.title {
-    font-size: 16pt;
-  }
-
-  div#status {
-    float: none;
-    width: 100%;
-    padding: 0;
-    display: inline-block;
-  }
-
-  #nav button {
-    padding: 4px 12px;
-    margin: 4px 0;
-    font-size: 9pt;
-  }
-
-  #nav button.here {
-    height: 40px;
-  }
-
   td.stationStatus {
     padding: 0 6px;
     font-size: 10pt;
@@ -17025,10 +16777,6 @@ td.stationSchedule {
 
   td.station_name {
     font-size: 10pt;
-  }
-
-  .program {
-    min-width: 400px;
   }
 
   #programs table tr:nth-child(2).showWeekly td {
@@ -17049,4 +16797,33 @@ td.stationSchedule {
     width: 100%;
     max-width: 100%;
   }
+}
+.nav-item {
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+.nav-item .nav-link {
+  position: relative;
+}
+.nav-item:before {
+  content: "";
+  height: calc( 100% + 1px);
+  position: absolute;
+  transform: skewX(-18deg);
+  width: 100%;
+  left: 0;
+}
+.nav-item.active:before {
+  background-color: #397F19;
+}
+.nav-item:hover:before, .nav-item:focus:before {
+  background-color: #43941d;
+}
+
+.c-bgImg {
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.c-bgImg--grass {
+  background-image: url("../icons/grass.png");
 }

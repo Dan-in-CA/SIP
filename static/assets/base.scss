@@ -23,3 +23,38 @@ $screen-lg-min: breakpoint-min('lg');
 
 
 @import "./styles/base";
+
+.nav-item {
+  transition: $transition-base;
+  position: relative;
+
+  .nav-link {
+    position: relative;
+  }
+
+  &:before {
+    content: '';
+    height: calc( 100% + 1px);
+    position: absolute;
+    transform: skewX(-18deg);
+    width: 100%;
+    left: 0;
+  }
+
+  &.active:before {
+    background-color: theme-color('primary');
+  }
+
+  &:hover:before, &:focus:before {
+    background-color: lighten(theme-color('primary'), 5%);
+  }
+}
+
+.c-bgImg {
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  &--grass {
+    background-image: img-url('grass.png')
+  }
+}

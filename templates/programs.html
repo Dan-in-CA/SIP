@@ -2,16 +2,17 @@ $def with ()
 
 $var title: $_(u'SIP Programs')
 $var page: programs
+$var header: $_(u'SIP Programs')
 $code:
     snames = gv.snames
     nprogs = len(gv.pd)
-    
+
     #if gv.sd['idd'] and (gv.sd['nst'] > len(program['duration_sec'])):
 	#	program['duration_sec'].extend([0] * (gv.sd['nst'] - len(program['duration_sec'])))
 
     def two_digits(n):
         return '%02d' % int(n)
-    
+
     def pdays(days, dayInterval):
         output = ""
         if prog['type'] == 'interval':
@@ -21,7 +22,7 @@ $code:
             output += _(u"Every ") + str(dayInterval) + " " + _(u"days")
             if daysRemaining:
                 output += ", " + _(u'starting in') + " " + str(daysRemaining) + " " + _(u'days') + "."
-        else: 
+        else:
             if days == 127:
                 output += _(u"Every Weekday")
             else:
@@ -52,7 +53,7 @@ $code:
 
         jQuery("button#nDelAll, button.cDelete").click(function(){
             try{
-                var pid = jQuery(this).attr("data")
+                var pid = jQuery(this).attr("data-id")
                 }
             catch(err) {
                 var pid = 0
@@ -63,7 +64,7 @@ $code:
 
         jQuery("button#nAdd, button.cModify").click(function(){
             try{
-                var pid = jQuery(this).attr("data")
+                var pid = jQuery(this).attr("data-id")
                 }
             catch(err) {
                 var pid = 0
@@ -74,7 +75,7 @@ $code:
 
         jQuery("button.cRunNow").click(function(){
             try{
-                var pid = jQuery(this).attr("data")
+                var pid = jQuery(this).attr("data-id")
                 }
             catch(err) {
                 var pid = 0
@@ -83,14 +84,14 @@ $code:
             jQuery("form#rn").submit();
         });
 
-            jQuery("button.cDisable").click(function(){
-                var pid = jQuery(this).attr("data");
-                var enable = jQuery(this).hasClass("off");
+            jQuery(".js-toggleProgram").click(function(){
+                var pid = jQuery(this).attr("data-id");
+                var enable = jQuery(this).is(":checked");
                 jQuery("form#ep input[name='pid']").val(pid);
                 jQuery("form#ep input[name='enable']").val(enable ? 1 : 0);
                 jQuery("form#ep").submit();
-            });        
-        
+            });
+
     });
 
 </script>
@@ -107,28 +108,35 @@ $code:
      <input type="hidden" name="pid">
      <input type="hidden" name="enable">
 </form>
-<div id="controls">
-    <button id="nAdd" class="add" data="-1">$_(u'Add a New Program')</button>
-    <button id="nDelAll" class="deleteAll danger" data="-1">$_(u'Delete All')</button>
+<div class="mb-3">
+    <button id="nAdd" class="btn btn-success" data-id="-1">$_(u'Add a New Program')</button>
+    <button id="nDelAll" class="btn btn-danger" data-id="-1">$_(u'Delete All')</button>
 </div>
-
-<div id="programs">
+<div class="">
+<div id="programs" class="row justify-content-center">
     $for pid in range(nprogs):
         $ prog = gv.pd[pid]
-        <div id="p${pid}" class="controlBlock program ${'disabled' if prog['enabled'] == 0 else ''}">
-         <p>
-             <button class="cDisable toggle ${'off' if prog['enabled'] == 0 else 'on'}" data="${pid}">
-                 <span class='toggleleft'>$_(u'On')</span>
-                 <span class='togglesep'>&nbsp;</span>
-                 <span class='toggleright'>$_(u'Off')</span>
-             </button>
-        $_(u'Program') ${pid+1}: <span class="val">${pdays(prog['day_mask'], prog['interval_base_day'])}</span></b>
-         </p>
+        <div class="col-12 col-sm-8 col-lg-6 my-4">
+        <div id="p${pid}" class="card border program ${'disabled border-danger' if prog['enabled'] == 0 else 'border-primary'}">
+
+        <header class="card-header d-flex flex-wrap  text-white ${'bg-danger' if prog['enabled'] == 0 else 'bg-primary'}">
+           <div>
+               <span class="h4">$_(u'Program') ${pid+1}: </span>
+               <span class="font-weight-bold text-nowrap">${pdays(prog['day_mask'], prog['interval_base_day'])}</span>
+           </div>
+
+            <div class="custom-control custom-switch ml-auto mt-1">
+                <input type="checkbox" autocomplete="false" class="custom-control-input js-toggleProgram" id="toggle-${pid}" data-id="${pid}" ${'' if prog['enabled'] == 0 else 'checked'}>
+                <label class="custom-control-label" for="toggle-${pid}">$_(u'Toggle')</label>
+            </div>
+
+        </header>
+            <div class="card-body">
             $ start = prog['start_min']
             $ end = prog['stop_min']
             $ interval = prog['cycle_min']
             $ duration = 0
-            <p class="stationList">$_(u'Run'):
+            <div class="stationList"><strong>$_(u'Run'):</strong>
 			$ sid = -1
             $for bid in range(gv.sd['nbrd']):
                 $if len(prog) >= 8 + bid and isinstance(prog['station_mask'][bid], int):
@@ -151,23 +159,33 @@ $code:
                                 $ duration = prog['duration_sec'][0]
             $ lap_end = start + duration / 60
             $ recurring = prog['cycle_min'] > 0 #  int(lap_end) < int(end)
-							
-            </p>
-            <p>$_(u'Starting'): <span class="val">${formatTime(two_digits(start/60) + ":" + two_digits(start%60))}</span>
-                <span ${"" if (gv.sd['idd'] > 0) else "style=display:none"}>$_(u'with individual station durations')</span></p>
-                <p>$_(u'for')</b> <span class="val">${two_digits(duration/3600)}</span> hrs <span class="val">${two_digits(((duration/60)%60))}</span> mins <span class="val">${two_digits(duration%60)}</span> secs 
-            $if not recurring:    
-                $_(u'until') <span class="val">${formatTime(two_digits(lap_end/60) + ":" + two_digits(lap_end%60))}</span></p>
-            $else:
-                </p>
-            $if recurring:
-                <p>$_(u'Recurring every')</b> <span class="val">${two_digits(interval/60)}</span> hrs <span class="val">${two_digits(interval%60)}</span> mins
-				$_(u'until') <span class="val">${formatTime(two_digits(end/60) + ":" + two_digits(end%60))}</span></p>
 
-            <p>
-                <button class="cRunNow" data="${pid}">$_(u'Run Now')</button>
-                <button class="cModify" data="${pid}">$_(u'Edit')</button>
-                <button class="cDelete danger" data="${pid}">$_(u'Delete')</button>
-            </p>
+            </div>
+            <div>
+                <strong>$_(u'Starting'):</strong> <span class="val">${formatTime(two_digits(start/60) + ":" + two_digits(start%60))}</span>
+                <span ${"" if (gv.sd['idd'] > 0) else "style=display:none"}>$_(u'with individual station durations')</span>
+            </div>
+
+            <div>
+                <strong>$_(u'for')</strong> <span class="val">${two_digits(duration/3600)}</span> hrs <span class="val">${two_digits(((duration/60)%60))}</span> mins <span class="val">${two_digits(duration%60)}</span> secs
+            $if not recurring:
+                $_(u'until') <span class="val">${formatTime(two_digits(lap_end/60) + ":" + two_digits(lap_end%60))}</span>
+
+            </div>
+
+            $if recurring:
+                <div><strong>$_(u'Recurring every')</strong> <span class="val">${two_digits(interval/60)}</span> hrs <span class="val">${two_digits(interval%60)}</span> mins
+				$_(u'until') <span class="val">${formatTime(two_digits(end/60) + ":" + two_digits(end%60))}</span>
+                </div>
+
+            <div class="mt-3">
+                <button class="cRunNow btn btn-success btn-sm" data-id="${pid}">$_(u'Run Now')</button>
+                <button class="cModify btn btn-primary btn-sm" data-id="${pid}">$_(u'Edit')</button>
+                <button class="cDelete btn btn-danger btn-sm" data-id="${pid}">$_(u'Delete')</button>
+            </div>
         </div>
+        </div>
+        </div>
+
+</div>
 </div>

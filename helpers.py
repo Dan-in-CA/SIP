@@ -110,7 +110,7 @@ def reboot(wait=1, block=False):
 def poweroff(wait=1, block=False):
     """
     Powers off the Raspberry Pi from a new thread.
-    Set to True at start of thread (recursive).
+    Set to True at start of thread (recursive).b
     """
     if block:
         from gpio_pins import set_output

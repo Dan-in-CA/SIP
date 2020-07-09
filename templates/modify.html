@@ -11,8 +11,8 @@ $code:
     idd = int(gv.sd['idd'])
     if pid < 0: #  A new program
         program = {}
-        program['enabled'] = 1 
-        program['day_mask'] =  127 
+        program['enabled'] = 1
+        program['day_mask'] =  127
         program['interval_base_day'] = 0
         program['start_min'] = 360
         program['stop_min'] = 1080
@@ -26,7 +26,7 @@ $code:
         program = eval(prog)            ### format conversion
     weekly = int(program['type'] in ['alldays', 'evendays', 'odddays'])
     stationsShown = 0
-    for bid in range(gv.sd['nbrd']):        
+    for bid in range(gv.sd['nbrd']):
         boardShow = gv.sd['show'][bid]
         for s in range(8):
             stationsShown += (boardShow>>s) & 1
@@ -50,7 +50,7 @@ $code:
 
     # lap_end = program['start_min'] + duration // 60
     # recurring = int(lap_end) < int(program['stop_min'])
-    
+
     recurring = int(program['cycle_min'] != 0)
     even = (program['type'] == 'evendays')
     odd = (program['type'] == 'odddays')
@@ -68,11 +68,11 @@ $code:
             return str(newhour)  + t[2:] + (" am" if hour<12 else " pm")
 
 <script>
-        
+
     var prog = JSON.parse($:{"'" + json.dumps(program) + "'"});   ///// format conversion
 
     // Helper functions
-    function parseTime(prefix) { 
+    function parseTime(prefix) {
         var h = parseInt(jQuery("#" + prefix + "h").val());
         var m = parseInt(jQuery("#" + prefix + "m").val());
         if (prefix.indexOf("i") < 0 && !timeFormat) {
@@ -232,7 +232,7 @@ $code:
             var dayInterval = 0;
             var i, s, sid;
           prog['enabled'] = jQuery("button#cProgramEnabled").hasClass("on") ? 1 : 0;
-          
+
             // process days
             if (jQuery("button#cWeeklyInterval").hasClass("on")) {
                 prog['type'] = 'alldays';
@@ -259,7 +259,7 @@ $code:
                     return;
                 }
              }
-             
+
             // process stations
             var stations = [0];
             for (var bid = 0; bid < nbrd; bid ++) {
@@ -334,7 +334,7 @@ $code:
                     var endTime = startTime + idurations.reduce((a,b) => a + b, 0) / 60;
                 } else {
                     var endTime = startTime + (gduration / 60);
-                }   
+                }
             } else {                                           //recurring
                 var interval = parseTime("ti");
                 var endTime = parseTime("te");
@@ -346,7 +346,7 @@ $code:
             }
 
             var v = {};                                     //// format conversion
-            v['type'] = prog['type']; 
+            v['type'] = prog['type'];
             v['enabled'] = prog['enabled'];
             v['day_mask'] = days;
             v['interval_base_day'] = dayInterval;
@@ -359,12 +359,12 @@ $code:
 //         var vs = JSON.stringify(v);                      //// format conversion
          jQuery("form#mf input[name='v']").val(JSON.stringify(v));
          jQuery("form#mf").submit();
-        });  
+        });
          jQuery("button#cCancel").click(function(){
             window.location= baseUrl + "/vp";
         });
     });
-    
+
 var durationTime = ${two_digits(int(program['duration_sec'][0]) % 60)};
 var cycleTime = ${two_digits(program['cycle_min'] % 60)};
 
@@ -380,7 +380,7 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
             <div class="controlBlock">
                 <p>
                 $ t = formatTime(two_digits(program['start_min'] / 60) + ":" + two_digits(program['start_min'] % 60))
-                
+
                     <b>$_(u'Start Time'):</b> <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "tsh" value = "${t.split(":")[0]}"> :
                     <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "tsm" value = "${t.split(":")[1][0:2]}">
                 $if tf:
@@ -439,7 +439,7 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                         $ show = (gv.sd[u"show"][bid]>>s)&1
                         $if show == 1 and sn != gv.sd[u"mas"]:
                             $ stationEnabled = program['station_mask'][bid]&(1<<s)
-                                      
+
                             <tr>
                                 <td class='station_name'>${snames[sid]}</td>
                                 <td>
@@ -498,5 +498,5 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
 <div id="controls">
     <button id="cSubmit" class="submit"><b>$_(u"Save")</b></button>
     <button id="cCancel" class="cancel danger">$_(u"Cancel")</button>
-    <span id="errorHint"></span>
+    <span id="errorHint" class="text-danger"></span>
 </div>

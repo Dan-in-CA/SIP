@@ -112,25 +112,25 @@ $var header: $_(u'SIP Proto Plugin')
 
 <p class="h4">$_(u'Example Check Boxes using table')</p>
 <form action="${app_path('/proto-save')}" method="get"> <!--Edit: Replace "proto-save" with URL of plugin's class for saving settings-->
+      <div class="border-info border rounded p-2 d-inline-block">
+        <table >
 
-    <table class="optionList">
+            <!--Check boxes-->
+            <thead>
+                <th class="stationNumber">$_(u'Heading')</th>  <!--Edit: Optional-->
+                <th class="stationNumber">$_(u'Heading')</th>  <!--Edit: Optional-->
+            </thead>
+            <tr>
+                <td style='text-transform: none;'>$_(u'Check Box 1'):</td>  <!--Edit-->
+                <td><input type="checkbox" name="check-1"  ${"checked" if 'check-1' in settings else ""}></td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>$_(u'Check Box 2'):</td>  <!--Edit-->
+                <td><input type="checkbox" name="check-2" ${"checked" if 'check-2' in settings else ""}></td>
+            </tr>
 
-        <!--Check boxes-->
-        <thead>
-            <th class="stationNumber">$_(u'Heading')</th>  <!--Edit: Optional-->
-            <th class="stationNumber">$_(u'Heading')</th>  <!--Edit: Optional-->
-        </thead>
-        <tr>
-            <td style='text-transform: none;'>$_(u'Check Box 1'):</td>  <!--Edit-->
-            <td><input type="checkbox" name="check-1"  ${"checked" if 'check-1' in settings else ""}></td>
-        </tr>
-        <tr>
-            <td style='text-transform: none;'>$_(u'Check Box 2'):</td>  <!--Edit-->
-            <td><input type="checkbox" name="check-2" ${"checked" if 'check-2' in settings else ""}></td>
-        </tr>
-
-    </table>
-
+        </table>
+      </div>
     <p class="mt-5 h4">$_(u'Text Entry Fields using bootstrap columns')</p>  <!--Edit-->
     <div class=" border-info border rounded container py-3">
         <!--Text fields-->
