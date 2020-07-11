@@ -27,10 +27,13 @@ import i18n
 from web.webapi import seeother
 import web
 from web import form
+
 try:
     from gpio_pins import GPIO, pin_rain_sense, pin_relay
+
     if gv.use_pigpio:
         import pigpio
+
         pi = pigpio.pi()
 except ImportError:
     print(u"error importing GPIO pins into helpers")
@@ -57,7 +60,7 @@ def report_stations_scheduled(txt=None):
     """
     Send blinker signal indicating that stations had been scheduled.
     """
-    stations_scheduled.send(u"SIP", txt = txt)
+    stations_scheduled.send(u"SIP", txt=txt)
 
 
 rain_changed = signal(u"rain_changed")
@@ -154,7 +157,7 @@ def restart(wait=1, block=False):
         if six.PY2:
             subprocess.Popen(u"systemctl restart sip.service".split())
         elif six.PY3:
-            subprocess.Popen(u"systemctl restart sip3.service".split())    
+            subprocess.Popen(u"systemctl restart sip3.service".split())
     else:
         t = Thread(target=restart, args=(wait, True))
         t.start()
@@ -317,11 +320,11 @@ def log_run():
     """
 
     if gv.sd[u"lg"]:
-        program = "program" #  _(u"program")
-        station = "station" #  _(u"station")
-        duration = "duration" #  _(u"duration")
-        strt = "start" #  _(u"start")
-        date = "date" #  _(u"date")
+        program = "program"  #  _(u"program")
+        station = "station"  #  _(u"station")
+        duration = "duration"  #  _(u"duration")
+        strt = "start"  #  _(u"start")
+        date = "date"  #  _(u"date")
         if gv.lrun[1] == 0:  # skip program 0
             return
         elif gv.lrun[1] == 98:
@@ -388,15 +391,14 @@ def prog_match(prog):
     this_minute = (lt.tm_hour * 60) + lt.tm_min  # Check time match
     if this_minute < prog[u"start_min"] or this_minute >= prog[u"stop_min"]:
         return 0
-    if (
-        prog[u"cycle_min"] == 0
-        and (this_minute == prog[u"start_min"])
-    ):
+    if prog[u"cycle_min"] == 0 and (this_minute == prog[u"start_min"]):
         return 1  # Program matched
     elif (
         prog[u"cycle_min"] != 0
-        and (this_minute - prog[u"start_min"]) // prog[u"cycle_min"]
-     * prog[u"cycle_min"] == this_minute - prog[u"start_min"]
+        and (this_minute - prog[u"start_min"])
+        // prog[u"cycle_min"]
+        * prog[u"cycle_min"]
+        == this_minute - prog[u"start_min"]
     ):
         return 1  # Program matched
     return 0
@@ -406,23 +408,20 @@ def schedule_stations(stations):
     """
     Schedule stations/valves/zones to run.
     """
-    if (gv.sd[u"rd"]   #  If rain delay or rain detected by sensor
-        or (gv.sd[u"urs"] 
-            and gv.sd[u"rs"]
-            )
-        ):
+    if gv.sd[u"rd"] or (  #  If rain delay or rain detected by sensor
+        gv.sd[u"urs"] and gv.sd[u"rs"]
+    ):
         rain = True
     else:
         rain = False
     accumulate_time = gv.now
     if gv.sd[u"seq"]:  # sequential mode, stations run one after another
-        for b in range(len(stations)): # stations is a list of bitmasks
+        for b in range(len(stations)):  # stations is a list of bitmasks
             for s in range(8):
                 sid = b * 8 + s  # station index
                 if gv.rs[sid][2]:  # if station has a duration value
                     if (
-                        not rain 
-                        or gv.sd[u"ir"][b] & 1 << s
+                        not rain or gv.sd[u"ir"][b] & 1 << s
                     ):  # if no rain or station ignores rain
                         gv.rs[sid][0] = accumulate_time  # start at accumulated time
                         accumulate_time += gv.rs[sid][2]  # add duration
@@ -437,13 +436,13 @@ def schedule_stations(stations):
         for b in range(len(stations)):
             for s in range(8):
                 sid = b * 8 + s  # station index
-                if (not stations[b] & 1 << s
-                    or gv.srvals[sid]  # - test
-                    ):  # skip stations not in prog or already running
+                if (
+                    not stations[b] & 1 << s or gv.srvals[sid]  # - test
+                ):  # skip stations not in prog or already running
                     continue
                 if gv.rs[sid][2]:  # if station has a duration value
-                    if (not rain 
-                        or gv.sd[u"ir"][b] & 1 << s
+                    if (
+                        not rain or gv.sd[u"ir"][b] & 1 << s
                     ):  # if no rain or station ignores rain
                         gv.rs[sid][0] = gv.now  # set start time
                         gv.rs[sid][1] = gv.now + gv.rs[sid][2]  # set stop time
@@ -604,10 +603,7 @@ def check_login(redirect=False):
 
 
 signin_form = form.Form(
-    form.Password(
-        name=u'password', description=_(u"Passphrase") + u":", value=u''
-        ),
-    
+    form.Password(name=u"password", description=_(u"Passphrase") + u":", value=u""),
     validators=[
         form.Validator(
             _(u"Incorrect passphrase, please try again"),

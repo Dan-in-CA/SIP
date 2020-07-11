@@ -18,9 +18,6 @@ $code:
     days= json.dumps([_(u'Sunday'), _(u'Monday'), _(u'Tuesday'), _(u'Wednesday'), _(u'Thursday'), _(u'Friday'), _(u'Saturday')])
     months = json.dumps([_(u'January'), _(u'February'), _(u'March'), _(u'April'), _(u'May'), _(u'June'), _(u'July'), _(u'August'), _(u'September'), _(u'October'), _(u'November'), _(u'December')])
 
-$code:
-    deviceOffset = int(time.time() - timegm(time.localtime()))
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,7 +91,7 @@ $code:
     
     <script>
         // Variables set server-side
-        var devTzOffset = ${deviceOffset} * 1000
+        var devTzOffset = ${gv.tz_offset}*1000;
         var cliTzOffset = new Date().getTimezoneOffset() * 60 * 1000;
         var timeFormat = ${gv.sd[u"tf"]};
         var dayList = $:{days};
@@ -202,12 +199,21 @@ $code:
               $if (gv.plugFtr):
                   <div class="row">              
                       <div class="col-12-xs col-xs-offset-4 piDatFooter" id="plugFtrPars"></div> <!--div for plugin data display -->
+<<<<<<< Updated upstream
                   </div>
               <div class="row">
                   <div class="col-5-xs"></div>
                   <div class="col-5-xs pull-right">
                     <button id="bHelp" class="help" title=$:{json.dumps(_(u'Help'), ensure_ascii=False)}>$_(u'?')</button>
                   </div>
+=======
+                  </div>
+              <div class="row">
+                  <div class="col-5-xs"></div>
+                  <div class="col-5-xs pull-right">
+                    <button id="bHelp" class="help" title=$:{json.dumps(_(u'Help'), ensure_ascii=False)}>$_(u'?')</button>
+                  </div>
+>>>>>>> Stashed changes
               </div>
           
           <div class="row">

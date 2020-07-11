@@ -267,13 +267,15 @@ $if gv.sd[u'mm']:
                             $if rem > 65536:
                                 $ rem = 0
                             <td class="station_running">
-                                <button class='toggle manual narrow ${'on' if sbit else 'off'}' id='${sid}'><span class='toggleleft'>$_(u'On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Off')</span></button>
-                                    ${'in' if sbit else 'for'}
-                                <input type='text' id='mm${sid}' size='2' maxlength='3' value='${two_digits(rem/60)}'/>:
-                                <input type='text' id='ss${sid}' size='2' maxlength='2' value='${two_digits(rem%60)}'/> (mm:ss)
-                            </td>
+                                <button class='toggle manual narrow ${'on' if sbit else 'off'}' id='${sid}'><span class='toggleleft'>$_(u'On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Off')</span></button></td>
+                             <td>&#160;</td> <td class="nonselectable">${'in' if sbit else 'for'}</td><td class="nonselectable">&nbsp;</td>
+                             <td>   <input type='text' id='mm${sid}' size='2' maxlength='3' value='${two_digits(rem/60)}'/></td> 
+                             <td class="nonselectable">&nbsp;</td><td class="nonselectable">:</td><td class="nonselectable">&nbsp;</td>
+                             <td>   <input type='text' id='ss${sid}' size='2' maxlength='2' value='${two_digits(rem%60)}'/> </td>
+                             <td class="nonselectable">&nbsp;</td><td class="nonselectable">(mm:ss)</td>
                     </tr>
-        </table>
+        </table></div>
+        <div>
         <button id="pStopAll" class="execute delete">$_(u'Stop All Stations')</button>
     </div>
 
