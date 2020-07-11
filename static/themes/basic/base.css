@@ -51,11 +51,11 @@ div.footer {
 	background-repeat: no-repeat;
 	background-color: #32A620;
 	color:white;
-/* 	text-align: right; */
+	text-align: right;
 	padding: 16px 160px;
 	font-size:9pt;
 	clear: both;
-	width: 100%;
+/* 	width: 100%; */
 }
 
 div.content {

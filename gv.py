@@ -108,6 +108,9 @@ from helpers import load_programs, station_names
 
 nowt = time.localtime()
 now = timegm(nowt)
+tz_offset = int(
+    time.time() - timegm(time.localtime())
+)  # compatible with Javascript (negative tz shown as positive value)
 plugin_menu = []  # Empty list of lists for plugin links (e.g. ["name", "URL"])
 srvals = [0] * (sd[u"nst"])  # Shift Register values
 output_srvals = [0] * (sd[u"nst"])  # Shift Register values last set by set_output()
