@@ -52,7 +52,7 @@ div.footer {
 	background-color: #32A620;
 	color:white;
 	text-align: right;
-	padding: 16px 160px;
+	padding: 16px 160px 16px 50px;
 	font-size:9pt;
 	clear: both;
 /* 	width: 100%; */
@@ -259,7 +259,9 @@ button.help {
 	font-weight: 700;
     background-color: #2E3959;
 }
-
+button#pStopAll {
+	margin-bottom: 10px;
+}
 button.toggle {
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -639,6 +641,9 @@ td.stationSchedule {
    div.header div.title {
 	  font-size: 16pt;
    }
+   div.ftrInfo {
+	  min-width: 100px;
+   }  
    div#status {
       float: none;
       width: 100%;

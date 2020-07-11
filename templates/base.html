@@ -28,8 +28,8 @@ $code:
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="IE=edge"> 
     
-  	<link rel="stylesheet" href="$app_path('/static/bootstrap-3.3.7/css/bootstrap.min.css')">
-  	<link rel="stylesheet" href="$app_path('/static/bootstrap-timepicker/css/bootstrap-timepicker.min.css')">
+<!--   	<link rel="stylesheet" href="$app_path('/static/bootstrap-3.3.7/css/bootstrap.min.css')"> -->
+<!--   	<link rel="stylesheet" href="$app_path('/static/bootstrap-timepicker/css/bootstrap-timepicker.min.css')"> -->
     
     <title>${content.title + (" - " + gv.sd[u'name'] if gv.sd[u'name'] != u"SIP" else "")}</title>
     
@@ -88,8 +88,6 @@ $code:
     </style>
     
     <script src="/static/scripts/jquery-3.4.1.min.js"></script>
-<!--     <script src="/static/bootstrap-3.3.7/js/bootstrap.js"></script> -->
-<!--     <script src="/static/bootstrap-timepicker/js/bootstrap-timepicker.js"></script> -->
     
     
     <script>
@@ -206,12 +204,13 @@ $code:
           <div>
               <div>
                   <button id="bHelp" class="help" title=$:{json.dumps(_(u'Help'), ensure_ascii=False)}>$_(u'?')</button>
-              </div>
-          </div>
-          <div>
+              </div><br>
+<!--           </div> -->
+          <div class="ftrInfo">
               <p>$_(u'CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_(u'Click to toggle Celsius &lt;&gt; Fahrenheit'), ensure_ascii=False)}></span></b></p>
               <p"><a target="_blank" href="https://github.com/Dan-in-CA/sip">$_(u'Software')</a> $_(u'version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
-          </div>       
+          </div>
+          </div>     
         </div>
     </div>
 </body>
