@@ -152,6 +152,7 @@ class update_plugins(ProtectedPage):
 
 
             raise web.seeother(u"/restart")
+        raise web.seeother(u"/restart")
 
 
 

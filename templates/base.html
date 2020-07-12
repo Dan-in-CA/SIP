@@ -138,7 +138,7 @@ $code:
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="collapse navbar-collapse px-1 px-md-0" id="mainMenu">
+                        <div class="collapse navbar-collapse" id="mainMenu">
                             <ul class="navbar-nav w-100 h5">
                                 <li class="nav-item ${' active' if content.page=='programs' else ''}">
                                     <a href="/vp" class="nav-link" title=$:{json_dump(_(u'Define Programs'))}>$_(u'Programs')</a>
@@ -238,7 +238,7 @@ $code:
                         </div>
                         <div class="col-12 col-md my-1 text-right">
                             <a class="" target="_blank" href="https://github.com/Dan-in-CA/sip">$_(u'Software')</a>
-                            <span> $_(u'version'): </span><strong>${gv.ver_str} (${gv.ver_date})</strong>
+                            <span> $_(u'version'): </span><strong>${gv.ver_str} (${gv.ver_date})</strong>l
                         </div>
                  </div>
             </div>

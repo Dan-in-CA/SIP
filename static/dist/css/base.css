@@ -16804,20 +16804,32 @@ td.stationSchedule {
 }
 .nav-item .nav-link {
   position: relative;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
 }
-.nav-item:before {
-  content: "";
-  height: calc( 100% + 1px);
-  position: absolute;
-  transform: skewX(-18deg);
-  width: 100%;
-  left: 0;
+@media (max-width: 991.98px) {
+  .nav-item.active .nav-link {
+    background-color: #397F19;
+  }
+  .nav-item .nav-link:hover, .nav-item .nav-link:focus {
+    background-color: #43941d;
+  }
 }
-.nav-item.active:before {
-  background-color: #397F19;
-}
-.nav-item:hover:before, .nav-item:focus:before {
-  background-color: #43941d;
+@media (min-width: 992px) {
+  .nav-item:before {
+    content: "";
+    height: calc(100% + 1px);
+    position: absolute;
+    transform: skewX(-18deg);
+    width: 100%;
+    left: 0;
+  }
+  .nav-item.active:before {
+    background-color: #397F19;
+  }
+  .nav-item:hover:before, .nav-item:focus:before {
+    background-color: #43941d;
+  }
 }
 
 .c-bgImg {

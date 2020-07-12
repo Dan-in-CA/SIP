@@ -5,10 +5,22 @@ $var page: restart
 $var header: $_(u'SIP is restarting')
 
 <script>
-    setTimeout(function () {
-        window.location.href = '${redirectTo}';
-    }, 1000);
+    var redirectTo = '${redirectTo}';
 
+    function changePage() {
+
+        // A small trick in order to be sure that SIP has been restarted and is answering our requests
+        var interval = setInterval(function () {
+            jQuery.get('/', function () {
+                window.location.href = redirectTo;
+                clearInterval(interval);
+            });
+        }, 1000);
+    }
+
+    jQuery(document).ready(function () {
+        changePage()
+    });
 </script>
 
 

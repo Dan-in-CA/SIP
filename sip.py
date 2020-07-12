@@ -44,7 +44,7 @@ from helpers import (
     get_errors,
     push_error,
     clear_errors,
-    restart
+    restart,
 )
 from ReverseProxied import ReverseProxied
 from urls import urls  # Provides access to URLs for UI pages

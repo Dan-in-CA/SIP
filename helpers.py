@@ -519,7 +519,6 @@ def read_log():
                 result.append(rec)
         return result
     except IOError as e:
-        push_error(u"read_log IOError", e)
         return result
 
 
