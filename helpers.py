@@ -154,7 +154,7 @@ def restart(wait=1, block=False):
         if six.PY2:
             subprocess.Popen(u"systemctl restart sip.service".split())
         elif six.PY3:
-            subprocess.Popen(u"systemctl restart sip3.service".split())
+            subprocess.Popen(u"systemctl restart sip3-gs.service".split())
     else:
         t = Thread(target=restart, args=(wait, True))
         t.start()
