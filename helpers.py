@@ -635,7 +635,7 @@ def redirect_back(default=u"/"):
     """
     Checks HTTP_REFERER
     """
-    referer = web.ctx.env.get('HTTP_REFERER', default)
+    referer = web.ctx.env.get('HTTP_REFERER',default)
     return web.seeother(referer)
 
 def transform_temp(temp, from_unit='C', to_unit='F'):
