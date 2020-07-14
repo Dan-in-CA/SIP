@@ -19,6 +19,7 @@ import subprocess
 import sys
 from threading import Thread
 import time
+import math
 
 # local module imports
 from blinker import signal
@@ -155,7 +156,7 @@ def restart(wait=1, block=False):
         command = u"systemctl status " + str(pid)
         output = str(subprocess.check_output(command.split()))
         unit_name = output.split()[1]
-        command = u"systemctl restart " + unit_name    
+        command = u"systemctl restart " + unit_name
         subprocess.Popen(command.split())
     else:
         t = Thread(target=restart, args=(wait, True))
@@ -640,3 +641,17 @@ def report_error(title, message=None):
     print('SIP error: --------------')
     print(title, message)
     return
+
+
+def transform_temp(temp, from_unit='C', to_unit='F'):
+    temp = float(temp)
+    if from_unit == to_unit or math.isnan(temp):
+        return temp
+    if from_unit == 'C' and to_unit == 'F':
+        temp =   ( 9 / 5 * temp ) + 32
+    if from_unit == 'F' and to_unit == 'C':
+        temp =  ( temp  - 32 ) * 5 / 9
+
+    return round(temp, 2)
+
+
