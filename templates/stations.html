@@ -64,13 +64,14 @@ $code:
 
         });
 
-        jQuery("button#cResetNames").click(function(){
+        jQuery("button#cResetNames").click(function(event){
             jQuery("input[type='text']").each(function () {
                 jQuery(this).val("S" + (parseInt(jQuery(this).attr("name").substring(1)) + 1));
             });
             jQuery(".stationShow input").each(function () {
                 jQuery(this).prop('checked', true);
             });
+            event.preventDefault()
         });
 
     });
@@ -100,11 +101,11 @@ $code:
                     $if sid == gv.sd['mas'] - 1:
                         $if 'wl_weather' in gv.sd:
                             <div class="col-12 col-sm-6 col-lg stationMaster  mt-1 mt-lg-0 " >
-                                <div class="p-1 font-weight-bold text-light bg-info">$_(u'Master valve')</div>
+                                <div class="p-1 font-weight-bold text-light bg-info text-center">$_(u'Master valve')</div>
                             </div>
                         $else:
                             <div class="col-12 col-sm-6 col-lg stationMaster mt-1 mt-lg-0 " >
-                                <div class="p-1 font-weight-bold text-light bg-info">$_(u'Master valve')</div>
+                                <div class="p-1 font-weight-bold text-light bg-info text-center">$_(u'Master valve')</div>
                             </div>
                     $else:
                         <div class="col-12 col-sm-6 col-lg stationShow text-lg-center mt-1 mt-lg-0 ">
@@ -144,7 +145,7 @@ $code:
 
     <div class="mt-5">
         <button class="btn btn-success my-1" type="submit">$_(u'Submit Changes')</button>
-        <button  class="my-1 btn btn-danger">$_(u'Reset Names')</button>
+        <button  id="cResetNames" role="button" class="my-1 btn btn-danger">$_(u'Reset Names')</button>
         <a href="${app_path('/')}" class="my-1 btn btn-secondary">$_(u'Cancel')</a>
     </div>
 </form>

@@ -119,7 +119,7 @@ $escaped-characters: (
 
 $enable-caret:                                true !default;
 $enable-rounded:                              true !default;
-$enable-shadows:                              false !default;
+$enable-shadows:                              true !default;
 $enable-gradients:                            false !default;
 $enable-transitions:                          true !default;
 $enable-prefers-reduced-motion-media-query:   true !default;
@@ -127,7 +127,7 @@ $enable-hover-media-query:                    false !default; // Deprecated, no 
 $enable-grid-classes:                         true !default;
 $enable-pointer-cursor-for-buttons:           true !default;
 $enable-print-styles:                         true !default;
-$enable-responsive-font-sizes:                false !default;
+$enable-responsive-font-sizes:                true !default;
 $enable-validation-icons:                     true !default;
 $enable-deprecation-messages:                 true !default;
 
@@ -180,9 +180,9 @@ $body-color:                $gray-900 !default;
 //
 // Style anchor elements.
 
-$link-color:                              theme-color("primary") !default;
+$link-color:                              $info !default;
 $link-decoration:                         none !default;
-$link-hover-color:                        darken($link-color, 15%) !default;
+$link-hover-color:                        lighten($link-color, 15%) !default;
 $link-hover-decoration:                   underline !default;
 // Darken percentage for links with `.text-*` class (e.g. `.text-success`)
 $emphasized-link-hover-darken-percentage: 15% !default;
@@ -239,7 +239,7 @@ $grid-row-columns:            6 !default;
 // Define common padding and border radius sizes and more.
 
 $line-height-lg:              1.5 !default;
-$line-height-sm:              1.5 !default;
+$line-height-sm:              1.2 !default;
 
 $border-width:                1px !default;
 $border-color:                $gray-300 !default;
@@ -786,7 +786,7 @@ $dropdown-link-active-bg:           $component-active-bg !default;
 
 $dropdown-link-disabled-color:      $gray-600 !default;
 
-$dropdown-item-padding-y:           .25rem !default;
+$dropdown-item-padding-y:           .5rem !default;
 $dropdown-item-padding-x:           1.5rem !default;
 
 $dropdown-header-color:             $gray-600 !default;
