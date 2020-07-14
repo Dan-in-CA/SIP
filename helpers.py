@@ -151,10 +151,12 @@ def restart(wait=1, block=False):
         except Exception:
             pass
         gv.restarted = 0
-        if six.PY2:
-            subprocess.Popen(u"systemctl restart sip.service".split())
-        elif six.PY3:
-            subprocess.Popen(u"systemctl restart sip3-gs.service".split())
+        pid = os.getpid()
+        command = u"systemctl status " + str(pid)
+        output = str(subprocess.check_output(command.split()))
+        unit_name = output.split()[1]
+        command = u"systemctl restart " + unit_name    
+        subprocess.Popen(command.split())
     else:
         t = Thread(target=restart, args=(wait, True))
         t.start()
