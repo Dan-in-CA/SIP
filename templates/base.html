@@ -218,7 +218,7 @@ $code:
                           <input type="hidden" name="tunit" value="${gv.sd[u'tu']}">
                           <div class="text-nowrap">$_(u'CPU Temp'):
                               <button type="submit"  id="heat" style="color: #fff" class="font-weight-bold btn-link btn" title=$:{json.dumps(_(u'Click to toggle Celsius &lt;&gt; Fahrenheit'), ensure_ascii=False)}>
-                              ${transform_temp(gv.cputemp,'C', gv.sd[u'tu'])} ${gv.sd[u'tu']}
+                              ${convert_temp(gv.cputemp,'C', gv.sd[u'tu'])} ${gv.sd[u'tu']}
                               </button>
                           </div>
                       </form>

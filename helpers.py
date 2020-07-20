@@ -643,14 +643,30 @@ def report_error(title, message=None):
     return
 
 
-def transform_temp(temp, from_unit='C', to_unit='F'):
+def convert_temp(temp, from_unit='C', to_unit='F'):
     temp = float(temp)
+    from_unit = from_unit.upper() #  handle lower case input
+    to_unit = to_unit.upper()
+
     if from_unit == to_unit or math.isnan(temp):
         return temp
-    if from_unit == 'C' and to_unit == 'F':
-        temp =   ( 9 / 5 * temp ) + 32
-    if from_unit == 'F' and to_unit == 'C':
-        temp =  ( temp  - 32 ) * 5 / 9
+    if from_unit == 'C':convert
+        if to_unit == 'F':
+            temp = (1.8 * temp) + 32
+        elif to_unit == 'K':
+            temp += 273.15
+    elif from_unit == 'F':
+        c_temp = (temp - 32) * 5 / 9
+        if to_unit == 'C':
+            temp = c_temp
+        elif to_unit == 'K':
+            temp = c_temp + 273.15
+    elif from_unit == 'K':
+        c_temp = temp - 273.15
+        if to_unit == 'C':
+            temp = c_temp
+        elif to_unit == 'F':
+            temp = (9 / 5 * c_temp) + 32
 
     return round(temp, 2)
 
