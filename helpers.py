@@ -153,10 +153,12 @@ def restart(wait=1, block=False):
         except Exception:
             pass
         gv.restarted = 0
-        if six.PY2:
-            subprocess.Popen(u"systemctl restart sip.service".split())
-        elif six.PY3:
-            subprocess.Popen(u"systemctl restart sip3.service".split())
+        pid = os.getpid()
+        command = u"systemctl status " + str(pid)
+        output = str(subprocess.check_output(command.split()))
+        unit_name = output.split()[1]
+        command = u"systemctl restart " + unit_name
+        subprocess.Popen(command.split())
     else:
         t = Thread(target=restart, args=(wait, True))
         t.start()
@@ -518,7 +520,7 @@ def read_log():
                     rec = json.loads(i)
                 result.append(rec)
         return result
-    except IOError as e:
+    except IOError:
         return result
 
 
@@ -541,7 +543,7 @@ def station_names():
         with open(u"./data/snames.json", u"r") as snf:
             return json.load(snf)
     except IOError as e:
-        push_error(u"station_names function", e)
+        report_error(u"station_names function", e)
         stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08"]
         jsave(stations, u"snames")
         return stations
@@ -631,33 +633,15 @@ def get_input(qdict, key, default=None, cast=None):
             result = cast(result)
     return result
 
-def redirect_back(default=u"/"):
+
+def report_error(title, message=None):
     """
-    Checks HTTP_REFERER
-    """
-    referer = web.ctx.env.get('HTTP_REFERER',default)
-    return web.seeother(referer)
-
-def transform_temp(temp, from_unit='C', to_unit='F'):
-    temp = float(temp)
-    if from_unit == to_unit or math.isnan(temp):
-        return temp
-    if from_unit == 'C' and to_unit == 'F':
-        temp =   ( 9 / 5 * temp ) + 32
-    if from_unit == 'F' and to_unit == 'C':
-        temp =  ( temp  - 32 ) * 5 / 9
-
-    return round(temp, 2)
-
-def slugify(text, delim = "-"):
-    return re.sub(r'[\W_]+', str(delim) ,  text, re.UNICODE)
-
-def push_error(title, message):
-    """
-    Push errors on a global variable in order to show them on interface
+    All errors are reported here
     """
 
+    print('SIP error: --------------')
     print(title, message)
+
     errors= globals()['errors'] if 'errors' in globals().keys() else []
     error= dict()
     error['title']= title
@@ -685,3 +669,18 @@ def clear_errors():
         del globals()['errors'][:]
 
     return
+
+
+def transform_temp(temp, from_unit='C', to_unit='F'):
+    temp = float(temp)
+    if from_unit == to_unit or math.isnan(temp):
+        return temp
+    if from_unit == 'C' and to_unit == 'F':
+        temp =   ( 9 / 5 * temp ) + 32
+    if from_unit == 'F' and to_unit == 'C':
+        temp =  ( temp  - 32 ) * 5 / 9
+
+    return round(temp, 2)
+
+def slugify(text, delim = "-"):
+    return re.sub(r'[\W_]+', str(delim) ,  text, re.UNICODE)

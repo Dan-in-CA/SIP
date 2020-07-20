@@ -21,8 +21,8 @@ old_count = 868 #  update this to reset revision number.
 try:
     revision = int(subprocess.check_output([u"git", u"rev-list", u"--count", u"HEAD"]))
     ver_str = u"{}.{}.{}".format(major_ver, minor_ver, (revision - old_count))
-except Exception:
-    print(_(u"Could not use git to determine version!"))
+except Exception as e:
+    report_error(_(u"Could not use git to determine version!"), e)
     revision = 999
     ver_str = u"{}.{}.{}".format(major_ver, minor_ver, revision)
 
@@ -31,8 +31,8 @@ try:
         [u"git", u"log", u"-1", u"--format=%cd", u"--date=short"]
     ).strip()
     ver_date = ver_date.decode('utf-8')
-except Exception:
-    print(_(u"Could not use git to determine date of last commit!"))
+except Exception as e:
+    report_error(_(u"Could not use git to determine date of last commit!"), e)
     ver_date = u"2015-01-09"
 
 #####################
@@ -99,8 +99,8 @@ if sd[u"pigpio"]:
     try:
         subprocess.check_output(u"pigpiod", stderr=subprocess.STDOUT)
         use_pigpio = True
-    except Exception:
-        print(u"pigpio not found. Using RPi.GPIO")
+    except Exception as e:
+        report_error(u"pigpio not found. Using RPi.GPIO", e)
 else:
     use_pigpio = False
 

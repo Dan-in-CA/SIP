@@ -20,7 +20,7 @@ import time
 # local module imports
 import gv  # Get access to SIP's settings
 from helpers import restart
-from helpers import push_error
+from helpers import report_error
 from sip import template_render
 from urls import urls  # Get access to SIP's URLs
 import web
@@ -58,7 +58,7 @@ def get_permissions():
         settings = dict(list(zip(installed, permissions)))
         return settings
     except IOError as e:
-        push_error(u"get_permissions IOError", e)
+        report_error(u"get_permissions IOError", e)
         settings = {}
         return settings
 
@@ -72,7 +72,7 @@ def parse_manifest(plugin):
             f_list = [line.strip() for line in mf_list[int(sep) + 2 :]]
             return (desc, f_list)
     except IOError as e:
-        push_error(u"parse_manifest IOError", e)
+        report_error(u"parse_manifest IOError", e)
         return (u"", [])
 
 
@@ -99,7 +99,7 @@ def get_readme():
             else:
                 plugs[plug_list[breaks[i] - 1]] = u" ".join(plug_list[breaks[i] + 1 :])
     except IOError as e:
-        push_error(U"We couldn't get readme file for github", e)
+        report_error(U"We couldn't get readme file for github", e)
 
     return plugs
 
@@ -186,13 +186,13 @@ class install_plugins(ProtectedPage):
                 + u".manifest"
             )
             data = response.readlines()
-            data = [i.decode(u'utf-8') for i in data]
+            data = [i.decode('utf-8') for i in data]
             sep = [i for i, s in enumerate(data) if u"###" in s][0]
             file_list = [line.strip() for line in data[int(sep) + 2 :]]
             short_list = [
                 x for x in file_list if not u"data" in x and not u"manifest" in x
             ]
-            with open(u"plugins/manifests/" + p + u".manifest", u"w") as new_mf:
+            with open(u"plugins/manifests/" + p + u".manifest", "w") as new_mf:
                 new_mf.writelines(data)
             for f in short_list:
                 pf = f.split()
@@ -202,13 +202,13 @@ class install_plugins(ProtectedPage):
                     + u"/"
                     + pf[0]
                 )
+                f_data = response.read()
                 try:
-                    f_data = response.read().decode(u'utf-8')
-                    with open(pf[1] + u"/" + pf[0], u"w") as next_file:
+                    f_data = f_data.decode('utf-8')
+                    with open(pf[1] + u"/" + pf[0], "w") as next_file:
                         next_file.write(f_data)
                 except UnicodeDecodeError:
-                    f_data = response.read()
-                    with open(pf[1] + u"/" + pf[0], u"wb") as next_file:
+                    with open(pf[1] + u"/" + pf[0], "wb") as next_file:
                         next_file.write(f_data)
         raise web.seeother(u"/plugins")
 

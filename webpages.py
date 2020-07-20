@@ -148,7 +148,7 @@ class change_values(ProtectedPage):
             try:
                 gv.sd[key] = int(qdict[key])
             except Exception as e:
-                push_error(u"change_values Exception", e)
+                report_error(u"change_values Exception", e)
                 pass
         jsave(gv.sd, u"sd")
         report_value_change()
@@ -187,8 +187,7 @@ class change_options(ProtectedPage):
                         raise web.seeother(u"/vo?errorCode=pw_mismatch")
                 else:
                     raise web.seeother(u"/vo?errorCode=pw_wrong")
-            except KeyError as e:
-                push_error(u"change_options KeyError", e)
+            except KeyError:
                 pass
 
         for f in [u"name"]:

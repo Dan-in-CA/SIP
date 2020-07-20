@@ -13,17 +13,10 @@ import ast
 from calendar import timegm
 import i18n
 import json
-import os  # - test
 import subprocess
 import sys
 from threading import Thread
 import time
-
-sip_path = os.path.dirname(os.path.abspath(__file__))  # - test
-# print("sip_path: ", sip_path)  # - test
-# print("working directory: ", os.getcwd())  # - test
-os.chdir(sip_path)
-# print("changed working directory: ", os.getcwd())  # - test
 
 # local module imports
 import gv
@@ -39,12 +32,12 @@ from helpers import (
     schedule_stations,
     station_names,
     stop_onrain,
+    report_error,
+    restart,
     transform_temp,
     slugify,
     get_errors,
-    push_error,
     clear_errors,
-    restart,
 )
 from ReverseProxied import ReverseProxied
 from urls import urls  # Provides access to URLs for UI pages
@@ -52,16 +45,6 @@ import web  # the Web.py module. See webpy.org (Enables the Python SIP web inter
 
 sys.path.append(u"./plugins")
 gv.restarted = 1
-
-# import os  # - test
-# sip_path = os.path.dirname(os.path.abspath(__file__))  # - test
-# print("sip_path: ", sip_path)  # - test
-#
-# print("working directory: ", os.getcwd())  # - test
-# os.chdir(sip_path)
-# print("working directory again: ", os.getcwd())  # - test
-
-
 
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
@@ -290,7 +273,7 @@ if __name__ == u"__main__":
     try:
         print(_(u"plugins loaded:"))
     except Exception as e:
-        push_error(u"Import plugins error", e)
+        report_error(u"Import plugins error", e)
         pass
     for name in plugins.__all__:
         print(u" ", name)
@@ -303,7 +286,7 @@ if __name__ == u"__main__":
             if u"/plugins" in item:
                 gv.plugin_menu.pop(i)
     except Exception as e:
-        push_error(u"Creating plugins menu", e)
+        report_error(u"Creating plugins menu", e)
         pass
     tl = Thread(target=timing_loop)
     tl.daemon = True
@@ -313,8 +296,6 @@ if __name__ == u"__main__":
         set_output()
 
     app.notfound = lambda: web.seeother(u"/")
-
-#     print("sip_path: ", sip_path)  # - test
 
     ###########################
     #### For HTTPS (SSL):  ####
@@ -330,7 +311,7 @@ if __name__ == u"__main__":
         except IOError as e:
             gv.sd[u"htp"] = int(80)
             jsave(gv.sd, u"sd")
-            push_error(u"SSL error", e)
+            report_error(u"SSL error", e)
             restart(2)
 
 
