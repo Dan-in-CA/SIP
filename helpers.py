@@ -644,30 +644,33 @@ def report_error(title, message=None):
 
 
 def convert_temp(temp, from_unit='C', to_unit='F'):
-    temp = float(temp)
-    from_unit = from_unit.upper() #  handle lower case input
+    """
+      Convert Temperature
+      supported units :
+      Celsius, Fahrenheit, Kelvin
+     """
+
+    try:
+        temp = float(temp)
+    except ValueError as e:
+        report_error(u"convert_temp function", e)
+        temp = float('nan')
+
+    from_unit = from_unit.upper()  # handle lower case input
     to_unit = to_unit.upper()
 
     if from_unit == to_unit or math.isnan(temp):
         return temp
-    if from_unit == 'C':convert
+    if from_unit == 'C':
         if to_unit == 'F':
             temp = (1.8 * temp) + 32
         elif to_unit == 'K':
             temp += 273.15
     elif from_unit == 'F':
         c_temp = (temp - 32) * 5 / 9
-        if to_unit == 'C':
-            temp = c_temp
-        elif to_unit == 'K':
-            temp = c_temp + 273.15
+        return convert_temp(c_temp, 'C', to_unit)
     elif from_unit == 'K':
         c_temp = temp - 273.15
-        if to_unit == 'C':
-            temp = c_temp
-        elif to_unit == 'F':
-            temp = (9 / 5 * c_temp) + 32
+        return convert_temp(c_temp, 'C', to_unit)
 
     return round(temp, 2)
-
-
