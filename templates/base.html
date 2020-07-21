@@ -232,7 +232,7 @@ $code:
                             <form name="tt" action="${app_path(u'/ttu')}" method="get">
                                 <input type="hidden" name="tunit" value="${gv.sd[u'tu']}">
                                 <div class="text-nowrap">$_(u'CPU Temp'):
-                                    <button type="submit" class="font-weight-bold btn-link btn" title=$:{json_dump(_(u'Click to toggle Celsius &lt;&gt; Fahrenheit'))}>${transform_temp(gv.cputemp,'C', gv.sd[u'tu'])} ${gv.sd[u'tu']}</button>
+                                    <button type="submit" class="font-weight-bold btn-link btn" title=$:{json_dump(_(u'Click to toggle Celsius &lt;&gt; Fahrenheit'))}>${convert_temp(gv.cputemp,'C', gv.sd[u'tu'])} ${gv.sd[u'tu']}</button>
                                 </div>
                             </form>
                         </div>

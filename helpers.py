@@ -671,16 +671,38 @@ def clear_errors():
     return
 
 
-def transform_temp(temp, from_unit='C', to_unit='F'):
-    temp = float(temp)
+def convert_temp(temp, from_unit='C', to_unit='F'):
+    """
+      Convert Temperature
+      supported units :
+      Celsius, Fahrenheit, Kelvin
+     """
+
+    try:
+        temp = float(temp)
+    except(ValueError, TypeError) as e:
+        report_error(u"convert_temp function", e)
+        return float('nan')
+
+    from_unit = from_unit.upper()  # handle lower case input
+    to_unit = to_unit.upper()
+
     if from_unit == to_unit or math.isnan(temp):
-        return temp
-    if from_unit == 'C' and to_unit == 'F':
-        temp =   ( 9 / 5 * temp ) + 32
-    if from_unit == 'F' and to_unit == 'C':
-        temp =  ( temp  - 32 ) * 5 / 9
+        return round(temp, 2)
+    if from_unit == 'C':
+        if to_unit == 'F':
+            temp = (1.8 * temp) + 32
+        elif to_unit == 'K':
+            temp += 273.15
+    elif from_unit == 'F':
+        c_temp = (temp - 32) * 5 / 9
+        return convert_temp(c_temp, 'C', to_unit)
+    elif from_unit == 'K':
+        c_temp = temp - 273.15
+        return convert_temp(c_temp, 'C', to_unit)
 
     return round(temp, 2)
+
 
 def slugify(text, delim = "-"):
     return re.sub(r'[\W_]+', str(delim) ,  text, re.UNICODE)
