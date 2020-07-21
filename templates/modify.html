@@ -2,6 +2,7 @@ $def with (pid, prog)
 
 $var title: $_(u'SIP Modify Program')
 $var page: programs
+$var header: ${_(u"Edit Program #") + str(pid+1) if (pid>-1) else _(u"Add a New Program")}
 
 $code:
     def two_digits(n):
@@ -138,7 +139,7 @@ $code:
         });
         jQuery("button#cRecurring").click(function(){
             jQuery(this).toggleClass("on").toggleClass("off");
-            jQuery("#recurr").toggle();
+            jQuery("#recurr").toggleClass('d-none');
             return false;
         });
         jQuery("table.stationList button.weekday.pushon, table.stationList button.station.toggle").click(function(){
@@ -370,48 +371,78 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
 
 </script>
 <div id="programs">
-    <div class="title">${_(u"Edit Program #") + str(pid+1) if (pid>-1) else _(u"Add a New Program")}</div>
+
     <form name="mf" id="mf" action="${app_path('/cp')}" method="get">
         <input type="hidden" name="pid" value="${pid}">
         <input type="hidden" name="v" value="$:{program}">
-        <div style="padding-left:5px;padding-right:5px;">
-            <p><button id="cProgramEnabled" class="toggle ${'on' if program['enabled'] else 'off'}"><span class='toggleleft'>$_(u'Program On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Program Off')</span></button></p>
+        <div class="row">
+            <div class="col-12 mb-3">
+                <button id="cProgramEnabled" class="toggle btn ${'on' if program['enabled'] else 'off'}">
+                    <span class='toggleleft'>$_(u'Program On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Program Off')</span>
+                </button>
+            </div>
 
-            <div class="controlBlock">
-                <p>
-                $ t = formatTime(two_digits(program['start_min'] / 60) + ":" + two_digits(program['start_min'] % 60))
+            <div class="form-group col-12 col-md">
+            $ t = formatTime(two_digits(program['start_min'] / 60) + ":" + two_digits(program['start_min'] % 60))
 
-                    <b>$_(u'Start Time'):</b> <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "tsh" value = "${t.split(":")[0]}"> :
-                    <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "tsm" value = "${t.split(":")[1][0:2]}">
-                $if tf:
-                    (hh:mm)
-                $else:
-                    <select id='tsf'>
-                        <option ${"selected" if t.find(u"am") >= 0 else ""}>AM</option>
-                        <option ${"selected" if t.find(u"pm") >= 0 else ""}>PM</option>
-                    </select>
-                </p>
-                <p ${"" if not idd else "style=display:none"}><b>$_(u'Duration'):</b> <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "3" id = "tdm" value="${two_digits(int(program['duration_sec'][0]) / 60)}"> :
-                <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tds" value="${two_digits(int(program['duration_sec'][0]) % 60)}"> (mm:ss)</p>
-                <p><button id = "cRecurring" class = "toggle choice ${('off') if recurring else ('on')}"><span class='toggleleft'>$_(u'Single pass')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Recurring')</span></button></p>
-                <div id="recurr" $:{"" if recurring else "style='display:none'"}>
-                    <p><b>$_(u'Every'):</b> <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "tih" value = "${two_digits(program['cycle_min'] / 60)}"> :
-                    <input class="timeInput numbersOnly" type = "text" size = "2" maxlength = "2" id = "tim" value="${two_digits(program['cycle_min'] % 60)}"> (hh:mm)</p>
-                    <p>
-                    $ t = formatTime(two_digits(program[u"stop_min"] // 60) + ":" + two_digits(program[u"stop_min"] % 60))
-                        <b>$_(u"Until"):</b> <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "teh" value = "${t.split(":")[0]}"> :
-                        <input class="timeInput numbersOnly" type = "text" size = "2" maxlength = "2" id = "tem" value = "${t.split(":")[1][0:2]}">
-                    $if tf:
-                        (hh:mm)
-                    $else:
-                        <select id='tef'>
-                            <option ${"selected" if t.find("am") >= 0 else ""}>AM</option>
-                            <option ${"selected" if t.find("pm") >= 0 else ""}>PM</option>
-                        </select>
-                    </p>
+                <label class="d-block font-weight-bold">$_(u'Start Time'):</label>
+                <div class="d-inline-flex align-items-center">
+                    <input class="timeInput numbersOnly form-control" type="number" min="0" max="23" size = "2" maxlength = "2" id = "tsh" value = "${t.split(":")[0]}">
+                    <span class="mx-2 font-weight-bold">:</span>
+                    <input class="timeInput numbersOnly  form-control" type="number" size = "2"min="0" max="59" id = "tsm" value = "${t.split(":")[1][0:2]}">
+                </div>
+            $if tf:
+               <span class="text-muted ml-2">(hh:mm)</span>
+            $else:
+                <select id='tsf'  class="custom-select">
+                    <option ${"selected" if t.find(u"am") >= 0 else ""}>AM</option>
+                    <option ${"selected" if t.find(u"pm") >= 0 else ""}>PM</option>
+                </select>
+            </div>
+
+            <div class="form-group col-12 col-md ${'' if not idd else 'd-none'}">
+                <label class="d-block font-weight-bold">$_(u'Duration'):</label>
+                <div class="d-inline-flex align-items-center">
+                    <input class="timeInput numbersOnly form-control" type="number" size = "2" max = "999" id = "tdm" value="${two_digits(int(program['duration_sec'][0]) / 60)}">
+                        <span class="mx-2 font-weight-bold">:</span>
+                    <input class="timeInput numbersOnly form-control" type="number"  size="2" max="59" id="tds" value="${two_digits(int(program['duration_sec'][0]) % 60)}">
+                    <span class="text-muted ml-2">(mm:ss)</span>
                 </div>
             </div>
-            <p><button id="cWeeklyInterval" class="toggle choice ${'on' if weekly else 'off'}"><span class='toggleleft'>$_(u"Weekly")</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u"Interval")</span></button></p>
+            </div>
+                <p class="mt-4"><button id = "cRecurring" class = "toggle btn choice ${('off') if recurring else ('on')}"><span class='toggleleft'>$_(u'Single pass')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Recurring')</span></button></p>
+                <div id="recurr" class="row $:{'' if recurring else 'd-none'}">
+                      <div class="form-group col-12 col-md">
+                                <label class="d-block font-weight-bold">$_(u'Every'):</label>
+                            <div class="d-inline-flex align-items-center">
+                                <input class="timeInput numbersOnly form-control" type="number" size="2" max="23" id="tih"
+                                       value="${two_digits(program['cycle_min'] / 60)}">
+                                <span class="mx-2 font-weight-bold">:</span>
+                                <input class="timeInput numbersOnly form-control" type="number" size="2" max="59" id="tim"
+                                       value="${two_digits(program['cycle_min'] % 60)}">
+                                <span class="text-muted ml-2">(hh:mm)</span>
+                            </div>
+                     </div>
+                    <div class="form-group col-12 col-md">
+                    $ t = formatTime(two_digits(program[u"stop_min"] // 60) + ":" + two_digits(program[u"stop_min"] % 60))
+                        <label class="d-block font-weight-bold">$_(u'Until'):</label>
+                        <div class="d-inline-flex align-items-center">
+
+                                <input class="timeInput numbersOnly form-control" type="number" size = "2" max = "23" id = "teh" value = "${t.split(":")[0]}">
+                                <span class="mx-2 font-weight-bold">:</span>
+                                <input class="timeInput numbersOnly form-control" type = "number" size = "2" maxlength = "59" id = "tem" value = "${t.split(":")[1][0:2]}">
+                            $if tf:
+                                <span class="text-muted ml-2">(hh:mm)</span>
+                            $else:
+                                <select class="custom-select" id='tef'>
+                                    <option ${"selected" if t.find("am") >= 0 else ""}>AM</option>
+                                    <option ${"selected" if t.find("pm") >= 0 else ""}>PM</option>
+                                </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p><button id="cWeeklyInterval" class="toggle btn choice ${'on' if weekly else 'off'}"><span class='toggleleft'>$_(u"Weekly")</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u"Interval")</span></button></p>
             <table id="stations" class="stationList">
                 <tr class="showWeekly" $:{u"" if weekly else "style = 'display:none'"}>
                     <td colspan="3"></td>
@@ -443,7 +474,7 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                             <tr>
                                 <td class='station_name'>${snames[sid]}</td>
                                 <td>
-                                    <button id="station${sid}" class='station toggle narrow ${u"on" if stationEnabled else u"off"}'><span class='toggleleft'>$_(u"On")</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u"Off")</span></button>
+                                    <button id="station${sid}" class='station toggle btn btn-sm  ${u"on" if stationEnabled else u"off"}'><span class='toggleleft'>$_(u"On")</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u"Off")</span></button>
                                 </td>
                                 <td>
                                     <span ${u"" if idd else "style=display:none"}><input class = "timeInput numbersOnly" type = "text" size = "2" maxlength="3" id="tdm${sid}" value="${two_digits(program['duration_sec'][sid if idd else 0] / 60)}"> :
@@ -484,9 +515,9 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                 <tr class="showWeekly" $:{u"" if weekly else "style='display:none'"}>
                     <td colspan="2"></td>
                     <td colspan="7">
-                        <button id="cRestrictions" class="toggle choice ${'off' if even or odd else 'on'}"><span class='toggleleft'>$_(u"Any Day")</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u"Restrict Day")</span></button>
+                        <button id="cRestrictions" class="toggle btn choice ${'off' if even or odd else 'on'}"><span class='toggleleft'>$_(u"Any Day")</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u"Restrict Day")</span></button>
                         <span id="evenodd" $:{u"" if even or odd else "style='display:none'"}>
-                            <button id="cEvenOdd" class="toggle narrow choice ${'on' if even else 'off'}" ><span class='toggleleft'>$_(u"Even")</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u"Odd")</span></button>
+                            <button id="cEvenOdd" class="toggle btn btn-sm  choice ${'on' if even else 'off'}" ><span class='toggleleft'>$_(u"Even")</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u"Odd")</span></button>
                             $_(u'(except 31st and Feb 29th)')</span>
                     </td>
                 </tr>
@@ -496,7 +527,7 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
 </div>
 
 <div id="controls">
-    <button id="cSubmit" class="submit"><b>$_(u"Save")</b></button>
-    <button id="cCancel" class="cancel danger">$_(u"Cancel")</button>
+    <button id="cSubmit" class="btn btn-success"><b>$_(u"Save")</b></button>
+    <button id="cCancel" class="btn btn-danger">$_(u"Cancel")</button>
     <span id="errorHint" class="text-danger"></span>
 </div>

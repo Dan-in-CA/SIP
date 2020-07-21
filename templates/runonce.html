@@ -14,7 +14,7 @@ $code:
         //
     	// });
 
-        jQuery("form").submit(function(e){
+        jQuery("form#runOnce").submit(function(e){
             var comm="[";
             var sid,strmm,strss,mm,ss,matchfound=0;
             for (sid=0; sid<nbrd*8; sid++) {
@@ -49,7 +49,7 @@ $code:
 </script>
 
 
-<form action="${app_path('/cr')}" method="get">
+<form id="runOnce" action="${app_path('/cr')}" method="get">
         $for bid in range(0, gv.sd['nbrd']):
             $for s in range(0,8):
                 $ sid = bid*8 + s

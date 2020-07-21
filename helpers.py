@@ -684,3 +684,10 @@ def transform_temp(temp, from_unit='C', to_unit='F'):
 
 def slugify(text, delim = "-"):
     return re.sub(r'[\W_]+', str(delim) ,  text, re.UNICODE)
+
+def redirect_back(default=u"/"):
+    """
+    Checks HTTP_REFERER
+    """
+    referer = web.ctx.env.get('HTTP_REFERER',default)
+    return web.seeother(referer)

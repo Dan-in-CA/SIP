@@ -24,48 +24,55 @@ $screen-lg-min: breakpoint-min('lg');
 
 @import "./styles/base";
 
-.nav-item {
+.navbar .nav-item {
   $-hover-color: theme-color('primary');
-  transition: $transition-base;
-  position: relative;
 
   .nav-link {
+    z-index: 1;
     position: relative;
+    transition: $transition-base;
     padding-right: $navbar-nav-link-padding-x;
     padding-left: $navbar-nav-link-padding-x;
-
   }
 
   @include media-breakpoint-down('md') {
-    &.active .nav-link {
-      background-color: $-hover-color;
-    }
-
     .nav-link {
       &:hover, &:focus {
         background-color: lighten($-hover-color, 5%);
       }
     }
+    &.active .nav-link {
+      background-color: $-hover-color;
+    }
+
   }
 
 
   @include media-breakpoint-up('lg') {
-    &:before {
-      content: '';
-      height: calc(100% + 1px);
-      position: absolute;
-      transform: skewX(-18deg);
-      width: 100%;
-      left: 0;
+
+    .nav-link {
+      &:before {
+        content: '';
+        height: calc(100% + 1px);
+        position: absolute;
+        transform: skewX(-18deg);
+        width: 100%;
+        left: 0;
+        top: 0;
+        z-index: -1;
+        transition: $transition-base;
+      }
+
+      &:hover:before, &:focus:before {
+        background-color: lighten($-hover-color, 5%);
+
+      }
     }
 
-    &.active:before {
+    &.active .nav-link:before {
       background-color: $-hover-color;
     }
 
-    &:hover:before, &:focus:before {
-      background-color: lighten($-hover-color, 5%);
-    }
   }
 }
 

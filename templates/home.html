@@ -2,6 +2,7 @@ $def with ()
 
 $var title: SIP Irrigation Control
 $var page: home
+$var header:  $_(u'Status')
 
 $code:
 	tf = gv.sd[u"tf"]
@@ -115,7 +116,7 @@ $code:
     	jQuery.get("rss", function(data){
 	    	if(priorRs != data) {
 	    		priorRs = data;
-	    		location.reload(true);
+	    		location.reload();
 	    	}
     	})
     }
@@ -274,7 +275,7 @@ $if gv.sd[u'mm']:
                             </td>
                     </tr>
         </table>
-        <button id="pStopAll" class="execute delete">$_(u'Stop All Stations')</button>
+        <button id="pStopAll" class="btn btn-info">$_(u'Stop All Stations')</button>
     </div>
 
 $else:
