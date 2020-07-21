@@ -652,15 +652,15 @@ def convert_temp(temp, from_unit='C', to_unit='F'):
 
     try:
         temp = float(temp)
-    except ValueError as e:
+    except(ValueError, TypeError) as e:
         report_error(u"convert_temp function", e)
-        temp = float('nan')
+        return float('nan')
 
     from_unit = from_unit.upper()  # handle lower case input
     to_unit = to_unit.upper()
 
     if from_unit == to_unit or math.isnan(temp):
-        return temp
+        return round(temp, 2)
     if from_unit == 'C':
         if to_unit == 'F':
             temp = (1.8 * temp) + 32
