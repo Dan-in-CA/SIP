@@ -3577,8 +3577,8 @@ input[type=button].btn-block {
 }
 .custom-control-input:checked ~ .custom-control-label::before {
   color: #fff;
-  border-color: #3b4a7e;
-  background-color: #3b4a7e;
+  border-color: #397F19;
+  background-color: #397F19;
   box-shadow: none;
 }
 .custom-control-input:focus ~ .custom-control-label::before {
@@ -16845,37 +16845,38 @@ td.stationSchedule {
     max-width: 100%;
   }
 }
-.nav-item {
+.navbar .nav-item .nav-link {
+  z-index: 1;
+  position: relative;
   transition: all 0.2s ease-in-out;
-  position: relative;
-}
-.nav-item .nav-link {
-  position: relative;
   padding-right: 0.5rem;
   padding-left: 0.5rem;
 }
 @media (max-width: 991.98px) {
-  .nav-item.active .nav-link {
-    background-color: #397F19;
-  }
-  .nav-item .nav-link:hover, .nav-item .nav-link:focus {
+  .navbar .nav-item .nav-link:hover, .navbar .nav-item .nav-link:focus {
     background-color: #43941d;
+  }
+  .navbar .nav-item.active .nav-link {
+    background-color: #397F19;
   }
 }
 @media (min-width: 992px) {
-  .nav-item:before {
+  .navbar .nav-item .nav-link:before {
     content: "";
     height: calc(100% + 1px);
     position: absolute;
     transform: skewX(-18deg);
     width: 100%;
     left: 0;
+    top: 0;
+    z-index: -1;
+    transition: all 0.2s ease-in-out;
   }
-  .nav-item.active:before {
-    background-color: #397F19;
-  }
-  .nav-item:hover:before, .nav-item:focus:before {
+  .navbar .nav-item .nav-link:hover:before, .navbar .nav-item .nav-link:focus:before {
     background-color: #43941d;
+  }
+  .navbar .nav-item.active .nav-link:before {
+    background-color: #397F19;
   }
 }
 

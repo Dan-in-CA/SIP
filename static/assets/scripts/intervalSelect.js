@@ -2,10 +2,10 @@
 	Behaviors and animation loops for interval selector
 */
 
-var animations = [];
-var frameRate = 15, growRate = 2, shrinkRate = 1;
+window.animations = [];
+window.frameRate = 15, growRate = 2, shrinkRate = 1;
 
-function processAnimations() {
+window.processAnimations=function() {
 	var active = false;
 	for (var a in animations) {
 		var anim = animations[a];
@@ -23,7 +23,7 @@ function processAnimations() {
 		setTimeout(processAnimations, 1000/frameRate);
 	}
 }
-function addAnimation(element, finalSize) {
+window.addAnimation=function(element, finalSize) {
 	var thisIndex = jQuery(element).index();
 	var found = false;
 	for (var a in animations) {
@@ -43,14 +43,14 @@ function addAnimation(element, finalSize) {
 	return !found;
 }
 
-function intervalSelectMouseover() {
+window.intervalSelectMouseover=function() {
 	if (addAnimation(this, 40)) {
 		processAnimations();
 	}
 }
 
-function intervalSelectMouseout() {
-	var originalSize = 	jQuery(this).hasClass("distance0") ? 40 : 
+window.intervalSelectMouseout=function() {
+	var originalSize = 	jQuery(this).hasClass("distance0") ? 40 :
 						(jQuery(this).hasClass("distance1") ? 34 :
 						(jQuery(this).hasClass("distance2") ? 30 :
 						26));
@@ -59,7 +59,7 @@ function intervalSelectMouseout() {
 	}
 }
 
-function intervalSelectClick() {
+window.intervalSelectClick=function() {
 	jQuery(this).parent().children(".intervalSelect.distance0").each(function(){
 		addAnimation(this, 26);
 		jQuery(this).removeClass("distance0");

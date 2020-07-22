@@ -255,7 +255,7 @@ $box-shadow:                  0 .5rem 1rem rgba($black, .15) !default;
 $box-shadow-lg:               0 1rem 3rem rgba($black, .175) !default;
 
 $component-active-color:      $white !default;
-$component-active-bg:         theme-color("primary") !default;
+$component-active-bg:         $primary !default;
 
 $caret-width:                 .3em !default;
 $caret-vertical-align:        $caret-width * .85 !default;
@@ -546,7 +546,7 @@ $custom-control-indicator-disabled-bg:          $input-disabled-bg !default;
 $custom-control-label-disabled-color:           $gray-600 !default;
 
 $custom-control-indicator-checked-color:        $component-active-color !default;
-$custom-control-indicator-checked-bg:           theme-color("info")!default;//$component-active-bg
+$custom-control-indicator-checked-bg:           $component-active-bg !default;
 $custom-control-indicator-checked-disabled-bg:  rgba(theme-color("primary"), .5) !default;
 $custom-control-indicator-checked-box-shadow:   none !default;
 $custom-control-indicator-checked-border-color: $custom-control-indicator-checked-bg !default;

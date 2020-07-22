@@ -119,7 +119,7 @@ $code:
         <div class="col-12 col-sm-8 col-lg-6 my-4">
         <div id="p${pid}" class="card border program ${'disabled border-danger' if prog['enabled'] == 0 else 'border-primary'}">
 
-        <header class="card-header d-flex flex-wrap  text-white ${'bg-danger' if prog['enabled'] == 0 else 'bg-primary'}">
+        <header class="card-header d-flex flex-wrap  text-white ${'bg-danger' if prog['enabled'] == 0 else 'bg-info'}">
            <div>
                <span class="h4">$_(u'Program') ${pid+1}: </span>
                <span class="font-weight-bold text-nowrap">${pdays(prog['day_mask'], prog['interval_base_day'])}</span>

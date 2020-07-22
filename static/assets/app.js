@@ -13,14 +13,12 @@ window.dateString=function dateString(d) {
     dateString += monthList [d.getMonth()]; // Moved translatable text to base.html, dk
     return dateString;
 }
+require('./scripts/intervalSelect');
+// require('./scripts/schedule');
 
 import ClockHandler from './scripts/time';
 
-
 window.addEventListener('DOMContentLoaded', (event) => {
     ClockHandler.init('#deviceTime')
-    require('./scripts/intervalSelect');
-    require('./scripts/schedule');
-
 
 });
