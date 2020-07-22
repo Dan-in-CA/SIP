@@ -659,7 +659,7 @@ def convert_temp(temp, from_unit='C', to_unit='F'):
     from_unit = from_unit.upper()  # handle lower case input
     to_unit = to_unit.upper()
 
-    if from_unit == to_unit or math.isnan(temp):
+    if from_unit == to_unit:
         return round(temp, 2)
     if from_unit == 'C':
         if to_unit == 'F':
