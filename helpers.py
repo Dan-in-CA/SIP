@@ -19,6 +19,7 @@ import subprocess
 import sys
 from threading import Thread
 import time
+import math
 
 # local module imports
 from blinker import signal
@@ -155,7 +156,7 @@ def restart(wait=1, block=False):
         command = u"systemctl status " + str(pid)
         output = str(subprocess.check_output(command.split()))
         unit_name = output.split()[1]
-        command = u"systemctl restart " + unit_name    
+        command = u"systemctl restart " + unit_name
         subprocess.Popen(command.split())
     else:
         t = Thread(target=restart, args=(wait, True))
@@ -640,3 +641,36 @@ def report_error(title, message=None):
     print('SIP error: --------------')
     print(title, message)
     return
+
+
+def convert_temp(temp, from_unit='C', to_unit='F'):
+    """
+      Convert Temperature
+      supported units :
+      Celsius, Fahrenheit, Kelvin
+     """
+
+    try:
+        temp = float(temp)
+    except(ValueError, TypeError) as e:
+        report_error(u"convert_temp function", e)
+        return float('nan')
+
+    from_unit = from_unit.upper()  # handle lower case input
+    to_unit = to_unit.upper()
+
+    if from_unit == to_unit:
+        return round(temp, 2)
+    if from_unit == 'C':
+        if to_unit == 'F':
+            temp = (1.8 * temp) + 32
+        elif to_unit == 'K':
+            temp += 273.15
+    elif from_unit == 'F':
+        c_temp = (temp - 32) * 5 / 9
+        return convert_temp(c_temp, 'C', to_unit)
+    elif from_unit == 'K':
+        c_temp = temp - 273.15
+        return convert_temp(c_temp, 'C', to_unit)
+
+    return round(temp, 2)

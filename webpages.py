@@ -630,6 +630,8 @@ class toggle_temp(ProtectedPage):
         qdict = web.input()
         if qdict[u"tunit"] == u"C":
             gv.sd[u"tu"] = u"F"
+        elif qdict[u"tunit"] == u"F":
+            gv.sd[u"tu"] = u"K"
         else:
             gv.sd[u"tu"] = u"C"
         jsave(gv.sd, u"sd")

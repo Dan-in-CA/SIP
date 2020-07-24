@@ -34,6 +34,7 @@ from helpers import (
     stop_onrain,
     report_error,
     restart,
+    convert_temp,
 )
 from ReverseProxied import ReverseProxied
 from urls import urls  # Provides access to URLs for UI pages
@@ -231,6 +232,7 @@ template_globals = {
     "gv": gv,
     u"str": str,
     u"eval": eval,
+    u"convert_temp": convert_temp,
     u"session": web.config._session,
     u"json": json,
     u"ast": ast,
