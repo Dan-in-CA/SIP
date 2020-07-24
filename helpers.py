@@ -19,6 +19,7 @@ import subprocess
 import sys
 from threading import Thread
 import time
+import math
 
 # local module imports
 from blinker import signal
@@ -154,10 +155,12 @@ def restart(wait=1, block=False):
         except Exception:
             pass
         gv.restarted = 0
-        if six.PY2:
-            subprocess.Popen(u"systemctl restart sip.service".split())
-        elif six.PY3:
-            subprocess.Popen(u"systemctl restart sip3.service".split())
+        pid = os.getpid()
+        command = u"systemctl status " + str(pid)
+        output = str(subprocess.check_output(command.split()))
+        unit_name = output.split()[1]
+        command = u"systemctl restart " + unit_name
+        subprocess.Popen(command.split())
     else:
         t = Thread(target=restart, args=(wait, True))
         t.start()
@@ -216,7 +219,7 @@ def mkdir_p(path):
 
 def check_rain():
     """
-    Checks status of an installed rain sensor.  
+    Checks status of an installed rain sensor.
     Handles normally open and normally closed rain sensors
     Sets gv.sd["rs"] to 1 if rain is detected otherwise 0.
     """
@@ -271,8 +274,8 @@ def clear_mm():
 def plugin_adjustment():
     """
     Sums irrigation time (water level) adjustments from multiple plugins.
-    
-    The adjustment value output from a plugin must be 
+
+    The adjustment value output from a plugin must be
     a unique element in the gv.sd dictionary with a key starting with "wl_"
     """
     duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith(u"wl_")]
@@ -302,7 +305,7 @@ def get_cpu_temp():
 
 def timestr(t):
     """
-    Convert duration in seconds to string in the form mm:ss. 
+    Convert duration in seconds to string in the form mm:ss.
     """
     return (
         str((t // 60 >> 0) // 10 >> 0)
@@ -315,8 +318,8 @@ def timestr(t):
 
 def log_run():
     """
-    Add run data to json log file - most recent first.    
-    If a record limit is specified (gv.sd["lr"]) the number of records is truncated.  
+    Add run data to json log file - most recent first.
+    If a record limit is specified (gv.sd["lr"]) the number of records is truncated.
     """
 
     if gv.sd[u"lg"]:
@@ -408,9 +411,11 @@ def schedule_stations(stations):
     """
     Schedule stations/valves/zones to run.
     """
-    if gv.sd[u"rd"] or (  #  If rain delay or rain detected by sensor
-        gv.sd[u"urs"] and gv.sd[u"rs"]
-    ):
+    if (gv.sd[u"rd"]   #  If rain delay or rain detected by sensor
+        or (gv.sd[u"urs"]
+            and gv.sd[u"rs"]
+            )
+        ):
         rain = True
     else:
         rain = False
@@ -421,7 +426,8 @@ def schedule_stations(stations):
                 sid = b * 8 + s  # station index
                 if gv.rs[sid][2]:  # if station has a duration value
                     if (
-                        not rain or gv.sd[u"ir"][b] & 1 << s
+                        not rain
+                        or gv.sd[u"ir"][b] & 1 << s
                     ):  # if no rain or station ignores rain
                         gv.rs[sid][0] = accumulate_time  # start at accumulated time
                         accumulate_time += gv.rs[sid][2]  # add duration
@@ -441,8 +447,8 @@ def schedule_stations(stations):
                 ):  # skip stations not in prog or already running
                     continue
                 if gv.rs[sid][2]:  # if station has a duration value
-                    if (
-                        not rain or gv.sd[u"ir"][b] & 1 << s
+                    if (not rain
+                        or gv.sd[u"ir"][b] & 1 << s
                     ):  # if no rain or station ignores rain
                         gv.rs[sid][0] = gv.now  # set start time
                         gv.rs[sid][1] = gv.now + gv.rs[sid][2]  # set stop time
@@ -521,7 +527,7 @@ def read_log():
 
 def jsave(data, fname):
     """
-    Save data to a json file.  
+    Save data to a json file.
     """
     with open(u"./data/" + fname + u".json", u"w") as f:
         json.dump(data, f, indent=4, sort_keys=True)
@@ -531,13 +537,14 @@ def station_names():
     """
     Load station names from /data/stations.json file if it exists
     otherwise create file with defaults.
-    
-    Return station names as a list. 
+
+    Return station names as a list.
     """
     try:
         with open(u"./data/snames.json", u"r") as snf:
             return json.load(snf)
-    except IOError:
+    except IOError as e:
+        report_error(u"station_names function", e)
         stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08"]
         jsave(stations, u"snames")
         return stations
@@ -603,7 +610,10 @@ def check_login(redirect=False):
 
 
 signin_form = form.Form(
-    form.Password(name=u"password", description=_(u"Passphrase") + u":", value=u""),
+    form.Password(
+        name=u'password', description=_(u"Passphrase") + u":", value=u''
+        ),
+
     validators=[
         form.Validator(
             _(u"Incorrect passphrase, please try again"),
@@ -623,3 +633,46 @@ def get_input(qdict, key, default=None, cast=None):
         if cast is not None:
             result = cast(result)
     return result
+
+
+def report_error(title, message=None):
+    """
+    All errors are reported here
+    """
+
+    print('SIP error: --------------')
+    print(title, message)
+    return
+
+
+def convert_temp(temp, from_unit='C', to_unit='F'):
+    """
+      Convert Temperature
+      supported units :
+      Celsius, Fahrenheit, Kelvin
+     """
+
+    try:
+        temp = float(temp)
+    except(ValueError, TypeError) as e:
+        report_error(u"convert_temp function", e)
+        return float('nan')
+
+    from_unit = from_unit.upper()  # handle lower case input
+    to_unit = to_unit.upper()
+
+    if from_unit == to_unit:
+        return round(temp, 2)
+    if from_unit == 'C':
+        if to_unit == 'F':
+            temp = (1.8 * temp) + 32
+        elif to_unit == 'K':
+            temp += 273.15
+    elif from_unit == 'F':
+        c_temp = (temp - 32) * 5 / 9
+        return convert_temp(c_temp, 'C', to_unit)
+    elif from_unit == 'K':
+        c_temp = temp - 273.15
+        return convert_temp(c_temp, 'C', to_unit)
+
+    return round(temp, 2)

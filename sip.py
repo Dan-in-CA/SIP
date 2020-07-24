@@ -25,13 +25,16 @@ from helpers import (
     check_rain,
     get_rpi_revision,
     jsave,
-    log_run,        
+    log_run,
     plugin_adjustment,
     prog_match,
-    report_station_completed,    
+    report_station_completed,
     schedule_stations,
-    station_names,    
+    station_names,
     stop_onrain,
+    report_error,
+    restart,
+    convert_temp,
 )
 from ReverseProxied import ReverseProxied
 from urls import urls  # Provides access to URLs for UI pages
@@ -71,7 +74,7 @@ def timing_loop():
                                 if gv.sd[u"mas"] == sid + 1:
                                     continue  # skip, this is master station
                                 if (
-                                    gv.srvals[sid] 
+                                    gv.srvals[sid]
                                     and gv.sd[u"seq"]
                                 ):  # skip if currently on and sequential mode
                                     continue
@@ -138,7 +141,7 @@ def timing_loop():
                                     gv.rs[masid][0] = gv.rs[sid][0] + gv.sd[u"mton"]
                                     gv.rs[masid][1] = gv.rs[sid][1] + gv.sd[u"mtoff"]
                                     gv.rs[masid][3] = gv.rs[sid][3]
-                            elif gv.sd[u"mas"] == sid + 1: # if this is master 
+                            elif gv.sd[u"mas"] == sid + 1: # if this is master
                                 masid = gv.sd[u"mas"] - 1  # master index
                                 gv.sbits[b] |= 1 << sid
                                 gv.srvals[masid] = 1
@@ -229,6 +232,7 @@ template_globals = {
     "gv": gv,
     u"str": str,
     u"eval": eval,
+    u"convert_temp": convert_temp,
     u"session": web.config._session,
     u"json": json,
     u"ast": ast,
@@ -254,7 +258,8 @@ if __name__ == u"__main__":
 
     try:
         print(_(u"plugins loaded:"))
-    except Exception:
+    except Exception as e:
+        report_error(u"Import plugins error", e)
         pass
     for name in plugins.__all__:
         print(u" ", name)
@@ -266,7 +271,8 @@ if __name__ == u"__main__":
         for i, item in enumerate(gv.plugin_menu):
             if u"/plugins" in item:
                 gv.plugin_menu.pop(i)
-    except Exception:
+    except Exception as e:
+        report_error(u"Creating plugins menu", e)
         pass
     tl = Thread(target=timing_loop)
     tl.daemon = True
@@ -276,16 +282,23 @@ if __name__ == u"__main__":
         set_output()
 
     app.notfound = lambda: web.seeother(u"/")
-    
+
     ###########################
     #### For HTTPS (SSL):  ####
 
     if gv.sd["htp"] == 443:
-        from cheroot.server import HTTPServer
-        from cheroot.ssl.builtin import BuiltinSSLAdapter   
-        HTTPServer.ssl_adapter = BuiltinSSLAdapter(
-            certificate='/usr/lib/ssl/certs/SIP.crt',
-            private_key='/usr/lib/ssl/private/SIP.key'
-        )
+        try:
+            from cheroot.server import HTTPServer
+            from cheroot.ssl.builtin import BuiltinSSLAdapter
+            HTTPServer.ssl_adapter = BuiltinSSLAdapter(
+                certificate='/usr/lib/ssl/certs/SIP.crt',
+                private_key='/usr/lib/ssl/private/SIP.key'
+            )
+        except IOError as e:
+            gv.sd[u"htp"] = int(80)
+            jsave(gv.sd, u"sd")
+            report_error(u"SSL error", e)
+            restart(2)
+
 
     app.run()
