@@ -214,9 +214,7 @@ def timing_loop():
         #### End of timing loop ####
 
 def json_dump(string):
-    """
-    Checks HTTP_REFERER
-    """
+
     return json.dumps(string, ensure_ascii=False)
 
 

@@ -110,7 +110,7 @@ def reboot(wait=1, block=False):
 def poweroff(wait=1, block=False):
     """
     Powers off the Raspberry Pi from a new thread.
-    Set to True at start of thread (recursive).b
+    Set to True at start of thread (recursive).
     """
     if block:
         from gpio_pins import set_output
@@ -652,6 +652,39 @@ def report_error(title, message=None):
     return
 
 
+def convert_temp(temp, from_unit='C', to_unit='F'):
+    """
+      Convert Temperature
+      supported units :
+      Celsius, Fahrenheit, Kelvin
+     """
+
+    try:
+        temp = float(temp)
+    except(ValueError, TypeError) as e:
+        report_error(u"convert_temp function", e)
+        return float('nan')
+
+    from_unit = from_unit.upper()  # handle lower case input
+    to_unit = to_unit.upper()
+
+    if from_unit == to_unit:
+        return round(temp, 2)
+    if from_unit == 'C':
+        if to_unit == 'F':
+            temp = (1.8 * temp) + 32
+        elif to_unit == 'K':
+            temp += 273.15
+    elif from_unit == 'F':
+        c_temp = (temp - 32) * 5 / 9
+        return convert_temp(c_temp, 'C', to_unit)
+    elif from_unit == 'K':
+        c_temp = temp - 273.15
+        return convert_temp(c_temp, 'C', to_unit)
+
+    return round(temp, 2)
+
+
 def get_errors():
     """
     get global errors
@@ -669,39 +702,6 @@ def clear_errors():
         del globals()['errors'][:]
 
     return
-
-
-def convert_temp(temp, from_unit='C', to_unit='F'):
-    """
-      Convert Temperature
-      supported units :
-      Celsius, Fahrenheit, Kelvin
-     """
-
-    try:
-        temp = float(temp)
-    except(ValueError, TypeError) as e:
-        report_error(u"convert_temp function", e)
-        return float('nan')
-
-    from_unit = from_unit.upper()  # handle lower case input
-    to_unit = to_unit.upper()
-
-    if from_unit == to_unit or math.isnan(temp):
-        return round(temp, 2)
-    if from_unit == 'C':
-        if to_unit == 'F':
-            temp = (1.8 * temp) + 32
-        elif to_unit == 'K':
-            temp += 273.15
-    elif from_unit == 'F':
-        c_temp = (temp - 32) * 5 / 9
-        return convert_temp(c_temp, 'C', to_unit)
-    elif from_unit == 'K':
-        c_temp = temp - 273.15
-        return convert_temp(c_temp, 'C', to_unit)
-
-    return round(temp, 2)
 
 
 def slugify(text, delim = "-"):

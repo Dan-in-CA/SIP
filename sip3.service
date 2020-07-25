@@ -1,0 +1,12 @@
+#Service for SIP running on a SystemD service
+#
+[Unit]
+Description=SIP for Python3
+After=syslog.target network.target
+[Service]
+ExecStart=/usr/bin/python3 -u /home/pi/SIP/sip.py
+Restart=on-abort
+WorkingDirectory=/home/pi/SIP/
+SyslogIdentifier=sip
+[Install]
+WantedBy=multi-user.target
