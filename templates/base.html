@@ -94,38 +94,38 @@ $code:
     
     <script>
         // Variables set server-side
-        var devTzOffset = ${deviceOffset} * 1000
-        var cliTzOffset = new Date().getTimezoneOffset() * 60 * 1000;
-        var timeFormat = ${gv.sd[u"tf"]};
-        var dayList = $:{days};
-        var monthList = $:{months};
-        var baseUrl = "";
+        let devTzOffset = ${deviceOffset} * 1000
+        let cliTzOffset = new Date().getTimezoneOffset() * 60 * 1000;
+        let timeFormat = ${gv.sd[u"tf"]};
+        let dayList = $:{days};
+        let monthList = $:{months};
+        let baseUrl = "";
 
-        var cputemp = "${gv.cputemp}";
-        var tempunit = "${gv.sd[u'tu']}";
+        let cputemp = "${gv.cputemp}";
+        let tempunit = "${gv.sd[u'tu']}";
 
         $if content.page != 'login':
-            var snames = $:{json.dumps(gv.snames, ensure_ascii=False)};
-            var lrun = ${gv.lrun};
-            var rdst = ${gv.sd[u'rdst']}*1000;
-            var upas = ${gv.sd[u'upas']};
-            var en = ${gv.sd[u'en']};
-            var mm = ${gv.sd[u'mm']};
-            var rd = ${gv.sd[u'rd']};
-            var wl = ${gv.sd[u'wl']};
-            var wlx = $:{plugin_adjustment()};
-            var iw = ${gv.sd[u'iw']};
-            var mas = ${gv.sd[u'mas']};
-            var nbrd = ${gv.sd[u'nbrd']};
-            var plugins = $:{json.dumps(gv.plugin_menu, ensure_ascii=False)};
-            var progs = $:{json.dumps(gv.pd, ensure_ascii=False)};
-            var nprogs = ${len(gv.pd)};
-            var sdt = ${gv.sd[u'sdt']};
-            var seq = ${gv.sd[u'seq']};
-            var run_once = $:{json.dumps(_(u'Run-once'), ensure_ascii=False)};
-            var man = $:{json.dumps(_(u'Manual'), ensure_ascii=False)};
-            var program = $:{json.dumps(_(u'Program'), ensure_ascii=False)};
-            var idd = $:{gv.sd[u'idd']};
+            let snames = $:{json.dumps(gv.snames, ensure_ascii=False)};
+            let lrun = ${gv.lrun};
+            let rdst = ${gv.sd[u'rdst']}*1000;
+            let upas = ${gv.sd[u'upas']};
+            let en = ${gv.sd[u'en']};
+            let mm = ${gv.sd[u'mm']};
+            let rd = ${gv.sd[u'rd']};
+            let wl = ${gv.sd[u'wl']};
+            let wlx = $:{plugin_adjustment()};
+            let iw = ${gv.sd[u'iw']};
+            let mas = ${gv.sd[u'mas']};
+            let nbrd = ${gv.sd[u'nbrd']};
+            let plugins = $:{json.dumps(gv.plugin_menu, ensure_ascii=False)};
+            let progs = $:{json.dumps(gv.pd, ensure_ascii=False)};
+//             var nprogs = ${len(gv.pd)};
+            let sdt = ${gv.sd[u'sdt']};
+            let seq = ${gv.sd[u'seq']};
+            let run_once = $:{json.dumps(_(u'Run-once'), ensure_ascii=False)};
+            let man = $:{json.dumps(_(u'Manual'), ensure_ascii=False)};
+            let program = $:{json.dumps(_(u'Program'), ensure_ascii=False)};
+            let idd = $:{gv.sd[u'idd']};
 
             jQuery(document).ready(function(){
                 jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + '/plugins\'">$_(u'Manage Plugins')</button><br/>');
@@ -141,7 +141,7 @@ $code:
                 	     jQuery("#plugFtrPars").append( "<p>${gv.plugFtr[i]["label"] + ": " + str(gv.plugFtr[i]["val"])}</p>" );
 
                 jQuery("#bPlugins").click(function(e) {
-                    var btn = jQuery("#bPlugins");
+                    let btn = jQuery("#bPlugins");
                     jQuery("#pluginMenu").css({
                         position: 'absolute',
                         top: btn.offset().top + btn.outerHeight() + 10,

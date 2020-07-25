@@ -69,14 +69,14 @@ $code:
 
 <script>
         
-    var prog = JSON.parse($:{"'" + json.dumps(program) + "'"});   ///// format conversion
+    let prog = JSON.parse($:{"'" + json.dumps(program) + "'"});   ///// format conversion
 
     // Helper functions
     function parseTime(prefix) { 
-        var h = parseInt(jQuery("#" + prefix + "h").val());
-        var m = parseInt(jQuery("#" + prefix + "m").val());
+        let h = parseInt(jQuery("#" + prefix + "h").val());
+        let m = parseInt(jQuery("#" + prefix + "m").val());
         if (prefix.indexOf("i") < 0 && !timeFormat) {
-            var f = jQuery("#" + prefix + "f").val();
+            let f = jQuery("#" + prefix + "f").val();
             if (f == "PM") {
                 if (h != 12) {
                     h += 12;
@@ -142,8 +142,8 @@ $code:
             return false;
         });
         jQuery("table.stationList button.weekday.pushon, table.stationList button.station.toggle").click(function(){
-            var id = jQuery(this).attr("id");
-            var state = jQuery(this).hasClass("on");
+            let id = jQuery(this).attr("id");
+            let state = jQuery(this).hasClass("on");
             jQuery(this)
                 .addClass(state ? "off": "on")
                 .removeClass(state ? "on" : "off");
@@ -156,11 +156,11 @@ $code:
             return false;
         });
         jQuery(".stationState").click(function(){
-            var classes = jQuery(this).attr("class");
-            var stationName = classes.match(/station\d+/)[0];
-            var dayName = classes.match(/day\d+/)[0];
-            var stationOn = jQuery(this).hasClass("stationOn");
-            var dayOn = jQuery(this).hasClass("dayOn");
+            let classes = jQuery(this).attr("class");
+            let stationName = classes.match(/station\d+/)[0];
+            let dayName = classes.match(/day\d+/)[0];
+            let stationOn = jQuery(this).hasClass("stationOn");
+            let dayOn = jQuery(this).hasClass("dayOn");
             if (stationOn && dayOn) {
                 jQuery("#" + stationName).trigger("click");
             } else if (stationOn && !dayOn) {
@@ -187,21 +187,21 @@ $code:
         });
 
         jQuery(".numbersOnly").keyup(function () {
-            var newValue = this.value.replace(/[^0-9]/g, '');
+            let newValue = this.value.replace(/[^0-9]/g, '');
             if (this.value != newValue) {
                 this.value = newValue;
             }
         });
         jQuery("#intervalSelector").click(function() {
-            var dayInterval = parseInt(jQuery("#intervalSelector .intervalSelect.distance0").text());
-            var delayInterval = parseInt(jQuery("#intervalDelaySelector .intervalSelect.distance0").text());
+            let dayInterval = parseInt(jQuery("#intervalSelector .intervalSelect.distance0").text());
+            let delayInterval = parseInt(jQuery("#intervalDelaySelector .intervalSelect.distance0").text());
             if (isNaN(delayInterval)) {
                 delayInterval = 0;
             } else if (delayInterval > 1 && delayInterval >= dayInterval) {
                 delayInterval = dayInterval - 1;
             }
             jQuery("#intervalDelaySelector").html("");
-            for (var i=0; i<dayInterval; i++) {
+            for (let i=0; i<dayInterval; i++) {
                 jQuery("#intervalDelaySelector").append(
                         jQuery("<span class='intervalSelect'>" + i + "</span>")
                             .on("click", intervalSelectClick)
@@ -219,7 +219,7 @@ $code:
             });
         });
         jQuery("#intervalSelector .intervalSelect").each(function() {
-            var thisValue = parseInt(jQuery(this).text());
+            let thisValue = parseInt(jQuery(this).text());
             if (thisValue == prog['interval_base_day']) {
                 jQuery(this).trigger("click");
                 jQuery("#intervalSelector").trigger("click");
@@ -227,10 +227,10 @@ $code:
         });
 
         jQuery("button#cSubmit").click(function(){
-            var idd = ${gv.sd['idd']};
-            var days = 0;
-            var dayInterval = 0;
-            var i, s, sid;
+            let idd = ${gv.sd['idd']};
+            let days = 0;
+            let dayInterval = 0;
+            let i, s, sid;
           prog['enabled'] = jQuery("button#cProgramEnabled").hasClass("on") ? 1 : 0;
           
             // process days
@@ -261,10 +261,10 @@ $code:
              }
              
             // process stations
-            var stations = [0];
-            for (var bid = 0; bid < nbrd; bid ++) {
+            let stations = [0];
+            for (let bid = 0; bid < nbrd; bid ++) {
                 stations[bid] = 0;
-                for (var s=0; s < 8; s ++) {
+                for (let s=0; s < 8; s ++) {
                     sid = bid * 8 + s;
                     if (jQuery("button#station" + sid).hasClass("on")) {
                         stations[bid] |= 1<<s;
@@ -273,10 +273,10 @@ $code:
             }
 
             // process general duration
-            var dm = parseInt(jQuery("#tdm").val());
-            var ds = parseInt(jQuery("#tds").val());
+            let dm = parseInt(jQuery("#tdm").val());
+            let ds = parseInt(jQuery("#tds").val());
             if(!idd) {
-            var gduration = dm * 60 + ds;
+            let gduration = dm * 60 + ds;
                 if (!(dm >= 0 && ds >= 0 && ds < 60 && gduration > 0)) {
                     alert($:{json.dumps(_(u"Please enter a Duration to continue."), ensure_ascii=False)});
                     return;
@@ -284,18 +284,18 @@ $code:
             }
 
             // Process individual station times
-            var t = "[";
-            var lap_t = 0;
-            var sduration = 0;
+            let t = "[";
+            let lap_t = 0;
+            let sduration = 0;
             if(idd) {
-            for (var bid=0; bid<nbrd; bid++) {
-                for (var s = 0; s < 8; s ++) {
+            for (let bid=0; bid<nbrd; bid++) {
+                for (let s = 0; s < 8; s ++) {
                     sid = bid * 8 + s;
-                    var stationOn = jQuery("button#station"+sid).hasClass("on")
+                    let stationOn = jQuery("button#station"+sid).hasClass("on")
                     if (stationOn) {
                         if (idd) {
-                            var dm = parseInt(jQuery("#tdm" + sid).val());
-                            var ds = parseInt(jQuery("#tds" + sid).val());
+                            let dm = parseInt(jQuery("#tdm" + sid).val());
+                            let ds = parseInt(jQuery("#tds" + sid).val());
                             sduration = dm * 60 + ds;
                             if (!(dm >= 0 && ds >= 0 && ds < 60 && sduration > 0)) {
                                 alert($:{json.dumps(_(u'Duration must be later than start.'), ensure_ascii=False)});
@@ -321,23 +321,23 @@ $code:
                 }
             }
             t += "]";
-            var idurations = JSON.parse(t)
+            let idurations = JSON.parse(t)
             }
 
             // process time
-            var startTime = parseTime("ts");
+            let startTime = parseTime("ts");
             if (jQuery("button#cRecurring").hasClass("on")) {  //Single pass
-                var interval = 0;
-//              var interval = Math.ceil(lap_t / 60);
-//                var endTime = startTime + interval;
+                let interval = 0;
+//              let interval = Math.ceil(lap_t / 60);
+//                let endTime = startTime + interval;
                 if (idd) {
-                    var endTime = startTime + idurations.reduce((a,b) => a + b, 0) / 60;
+                    let endTime = startTime + idurations.reduce((a,b) => a + b, 0) / 60;
                 } else {
-                    var endTime = startTime + (gduration / 60);
+                    let endTime = startTime + (gduration / 60);
                 }   
             } else {                                           //recurring
-                var interval = parseTime("ti");
-                var endTime = parseTime("te");
+                let interval = parseTime("ti");
+                let endTime = parseTime("te");
             }
             if (startTime >= endTime) {
                 // Possible bug - can you run a program from 10PM to 2AM?
@@ -345,7 +345,7 @@ $code:
                 return;
             }
 
-            var v = {};                                     //// format conversion
+            let v = {};                                     //// format conversion
             v['type'] = prog['type']; 
             v['enabled'] = prog['enabled'];
             v['day_mask'] = days;
@@ -356,7 +356,7 @@ $code:
             v['duration_sec'] = [[gduration], idurations][idd]; // select one or the other
             v['name'] = 'Unnamed';
             v['station_mask']  = stations;
-//         var vs = JSON.stringify(v);                      //// format conversion
+//         let vs = JSON.stringify(v);                      //// format conversion
          jQuery("form#mf input[name='v']").val(JSON.stringify(v));
          jQuery("form#mf").submit();
         });  
@@ -365,8 +365,8 @@ $code:
         });
     });
     
-var durationTime = ${two_digits(int(program['duration_sec'][0]) % 60)};
-var cycleTime = ${two_digits(program['cycle_min'] % 60)};
+let durationTime = ${two_digits(int(program['duration_sec'][0]) % 60)};
+let cycleTime = ${two_digits(program['cycle_min'] % 60)};
 
 </script>
 <div id="programs">
