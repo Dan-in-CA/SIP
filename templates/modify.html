@@ -275,8 +275,8 @@ $code:
             // process general duration
             let dm = parseInt(jQuery("#tdm").val());
             let ds = parseInt(jQuery("#tds").val());
-            if(!idd) {
             let gduration = dm * 60 + ds;
+            if(!idd) {
                 if (!(dm >= 0 && ds >= 0 && ds < 60 && gduration > 0)) {
                     alert($:{json.dumps(_(u"Please enter a Duration to continue."), ensure_ascii=False)});
                     return;
@@ -287,6 +287,7 @@ $code:
             let t = "[";
             let lap_t = 0;
             let sduration = 0;
+            let idurations;
             if(idd) {
             for (let bid=0; bid<nbrd; bid++) {
                 for (let s = 0; s < 8; s ++) {
@@ -321,23 +322,23 @@ $code:
                 }
             }
             t += "]";
-            let idurations = JSON.parse(t)
+            idurations = JSON.parse(t)
             }
+           
 
             // process time
             let startTime = parseTime("ts");
+            let interval = 0;
+            let endTime;
             if (jQuery("button#cRecurring").hasClass("on")) {  //Single pass
-                let interval = 0;
-//              let interval = Math.ceil(lap_t / 60);
-//                let endTime = startTime + interval;
                 if (idd) {
-                    let endTime = startTime + idurations.reduce((a,b) => a + b, 0) / 60;
+                    endTime = startTime + idurations.reduce((a,b) => a + b, 0) / 60;
                 } else {
-                    let endTime = startTime + (gduration / 60);
+                    endTime = startTime + (gduration / 60);
                 }   
             } else {                                           //recurring
-                let interval = parseTime("ti");
-                let endTime = parseTime("te");
+                interval = parseTime("ti");
+                endTime = parseTime("te");
             }
             if (startTime >= endTime) {
                 // Possible bug - can you run a program from 10PM to 2AM?
