@@ -207,7 +207,17 @@ $code:
               </div><br>
 <!--           </div> -->
           <div class="ftrInfo">
-              <p>$_(u'CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_(u'Click to toggle Celsius &lt;&gt; Fahrenheit'), ensure_ascii=False)}></span></b></p>
+<!--               <p>$_(u'CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_(u'Click to toggle Celsius &lt;&gt; Fahrenheit'), ensure_ascii=False)}></span></b></p> -->
+<!-- 				  <div class="col-6-xs pull-right"> -->
+              <form name="tt" action="${u'/ttu'}" method="get">
+                  <input type="hidden" name="tunit" value="${gv.sd[u'tu']}">
+                  <div class="text-nowrap">$_(u'CPU Temp'):
+                      <button type="submit"  id="heat" style="color: #fff" class="font-weight-bold btn-link btn" title=$:{json.dumps(_(u'Click to toggle Celsius &gt; Fahrenheit &gt; Kelvin'), ensure_ascii=False)}>
+                      ${convert_temp(gv.cputemp,'C', gv.sd[u'tu'])} ${gv.sd[u'tu']}
+                      </button>
+                  </div>
+              </form>
+              </div>
               <p"><a target="_blank" href="https://github.com/Dan-in-CA/sip">$_(u'Software')</a> $_(u'version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
           </div>
           </div>     
