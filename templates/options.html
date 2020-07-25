@@ -16,13 +16,13 @@ $code:
 </style>	
 
 <script>
-    var errorCode = "${errorCode}";
+    let errorCode = "${errorCode}";
     
     // Initialize behaviors
     jQuery(document).ready(function(){
 
         jQuery("button#tooltips").click(function(){
-            var visible = jQuery(this).text() == $:{json.dumps(_(u'Hide Tooltips'), ensure_ascii=False)};
+            let visible = jQuery(this).text() == $:{json.dumps(_(u'Hide Tooltips'), ensure_ascii=False)};
             jQuery(this).text(visible ? $:{json.dumps(_(u'Show Tooltips'), ensure_ascii=False)} : $:{json.dumps(_(u'Hide Tooltips'), ensure_ascii=False)});
             jQuery(".optTooltip").toggle();
         });
@@ -39,8 +39,8 @@ $code:
 
         jQuery("button#cSubmit").click(function(){
             // process time zone value
-//            var th = parseInt(jQuery("input[name='th']").val(),10);
-//            var tq = parseInt(jQuery("input[name='tq']").val(),10);
+//            let th = parseInt(jQuery("input[name='th']").val(),10);
+//            let tq = parseInt(jQuery("input[name='tq']").val(),10);
 //            tq = (tq/15>>0)/4.0;
 //            th = th+(th>=0?tq:-tq);
 //            jQuery("input[name='otz']").val(((th+12)*4)>>0);
