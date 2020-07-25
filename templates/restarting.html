@@ -1,20 +1,24 @@
-$def with()
+$def with(redirectTo)
 
 $var title: $_(u'SIP Restarting')
 $var page: restart
 
 <script>
-	var interval = null;	
-	function changePage() {
-		interval = setInterval(function() {
-	       jQuery.getScript("/static/scripts/goHome.js", function() {
-	    	   clearInterval(interval);
-	       });
-		}, 1000);
-};
+    var redirectTo = '${redirectTo}';
 
-	jQuery(document).ready(function(){
-			changePage()
+    function changePage() {
+
+        // A small trick in order to be sure that SIP has been restarted and is answering our requests
+        var interval = setInterval(function () {
+            jQuery.get('/', function () {
+                window.location.href = redirectTo;
+                clearInterval(interval);
+            });
+        }, 1000);
+    }
+
+    jQuery(document).ready(function () {
+        changePage()
     });
 </script>
 

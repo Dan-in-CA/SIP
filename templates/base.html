@@ -82,9 +82,9 @@ $code:
         td.stationNumber, td.stationShow, td.stationIgnore, td.stationMaster {text-align:center;}
         td.stationIgnoreWL {text-align:center;}
         td.stationName {text-align:left; padding-left:1em;}
-        
+
         .piDatFooter {background-color:white; color:black; font-size:12pt; margin-bottom:10px; padding:0px 4px 0px 4px;}
-        
+
     </style>
     
     <script src="static/scripts/jquery-3.4.1.min.js"></script>
@@ -131,14 +131,14 @@ $code:
                 jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + '/plugins\'">$_(u'Manage Plugins')</button><br/>');
                 $if len(uplugin_menu) > 0:
                 	$for i, plugin in enumerate(uplugin_menu):
-                		
+
                         jQuery('#pluginMenu').append('<button class="execute" type="button" onclick="window.location.href=\'' + '${plugin[1]}\'">${plugin[0]}</button><br/>');
                 $else:
                     jQuery('#pluginMenu').append('None<br/>');
-                	
+
                 $if gv.plugFtr:
                 	$for i, d in enumerate(gv.plugFtr):
-                	     jQuery("#plugFtrPars").append( "<p>${gv.plugFtr[i]["label"] + ": " + str(gv.plugFtr[i]["val"])}</p>" );                	
+                	     jQuery("#plugFtrPars").append( "<p>${gv.plugFtr[i]["label"] + ": " + str(gv.plugFtr[i]["val"])}</p>" );
 
                 jQuery("#bPlugins").click(function(e) {
                     var btn = jQuery("#bPlugins");
@@ -200,7 +200,7 @@ $code:
         <div class="footer container">
           $if content.page != u'login':
               $if (gv.plugFtr):
-                  <div class="row">              
+                  <div class="row">
                       <div class="col-12-xs col-xs-offset-4 piDatFooter" id="plugFtrPars"></div> <!--div for plugin data display -->
                   </div>
               <div class="row">
@@ -209,22 +209,29 @@ $code:
                     <button id="bHelp" class="help" title=$:{json.dumps(_(u'Help'), ensure_ascii=False)}>$_(u'?')</button>
                   </div>
               </div>
-          
+
           <div class="row">
             <div class="col-5-xs"></div>
               <div class="col-6-xs pull-right">
-            <div class="col-1-xs"></div>              
-                <p class="text-xs-right text-nowrap">$_(u'CPU Temp'): <b><span id="heat" style="cursor:pointer" title=$:{json.dumps(_(u'Click to toggle Celsius &lt;&gt; Fahrenheit'), ensure_ascii=False)}></span></b></p>
-            </div>
-          </div>     
-            
-            
-          <div class="row"> 
-              <div class="col-12-xs pull-right"> 
+              <div class="col-1-xs"></div>
+                      <form name="tt" action="${app_path(u'/ttu')}" method="get">
+                          <input type="hidden" name="tunit" value="${gv.sd[u'tu']}">
+                          <div class="text-nowrap">$_(u'CPU Temp'):
+                              <button type="submit"  id="heat" style="color: #fff" class="font-weight-bold btn-link btn" title=$:{json.dumps(_(u'Click to toggle Celsius &gt; Fahrenheit &gt; Kelvin'), ensure_ascii=False)}>
+                              ${convert_temp(gv.cputemp,'C', gv.sd[u'tu'])} ${gv.sd[u'tu']}
+                              </button>
+                          </div>
+                      </form>
+              </div>
+          </div>
+
+
+          <div class="row">
+              <div class="col-12-xs pull-right">
                 <p class="text-xs-right text-nowrap"><a target="_blank" href="https://github.com/Dan-in-CA/sip">$_(u'Software')</a> $_(u'version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
               </div>
           </div>
-          
+
         </div>
     </div>
 </body>

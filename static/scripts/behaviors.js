@@ -10,13 +10,13 @@ function dateString(d) {
 function updateClock() { // Controls time and date clock.
 	// Do our best to match this clock with the device clock (instead of the client device clock)
 	var now = new Date(Date.now() + cliTzOffset - devTzOffset);
-	
+
 	/*
 		Uncomment to test styling - sets a random time
 		now.setHours(Math.floor(Math.random()*24));
 		now.setMinutes(Math.floor(Math.random()*60));
 	*/
-	
+
 	if (timeFormat) {
 		jQuery("#deviceTime span.time").html((now.getHours() < 10 ? "0" : "") + now.getHours() + "<span class='sep'>:</span>" + (now.getMinutes() < 10 ? "0" : "") + now.getMinutes());
 		jQuery("#deviceTime span.ampm").html("");
@@ -25,32 +25,15 @@ function updateClock() { // Controls time and date clock.
 		jQuery("#deviceTime span.ampm").html((now.getHours() >= 12 ? "pm" : "am"));
 	}
 	jQuery("#deviceTime span.second").text(":" + (now.getSeconds() < 10 ? "0" : "") + now.getSeconds());
-	
+
 	jQuery("#deviceDate").text(dateString(now));
 }
 
 // Initialize standard behaviors
 jQuery(document).ready(function(){
-	jQuery("#heat")
-		.mouseenter(function() {
-			jQuery(this).toggleClass("bluebg",true);
-		})
-		.mouseleave(function() {
-			jQuery(this).toggleClass("bluebg",false);
-		})
-		.click(function() {
-			jQuery("input[name='tunit']").val(tempunit);
-			jQuery("form[name='tt']").submit();
-		});
-	var temp = parseFloat(cputemp);
-	if (isNaN(temp)) {
-		jQuery("#heat").html("n/a");
-	} else {
-		jQuery("#heat").html((tempunit == "F" ? Math.round(10*(9/5*cputemp+32))/10 : cputemp) + "&deg;" + tempunit);		
-	}
-	
-	
-	
+
+
+
 	jQuery("button#bHome").click(function(){
 		window.location = "/";
 	});
@@ -80,5 +63,5 @@ jQuery(document).ready(function(){
 	// start the clock now, and update every second
 	updateClock();
 	setInterval(updateClock, 1000);
-	
+
 });
