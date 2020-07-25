@@ -12,11 +12,11 @@ $var page: proto_plugin  <!--Edit: page name, used internally-->
             jQuery("#pluginForm").submit();
         });
         jQuery("button#cCancel").click(function(){
-            window.location= baseUrl + "/";
+            window.location="/";
         });
 
         jQuery("button#docButton").click(function(){
-            window.open(baseUrl + "/static/docs/plugins/proto-docs.html", "_blank"); //Edit: replace "proto-docs.html"
+            window.open("static/docs/plugins/proto-docs.html", "_blank"); //Edit: replace "proto-docs.html"
         });
 
     });
@@ -28,7 +28,7 @@ $var page: proto_plugin  <!--Edit: page name, used internally-->
     </div>
 
     <p>$_(u'Example Check Boxes')</p>
-    <form id="pluginForm" action="${app_path('/proto-save')}" method="get"> <!--Edit: Replace "proto-save" with URL of plugin's class for saving settings-->
+    <form id="pluginForm" action="${'/proto-save'}" method="get"> <!--Edit: Replace "proto-save" with URL of plugin's class for saving settings-->
 
         <table class="optionList">
 
