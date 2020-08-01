@@ -730,7 +730,7 @@ td.stationSchedule {
       width: 100%;
       max-width: 100%;
    }
-   tbody.shaded {
+   .shaded {
 	background-color: #DDD;
    }
    label {
@@ -741,7 +741,7 @@ td.stationSchedule {
 	white-space: nowrap;
 /* 	user-select: none; */
    }
-   label.seconds{
+   .seconds{
    	border:none;
 	padding-left: 0px;
 	padding-right:0px;

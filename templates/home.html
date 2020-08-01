@@ -266,13 +266,12 @@ $if gv.sd[u'mm']:
                             $ rem = gv.ps[sid][1]
                             $if rem > 65536:
                                 $ rem = 0
-                            <td class="station_running">
-                              <button class='toggle manual narrow ${'on' if sbit else 'off'}' id='${sid}'><span class='toggleleft'>$_(u'On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Off')</span></button></td>
-                              <td>${'in' if sbit else 'for'}</td>
-                             <td><input type='number' id='mm${sid}' size='2' maxlength='3' value='${two_digits(rem/60)}'/></td>
-                            
-                             <label><td><input type='number' id='ss${sid}' size='2' maxlength='2' value='${two_digits(rem%60)}'/></td>
-                             <td>(mm:ss)</td></label>
+                            <td class="station_running oneline">
+                                <button class='toggle manual narrow ${'on' if sbit else 'off'}' id='${sid}'><span class='toggleleft'>$_(u'On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Off')</span></button>
+                                    <label class="seconds">${'in' if sbit else 'for'}
+                                <input type='number' id='mm${sid}' size='2' maxlength='3' value='${two_digits(rem/60)}'/>:</label>
+                                <label class="seconds"><input type='number' id='ss${sid}' size='2' maxlength='2' value='${two_digits(rem%60)}'/> (mm:ss)</label>
+                            </td>
                     </tr>
         </table></div>
 
