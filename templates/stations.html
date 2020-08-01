@@ -113,18 +113,18 @@ $code:
                                 <td class="stationMaster" colspan="3">$_(u'(Master valve)')</td>
                         $else:
                             <td class="stationShow">
-                                <label class="notlectable">&nbsp;<input type="checkbox" ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}">&nbsp;</label>
+                                <label class="notSelectable">&nbsp;<input type="checkbox" ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}">&nbsp;</label>
                             </td>
                             <td class="stationIgnore">
-                                <label class="notlectable">&nbsp;<input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">&nbsp;</label>
+                                <label class="notSelectable">&nbsp;<input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">&nbsp;</label>
                             </td>
                             $# $if 'wl_weather' in gv.sd or 'et' in gv.plugin_data:
                                 <td class="stationIgnoreWL">
-                                    <label class="notlectable">&nbsp;<input type="checkbox" ${"checked" if gv.sd['iw'][bid]&(1<<s) else ""} id="wlc${sid}">&nbsp;</label>
+                                    <label class="notSelectable">&nbsp;<input type="checkbox" ${"checked" if gv.sd['iw'][bid]&(1<<s) else ""} id="wlc${sid}">&nbsp;</label>
                                 </td>
                         $if gv.sd['mas'] > 0 and gv.sd['mas'] != sid+1:
                             <td class="stationMaster">
-                                <label class="notlectable">&nbsp;<input type="checkbox" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}">&nbsp;</label>
+                                <label class="notSelectable">&nbsp;<input type="checkbox" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}">&nbsp;</label>
                             </td>
                     </tr>
           </tbody>

@@ -7,12 +7,7 @@ $code:
 	
 <script>
     // Initialize behaviors
-    jQuery(document).ready(function(){
-		
-//     	jQuery('#timepicker1').timepicker({
-//     		showHours: false   	
-//     	});
-    	
+    jQuery(document).ready(function(){    	
         jQuery("button#cRunNow").click(function(){
             var comm="/cr?&t=[";
             var sid,strmm,strss,mm,ss,matchfound=0;
@@ -65,18 +60,12 @@ $code:
                         <tr>
                             <td class='station_name'>${snames[sid]}</td>
                             <td class=timeInput>
-                                <input type="number" size="3" max="999" value="0" name="mm${sid}">:
-                                <label class=seconds><input type="number" size="2" max="99" value="0" name="ss${sid}">(mm:ss)</label>
+                                <label class="seconds"><input type="number" size="3" max="999" value="0" name="mm${sid}">:</label>
+                                <label class="seconds"><input type="number" size="2" max="99" value="0" name="ss${sid}">(mm:ss)</label>
                             </td>
                         </tr>
-
         </table>
-
     </form>
-<!--         <div class="input-group bootstrap-timepicker timepicker"> -->
-<!--             <input id="timepicker1" type="text" class="form-control input-small"> -->
-<!--             <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span> -->
-<!--         </div> -->
 </div>
 
 

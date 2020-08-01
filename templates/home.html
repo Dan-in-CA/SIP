@@ -222,7 +222,7 @@ $code:
         let rHours = Math.floor(remaining / 3600000);
         let rMinutes = Math.floor((remaining%3600000) / 60000);
         if (rHours <=0 && rMinutes <=0) {
-            window.location = baseUrl + "/";
+            window.location = "/";
         } else {
             timerElement.text((rHours<10 ? "0" : "") + rHours + ":" + (rMinutes<10 ? "0" : "") + rMinutes);
             setTimeout("countdownTimer('" + timerId + "')", 2000);
@@ -266,11 +266,11 @@ $if gv.sd[u'mm']:
                             $ rem = gv.ps[sid][1]
                             $if rem > 65536:
                                 $ rem = 0
-                            <td class="station_running oneline">
+                            <td class="station_running seconds">
                                 <button class='toggle manual narrow ${'on' if sbit else 'off'}' id='${sid}'><span class='toggleleft'>$_(u'On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Off')</span></button>
-                                    <label class="seconds">${'in' if sbit else 'for'}
+                                    <label class="seconds notlectable">${'in' if sbit else 'for'}
                                 <input type='number' id='mm${sid}' size='2' maxlength='3' value='${two_digits(rem/60)}'/>:</label>
-                                <label class="seconds"><input type='number' id='ss${sid}' size='2' maxlength='2' value='${two_digits(rem%60)}'/> (mm:ss)</label>
+                                <label class="seconds notlectable"><input type='number' id='ss${sid}' size='2' maxlength='2' value='${two_digits(rem%60)}'/> (mm:ss)</label>
                             </td>
                     </tr>
         </table></div>
