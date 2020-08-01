@@ -75,12 +75,16 @@ $code:
         });
 
     });
+    
+
 
 </script>
 <div id="stations">
     <div class="title">$_(u'Configure Stations')</div>
     <form id="sf" name="sf" action="/cs" method="get">
-        <table class="stationList">
+        <table id="stationOpts" class="stationList">
+        
+          <thead>
             <tr>
                 <th class="stationNumber">$_(u'Station')</th>
                 <th class="stationName">$_(u'Name')</th>
@@ -91,6 +95,9 @@ $code:
                 $if gv.sd['mas'] > 0:
                     <th class="stationMaster">$_(u'Activate Master?')</th>
             </tr>
+          </thead> 
+           
+          <tbody class="shaded">
             $for bid in range(0,gv.sd['nbrd']):
                 $for s in range(0,8):
                     $ sid = bid*8 + s;
@@ -106,20 +113,22 @@ $code:
                                 <td class="stationMaster" colspan="3">$_(u'(Master valve)')</td>
                         $else:
                             <td class="stationShow">
-                                <input type="checkbox" ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}">
+                                <label class="notlectable">&nbsp;<input type="checkbox" ${"checked" if gv.sd['show'][bid]&(1<<s) else ""} id="show${sid}">&nbsp;</label>
                             </td>
                             <td class="stationIgnore">
-                                <input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">
+                                <label class="notlectable">&nbsp;<input type="checkbox" ${"checked" if gv.sd['ir'][bid]&(1<<s) else ""} id="rc${sid}">&nbsp;</label>
                             </td>
                             $# $if 'wl_weather' in gv.sd or 'et' in gv.plugin_data:
                                 <td class="stationIgnoreWL">
-                                    <input type="checkbox" ${"checked" if gv.sd['iw'][bid]&(1<<s) else ""} id="wlc${sid}">
+                                    <label class="notlectable">&nbsp;<input type="checkbox" ${"checked" if gv.sd['iw'][bid]&(1<<s) else ""} id="wlc${sid}">&nbsp;</label>
                                 </td>
                         $if gv.sd['mas'] > 0 and gv.sd['mas'] != sid+1:
                             <td class="stationMaster">
-                                <input type="checkbox" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}">
+                                <label class="notlectable">&nbsp;<input type="checkbox" ${"checked" if gv.sd['mo'][bid]&(1<<s) else ""} id="mc${sid}">&nbsp;</label>
                             </td>
                     </tr>
+          </tbody>
+          
         </table>
 
         <p></p>
@@ -132,7 +141,7 @@ $code:
     </form>
 </div>
 
-<div id="controls">
+<div class="controls">
     <button id="cSubmit" class="submit">$_(u'Submit Changes')</button>
     <button id="cResetNames" class="refresh">$_(u'Reset Names')</button>
     <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>

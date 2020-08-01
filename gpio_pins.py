@@ -24,7 +24,7 @@ except ImportError:
         print(u"No GPIO module was loaded from GPIO Pins module") 
            
 # fmt: off
-if gv.platform == u"pi":    
+if gv.platform == u"pi":
     rev = GPIO.RPI_REVISION
     if rev == 1:
         # map 26 physical pins (1 based) with 0 for pins that do not have a gpio number

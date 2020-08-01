@@ -100,7 +100,7 @@ $code:
                 output += categoryCloser + "<div class='category collapsible collapsed'><h4>" + category + "</h4>"
                 categoryCloser = "</div>"
             oldcategory = category
-            output += "<div class='option' title='" + tooltip + "'><span class='optLabel'>" + label + ":</span>\n"
+            output += "<div class='option' title='" + tooltip + "'><label><span class='optLabel'>" + label + ":</span>\n"
             if datatype == "boolean":
                 output += "<input name='o" + name + "' type='checkbox' " + ("checked" if value>0 else "") + ">\n"
             elif datatype == "string":
@@ -138,7 +138,7 @@ $code:
                 output += "<input name='o" + name + "' type='text' size='3' maxlength='3' value='" + str(value) + "'>\n"
 
             output += "<span class='optTooltip'>" + tooltip + "</span>\n"
-            output += "</div>\n\n"
+            output += "</label></div>\n\n"
         output += categoryCloser + "<div class='category collapsible collapsed'><h4>"+_(u'System Restart')+"</h4>"
         output += "<div class='option'>"
         output += "&nbsp;<button id='cRestart' class='restart danger' title=" + json.dumps(_(u'Restart software'), ensure_ascii=False)+">" + _(u'Restart SIP')+"</button>"
@@ -151,7 +151,7 @@ $code:
     </form>
 </div>
 
-<div id="controls">
+<div class="controls">
     <button id='cSubmit' class="submit">$_(u'Submit Changes')</button>
     <button id='cCancel' class="cancel danger">$_(u'Cancel')</button>
 </div>

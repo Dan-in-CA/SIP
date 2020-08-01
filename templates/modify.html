@@ -382,8 +382,8 @@ let cycleTime = ${two_digits(program['cycle_min'] % 60)};
                 <p>
                 $ t = formatTime(two_digits(program['start_min'] / 60) + ":" + two_digits(program['start_min'] % 60))
                 
-                    <b>$_(u'Start Time'):</b> <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "tsh" value = "${t.split(":")[0]}"> :
-                    <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "tsm" value = "${t.split(":")[1][0:2]}">
+                    <b>$_(u'Start Time'):</b> <input class="timeInput numbersOnly" type="number" size = "2" maxlength = "2" id = "tsh" value = "${t.split(":")[0]}"> :
+                    <input class="timeInput numbersOnly" type="number" size = "2" maxlength = "2" id = "tsm" value = "${t.split(":")[1][0:2]}">
                 $if tf:
                     (hh:mm)
                 $else:
@@ -392,16 +392,16 @@ let cycleTime = ${two_digits(program['cycle_min'] % 60)};
                         <option ${"selected" if t.find(u"pm") >= 0 else ""}>PM</option>
                     </select>
                 </p>
-                <p ${"" if not idd else "style=display:none"}><b>$_(u'Duration'):</b> <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "3" id = "tdm" value="${two_digits(int(program['duration_sec'][0]) / 60)}"> :
-                <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tds" value="${two_digits(int(program['duration_sec'][0]) % 60)}"> (mm:ss)</p>
+                <p ${"" if not idd else "style=display:none"}><b>$_(u'Duration'):</b> <input class="timeInput numbersOnly" type="number" size = "2" maxlength = "3" id = "tdm" value="${two_digits(int(program['duration_sec'][0]) / 60)}"> :
+                <input class="timeInput numbersOnly" type="number" size="2" maxlength="2" id="tds" value="${two_digits(int(program['duration_sec'][0]) % 60)}"> (mm:ss)</p>
                 <p><button id = "cRecurring" class = "toggle choice ${('off') if recurring else ('on')}"><span class='toggleleft'>$_(u'Single pass')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Recurring')</span></button></p>
                 <div id="recurr" $:{"" if recurring else "style='display:none'"}>
-                    <p><b>$_(u'Every'):</b> <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "tih" value = "${two_digits(program['cycle_min'] / 60)}"> :
-                    <input class="timeInput numbersOnly" type = "text" size = "2" maxlength = "2" id = "tim" value="${two_digits(program['cycle_min'] % 60)}"> (hh:mm)</p>
+                    <p><b>$_(u'Every'):</b> <input class="timeInput numbersOnly" type="number" size = "2" maxlength = "2" id = "tih" value = "${two_digits(program['cycle_min'] / 60)}"> :
+                    <input class="timeInput numbersOnly" type = "number" size = "2" maxlength = "2" id = "tim" value="${two_digits(program['cycle_min'] % 60)}"> (hh:mm)</p>
                     <p>
                     $ t = formatTime(two_digits(program[u"stop_min"] // 60) + ":" + two_digits(program[u"stop_min"] % 60))
-                        <b>$_(u"Until"):</b> <input class="timeInput numbersOnly" type="text" size = "2" maxlength = "2" id = "teh" value = "${t.split(":")[0]}"> :
-                        <input class="timeInput numbersOnly" type = "text" size = "2" maxlength = "2" id = "tem" value = "${t.split(":")[1][0:2]}">
+                        <b>$_(u"Until"):</b> <input class="timeInput numbersOnly" type="number" size = "2" maxlength = "2" id = "teh" value = "${t.split(":")[0]}"> :
+                        <input class="timeInput numbersOnly" type = "number" size = "2" maxlength = "2" id = "tem" value = "${t.split(":")[1][0:2]}">
                     $if tf:
                         (hh:mm)
                     $else:
@@ -447,8 +447,10 @@ let cycleTime = ${two_digits(program['cycle_min'] % 60)};
                                     <button id="station${sid}" class='station toggle narrow ${u"on" if stationEnabled else u"off"}'><span class='toggleleft'>$_(u"On")</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u"Off")</span></button>
                                 </td>
                                 <td>
-                                    <span ${u"" if idd else "style=display:none"}><input class = "timeInput numbersOnly" type = "text" size = "2" maxlength="3" id="tdm${sid}" value="${two_digits(program['duration_sec'][sid if idd else 0] / 60)}"> :
-                                    <input class="timeInput numbersOnly" type="text" size="2" maxlength="2" id="tds${sid}" value="${two_digits(program['duration_sec'][sid if idd else 0] % 60)}"> (mm:ss)</span>
+                                <div class="oneline">
+                                    <span ${u"" if idd else "style=display:none"}><input class = "timeInput numbersOnly" type = "number" size = "2" maxlength="3" id="tdm${sid}" value="${two_digits(program['duration_sec'][sid if idd else 0] / 60)}"> :
+                                    <input class="timeInput numbersOnly" type="number" size="2" maxlength="2" id="tds${sid}" value="${two_digits(program['duration_sec'][sid if idd else 0] % 60)}"> (mm:ss)</span>
+                                </div>
                                 </td>
                                 $for d in range(7):
                                     $ status = ("stationOn" if stationEnabled else "") + (" dayOn" if program['day_mask']&(1<<d) else "")
@@ -496,7 +498,7 @@ let cycleTime = ${two_digits(program['cycle_min'] % 60)};
     </form>
 </div>
 
-<div id="controls">
+<div class="controls">
     <button id="cSubmit" class="submit"><b>$_(u"Save")</b></button>
     <button id="cCancel" class="cancel danger">$_(u"Cancel")</button>
     <span id="errorHint"></span>

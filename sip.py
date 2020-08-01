@@ -122,7 +122,6 @@ def timing_loop():
                                 gv.lrun[0] = sid
                                 gv.lrun[1] = gv.rs[sid][3]
                                 gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-#                                 gv.lrun[3] = gv.now #  test
                                 print(u"logging @ time check")
                                 log_run()
                                 report_station_completed(sid + 1)

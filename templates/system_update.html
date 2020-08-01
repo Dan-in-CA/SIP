@@ -57,11 +57,10 @@ $var page: system_update
         </table>
     </form>
 </div>
-<div id="controls">
+<div class="controls">
     $if m_vals['can_update']:
         <button id="cUpdate" class="options"><b>$_(u'Update SIP')</b></button>
     $else:
         <button id="cUpToDate" class="cancel"><b>$_(u'Up-to-date')</b></button>
-    <!--<button id="cReboot" class="reboot danger">$_(u'Restart SIP')</button>-->
     <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>
 </div>

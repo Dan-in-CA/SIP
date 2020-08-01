@@ -361,10 +361,10 @@ $else:
             </tr>
         </table>
     </div>
-		 <button id="pStopAll" class="execute delete">$_(u'Stop All Stations')</button>
+<!-- 		 <button id="pStopAll" class="execute delete">$_(u'Stop All Stations')</button> -->
 </div>
 
-<div id="controls">
+<div>
     <form name="hf" action="/cv" method="get">
         <input type="hidden" name="en">
         <input type="hidden" name="mm">
@@ -372,4 +372,7 @@ $else:
         <input type="hidden" name="wl">
         <input type="hidden" name="rbt" value="0">
     </form>
+</div>  
+<div class="controls">
+    <button class="execute delete">$_(u'Stop All Stations')</button>
 </div>

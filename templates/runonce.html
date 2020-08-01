@@ -9,9 +9,9 @@ $code:
     // Initialize behaviors
     jQuery(document).ready(function(){
 		
-    	jQuery('#timepicker1').timepicker({
-    		showHours: false   	
-    	});
+//     	jQuery('#timepicker1').timepicker({
+//     		showHours: false   	
+//     	});
     	
         jQuery("button#cRunNow").click(function(){
             var comm="/cr?&t=[";
@@ -43,7 +43,7 @@ $code:
         });
 
         jQuery("button#cResetTime").click(function(){
-            jQuery("input[type='text']").val(0);
+            jQuery("input[type='number']").val(0);
         });
 
         jQuery("button#cCancel").click(function(){
@@ -64,9 +64,9 @@ $code:
                     $if show == 1 and sid+1 != gv.sd['mas']:
                         <tr>
                             <td class='station_name'>${snames[sid]}</td>
-                            <td>
-                                <input type="text" size="3" maxlength="3" value="0" name="mm${sid}">:
-                                <input type="text" size="2" maxlength="2" value="0" name="ss${sid}"> (mm:ss)
+                            <td class=timeInput>
+                                <input type="number" size="3" max="999" value="0" name="mm${sid}">:
+                                <label class=seconds><input type="number" size="2" max="99" value="0" name="ss${sid}">(mm:ss)</label>
                             </td>
                         </tr>
 
@@ -80,7 +80,7 @@ $code:
 </div>
 
 
-<div id="controls">
+<div class="controls">
     <button id="cRunNow" class="submit"><b>$_(u'Run Now')</b></button>
     <button id="cResetTime" class="refresh">$_(u'Reset Time')</button>
     <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>

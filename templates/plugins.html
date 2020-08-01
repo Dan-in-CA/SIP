@@ -41,29 +41,34 @@ $var page: plugins
     <button class="execute" id="writePlugins" type="button" >$_(u'Roll Your Own')</button></div>
     <form id="pluginForm" action="/upd-plugins" method="get">
         <table class="optionList" id="installedList">
+        	<thead>
             <tr>
                 <th class="pluginName">$_(u'Name')</th>
                 <th class="pluginEnabled">$_(u'Enabled')&nbsp;&nbsp;&nbsp;</th>
                 <th class="pluginDelete">$_(u'Uninstall?')</th>
             </tr>
+            </thead>
+            
+            <tbody class="shaded">
             $ names = list(settings.keys())
             $names.sort()
             $for n in names:
                 <tr>
                     <td class="pluginName">${n.split('.')[0]}</td>
                     <td class="stationShow">
-                        <input type="checkbox" name="${n}" ${"checked" if settings[n] else ""} >
+                        <label class="notlectable"><input type="checkbox" name="${n}" ${"checked" if settings[n] else ""} ></label>
                     </td>
                     <td class="stationShow">
-                        <input type="checkbox" name="del-${n}">
+                        <label class="notlectable"><input type="checkbox" name="del-${n}"></label>
                     </td>
                 </tr>
+            </tbody>    
         </table>
         <input type="hidden" name="btnId" id="btnId">
     </form>
 </div>
 <div><b>$_(u'CAUTION:')</b> $_(u'Clicking UPDATE or UNINSTALL will restart the software and stop any running programs.')</div>
-<div id="controls">
+<div class="controls">
     <button id="cSubmit" class="submit"><b>$_(u'Update Enabled')</b></button>
     <button id="cDelete" class="submit danger"><b>$_(u'Uninstall')</b></button>
     <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>

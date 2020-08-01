@@ -47,6 +47,7 @@ $code:
     <p>$_(u'Download log as ')<a href="/wl">csv</a>.</p>
 
     <table class="logList">
+    	<thead>
         <tr class="log_rec">
             <th>$_(u'Date')</th>
             <th>$_(u'Start Time')</th>
@@ -54,22 +55,26 @@ $code:
             <th>$_(u'Duration')</th>
             <th>$_(u'Program')</th>
         </tr>
+        </thead>
+         
+        <tbody> 
         $ odd = 1
         $for r in records:
             $ event = r #  ast.literal_eval(json.loads(r))
             <tr class="log_rec ${'odd' if odd else 'even'}">
-                <td align='center'>${event["date"]}</td>
-                <td align='center'>${formatTime(event["start"])}</td>
-                <td align='center'>${snames[event["station"]]}</td>
-                <td align='center'>${event["duration"]}</td>
-                <td align='center'>${event["program"]}</td>
+                <td>${event["date"]}</td>
+                <td>${formatTime(event["start"])}</td>
+                <td>${snames[event["station"]]}</td>
+                <td>${event["duration"]}</td>
+                <td>${event["program"]}</td>
             </tr>
             $ odd = 1 - odd
+        </tbody>  
     </table>
 
 </div>
 
-<div id="controls">
+<div class="controls">
     <button id="nRefresh" class="refresh">$_(u'Refresh')</button>
     <button id="nDeleteAll" class="delete danger">$_(u'Clear Log')</button>
 </div>
