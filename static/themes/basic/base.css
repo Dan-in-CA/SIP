@@ -401,9 +401,6 @@ table.stationList td.timeInput {
 tr.even {
 	background-color: #DDD;
 }
-/* tbody.shaded {
-	background-color: #DDD;
-} */
 td.stationStatus {
 	color: white;
 	background-color: #7D1921;
