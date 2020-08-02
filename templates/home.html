@@ -104,7 +104,7 @@ $code:
         }
     }
     function statusTimer() {
-        jQuery.getJSON(baseUrl + "/api/status", updateStatus)
+        jQuery.getJSON("/api/status", updateStatus)
     }
 
     function countdownTimer(el) {
@@ -177,7 +177,7 @@ $code:
             sid = parseInt(jQuery(this).attr("id"));
             sbit = jQuery(this).hasClass("on");
             if (sbit) {
-                window.location = baseUrl + "/sn?sid="+(sid+1)+"&set_to=0"; // turn off station
+                window.location = "/sn?sid="+(sid+1)+"&set_to=0"; // turn off station
             } else {
                 let strmm = jQuery("#mm"+sid).val();
                 let strss = jQuery("#ss"+sid).val();
@@ -187,12 +187,12 @@ $code:
                     alert($:{json.dumps(_(u'Timer values wrong: '), ensure_ascii=False)} + strmm + ":" + strss);
                     return;
                 }
-                window.location = baseUrl+ "/sn?sid=" + (sid+1) + "&set_to=1" + "&set_time=" + (mm*60+ss);  // turn it off with timer
+                window.location = "/sn?sid=" + (sid+1) + "&set_to=1" + "&set_time=" + (mm*60+ss);  // turn it off with timer
             }
         });
 
         jQuery("button#pStopAll").click(function(){
-            window.location = baseUrl + "/cv?rsn=1";
+            window.location = "/cv?rsn=1";
         });
 
         jQuery("button#pPrev").click(function() {
@@ -274,7 +274,6 @@ $if gv.sd[u'mm']:
                             </td>
                     </tr>
         </table></div>
-
 
 $else:
     <div id="programmode">
