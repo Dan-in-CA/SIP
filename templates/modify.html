@@ -382,7 +382,7 @@ let cycleTime = ${two_digits(program['cycle_min'] % 60)};
                 <p>
                 $ t = formatTime(two_digits(program['start_min'] / 60) + ":" + two_digits(program['start_min'] % 60))
                 
-                    <b>$_(u'Start Time'):</b> <input class="timeInput numbersOnly" type="number" size = "2" maxlength = "2" id = "tsh" value = "${t.split(":")[0]}"> :
+                    <label class="oneline"><b>$_(u'Start Time'):</b> <input class="timeInput numbersOnly" type="number" size = "2" maxlength = "2" id = "tsh" value = "${t.split(":")[0]}"> :
                     <input class="timeInput numbersOnly" type="number" size = "2" maxlength = "2" id = "tsm" value = "${t.split(":")[1][0:2]}">
                 $if tf:
                     (hh:mm)
@@ -390,7 +390,7 @@ let cycleTime = ${two_digits(program['cycle_min'] % 60)};
                     <select id='tsf'>
                         <option ${"selected" if t.find(u"am") >= 0 else ""}>AM</option>
                         <option ${"selected" if t.find(u"pm") >= 0 else ""}>PM</option>
-                    </select>
+                    </select></label>
                 </p>
                 <p ${"" if not idd else "style=display:none"}><b>$_(u'Duration'):</b> <input class="timeInput numbersOnly" type="number" size = "2" maxlength = "3" id = "tdm" value="${two_digits(int(program['duration_sec'][0]) / 60)}"> :
                 <input class="timeInput numbersOnly" type="number" size="2" maxlength="2" id="tds" value="${two_digits(int(program['duration_sec'][0]) % 60)}"> (mm:ss)</p>
@@ -458,7 +458,7 @@ let cycleTime = ${two_digits(program['cycle_min'] % 60)};
                                 $if firstTime:
                                     <td class="showInterval" $:{"style='display:none'" if weekly else ""} rowspan="${stationsShown}">
                                         <p>$_(u'Water interval'):</p>
-                                        <div id="intervalSelector" class="animatedSelector controlblock">
+                                        <div id="intervalSelector" class="animatedSelector controlblock oneline">
                                             <!--  Customize this with any set of intervals you like up to 127 -->
                                             <span class="intervalSelect ${"distance0" if weekly else ""}">2</span>
                                             <span class="intervalSelect">3</span>

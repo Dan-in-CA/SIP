@@ -131,7 +131,21 @@ $code:
         if(restarted == 0) {
         	alert("SIP could not restart.\nPlease restart the program from the command line.");
         }
-    	
+        
+        $# Code to clear mamual mode page after timed run
+        $ flat_list = [item for sublist in gv.ps for item in sublist]
+        $ idxt = 0
+        $ remTime = 0
+        $if 99 in flat_list:
+        	$ idxt = flat_list.index(99) + 1
+        	$ remTime = flat_list[idxt]              
+		if($remTime) {
+			setTimeout(refreshPage, ${remTime + 1} * 1000);		
+		}
+        function refreshPage() {
+        	window.location = "/";
+        	}
+		
         $if gv.sd['mm'] == 0:
             statusTimer();
 

@@ -101,9 +101,7 @@ class sw_restart(ProtectedPage):
 
     def GET(self):
         restart(1)
-        #referer = web.ctx.env.get('HTTP_REFERER', u"/")
-        referer = u"/"
-        return template_render.restarting(referer)
+        return template_render.restarting()
 
 
 ###########################
