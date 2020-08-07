@@ -38,7 +38,9 @@ $code:
 <script>
     let priorRs = ${gv.sd[u"rs"]};
     let useRainsense = ${gv.sd[u"urs"]};
-    let devt = ${gv.now}
+    let devt = ${gv.now};
+    let h = 0;
+    let w = 100;
     
     function formatLogline(log) {
         let lrsid = lrun[0], lrpid = lrun[1], lrdur = lrun[2], lret = lrun[3];
@@ -60,7 +62,7 @@ $code:
         let display, updateInterval = 30000;
         for (let s=0; s<status.length; s++) {
             let station = status[s];
-            let classes = "stationStatus station_" + station.status;
+            let classes = "noNewline stationStatus station_" + station.status;
             switch (station.reason) {
                 case "program" :
                     let minutes = Math.floor(station.remaining / 60);
@@ -161,12 +163,12 @@ $code:
 
         jQuery("button#cRainDelay").click(function(){
             if (rd != 0) {
-                let h = 0;
+                h = 0;
             } else {
-                let h = prompt($:{json.dumps(_(u'Enter hours to delay'), ensure_ascii=False)},"0");
+                h = prompt($:{json.dumps(_(u'Enter hours to delay'), ensure_ascii=False)},"0");
             }
             if (h < 0) {
-                let h = prompt("Delay must be a positive value","0");
+                h = prompt("Delay must be a positive value","0");
             }
             if (h != null && h >= 0){
                 jQuery("form[name='hf'] input[name='rd']").val(h);
@@ -177,9 +179,9 @@ $code:
 
         jQuery("button#cWaterLevel").click(function(){
             if (wl != 100) {
-                let w = 100;
+                w = 100;
             } else {
-                let w = prompt($:{json.dumps(_(u'Enter percentage adjustment'), ensure_ascii=False)},wl);
+                w = prompt($:{json.dumps(_(u'Enter percentage adjustment'), ensure_ascii=False)},wl);
             }
             if (w != null){
                 jQuery("form[name='hf'] input[name='wl']").val(w);
@@ -246,9 +248,9 @@ $code:
 <div id="options">
     <button id="cStartStop" class="toggle ${'on' if gv.sd[u'en'] else 'off'}"><span class='toggleleft'>$_(u'System On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'System Off')</span></button>
     <br>
-    <button id="cWaterLevel" class="toggle choice ${'on' if gv.sd[u'wl']==100 else 'off'}"><span class='toggleleft'>$_(u'Normal')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>${_(u'Water Level') if gv.sd[u'wl']==100 else str(gv.sd['wl']) + '%' + _(u'Level')}</span></button> ${'' if int(plugin_adjustment()) == 100 else ' Plugin adjustments: ' + plugin_adjustment_list() + ('' if gv.sd[u'wl']==100 and '*' not in plugin_adjustment_list() else ' - Total adjustment: ' + total_adjustment() + '%')}
+    <button id="cWaterLevel" class="toggle choice ${'on' if gv.sd[u'wl']==100 else 'off'}"><span class='toggleleft'>$_(u'Normal')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>${_(u'Water Level') if gv.sd[u'wl']==100 else str(gv.sd['wl']) + '%' + _(u'Level')}</span></button><span class="noNewline">${'' if int(plugin_adjustment()) == 100 else ' Plugin adjustments: ' + plugin_adjustment_list() + ('' if gv.sd[u'wl']==100 and '*' not in plugin_adjustment_list() else ' - Total adjustment: ' + total_adjustment() + '%')}</span>
     <br>
-    <button id="cRainDelay" class="toggle ${'off' if gv.sd[u'rd'] or (gv.sd[u'urs'] and gv.sd[u'rs']) else 'on'}"><span class='toggleleft'>$_(u'Active')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Rain Delay')</span></button> ${u"" if gv.sd[u'rdst'] - gv.now <= 0 else u"Rain delay time left: " +  str((int(gv.sd[u'rdst'] - gv.now) // 3600)) + ':' + str(int((gv.sd[u'rdst'] - gv.now) % 3600 // 60)).zfill(2)}
+    <button id="cRainDelay" class="toggle ${'off' if gv.sd[u'rd'] or (gv.sd[u'urs'] and gv.sd[u'rs']) else 'on'}"><span class='toggleleft'>$_(u'Active')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Rain Delay')</span></button><span class="noNewline">${u"" if gv.sd[u'rdst'] - gv.now <= 0 else u"Rain delay time left: " +  str((int(gv.sd[u'rdst'] - gv.now) // 3600)) + ':' + str(int((gv.sd[u'rdst'] - gv.now) % 3600 // 60)).zfill(2)}</span>
 
     $if gv.sd[u'urs']:
         <span class="rainsense">${u'' if gv.sd[u'rs'] else _(u'no')} $_(u'rain sensed')</span>

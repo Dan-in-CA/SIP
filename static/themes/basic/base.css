@@ -736,7 +736,10 @@ td.stationSchedule {
 	-moz-user-select: none;
 	-webkit-user-select: none;
    }
-   .seconds{
+   .noNewline {
+    white-space: nowrap;
+   }
+   .timeInput{
    	border:none;
 	padding-left: 0px;
 	padding-right:0px;
@@ -750,6 +753,9 @@ td.stationSchedule {
    }
    input[type=number][size="2"]{
     width: 2em;
+   }
+   .breakBefore {
+    display: table;
    }
 }
 

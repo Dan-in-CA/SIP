@@ -93,7 +93,6 @@ $code:
         let timeFormat = ${gv.sd[u"tf"]};
         let dayList = $:{days};
         let monthList = $:{months};
-        let baseUrl = "";
 
         let cputemp = "${gv.cputemp}";
         let tempunit = "${gv.sd[u'tu']}";
@@ -199,7 +198,7 @@ $code:
                   </div>
               <div class="row">
                   <div class="controls">
-                    <button id="bHelp" class="help" title=$:{json.dumps(_(u'Help'), ensure_ascii=False)}>$_(u'?')</button>
+                    <button id="bHelp" class="help" title=$:{json.dumps(_(u'Documentation wiki'), ensure_ascii=False)}>&nbsp;&nbsp;$_(u'?')&nbsp;&nbsp;</button>
                   </div>
               </div>
 

@@ -232,7 +232,7 @@ function displayProgram() { // Controls home page irrigation timeline
 		displaySchedule(schedule);
 	} else {
 		var visibleDate = toXSDate(displayScheduleDate);
-		jQuery.getJSON(baseUrl + "/api/log?date=" + visibleDate, function(log) {
+		jQuery.getJSON("/api/log?date=" + visibleDate, function(log) {
 			for (var l in log) {
 				log[l].duration = fromClock(log[l].duration);
 				log[l].start = fromClock(log[l].start)/60;
