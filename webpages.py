@@ -261,6 +261,10 @@ class change_options(ProtectedPage):
             set_output()
             report_rebooted()
             reboot()
+        if u"shutdown" in qdict and qdict[u"shutdown"] == u"1":
+            gv.srvals = [0] * (gv.sd[u"nst"])
+            set_output()
+            poweroff()
 
         if u"rstrt" in qdict and qdict[u"rstrt"] == u"1":
             restart(2)

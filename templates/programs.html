@@ -50,142 +50,112 @@ $code:
 <script>
     // Initialize behaviors
     jQuery(document).ready(function(){
-
-        jQuery("button#nDelAll, button.cDelete").click(function(){
-            try{
-                var pid = jQuery(this).attr("data-id")
-                }
-            catch(err) {
-                var pid = 0
-            }
-            jQuery("form#df input[name='pid']").val(pid);
-            jQuery("form#df").submit();
+        jQuery(".js-toggleProgram").change(function(){
+            jQuery(this).parents('form').submit()
         });
-
-        jQuery("button#nAdd, button.cModify").click(function(){
-            try{
-                var pid = jQuery(this).attr("data-id")
-                }
-            catch(err) {
-                var pid = 0
-            }
-            jQuery("form#mf input[name='pid']").val(pid);
-            jQuery("form#mf").submit();
-        });
-
-        jQuery("button.cRunNow").click(function(){
-            try{
-                var pid = jQuery(this).attr("data-id")
-                }
-            catch(err) {
-                var pid = 0
-            }
-            jQuery("form#rn input[name='pid']").val(pid);
-            jQuery("form#rn").submit();
-        });
-
-            jQuery(".js-toggleProgram").click(function(){
-                var pid = jQuery(this).attr("data-id");
-                var enable = jQuery(this).is(":checked");
-                jQuery("form#ep input[name='pid']").val(pid);
-                jQuery("form#ep input[name='enable']").val(enable ? 1 : 0);
-                jQuery("form#ep").submit();
-            });
-
     });
 
 </script>
-<form name="df" id="df" action="${app_path('/dp')}" method="get">
-        <input type="hidden" name="pid">
-</form>
-<form name="rn" id="rn" action="${app_path('/rp')}" method="get">
-    <input type="hidden" name="pid">
-</form>
-<form name="mf" id="mf" action="${app_path('/mp')}" method="get">
-    <input type="hidden" name="pid">
-</form>
-     <form name="ep" id="ep" action="${app_path('/ep')}" method="get">
-     <input type="hidden" name="pid">
-     <input type="hidden" name="enable">
-</form>
-<div class="mb-3">
-    <button id="nAdd" class="btn btn-success" data-id="-1">$_(u'Add a New Program')</button>
-    <button id="nDelAll" class="btn btn-danger" data-id="-1">$_(u'Delete All')</button>
+
+
+<div class="mb-3 d-flex flex-wrap">
+    <form class="m-1"  action="${app_path('/mp')}" method="get">
+        <input type="hidden" name="pid" value="-1">
+        <button type="submit" class="btn btn-outline-primary">$_(u'Add a New Program')</button>
+    </form>
+    <form class="m-1"  action="${app_path('/dp')}" method="get">
+        <input type="hidden" name="pid" value="-1">
+        <button type="submit" class="btn btn-outline-danger">$_(u'Delete All')</button>
+    </form>
 </div>
-<div class="">
+
 <div id="programs" class="row justify-content-center">
     $for pid in range(nprogs):
         $ prog = gv.pd[pid]
         <div class="col-12 col-sm-8 col-lg-6 my-4">
-        <div id="p${pid}" class="card border program ${'disabled border-danger' if prog['enabled'] == 0 else 'border-primary'}">
+            <div id="p${pid}" class="card border program ${'disabled border-danger' if prog['enabled'] == 0 else 'border-primary'}">
 
-        <header class="card-header d-flex flex-wrap  text-white ${'bg-danger' if prog['enabled'] == 0 else 'bg-info'}">
-           <div>
-               <span class="h4">$_(u'Program') ${pid+1}: </span>
-               <span class="font-weight-bold text-nowrap">${pdays(prog['day_mask'], prog['interval_base_day'])}</span>
-           </div>
+                <header class="card-header d-flex flex-wrap  text-white ${'bg-danger' if prog['enabled'] == 0 else 'bg-info'}">
+                   <div>
+                       <span class="h5">$_(u'Program') ${pid+1}: </span>
+                       <span class="font-weight-bold text-nowrap">${pdays(prog['day_mask'], prog['interval_base_day'])}</span>
+                   </div>
 
-            <div class="custom-control custom-switch ml-auto mt-1">
-                <input type="checkbox" autocomplete="false" class="custom-control-input js-toggleProgram" id="toggle-${pid}" data-id="${pid}" ${'' if prog['enabled'] == 0 else 'checked'}>
-                <label class="custom-control-label" for="toggle-${pid}">$_(u'On')/$_(u'Off')</label>
-            </div>
+                    <form class="ml-auto mt-1" action="${app_path('/ep')}" method="get">
+                        <input type="hidden" name="pid" value="${pid}">
+                        <input type="hidden" name="enable" value="0">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" autocomplete="false" class="custom-control-input js-toggleProgram" id="toggle-${pid}" value="1" name="enable" ${'' if prog['enabled'] == 0 else 'checked'}>
+                            <label class="custom-control-label" for="toggle-${pid}">$_(u'On')/$_(u'Off')</label>
+                        </div>
+                    </form>
 
-        </header>
-            <div class="card-body">
-            $ start = prog['start_min']
-            $ end = prog['stop_min']
-            $ interval = prog['cycle_min']
-            $ duration = 0
-            <div class="stationList"><strong>$_(u'Run'):</strong>
-			$ sid = -1
-            $for bid in range(gv.sd['nbrd']):
-                $if len(prog) >= 8 + bid and isinstance(prog['station_mask'][bid], int):
-                    $ bits = prog['station_mask'][bid]
-                $else:
-                    $ bits = 0
-                $for s in range(8):
-                    $ sid += 1
-                    $if (gv.sd['show'][bid]>>s)&1 and bits&(1 << s):
-                        <span class="stationName val">${snames[sid]}</span>
-                        $if gv.sd['seq'] :
-                            $if gv.sd['idd'] :
-                                $ duration += prog['duration_sec'][sid]
-                            $else:
-                                $ duration = prog['duration_sec'][0]
+
+                </header>
+                <div class="card-body">
+                    $ start = prog['start_min']
+                    $ end = prog['stop_min']
+                    $ interval = prog['cycle_min']
+                    $ duration = 0
+                    <div class="stationList"><strong>$_(u'Run'):</strong>
+                    $ sid = -1
+                    $for bid in range(gv.sd['nbrd']):
+                        $if len(prog) >= 8 + bid and isinstance(prog['station_mask'][bid], int):
+                            $ bits = prog['station_mask'][bid]
                         $else:
-                            $if gv.sd['idd'] :
-                                $ duration = max(duration, prog['duration_sec'][sid])
-                            $else:
-                                $ duration = prog['duration_sec'][0]
-            $ lap_end = start + duration / 60
-            $ recurring = prog['cycle_min'] > 0 #  int(lap_end) < int(end)
+                            $ bits = 0
+                        $for s in range(8):
+                            $ sid += 1
+                            $if (gv.sd['show'][bid]>>s)&1 and bits&(1 << s):
+                                <span class="stationName val">${snames[sid]}</span>
+                                $if gv.sd['seq'] :
+                                    $if gv.sd['idd'] :
+                                        $ duration += prog['duration_sec'][sid]
+                                    $else:
+                                        $ duration = prog['duration_sec'][0]
+                                $else:
+                                    $if gv.sd['idd'] :
+                                        $ duration = max(duration, prog['duration_sec'][sid])
+                                    $else:
+                                        $ duration = prog['duration_sec'][0]
+                    $ lap_end = start + duration / 60
+                    $ recurring = prog['cycle_min'] > 0 #  int(lap_end) < int(end)
 
-            </div>
-            <div>
-                <strong>$_(u'Starting'):</strong> <span class="val">${formatTime(two_digits(start/60) + ":" + two_digits(start%60))}</span>
-                <span ${"" if (gv.sd['idd'] > 0) else "style=display:none"}>$_(u'with individual station durations')</span>
-            </div>
+                    </div>
+                    <div>
+                        <strong>$_(u'Starting'):</strong> <span class="val">${formatTime(two_digits(start/60) + ":" + two_digits(start%60))}</span>
+                        <span ${"" if (gv.sd['idd'] > 0) else "style=display:none"}>$_(u'with individual station durations')</span>
+                    </div>
 
-            <div>
-                <strong>$_(u'for')</strong> <span class="val">${two_digits(duration/3600)}</span> hrs <span class="val">${two_digits(((duration/60)%60))}</span> mins <span class="val">${two_digits(duration%60)}</span> secs
-            $if not recurring:
-                $_(u'until') <span class="val">${formatTime(two_digits(lap_end/60) + ":" + two_digits(lap_end%60))}</span>
+                    <div>
+                        <strong>$_(u'for')</strong> <span class="val">${two_digits(duration/3600)}</span> hrs <span class="val">${two_digits(((duration/60)%60))}</span> mins <span class="val">${two_digits(duration%60)}</span> secs
+                    $if not recurring:
+                        $_(u'until') <span class="val">${formatTime(two_digits(lap_end/60) + ":" + two_digits(lap_end%60))}</span>
 
-            </div>
+                    </div>
 
-            $if recurring:
-                <div><strong>$_(u'Recurring every')</strong> <span class="val">${two_digits(interval/60)}</span> hrs <span class="val">${two_digits(interval%60)}</span> mins
-				$_(u'until') <span class="val">${formatTime(two_digits(end/60) + ":" + two_digits(end%60))}</span>
+                    $if recurring:
+                        <div><strong>$_(u'Recurring every')</strong> <span class="val">${two_digits(interval/60)}</span> hrs <span class="val">${two_digits(interval%60)}</span> mins
+                        $_(u'until') <span class="val">${formatTime(two_digits(end/60) + ":" + two_digits(end%60))}</span>
+                        </div>
+
+                    <div class="mt-2 d-flex flex-wrap">
+                        <form class="m-1" action="${app_path('/rp')}" method="get">
+                            <input type="hidden" name="pid" value="${pid}">
+                            <button type="submit" class="btn btn-success btn-sm" >$_(u'Run Now')</button>
+                        </form>
+                        <form class="m-1" action="${app_path('/mp')}" method="get">
+                            <input type="hidden" name="pid" value="${pid}">
+                            <button class="btn btn-primary btn-sm" >$_(u'Edit')</button>
+                        </form>
+                        <form class="m-1" action="${app_path('/dp')}" method="get">
+                            <input type="hidden" name="pid" value="${pid}">
+                            <button class=" btn btn-danger btn-sm">$_(u'Delete')</button>
+                        </form>
+                    </div>
                 </div>
-
-            <div class="mt-3">
-                <button class="cRunNow btn btn-success btn-sm" data-id="${pid}">$_(u'Run Now')</button>
-                <button class="cModify btn btn-primary btn-sm" data-id="${pid}">$_(u'Edit')</button>
-                <button class="cDelete btn btn-danger btn-sm" data-id="${pid}">$_(u'Delete')</button>
             </div>
         </div>
-        </div>
-        </div>
 
 </div>
-</div>
+

@@ -107,9 +107,9 @@ $code:
 
         </header>
 
-        <main class="container-fluid px-1 px-md-3 flex-grow-1">
+        <main class="container-fluid px-1 px-md-3 flex-grow-1  c-bgImgc-bgImg--grass ">
             <div class="row">
-                <div class="col-12 col-md-2 text-white  c-bgImg c-bgImg--grass ">
+                <div class="col-12 col-md-2 text-white ">
                     <div id="deviceTime" class="collapse collapse show mx-n3 px-3" style="background: #06b0069e;">
                         <div class="row  py-3" >
                             <div class="col-auto col-md-12 d-flex ">
@@ -135,7 +135,7 @@ $code:
                         </a>
 
 
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler rounded-0" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="mainMenu">
@@ -228,7 +228,7 @@ $code:
                         <div class="col-auto col-sm my-1">
                             <a href="https://github.com/Dan-in-CA/SIP/wiki"  target="_blank"  class="btn btn-link px-1" title=$:{json_dump(_(u'Help'))}> <i class="fas fa-question-circle mr-2"></i>$_(u'(wiki)')</a>
                         </div>
-                        <div class="col col-sm my-1">
+                        <div class="col col-sm my-1 text-right">
                             <form name="tt" action="${app_path(u'/ttu')}" method="get">
                                 <input type="hidden" name="tunit" value="${gv.sd[u'tu']}">
                                 <div class="text-nowrap">$_(u'CPU Temp'):

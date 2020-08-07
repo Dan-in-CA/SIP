@@ -74,7 +74,7 @@ $code:
     $code:
         output = ""
         for opt_group in opt_groups:
-            output +=  "<div class='card'>"
+            output +=  "<div class='card mb-2'>"
             output +=  "<div class='d-flex justify-content-between align-items-center card-header bg-info text-white py-1'  data-toggle='collapse' data-target='#"+slugify(opt_group)+"' >"
             output +=  "<h4 class='mb-0'>" + opt_group + "</h4><i class='fas fa-lg fa-angle-down ml-2'></i>"
             output +=  "</div>"
@@ -154,9 +154,16 @@ $code:
         </div>
         <div class=" m-2">
             <form action="${app_path('/co')}" method="get">
-                <button class="btn btn-danger">${_(u"Reboot")}</button>
+                <button class="btn btn-danger">${_(u"Reboot System")}</button>
                 <div class="js-tooltip valid-feedback">${ _(u"Reboot hardware")}</div>
                 <input type="hidden" name="rstrt" value="1">
+            </form>
+        </div>
+        <div class=" m-2">
+            <form action="${app_path('/co')}" method="get">
+                <button class="btn btn-danger">${_(u"Shutdown System")}</button>
+                <div class="js-tooltip invalid-feedback">${ _(u"Caution!! Shutdowns hardware")}</div>
+                <input type="hidden" name="shutdown" value="1">
             </form>
         </div>
 
