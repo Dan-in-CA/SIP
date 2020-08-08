@@ -72,6 +72,10 @@ $code:
 
     var prog = JSON.parse($:{"'" + json.dumps(program) + "'"});   ///// format conversion
 
+    var isWeekly=function (){
+        return jQuery('[name="cWeeklyInterval"]:checked').val() == "off";
+    }
+
     // Helper functions
     function parseTime(prefix) {
         var h = parseInt(jQuery("#" + prefix + "h").val());
@@ -98,7 +102,8 @@ $code:
     function checkConsistency() {
         disableSubmit = false;
         errorHint = "";
-        if (jQuery('[name="cWeeklyInterval"]:checked').val() == "off" && jQuery(".js-dayBtn.on").length < 1) {
+        console.log(isWeekly())
+        if (isWeekly() && jQuery(".js-dayBtn.on").length < 1) {
             disableSubmit = true;
             errorHint = $:{json_dump(_(u'Please choose at least one weekday for the program to run.'))};
         }
@@ -117,101 +122,96 @@ $code:
 
         jQuery('[name="cWeeklyInterval"]').change(function(){
 
-            var weeklyShow = jQuery('[name="cWeeklyInterval"]:checked').val() == 'off';
-
-            jQuery('#collapse-showInterval').collapse(weeklyShow ? 'hide' : 'show');
-            jQuery('.collapse.showWeekly').collapse(weeklyShow ? 'show' : 'hide');
+            jQuery('#collapse-showInterval').collapse(isWeekly() ? 'hide' : 'show');
+            jQuery('.collapse.showWeekly').collapse(isWeekly() ? 'show' : 'hide');
 
 
-            if (jQuery(".distance0").length == 0){
-                jQuery("#intervalSelector .intervalSelect:first-child").trigger("click");
-            }
+            jQuery(".js-interval").first().trigger("click");
+
             checkConsistency();
             return false;
         });
 
-        jQuery('table#stations .js-dayBtn').click(function(){
+        jQuery('table .js-dayBtn').click(function () {
             var id = jQuery(this).attr("id");
 
-            if (id.indexOf("day") == 0) {
-                var state = jQuery(this).hasClass("on");
-                jQuery(this)
-                    .addClass( state ? "off": "on")
-                    .removeClass( state ? "on" : "off");
-                jQuery("." + id).toggleClass("dayOn");
-            }
+            var state = jQuery(this).hasClass("on");
+            jQuery(this)
+                .addClass(state ? "off" : "on")
+                .removeClass(state ? "on" : "off");
+            jQuery(".js-stationState." + id).toggleClass("dayOn");
+
             checkConsistency();
             return false;
         });
 
-        jQuery(".js-station").change(function(){
+        jQuery(".js-station").change(function () {
+            var id = jQuery(this).attr("id");
+            jQuery('.js-stationState.' + id).toggleClass("stationOn");
+
             checkConsistency();
             return false;
         });
 
-        jQuery(".stationState").click(function(){
+        jQuery(".js-stationState").click(function(){
             var classes = jQuery(this).attr("class");
             var stationName = classes.match(/station\d+/)[0];
             var dayName = classes.match(/day\d+/)[0];
-            var stationOn = jQuery(this).is(":checked");
+            var stationOn =  jQuery(this).hasClass("stationOn");
             var dayOn = jQuery(this).hasClass("dayOn");
             if (stationOn && dayOn) {
-                jQuery("#" + stationName).trigger("change");
+                jQuery("#" + stationName).attr("checked",true);
             } else if (stationOn && !dayOn) {
-                jQuery("#" + dayName).trigger("click");
+                jQuery(".js-dayBtn#" + dayName).trigger("click");
             } else if (!stationOn && dayOn) {
-                jQuery("#" + stationName).trigger("change");
+                jQuery("#js-" + stationName).attr("checked",true);
             } else {
-                jQuery("#" + stationName).trigger("change");
-                jQuery("#" + dayName).trigger("click");
+                jQuery("#js-" + stationName).attr("checked",true);
+                jQuery(".js-dayBtn#" + dayName).trigger("click");
             }
             return false;
         });
         jQuery("#js-allWeekdays").click(function(){
-            jQuery(".js-dayBtn").addClass("dayOn").addClass("on").removeClass("off");
+            jQuery(".js-stationState").addClass("dayOn");
+            jQuery(".js-dayBtn").addClass("on").removeClass("off");
             checkConsistency();
         });
         jQuery("#js-noWeekdays").click(function(){
-            jQuery(".js-dayBtn").removeClass("dayOn").addClass("off").removeClass("on");
+            jQuery(".js-stationState").removeClass("dayOn");
+            jQuery(".js-dayBtn").addClass("off").removeClass("on");
             checkConsistency();
         });
 
         jQuery(".js-numbersOnly").keyup(function () {
             this.value  = this.value.replace(/[^0-9]/g, '');
         });
-        jQuery("#intervalSelector").click(function() {
-            var dayInterval = parseInt(jQuery("#intervalSelector .intervalSelect.distance0").text());
-            var delayInterval = parseInt(jQuery("#intervalDelaySelector .intervalSelect.distance0").text());
-            if (isNaN(delayInterval)) {
-                delayInterval = 0;
-            } else if (delayInterval > 1 && delayInterval >= dayInterval) {
-                delayInterval = dayInterval - 1;
+        jQuery(document).on('click','.js-intervalDelay',function() {
+            jQuery(".js-intervalDelay").removeClass('active')
+            jQuery(this).addClass('active')
+        });
+
+        jQuery(".js-interval").click(function() {
+            jQuery(".js-interval").removeClass('active')
+            jQuery(this).addClass('active')
+            var interval = parseInt(jQuery(this).data('interval'));
+
+            var delay=prog['day_mask'];
+            if (delay>=interval){
+                delay=interval-1;
             }
-            jQuery("#intervalDelaySelector").html("");
-            for (var i=0; i<dayInterval; i++) {
-                jQuery("#intervalDelaySelector").append(
-                        jQuery("<span class='intervalSelect'>" + i + "</span>")
-                            .on("click", intervalSelectClick)
-                            .on("mouseover", intervalSelectMouseover)
-                            .on("mouseout", intervalSelectMouseout)
-                );
-                if (i == 16) {
-                    jQuery("#intervalDelaySelector").append("<br/>");
+
+            jQuery("#intervalDelaySelector").html('');
+            for (var i=0; i<interval; i++) {
+                var isActive = i === delay;
+                var span = '<span class="js-intervalDelay " data-interval-delay="' + i + '" > ' + i + '</span>';
+                jQuery("#intervalDelaySelector").append(span);
+                if (isActive) {
+                    jQuery('[data-interval-delay="' + i + '"]').trigger("click");
                 }
             }
-            jQuery("#intervalDelaySelector .intervalSelect").each(function() {
-                if (jQuery(this).text() == delayInterval) {
-                    jQuery(this).trigger("click");
-                }
-            });
+
         });
-        jQuery("#intervalSelector .intervalSelect").each(function() {
-            var thisValue = parseInt(jQuery(this).text());
-            if (thisValue == prog['interval_base_day']) {
-                jQuery(this).trigger("click");
-                jQuery("#intervalSelector").trigger("click");
-            }
-        });
+        jQuery(".js-interval.active").trigger('click');//initialize delays
 
         jQuery("button#cSubmit").click(function(){
             var idd = ${gv.sd['idd']};
@@ -221,7 +221,7 @@ $code:
           prog['enabled'] = jQuery('input[name="cProgramEnabled"]:checked').val() == 1;
 
             // process days
-            if (jQuery('[name="cWeeklyInterval"]:checked').val()=="off") {
+            if (isWeekly()) {
                 prog['type'] = 'alldays';
                 for (i = 0; i < 7; i++) {
                     if (jQuery(".js-dayBtn#day" + i).hasClass("on")) {
@@ -234,8 +234,8 @@ $code:
                 }
             } else {
                 prog['type'] = 'interval';
-                dayInterval = parseInt(jQuery("#intervalSelector .intervalSelect.distance0").text());
-                days = parseInt(jQuery("#intervalDelaySelector .intervalSelect.distance0").text());
+                dayInterval = parseInt(jQuery(".js-interval.active").data('interval'));
+                days = parseInt(jQuery(".js-intervalDelay.active").data('interval-delay'));
 
                 if (days < 0 || days >= dayInterval) {
                     alert($:{json_dump(_(u'Starting in days wrong.'))});
@@ -249,7 +249,7 @@ $code:
                 stations[bid] = 0;
                 for (var s=0; s < 8; s ++) {
                     sid = bid * 8 + s;
-                    if (jQuery("input#station" + sid).is(":checked")) {
+                    if (jQuery(".js-station#station" + sid).is(":checked")) {
                         stations[bid] |= 1<<s;
                     }
                 }
@@ -274,7 +274,7 @@ $code:
             for (var bid=0; bid<nbrd; bid++) {
                 for (var s = 0; s < 8; s ++) {
                     sid = bid * 8 + s;
-                    var stationOn = jQuery("input#js-station" + sid).is(":checked")
+                    var stationOn = jQuery(".js-station#station" + sid).is(":checked")
                     if (stationOn) {
                         if (idd) {
                             var dm = parseInt(jQuery("#tdm" + sid).val());
@@ -475,7 +475,6 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
 
         <div class="card border-info">
             <div class="card-body row px-2 accordion">
-            <div class="card-body row px-2 accordion">
                     <div class="table-responsive col">
                          <table id="stations" class=" table table-borderless table-sm">
                              <thead   id="collapse-weeklyBtns"  class="showWeekly collapse  ${'show' if weekly else ''}">
@@ -492,7 +491,7 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                                 <td><span class="${'' if idd else 'd-none'} font-weight-bold">$_(u"Duration"):</span></td>
                                 $ days=[ _(u"Monday"), _(u"Tuesday"), _(u"Wednesday"), _(u"Thursday"), _(u"Friday"), _(u"Saturday"), _(u"Sunday"), ]
                                 $for i in range(len(days)):
-                                    <td><button type="button" id="day${i}" class="btn btn-sm rounded-0 weekday js-dayBtn ${'on' if program['day_mask']&(1<<0) else 'off'}">${days[i]}</button></td>
+                                    <td><button type="button" id="day${i}" class="text-white btn btn-sm rounded-0 weekday js-dayBtn ${'on' if program['day_mask']&(1<<0) else 'off'}">${days[i]}</button></td>
 
                             </tr>
 
@@ -509,8 +508,8 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                                                 <div class="d-flex mr-2">
                                                     <span class="font-weight-bold text-info mr-3">${snames[sid]}</span>
                                                     <div class="custom-control custom-switch ml-auto">
-                                                        <input type="checkbox" class="js-station custom-control-input" autocomplete="off" id="js-station${sid}" ${'checked' if stationEnabled else''}>
-                                                        <label class="custom-control-label" for="js-station${sid}"><span class=" d-none d-sm-block">$_(u"On")/$_(u"Off")</span></label>
+                                                        <input type="checkbox" class="js-station custom-control-input" autocomplete="off" id="station${sid}" ${'checked' if stationEnabled else''}>
+                                                        <label class="custom-control-label" for="station${sid}"><span class=" d-none d-sm-block">$_(u"On")/$_(u"Off")</span></label>
                                                     </div>
                                                 </div>
                                             </td>
@@ -524,7 +523,7 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                                             </td>
                                             $for d in range(7):
                                                 $ status = ("stationOn" if stationEnabled else "") + (" dayOn" if program['day_mask']&(1<<d) else "")
-                                                <td class="showWeekly collapse stationState ${status} station${sid} day${d}  $:{'show' if weekly else ''}" ></td>
+                                                <td class="showWeekly collapse js-stationState ${status} station${sid} day${d}  $:{'show' if weekly else ''}" ></td>
                                         </tr>
                             <tr class="showWeekly collapse  ${'show' if weekly else ''}" >
                                 <td colspan="2"></td>
@@ -564,22 +563,22 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                         <div class="ml-md-3 ml-xl-4">
                             <div class="card mt-3">
                                 <h4 class="card-header bg-white border-0">$_(u"Water interval"):</h4>
-                                <div id="intervalSelector" class="card-body py-2 ">
-                                    <span class="intervalSelect ${'distance0' if weekly else ''}">2</span>
+                                <div id="intervalSelector" class="card-body py-2 h5 d-flex flex-wrap justify-content-center align-items-center">
+                                    <span class="js-interval" data-interval="2">2</span>
                                     <!--  Customize this with any set of intervals you like up to 127 -->
                                     $for d in [3, 4, 5, 6, 7, 10, 12, 14, 15, 21, 30 ]:
-                                    <span class="intervalSelect">${d}</span>
+                                    <span class="js-interval ${'active' if program['interval_base_day']==d else ''}" data-interval="${d}">${d}</span>
 
                                 </div>
                             </div>
                             <div class="card mt-3">
                                 <h4 class="card-header bg-white border-0">$_(u"Starting in"):</h4>
-                                <div id="intervalDelaySelector" class="card-body py-2  ">
+                                <div id="intervalDelaySelector" class="h5 card-body py-2 flex flex-wrap justify-content-center align-items-center ">
                                     $if weekly:
-                                        <span class="intervalSelect distance0">0</span>
-                                        <span class="intervalSelect distance1">1</span>
+                                        <span class="js-intervalDelay " data-interval-delay="0">0</span>
+                                        <span class="js-intervalDelay " data-interval-delay="1">1</span>
                                     $else:
-                                        <span class="intervalSelect distance0">${program['day_mask']&0x7F}</span>
+                                        <span class="js-intervalDelay " data-interval-delaydata-interval-delay="${program['day_mask']}">${program['day_mask']}</span>
                                 </div>
                             </div>
                         </div>

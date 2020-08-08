@@ -2466,7 +2466,7 @@ textarea.form-control {
   }
 }
 
-.btn {
+.btn, .js-interval, .js-intervalDelay {
   display: inline-block;
   font-weight: 400;
   color: #212529;
@@ -2485,34 +2485,36 @@ textarea.form-control {
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
-  .btn {
+  .btn, .js-interval, .js-intervalDelay {
     transition: none;
   }
 }
-.btn:hover {
+.btn:hover, .js-interval:hover, .js-intervalDelay:hover {
   color: #212529;
   text-decoration: none;
 }
-.btn:focus, .btn.focus {
+.btn:focus, .js-interval:focus, .js-intervalDelay:focus, .btn.focus, .focus.js-interval, .focus.js-intervalDelay {
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(57, 127, 25, 0.25);
 }
-.btn.disabled, .btn:disabled {
+.btn.disabled, .disabled.js-interval, .disabled.js-intervalDelay, .btn:disabled, .js-interval:disabled, .js-intervalDelay:disabled {
   opacity: 0.65;
   box-shadow: none;
 }
-.btn:not(:disabled):not(.disabled) {
+.btn:not(:disabled):not(.disabled), .js-interval:not(:disabled):not(.disabled), .js-intervalDelay:not(:disabled):not(.disabled) {
   cursor: pointer;
 }
-.btn:not(:disabled):not(.disabled):active, .btn:not(:disabled):not(.disabled).active {
+.btn:not(:disabled):not(.disabled):active, .js-interval:not(:disabled):not(.disabled):active, .js-intervalDelay:not(:disabled):not(.disabled):active, .btn:not(:disabled):not(.disabled).active, .js-interval:not(:disabled):not(.disabled).active, .js-intervalDelay:not(:disabled):not(.disabled).active {
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
-.btn:not(:disabled):not(.disabled):active:focus, .btn:not(:disabled):not(.disabled).active:focus {
+.btn:not(:disabled):not(.disabled):active:focus, .js-interval:not(:disabled):not(.disabled):active:focus, .js-intervalDelay:not(:disabled):not(.disabled):active:focus, .btn:not(:disabled):not(.disabled).active:focus, .js-interval:not(:disabled):not(.disabled).active:focus, .js-intervalDelay:not(:disabled):not(.disabled).active:focus {
   box-shadow: 0 0 0 0.2rem rgba(57, 127, 25, 0.25), inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 
-a.btn.disabled,
-fieldset:disabled a.btn {
+a.btn.disabled, a.disabled.js-interval, a.disabled.js-intervalDelay,
+fieldset:disabled a.btn,
+fieldset:disabled a.js-interval,
+fieldset:disabled a.js-intervalDelay {
   pointer-events: none;
 }
 
@@ -2764,28 +2766,28 @@ fieldset:disabled a.btn {
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.2rem rgba(82, 88, 93, 0.5);
 }
 
-.btn-outline-primary {
+.btn-outline-primary, .js-interval, .js-intervalDelay {
   color: #397F19;
   border-color: #397F19;
 }
-.btn-outline-primary:hover {
+.btn-outline-primary:hover, .js-interval:hover, .js-intervalDelay:hover {
   color: #fff;
   background-color: #397F19;
   border-color: #397F19;
 }
-.btn-outline-primary:focus, .btn-outline-primary.focus {
+.btn-outline-primary:focus, .js-interval:focus, .js-intervalDelay:focus, .btn-outline-primary.focus, .focus.js-interval, .focus.js-intervalDelay {
   box-shadow: 0 0 0 0.2rem rgba(57, 127, 25, 0.5);
 }
-.btn-outline-primary.disabled, .btn-outline-primary:disabled {
+.btn-outline-primary.disabled, .disabled.js-interval, .disabled.js-intervalDelay, .btn-outline-primary:disabled, .js-interval:disabled, .js-intervalDelay:disabled {
   color: #397F19;
   background-color: transparent;
 }
-.btn-outline-primary:not(:disabled):not(.disabled):active, .btn-outline-primary:not(:disabled):not(.disabled).active, .show > .btn-outline-primary.dropdown-toggle {
+.btn-outline-primary:not(:disabled):not(.disabled):active, .js-interval:not(:disabled):not(.disabled):active, .js-intervalDelay:not(:disabled):not(.disabled):active, .btn-outline-primary:not(:disabled):not(.disabled).active, .js-interval:not(:disabled):not(.disabled).active, .js-intervalDelay:not(:disabled):not(.disabled).active, .show > .btn-outline-primary.dropdown-toggle, .show > .dropdown-toggle.js-interval, .show > .dropdown-toggle.js-intervalDelay {
   color: #fff;
   background-color: #397F19;
   border-color: #397F19;
 }
-.btn-outline-primary:not(:disabled):not(.disabled):active:focus, .btn-outline-primary:not(:disabled):not(.disabled).active:focus, .show > .btn-outline-primary.dropdown-toggle:focus {
+.btn-outline-primary:not(:disabled):not(.disabled):active:focus, .js-interval:not(:disabled):not(.disabled):active:focus, .js-intervalDelay:not(:disabled):not(.disabled):active:focus, .btn-outline-primary:not(:disabled):not(.disabled).active:focus, .js-interval:not(:disabled):not(.disabled).active:focus, .js-intervalDelay:not(:disabled):not(.disabled).active:focus, .show > .btn-outline-primary.dropdown-toggle:focus, .show > .dropdown-toggle.js-interval:focus, .show > .dropdown-toggle.js-intervalDelay:focus {
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125), 0 0 0 0.2rem rgba(57, 127, 25, 0.5);
 }
 
@@ -2981,14 +2983,14 @@ fieldset:disabled a.btn {
   pointer-events: none;
 }
 
-.btn-lg, .btn-group-lg > .btn {
+.btn-lg, .btn-group-lg > .btn, .btn-group-lg > .js-interval, .btn-group-lg > .js-intervalDelay {
   padding: 0.5rem 2rem;
   font-size: 1.09375rem;
   line-height: 1.5;
   border-radius: 4.5rem;
 }
 
-.btn-sm, .btn-group-sm > .btn {
+.btn-sm, .btn-group-sm > .btn, .btn-group-sm > .js-interval, .btn-group-sm > .js-intervalDelay {
   padding: 0.25rem 1rem;
   font-size: 0.765625rem;
   line-height: 1.2;
@@ -3277,19 +3279,29 @@ input[type=button].btn-block {
   display: inline-flex;
   vertical-align: middle;
 }
-.btn-group > .btn,
-.btn-group-vertical > .btn {
+.btn-group > .btn, .btn-group > .js-interval, .btn-group > .js-intervalDelay,
+.btn-group-vertical > .btn,
+.btn-group-vertical > .js-interval,
+.btn-group-vertical > .js-intervalDelay {
   position: relative;
   flex: 1 1 auto;
 }
-.btn-group > .btn:hover,
-.btn-group-vertical > .btn:hover {
+.btn-group > .btn:hover, .btn-group > .js-interval:hover, .btn-group > .js-intervalDelay:hover,
+.btn-group-vertical > .btn:hover,
+.btn-group-vertical > .js-interval:hover,
+.btn-group-vertical > .js-intervalDelay:hover {
   z-index: 1;
 }
-.btn-group > .btn:focus, .btn-group > .btn:active, .btn-group > .btn.active,
+.btn-group > .btn:focus, .btn-group > .js-interval:focus, .btn-group > .js-intervalDelay:focus, .btn-group > .btn:active, .btn-group > .js-interval:active, .btn-group > .js-intervalDelay:active, .btn-group > .btn.active, .btn-group > .active.js-interval, .btn-group > .active.js-intervalDelay,
 .btn-group-vertical > .btn:focus,
+.btn-group-vertical > .js-interval:focus,
+.btn-group-vertical > .js-intervalDelay:focus,
 .btn-group-vertical > .btn:active,
-.btn-group-vertical > .btn.active {
+.btn-group-vertical > .js-interval:active,
+.btn-group-vertical > .js-intervalDelay:active,
+.btn-group-vertical > .btn.active,
+.btn-group-vertical > .active.js-interval,
+.btn-group-vertical > .active.js-intervalDelay {
   z-index: 1;
 }
 
@@ -3302,17 +3314,21 @@ input[type=button].btn-block {
   width: auto;
 }
 
-.btn-group > .btn:not(:first-child),
+.btn-group > .btn:not(:first-child), .btn-group > .js-interval:not(:first-child), .btn-group > .js-intervalDelay:not(:first-child),
 .btn-group > .btn-group:not(:first-child) {
   margin-left: -1px;
 }
-.btn-group > .btn:not(:last-child):not(.dropdown-toggle),
-.btn-group > .btn-group:not(:last-child) > .btn {
+.btn-group > .btn:not(:last-child):not(.dropdown-toggle), .btn-group > .js-interval:not(:last-child):not(.dropdown-toggle), .btn-group > .js-intervalDelay:not(:last-child):not(.dropdown-toggle),
+.btn-group > .btn-group:not(:last-child) > .btn,
+.btn-group > .btn-group:not(:last-child) > .js-interval,
+.btn-group > .btn-group:not(:last-child) > .js-intervalDelay {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-.btn-group > .btn:not(:first-child),
-.btn-group > .btn-group:not(:first-child) > .btn {
+.btn-group > .btn:not(:first-child), .btn-group > .js-interval:not(:first-child), .btn-group > .js-intervalDelay:not(:first-child),
+.btn-group > .btn-group:not(:first-child) > .btn,
+.btn-group > .btn-group:not(:first-child) > .js-interval,
+.btn-group > .btn-group:not(:first-child) > .js-intervalDelay {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -3328,12 +3344,12 @@ input[type=button].btn-block {
   margin-right: 0;
 }
 
-.btn-sm + .dropdown-toggle-split, .btn-group-sm > .btn + .dropdown-toggle-split {
+.btn-sm + .dropdown-toggle-split, .btn-group-sm > .btn + .dropdown-toggle-split, .btn-group-sm > .js-interval + .dropdown-toggle-split, .btn-group-sm > .js-intervalDelay + .dropdown-toggle-split {
   padding-right: 0.75rem;
   padding-left: 0.75rem;
 }
 
-.btn-lg + .dropdown-toggle-split, .btn-group-lg > .btn + .dropdown-toggle-split {
+.btn-lg + .dropdown-toggle-split, .btn-group-lg > .btn + .dropdown-toggle-split, .btn-group-lg > .js-interval + .dropdown-toggle-split, .btn-group-lg > .js-intervalDelay + .dropdown-toggle-split {
   padding-right: 1.5rem;
   padding-left: 1.5rem;
 }
@@ -3350,31 +3366,39 @@ input[type=button].btn-block {
   align-items: flex-start;
   justify-content: center;
 }
-.btn-group-vertical > .btn,
+.btn-group-vertical > .btn, .btn-group-vertical > .js-interval, .btn-group-vertical > .js-intervalDelay,
 .btn-group-vertical > .btn-group {
   width: 100%;
 }
-.btn-group-vertical > .btn:not(:first-child),
+.btn-group-vertical > .btn:not(:first-child), .btn-group-vertical > .js-interval:not(:first-child), .btn-group-vertical > .js-intervalDelay:not(:first-child),
 .btn-group-vertical > .btn-group:not(:first-child) {
   margin-top: -1px;
 }
-.btn-group-vertical > .btn:not(:last-child):not(.dropdown-toggle),
-.btn-group-vertical > .btn-group:not(:last-child) > .btn {
+.btn-group-vertical > .btn:not(:last-child):not(.dropdown-toggle), .btn-group-vertical > .js-interval:not(:last-child):not(.dropdown-toggle), .btn-group-vertical > .js-intervalDelay:not(:last-child):not(.dropdown-toggle),
+.btn-group-vertical > .btn-group:not(:last-child) > .btn,
+.btn-group-vertical > .btn-group:not(:last-child) > .js-interval,
+.btn-group-vertical > .btn-group:not(:last-child) > .js-intervalDelay {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
-.btn-group-vertical > .btn:not(:first-child),
-.btn-group-vertical > .btn-group:not(:first-child) > .btn {
+.btn-group-vertical > .btn:not(:first-child), .btn-group-vertical > .js-interval:not(:first-child), .btn-group-vertical > .js-intervalDelay:not(:first-child),
+.btn-group-vertical > .btn-group:not(:first-child) > .btn,
+.btn-group-vertical > .btn-group:not(:first-child) > .js-interval,
+.btn-group-vertical > .btn-group:not(:first-child) > .js-intervalDelay {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
 
-.btn-group-toggle > .btn,
-.btn-group-toggle > .btn-group > .btn {
+.btn-group-toggle > .btn, .btn-group-toggle > .js-interval, .btn-group-toggle > .js-intervalDelay,
+.btn-group-toggle > .btn-group > .btn,
+.btn-group-toggle > .btn-group > .js-interval,
+.btn-group-toggle > .btn-group > .js-intervalDelay {
   margin-bottom: 0;
 }
-.btn-group-toggle > .btn input[type=radio],
+.btn-group-toggle > .btn input[type=radio], .btn-group-toggle > .js-interval input[type=radio], .btn-group-toggle > .js-intervalDelay input[type=radio],
 .btn-group-toggle > .btn input[type=checkbox],
+.btn-group-toggle > .js-interval input[type=checkbox],
+.btn-group-toggle > .js-intervalDelay input[type=checkbox],
 .btn-group-toggle > .btn-group > .btn input[type=radio],
 .btn-group-toggle > .btn-group > .btn input[type=checkbox] {
   position: absolute;
@@ -3448,23 +3472,43 @@ input[type=button].btn-block {
 .input-group-append {
   display: flex;
 }
-.input-group-prepend .btn,
-.input-group-append .btn {
+.input-group-prepend .btn, .input-group-prepend .js-interval, .input-group-prepend .js-intervalDelay,
+.input-group-append .btn,
+.input-group-append .js-interval,
+.input-group-append .js-intervalDelay {
   position: relative;
   z-index: 2;
 }
-.input-group-prepend .btn:focus,
-.input-group-append .btn:focus {
+.input-group-prepend .btn:focus, .input-group-prepend .js-interval:focus, .input-group-prepend .js-intervalDelay:focus,
+.input-group-append .btn:focus,
+.input-group-append .js-interval:focus,
+.input-group-append .js-intervalDelay:focus {
   z-index: 3;
 }
-.input-group-prepend .btn + .btn,
+.input-group-prepend .btn + .btn, .input-group-prepend .js-interval + .btn, .input-group-prepend .js-intervalDelay + .btn, .input-group-prepend .btn + .js-interval, .input-group-prepend .js-interval + .js-interval, .input-group-prepend .js-intervalDelay + .js-interval, .input-group-prepend .btn + .js-intervalDelay, .input-group-prepend .js-interval + .js-intervalDelay, .input-group-prepend .js-intervalDelay + .js-intervalDelay,
 .input-group-prepend .btn + .input-group-text,
+.input-group-prepend .js-interval + .input-group-text,
+.input-group-prepend .js-intervalDelay + .input-group-text,
 .input-group-prepend .input-group-text + .input-group-text,
 .input-group-prepend .input-group-text + .btn,
+.input-group-prepend .input-group-text + .js-interval,
+.input-group-prepend .input-group-text + .js-intervalDelay,
 .input-group-append .btn + .btn,
+.input-group-append .js-interval + .btn,
+.input-group-append .js-intervalDelay + .btn,
+.input-group-append .btn + .js-interval,
+.input-group-append .js-interval + .js-interval,
+.input-group-append .js-intervalDelay + .js-interval,
+.input-group-append .btn + .js-intervalDelay,
+.input-group-append .js-interval + .js-intervalDelay,
+.input-group-append .js-intervalDelay + .js-intervalDelay,
 .input-group-append .btn + .input-group-text,
+.input-group-append .js-interval + .input-group-text,
+.input-group-append .js-intervalDelay + .input-group-text,
 .input-group-append .input-group-text + .input-group-text,
-.input-group-append .input-group-text + .btn {
+.input-group-append .input-group-text + .btn,
+.input-group-append .input-group-text + .js-interval,
+.input-group-append .input-group-text + .js-intervalDelay {
   margin-left: -1px;
 }
 
@@ -3506,7 +3550,11 @@ input[type=button].btn-block {
 .input-group-lg > .input-group-prepend > .input-group-text,
 .input-group-lg > .input-group-append > .input-group-text,
 .input-group-lg > .input-group-prepend > .btn,
-.input-group-lg > .input-group-append > .btn {
+.input-group-lg > .input-group-prepend > .js-interval,
+.input-group-lg > .input-group-prepend > .js-intervalDelay,
+.input-group-lg > .input-group-append > .btn,
+.input-group-lg > .input-group-append > .js-interval,
+.input-group-lg > .input-group-append > .js-intervalDelay {
   padding: 0.5rem 1rem;
   font-size: 1.09375rem;
   line-height: 1.5;
@@ -3523,7 +3571,11 @@ input[type=button].btn-block {
 .input-group-sm > .input-group-prepend > .input-group-text,
 .input-group-sm > .input-group-append > .input-group-text,
 .input-group-sm > .input-group-prepend > .btn,
-.input-group-sm > .input-group-append > .btn {
+.input-group-sm > .input-group-prepend > .js-interval,
+.input-group-sm > .input-group-prepend > .js-intervalDelay,
+.input-group-sm > .input-group-append > .btn,
+.input-group-sm > .input-group-append > .js-interval,
+.input-group-sm > .input-group-append > .js-intervalDelay {
   padding: 0.25rem 0.5rem;
   font-size: 0.765625rem;
   line-height: 1.2;
@@ -3535,21 +3587,29 @@ input[type=button].btn-block {
   padding-right: 1.75rem;
 }
 
-.input-group > .input-group-prepend > .btn,
+.input-group > .input-group-prepend > .btn, .input-group > .input-group-prepend > .js-interval, .input-group > .input-group-prepend > .js-intervalDelay,
 .input-group > .input-group-prepend > .input-group-text,
 .input-group > .input-group-append:not(:last-child) > .btn,
+.input-group > .input-group-append:not(:last-child) > .js-interval,
+.input-group > .input-group-append:not(:last-child) > .js-intervalDelay,
 .input-group > .input-group-append:not(:last-child) > .input-group-text,
 .input-group > .input-group-append:last-child > .btn:not(:last-child):not(.dropdown-toggle),
+.input-group > .input-group-append:last-child > .js-interval:not(:last-child):not(.dropdown-toggle),
+.input-group > .input-group-append:last-child > .js-intervalDelay:not(:last-child):not(.dropdown-toggle),
 .input-group > .input-group-append:last-child > .input-group-text:not(:last-child) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-.input-group > .input-group-append > .btn,
+.input-group > .input-group-append > .btn, .input-group > .input-group-append > .js-interval, .input-group > .input-group-append > .js-intervalDelay,
 .input-group > .input-group-append > .input-group-text,
 .input-group > .input-group-prepend:not(:first-child) > .btn,
+.input-group > .input-group-prepend:not(:first-child) > .js-interval,
+.input-group > .input-group-prepend:not(:first-child) > .js-intervalDelay,
 .input-group > .input-group-prepend:not(:first-child) > .input-group-text,
 .input-group > .input-group-prepend:first-child > .btn:not(:first-child),
+.input-group > .input-group-prepend:first-child > .js-interval:not(:first-child),
+.input-group > .input-group-prepend:first-child > .js-intervalDelay:not(:first-child),
 .input-group > .input-group-prepend:first-child > .input-group-text:not(:first-child) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
@@ -4767,7 +4827,7 @@ a.badge:hover, a.badge:focus {
   display: none;
 }
 
-.btn .badge {
+.btn .badge, .js-interval .badge, .js-intervalDelay .badge {
   position: relative;
   top: -1px;
 }
@@ -7496,7 +7556,7 @@ button.bg-dark:focus {
   }
 }
 
-.sr-only, .bootstrap-datetimepicker-widget table th.next::after, .bootstrap-datetimepicker-widget table th.prev::after, .bootstrap-datetimepicker-widget .picker-switch::after, .bootstrap-datetimepicker-widget .btn[data-action=today]::after, .bootstrap-datetimepicker-widget .btn[data-action=clear]::after, .bootstrap-datetimepicker-widget .btn[data-action=togglePeriod]::after, .bootstrap-datetimepicker-widget .btn[data-action=showMinutes]::after, .bootstrap-datetimepicker-widget .btn[data-action=showHours]::after, .bootstrap-datetimepicker-widget .btn[data-action=decrementMinutes]::after, .bootstrap-datetimepicker-widget .btn[data-action=decrementHours]::after, .bootstrap-datetimepicker-widget .btn[data-action=incrementMinutes]::after, .bootstrap-datetimepicker-widget .btn[data-action=incrementHours]::after {
+.sr-only, .bootstrap-datetimepicker-widget table th.next::after, .bootstrap-datetimepicker-widget table th.prev::after, .bootstrap-datetimepicker-widget .picker-switch::after, .bootstrap-datetimepicker-widget .btn[data-action=today]::after, .bootstrap-datetimepicker-widget [data-action=today].js-interval::after, .bootstrap-datetimepicker-widget [data-action=today].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=clear]::after, .bootstrap-datetimepicker-widget [data-action=clear].js-interval::after, .bootstrap-datetimepicker-widget [data-action=clear].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=togglePeriod]::after, .bootstrap-datetimepicker-widget [data-action=togglePeriod].js-interval::after, .bootstrap-datetimepicker-widget [data-action=togglePeriod].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=showMinutes]::after, .bootstrap-datetimepicker-widget [data-action=showMinutes].js-interval::after, .bootstrap-datetimepicker-widget [data-action=showMinutes].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=showHours]::after, .bootstrap-datetimepicker-widget [data-action=showHours].js-interval::after, .bootstrap-datetimepicker-widget [data-action=showHours].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=decrementMinutes]::after, .bootstrap-datetimepicker-widget [data-action=decrementMinutes].js-interval::after, .bootstrap-datetimepicker-widget [data-action=decrementMinutes].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=decrementHours]::after, .bootstrap-datetimepicker-widget [data-action=decrementHours].js-interval::after, .bootstrap-datetimepicker-widget [data-action=decrementHours].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=incrementMinutes]::after, .bootstrap-datetimepicker-widget [data-action=incrementMinutes].js-interval::after, .bootstrap-datetimepicker-widget [data-action=incrementMinutes].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=incrementHours]::after, .bootstrap-datetimepicker-widget [data-action=incrementHours].js-interval::after, .bootstrap-datetimepicker-widget [data-action=incrementHours].js-intervalDelay::after {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -10015,7 +10075,7 @@ a.text-dark:hover, a.text-dark:focus {
     box-shadow: none !important;
   }
 
-  a:not(.btn) {
+  a:not(.btn):not(.js-interval):not(.js-intervalDelay) {
     text-decoration: underline;
   }
 
@@ -16115,7 +16175,7 @@ readers do not read off random characters that represent icons */
   content: "\F63F";
 }
 
-.sr-only, .bootstrap-datetimepicker-widget table th.next::after, .bootstrap-datetimepicker-widget table th.prev::after, .bootstrap-datetimepicker-widget .picker-switch::after, .bootstrap-datetimepicker-widget .btn[data-action=today]::after, .bootstrap-datetimepicker-widget .btn[data-action=clear]::after, .bootstrap-datetimepicker-widget .btn[data-action=togglePeriod]::after, .bootstrap-datetimepicker-widget .btn[data-action=showMinutes]::after, .bootstrap-datetimepicker-widget .btn[data-action=showHours]::after, .bootstrap-datetimepicker-widget .btn[data-action=decrementMinutes]::after, .bootstrap-datetimepicker-widget .btn[data-action=decrementHours]::after, .bootstrap-datetimepicker-widget .btn[data-action=incrementMinutes]::after, .bootstrap-datetimepicker-widget .btn[data-action=incrementHours]::after {
+.sr-only, .bootstrap-datetimepicker-widget table th.next::after, .bootstrap-datetimepicker-widget table th.prev::after, .bootstrap-datetimepicker-widget .picker-switch::after, .bootstrap-datetimepicker-widget .btn[data-action=today]::after, .bootstrap-datetimepicker-widget [data-action=today].js-interval::after, .bootstrap-datetimepicker-widget [data-action=today].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=clear]::after, .bootstrap-datetimepicker-widget [data-action=clear].js-interval::after, .bootstrap-datetimepicker-widget [data-action=clear].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=togglePeriod]::after, .bootstrap-datetimepicker-widget [data-action=togglePeriod].js-interval::after, .bootstrap-datetimepicker-widget [data-action=togglePeriod].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=showMinutes]::after, .bootstrap-datetimepicker-widget [data-action=showMinutes].js-interval::after, .bootstrap-datetimepicker-widget [data-action=showMinutes].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=showHours]::after, .bootstrap-datetimepicker-widget [data-action=showHours].js-interval::after, .bootstrap-datetimepicker-widget [data-action=showHours].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=decrementMinutes]::after, .bootstrap-datetimepicker-widget [data-action=decrementMinutes].js-interval::after, .bootstrap-datetimepicker-widget [data-action=decrementMinutes].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=decrementHours]::after, .bootstrap-datetimepicker-widget [data-action=decrementHours].js-interval::after, .bootstrap-datetimepicker-widget [data-action=decrementHours].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=incrementMinutes]::after, .bootstrap-datetimepicker-widget [data-action=incrementMinutes].js-interval::after, .bootstrap-datetimepicker-widget [data-action=incrementMinutes].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=incrementHours]::after, .bootstrap-datetimepicker-widget [data-action=incrementHours].js-interval::after, .bootstrap-datetimepicker-widget [data-action=incrementHours].js-intervalDelay::after {
   border: 0;
   clip: rect(0, 0, 0, 0);
   height: 1px;
@@ -16170,7 +16230,7 @@ readers do not read off random characters that represent icons */
   font-weight: 900;
 }
 
-.sr-only, .bootstrap-datetimepicker-widget table th.next::after, .bootstrap-datetimepicker-widget table th.prev::after, .bootstrap-datetimepicker-widget .picker-switch::after, .bootstrap-datetimepicker-widget .btn[data-action=today]::after, .bootstrap-datetimepicker-widget .btn[data-action=clear]::after, .bootstrap-datetimepicker-widget .btn[data-action=togglePeriod]::after, .bootstrap-datetimepicker-widget .btn[data-action=showMinutes]::after, .bootstrap-datetimepicker-widget .btn[data-action=showHours]::after, .bootstrap-datetimepicker-widget .btn[data-action=decrementMinutes]::after, .bootstrap-datetimepicker-widget .btn[data-action=decrementHours]::after, .bootstrap-datetimepicker-widget .btn[data-action=incrementMinutes]::after, .bootstrap-datetimepicker-widget .btn[data-action=incrementHours]::after {
+.sr-only, .bootstrap-datetimepicker-widget table th.next::after, .bootstrap-datetimepicker-widget table th.prev::after, .bootstrap-datetimepicker-widget .picker-switch::after, .bootstrap-datetimepicker-widget .btn[data-action=today]::after, .bootstrap-datetimepicker-widget [data-action=today].js-interval::after, .bootstrap-datetimepicker-widget [data-action=today].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=clear]::after, .bootstrap-datetimepicker-widget [data-action=clear].js-interval::after, .bootstrap-datetimepicker-widget [data-action=clear].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=togglePeriod]::after, .bootstrap-datetimepicker-widget [data-action=togglePeriod].js-interval::after, .bootstrap-datetimepicker-widget [data-action=togglePeriod].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=showMinutes]::after, .bootstrap-datetimepicker-widget [data-action=showMinutes].js-interval::after, .bootstrap-datetimepicker-widget [data-action=showMinutes].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=showHours]::after, .bootstrap-datetimepicker-widget [data-action=showHours].js-interval::after, .bootstrap-datetimepicker-widget [data-action=showHours].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=decrementMinutes]::after, .bootstrap-datetimepicker-widget [data-action=decrementMinutes].js-interval::after, .bootstrap-datetimepicker-widget [data-action=decrementMinutes].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=decrementHours]::after, .bootstrap-datetimepicker-widget [data-action=decrementHours].js-interval::after, .bootstrap-datetimepicker-widget [data-action=decrementHours].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=incrementMinutes]::after, .bootstrap-datetimepicker-widget [data-action=incrementMinutes].js-interval::after, .bootstrap-datetimepicker-widget [data-action=incrementMinutes].js-intervalDelay::after, .bootstrap-datetimepicker-widget .btn[data-action=incrementHours]::after, .bootstrap-datetimepicker-widget [data-action=incrementHours].js-interval::after, .bootstrap-datetimepicker-widget [data-action=incrementHours].js-intervalDelay::after {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -16270,31 +16330,31 @@ readers do not read off random characters that represent icons */
 .bootstrap-datetimepicker-widget button[data-action] {
   padding: 6px;
 }
-.bootstrap-datetimepicker-widget .btn[data-action=incrementHours]::after {
+.bootstrap-datetimepicker-widget .btn[data-action=incrementHours]::after, .bootstrap-datetimepicker-widget [data-action=incrementHours].js-interval::after, .bootstrap-datetimepicker-widget [data-action=incrementHours].js-intervalDelay::after {
   content: "Increment Hours";
 }
-.bootstrap-datetimepicker-widget .btn[data-action=incrementMinutes]::after {
+.bootstrap-datetimepicker-widget .btn[data-action=incrementMinutes]::after, .bootstrap-datetimepicker-widget [data-action=incrementMinutes].js-interval::after, .bootstrap-datetimepicker-widget [data-action=incrementMinutes].js-intervalDelay::after {
   content: "Increment Minutes";
 }
-.bootstrap-datetimepicker-widget .btn[data-action=decrementHours]::after {
+.bootstrap-datetimepicker-widget .btn[data-action=decrementHours]::after, .bootstrap-datetimepicker-widget [data-action=decrementHours].js-interval::after, .bootstrap-datetimepicker-widget [data-action=decrementHours].js-intervalDelay::after {
   content: "Decrement Hours";
 }
-.bootstrap-datetimepicker-widget .btn[data-action=decrementMinutes]::after {
+.bootstrap-datetimepicker-widget .btn[data-action=decrementMinutes]::after, .bootstrap-datetimepicker-widget [data-action=decrementMinutes].js-interval::after, .bootstrap-datetimepicker-widget [data-action=decrementMinutes].js-intervalDelay::after {
   content: "Decrement Minutes";
 }
-.bootstrap-datetimepicker-widget .btn[data-action=showHours]::after {
+.bootstrap-datetimepicker-widget .btn[data-action=showHours]::after, .bootstrap-datetimepicker-widget [data-action=showHours].js-interval::after, .bootstrap-datetimepicker-widget [data-action=showHours].js-intervalDelay::after {
   content: "Show Hours";
 }
-.bootstrap-datetimepicker-widget .btn[data-action=showMinutes]::after {
+.bootstrap-datetimepicker-widget .btn[data-action=showMinutes]::after, .bootstrap-datetimepicker-widget [data-action=showMinutes].js-interval::after, .bootstrap-datetimepicker-widget [data-action=showMinutes].js-intervalDelay::after {
   content: "Show Minutes";
 }
-.bootstrap-datetimepicker-widget .btn[data-action=togglePeriod]::after {
+.bootstrap-datetimepicker-widget .btn[data-action=togglePeriod]::after, .bootstrap-datetimepicker-widget [data-action=togglePeriod].js-interval::after, .bootstrap-datetimepicker-widget [data-action=togglePeriod].js-intervalDelay::after {
   content: "Toggle AM/PM";
 }
-.bootstrap-datetimepicker-widget .btn[data-action=clear]::after {
+.bootstrap-datetimepicker-widget .btn[data-action=clear]::after, .bootstrap-datetimepicker-widget [data-action=clear].js-interval::after, .bootstrap-datetimepicker-widget [data-action=clear].js-intervalDelay::after {
   content: "Clear the picker";
 }
-.bootstrap-datetimepicker-widget .btn[data-action=today]::after {
+.bootstrap-datetimepicker-widget .btn[data-action=today]::after, .bootstrap-datetimepicker-widget [data-action=today].js-interval::after, .bootstrap-datetimepicker-widget [data-action=today].js-intervalDelay::after {
   content: "Set the date to today";
 }
 .bootstrap-datetimepicker-widget .picker-switch {
@@ -16887,4 +16947,16 @@ td.stationSchedule {
 }
 .c-bgImg--grass {
   background-image: url("../icons/grass.png");
+}
+
+.js-interval, .js-intervalDelay {
+  border: none;
+  padding: 2px 6px;
+  transition: all 0.2s;
+}
+.js-interval:hover, .js-intervalDelay:hover {
+  font-size: 130%;
+}
+.js-interval.active, .js-intervalDelay.active {
+  font-size: 130%;
 }
