@@ -502,7 +502,7 @@ class change_runonce(ProtectedPage):
                 gv.ps[sid][1] = dur
                 stations[sid // 8] += 2 ** (sid % 8)
         schedule_stations(stations)
-        raise redirect_back()
+        raise  web.seeother(u"/")
 
 
 class view_programs(ProtectedPage):

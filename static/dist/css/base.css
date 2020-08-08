@@ -4804,7 +4804,7 @@ input[type=button].btn-block {
 
 .badge {
   display: inline-block;
-  padding: 0.25em 0.4em;
+  padding: 0.3em 0.4em;
   font-size: 75%;
   font-weight: 700;
   line-height: 1;
@@ -16950,13 +16950,12 @@ td.stationSchedule {
 }
 
 .js-interval, .js-intervalDelay {
+  font-size: 1.2rem;
   border: none;
   padding: 2px 6px;
-  transition: all 0.2s;
+  margin: 4px;
+  transition: all 0.2s ease-out;
 }
-.js-interval:hover, .js-intervalDelay:hover {
-  font-size: 130%;
-}
-.js-interval.active, .js-intervalDelay.active {
-  font-size: 130%;
+.js-interval:hover, .js-interval.active, .js-intervalDelay:hover, .js-intervalDelay.active {
+  transform: scale(1.2);
 }

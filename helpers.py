@@ -713,3 +713,15 @@ def redirect_back(default=u"/"):
     """
     referer = web.ctx.env.get('HTTP_REFERER',default)
     return web.seeother(referer)
+
+def format_time(t):
+    if gv.sd['tf']:
+        return t
+    else:
+        hour = int(t[0:2])
+        newhour = hour
+        if hour == 0:
+            newhour = 12
+        if hour > 12:
+            newhour = hour-12
+        return str(newhour) + t[2:] + (" am" if hour<12 else " pm")

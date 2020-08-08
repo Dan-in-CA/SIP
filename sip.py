@@ -38,6 +38,7 @@ from helpers import (
     slugify,
     get_errors,
     clear_errors,
+    format_time,
 )
 from ReverseProxied import ReverseProxied
 from urls import urls  # Provides access to URLs for UI pages
@@ -245,6 +246,7 @@ template_globals = {
     u"convert_temp": convert_temp,
     u"get_errors": get_errors,
     u"clear_errors": clear_errors,
+    u"format_time": format_time,
     u"session": web.config._session,
     u"json": json,
     u"ast": ast,

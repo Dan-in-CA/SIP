@@ -69,16 +69,16 @@ $code:
     </form>
 </div>
 
-<div id="programs" class="row justify-content-center">
+<div id="programs" class="row justify-content-center align-items-stretch">
     $for pid in range(nprogs):
         $ prog = gv.pd[pid]
-        <div class="col-12 col-sm-8 col-lg-6 my-4">
-            <div id="p${pid}" class="card border program ${'disabled border-danger' if prog['enabled'] == 0 else 'border-primary'}">
+        <div class="col-12 col-sm-8 col-lg-6 my-4 align-self-stretch">
+            <div id="p${pid}" class="h-100 card border program ${'disabled border-danger' if prog['enabled'] == 0 else 'border-primary'}">
 
-                <header class="card-header d-flex flex-wrap  text-white ${'bg-danger' if prog['enabled'] == 0 else 'bg-info'}">
-                   <div>
+                <header class="card-header d-flex flex-wrap flex-lg-nowrap   text-white ${'bg-danger' if prog['enabled'] == 0 else 'bg-info'}">
+                   <div class="mt-1 mr-2">
                        <span class="h5">$_(u'Program') ${pid+1}: </span>
-                       <span class="font-weight-bold text-nowrap">${pdays(prog['day_mask'], prog['interval_base_day'])}</span>
+                       <span class="font-weight-bold ">${pdays(prog['day_mask'], prog['interval_base_day'])}</span>
                    </div>
 
                     <form class="ml-auto mt-1" action="${app_path('/ep')}" method="get">
@@ -92,7 +92,7 @@ $code:
 
 
                 </header>
-                <div class="card-body">
+                <div class="card-body d-flex flex-column">
                     $ start = prog['start_min']
                     $ end = prog['stop_min']
                     $ interval = prog['cycle_min']
@@ -139,7 +139,7 @@ $code:
                         $_(u'until') <span class="val">${formatTime(two_digits(end/60) + ":" + two_digits(end%60))}</span>
                         </div>
 
-                    <div class="mt-2 d-flex flex-wrap">
+                    <div class="mt-auto pt-2 d-flex flex-wrap">
                         <form class="m-1" action="${app_path('/rp')}" method="get">
                             <input type="hidden" name="pid" value="${pid}">
                             <button type="submit" class="btn btn-success btn-sm" >$_(u'Run Now')</button>

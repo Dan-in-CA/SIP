@@ -112,8 +112,8 @@ $code:
             errorHint = $:{json_dump(_(u'Please choose at least one station to run in this program.'))};
         }
 
-            jQuery("button#cSubmit").prop("disabled", disableSubmit);
-            jQuery("#errorHint").text(errorHint).collapse(disableSubmit?'show':'hide');
+        jQuery("button#cSubmit").prop("disabled", disableSubmit);
+        jQuery("#errorHint").text(errorHint).collapse(disableSubmit ? 'show' : 'hide');
 
     }
 
@@ -125,7 +125,6 @@ $code:
             jQuery('#collapse-showInterval').collapse(isWeekly() ? 'hide' : 'show');
             jQuery('.collapse.showWeekly').collapse(isWeekly() ? 'show' : 'hide');
 
-
             jQuery(".js-interval").first().trigger("click");
 
             checkConsistency();
@@ -134,8 +133,8 @@ $code:
 
         jQuery('table .js-dayBtn').click(function () {
             var id = jQuery(this).attr("id");
-
             var state = jQuery(this).hasClass("on");
+
             jQuery(this)
                 .addClass(state ? "off" : "on")
                 .removeClass(state ? "on" : "off");
@@ -229,7 +228,7 @@ $code:
                     }
                 }
 
-                if (jQuery('[name="cRestrictions"]:checked').val() == 'off') {
+                if (jQuery('[name="cRestrictions"]:checked').val() == 'on') {
                     prog['type'] = jQuery('[name="cEvenOdd"]:checked').val();
                 }
             } else {
@@ -309,7 +308,7 @@ $code:
 
             // process time
             var startTime = parseTime("ts");
-            if (jQuery('[name="cRecurring"]:checked').val()=='on') {  //Single pass
+            if (jQuery('[name="cRecurring"]:checked').val()=='off') {  //Single pass
                 var interval = 0;
 //              var interval = Math.ceil(lap_t / 60);
 //                var endTime = startTime + interval;
@@ -480,9 +479,9 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                              <thead   id="collapse-weeklyBtns"  class="showWeekly collapse  ${'show' if weekly else ''}">
                                 <tr>
                                     <td colspan="2"></td>
-                                    <td colspan="7" class="text-center py-2">
-                                        <button id="js-allWeekdays" type="button" class="btn btn-info btn-sm">$_(u"Select All")</button>
-                                        <button id="js-noWeekdays" type="button" class="btn btn-sm btn-warning">$_(u"Clear All")</button>
+                                    <td colspan="7" class="text-center py-4">
+                                        <button id="js-allWeekdays" type="button" class="btn btn-info btn-sm mx-1">$_(u"Select All")</button>
+                                        <button id="js-noWeekdays" type="button" class="btn btn-sm btn-warning mx-1">$_(u"Clear All")</button>
                                     </td>
                                 </tr>
                              </thead>
@@ -491,7 +490,7 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                                 <td><span class="${'' if idd else 'd-none'} font-weight-bold">$_(u"Duration"):</span></td>
                                 $ days=[ _(u"Monday"), _(u"Tuesday"), _(u"Wednesday"), _(u"Thursday"), _(u"Friday"), _(u"Saturday"), _(u"Sunday"), ]
                                 $for i in range(len(days)):
-                                    <td><button type="button" id="day${i}" class="text-white btn btn-sm rounded-0 weekday js-dayBtn ${'on' if program['day_mask']&(1<<0) else 'off'}">${days[i]}</button></td>
+                                    <td class="px-0"><button type="button" id="day${i}" class="text-white btn btn-sm rounded-0 weekday js-dayBtn ${'on' if program['day_mask']&(1<<0) else 'off'}">${days[i]}</button></td>
 
                             </tr>
 
@@ -543,11 +542,11 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                                         <div id="collapse-evenOdd" class="collapse mt-2 $:{u'show' if even or odd else ''} ">
                                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                                 <label class="btn btn-outline-primary btn-sm  ${'active' if  even  else ''}"  >
-                                                    <input type="radio" autocomplete="off" name="cEvenOdd" value="odddays" ${'checked' if even or odd else ''}>
+                                                    <input type="radio" autocomplete="off" name="cEvenOdd" value="evendays" ${'checked' if even  else ''}>
                                                     $_(u"Even")
                                                 </label>
                                                 <label class="btn btn-outline-primary btn-sm  ${'' if  even else 'active'}" >
-                                                    <input type="radio" autocomplete="off" name="cEvenOdd" value="evendays" ${'' if even or odd else 'checked'}>
+                                                    <input type="radio" autocomplete="off" name="cEvenOdd" value="odddays" ${'checked' if odd else ''}>
                                                     $_(u'Odd')
                                                 </label>
                                             </div>
@@ -563,7 +562,7 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                         <div class="ml-md-3 ml-xl-4">
                             <div class="card mt-3">
                                 <h4 class="card-header bg-white border-0">$_(u"Water interval"):</h4>
-                                <div id="intervalSelector" class="card-body py-2 h5 d-flex flex-wrap justify-content-center align-items-center">
+                                <div id="intervalSelector" class="card-body py-2  d-flex flex-wrap justify-content-center align-items-center">
                                     <span class="js-interval" data-interval="2">2</span>
                                     <!--  Customize this with any set of intervals you like up to 127 -->
                                     $for d in [3, 4, 5, 6, 7, 10, 12, 14, 15, 21, 30 ]:
@@ -573,12 +572,8 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
                             </div>
                             <div class="card mt-3">
                                 <h4 class="card-header bg-white border-0">$_(u"Starting in"):</h4>
-                                <div id="intervalDelaySelector" class="h5 card-body py-2 flex flex-wrap justify-content-center align-items-center ">
-                                    $if weekly:
-                                        <span class="js-intervalDelay " data-interval-delay="0">0</span>
-                                        <span class="js-intervalDelay " data-interval-delay="1">1</span>
-                                    $else:
-                                        <span class="js-intervalDelay " data-interval-delaydata-interval-delay="${program['day_mask']}">${program['day_mask']}</span>
+                                <div id="intervalDelaySelector" class=" card-body py-2 flex flex-wrap justify-content-center align-items-center ">
+
                                 </div>
                             </div>
                         </div>
@@ -592,7 +587,8 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
 
 <div class="mt-3">
     <button id="cSubmit" class="btn btn-success"><b>$_(u"Save")</b></button>
-    <a href="/vp" class="btn btn-danger">$_(u"Cancel")</a>
+    <a href="${app_path('/')}" class="btn btn-danger  my-1">$_(u'Cancel')</a>
+    <a href="/vp" class="btn btn-secondary">$_(u"Back")</a>
 </div>
 <style>
     table{
@@ -603,3 +599,4 @@ var cycleTime = ${two_digits(program['cycle_min'] % 60)};
         visibility: hidden;
     }
 </style>
+

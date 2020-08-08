@@ -101,7 +101,7 @@ $code:
         setTimeout(statusTimer,updateInterval);
         if (updateInterval > 1000) {
 
-            displayProgram();
+            schedule.displayProgram();
         }
     }
     function statusTimer() {
@@ -125,6 +125,7 @@ $code:
 
     // Initialize behaviors
     jQuery(document).ready(function(){
+        var mainForm=  jQuery('form[name="hf"]');
     	if(useRainsense){
     		var rainCheck = setInterval(rainChange, 1000);
     	}
@@ -136,41 +137,39 @@ $code:
         $if gv.sd['mm'] == 0:
             statusTimer();
 
-        jQuery("button#cStartStop").click(function(){
-            jQuery("form[name='hf'] input[name='en']").val(1-en);
-            jQuery("form[name='hf']").submit();
+        jQuery('[name="cStartStop"]').change(function(){
+            mainForm.find('input[name="en"]').val(jQuery('[name="cStartStop"]:checked').val());
+            mainForm.submit();
         });
 
-        jQuery("button#cManual").click(function(){
-            jQuery("form[name='hf'] input[name='mm']").val(1-mm);
-            jQuery("form[name='hf']").submit();
+        jQuery('[name="cManual"]').click(function(){
+            mainForm.find('input[name="mm"]').val(jQuery('[name="cManual"]:checked').val());
+           mainForm.submit();
         });
 
-        jQuery("button#cRainDelay").click(function(){
-            if (rd != 0) {
-                var h = 0;
-            } else {
-                var h = prompt($:{json.dumps(_(u'Enter hours to delay'), ensure_ascii=False)},"0");
+        jQuery('[name="cRainDelay"]').click(function(){
+            var  h= jQuery('[name="cRainDelay"]:checked').val()
+            if (h != 0) {
+                h = prompt($:{json_dump(_(u'Enter hours to delay'))},h);
             }
             if (h < 0) {
                 var h = prompt("Delay must be a positive value","0");
             }
             if (h != null && h >= 0){
-                jQuery("form[name='hf'] input[name='rd']").val(h);
-                jQuery("form[name='hf']").submit();
+                mainForm.find('input[name="rd"]').val(h);
+                mainForm.submit();
 
             }
         });
 
-        jQuery("button#cWaterLevel").click(function(){
-            if (wl != 100) {
-                var w = 100;
-            } else {
-                var w = prompt($:{json.dumps(_(u'Enter percentage adjustment'), ensure_ascii=False)},wl);
+        jQuery('[name="cWaterLevel"]').click(function(){
+            var  w= jQuery('[name="cWaterLevel"]:checked').val()
+            if (w != 100) {
+                 w = prompt($:{json_dump(_(u'Enter percentage adjustment'))},w);
             }
-            if (w != null){
-                jQuery("form[name='hf'] input[name='wl']").val(w);
-                jQuery("form[name='hf']").submit();
+            if (w != null) {
+                mainForm.find('input[name="wl"]').val(w);
+                mainForm.submit();
             }
         });
 
@@ -192,23 +191,20 @@ $code:
             }
         });
 
-        jQuery("button#pStopAll").click(function(){
-            window.location = baseUrl + "/cv?rsn=1";
-        });
 
-        jQuery("button#pPrev").click(function() {
-            displayScheduleDate.setDate(displayScheduleDate.getDate() - 1);
-            displayProgram();
+        jQuery("button#pPrev").click(function () {
+            schedule.displayScheduleDate.setDate(schedule.displayScheduleDate.getDate() - 1);
+            schedule.displayProgram();
         });
-        jQuery("button#pToday").click(function() {
+        jQuery("button#pToday").click(function () {
             var day = new Date()  //dk
-            displayScheduleDate.setDate(day.getDate());
-            displayScheduleDate.setMonth(day.getMonth()); //dk
-            displayProgram();
+            schedule.displayScheduleDate.setDate(day.getDate());
+            schedule.displayScheduleDate.setMonth(day.getMonth()); //dk
+            schedule.displayProgram();
         });
-        jQuery("button#pNext").click(function() {
-            displayScheduleDate.setDate(displayScheduleDate.getDate() + 1);
-            displayProgram();
+        jQuery("button#pNext").click(function () {
+            schedule.displayScheduleDate.setDate(schedule.displayScheduleDate.getDate() + 1);
+            schedule.displayProgram();
         });
 
         jQuery(".countdown").each(function() {
@@ -230,24 +226,98 @@ $code:
         }
     }
 </script>
-<div id="options">
-    <button id="cStartStop" class="toggle ${'on' if gv.sd[u'en'] else 'off'}"><span class='toggleleft'>$_(u'System On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'System Off')</span></button>
-    <br>
-    <button id="cWaterLevel" class="toggle choice ${'on' if gv.sd[u'wl']==100 else 'off'}"><span class='toggleleft'>$_(u'Normal')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>${_(u'Water Level') if gv.sd[u'wl']==100 else str(gv.sd['wl']) + '%' + _(u'Level')}</span></button> ${'' if int(plugin_adjustment()) == 100 else ' Plugin adjustments: ' + plugin_adjustment_list() + ('' if gv.sd[u'wl']==100 and '*' not in plugin_adjustment_list() else ' - Total adjustment: ' + total_adjustment() + '%')}
-    <br>
-    <button id="cRainDelay" class="toggle ${'off' if gv.sd[u'rd'] or (gv.sd[u'urs'] and gv.sd[u'rs']) else 'on'}"><span class='toggleleft'>$_(u'Active')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Rain Delay')</span></button> ${u"" if gv.sd[u'rdst'] - gv.now <= 0 else u"Rain delay time left: " +  str((int(gv.sd[u'rdst'] - gv.now) // 3600)) + ':' + str(int((gv.sd[u'rdst'] - gv.now) % 3600 // 60)).zfill(2)}
 
-    $if gv.sd[u'urs']:
-        <span class="rainsense">${u'' if gv.sd[u'rs'] else _(u'no')} $_(u'rain sensed')</span>
-    <br>
-    <button id="cManual" class="toggle choice ${'off' if gv.sd[u'mm'] else 'on'}"><span class='toggleleft'>$_(u'Auto')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Manual')</span></button>
-</div>
 
-<div id="stationsdiv">
+
+    <div class="my-3">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons" >
+            <label class="btn btn-outline-primary  ${'active' if  gv.sd[u'en'] else ''}"  >
+                <input type="radio" autocomplete="off" name="cStartStop" value="1" ${'checked' if  gv.sd[u'en'] else ''}>
+                $_(u'System On')
+            </label>
+            <label class="btn btn-outline-danger   ${'' if  gv.sd[u'en'] else 'active'}"  >
+                <input type="radio" autocomplete="off" name="cStartStop" value="0" ${'' if  gv.sd[u'en'] else 'checked'}>
+                $_(u'System Off')
+            </label>
+        </div>
+    </div>
+
+
+    <div class="my-3">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-outline-primary btn-sm  ${'active' if gv.sd[u'wl']==100 else ''}"  >
+                <input type="radio" autocomplete="off" name="cWaterLevel" value="100" ${'checked' if gv.sd[u'wl']==100 else ''}>
+                $_(u'Normal')
+            </label>
+            <label class="btn btn-outline-primary btn-sm  ${'' if gv.sd[u'wl']==100 else 'active'}" >
+                <input type="radio" autocomplete="off" name="cWaterLevel" value="${'0' if gv.sd[u'wl']==100 else gv.sd[u'wl']}" ${'' if gv.sd[u'wl']==100 else 'checked'}>
+                ${_(u'Water Level') if gv.sd[u'wl']==100 else str(gv.sd['wl']) + '% ' + _(u'Level')}
+            </label>
+        </div>
+
+        $if int(plugin_adjustment()) != 100:
+            <span class="badge badge-pill badge-secondary">
+                $_(u'Plugin adjustments'): ${plugin_adjustment_list()}
+            </span>
+                $if gv.sd[u'wl']==100 and '*' not in plugin_adjustment_list():
+                   .
+                $else:
+                    <span class="badge badge-pill badge-secondary">
+                    $_(u'Total adjustment'): ${total_adjustment()} %
+                    </span>
+
+
+    </div>
+
+    <div class="my-3">
+        $ isOff = (gv.sd[u'rd'] or (gv.sd[u'urs'] and gv.sd[u'rs']))
+
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-outline-primary btn-sm  ${'' if isOff else 'active'}"  >
+                <input type="radio" autocomplete="off" name="cRainDelay" value="0" ${'' if isOff else 'checked'}>
+                $_(u'Active')
+            </label>
+            <label class="btn btn-outline-primary btn-sm  ${'active' if isOff else ''}" >
+                <input type="radio" autocomplete="off" name="cRainDelay" value="${'1' if gv.sd[u'rd']==0 else gv.sd[u'rd']}" ${'checked' if isOff else ''}>
+                $_(u'Rain Delay')
+            </label>
+        </div>
+
+
+        $if gv.sd[u'urs']:
+            <span class="badge badge-warning badge-pill">
+                ${u'' if gv.sd[u'rs'] else _(u'no')} $_(u'rain sensed')
+            </span>
+
+        $if gv.sd[u'rdst'] - gv.now > 0:
+            <span class="badge badge-warning badge-pill">
+            $_(u'Rain delay time left'):  $str((int(gv.sd[u'rdst'] - gv.now) // 3600)):$str(int((gv.sd[u'rdst'] - gv.now) % 3600 // 60)).zfill(2)
+            </span>
+
+    </div>
+
+
+
+    <div class="my-3">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-outline-primary btn-sm  ${'' if gv.sd[u'mm'] else 'active'}">
+                <input type="radio" autocomplete="off" name="cManual" value="0" ${'' if gv.sd[u'mm'] else 'checked'}>
+                $_(u'Auto')
+            </label>
+            <label class="btn btn-outline-primary btn-sm  ${'active' if gv.sd[u'mm'] else ''}">
+                <input type="radio" autocomplete="off" name="cManual" value="1" ${'checked' if gv.sd[u'mm'] else ''}>
+                $_(u'Manual')
+            </label>
+        </div>
+    </div>
+
+
+
+<div class="">
 
 $if gv.sd[u'mm']:
-    <div id="manualmode">
-        <table id="stations" class="stationList">
+    <div id="manualmode" class="card">
+        <div  class=" card-body">
         $# Manual program control formatting
         $for bid in range(0, gv.sd[u'nbrd']):
             $for s in range(0,8):
@@ -256,26 +326,33 @@ $if gv.sd[u'mm']:
                 $ sbit = (gv.sbits[bid]>>s)&1
                 $ show = (gv.sd[u'show'][bid]>>s)&1
                 $if show == 1:
-                    <tr>
-                        <td class='station_name'>${snames[sid]}</td>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label text-sm-right font-weight-bold text-info">${snames[sid]}</label>
                         $if sn == gv.sd[u'mas']:
-                            $if sbit:
-                                <td class="master station_on">$_(u'On (Master)')</td>
-                            $else:
-                                <td class="master station_off">$_(u'Off (Master)')</td>
+                            <div class="col-auto col-form-label text-muted font-weight-bold">
+                                $if sbit:
+                                    $_(u'On (Master)')
+                                $else:
+                                    $_(u'Off (Master)')
+                            </div>
                         $else:
                             $ rem = gv.ps[sid][1]
                             $if rem > 65536:
                                 $ rem = 0
-                            <td class="station_running">
-                                <button class='toggle manual narrow ${'on' if sbit else 'off'}' id='${sid}'><span class='toggleleft'>$_(u'On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Off')</span></button>
-                                    ${'in' if sbit else 'for'}
-                                <input type='text' id='mm${sid}' size='2' maxlength='3' value='${two_digits(rem/60)}'/>:
-                                <input type='text' id='ss${sid}' size='2' maxlength='2' value='${two_digits(rem%60)}'/> (mm:ss)
-                            </td>
-                    </tr>
-        </table>
-        <button id="pStopAll" class="btn btn-info">$_(u'Stop All Stations')</button>
+
+                            <div class="col-1 col-form-label text-muted ">${'in' if sbit else 'for'}</div>
+                            <div class="input-group align-items-center col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                                <input type="number"  min="0" max="60" class="form-control" name="mm${sid}" value="${two_digits(rem/60)}"
+                                       placeholder="minutes"/>
+                                <span class="input-group-text px-1 rounded-0">:</span>
+                                <input type="number" min="0" max="59" class="form-control" name="ss${sid}" value="${two_digits(rem%60)}"
+                                       placeholder="seconds"/>
+                            </div>
+                            <div class="col-auto col-form-label text-muted">(mm:ss)</div>
+
+                    </div>
+
+        </div>
     </div>
 
 $else:
@@ -286,38 +363,18 @@ $else:
                 <td colspan="8">
                     <span id="displayScheduleDate"></span>
                 </td>
-                <td colspan="16" style="text-align:right">
-                    <button id="pPrev" class="btn btn-info btn-sm">&lt;&lt;$_(u' Prev Day')</button>
+                <td colspan="16" class="text-right py-4">
+                    <button id="pPrev" class="btn btn-info btn-sm">&lt;&lt; $_(u' Prev Day')</button>
                     <button id="pToday" class="btn btn-info btn-sm">$_(u'Today')</button>
                     <button id="pNext" class="btn btn-info btn-sm">$_(u'Next Day') &gt;&gt;</button>
                 </td>
             </tr>
             <tr><td colspan="2">
-                <td class="scheduleTick">${'00:00' if tf else '12 AM'}</td>
-                <td class="scheduleTick">${'01:00' if tf else '1 AM'}</td>
-                <td class="scheduleTick">${'02:00' if tf else '2 AM'}</td>
-                <td class="scheduleTick">${'03:00' if tf else '3 AM'}</td>
-                <td class="scheduleTick">${'04:00' if tf else '4 AM'}</td>
-                <td class="scheduleTick">${'05:00' if tf else '5 AM'}</td>
-                <td class="scheduleTick">${'06:00' if tf else '6 AM'}</td>
-                <td class="scheduleTick">${'07:00' if tf else '7 AM'}</td>
-                <td class="scheduleTick">${'08:00' if tf else '8 AM'}</td>
-                <td class="scheduleTick">${'09:00' if tf else '9 AM'}</td>
-                <td class="scheduleTick">${'10:00' if tf else '10 AM'}</td>
-                <td class="scheduleTick">${'11:00' if tf else '11 AM'}</td>
-                <td class="scheduleTick">${'12:00' if tf else '12 PM'}</td>
-                <td class="scheduleTick">${'13:00' if tf else '1 PM'}</td>
-                <td class="scheduleTick">${'14:00' if tf else '2 PM'}</td>
-                <td class="scheduleTick">${'15:00' if tf else '3 PM'}</td>
-                <td class="scheduleTick">${'16:00' if tf else '4 PM'}</td>
-                <td class="scheduleTick">${'17:00' if tf else '5 PM'}</td>
-                <td class="scheduleTick">${'18:00' if tf else '6 PM'}</td>
-                <td class="scheduleTick">${'19:00' if tf else '7 PM'}</td>
-                <td class="scheduleTick">${'20:00' if tf else '8 PM'}</td>
-                <td class="scheduleTick">${'21:00' if tf else '9 PM'}</td>
-                <td class="scheduleTick">${'22:00' if tf else '10 PM'}</td>
-                <td class="scheduleTick">${'23:00' if tf else '11 PM'}</td>
+                $for t in ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00']:
+                <td class="scheduleTick">${format_time(t)}</td>
+
             </tr>
+
             $ odd = 1
             $for bid in range(0, gv.sd[u'nbrd']):
                 $for s in range(0,8):
@@ -328,47 +385,27 @@ $else:
                         <tr class="stationSchedule ${'odd' if odd else 'even'}" id='schedule${sid}' data="${sid}">
                             <td class='station_name'>${snames[sid]}</td>
                             <td id='status${sid}' class="stationStatus">$_(u'loading...')</td>
-                            <td class="scheduleTick" data="0"></td>
-                            <td class="scheduleTick" data="1"></td>
-                            <td class="scheduleTick" data="2"></td>
-                            <td class="scheduleTick" data="3"></td>
-                            <td class="scheduleTick" data="4"></td>
-                            <td class="scheduleTick" data="5"></td>
-                            <td class="scheduleTick" data="6"></td>
-                            <td class="scheduleTick" data="7"></td>
-                            <td class="scheduleTick" data="8"></td>
-                            <td class="scheduleTick" data="9"></td>
-                            <td class="scheduleTick" data="10"></td>
-                            <td class="scheduleTick" data="11"></td>
-                            <td class="scheduleTick" data="12"></td>
-                            <td class="scheduleTick" data="13"></td>
-                            <td class="scheduleTick" data="14"></td>
-                            <td class="scheduleTick" data="15"></td>
-                            <td class="scheduleTick" data="16"></td>
-                            <td class="scheduleTick" data="17"></td>
-                            <td class="scheduleTick" data="18"></td>
-                            <td class="scheduleTick" data="19"></td>
-                            <td class="scheduleTick" data="20"></td>
-                            <td class="scheduleTick" data="21"></td>
-                            <td class="scheduleTick" data="22"></td>
-                            <td class="scheduleTick" data="23"></td>
+                            $for s in range(23):
+                                <td class="scheduleTick" data="${s}"></td>
+
                         </tr>
                     $ odd = 1 - odd
             <tr>
-                <td colspan="24" id="legend" style="text-align:center">
-                </td>
+                <td colspan="24" id="legend" class="text-center"></td>
             </tr>
         </table>
     </div>
-		 <button id="pStopAll" class="btn btn-info">$_(u'Stop All Stations')</button>
+
+
 </div>
 
-<div id="controls">
-    <form name="hf" action="${app_path('/cv')}" method="get">
-        <input type="hidden" name="en">
-        <input type="hidden" name="mm">
-        <input type="hidden" name="rd">
-        <input type="hidden" name="wl">
-        <input type="hidden" name="rbt" value="0">
-    </form>
-</div>
+
+<form name="hf" action="${app_path('/cv')}" method="get">
+    <input type="hidden" name="en">
+    <input type="hidden" name="mm">
+    <input type="hidden" name="rd">
+    <input type="hidden" name="wl">
+    <input type="hidden" name="rbt" value="0">
+</form>
+
+<a href="${app_path('/cv?rsn=1')}" class="btn btn-info">$_(u'Stop All Stations')</a>

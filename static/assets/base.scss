@@ -89,15 +89,13 @@ $screen-lg-min: breakpoint-min('lg');
 .js-interval, .js-intervalDelay {
     @extend .btn;
     @extend .btn-outline-primary;
+    @include font-size(1.2rem);
     border: none;
     padding: 2px 6px;
-    transition: all .2s;
+    margin: 4px;
+    transition: all .2s ease-out;
 
-    &:hover {
-        font-size: 130%;
-    }
-
-    &.active {
-        font-size: 130%;
+    &:hover, &.active {
+        transform: scale(1.2);
     }
 }
