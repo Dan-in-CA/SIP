@@ -282,11 +282,11 @@ $if gv.sd[u'mm']:
                             $ rem = gv.ps[sid][1]
                             $if rem > 65536:
                                 $ rem = 0
-                            <td class="station_running seconds">
+                            <td class="station_running noNewline">
                                 <button class='toggle manual narrow ${'on' if sbit else 'off'}' id='${sid}'><span class='toggleleft'>$_(u'On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Off')</span></button>
-                                    <label class="seconds notlectable">${'in' if sbit else 'for'}
+                                    <label class="timeInput">${'in' if sbit else 'for'}
                                 <input type='number' id='mm${sid}' size='2' maxlength='3' value='${two_digits(rem/60)}'/>:</label>
-                                <label class="seconds notlectable"><input type='number' id='ss${sid}' size='2' maxlength='2' value='${two_digits(rem%60)}'/> (mm:ss)</label>
+                                <label class="timeInput"><input type='number' id='ss${sid}' size='2' maxlength='2' value='${two_digits(rem%60)}'/> (mm:ss)</label>
                             </td>
                     </tr>
         </table></div>
