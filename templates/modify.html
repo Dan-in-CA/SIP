@@ -448,8 +448,8 @@ let cycleTime = ${two_digits(program['cycle_min'] % 60)};
                                 </td>
                                 <td>
                                 <div class="oneline">
-                                    <span ${u"" if idd else "style=display:none"}><input class = "timeInput numbersOnly" type = "number" size = "2" maxlength="3" id="tdm${sid}" value="${two_digits(program['duration_sec'][sid if idd else 0] / 60)}"> :
-                                    <input class="timeInput numbersOnly" type="number" size="2" maxlength="2" id="tds${sid}" value="${two_digits(program['duration_sec'][sid if idd else 0] % 60)}"> (mm:ss)</span>
+                                    <span ${u"" if idd else "style=display:none"}><label class="timeInput"><input class = "timeInput numbersOnly" type = "number" size = "2" maxlength="3" id="tdm${sid}" value="${two_digits(program['duration_sec'][sid if idd else 0] / 60)}"> : &nbsp;</label>
+                                    <label class="timeInput"><input class="timeInput numbersOnly" type="number" size="2" maxlength="2" id="tds${sid}" value="${two_digits(program['duration_sec'][sid if idd else 0] % 60)}"> (mm:ss)</label></span>
                                 </div>
                                 </td>
                                 $for d in range(7):
