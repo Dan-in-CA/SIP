@@ -15,8 +15,8 @@ import time
 ##############################
 #### Revision information ####
 major_ver = 4
-minor_ver = 0
-old_count = 868 #  update this to reset revision number.
+minor_ver = 1
+old_count = 941 #  update this to reset revision number.
 
 try:
     revision = int(subprocess.check_output([u"git", u"rev-list", u"--count", u"HEAD"]))
