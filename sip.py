@@ -34,7 +34,7 @@ from helpers import (
     schedule_stations,
     station_names,
     stop_onrain,
-    report_error,
+#     report_error,
     restart,
     convert_temp,
 )
@@ -260,7 +260,8 @@ if __name__ == u"__main__":
     try:
         print(_(u"plugins loaded:"))
     except Exception as e:
-        report_error(u"Import plugins error", e)
+        print(u"Import plugins error", e)
+#         report_error(u"Import plugins error", e)
         pass
     for name in plugins.__all__:
         print(u" ", name)
@@ -273,7 +274,8 @@ if __name__ == u"__main__":
             if u"/plugins" in item:
                 gv.plugin_menu.pop(i)
     except Exception as e:
-        report_error(u"Creating plugins menu", e)
+        print(u"Creating plugins menu", e)
+#         report_error(u"Creating plugins menu", e)
         pass
     tl = Thread(target=timing_loop)
     tl.daemon = True
@@ -298,7 +300,8 @@ if __name__ == u"__main__":
         except IOError as e:
             gv.sd[u"htp"] = int(80)
             jsave(gv.sd, u"sd")
-            report_error(u"SSL error", e)
+            print(u"SSL error", e)
+#             report_error(u"SSL error", e)
             restart(2)
 
 

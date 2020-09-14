@@ -544,7 +544,8 @@ def station_names():
         with open(u"./data/snames.json", u"r") as snf:
             return json.load(snf)
     except IOError as e:
-        report_error(u"station_names function", e)
+        print("Error opening file: ", e)
+#         report_error(u"station_names function", e)
         stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08"]
         jsave(stations, u"snames")
         return stations
@@ -655,7 +656,8 @@ def convert_temp(temp, from_unit='C', to_unit='F'):
     try:
         temp = float(temp)
     except(ValueError, TypeError) as e:
-        report_error(u"convert_temp function", e)
+        print("Error: ", e)
+#         report_error(u"convert_temp function", e)
         return float('nan')
 
     from_unit = from_unit.upper()  # handle lower case input
