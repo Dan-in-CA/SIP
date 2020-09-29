@@ -639,6 +639,14 @@ class api_status(ProtectedPage):
 
     def GET(self):
         statuslist = []
+        status = {
+            u"systemName": gv.sd[u"name"],
+            u"systemStatus": gv.sd[u"en"],
+            u"waterLevel": gv.sd[u"wl"],
+            u"rainDelay": gv.sd[u"rd"],
+            u"mode": gv.sd[u"mm"]
+        }
+        statuslist.append(status)
         for bid in range(0, gv.sd[u"nbrd"]):
             for s in range(0, 8):
                 if (gv.sd[u"show"][bid] >> s) & 1 == 1:
