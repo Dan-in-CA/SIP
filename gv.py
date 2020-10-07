@@ -15,14 +15,14 @@ import time
 ##############################
 #### Revision information ####
 major_ver = 4
-minor_ver = 0
-old_count = 868 #  update this to reset revision number.
+minor_ver = 1
+old_count = 941 #  update this to reset revision number.
 
 try:
     revision = int(subprocess.check_output([u"git", u"rev-list", u"--count", u"HEAD"]))
     ver_str = u"{}.{}.{}".format(major_ver, minor_ver, (revision - old_count))
 except Exception as e:
-    report_error(_(u"Could not use git to determine version!"), e)
+    print(_(u"Could not use git to determine version!"), e)
     revision = 999
     ver_str = u"{}.{}.{}".format(major_ver, minor_ver, revision)
 
@@ -32,7 +32,7 @@ try:
     ).strip()
     ver_date = ver_date.decode('utf-8')
 except Exception as e:
-    report_error(_(u"Could not use git to determine date of last commit!"), e)
+    print(_(u"Could not use git to determine date of last commit!"), e)
     ver_date = u"2015-01-09"
 
 #####################
@@ -100,7 +100,8 @@ if sd[u"pigpio"]:
         subprocess.check_output(u"pigpiod", stderr=subprocess.STDOUT)
         use_pigpio = True
     except Exception as e:
-        report_error(u"pigpio not found. Using RPi.GPIO", e)
+        use_pigpio = False
+        print(_(u"pigpio not found. Using RPi.GPIO"), e)
 else:
     use_pigpio = False
 
@@ -108,6 +109,9 @@ from helpers import load_programs, station_names
 
 nowt = time.localtime()
 now = timegm(nowt)
+tz_offset = int(
+    time.time() - timegm(time.localtime())
+)  # compatible with Javascript (negative tz shown as positive value)
 plugin_menu = []  # Empty list of lists for plugin links (e.g. ["name", "URL"])
 srvals = [0] * (sd[u"nst"])  # Shift Register values
 output_srvals = [0] * (sd[u"nst"])  # Shift Register values last set by set_output()

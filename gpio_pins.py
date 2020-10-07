@@ -21,15 +21,15 @@ except ImportError:
             i for i in range(27)
         ]  # assume 26 pins all mapped.  Maybe we should not assume anything, but...
         gv.platform = ""  # if no platform, allows program to still run.
-        print(u"No GPIO module was loaded from GPIO Pins module") 
-           
+        print(u"No GPIO module was loaded from GPIO Pins module")
+
 # fmt: off
-if gv.platform == u"pi":    
+if gv.platform == u"pi":
     rev = GPIO.RPI_REVISION
     if rev == 1:
         # map 26 physical pins (1 based) with 0 for pins that do not have a gpio number
         if gv.use_pigpio:
-            gv.pin_map = [ #  BMC numbering 
+            gv.pin_map = [ #  BMC numbering
                 0, #  offset for 1 based numbering
                 0,  0,
                 0,  0,

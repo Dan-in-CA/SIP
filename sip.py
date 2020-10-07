@@ -5,18 +5,20 @@
 from __future__ import print_function
 from __future__ import division
 from six.moves import range
-# from future import standard_library
-# standard_library.install_aliases()
 
 # standard library imports
 import ast
 from calendar import timegm
 import i18n
 import json
+import os
 import subprocess
 import sys
 from threading import Thread
 import time
+
+sip_path = os.path.dirname(os.path.abspath(__file__))
+os.chdir(sip_path)
 
 # local module imports
 import gv
@@ -124,7 +126,6 @@ def timing_loop():
                                 gv.lrun[0] = sid
                                 gv.lrun[1] = gv.rs[sid][3]
                                 gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-                                gv.lrun[3] = gv.now #  test
                                 print(u"logging @ time check")
                                 log_run()
                                 report_station_completed(sid + 1)
@@ -252,7 +253,7 @@ template_globals = {
     u"ast": ast,
     u"_": _,
     u"i18n": i18n,
-    u"app_path": lambda p: web.ctx.homepath + p,
+    u"app_path": lambda p: web.ctx.homepath + p,  # - test
     u"web": web,
     u"round": round,
     u"time": time,

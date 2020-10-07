@@ -10,8 +10,6 @@ import ast
 import datetime
 import io
 import time
-import pprint
-
 
 # local module imports
 from blinker import signal
@@ -172,8 +170,6 @@ class change_options(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        print(json.dumps(qdict, indent=4))
-
         if u"opw" in qdict and qdict[u"opw"] != u"":
             try:
                 if password_hash(qdict[u"opw"]) == gv.sd[u"passphrase"]:
@@ -192,9 +188,6 @@ class change_options(ProtectedPage):
 
         for f in [u"name"]:
             if u"o" + f in qdict:
-                print('--------')
-                print(f)
-                print('----------')
                 gv.sd[f] = qdict[u"o" + f]
 
         for f in [u"loc", u"lang"]:
@@ -656,6 +649,14 @@ class api_status(ProtectedPage):
 
     def GET(self):
         statuslist = []
+        status = {
+            u"systemName": gv.sd[u"name"],
+            u"systemStatus": gv.sd[u"en"],
+            u"waterLevel": gv.sd[u"wl"],
+            u"rainDelay": gv.sd[u"rd"],
+            u"mode": gv.sd[u"mm"]
+        }
+        statuslist.append(status)
         for bid in range(0, gv.sd[u"nbrd"]):
             for s in range(0, 8):
                 if (gv.sd[u"show"][bid] >> s) & 1 == 1:
