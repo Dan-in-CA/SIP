@@ -66,6 +66,12 @@ $code:
             if hour > 12:
                 newhour = hour-12
             return str(newhour)  + t[2:] + (" am" if hour<12 else " pm")
+            
+    def pdays(daym, dayInterval):
+        daym = daym & 0x7f
+        dse = int(gv.now/86400) # days since epoc
+        daysRemaining = ((daym + dayInterval)-(dse % dayInterval)) % dayInterval
+        return daysRemaining
 
 <script>
         
@@ -479,7 +485,7 @@ let cycleTime = ${two_digits(program['cycle_min'] % 60)};
                                                 <span class="intervalSelect distance0">0</span>
                                                 <span class="intervalSelect distance1">1</span>
                                             $else:
-                                                <span class="intervalSelect distance0">${program['day_mask']&0x7F}</span>
+                                                <span class="intervalSelect distance0">${pdays(program['day_mask'], program['interval_base_day'])}</span>
                                         </div>
                                     </td>
                                     $ firstTime = False
