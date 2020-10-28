@@ -21,7 +21,8 @@ except ImportError:
             i for i in range(27)
         ]  # assume 26 pins all mapped.  Maybe we should not assume anything, but...
         gv.platform = ""  # if no platform, allows program to still run.
-        print(u"No GPIO module was loaded from GPIO Pins module") 
+        print(u"\33[31mWARNING: No GPIO library was loaded,\nSIP will run but stations will NOT be activated.")
+        print(u"Please be sure either RPI.GPIO or pigpio for Python (or both) is installed.\33[0m") 
            
 # fmt: off
 if gv.platform == u"pi":
