@@ -43,8 +43,16 @@ except ImportError:
 ##############################
 #### Function Definitions ####
 
-station_completed = signal(u"station_completed")
+new_day = signal(u"new_day")
 
+def report_new_day(txt=None):
+    """
+    Send blinker signal indicating that a new dy has strted.
+    """
+    new_day.send()
+    
+
+station_completed = signal(u"station_completed")
 
 def report_station_completed(station):
     """
@@ -55,7 +63,6 @@ def report_station_completed(station):
 
 
 stations_scheduled = signal(u"stations_scheduled")
-
 
 def report_stations_scheduled(txt=None):
     """
@@ -74,10 +81,10 @@ def report_rain_changed(txt=None):
     rain_changed.send()
 
 
-restarting = signal(u"restart")  #: Signal to send on software restart
+restarting = signal(u"restarting")  #: Signal to send on software restart
 
 
-def report_restart():
+def report_restart(txt=None):
     """
     Send blinker signal indicating system will restart.
     """

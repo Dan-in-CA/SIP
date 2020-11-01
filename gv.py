@@ -107,6 +107,7 @@ else:
 
 from helpers import load_programs, station_names
 
+day_ord = 0
 nowt = time.localtime()
 now = timegm(nowt)
 tz_offset = int(

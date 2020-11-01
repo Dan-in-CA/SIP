@@ -6,16 +6,27 @@ from __future__ import print_function
 from blinker import signal
 import gv
 
-### Alarm Signal ###
+### Alarm Signal (Example of sending and recieving a blinker signal) ###
+
+# Function to be run when sigal is recieved.
 def notify_alarm_toggled(name, **kw):
     print(u"Messge from {}!: {}".format(name, kw[u"txt"]))
 
-
-alarm = signal(u"alarm_toggled")
+# instance of named signal
+alarm = signal(u"alarm_toggled")  
+# Connect signal to function to be run.
 alarm.connect(notify_alarm_toggled)
 
-# Send an alarm!
+# Send alarm signal 
+# (normally this would be in a function in a different module)
 alarm.send(u"Signaling plugin", txt=u"Just an example!")
+
+### new day ###
+def notify_new_day(name, **kw):
+    print(u"A new day has started.")
+
+new_day = signal(u"new_day")
+new_day.connect(notify_new_day)
 
 ### login ###
 def notify_login(name, **kw):
@@ -29,7 +40,7 @@ loggedin.connect(notify_login)
 def notify_option_change(name, **kw):
     print(u"Option settings changed in gv.sd")
     #  gv.sd is a dictionary containing the setting that changed.
-    #  See "from options" gv_reference.txt
+    #  See "from options" in gv_reference.txt
 
 
 option_change = signal(u"option_change")

@@ -9,6 +9,7 @@ from six.moves import range
 # standard library imports
 import ast
 from calendar import timegm
+from datetime import date
 import i18n
 import json
 import os
@@ -30,11 +31,11 @@ from helpers import (
     log_run,
     plugin_adjustment,
     prog_match,
+    report_new_day,
     report_station_completed,
     schedule_stations,
     station_names,
     stop_onrain,
-#     report_error,
     restart,
     convert_temp,
 )
@@ -53,12 +54,19 @@ def timing_loop():
         pass
     last_min = 0
     while True:  # infinite loop
+        cur_ord = (
+            date.today().toordinal() 
+        )  # day of year
+        if cur_ord > gv.day_ord:
+            gv.day_ord = cur_ord
+            report_new_day()
         gv.nowt = (
             time.localtime()
         )  # Current time as time struct.  Updated once per second.
         gv.now = timegm(
             gv.nowt
         )  # Current time as timestamp based on local time from the Pi. Updated once per second.
+        
         if (
             gv.sd[u"en"]
             and not gv.sd[u"mm"]
@@ -261,7 +269,6 @@ if __name__ == u"__main__":
         print(_(u"plugins loaded:"))
     except Exception as e:
         print(u"Import plugins error", e)
-#         report_error(u"Import plugins error", e)
         pass
     for name in plugins.__all__:
         print(u" ", name)
@@ -275,7 +282,6 @@ if __name__ == u"__main__":
                 gv.plugin_menu.pop(i)
     except Exception as e:
         print(u"Creating plugins menu", e)
-#         report_error(u"Creating plugins menu", e)
         pass
     tl = Thread(target=timing_loop)
     tl.daemon = True
@@ -301,7 +307,6 @@ if __name__ == u"__main__":
             gv.sd[u"htp"] = int(80)
             jsave(gv.sd, u"sd")
             print(u"SSL error", e)
-#             report_error(u"SSL error", e)
             restart(2)
 
 
