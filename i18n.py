@@ -5,6 +5,7 @@ import gettext
 import json
 import locale
 import os
+import sys
 
 __author__ = u"Dan"
 
@@ -63,6 +64,9 @@ else:
     ui_lang = sd_lang
 
 try:
-    gettext.translation(u"sip_messages", localedir, languages=[ui_lang]).install(True)
+    install_kwargs = {}
+    if sys.version_info.major == 2:
+        install_kwargs['unicode'] = True
+    gettext.translation(u"sip_messages", localedir, languages=[ui_lang]).install(**install_kwargs)
 except IOError:
     pass
