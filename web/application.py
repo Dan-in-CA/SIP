@@ -4,35 +4,30 @@ Web application
 """
 from __future__ import print_function
 
-from . import webapi as web
-from . import wsgi, utils, browser
-from .debugerror import debugerror
-from . import httpserver
-from .utils import lstrips
-from .py3helpers import iteritems, string_types, is_iter, PY2
-import sys
-
-import traceback
 import itertools
 import os
-from inspect import isclass
-
+import sys
+import traceback
 import wsgiref.handlers
-
-try:
-    from urllib.parse import splitquery, urlencode, unquote
-except ImportError:
-    from urllib import splitquery, urlencode, unquote
-
-try:
-    from importlib import reload  # Since Py 3.4 reload is in importlib
-except ImportError:
-    try:
-        from imp import reload  # Since Py 3.0 and before 3.4 reload is in imp
-    except ImportError:
-        pass  # Before Py 3.0 reload is a global function
-
+from inspect import isclass
 from io import BytesIO
+
+from . import browser, httpserver, utils
+from . import webapi as web
+from . import wsgi
+from .debugerror import debugerror
+from .py3helpers import PY2, is_iter, iteritems, string_types
+from .utils import lstrips
+
+if PY2:
+    from urllib import splitquery, urlencode, unquote
+else:
+    from urllib.parse import urlparse, urlencode, unquote
+
+try:
+    reload  # Python 2
+except NameError:
+    from importlib import reload  # Python 3
 
 
 __all__ = [
@@ -223,7 +218,13 @@ class application:
         """
         # PY3DOCTEST: b'hello'
         # PY3DOCTEST: b'your user-agent is a small jumping bean/1.0 (compatible)'
-        path, maybe_query = splitquery(localpart)
+        if PY2:
+            path, maybe_query = splitquery(localpart)
+        else:
+            _p = urlparse(localpart)
+            path = _p.path
+            maybe_query = _p.query
+
         query = maybe_query or ""
 
         if "env" in kw:
@@ -799,7 +800,8 @@ class Reloader:
         self.mtimes = {}
 
     def __call__(self):
-        for mod in sys.modules.values():
+        sys_modules = list(sys.modules.values())
+        for mod in sys_modules:
             self.check(mod)
 
     def check(self, mod):

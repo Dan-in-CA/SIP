@@ -237,7 +237,6 @@ class StaticApp(SimpleHTTPRequestHandler):
                 self.send_response(304, "Not Modified")
                 self.start_response(self.status, self.headers)
                 return
-#                 raise StopIteration()
         except OSError:
             pass  # Probably a 404
 

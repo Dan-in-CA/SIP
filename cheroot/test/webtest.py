@@ -26,11 +26,13 @@ import os
 import json
 import unittest
 import warnings
+import functools
 
-from six.moves import range, http_client, map, urllib_parse
+from six.moves import http_client, map, urllib_parse
 import six
 
 from more_itertools.more import always_iterable
+import jaraco.functools
 
 
 def interface(host):
@@ -191,10 +193,7 @@ class WebCase(unittest.TestCase):
                         *args, **kwargs
                     )
 
-        `raise_subcls` must be a tuple with the exceptions classes
-        or a single exception class that are not going to be considered
-        a socket.error regardless that they were are subclass of a
-        socket.error and therefore not considered for a connection retry.
+        `raise_subcls` is passed through to openURL.
         """
         ServerError.on = False
 
@@ -209,7 +208,7 @@ class WebCase(unittest.TestCase):
         result = openURL(
             url, headers, method, body, self.HOST, self.PORT,
             self.HTTP_CONN, protocol or self.PROTOCOL,
-            raise_subcls, ssl_context=self.ssl_context,
+            raise_subcls=raise_subcls, ssl_context=self.ssl_context,
         )
         self.time = time.time() - start
         self.status, self.headers, self.body = result
@@ -478,42 +477,41 @@ def shb(response):
     return resp_status_line, h, response.read()
 
 
-def openURL(
-    url, headers=None, method='GET', body=None,
-    host='127.0.0.1', port=8000, http_conn=http_client.HTTPConnection,
-    protocol='HTTP/1.1', raise_subcls=None, ssl_context=None,
-):
+# def openURL(*args, raise_subcls=(), **kwargs):
+# py27 compatible signature:
+def openURL(*args, **kwargs):
     """
-    Open the given HTTP resource and return status, headers, and body.
+    Open a URL, retrying when it fails.
 
-    `raise_subcls` must be a tuple with the exceptions classes
-    or a single exception class that are not going to be considered
-    a socket.error regardless that they were are subclass of a
-    socket.error and therefore not considered for a connection retry.
+    Specify `raise_subcls` (class or tuple of classes) to exclude
+    those socket.error subclasses from being suppressed and retried.
     """
-    headers = cleanHeaders(headers, method, body, host, port)
+    raise_subcls = kwargs.pop('raise_subcls', ())
+    opener = functools.partial(_open_url_once, *args, **kwargs)
 
-    # Trying 10 times is simply in case of socket errors.
-    # Normal case--it should run once.
-    for trial in range(10):
-        try:
-            return _open_url_once(
-                body, headers, host, http_conn, method,
-                port, protocol, ssl_context, url,
-            )
-        except socket.error as e:
-            if raise_subcls is not None and isinstance(e, raise_subcls):
-                raise
-            else:
-                time.sleep(0.5)
-                if trial == 9:
-                    raise
+    def on_exception():
+        type_, exc = sys.exc_info()[:2]
+        if isinstance(exc, raise_subcls):
+            raise
+        time.sleep(0.5)
+
+    # Try up to 10 times
+    return jaraco.functools.retry_call(
+        opener,
+        retries=9,
+        cleanup=on_exception,
+        trap=socket.error,
+    )
 
 
 def _open_url_once(
-        body, headers, host, http_conn, method,
-        port, protocol, ssl_context, url,
+    url, headers=None, method='GET', body=None,
+    host='127.0.0.1', port=8000, http_conn=http_client.HTTPConnection,
+    protocol='HTTP/1.1', ssl_context=None,
 ):
+    """Open the given HTTP resource and return status, headers, and body."""
+    headers = cleanHeaders(headers, method, body, host, port)
+
     # Allow http_conn to be a class or an instance
     if hasattr(http_conn, 'host'):
         conn = http_conn

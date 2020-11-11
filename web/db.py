@@ -10,7 +10,7 @@ import re
 import time
 
 from .py3helpers import PY2, iteritems, numeric_types, string_types, text_type
-from .utils import iterbetter, iters, safestr, safeunicode, storage, threadeddict
+from .utils import iters, safestr, safeunicode, storage, threadeddict
 
 try:
     from urllib import parse as urlparse
@@ -55,7 +55,7 @@ TOKEN = "[ \\f\\t]*(\\\\\\r?\\n[ \\f\\t]*)*(#[^\\r\\n]*)?(((\\d+[jJ]|((\\d+\\.\\
 tokenprog = re.compile(TOKEN)
 
 # Supported db drivers.
-pg_drivers = ["psycopg2", "psycopg", "pgdb"]
+pg_drivers = ["psycopg2"]
 mysql_drivers = ["MySQLdb", "pymysql", "mysql.connector"]
 sqlite_drivers = ["sqlite3", "pysqlite2.dbapi2", "sqlite"]
 
@@ -234,7 +234,7 @@ class SQLQuery(object):
             else:
                 x = safestr(x)
                 # automatically escape % characters in the query
-                # For backward compatability, ignore escaping when the query
+                # For backward compatibility, ignore escaping when the query
                 # looks already escaped
                 if paramstyle in ["format", "pyformat"]:
                     if "%" in x and "%%" not in x:
@@ -258,7 +258,7 @@ class SQLQuery(object):
         >>> SQLQuery.join(['a', 'b'], ', ')
         <sql: 'a, b'>
 
-        Optinally, prefix and suffix arguments can be provided.
+        Optionally, prefix and suffix arguments can be provided.
 
         >>> SQLQuery.join(['a', 'b'], ', ', prefix='(', suffix=')')
         <sql: '(a, b)'>
@@ -330,9 +330,19 @@ def _sqllist(values):
     """
         >>> _sqllist([1, 2, 3])
         <sql: '(1, 2, 3)'>
+        >>> _sqllist(set([5, 1, 3, 2]))
+        <sql: '(1, 2, 3, 5)'>
+        >>> _sqllist((5, 1, 3, 2, 2, 5))
+        <sql: '(1, 2, 3, 5)'>
     """
     items = []
     items.append("(")
+
+    if isinstance(values, set):
+        values = list(values)
+    elif isinstance(values, tuple):
+        values = list(set(values))
+
     for i, v in enumerate(values):
         if i != 0:
             items.append(", ")
@@ -354,7 +364,7 @@ def reparam(string_, dictionary):
     return SafeEval().safeeval(string_, dictionary)
 
     dictionary = dictionary.copy()  # eval mucks with it
-    # disable builtins to avoid risk for remote code exection.
+    # disable builtins to avoid risk for remote code execution.
     dictionary["__builtins__"] = object()
     result = []
     for live, chunk in _interpolate(string_):
@@ -468,11 +478,109 @@ def sqlquote(a):
         <sql: "WHERE x = 't' AND y = 3">
         >>> 'WHERE x = ' + sqlquote(True) + ' AND y IN ' + sqlquote([2, 3])
         <sql: "WHERE x = 't' AND y IN (2, 3)">
+        >>> 'WHERE x = ' + sqlquote(True) + ' AND y IN ' + sqlquote(set([3, 2, 3, 4]))
+        <sql: "WHERE x = 't' AND y IN (2, 3, 4)">
+        >>> 'WHERE x = ' + sqlquote(True) + ' AND y IN ' + sqlquote((3, 2, 3, 4))
+        <sql: "WHERE x = 't' AND y IN (2, 3, 4)">
     """
-    if isinstance(a, list):
+    if isinstance(a, (list, tuple, set)):
         return _sqllist(a)
     else:
         return sqlparam(a).sqlquery()
+
+
+class BaseResultSet:
+    """Base implementation of Result Set, the result of a db query.
+    """
+
+    def __init__(self, cursor):
+        self.cursor = cursor
+        self.names = [x[0] for x in cursor.description]
+        self._index = 0
+
+    def list(self):
+        rows = [self._prepare_row(d) for d in self.cursor.fetchall()]
+        self._index += len(rows)
+        return rows
+
+    def _prepare_row(self, row):
+        return storage(dict(zip(self.names, row)))
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        row = self.cursor.fetchone()
+        if row is None:
+            raise StopIteration()
+        self._index += 1
+        return self._prepare_row(row)
+
+    next = __next__  # for python 2.7 support
+
+    def first(self, default=None):
+        """Returns the first row of this ResultSet or None when there are no
+        elements.
+
+        If the optional argument default is specified, that is returned instead
+        of None when there are no elements.
+        """
+        try:
+            return next(iter(self))
+        except StopIteration:
+            return default
+
+    def __getitem__(self, i):
+        # todo: slices
+        if i < self._index:
+            raise IndexError("already passed " + str(i))
+        try:
+            while i > self._index:
+                next(self)
+                self._index += 1
+            # now self._index == i
+            self._index += 1
+            return next(self)
+        except StopIteration:
+            raise IndexError(str(i))
+
+
+class ResultSet(BaseResultSet):
+    """The result of a database query.
+    """
+
+    def __len__(self):
+        return int(self.cursor.rowcount)
+
+
+class SqliteResultSet(BaseResultSet):
+    """Result Set for sqlite.
+
+    Same functionally as ResultSet except len is not supported.
+    """
+
+    def __init__(self, cursor):
+        BaseResultSet.__init__(self, cursor)
+        self._head = None
+
+    def __next__(self):
+        if self._head is not None:
+            self._index += 1
+            return self._head
+        else:
+            return super().__next__()
+
+    def __bool__(self):
+        # The ResultSet class class doesn't need to support __bool__ explicitly
+        # because it has __len__. Since SqliteResultSet doesn't support len,
+        # we need to peep into the result to find if the result is empty of not.
+        if self._head is None:
+            try:
+                self._head = next(self)
+                self._index -= 1  # reset the index
+            except StopIteration:
+                return False
+        return True
 
 
 class Transaction:
@@ -554,8 +662,8 @@ class DB:
     def __init__(self, db_module, keywords):
         """Creates a database.
         """
-        # some DB implementaions take optional paramater `driver` to use a
-        # specific driver modue but it should not be passed to `connect`.
+        # some DB implementations take optional parameter `driver` to use a
+        # specific driver module but it should not be passed to `connect`.
         keywords.pop("driver", None)
 
         self.db_module = db_module
@@ -737,25 +845,16 @@ class DB:
         self._db_execute(db_cursor, sql_query)
 
         if db_cursor.description:
-            names = [x[0] for x in db_cursor.description]
-
-            def iterwrapper():
-                row = db_cursor.fetchone()
-                while row:
-                    yield storage(dict(zip(names, row)))
-                    row = db_cursor.fetchone()
-
-            out = iterbetter(iterwrapper())
-            out.__len__ = lambda: int(db_cursor.rowcount)
-            out.list = lambda: [
-                storage(dict(zip(names, x))) for x in db_cursor.fetchall()
-            ]
+            return self.create_result_set(db_cursor)
         else:
             out = db_cursor.rowcount
 
         if not self.ctx.transactions:
             self.ctx.commit()
         return out
+
+    def create_result_set(self, cursor):
+        return ResultSet(cursor)
 
     def select(
         self,
@@ -1106,8 +1205,6 @@ class PostgresDB(DB):
             import psycopg2.extensions
 
             psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
-        if db_module.__name__ == "pgdb" and "port" in keywords:
-            keywords["host"] += ":" + str(keywords.pop("port"))
 
         # if db is not provided `postgres` driver will take it from PGDATABASE
         # environment variable.
@@ -1141,20 +1238,12 @@ class PostgresDB(DB):
 
     def _connect(self, keywords):
         conn = DB._connect(self, keywords)
-        try:
-            conn.set_client_encoding("UTF8")
-        except AttributeError:
-            # fallback for pgdb driver
-            conn.cursor().execute("set client_encoding to 'UTF-8'")
+        conn.set_client_encoding("UTF8")
         return conn
 
     def _connect_with_pooling(self, keywords):
         conn = DB._connect_with_pooling(self, keywords)
-        try:
-            conn._con._con.set_client_encoding("UTF8")
-        except AttributeError:
-            # fallback for pgdb driver
-            conn.cursor().execute("set client_encoding to 'UTF-8'")
+        conn._con._con.set_client_encoding("UTF8")
         return conn
 
 
@@ -1172,6 +1261,9 @@ class MySQLDB(DB):
                 keywords["password"] = keywords["pw"]
                 del keywords["pw"]
         if db.__name__ == "mysql.connector":
+            # Enabled buffered so that len can work as expected.
+            keywords.setdefault("buffered", True)
+
             if "pw" in keywords:
                 keywords["password"] = keywords["pw"]
                 del keywords["pw"]
@@ -1181,7 +1273,7 @@ class MySQLDB(DB):
         elif keywords["charset"] is None:
             del keywords["charset"]
 
-        self.paramstyle = db.paramstyle = "pyformat"  # it's both, like psycopg
+        self.paramstyle = db.paramstyle = "pyformat"  # it's both
         self.dbname = "mysql"
         DB.__init__(self, db, keywords)
         self.supports_multiple_insert = True
@@ -1232,11 +1324,8 @@ class SqliteDB(DB):
     def _process_insert_query(self, query, tablename, seqname):
         return query, SQLQuery("SELECT last_insert_rowid();")
 
-    def query(self, *a, **kw):
-        out = DB.query(self, *a, **kw)
-        if isinstance(out, iterbetter):
-            del out.__len__
-        return out
+    def create_result_set(self, cursor):
+        return SqliteResultSet(cursor)
 
 
 class FirebirdDB(DB):
@@ -1546,7 +1635,7 @@ class Parser:
                 self.pos = dollar + 1
                 yield self.parse_expr()
 
-            # for supporting ${x.id}, for backward compataility
+            # for supporting ${x.id}, for backward compatibility
             elif nextchar == "{":
                 saved_pos = self.pos
                 self.pos = dollar + 2  # skip "${"

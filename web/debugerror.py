@@ -12,14 +12,15 @@ __all__ = ["debugerror", "djangoerror", "emailerrors"]
 
 import os
 import os.path
-import sys
 import pprint
+import sys
 import traceback
-from .template import Template
-from .net import websafe
-from .utils import sendmail, safestr
+
 from . import webapi as web
+from .net import websafe
 from .py3helpers import PY2
+from .template import Template
+from .utils import safestr, sendmail
 
 if PY2:
 
@@ -275,9 +276,12 @@ def djangoerror():
         # hack to get correct line number for templates
         lineno += tback.tb_frame.f_locals.get("__lineoffset__", 0)
 
-        pre_context_lineno, pre_context, context_line, post_context = _get_lines_from_file(
-            filename, lineno, 7
-        )
+        (
+            pre_context_lineno,
+            pre_context,
+            context_line,
+            post_context,
+        ) = _get_lines_from_file(filename, lineno, 7)
 
         if "__hidetraceback__" not in tback.tb_frame.f_locals:
             frames.append(
