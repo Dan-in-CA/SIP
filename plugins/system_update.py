@@ -5,6 +5,9 @@
 
 # standard library imports
 import json
+import os
+import os.path
+import shutil
 import subprocess
 import sys
 import time
@@ -109,12 +112,29 @@ checker = StatusChecker()
 
 
 def perform_update():
+    """
+    Uses git pull to update SIP from GitHub repository.
+    Handles case where data directory is a symlink.
+    """
+    if os.path.islink("./data"):
+        os.rename("./data", "./data_updating")
+        try:
+            os.makedirs("./data")
+        except OSError as e:
+            print("System update error ", e)
 
     command = u"git config core.filemode true"
     subprocess.call(command.split())
     
     command = u"git pull"
     subprocess.call(command.split())
+    
+    if os.path.isdir("./data_updating"):
+        try:
+            shutil.rmtree("./data")
+            os.rename("./data_updating", "./data")
+        except OSError as e:
+            print("System update error ", e)        
 
 ################################################################################
 # Web pages:                                                                   #
