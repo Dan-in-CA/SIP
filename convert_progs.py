@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Python 2/3 compatibility imports
 from __future__ import print_function
+
+# standard library imports
 import json
+
+# local module imports
 import gv
 
 
@@ -19,7 +24,7 @@ prog_keys = [
 
 
 def convert():
-    with open(u"./data/programs.json") as old:
+    with open("./data/programs.json") as old:
         old_data = json.load(old)
     pd = []
     for i in range(len(old_data)): # for each old program (i)
@@ -30,9 +35,12 @@ def convert():
             new_prog[u"duration_sec"] = old_data[i].pop() # copy list from old data
         else:
             new_prog[u"duration_sec"] = [old_data[i][6]]
-        new_prog[u"enabled"] = old_data[i][0]    
-        if type(new_prog[u"station_mask"]) == int:
-                new_prog[u"station_mask"] =[old_data[i][7]]
+        new_prog[u"enabled"] = old_data[i][0]
+        new_prog[u"station_mask"] = []    
+        for b in range(7, (7 + gv.sd["nbrd"])):
+            new_prog[u"station_mask"].append(old_data[i][b])
+            
+                
         new_prog[u"name"] = u"Unnamed" # Not in old format
         
         #  decode program type from old format & clean up new format
