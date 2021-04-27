@@ -4,6 +4,7 @@ var displayScheduleDate = new Date(Date.now() + tzOffsetDif); // dk
 var displayScheduleTimeout;
 var sid,sn,t;
 var simdate = displayScheduleDate; // date for simulation
+//var simdate = new Date(Date.now()); // date for simulation
 if (typeof progs !== 'undefined'){var nprogs = progs.length}; // number of programs
 if (typeof nbrd !== 'undefined'){var nst = nbrd*8}; // number of stations
 
@@ -241,7 +242,7 @@ function displayProgram() { // Controls home page irrigation timeline
 				}
 				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
 			}
-			if (toXSDate(displayScheduleDate) == toXSDate(new Date(Date.now()- devTzOffset + tzOffsetDif))) {
+			if (toXSDate(displayScheduleDate) == toXSDate(new Date(Date.now() + tzOffsetDif))) {
 				var schedule = doSimulation(); //dk
 				log = log.concat(schedule);
 			}
