@@ -1,5 +1,5 @@
 # SIP
-###### Sustainable Irrigation Platform
+###### **S**ustainable **I**rrigation **P**latform
 
 SIP is a free Raspberry Pi based Python program for controlling irrigation systems ( sprinkler, drip, etc ). It uses web technology to provide an intuitive user interface (UI) in several languages. The UI can be accessed in your favorite browser on desktop, laptop, and mobile devices.
 SIP has also been used to control pumps, lights, and other Irrigation related equipment.
@@ -35,9 +35,9 @@ The motivation for developing SIP is to enable a very low cost yet sophisticated
 SIP has been greatly improved by contributions, large and small, from the user community.\
 For example all the UI language translations have been contributed by users. If you would like to contribute a language translation or update an existing one please see the [translation instructions](https://github.com/Dan-in-CA/SIP/wiki/Translation-doc) on the wiki. It is rather easy.
 
-To report a bug, make suggestions or contribute to the SIP project open an issue or pull request on GitHub.
+To report a bug or contribute to the SIP project open an issue or pull request.
 
-To ask question and learn more about SIP please visit the
+To ask question, make suggestions and learn more about SIP please see the **Discussions** tab in this repository or visit the
  [SIP Forum](http://nosack.com/sipforum/index.php)
 
 -----------------------------------------------------------------
