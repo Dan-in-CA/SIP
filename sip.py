@@ -98,7 +98,7 @@ def timing_loop():
                                         duration = p[u"duration_sec"][0]
                                 else:
                                     duration_adj = (
-                                        gv.sd[u"wl"] // 100.0
+                                        gv.sd[u"wl"] / 100.0
                                     ) * extra_adjustment
                                     if gv.sd[u"idd"]:
                                         duration = (
