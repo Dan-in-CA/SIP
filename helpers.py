@@ -552,7 +552,6 @@ def station_names():
             return json.load(snf)
     except IOError as e:
         print("Error opening file: ", e)
-#         report_error(u"station_names function", e)
         stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08"]
         jsave(stations, u"snames")
         return stations
@@ -643,16 +642,6 @@ def get_input(qdict, key, default=None, cast=None):
     return result
 
 
-def report_error(title, message=None):
-    """
-    All errors are reported here
-    """
-
-    print('SIP error: --------------')
-    print(title, message)
-    return
-
-
 def convert_temp(temp, from_unit='C', to_unit='F'):
     """
       Convert Temperature
@@ -664,7 +653,6 @@ def convert_temp(temp, from_unit='C', to_unit='F'):
         temp = float(temp)
     except(ValueError, TypeError) as e:
         print("Error: ", e)
-#         report_error(u"convert_temp function", e)
         return float('nan')
 
     from_unit = from_unit.upper()  # handle lower case input

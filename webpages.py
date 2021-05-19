@@ -142,7 +142,6 @@ class change_values(ProtectedPage):
             try:
                 gv.sd[key] = int(qdict[key])
             except Exception as e:
-                report_error(u"change_values Exception", e)
                 pass
         jsave(gv.sd, u"sd")
         report_value_change()
