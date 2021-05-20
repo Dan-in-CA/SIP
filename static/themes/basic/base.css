@@ -5,7 +5,30 @@
  - rust: #7D1921
  - navy: #2E3959
 */
-@import url(https://fonts.googleapis.com/css?family=Quicksand:300,400,700);
+
+@font-face {
+  font-family: Quicksand;
+  src: url(./fonts/Quicksand-Regular.ttf);
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: Quicksand;
+  src: url(./fonts/Quicksand-Light.ttf);
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: Quicksand;
+  src: url(./fonts/Quicksand-Medium.ttf);
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: Quicksand;
+  src: url(./fonts/Quicksand-Bold.ttf);
+  font-weight: 700;
+}
 
 body {
 	margin:0px;
@@ -147,6 +170,7 @@ div#status {
 	color:white;
 	font-family: 'Quicksand', sans-serif;
 	font-weight: 300;
+/* 	font-weight: light; */
 	padding-top: 23px;
 	padding-bottom: 12px;
 	background-color: #397F19;
@@ -194,6 +218,7 @@ div#status {
 	font-family: Quicksand, sans-serif;
 	font-size: 12pt;
 	font-weight: 700;
+/* 	font-weight: bold; */
 	text-transform: uppercase;
 }
 
@@ -210,6 +235,7 @@ div#status {
 	text-transform: uppercase;
 	font-size: 16pt;
 	font-weight: 400;
+/* 	font-weight: medium; */
 	color:white;
 	background-color:#2E3959;
 	border:0px;
@@ -241,6 +267,7 @@ button {
 	font-family: Quicksand, sans-serif;
 	font-size: 12pt;
 	font-weight: 400;
+/* 	font-weight: medium; */
 	text-transform: uppercase;
 	text-align: center;
 	line-height: 14pt;
