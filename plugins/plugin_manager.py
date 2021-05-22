@@ -20,7 +20,6 @@ import time
 # local module imports
 import gv  # Get access to SIP's settings
 from helpers import restart
-from helpers import report_error
 from sip import template_render
 from urls import urls  # Get access to SIP's URLs
 import web
@@ -58,7 +57,6 @@ def get_permissions():
         settings = dict(list(zip(installed, permissions)))
         return settings
     except IOError as e:
-        report_error(u"get_permissions IOError", e)
         settings = {}
         return settings
 
@@ -72,7 +70,6 @@ def parse_manifest(plugin):
             f_list = [line.strip() for line in mf_list[int(sep) + 2 :]]
             return (desc, f_list)
     except IOError as e:
-        report_error(u"parse_manifest IOError", e)
         return (u"", [])
 
 
@@ -99,7 +96,7 @@ def get_readme():
             else:
                 plugs[plug_list[breaks[i] - 1]] = u" ".join(plug_list[breaks[i] + 1 :])
     except IOError as e:
-        report_error(U"We couldn't get readme file for github", e)
+        print(u"We couldn't get readme file for github", e)
 
     return plugs
 
