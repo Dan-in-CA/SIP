@@ -80,7 +80,17 @@ $code:
         td.stationIgnoreWL {text-align:center;}
         td.stationName {text-align:left; padding-left:1em;}
 
-        .piDatFooter {position: absolute; right: 10%; background-color:white; color:black; font-size:12pt; margin-bottom:10px; width: 75%; padding:0px 4px 0px 4px;}
+
+         .piDatFooter {
+         	text-align: right;
+          	right: 0; 
+         	background-color:white;
+         	color:black;
+         	font-size:12pt;
+          	margin-bottom:10px;
+         	width: 75%;
+         	padding:0px 4px 0px 4px;     	 
+         	} 
 
     </style>
     
@@ -203,17 +213,19 @@ $code:
 
             </div>
         </div>
-        <div class="footer container">
+        <div class="footer">
           $if content.page != u'login':
               $if (gv.pluginFtr):
+                  <div  align="right">
                   <div class="piDatFooter" id="pluginPars"></div> <!--div for plugin data display -->
-              <div class="row">
+                  </div>                   
+              <div>
                   <div class="controls">
                     <button id="bHelp" class="help" title=$:{json.dumps(_(u'Documentation wiki'), ensure_ascii=False)}>&nbsp;&nbsp;$_(u'?')&nbsp;&nbsp;</button>
                   </div>
               </div>
 
-          <div class="row">
+          <div>
              <form name="tt" action="${u'/ttu'}" method="get">
                  <input type="hidden" name="tunit" value="${gv.sd[u'tu']}">
                  <div class="text-nowrap">$_(u'CPU Temp'):
@@ -225,7 +237,7 @@ $code:
           </div>
 
 
-          <div class="row">
+          <div>
               <div>
                 <p class="text-nowrap"><a target="_blank" href="https://github.com/Dan-in-CA/sip">$_(u'Software')</a> $_(u'version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
               </div>
