@@ -761,6 +761,81 @@ class water_log(ProtectedPage):
 
         web.header(u"Content-Type", u"text/csv")
         return data
+    
+class showInFooter(object):
+    """Enables plugins to display e.g. sensor readings in the footer of SIP's UI
+    """
+# next((i for i,d in enumerate(gv.pluginFtr) if label in d), None) # get index of dict containing label.
+
+#     def __init__(self, data_set):
+    def __init__(self, label = "", val = "", unit = ""):
+#         self._idx = data_set - 1 
+        self._label = label
+        self._val = val
+        self._unit = unit
+
+        self._idx = len(gv.pluginFtr)
+        gv.pluginFtr.append({u"label": self._label, u"val": self._val, u"unit": self._unit})
+        print("index: ", self._idx)  # - test
+        
+                   
+    @property
+    def label(self):
+        if not self._label:
+            return "label not set"
+        else:
+            return self._label
+    
+    @label.setter
+    def label(self, text):
+        self._label = text
+        if self._label:
+            gv.pluginFtr[self._idx][u"label"] = self._label + ": "
+    
+    @property
+    def val(self):
+        if self._val == "":
+            return "val not set"
+        else:
+            return self._val
+    
+    @val.setter
+    def val(self, num):
+        self._val = num
+        if self._val:
+            gv.pluginFtr[self._idx][u"val"] = self._val
+
+    @property
+    def unit(self):
+        if not self.unit:
+            return "unit not set"
+        else:
+            return self._unit
+    
+    @unit.setter
+    def unit(self, text):
+        self._unit = text
+        gv.pluginFtr[self._idx][u"unit"] = self._unit         
+        
+        
+class plugin_data(ProtectedPage):
+    """Simple plugin dta api
+        Called through URLs as /api/plugins.
+    """
+    def GET(self):
+        footer_data = []
+#         station_data = []
+        data = {}
+#         print("gv data: ", gv.pluginFtr)  # - test
+        for i, v in enumerate(gv.pluginFtr):
+            footer_data.append((i, v[u"val"]))         
+#         for v in gv.pluginStn:
+#             station_data.append(v[1])       
+        data["fdata"] = footer_data
+#         data["sdata"] = station_data
+#         print("data from plugins: ", data)  # - test
+#         print("gv data: ", gv.pluginFtr)  # - test
+        return json.dumps(data)        
 
 
 class rain_sensor_state(ProtectedPage):

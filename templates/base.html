@@ -80,7 +80,7 @@ $code:
         td.stationIgnoreWL {text-align:center;}
         td.stationName {text-align:left; padding-left:1em;}
 
-        .piDatFooter {background-color:white; color:black; font-size:12pt; margin-bottom:10px; padding:0px 4px 0px 4px;}
+        .piDatFooter {position: absolute; right: 10%; background-color:white; color:black; font-size:12pt; margin-bottom:10px; width: 75%; padding:0px 4px 0px 4px;}
 
     </style>
     
@@ -129,9 +129,6 @@ $code:
                 $else:
                     jQuery('#pluginMenu').append('None<br/>');
 
-                $if gv.plugFtr:
-                	$for i, d in enumerate(gv.plugFtr):
-                	     jQuery("#plugFtrPars").append( "<p>${gv.plugFtr[i]["label"] + ": " + str(gv.plugFtr[i]["val"])}</p>" );
 
                 jQuery("#bPlugins").click(function(e) {
                     let btn = jQuery("#bPlugins");
@@ -146,7 +143,23 @@ $code:
                 jQuery(document).click(function(){
                     jQuery("#pluginMenu").slideUp();
                 });
+                
+                $if gv.pluginFtr:                	
+                	$for i in range(len(gv.pluginFtr)):
+                	    jQuery("#pluginPars").append('<p id="${"piData" + str(i)}"><span name="label">${gv.pluginFtr[i]["label"]}</span><span name="val">${str(gv.pluginFtr[i]["val"])}</span><span name="unit">${gv.pluginFtr[i]["unit"]}</span></p>');
+                    setInterval(dataTimer, 2000);
             });
+            
+             function dataTimer() {
+                // Call to get plugin data
+                var i;
+                   jQuery.getJSON("/api/plugins", function(piVals) {
+                		   for (i = 0; i < piVals.fdata.length; i++) {
+						   var parID = 'piData' + piVals.fdata[i][0];
+                    	   jQuery('p#'+parID ).find('span[name="val"]').text(piVals.fdata[i][1])};
+                	})
+                }
+            
     </script>
     <script src="static/scripts/behaviors.js"></script>
     <script src="static/scripts/schedule.js"></script>
@@ -192,10 +205,8 @@ $code:
         </div>
         <div class="footer container">
           $if content.page != u'login':
-              $if (gv.plugFtr):
-                  <div class="row">
-                      <div class="col-12-xs col-xs-offset-4 piDatFooter" id="plugFtrPars"></div> <!--div for plugin data display -->
-                  </div>
+              $if (gv.pluginFtr):
+                  <div class="piDatFooter" id="pluginPars"></div> <!--div for plugin data display -->
               <div class="row">
                   <div class="controls">
                     <button id="bHelp" class="help" title=$:{json.dumps(_(u'Documentation wiki'), ensure_ascii=False)}>&nbsp;&nbsp;$_(u'?')&nbsp;&nbsp;</button>

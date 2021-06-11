@@ -27,6 +27,7 @@ urls = [
     u"/wl",  u"webpages.water_log",
     u"/api/status", u"webpages.api_status",
     u"/api/log", u"webpages.api_log",
+    u"/api/plugins", u"webpages.plugin_data",
     u"/login",  u"webpages.login",
     u"/logout", u"webpages.logout",
     u"/restart", u"webpages.sw_restart",
