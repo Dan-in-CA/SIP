@@ -39,6 +39,7 @@ $code:
     let priorRs = ${gv.sd[u"rs"]};
     let useRainsense = ${gv.sd[u"urs"]};
     let devt = ${gv.now};
+    let pluginStn = $:{json.dumps(gv.pluginStn, ensure_ascii=False)};
     let h = 0;
     let w = 100;
     
@@ -71,6 +72,18 @@ $code:
                     if (seconds < 10) {seconds = "0"+seconds;}
                     if (station.status == "on") {
                         display = minutes+":"+seconds;
+	                        if (typeof pluginStn !== 'undefined' && pluginStn.length) {
+	                      	pluginStn.forEach(
+	                      	function(item, idx) {
+	                      		if (pluginVals) {
+		                      		display = display + ", " +  item[0] + ": " + pluginVals.sdata[idx];
+	                      		}
+	                      		else {
+	                      			display = display + ", " +  item[0] + ": " + item[1];
+	                      		}
+	                      	});
+	                      }                        
+                        
                     } else {
                         display = "(" + minutes+":"+seconds + ")";
                     }

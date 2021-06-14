@@ -88,7 +88,7 @@ $code:
          	color:black;
          	font-size:12pt;
           	margin-bottom:10px;
-         	width: 75%;
+         	width: 70%;
          	padding:0px 4px 0px 4px;     	 
          	} 
 
@@ -129,6 +129,7 @@ $code:
             let man = $:{json.dumps(_(u'Manual'), ensure_ascii=False)};
             let program = $:{json.dumps(_(u'Program'), ensure_ascii=False)};
             let idd = $:{gv.sd[u'idd']};
+            let pluginVals;
 
             jQuery(document).ready(function(){
                 jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + '/plugins\'">$_(u'Manage Plugins')</button><br/>');
@@ -154,19 +155,23 @@ $code:
                     jQuery("#pluginMenu").slideUp();
                 });
                 
-                $if gv.pluginFtr:                	
-                	$for i in range(len(gv.pluginFtr)):
-                	    jQuery("#pluginPars").append('<p id="${"piData" + str(i)}"><span name="label">${gv.pluginFtr[i]["label"]}</span><span name="val">${str(gv.pluginFtr[i]["val"])}</span><span name="unit">${gv.pluginFtr[i]["unit"]}</span></p>');
+                $if gv.pluginFtr or gv.pluginStn:
+                	$if gv.pluginFtr:
+                	    $for i in range(len(gv.pluginFtr)):
+                	        jQuery("#pluginPars").append('<p id="${"piData" + str(i)}"><span name="label">${gv.pluginFtr[i]["label"]}</span><span name="val">${str(gv.pluginFtr[i]["val"])}</span><span name="unit">${gv.pluginFtr[i]["unit"]}</span></p>');
                     setInterval(dataTimer, 2000);
             });
             
              function dataTimer() {
                 // Call to get plugin data
-                var i;
+                let i;
                    jQuery.getJSON("/api/plugins", function(piVals) {
-                		   for (i = 0; i < piVals.fdata.length; i++) {
-						   var parID = 'piData' + piVals.fdata[i][0];
-                    	   jQuery('p#'+parID ).find('span[name="val"]').text(piVals.fdata[i][1])};
+                	   	   pluginVals = piVals;
+                	   	   if (piVals.fdata) {
+	                		   for (i = 0; i < piVals.fdata.length; i++) {
+							   var parID = 'piData' + piVals.fdata[i][0];
+	                    	   jQuery('p#'+parID ).find('span[name="val"]').text(piVals.fdata[i][1])};
+                	   	   }
                 	})
                 }
             

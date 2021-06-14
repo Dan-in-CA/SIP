@@ -17,7 +17,7 @@ from urls import urls  # Get access to SIP's URLs
 import web  # web.py framework
 from webpages import ProtectedPage  # Needed for security
 from webpages import showInFooter # Enable plugin to display readings in UI footer
-# from webpages import showOnTimeline # Enable plugin to display station data on timeline
+from webpages import showOnTimeline # Enable plugin to display station data on timeline
 
 
 # Add new URLs to access classes in this plugin.
@@ -42,29 +42,51 @@ def empty_function():  # Only a place holder
 
 #############################
 ### Data display examples ###
+
+## use 1 to turn on testing, 0 to turn off ##
+test_footer = 1
+test_timeline = 1
  
-def footer_test():
-    """
-    Example of plugin data display in UI footer.
-    Run in background thread.
-    """
+if test_footer:
     example1 = showInFooter()  #  instantiate class to enable data in footer
     example1.label = u"Proto example data"
     example1.val = 0
     example1.unit = u" sec"
-    
+     
     example2 = showInFooter() #  instantiate class to enable data in footer
     example2.label = u"Second example data"
     example2.val = 0
     example2.unit = u" seconds"
+
+if test_timeline:
+    flow1 = showOnTimeline()  #  instantiate class to enable data on timeline
+    flow1.unit = u"lph"
+    flow1.val = 1
+     
+    flow2 = showOnTimeline()  #  instantiate class to enable data on timeline
+    flow2.unit = u"Used(L)"
+    flow2.val = 1
     
-    while True: #  Simulate plugin data
-        example1.val += 2 #  update plugin data 1
-        example2.val += 4 #  update plugin data 2
-        sleep(2)        
-  
-# Run footer_test() in baskground thread
-ft = Thread(target = footer_test)
+    # flow1.clear
+    # flow2.clear
+
+def data_test():
+        while True: #  Display simulated plugin data
+            
+            #  Update footer data
+            if test_footer:
+                example1.val += 2 #  update plugin data 1
+                example2.val += 4 #  update plugin data 2
+            
+            #  Update timeline data
+            if test_timeline:
+                flow1.val += 1
+                flow2.val += 2
+            
+            sleep(2)        
+
+# Run data_test() in baskground thread
+ft = Thread(target = data_test)
 ft.daemon = True
 ft.start()
 

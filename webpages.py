@@ -763,21 +763,20 @@ class water_log(ProtectedPage):
         return data
     
 class showInFooter(object):
-    """Enables plugins to display e.g. sensor readings in the footer of SIP's UI
     """
-# next((i for i,d in enumerate(gv.pluginFtr) if label in d), None) # get index of dict containing label.
-
-#     def __init__(self, data_set):
+    Enables plugins to display e.g. sensor readings in the footer of SIP's UI
+    """
     def __init__(self, label = "", val = "", unit = ""):
-#         self._idx = data_set - 1 
         self._label = label
         self._val = val
         self._unit = unit
 
         self._idx = len(gv.pluginFtr)
         gv.pluginFtr.append({u"label": self._label, u"val": self._val, u"unit": self._unit})
-        print("index: ", self._idx)  # - test
-        
+     
+    @property
+    def clear(self):
+        del gv.pluginFtr[self._idx][:] #  Remove elements of list but keep empty list   
                    
     @property
     def label(self):
@@ -816,6 +815,51 @@ class showInFooter(object):
     def unit(self, text):
         self._unit = text
         gv.pluginFtr[self._idx][u"unit"] = self._unit         
+ 
+ 
+class showOnTimeline:
+    """
+    Used to display plugin data next to station time countdown on home page timeline.
+        use [instance name].unit = [unit name] to set unit for data e.g. "lph".
+        use [instance name].val = [plugin data] to display plugin data
+        use [instance name].clear to remove from display e.g. if station not included in plugin.
+    """
+    
+    def __init__(self, val = "", unit = ""):
+        self._val = val
+        self._unit = unit
+        self._idx = None
+    
+        self._idx = len(gv.pluginStn)
+        gv.pluginStn.append([self._unit, self._val])
+        
+    @property
+    def clear(self):
+        del gv.pluginStn[self._idx][:] #  Remove elements of list but keep empty list
+            
+    @property
+    def unit(self):
+        if not self.unit:
+            return "unit not set"
+        else:
+            return self._unit
+    
+    @unit.setter
+    def unit(self, text):
+        self._unit = text
+        gv.pluginStn[self._idx][0] = self._unit
+        
+    @property
+    def val(self):
+        if not self._val:
+            return "val not set"
+        else:
+            return self._val
+    
+    @val.setter
+    def val(self, num):
+        self._val = num
+        gv.pluginStn[self._idx][1] = self._val 
         
         
 class plugin_data(ProtectedPage):
@@ -824,17 +868,16 @@ class plugin_data(ProtectedPage):
     """
     def GET(self):
         footer_data = []
-#         station_data = []
+        station_data = []
         data = {}
-#         print("gv data: ", gv.pluginFtr)  # - test
         for i, v in enumerate(gv.pluginFtr):
             footer_data.append((i, v[u"val"]))         
-#         for v in gv.pluginStn:
-#             station_data.append(v[1])       
+        for v in gv.pluginStn:
+            station_data.append(v[1])       
         data["fdata"] = footer_data
-#         data["sdata"] = station_data
+        data["sdata"] = station_data
 #         print("data from plugins: ", data)  # - test
-#         print("gv data: ", gv.pluginFtr)  # - test
+#         print("gv data: ", gv.pluginStn)  # - test
         return json.dumps(data)        
 
 
