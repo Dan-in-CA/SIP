@@ -90,6 +90,22 @@ ft = Thread(target = data_test)
 ft.daemon = True
 ft.start()
 
+#  Example new column in log
+def update_log_data(name, **kw):
+    log_value = 10 #  variable to hold value to be logged
+    gv.logAppend[u"From proto"] = log_value
+
+program_started = signal(u"stations_scheduled") #  blinker signal from helpers.py
+program_started.connect(update_log_data) #  run update_log_data() when program starts
+
+### Station Completed ###
+def notify_station_completed(station, **kw):
+    print(u"Station {} run completed".format(station))
+
+
+complete = signal(u"station_completed")
+complete.connect(notify_station_completed)
+
 
 class settings(ProtectedPage):
     """
