@@ -194,7 +194,7 @@ def get_ip():
         arg = u"ip route list"
         p = subprocess.Popen(arg, shell=True, stdout=subprocess.PIPE)
         data = p.communicate()
-        split_data = data[0].split()
+        split_data = data[0].decode(encoding="utf-8").split()
         ipaddr = split_data[split_data.index(u"src") + 1]
         return ipaddr
     except:
