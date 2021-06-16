@@ -817,7 +817,7 @@ class showInFooter(object):
         gv.pluginFtr[self._idx][u"unit"] = self._unit         
  
  
-class showOnTimeline:
+class showOnTimeline(object):
     """
     Used to display plugin data next to station time countdown on home page timeline.
         use [instance name].unit = [unit name] to set unit for data e.g. "lph".
