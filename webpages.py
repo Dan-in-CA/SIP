@@ -136,6 +136,7 @@ class change_values(ProtectedPage):
                 gv.now + gv.sd[u"rd"] * 3600
             )  # + 1  # +1 adds a smidge just so after a round trip the display hasn"t already counted down by a minute.
             stop_onrain()
+            report_rain_delay_change()
         elif u"rd" in qdict and qdict[u"rd"] == u"0":
             gv.sd[u"rdst"] = 0
         for key in list(qdict.keys()):
