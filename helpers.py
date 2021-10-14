@@ -81,6 +81,24 @@ def report_rain_changed(txt=None):
     rain_changed.send()
 
 
+running_program_change = signal(u"running_program_change")
+
+def report_running_program_change():
+    """
+    Send blinker signal indicating that running program changed.
+    """
+    running_program_change.send()
+
+
+rain_delay_change = signal(u"rain_delay_change")
+
+def report_rain_delay_change():
+    """
+    Send blinker signal indicating that rain delay changed.
+    """
+    rain_delay_change.send()
+
+
 restarting = signal(u"restarting")  #: Signal to send on software restart
 
 
