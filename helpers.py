@@ -574,7 +574,7 @@ def station_names():
         with open(u"./data/snames.json", u"r") as snf:
             return json.load(snf)
     except IOError as e:
-        print("Error opening file: ", e)
+        # print("Error opening file: ", e)
         stations = [u"S01", u"S02", u"S03", u"S04", u"S05", u"S06", u"S07", u"S08"]
         jsave(stations, u"snames")
         return stations
