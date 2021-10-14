@@ -33,6 +33,8 @@ from helpers import (
     prog_match,
     report_new_day,
     report_station_completed,
+    report_running_program_change,
+    report_rain_delay_change,
     schedule_stations,
     station_names,
     stop_onrain,
@@ -133,7 +135,6 @@ def timing_loop():
                                 print(u"logging @ time check")
                                 log_run()
                                 report_station_completed(sid + 1)
-                                gv.pon = None  # Program has ended
                             gv.rs[sid] = [0, 0, 0, 0]
                     else:  # if this station is not yet on
                         if gv.rs[sid][0] <= gv.now < gv.rs[sid][1]:
@@ -156,13 +157,16 @@ def timing_loop():
                                 gv.srvals[masid] = 1
                                 set_output()
 
-            for s in range(gv.sd[u"nst"]):
-                if gv.rs[s][1]:  # if any station is scheduled
+            program_running = False
+            pon = None
+            for sid in range(gv.sd[u"nst"]):
+                if gv.rs[sid][1]:  # if any station is scheduled
                     program_running = True
-                    gv.pon = gv.rs[s][3]  # Store number of running program
+                    pon = gv.rs[sid][3]
                     break
-                program_running = False
-                gv.pon = None
+            if pon != gv.pon:  # Update number of running program
+                gv.pon = pon
+                report_running_program_change()
 
             if program_running:
                 if (
@@ -207,6 +211,10 @@ def timing_loop():
                                 gv.rs[sid][1] + gv.sd[u"mtoff"]
                             )  # set to future...
                             break  # first found will do
+        else:  # Not busy
+            if gv.pon != None:
+                gv.pon = None
+                report_running_program_change()
 
         if gv.sd[u"urs"]:
             check_rain()  # in helpers.py
@@ -215,6 +223,7 @@ def timing_loop():
             gv.sd[u"rd"] = 0
             gv.sd[u"rdst"] = 0  # Rain delay stop time
             jsave(gv.sd, u"sd")
+            report_rain_delay_change()
 
         time.sleep(1)
 #         print("wl: ", gv.sd[u"wl"])

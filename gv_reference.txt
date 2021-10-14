@@ -70,3 +70,4 @@ gv.plugin_data dictionary (index by plugin root web prefix) to hold plugin data.
 gv.use_pigpio  set if pigpio libary is installed.
 gv.cputemp    CPU temperature from internal sensor.
 gv.day_ord	Day of year as int (ordinal)
+gv.use_gpio_pins = True Controls SIP's use of the GPIO pons, Set = False to disable.
