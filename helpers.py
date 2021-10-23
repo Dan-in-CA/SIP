@@ -250,31 +250,34 @@ def check_rain():
     """
 
     global pi
+    rain_sensor = gv.sd[u"rs"]
     try:
         if gv.sd[u"rst"] == 1:  # Rain sensor type normally open (default)
             if gv.use_pigpio:
                 if not pi.read(pin_rain_sense):  # Rain detected
-                    gv.sd[u"rs"] = 1
+                    rain_sensor = 1
                 else:
-                    gv.sd[u"rs"] = 0
+                    rain_sensor = 0
             else:
                 if (
-                    GPIO.input(pin_rain_sense) == gv.sd[u"rs"]
+                    GPIO.input(pin_rain_sense) == rain_sensor
                 ):  #  Rain sensor changed, reading and gv.sd["rs"] are inverse.
-                    report_rain_changed()
-                    gv.sd[u"rs"] = 1 - gv.sd[u"rs"]  #  toggle
+                    rain_sensor = 1 - rain_sensor  #  toggle
         elif gv.sd[u"rst"] == 0:  # Rain sensor type normally closed
             if gv.use_pigpio:
                 if pi.read(pin_rain_sense):  # Rain detected
-                    gv.sd[u"rs"] = 1
+                    rain_sensor = 1
                 else:
-                    gv.sd[u"rs"] = 0
+                    rain_sensor = 0
             else:
-                if GPIO.input(pin_rain_sense) != gv.sd[u"rs"]:  # Rain sensor changed
-                    report_rain_changed()
-                    gv.sd[u"rs"] = 1 - gv.sd[u"rs"]  #  toggle
+                if GPIO.input(pin_rain_sense) != rain_sensor:  # Rain sensor changed
+                    rain_sensor = 1 - rain_sensor  #  toggle
     except NameError:
         pass
+
+    if gv.sd[u"rs"] != rain_sensor:  # Update if rain sensor changed
+        gv.sd[u"rs"] = rain_sensor
+        report_rain_changed()
 
 
 def clear_mm():
