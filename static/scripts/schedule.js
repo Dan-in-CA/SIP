@@ -163,6 +163,9 @@ function fromClock(clock) {
 function programName(p) {
 	if (p == "Manual" || p == "Run-once") {
 		return p + " Program";
+	}	
+	else if(isNaN(p)) {
+		return p;	
 	} else {
 		return "Program " + p;
 	}
@@ -193,10 +196,14 @@ function displaySchedule(schedule) {
 						var barStart = Math.max(0,relativeStart)/60;
 						var barWidth = Math.max(0.05,Math.min(relativeEnd, 60)/60 - barStart);
 						var programClass;
+						var idx;						
 						if (schedule[s].program == "Manual" || schedule[s].program == "Run-once") {
-							programClass = "programManual";
+							programClass = "programManual";						
+						} else if(isNaN(schedule[s].program)) {
+							idx = progNames.indexOf(schedule[s].program);
+							programClass = "program" + (idx + 1)%10;	
 						} else {
-							programClass = "program" + (parseInt(schedule[s].program)+1)%10;
+							programClass = "program" + (parseInt(schedule[s].program))%10;
 						}
 						programClassesUsed[schedule[s].program] = programClass;
 						var markerClass = (schedule[s].date == undefined ? "schedule" : "history");
