@@ -591,7 +591,7 @@ def load_programs():
         with open(u"./data/programData.json", u"r") as pf:
             gv.pd = json.load(pf)
             for p in gv.pd:
-                gv.pnames.append(p["name"])
+                gv.pnames.append(str(p["name"]))
     except IOError:
         #  Check if programs.json file exists (old format) and if so, run conversion
         if os.path.isfile(u"./data/programs.json"):
