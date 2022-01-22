@@ -66,9 +66,6 @@ if test_timeline:
     flow2 = showOnTimeline()  #  instantiate class to enable data on timeline
     flow2.unit = u"Used(L)"
     flow2.val = 1
-    
-    # flow1.clear
-    # flow2.clear
 
 def data_test():
         while True: #  Display simulated plugin data
@@ -89,14 +86,6 @@ def data_test():
 ft = Thread(target = data_test)
 ft.daemon = True
 ft.start()
-
-#  Example new column in log
-def update_log_data(name, **kw):
-    log_value = 10 #  variable to hold value to be logged
-    gv.logAppend[u"From proto"] = log_value
-
-program_started = signal(u"stations_scheduled") #  blinker signal from helpers.py
-program_started.connect(update_log_data) #  run update_log_data() when program starts
 
 ### Station Completed ###
 def notify_station_completed(station, **kw):
