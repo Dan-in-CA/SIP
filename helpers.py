@@ -250,31 +250,34 @@ def check_rain():
     """
 
     global pi
+    rain_sensor = gv.sd[u"rs"]
     try:
         if gv.sd[u"rst"] == 1:  # Rain sensor type normally open (default)
             if gv.use_pigpio:
                 if not pi.read(pin_rain_sense):  # Rain detected
-                    gv.sd[u"rs"] = 1
+                    rain_sensor = 1
                 else:
-                    gv.sd[u"rs"] = 0
+                    rain_sensor = 0
             else:
                 if (
-                    GPIO.input(pin_rain_sense) == gv.sd[u"rs"]
+                    GPIO.input(pin_rain_sense) == rain_sensor
                 ):  #  Rain sensor changed, reading and gv.sd["rs"] are inverse.
-                    report_rain_changed()
-                    gv.sd[u"rs"] = 1 - gv.sd[u"rs"]  #  toggle
+                    rain_sensor = 1 - rain_sensor  #  toggle
         elif gv.sd[u"rst"] == 0:  # Rain sensor type normally closed
             if gv.use_pigpio:
                 if pi.read(pin_rain_sense):  # Rain detected
-                    gv.sd[u"rs"] = 1
+                    rain_sensor = 1
                 else:
-                    gv.sd[u"rs"] = 0
+                    rain_sensor = 0
             else:
-                if GPIO.input(pin_rain_sense) != gv.sd[u"rs"]:  # Rain sensor changed
-                    report_rain_changed()
-                    gv.sd[u"rs"] = 1 - gv.sd[u"rs"]  #  toggle
+                if GPIO.input(pin_rain_sense) != rain_sensor:  # Rain sensor changed
+                    rain_sensor = 1 - rain_sensor  #  toggle
     except NameError:
         pass
+
+    if gv.sd[u"rs"] != rain_sensor:  # Update if rain sensor changed
+        gv.sd[u"rs"] = rain_sensor
+        report_rain_changed()
 
 
 def clear_mm():
@@ -348,17 +351,19 @@ def log_run():
     """
 
     if gv.sd[u"lg"]:
-        program = "program"  #  _(u"program")
-        station = "station"  #  _(u"station")
-        duration = "duration"  #  _(u"duration")
-        strt = "start"  #  _(u"start")
-        date = "date"  #  _(u"date")
+        program = "program" 
+        station = "station"
+        duration = "duration"
+        strt = "start"
+        date = "date"
         if gv.lrun[1] == 0:  # skip program 0
             return
         elif gv.lrun[1] == 98:
             pgr = _(u"Run-once")
         elif gv.lrun[1] == 99:
             pgr = _(u"Manual")
+        elif gv.pd[gv.lrun[1] - 1][u"name"] != "":
+            pgr = str(gv.pd[gv.lrun[1] - 1][u"name"])      
         else:
             pgr = u"" + str(gv.lrun[1])
         start = time.gmtime(gv.now - gv.lrun[2])
@@ -473,7 +478,7 @@ def schedule_stations(stations):
             for s in range(8):
                 sid = b * 8 + s  # station index
                 if (
-                    not stations[b] & 1 << s or gv.srvals[sid]  # - test
+                    not stations[b] & 1 << s or gv.srvals[sid]
                 ):  # skip stations not in prog or already running
                     continue
                 if gv.rs[sid][2]:  # if station has a duration value
@@ -487,8 +492,8 @@ def schedule_stations(stations):
                     else:  # if rain and station does not ignore, clear station from display
                         gv.sbits[b] &= ~1 << s
                         gv.ps[s] = [0, 0]
-    report_stations_scheduled()  # - test
-    gv.sd[u"bsy"] = 1  # - test
+    report_stations_scheduled()
+    gv.sd[u"bsy"] = 1
     return
 
 
@@ -500,6 +505,7 @@ def stop_onrain():
     from gpio_pins import set_output
 
     do_set_output = False
+
     for b in range(gv.sd[u"nbrd"]):
         for s in range(8):
             sid = b * 8 + s  # station index
@@ -579,6 +585,7 @@ def station_names():
         jsave(stations, u"snames")
         return stations
 
+gv.pnames = []
 
 def load_programs():
     """
@@ -588,6 +595,8 @@ def load_programs():
     try:
         with open(u"./data/programData.json", u"r") as pf:
             gv.pd = json.load(pf)
+            for p in gv.pd:
+                gv.pnames.append(str(p["name"]))
     except IOError:
         #  Check if programs.json file exists (old format) and if so, run conversion
         if os.path.isfile(u"./data/programs.json"):

@@ -584,6 +584,7 @@ td.stationSchedule {
 .program8 {background-color: hsl(275,80%,40%)}
 .program9 {background-color: hsl(125,80%,40%)}
 .programManual {background-color: hsl(25,80%,40%)}
+
 .schedule {
 	background-image:url("whitestripes.png");
 }

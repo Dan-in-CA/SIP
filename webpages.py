@@ -499,8 +499,9 @@ class view_programs(ProtectedPage):
 
 class modify_program(ProtectedPage):
     """Open page to allow program modification."""
-
+    
     def GET(self):
+        p_name = u""
         qdict = web.input()
         pid = int(qdict[u"pid"])
         prog = []
@@ -513,8 +514,9 @@ class modify_program(ProtectedPage):
                     ((mp[u"day_mask"]) + mp[u"interval_base_day"])
                     - (dse % mp[u"interval_base_day"])
                 ) % mp[u"interval_base_day"]
-            prog = str(mp).replace(u" ", u"")
-        return template_render.modify(pid, prog)
+            p_name = mp["name"]
+            prog = str(mp).replace(u" ", u"") #  strip out spaces
+        return template_render.modify(pid, prog, p_name)
 
 
 class change_program(ProtectedPage):

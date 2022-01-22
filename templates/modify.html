@@ -1,4 +1,4 @@
-$def with (pid, prog)
+$def with (pid, prog, p_name)
 
 $var title: $_(u'SIP Modify Program')
 $var page: programs
@@ -20,10 +20,11 @@ $code:
         program['duration_sec'] = [[0], [0] * gv.sd['nst']][idd]
         program['station_mask'] = [0] * gv.sd['nbrd']
         program['type'] = 'alldays'
-        program['name'] = 'Unnamed'
+        program['name'] = ""
 
     else: #  An existing program
         program = eval(prog)            ### format conversion
+        # program = json.load(prog)            ### format conversion
     weekly = int(program['type'] in ['alldays', 'evendays', 'odddays'])
     stationsShown = 0
     for bid in range(gv.sd['nbrd']):        
@@ -361,7 +362,7 @@ $code:
             v['stop_min'] = endTime;
             v['cycle_min'] = interval;
             v['duration_sec'] = [[gduration], idurations][idd]; // select one or the other
-            v['name'] = 'Unnamed';
+            v['name'] = jQuery("#pname").val();
             v['station_mask']  = stations;
 //         let vs = JSON.stringify(v);                      //// format conversion
          jQuery("form#mf input[name='v']").val(JSON.stringify(v));
@@ -381,6 +382,9 @@ let cycleTime = ${two_digits(program['cycle_min'] % 60)};
     <form name="mf" id="mf" action="cp" method="get">
         <input type="hidden" name="pid" value="${pid}">
         <input type="hidden" name="v" value="$:{program}">
+        
+        <label for="pname"><b>$_(u'Program name'):</b> </label><input type="text" id="pname" name="pname" value = "${p_name}">
+        
         <div style="padding-left:5px;padding-right:5px;">
             <p><button id="cProgramEnabled" class="toggle ${'on' if program['enabled'] else 'off'}"><span class='toggleleft'>$_(u'Program On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Program Off')</span></button></p>
 
