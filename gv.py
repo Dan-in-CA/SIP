@@ -124,7 +124,6 @@ pd = load_programs()  # Load program data from file
 plugin_data = {}  # Empty dictionary to hold plugin based global data
 pluginFtr = []  # Empty list to hold plugin data for display in footer
 pluginStn = []  # Empty list to hold plugin data for display on timeline
-logAppend = OrderedDict()  # Empty ordered dictionary to hold plugin data for run log
 
 ps = []  # Program schedule (used for UI display)
 for i in range(sd[u"nst"]):
