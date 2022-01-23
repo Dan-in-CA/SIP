@@ -866,8 +866,8 @@ class showOnTimeline(object):
         
         
 class plugin_data(ProtectedPage):
-    """Simple plugin dta api
-        Called through URLs as /api/plugins.
+    """Simple plugin data api
+       Called through URLs as /api/plugins.
     """
     def GET(self):
         footer_data = []
@@ -879,9 +879,8 @@ class plugin_data(ProtectedPage):
             station_data.append(v[1])       
         data["fdata"] = footer_data
         data["sdata"] = station_data
-#         print("data from plugins: ", data)  # - test
-#         print("gv data: ", gv.pluginStn)  # - test
-        return json.dumps(data)        
+        web.header('Content-Type', 'application/json')
+        return json.dumps(data, ensure_ascii=False)
 
 
 class rain_sensor_state(ProtectedPage):

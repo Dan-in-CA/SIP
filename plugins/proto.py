@@ -43,7 +43,7 @@ def empty_function():  # Only a place holder
 #############################
 ### Data display examples ###
 
-## use 1 to turn on testing, 0 to turn off ##
+## use 1 to turn on for testing, 0 to turn off ##
 test_footer = 1
 test_timeline = 1
  
@@ -80,12 +80,15 @@ def data_test():
                 flow1.val += 1
                 flow2.val += 2
             
-            sleep(2)        
+            sleep(1)        
 
 # Run data_test() in baskground thread
 ft = Thread(target = data_test)
 ft.daemon = True
 ft.start()
+
+### End data display examples ###
+#################################
 
 ### Station Completed ###
 def notify_station_completed(station, **kw):
