@@ -164,8 +164,9 @@ class view_options(ProtectedPage):
 class change_options(ProtectedPage):
     """Save changes to options made on the options page."""
 
-    def GET(self):
+    def POST(self): #  was GET
         qdict = web.input()
+        print("qdict: ", qdict)
         if u"opw" in qdict and qdict[u"opw"] != u"":
             try:
                 if password_hash(qdict[u"opw"]) == gv.sd[u"passphrase"]:

@@ -82,7 +82,7 @@ $code:
 <div id="options">
     <div class="title">$_(u'Edit Options')</div>
     <button id="tooltips">$_(u'Show Tooltips')</button>
-    <form name="of" action="/co" method="get">
+    <form name="of" action="/co" method="POST"> #  was get
     $code:
         output = ""
         oldcategory = ""
