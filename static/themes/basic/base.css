@@ -287,6 +287,10 @@ button.on {
 button.off {
 	background-color: #7D1921;
 }
+button:disabled, button[disabled] {
+	pointer-events: none;
+	opacity: 0.3;
+}
 button.execute {
 	background-color: #2E3959;
     margin: 2px;
