@@ -13,6 +13,7 @@ except ImportError:
 # standard library imports
 import base64
 import json
+import pathlib
 import re
 import subprocess
 import time
@@ -196,7 +197,12 @@ class install_plugins(ProtectedPage):
                 try:
                     f_data = f_data.decode('utf-8')
                     with open(pf[1] + u"/" + pf[0], "w") as next_file:
-                        next_file.write(f_data)
+                        next_file.write(f_data)                        
+                except FileNotFoundError: # If a needed sub-directory is missing
+                    sub = pf[1].split("/")
+                    pathlib.Path("plugins/" + sub[1]).mkdir(exist_ok=True) 
+                    with open(pf[1] + u"/" + pf[0], "w") as next_file:
+                        next_file.write(f_data)                                                  
                 except UnicodeDecodeError:
                     with open(pf[1] + u"/" + pf[0], "wb") as next_file:
                         next_file.write(f_data)
