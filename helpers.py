@@ -420,7 +420,7 @@ def prog_match(prog):
             if lt.tm_mday == 31 or ((lt.tm_mon == 2 and lt.tm_mday == 29)):
                 return 0
             elif lt.tm_mday % 2 != 1:
-                return 0
+                return 0     
     this_minute = (lt.tm_hour * 60) + lt.tm_min  # Check time match
     if this_minute < prog[u"start_min"] or this_minute >= prog[u"stop_min"]:
         return 0
@@ -441,6 +441,7 @@ def schedule_stations(stations):
     """
     Schedule stations/valves/zones to run.
     """
+
     if (gv.sd[u"rd"]   #  If rain delay or rain detected by sensor
         or (gv.sd[u"urs"]
             and gv.sd[u"rs"]
@@ -448,17 +449,17 @@ def schedule_stations(stations):
         ):
         rain = True
     else:
-        rain = False
+        rain = False               
     accumulate_time = gv.now
     if gv.sd[u"seq"]:  # sequential mode, stations run one after another
-        for b in range(len(stations)):  # stations is a list of bitmasks
+        for b in range(len(stations)):  # stations is a list of bitmasks, one per board
             for s in range(8):
                 sid = b * 8 + s  # station index
                 if gv.rs[sid][2]:  # if station has a duration value
                     if (
                         not rain
-                        or gv.sd[u"ir"][b] & 1 << s
-                    ):  # if no rain or station ignores rain
+                        or gv.sd[u"ir"][b] & 1 << s  # if no rain or station ignores rain
+                    ):
                         gv.rs[sid][0] = accumulate_time  # start at accumulated time
                         accumulate_time += gv.rs[sid][2]  # add duration
                         gv.rs[sid][1] = accumulate_time  # set new stop time
@@ -474,8 +475,8 @@ def schedule_stations(stations):
                 sid = b * 8 + s  # station index
                 if (
                     not stations[b] & 1 << s or gv.srvals[sid]
-                ):  # skip stations not in prog or already running
-                    continue
+                ):
+                    continue  # skip stations not in prog or already running
                 if gv.rs[sid][2]:  # if station has a duration value
                     if (not rain
                         or gv.sd[u"ir"][b] & 1 << s

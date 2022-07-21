@@ -260,14 +260,14 @@ options = [
         _(u"Configure Master"),
     ],
     [
-        _(u"Master on adjust"),
+        _(u"Master on delay"),
         u"int",
         u"mton",
-        _(u"Master on delay (in seconds), between +0 and +60."),
+        _(u"Master on delay (in seconds), between -60 and +60."),
         _(u"Configure Master"),
     ],
     [
-        _(u"Master off adjust"),
+        _(u"Master off delay"),
         u"int",
         u"mtoff",
         _(u"Master off delay (in seconds), between -60 and +60."),

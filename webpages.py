@@ -166,7 +166,6 @@ class change_options(ProtectedPage):
 
     def POST(self): #  was GET
         qdict = web.input()
-        print("qdict: ", qdict)
         if u"opw" in qdict and qdict[u"opw"] != u"":
             try:
                 if password_hash(qdict[u"opw"]) == gv.sd[u"passphrase"]:
@@ -220,11 +219,17 @@ class change_options(ProtectedPage):
 
         for f in [u"sdt", u"mas", u"mton", u"mtoff", u"wl", u"lr", u"tz"]:
             if u"o" + f in qdict:
-                if (
-                    f == u"mton"
-                    and int(qdict[u"o" + f]) < 0
-                ):  # handle values less than zero (temp fix)
-                    raise web.seeother(u"/vo?errorCode=mton_minus")
+                if (f == u"mton"
+                    and (int(qdict[u"o" + f]) < -60
+                         or int(qdict[u"o" + f]) > 60)
+                ):  # handle values less than zero or greater than 60 (temp fix)
+                    raise web.seeother(u"/vo?errorCode=mton_mismatch")
+                elif (
+                    f == u"mtoff"
+                    and (int(qdict[u"o" + f]) < -60
+                         or int(qdict[u"o" + f]) > 60)
+                ):  # handle values less than or  greater than 60
+                    raise web.seeother(u"/vo?errorCode=mtoff_mismatch")
                 gv.sd[f] = int(qdict[u"o" + f])
 
         for f in [

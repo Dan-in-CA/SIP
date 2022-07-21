@@ -57,40 +57,44 @@ def timing_loop():
     last_min = 0
     while True:  # infinite loop
         cur_ord = (
-            date.today().toordinal() 
-        )  # day of year
+            date.today().toordinal()  # day of year 
+        )
         if cur_ord > gv.day_ord:
             gv.day_ord = cur_ord
             report_new_day()
         gv.nowt = (
-            time.localtime()
-        )  # Current time as time struct.  Updated once per second.
-        gv.now = timegm(
+            time.localtime()  # Current time as time struct.  Updated once per second.
+        )
+        gv.now = timegm(  # Current time as timestamp based on local time from the Pi. Updated once per second.
             gv.nowt
-        )  # Current time as timestamp based on local time from the Pi. Updated once per second.
+        )
+        
+        if gv.sd[u"mas"]: #  If master is defined
+            masid = gv.sd[u"mas"] -1 # master station index
+        else:
+            masid = None
         
         if (
             gv.sd[u"en"]
             and not gv.sd[u"mm"]
             and (not gv.sd[u"bsy"] or not gv.sd[u"seq"])
         ):
-            if int(gv.now // 60) != last_min:  # only check programs once a minute
-                last_min = int(gv.now // 60)
-                extra_adjustment = plugin_adjustment()
+            this_min = int(gv.now // 60)
+            if this_min != last_min:  # only check programs once a minute
+                last_min = this_min
                 for i, p in enumerate(gv.pd):  # get both index and prog item
                     if prog_match(p) and any(p[u"duration_sec"]):
                         # check each station per boards listed in program up to number of boards in Options
                         for b in range(len(p[u"station_mask"])):
                             for s in range(8):
                                 sid = b * 8 + s  # station index
-                                if gv.sd[u"mas"] == sid + 1:
-                                    continue  # skip, this is master station
-                                if (
-                                    gv.srvals[sid]
+                                if (gv.srvals[sid]
                                     and gv.sd[u"seq"]
-                                ):  # skip if currently on and sequential mode
-                                    continue
-
+                                ):
+                                    continue  # skip if currently on and sequential mode
+                                if sid == masid: 
+                                    continue  # skip, this is master station
+                                
                                 # station duration conditionally scaled by "water level"
                                 if gv.sd[u"iw"][b] & 1 << s:
                                     duration_adj = 1.0
@@ -101,7 +105,7 @@ def timing_loop():
                                 else:
                                     duration_adj = (
                                         gv.sd[u"wl"] / 100.0
-                                    ) * extra_adjustment
+                                    ) * plugin_adjustment() # was extra_adjustment
                                     if gv.sd[u"idd"]:
                                         duration = (
                                             p[u"duration_sec"][sid] * duration_adj
@@ -110,8 +114,8 @@ def timing_loop():
                                         duration = p[u"duration_sec"][0] * duration_adj
                                     duration = int(round(duration))  # convert to int
                                 if (
-                                    p[u"station_mask"][b] & 1 << s
-                                ):  # if this station is scheduled in this program
+                                    p[u"station_mask"][b] & 1 << s  # if this station is scheduled in this program
+                                ):
                                     gv.rs[sid][2] = duration
                                     gv.rs[sid][3] = i + 1  # program number for scheduling
                                     gv.ps[sid][0] = i + 1  # program number for display
@@ -127,33 +131,49 @@ def timing_loop():
                             gv.srvals[sid] = 0
                             set_output()
                             gv.sbits[b] &= ~(1 << s)
-                            if gv.sd[u"mas"] != sid + 1:  # if not master, fill out log
+                            # if gv.sd[u"mas"] != sid + 1:  # if not master, fill out log
+                            if sid != masid:  # if not master, fill out log
                                 gv.ps[sid] = [0, 0]
                                 gv.lrun[0] = sid
                                 gv.lrun[1] = gv.rs[sid][3]
                                 gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-                                print(u"logging @ time check")
+                                # print(u"logging @ time check")  # - test
                                 log_run()
                                 report_station_completed(sid + 1)
                             gv.rs[sid] = [0, 0, 0, 0]
                     else:  # if this station is not yet on
-                        if gv.rs[sid][0] <= gv.now < gv.rs[sid][1]:
-                            if gv.sd[u"mas"] != sid + 1:  # if not master
-                                gv.srvals[sid] = 1  # station is turned on
-                                set_output()
-                                gv.sbits[b] |= 1 << s  # Set display to on
-                                gv.ps[sid][0] = gv.rs[sid][3]
-                                gv.ps[sid][1] = gv.rs[sid][2]
-                                if gv.sd[u"mas"] and gv.sd[u"mo"][b] & (
-                                    1 << s
+                        if (gv.rs[sid][0] <= gv.now 
+                           and gv.now < gv.rs[sid][1]
+                        ):
+                            if sid != masid: # if not master
+                                if (gv.sd[u"mo"][b] & (1 << s) # station activates master
+                                    and gv.sd["mton"] < 0 # master has a negative delay
+                                    and not gv.srvals[masid] # master is not on
+                                ):
+                                    # advance remaining stations start and stop times by master negative delay
+                                    for stn in range(sid, len(gv.rs)):
+                                        if gv.rs[stn][3]:  # If station has a duration  
+                                            gv.rs[stn][0] += abs(gv.sd["mton"])
+                                            gv.rs[stn][1] += abs(gv.sd["mton"])                                      
+                                    gv.sbits[b] |= 1 << masid - (b * 8)  # start master 
+                                    gv.srvals[masid] = 1
+                                    set_output()                                
+                                else:
+                                    gv.srvals[sid] = 1  # station is turned on
+                                    set_output()
+                                    gv.sbits[b] |= 1 << s  # Set display to on
+                                    gv.ps[sid][0] = gv.rs[sid][3]
+                                    gv.ps[sid][1] = gv.rs[sid][2]
+                                if (gv.sd[u"mas"] # Master is defined
+                                    and gv.sd[u"mo"][b] & (1 << s) # this station activates master.
                                 ):  # Master settings
-                                    masid = gv.sd[u"mas"] - 1  # master index
-                                    gv.rs[masid][0] = gv.rs[sid][0] + gv.sd[u"mton"]
+                                    if gv.sd[u"mton"] > 0:
+                                        gv.rs[masid][0] = gv.rs[sid][0] + gv.sd[u"mton"] # this is where master is scheduled
                                     gv.rs[masid][1] = gv.rs[sid][1] + gv.sd[u"mtoff"]
                                     gv.rs[masid][3] = gv.rs[sid][3]
-                            elif gv.sd[u"mas"] == sid + 1: # if this is master
-                                gv.sbits[b] |= 1 << s # - test
-                                gv.srvals[sid] = 1
+                            elif sid == masid: # if this is master
+                                gv.sbits[b] |= 1 << s
+                                gv.srvals[sid] = 1  # this is where master is turned on
                                 set_output()
 
             program_running = False
@@ -168,9 +188,9 @@ def timing_loop():
                 report_running_program_change()
 
             if program_running:
-                if (
-                    gv.sd[u"urs"] and gv.sd[u"rs"]
-                ):  #  Stop stations if use rain sensor and rain detected.
+                if (gv.sd[u"urs"] 
+                    and gv.sd[u"rs"]  #  Stop stations if use rain sensor and rain detected.
+                ):
                     stop_onrain()  # Clear schedule for stations that do not ignore rain.
                 for sid in range(len(gv.rs)):  # loop through program schedule (gv.ps)
                     if gv.rs[sid][2] == 0:  # skip stations with no duration
@@ -193,9 +213,9 @@ def timing_loop():
                     gv.rs.append([0, 0, 0, 0])
                 gv.sd[u"bsy"] = 0
 
-            if gv.sd[u"mas"] and (  #  master is defined
-                gv.sd[u"mm"] or not gv.sd[u"seq"]
-            ):  #  manual or concurrent mode.
+            if (gv.sd[u"mas"] #  master is defined
+                and (gv.sd[u"mm"] or not gv.sd[u"seq"]) #  manual or concurrent mode.
+            ):
                 for b in range(gv.sd[u"nbrd"]):  # set stop time for master
                     for s in range(8):
                         sid = b * 8 + s
@@ -225,7 +245,6 @@ def timing_loop():
             report_rain_delay_change()
 
         time.sleep(1)
-#         print("wl: ", gv.sd[u"wl"])
         #### End of timing loop ####
 
 
