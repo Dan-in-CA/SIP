@@ -155,7 +155,8 @@ def timing_loop():
                                         if gv.rs[stn][3]:  # If station has a duration  
                                             gv.rs[stn][0] += abs(gv.sd["mton"])
                                             gv.rs[stn][1] += abs(gv.sd["mton"])                                      
-                                    gv.sbits[b] |= 1 << masid - (b * 8)  # start master 
+                                    brd = masid // 8
+                                    gv.sbits[brd] |= 1 << (masid - (brd * 8))  # start master
                                     gv.srvals[masid] = 1
                                     set_output()                                
                                 else:
