@@ -1,31 +1,27 @@
 # -*- coding: utf-8 -*-
 
-# Python 2/3 compatibility imports
-from __future__ import print_function
-from six.moves import range
-
 # local module imports
 from blinker import signal
 import gv
 try:
     import RPi.GPIO as GPIO
-    gv.platform = u"pi"
+    gv.platform = "pi"
 except ImportError:
     try:
         import Adafruit_BBIO.GPIO as GPIO  # Required for accessing GPIO pins on Beagle Bone Black
         gv.pin_map = [None] * 11  # map only the pins we are using
-        gv.pin_map.extend([u"P9_" + str(i) for i in range(11, 17)])
-        gv.platform = u"bo"
+        gv.pin_map.extend(["P9_" + str(i) for i in range(11, 17)])
+        gv.platform = "bo"
     except ImportError:
         gv.pin_map = [
             i for i in range(27)
         ]  # assume 26 pins all mapped.  Maybe we should not assume anything, but...
         gv.platform = ""  # if no platform, allows program to still run.
-        print(u"\33[31mWARNING: No GPIO library was loaded,\nSIP will run but stations will NOT be activated.")
-        print(u"Please be sure either RPI.GPIO or pigpio for Python (or both) is installed.\33[0m") 
+        print("\33[31mWARNING: No GPIO library was loaded,\nSIP will run but stations will NOT be activated.")
+        print("Please be sure either RPI.GPIO or pigpio for Python (or both) is installed.\33[0m") 
            
 # fmt: off
-if gv.platform == u"pi":
+if gv.platform == "pi":
     rev = GPIO.RPI_REVISION
     if rev == 1:
         # map 26 physical pins (1 based) with 0 for pins that do not have a gpio number
@@ -150,10 +146,10 @@ if gv.platform == u"pi":
                 0,  40,
             ]
     else:
-        print(u"Unknown pi pin revision.  Using pin mapping for rev 3")
+        print("Unknown pi pin revision.  Using pin mapping for rev 3")
 # fmt: on
 
-zone_change = signal(u"zone_change")
+zone_change = signal("zone_change")
 
 try:
     if gv.use_pigpio:
@@ -173,11 +169,11 @@ global pin_rain_sense
 global pin_relay
 
 try:
-    if gv.platform == u"pi":  # If this will run on Raspberry Pi:
+    if gv.platform == "pi":  # If this will run on Raspberry Pi:
         GPIO.setmode(GPIO.BOARD)
         pin_rain_sense = gv.pin_map[8]
         pin_relay = gv.pin_map[10]
-    elif gv.platform == u"bo":  # If this will run on Beagle Bone Black:
+    elif gv.platform == "bo":  # If this will run on Beagle Bone Black:
         pin_rain_sense = gv.pin_map[15]
         pin_relay = gv.pin_map[16]
 except AttributeError:
@@ -207,7 +203,7 @@ def setup_pins():
     global pi
 
     try:
-        if gv.platform == u"pi":  # If this will run on Raspberry Pi:
+        if gv.platform == "pi":  # If this will run on Raspberry Pi:
             if not gv.use_pigpio:
                 GPIO.setmode(
                     GPIO.BOARD
@@ -216,7 +212,7 @@ def setup_pins():
             pin_sr_clk = gv.pin_map[7]
             pin_sr_noe = gv.pin_map[11]
             pin_sr_lat = gv.pin_map[15]
-        elif gv.platform == u"bo":  # If this will run on Beagle Bone Black:
+        elif gv.platform == "bo":  # If this will run on Beagle Bone Black:
             pin_sr_dat = gv.pin_map[11]
             pin_sr_clk = gv.pin_map[13]
             pin_sr_noe = gv.pin_map[14]
@@ -288,9 +284,9 @@ def setShiftRegister(srvals):
         if gv.use_pigpio:
             pi.write(pin_sr_clk, 0)
             pi.write(pin_sr_lat, 0)
-            for s in range(gv.sd[u"nst"]):
+            for s in range(gv.sd["nst"]):
                 pi.write(pin_sr_clk, 0)
-                if srvals[gv.sd[u"nst"] - 1 - s]:
+                if srvals[gv.sd["nst"] - 1 - s]:
                     pi.write(pin_sr_dat, 1)
                 else:
                     pi.write(pin_sr_dat, 0)
@@ -299,9 +295,9 @@ def setShiftRegister(srvals):
         else:
             GPIO.output(pin_sr_clk, GPIO.LOW)
             GPIO.output(pin_sr_lat, GPIO.LOW)
-            for s in range(gv.sd[u"nst"]):
+            for s in range(gv.sd["nst"]):
                 GPIO.output(pin_sr_clk, GPIO.LOW)
-                if srvals[gv.sd[u"nst"] - 1 - s]:
+                if srvals[gv.sd["nst"] - 1 - s]:
                     GPIO.output(pin_sr_dat, GPIO.HIGH)
                 else:
                     GPIO.output(pin_sr_dat, GPIO.LOW)
@@ -318,7 +314,7 @@ def set_output():
 
     with gv.output_srvals_lock:
         gv.output_srvals = gv.srvals
-        if gv.sd[u"alr"]:
+        if gv.sd["alr"]:
             gv.output_srvals = [
                 1 - i for i in gv.output_srvals
             ]  #  invert logic of shift registers
