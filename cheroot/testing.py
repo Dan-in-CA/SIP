@@ -3,7 +3,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from contextlib import closing
+from contextlib import closing, contextmanager
 import errno
 import socket
 import threading
@@ -33,6 +33,7 @@ config = {
 }
 
 
+@contextmanager
 def cheroot_server(server_factory):
     """Set up and tear down a Cheroot server instance."""
     conf = config[server_factory].copy()
@@ -61,17 +62,17 @@ def cheroot_server(server_factory):
     httpserver.stop()  # destroy it
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def wsgi_server():
     """Set up and tear down a Cheroot WSGI server instance."""
-    for srv in cheroot_server(cheroot.wsgi.Server):
+    with cheroot_server(cheroot.wsgi.Server) as srv:
         yield srv
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def native_server():
     """Set up and tear down a Cheroot HTTP server instance."""
-    for srv in cheroot_server(cheroot.server.HTTPServer):
+    with cheroot_server(cheroot.server.HTTPServer) as srv:
         yield srv
 
 

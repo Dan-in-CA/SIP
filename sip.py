@@ -43,8 +43,8 @@ import web  # the Web.py module. See webpy.org (Enables the Python SIP web inter
 sys.path.append("./plugins")
 gv.restarted = 1
 
-command = "hostname -I"
-ip_addr = subprocess.check_output(command.split()).strip().split()
+# command = "hostname -I"
+# ip_addr = subprocess.check_output(command.split()).strip().split()
 
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
@@ -334,6 +334,6 @@ if __name__ == "__main__":
             print("SSL error", e)
             restart(2)
 
-    print("IP: ", ip_addr[0].decode("utf-8"))
+    # print("IP: ", ip_addr[0].decode("utf-8"))
     app.run()
 
