@@ -363,22 +363,22 @@ def log_run():
             pgr = "" + str(gv.lrun[1])
         start = time.gmtime(gv.now - gv.lrun[2])
         logline = (
-            u'{"'
+            '{"'
             + program
-            + u'":"'
+            + '":"'
             + pgr
-            + u'","'
+            + '","'
             + station
-            + u'":'
+            + '":'
             + str(gv.lrun[0])
-            + u',"'
+            + ',"'
             + duration
-            + u'":"'
+            + '":"'
             + timestr(gv.lrun[2])
-            + u'","'
+            + '","'
             + strt
-            + u'":"'
-            + time.strftime(u'%H:%M:%S","' + date + u'":"%Y-%m-%d"', start)
+            + '":"'
+            + time.strftime('%H:%M:%S","' + date + '":"%Y-%m-%d"', start)
             + "}"
         )       
         lines = []
@@ -641,7 +641,7 @@ def check_login(redirect=False):
 
 signin_form = form.Form(
     form.Password(
-        name='password', description=_("Passphrase") + ":", value=u''
+        name='password', description=_("Passphrase") + ":", value=''
         ),
 
     validators=[

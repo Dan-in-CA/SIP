@@ -766,7 +766,7 @@ class water_log(ProtectedPage):
                 + "\n"
             )
 
-        web.header(u"Content-Type", u"text/csv")
+        web.header("Content-Type", "text/csv")
         return data
     
 class showInFooter(object):
@@ -779,7 +779,7 @@ class showInFooter(object):
         self._unit = unit
 
         self._idx = len(gv.pluginFtr)
-        gv.pluginFtr.append({u"label": self._label, u"val": self._val, u"unit": self._unit})
+        gv.pluginFtr.append({"label": self._label, "val": self._val, "unit": self._unit})
      
     @property
     def clear(self):
@@ -796,7 +796,7 @@ class showInFooter(object):
     def label(self, text):
         self._label = text
         if self._label:
-            gv.pluginFtr[self._idx][u"label"] = self._label + ": "
+            gv.pluginFtr[self._idx]["label"] = self._label + ": "
     
     @property
     def val(self):
@@ -809,7 +809,7 @@ class showInFooter(object):
     def val(self, num):
         self._val = num
         if self._val:
-            gv.pluginFtr[self._idx][u"val"] = self._val
+            gv.pluginFtr[self._idx]["val"] = self._val
 
     @property
     def unit(self):
@@ -821,7 +821,7 @@ class showInFooter(object):
     @unit.setter
     def unit(self, text):
         self._unit = text
-        gv.pluginFtr[self._idx][u"unit"] = self._unit         
+        gv.pluginFtr[self._idx]["unit"] = self._unit         
  
  
 class showOnTimeline(object):
@@ -878,7 +878,7 @@ class plugin_data(ProtectedPage):
         station_data = []
         data = {}
         for i, v in enumerate(gv.pluginFtr):
-            footer_data.append((i, v[u"val"]))         
+            footer_data.append((i, v["val"]))         
         for v in gv.pluginStn:
             station_data.append(v[1])       
         data["fdata"] = footer_data
@@ -891,4 +891,4 @@ class rain_sensor_state(ProtectedPage):
     """Return rain sensor state."""
 
     def GET(self):
-        return gv.sd[u"rs"]
+        return gv.sd["rs"]

@@ -221,7 +221,7 @@ function displaySchedule(schedule) {
 		}
 	});
 	jQuery("#legend").empty();
-	for (var p in programClassesUsed) {
+	for (let p in programClassesUsed) {
 		jQuery("#legend").append("<span class='" + programClassesUsed[p] + "'>" + programName(p) + "</span>");
 	}
 	jQuery(".scheduleMarker").mouseover(scheduleMarkerMouseover);
@@ -236,12 +236,12 @@ function displaySchedule(schedule) {
 function displayProgram() { // Controls home page irrigation timeline
 	//if (displayScheduleDate > devt) { //dk
 	if (displayScheduleDate > new Date(Date.now() + tzOffsetDif)) { //dk
-		var schedule = doSimulation(); //dk
+		let schedule = doSimulation(); //dk
 		displaySchedule(schedule);
 	} else {
-		var visibleDate = toXSDate(displayScheduleDate);
+		let visibleDate = toXSDate(displayScheduleDate);
 		jQuery.getJSON("/api/log?date=" + visibleDate, function(log) {
-			for (var l in log) {
+			for (let l in log) {
 				log[l].duration = fromClock(log[l].duration);
 				log[l].start = fromClock(log[l].start)/60;
 				if (log[l].date != visibleDate) {
@@ -250,7 +250,7 @@ function displayProgram() { // Controls home page irrigation timeline
 				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
 			}
 			if (toXSDate(displayScheduleDate) == toXSDate(new Date(Date.now() + tzOffsetDif))) {
-				var schedule = doSimulation(); //dk
+				let schedule = doSimulation(); //dk
 				log = log.concat(schedule);
 			}
 			displaySchedule(log);
@@ -261,8 +261,8 @@ function displayProgram() { // Controls home page irrigation timeline
 jQuery(document).ready(displayProgram);
 
 function scheduleMarkerMouseover() {
-	var description = jQuery(this).attr("data");
-	var markerClass = jQuery(this).attr("class");
+	let description = jQuery(this).attr("data");
+	let markerClass = jQuery(this).attr("class");
 	markerClass = markerClass.substring(markerClass.indexOf("program"));
 	markerClass = markerClass.substring(0,markerClass.indexOf(" "));
 	jQuery(this).append('<span class="showDetails ' + markerClass + '">' + description + '</span>');
