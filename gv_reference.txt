@@ -1,73 +1,119 @@
-??Vars held in the settings dict (gv.sd), default values shown
+##################################################################################################################
+#### Variables held in the settings dictionary (gv.sd in Python code, "sd" in Node-red), default values shown ####
+##################################################################################################################
 
 from controller values (cvalues):
-en:1	enabled (system operation)
-rd:0	rain delay (hours)
-mm:0	manual mode (bool)
-rbt:0	reboot (bool) 
+=================================
+name		default		Description
+-----------------------------------
+en			1			enabled (bool, system operation)
+mm			0			manual mode (bool)
+rbt			0			reboot (bool)
+rd			0			rain delay (hours)
 
 from options:
-alr:0	active-low relay (for use with relay boards connected through shift registers)
-htp:80	port to bind to for the HTTP server
-htip:"::" IP address to bind to for the HTTP server
-seq:1	sequential/concurrent operation (bool)
-sdt:0	station delay time
-mton:0	master on delay
-mtoff:0	master off delay
-nbrd:1	number of boards (includes base unit and expansion octets/boards)
-tz:16	time zone -- no longer used by the program as of v2.0
-tf:1	time format (24 hour clock == 1)
-urs:0	use rain sensor (bool)
-rst:1	Rain sensor type (normaly open=1 (dafault), or normaly closed=0)
-wl:100	water level (percent adjustment of watering time)
-mas:0	master station index
-upas:0	use password (bool)
-passphrase:"12d4e6fc471fbe073df5a0678fcffb9f75b12161e4e3f6d1e1bd81ffb22163bf" SHA256 hash of passphrase. default (opendoor) shown.
-loc:""	location (for weather) - not used
-rdst:0	rain delay stop time (unix time stamp)
-rs:0	rain sensed (bool)
-nopts:14 Number of options to be displayed
-name:"SIP"	configurable name for system
-snlen:32 max size of station names
-idd:0   individual run times
+=============
+alr			0			active-low relay (for use with relay boards connected through shift registers)
+htip		"::" 		IP address to bind to for the HTTP server
+htp			80			port to bind to for the HTTP server
+idd			0   		individual run durations, used in schedule programs
+loc			""			location, (for e.g. weather plugin) - not used by core program
+mas			0			master station number (index + 1)
+mtoff		0			master off delay
+mton		0			master on delay
+nbrd		1			number of boards (includes base unit and expansion octets/boards)
+nopts		14 			Number of options to be displayed on Options page
+passphrase	"12d4e6fc471fbe073df5a0678fcffb9f75b12161e4e3f6d1e1bd81ffb22163bf", SHA256 hash of passphrase. default (opendoor) shown.
+pigpio		0			use pigpio library if it is installed.
+rdst		0			rain delay stop time (Unix time stamp)
+rs			0			rain sensed (bool), Stops all irrigation except stations set to ignore rain.
+rst			1			Rain sensor type (normally open = 1 (default), or normally closed = 0)
+sdt			0			station delay time (seconds)
+seq			1			sequential or concurrent operation (bool)
+snlen		32 			max length of station names on stations page
+tf			1			time format (24 hour clock = 1, 12 hour clock = 0)
+upas		0			use passphrase (bool)
+urs			0			use rain sensor (bool)
+wl			100			water level (global percent adjustment of watering time)
 
 for scheduling:
-bsy:0	program busy
-nprogs:0 number of programs (can be calculated form length of prog array)
-mo:[0] master operation bytes - contains bits per board for stations with master set
-ir:[0] ignore rain bytes - contains bits per board for stations to ignore rain delay and rain sensor
-iw:[0] ingore water level - contains bits per board for stations to ignore water level (both general scaling and plugin adjustments)
-rsn:0 Reset all stations
-nst:8 number of stations
-tz_offset:varies  local device time offset from UTC in seconds.
+===============
+bsy			0			program busy (scheduling program is currently running)
+ir			[0] 		ignore rain bytes, each byte contains bits per board for stations to ignore rain delay and rain sensor
+iw			[0] 		ignore water level, each byte contains bits per board for stations to ignore water level (both general scaling and plugin adjustments)
+mo			[0] 		master operation bitmask, each byte contains bits per board for stations with master set
+nprogs		0 			number of scheduling programs, can be calculated from length of program array (gv.pd)
+nst			8 			number of stations
+rsn			0 			Reset all station names on Stations page
+tz_offset	varies  	local device time offset from UTC in seconds.
 
 for logging:
-lg:0 log runs if = "checked"
-lr:100 limit number of log records to keep, 0 = no limit
+============
+lg			0 			enable logging of scheduling runs if = "checked"
+lr			100 		limit number of log records to keep, 0 = no limit
 
 UI related:
-name: u"SIP" System name. can be used to manage multiple controllers
-theme: "original" files used to style the UItyle the UI
+===========
+lang		"default"	Language to be used for text in the UI. 
+name 		"SIP" 		configurable name for system. can be used to help manage multiple controllers		
+show		[255]		controls if stations appear in the UI, list of bytes, each byte contains bits per board
+theme		"original" 	files used to style the UI
+tu			"C"			Temperature unit that appears in the page footer ("C" or "F")
 
-other gv attributes:
-gv.ver	software rev number (int, converted to dot separated digets in UI)
-gv.ver_date	date of release (string)
-gv.nowt	current time as struct time, updated once per second at top of timing loop
-gv.now	current time, updated once per second at top of timing loop
-gv.srvals	shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
-gv.output_srvals	shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
-gv.outpu_srvals_lock  a mutex used whenever gv.output_srvals must be accessed atomically
-gv.rovals	run once values - list of duration times in seconds for a run once program (list, length = number of statons)
-gv.pd	program data - loaded from file at startup (list of dicts)
-gv.ps	program schedule used for UI display (list of 2 element lists i.e. [program number, duration])
-gv.pon	program on (Holds program number of currently running program)
-gv.sbits	station bits, used to display stations that are on in UI (list of bytes, one byte per board)
-gv.rs	run schedule (list [scheduled start time, scheduled stop time, duration, program number])
-gv.lrun	last run, used to display log line on home page (list [station index, program number, duration, end time]) 
-gv.scount	station count, used in set station to track on stations with master association
-gv.plugin_menu list to hold a 2 element list for each plugin to be added to menu on home page (['menu text', 'url'])
-gv.plugin_data dictionary (index by plugin root web prefix) to hold plugin data.
-gv.use_pigpio  set if pigpio libary is installed.
-gv.cputemp    CPU temperature from internal sensor.
-gv.day_ord	Day of year as int (ordinal)
-gv.use_gpio_pins = True Controls SIP's use of the GPIO pons, Set = False to disable.
+#####################################
+#### other gv attributes ("gv"): ####
+#####################################
+
+Read + write:
+===========
+gv.bsy					SIP is busy, stations are running
+gv.lrun					last run, used to display log line on home page (list [station index, program number, duration, end time])
+gv.pd 					program data - loaded from file at startup (list of dicts)
+gv.pon					program on (Holds program number of currently running scheduling program)
+gv.ps					program schedule used for UI display (list of 2 element lists i.e. [program number, duration])
+gv.rovals 				run once values - list of duration times in seconds for a run once program (list, length = number of stations)
+gv.rs 					run schedule (list [scheduled start time, scheduled stop time, duration, program number])
+gv.sbits				station bits, used to display stations that are on in UI (list of bytes, one byte per board)
+gv.scount W?			station count, used in set station to track runing stations with master association
+gv.snames				station names, list read from snames.json in data folder.
+gv.srvals				shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
+gv.use_pigpio 			set to 1 if pigpio library is installed (bool).
+gv.use_gpio_pins		Controls SIP's use of GPIO pins, default = True, Set = False to disable.
+
+Read only (status info):
+========================
+gv.cputemp    			CPU temperature from internal sensor.
+gv.day_ord				Day of year as int (ordinal)
+gv.now					current time as timestamp, updated once per second at top of timing loop
+gv.nowt					current time as struct time, updated once per second at top of timing loop
+gv.output_srvals		shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
+gv.output_srvals_lock  	a mutex used whenever gv.output_srvals must be accessed atomically
+gv.plugin_data 			dictionary (index by plugin root web prefix) to hold plugin data.
+gv.plugin_menu 			list to hold a 2 element list for each plugin to be added to menu on home page (['menu text', 'url'])
+# gv.ver				software rev number (int, converted to dot separated digits in UI)
+gv.ver_date				date of release (string)
+
+#########################
+#### Blinker signals ####
+#########################
+
+Notifications broadcast by SIP
+==============================
+alarm					A signal that can be used in a plugin to indicate a problem (not used by SIP core)
+new_day					indicates that a new day has started (sent on software start and just after midnight)
+loggedin				someone has just logged in			
+option_change			a setting on the Options page has been changed
+program_change			a scheduling program has been edited
+program_deleted			a scheduling program has been deleted
+program_toggled			a scheduling program has been enabled or disabled
+rain_changed			indicates that a rain sensor has changed
+rain_delay_change		manual rain delay has been set or ended	(check sd["rd"])
+rebooted				the hardware has been rebooted
+restarting				SIP software is re-starting
+running_program_change	scheduling program has started or stopped (check gv.pon)
+station_completed		a station run has ended
+station_names			station names have been changed
+stations_scheduled		a program is started (Scheduled or "run now"), or station is manually started (check gv.srvals for stations set to run))
+value_change			a controller value has changed (see controller values above)
+zone_change				GPIO pins are activated according to gv.srvals
+
