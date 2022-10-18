@@ -49,14 +49,14 @@ tz_offset   varies      local device time offset from UTC in seconds.
 
 for logging:
 ============
-lg          0           enable logging of scheduling runs if = "checked"
+lg          1           enable logging of scheduling runs (bool), enabled: 1, disabled: 0
 lr          100         limit number of log records to keep, 0 = no limit
 
 UI related:
 ===========
 lang        "default"   Language to be used for text in the UI. 
 name        "SIP"       configurable name for system. can be used to help manage multiple controllers       
-show        [255]       controls if stations appear in the UI, list of bytes, each byte contains bits per board
+show        [255]       controls if stations appear in the UI, list of bytes (bitmsks), each byte contains bits per board
 theme       "original"  files used to style the UI
 tu          "C"         Temperature unit that appears in the page footer ("C" or "F")
 
@@ -67,16 +67,16 @@ tu          "C"         Temperature unit that appears in the page footer ("C" or
 Read + write:
 ===========
 gv.bsy                  SIP is busy, stations are running
-gv.lrun                 last run, used to display log line on home page (list [station index, program number, duration, end time])
-gv.pd                   program data - loaded from file at startup (list of dicts)
+gv.lrun      [4]        last run, used to display log line on home page (list [station index, program number, duration, end time]). Length = 4
+gv.pd        [P]        program data - loaded from file at startup (list of dicts). Length = number of programs
 gv.pon                  program on (Holds program number of currently running scheduling program)
-gv.ps                   program schedule used for UI display (list of 2 element lists i.e. [program number, duration])
-gv.rovals               run once values - list of duration times in seconds for a run once program (list, length = number of stations)
-gv.rs                   run schedule (list [scheduled start time, scheduled stop time, duration, program number])
-gv.sbits                station bits, used to display stations that are on in UI (list of bytes, one byte per board)
+gv.ps        [S]        program schedule used for UI display (list of 2 element lists i.e. [program number, duration]). Lwngth = number of stations
+gv.rovals    [S]        run once values - list of duration times in seconds for a run once program (list, length = number of stations not counting master)
+gv.rs        [S]        run schedule (list [scheduled start time, scheduled stop time, duration, program number]). Length = number of stations
+gv.sbits     [B]        station bits, used to display stations that are on in UI, list of bytes (bitmasks), one byte per board. Length = number of boards.
 gv.scount W?            station count, used in set station to track runing stations with master association
-gv.snames               station names, list read from snames.json in data folder.
-gv.srvals               shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
+gv.snames    [S]        station names, list read from snames.json in data folder. Length = number of stations
+gv.srvals    [S]        shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off). Length = number of stations
 gv.use_pigpio           set to 1 if pigpio library is installed (bool).
 gv.use_gpio_pins        Controls SIP's use of GPIO pins, default = True, Set = False to disable.
 
@@ -86,11 +86,11 @@ gv.cputemp              CPU temperature from internal sensor.
 gv.day_ord              Day of year as int (ordinal)
 gv.now                  current time as timestamp, updated once per second at top of timing loop
 gv.nowt                 current time as struct time, updated once per second at top of timing loop
-gv.output_srvals        shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
+gv.output_srvals [S]    shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
 gv.output_srvals_lock   a mutex used whenever gv.output_srvals must be accessed atomically
 gv.plugin_data          dictionary (index by plugin root web prefix) to hold plugin data.
-gv.plugin_menu          list to hold a 2 element list for each plugin to be added to menu on home page (['menu text', 'url'])
-# gv.ver                software rev number (int, converted to dot separated digits in UI)
+gv.plugin_menu   [M]    list to hold a 2 element list for each plugin to be added to menu on home page (['menu text', 'url'])
+# gv.ver_str            software rev number (string)
 gv.ver_date             date of release (string)
 
 #########################

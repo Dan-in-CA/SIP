@@ -1,0 +1,100 @@
+$def with(settings)
+<!-- Edit: Replace "proto_vals" with settings values for your plugin if used-->
+
+$var title: $_(u'SIP Proto Plugin') <!--Edit: Title to show on browser tab-->
+$var page: proto_plugin  <!--Edit: page name, used internally-->
+<script>
+
+    // Initialize behaviors
+    jQuery(document).ready(function(){
+
+        jQuery("#cSubmit").click(function() {
+            jQuery("#pluginForm").submit();
+        });
+        jQuery("button#cCancel").click(function(){
+            window.location="/";
+        });
+
+        jQuery("button#docButton").click(function(){
+            window.open("static/docs/plugins/proto-docs.html", "_blank"); //Edit: replace "proto-docs.html"
+        });
+
+    });
+</script>
+
+<div id="plugin">
+    <div class="title">Node-red Plugin  <!--Edit: User page heading, Make relevant to your plugin-->
+    <button class="execute" id="docButton" type="button" >$_(u'Help')</button>
+    </div>
+
+    <p>$_(u'Node-red access options')</p>
+    <form id="pluginForm" action="${'/node-red-save'}" method="get">
+
+        <table class="optionList">
+
+            <!--Check boxes-->
+            <thead>
+                <th class="stationNumber">$_('To Node-red')</th>
+            </thead>
+            <tr>
+                <td style='text-transform: none;'>$_('Send station on/off'):</td>  <!--Edit-->
+                <td><input type="checkbox" name="station-on-off"  ${"checked" if 'station-on-off' in settings else ""}></td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>$_('Send blinker signals'):</td>  <!--Edit-->
+                <td><input type="checkbox" name="blinker-signals"  ${"checked" if 'blinker-signals' in settings else ""}></td>
+            </tr>
+            
+            <thead>
+                <th class="stationNumber">$_(u'From Node-red')</th>
+            </thead>            
+            
+<!--             <tr>
+                <td style='text-transform: none;'>$_(u'Allow settings change'):</td>  Edit
+                <td><input type="checkbox" name="chng-settings" ${"checked" if 'chng-settings' in settings else ""}></td>
+            </tr> -->
+
+            <tr>
+                <td style='text-transform: none;'>$_(u'Allow sd changes'):</td>
+                <td><input type="checkbox" name="chng-sd" ${"checked" if 'chng-sd' in settings else ""}></td>
+            </tr> 
+
+            <tr>
+                <td style='text-transform: none;'>$_(u'Allow gv changes'):</td>
+                <td><input type="checkbox" name="chng-gv" ${"checked" if 'chng-gv' in settings else ""}></td>
+            </tr>
+            
+            <tr>
+                <td style='text-transform: none;'>$_(u'Allow station on/off'):</td>
+                <td><input type="checkbox" name="chng-stn" ${"checked" if 'chng-stn' in settings else ""}></td>
+            </tr> 
+
+            <tr>
+                <td style='text-transform: none;'>$_(u'Allow Run once'):</td>
+                <td><input type="checkbox" name="chng-ro" ${"checked" if 'chng-ro' in settings else ""}></td>
+            </tr>
+                     
+
+        </table></br>
+
+<!--         <p>$_(u'Node-red url')</p>  Edit -->
+        <table class="optionList">
+
+            <!--Text fields-->
+            <thead>
+                <th class="stationNumber">$_('Node-red URL')</th>  <!--Edit: Optional-->
+            </thead>
+
+            <tr>
+<!--                 <td style='text-transform: none;'>$_'url'):</td> -->
+                <td><input type="text"  size=40" name="nr-url" value="${settings['nr-url'] if 'nr-url' in settings else 'http://localhost:1880/node_red' }"></td>
+            </tr>
+        </table>
+
+    </form>
+
+<div class="controls">
+    <button id="cSubmit" class="submit"><b>$_(u'Submit')</b></button>
+    <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>
+</div>
+</div>

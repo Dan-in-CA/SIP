@@ -11,17 +11,18 @@ import time
 
 ##############################
 #### Revision information ####
-major_ver = 4
-minor_ver = 1
-old_count = 941 #  update this to reset revision number.
+major_ver = 5
+minor_ver = " beta " # 0
+# old_count = 941 #  update this to reset revision number.
 
-try:
-    revision = int(subprocess.check_output(["git", "rev-list", "--count", "HEAD"]))
-    ver_str = "{}.{}.{}".format(major_ver, minor_ver, (revision - old_count))
-except Exception as e:
-    print(_("Could not use git to determine version!"), e)
-    revision = 999
-    ver_str = "{}.{}.{}".format(major_ver, minor_ver, revision)
+# try:
+#     revision = int(subprocess.check_output(["git", "rev-list", "--count", "HEAD"]))
+#     ver_str = "{}.{}.{}".format(major_ver, minor_ver, (revision - old_count))
+# except Exception as e:
+#     print(_("Could not use git to determine version!"), e)
+#     revision = 999
+    # ver_str = "{}.{}.{}".format(major_ver, minor_ver, revision)   
+ver_str = "{}.{}".format(major_ver, minor_ver)    
 
 try:
     ver_date = subprocess.check_output(
