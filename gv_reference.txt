@@ -19,8 +19,8 @@ htp         80          port to bind to for the HTTP server
 idd         0           individual run durations, used in schedule programs
 loc         ""          location, (for e.g. weather plugin) - not used by core program
 mas         0           master station number (index + 1)
-mtoff       0           master off delay
-mton        0           master on delay
+mtoff       0           master off delay (seconds)
+mton        0           master on delay (seconds)
 nbrd        1           number of boards (includes base unit and expansion octets/boards)
 nopts       14          Number of options to be displayed on Options page
 passphrase  "12d4e6fc471fbe073df5a0678fcffb9f75b12161e4e3f6d1e1bd81ffb22163bf", SHA256 hash of passphrase. default (opendoor) shown.
@@ -60,9 +60,9 @@ show        [255]       controls if stations appear in the UI, list of bytes (bi
 theme       "original"  files used to style the UI
 tu          "C"         Temperature unit that appears in the page footer ("C" or "F")
 
-#####################################
-#### other gv attributes ("gv"): ####
-#####################################
+##########################################################################
+#### other gv attributes ("gv"), Items showing e.g [S] return a list: ####
+##########################################################################
 
 Read + write:
 ===========

@@ -292,7 +292,7 @@ class parse_json(object):
     parse JSON request message from node-red
     """    
 
-# gv lists
+# gv lists:
 # ["lrun", "pd", "ps", "rovals", "rs", "sbits", "snames", "srvals", "output_srvals", "plugin_menu"]  
     
     def GET(self):
@@ -434,7 +434,7 @@ class parse_json(object):
            # refresh_page.send()
        
             # clear_mm()
-            gv.sd["mm"] = 0
+            # gv.sd["mm"] = 0
             
         # Station on off
         elif ("sn" in data or "station" in data
