@@ -445,7 +445,8 @@ class parse_json(object):
             if (not gv.sd["mm"]  # SIP is not in manual mode
                 and not "req mm" in data 
                 or ("req mm" in data                
-                    and data["req mm"] == 1)
+                    and data["req mm"] == 1
+                    and not gv.sd["mm"])
                 ):
                 return "Error: manual mode required"
             try:
@@ -458,7 +459,6 @@ class parse_json(object):
             # gv.ps = [0, 0] * gv.sd["nst"]
             for s in range(len(station)):
                 brd = s // 8
-
                 if val: # set == 1 in Node-red
                     new_srvals[station[s] - 1] = 1
                     
