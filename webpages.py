@@ -4,9 +4,11 @@
 # from six.moves import map
 
 # standard library imports
+import json
 import ast
 import datetime
 import io
+import threading
 import time
 
 # local module imports
@@ -110,6 +112,7 @@ class home(ProtectedPage):
     """Open Home page."""
 
     def GET(self):
+        # print(web.ctx)  # - test
         return template_render.home()
 
 
@@ -469,9 +472,11 @@ class change_runonce(ProtectedPage):
         gv.rovals = json.loads(qdict["t"])
         gv.rovals.pop()
         for sid in range(gv.sd["nst"]):
-            if gv.srvals[sid]:  # if currently on, log result
-                gv.lrun[0] = sid
-                gv.lrun[1] = gv.rs[sid][3]
+            if (gv.srvals[sid]
+                and not sid == gv.sd["mas"] - 1
+                ):  # if currently on and not master, log result
+                gv.lrun[0] = sid  # station index
+                gv.lrun[1] = gv.rs[sid][3]  # program number
                 gv.lrun[2] = int(gv.now - gv.rs[sid][0])
                 gv.lrun[3] = gv.now #  start time
                 log_run()

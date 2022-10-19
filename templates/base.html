@@ -177,7 +177,20 @@ $code:
     <script src="static/scripts/behaviors.js"></script>
     <script src="static/scripts/schedule.js"></script>
     <script src="static/scripts/intervalSelect.js"></script>
+    
+    <script> // Experimental function
+    function refresh() {
+        jQuery.ajax({
+        	url: "/refresh",
+        	success: function() {
+        		location.reload();
+        	  }
+        	});
+    }
+    </script>
+    
 </head>
+<!-- <body onload="refresh()"> -->
 <body>
     <div class="content">
         <form name="tt" action="/ttu" method="get">

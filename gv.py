@@ -126,6 +126,7 @@ ps = []  # Program schedule (used for UI display)
 for i in range(sd["nst"]):
     ps.append([0, 0])
 
+bsy = 0 # A program is running
 pon = None  # Program on (Holds program number of a running program)
 sbits = [0] * (sd["nbrd"] + 1)  # Used to display stations that are on in UI
 
