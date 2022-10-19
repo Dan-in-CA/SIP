@@ -282,6 +282,7 @@ def clear_mm():
     from gpio_pins import set_output
 
     if gv.sd["mm"]:
+        # gv.sbits = [0] * (gv.sd["nbrd"])  # - test
         gv.sbits = [0] * (gv.sd["nbrd"] + 1)
         gv.ps = []
         for i in range(gv.sd["nst"]):
@@ -525,6 +526,7 @@ def stop_stations():
     gv.ps = []
     for i in range(gv.sd["nst"]):
         gv.ps.append([0, 0])
+    # gv.sbits = [0] * (gv.sd["nbrd"])  # - test
     gv.sbits = [0] * (gv.sd["nbrd"] + 1)
     gv.rs = []
     for i in range(gv.sd["nst"]):

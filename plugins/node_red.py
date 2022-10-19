@@ -129,6 +129,8 @@ def send_zone_change(name, **kw):
         when core program signals a change in station state.
     """
     global prior_srvals
+    if len(gv.srvals) > len(prior_srvals):
+        prior_srvals += [0] * (len(gv.srvals) - len(prior_srvals))
     if not "station-on-off" in nr_settings:
         return
     if gv.srvals != prior_srvals:   # check for a change
@@ -437,7 +439,7 @@ class parse_json(object):
             # gv.sd["mm"] = 0
             
         # Station on off
-        elif ("sn" in data or "station" in data
+        elif (("sn" in data or "station" in data)
               and "chng-stn" in nr_settings
               ):
             if (not gv.sd["mm"]  # SIP is not in manual mode
@@ -452,9 +454,19 @@ class parse_json(object):
                 station = data["station"]               
             val = data["set"]
             new_srvals = [0] * len(gv.srvals)
+            masid = gv.sd["mas"] - 1
+            # gv.ps = [0, 0] * gv.sd["nst"]
             for s in range(len(station)):
+                brd = s // 8
+
                 if val: # set == 1 in Node-red
                     new_srvals[station[s] - 1] = 1
+                    
+                    ### Set sbit for this station ####
+                    gv.sbits[brd] |= 1 << (masid - (brd * 8))  # start master
+                    
+                    # gv.ps[station[s] - 1][0] = 99
+                    # gv.ps[station[s] - 1][1] = 100    # float(‘inf’)
                 else:
                     new_srvals[station[s] - 1] = 0
             gv.srvals = new_srvals
