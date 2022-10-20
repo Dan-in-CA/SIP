@@ -389,7 +389,7 @@ class parse_json(object):
                     for i in sn_lst:
                         idx = int(i)- 1                
                         gv_lst[idx] = sn_dict[i]
-                    # print(gv_lst)  # - test
+                    print(gv_lst)  # - test
                     return "gv." + attr + " has ben updated"
 
                 else:
@@ -456,19 +456,16 @@ class parse_json(object):
             val = data["set"]
             new_srvals = [0] * len(gv.srvals)
             masid = gv.sd["mas"] - 1
-            # gv.ps = [0, 0] * gv.sd["nst"]
-            for s in range(len(station)):
-                brd = s // 8
-                if val: # set == 1 in Node-red
-                    new_srvals[station[s] - 1] = 1
-                    
-                    ### Set sbit for this station ####
-                    gv.sbits[brd] |= 1 << (masid - (brd * 8))  # start master
-                    
-                    # gv.ps[station[s] - 1][0] = 99
-                    # gv.ps[station[s] - 1][1] = 100    # float(‘inf’)
+            for sn in range(len(station)): # number of stations in data
+                sid = station[sn] - 1 # station index
+                bid = sid // 8
+                if val: # set == 1 in Node-red - applies to all stations in data                   
+                    new_srvals[sid] = 1 # station[s] == station number in UI                  
+                    gv.sbits[bid] |= 1 << sid % 8  # Set sbits for this station                   
+                    # gv.ps[sid][0] = 99                    
                 else:
-                    new_srvals[station[s] - 1] = 0
+                    new_srvals[sid] = 0
+                    gv.sbits[bid] &= ~(1 << sid)
             gv.srvals = new_srvals
             gpio_pins.set_output()
                    

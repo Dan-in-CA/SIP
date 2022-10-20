@@ -75,7 +75,7 @@ gv.pon                  program on (Holds program number of currently running sc
 gv.ps        [S]        program schedule used for UI display (list of 2 element lists i.e. [program number, duration]). Lwngth = number of stations
 gv.rovals    [S]        run once values - list of duration times in seconds for a run once program (list, length = number of stations not counting master)
 gv.rs        [S]        run schedule (list [scheduled start time, scheduled stop time, duration, program number]). Length = number of stations
-gv.sbits     [B]        station bits, used to display stations that are on in UI, list of bytes (bitmasks), one byte per board. Length = number of boards.
+gv.sbits     [B]        station bits, used to display stations that are on in UI, list of bytes (bitmasks), one byte per board. Length = number of boards + 1.
 gv.scount W?            station count, used in set station to track runing stations with master association
 gv.snames    [S]        station names, list read from snames.json in data folder. Length = number of stations
 gv.srvals    [S]        shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off). Length = number of stations
