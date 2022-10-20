@@ -302,7 +302,7 @@ class parse_json(object):
         qdict = (
             dict(web.input())  # Dictionary of JSON values
         )
-        print("qdict: ", qdict)
+        # print("qdict: ", qdict)  # - test
         if "gv" in qdict:
             attr = str(qdict["gv"])
             try:
@@ -318,23 +318,48 @@ class parse_json(object):
                              "rs",
                              "snames",
                              "srvals",
-                             "output_srvals"]  # station related lists
-                    and ("sn"  in qdict or "station" in qdict)
+                             "output_srvals",
+                             "lrun",
+                             "pd",
+                             "pnames",
+                             "sbits",
+                             "plugin_menu"
+                             ]  # these return lists
                     ):
+                             
+                    gv_lst = getattr(gv, attr)
+                    sel_lst = []                             
+                             
+                if ("sn"  in qdict or "station" in qdict):
+                    # ):
                     sn_lst = []
                     if "sn" in qdict:
                         sn_lst = json.loads(qdict["sn"])
                     elif "station" in qdict:
                         sn_lst = json.loads(qdict["station"])
-                    gv_lst = getattr(gv, attr)
-                    sel_lst = []
+                                             
+                    # gv_lst = getattr(gv, attr)
+                    # sel_lst = []
                     for i in sn_lst:
                         sel_lst.append(gv_lst[i - 1])
                     res_dict = dict(zip(sn_lst, sel_lst))
                     return res_dict
                 
+                elif "item" in qdict: 
+                    item_lst = json.loads(qdict["item"])
+                    for i in item_lst:
+                        sel_lst.append(gv_lst[i - 1])
+                    res_dict = dict(zip(item_lst, sel_lst))
+                    return res_dict                    
+                    
+                elif "index" in qdict: 
+                    index_lst = json.loads(qdict["index"])
+                    for i in index_lst:
+                        sel_lst.append(gv_lst[i])
+                    res_dict = dict(zip(index_lst, sel_lst))
+                    return res_dict                     
+                
                 else:                  
-                    # return json.dumps(getattr(gv, str(qdict["gv"])))
                     return json.dumps(getattr(gv, attr))
             except Exception as e:
                 return e

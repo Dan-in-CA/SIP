@@ -70,7 +70,7 @@ gv.bsy                  SIP is busy, stations are running
 gv.lrun      [4]        last run, used to display log line on home page (list [station index, program number, duration, end time]). Length = 4
 gv.pd        [P]        program data - loaded from file at startup (list of dicts). Length = number of programs
 gv.pluginStn            Used to display plugin data next to station time countdown on home page timeline.
-gv.pnames    [P{        program names - list of strings. length = numbr of programs
+gv.pnames    [P]        program names - list of strings. length = numbr of programs
 gv.pon                  program on (Holds program number of currently running scheduling program)
 gv.ps        [S]        program schedule used for UI display (list of 2 element lists i.e. [program number, duration]). Lwngth = number of stations
 gv.rovals    [S]        run once values - list of duration times in seconds for a run once program (list, length = number of stations not counting master)
