@@ -358,6 +358,8 @@ def log_run():
             pgr = _("Run-once")
         elif gv.lrun[1] == 99:
             pgr = _("Manual")
+        elif gv.lrun[1] == 100:
+            pgr = "Node-red"            
         elif gv.pd[gv.lrun[1] - 1]["name"] != "":
             pgr = str(gv.pd[gv.lrun[1] - 1]["name"])      
         else:

@@ -39,9 +39,9 @@ wl          100         water level (global percent adjustment of watering time)
 for scheduling:
 ===============
 bsy         0           program busy (scheduling program is currently running)
-ir          [0]         ignore rain bytes, each byte contains bits per board for stations to ignore rain delay and rain sensor
-iw          [0]         ignore water level, each byte contains bits per board for stations to ignore water level (both general scaling and plugin adjustments)
-mo          [0]         master operation bitmask, each byte contains bits per board for stations with master set
+ir          [0]         ignore rain bytes, each byte contains bits per board (bitmask) for stations to ignore rain delay and rain sensor
+iw          [0]         ignore water level, each byte contains bits per board (bitmask) for stations to ignore water level (both general scaling and plugin adjustments)
+mo          [0]         master operation, each byte contains bits per board (bitmask) for stations with master set
 nprogs      0           number of scheduling programs, can be calculated from length of program array (gv.pd)
 nst         8           number of stations
 rsn         0           Reset all station names on Stations page
@@ -67,7 +67,7 @@ tu          "C"         Temperature unit that appears in the page footer ("C" or
 Read + write:
 ===========
 gv.bsy                  SIP is busy, stations are running
-gv.lrun      [4]        last run, used to display log line on home page (list [station index, program number, duration, end time]). Length = 4
+gv.lrun      [4]        last run, used to add data to log file (list: [station index, program number, duration, end time]). Length = 4
 gv.pd        [P]        program data - loaded from file at startup (list of dicts). Length = number of programs
 gv.pluginStn            Used to display plugin data next to station time countdown on home page timeline.
 gv.pnames    [P]        program names - list of strings. length = numbr of programs

@@ -110,7 +110,7 @@ def run_once(list, pre):
             gv.rovals[s[0] - 1] = s[1]             
         stations = [0] * gv.sd["nbrd"]
         gv.ps = []  # program schedule (for display)
-        gv.rs = []  # run schedule
+        # gv.rs = []  # run schedule
         for sid in range(gv.sd["nst"]):
             gv.ps.append([0, 0])
             gv.rs.append([0, 0, 0, 0])
@@ -336,10 +336,7 @@ class parse_json(object):
                     if "sn" in qdict:
                         sn_lst = json.loads(qdict["sn"])
                     elif "station" in qdict:
-                        sn_lst = json.loads(qdict["station"])
-                                             
-                    # gv_lst = getattr(gv, attr)
-                    # sel_lst = []
+                        sn_lst = json.loads(qdict["station"])                                            
                     for i in sn_lst:
                         sel_lst.append(gv_lst[i - 1])
                     res_dict = dict(zip(sn_lst, sel_lst))
@@ -401,21 +398,52 @@ class parse_json(object):
                              "rs",
                              "snames",
                              "srvals",
-                             "output_srvals"]  # station related lists
-                    and ("sn"  in data or "station" in data)
+                             "output_srvals",
+                             "lrun",
+                             "pd",
+                             "pnames",
+                             "sbits",
+                             "plugin_menu"
+                             ]  # these return lists
                     ):
-                    sn_lst = []
+                    gv_lst = getattr(gv, attr)
+                             
+                             
+                if "sn"  in data or "station" in data:
+                    # ):
+                    # sn_lst = []
                     if "sn" in data:
                         sn_dict = data["sn"]
                     elif "station" in data:
                         sn_dict = data["station"]
                     sn_lst = list(sn_dict.keys())
-                    gv_lst = getattr(gv, attr)
                     for i in sn_lst:
                         idx = int(i)- 1                
                         gv_lst[idx] = sn_dict[i]
-                    print(gv_lst)  # - test
+                    # print(gv_lst)  # - test
                     return "gv." + attr + " has ben updated"
+                
+                elif "item" in data:
+                    try:
+                        item_dict = data["item"]
+                        item_lst = list(item_dict.keys())
+                        for i in item_lst:
+                            idx = int(i)- 1
+                            gv_lst[idx] = item_dict[i]
+                        return "gv." + attr + " has ben updated"
+                    except Exception as e:
+                        return e
+                                  
+                elif "index" in data:
+                    try:
+                        index_dict = data["item"]
+                        index_lst = list(index_dict.keys())
+                        for i in index_lst:
+                            idx = int(i)- 1
+                            gv_lst[idx] = index_dict[i]
+                        return "gv." + attr + " has ben updated" 
+                    except Exception as e:
+                        return e                    
 
                 else:
                     setattr(gv, data["gv"], data["val"])
@@ -479,23 +507,32 @@ class parse_json(object):
             except KeyError:
                 station = data["station"]               
             val = data["set"]
-            new_srvals = [0] * len(gv.srvals)
+            new_srvals = gv.srvals
             masid = gv.sd["mas"] - 1
             for sn in range(len(station)): # number of stations in data
                 sid = station[sn] - 1 # station index
                 bid = sid // 8
                 if val: # set == 1 in Node-red - applies to all stations in data                   
-                    new_srvals[sid] = 1 # station[s] == station number in UI                  
+                    new_srvals[sid] = 1 # station[s] == station number in UI 
+                    gv.srvals[sid] = 1                 
                     gv.sbits[bid] |= 1 << sid % 8  # Set sbits for this station                   
-                    # gv.ps[sid][0] = 99                    
+                    gv.ps[sid][0] = 100
+                    gv.rs[sid] = [gv.now, float("inf"), 0, 100] 
+                                     
                 else:
-                    new_srvals[sid] = 0
                     gv.sbits[bid] &= ~(1 << sid)
-            gv.srvals = new_srvals
+                    gv.ps[sid][0] = 0
+                    gv.lrun = [sid,
+                               gv.rs[sid][3],
+                               gv.now - gv.rs[sid][0],
+                               gv.now
+                               ]
+                    log_run()
+                    gv.rs[sid] = [0,0,0,0]
             gpio_pins.set_output()
                    
         # run once
-        elif ("ro" in data or "run once" in data
+        elif (("ro" in data or "run once" in data)
               and "chng-ro" in nr_settings
               ):
             pre = 1
