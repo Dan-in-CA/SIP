@@ -50,8 +50,8 @@ def bit_read(byts, read_lst):
         Return dict of bit values per input read list
     """
     res_lst = []
-    print("byts: ", type(byts))
-    print("read_lst:", type(read_lst))
+    print("byts: ", byts)
+    print("read_lst:", read_lst)
     for i in read_lst:
         idx = int(i) - 1
         bid = idx // 8
@@ -60,8 +60,16 @@ def bit_read(byts, read_lst):
     res_dict = dict(zip(read_lst, res_lst))
     return res_dict
 
-def bit_write():
-    pass
+def bit_write(bytes, bit_dict):
+    """Turn bits on or off.
+    """
+    for key, value in bit_dict.items():
+        idx = int(key) - 1
+        byte_idx = idx // 8
+        if value: # turn bits on
+            gv.sd[bytes][byte_idx] |= 1 << (idx % 8)
+        else:  # Turn bita off
+            gv.sd[bytes][byte_idx] &= ~(1 << (idx % 8))
 
 def load_settings():
     global nr_settings
@@ -374,8 +382,8 @@ class parse_json(object):
                     res_dict = dict(zip(index_lst, sel_lst))
                     return res_dict                     
                 
-                elif "bits" in qdict:
-                    bit_dict = bit_read(getattr(gv, attr), json.loads(qdict["bits"]))
+                elif "bit" in qdict:
+                    bit_dict = bit_read(getattr(gv, attr), json.loads(qdict["bit"]))
                     return json.dumps(bit_dict)                
                 
                 else:                  
@@ -385,7 +393,7 @@ class parse_json(object):
         elif "sd" in qdict:
             try:               
                 if "bit" in qdict:
-                    bit_dict = bit_read(gv.sd[qdict["sd"]], json.loads(qdict["bits"]))
+                    bit_dict = bit_read(gv.sd[qdict["sd"]], json.loads(qdict["bit"]))
                     return json.dumps(bit_dict)
                 else:
                     return json.dumps(gv.sd[qdict["sd"]])
@@ -481,14 +489,22 @@ class parse_json(object):
         elif ("sd" in data
               and "chng-sd" in nr_settings
               ):              
-            val = data["val"]
+            if "val"in data:
+                val = data["val"]
+            else:
+                val = None
             try:     
                 if data["sd"] == "rd":
                     set_rain_delay(val)
                 elif ( gv.sd["urs"]
                       and data["sd"] == "rs"
                       ):
-                    set_rain_sensed(val)                  
+                    set_rain_sensed(val) 
+                    
+                elif  "bit" in data:
+                    # print("bits in data: ", data["bit"])  # - test
+                    bit_write(data["sd"], data["bit"])
+                                     
                 else:
                     gv.sd[data["sd"]] = val
                 if ("save" in data

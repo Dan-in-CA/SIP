@@ -165,7 +165,13 @@ class view_options(ProtectedPage):
 class change_options(ProtectedPage):
     """Save changes to options made on the options page."""
 
-    def POST(self): #  was GET
+    def POST(self):
+        self.change_options()
+        
+    def GET(self):
+        self.change_options()    
+        
+    def change_options(self):    
         qdict = web.input()
         if "opw" in qdict and qdict["opw"] != "":
             try:
@@ -182,9 +188,6 @@ class change_options(ProtectedPage):
                     raise web.seeother("/vo?errorCode=pw_wrong")
             except KeyError:
                 pass
-
-    def GET(self):
-        qdict = web.input()
         for f in ["name"]:
             if "o" + f in qdict:
                 gv.sd[f] = qdict["o" + f]

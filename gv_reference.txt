@@ -39,9 +39,9 @@ wl          100         water level (global percent adjustment of watering time)
 for scheduling:
 ===============
 bsy         0           program busy (boolean, scheduling program is currently running)
-ir          [0]         ignore rain bytes, each byte contains bits per board (bitmask) for stations to ignore rain delay and rain sensor
-iw          [0]         ignore water level, each byte contains bits per board (bitmask) for stations to ignore water level (both general scaling and plugin adjustments)
-mo          [0]         master operation, each byte contains bits per board (bitmask) for stations with master set. Length = number of boards
+ir          [0]         ignore rain bytes, each byte contains bits per board (bit flags) for stations to ignore rain delay and rain sensor
+iw          [0]         ignore water level, each byte contains bits per board (bit flags) for stations to ignore water level (both general scaling and plugin adjustments)
+mo          [0]         master operation, each byte contains bits per board (bit flags) for stations with master set. Length = number of boards
 nprogs      0           number of scheduling programs, can be calculated from length of program array (gv.pd)
 nst         8           number of stations
 rsn         0           Stop all stations. Stops any running stations and clears the run schedule.
@@ -56,7 +56,7 @@ UI related:
 ===========
 lang        "default"   Language to be used for text in the UI. 
 name        "SIP"       configurable name for system. can be used to help manage multiple controllers       
-show        [255]       controls if stations appear in the UI, list of bytes (bitmsks), each byte contains bits per board
+show        [255]       controls if stations appear in the UI, list of bytes (bit flags), each byte contains bits per board
 theme       "original"  files used to style the UI
 tu          "C"         Temperature unit that appears in the page footer ("C" or "F")
 
