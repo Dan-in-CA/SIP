@@ -6,17 +6,17 @@ from controller values (cvalues):
 =================================
 name        default     Description
 -----------------------------------
-en          1           enabled (bool, system operation)
-mm          0           manual mode (bool)
-rbt         0           reboot (bool)
+en          1           enabled (boolean, system operation)
+mm          0           manual mode (boolean)
+rbt         0           reboot (boolean)
 rd          0           rain delay (hours)
 
 from options:
 =============
-alr         0           active-low relay (for use with relay boards connected through shift registers)
+alr         0           active-low relay (booleanfor use with relay boards connected through shift registers)
 htip        "::"        IP address to bind to for the HTTP server
 htp         80          port to bind to for the HTTP server
-idd         0           individual run durations, used in schedule programs
+idd         0           individual run durations, used in schedule programs (boolean)
 loc         ""          location, (for e.g. weather plugin) - not used by core program
 mas         0           master station number (index + 1)
 mtoff       0           master off delay (seconds)
@@ -24,32 +24,32 @@ mton        0           master on delay (seconds)
 nbrd        1           number of boards (includes base unit and expansion octets/boards)
 nopts       14          Number of options to be displayed on Options page
 passphrase  "12d4e6fc471fbe073df5a0678fcffb9f75b12161e4e3f6d1e1bd81ffb22163bf", SHA256 hash of passphrase. default (opendoor) shown.
-pigpio      0           use pigpio library if it is installed.
+pigpio      0           use pigpio library if it is installed (boolean)
 rdst        0           rain delay stop time (Unix time stamp)
-rs          0           rain sensed (bool), Stops all irrigation except stations set to ignore rain.
+rs          0           rain sensed (boolean), Stops all irrigation except stations set to ignore rain.
 rst         1           Rain sensor type (normally open = 1 (default), or normally closed = 0)
 sdt         0           station delay time (seconds)
-seq         1           sequential or concurrent operation (bool)
+seq         1           sequential or concurrent operation (boolean)
 snlen       32          max length of station names on stations page
 tf          1           time format (24 hour clock = 1, 12 hour clock = 0)
-upas        0           use passphrase (bool)
-urs         0           use rain sensor (bool)
+upas        0           use passphrase (boolean)
+urs         0           use rain sensor (boolean)
 wl          100         water level (global percent adjustment of watering time)
 
 for scheduling:
 ===============
-bsy         0           program busy (scheduling program is currently running)
+bsy         0           program busy (boolean, scheduling program is currently running)
 ir          [0]         ignore rain bytes, each byte contains bits per board (bitmask) for stations to ignore rain delay and rain sensor
 iw          [0]         ignore water level, each byte contains bits per board (bitmask) for stations to ignore water level (both general scaling and plugin adjustments)
-mo          [0]         master operation, each byte contains bits per board (bitmask) for stations with master set
+mo          [0]         master operation, each byte contains bits per board (bitmask) for stations with master set. Length = number of boards
 nprogs      0           number of scheduling programs, can be calculated from length of program array (gv.pd)
 nst         8           number of stations
-rsn         0           Reset all station names on Stations page
+rsn         0           Stop all stations. Stops any running stations and clears the run schedule.
 tz_offset   varies      local device time offset from UTC in seconds.
 
 for logging:
 ============
-lg          1           enable logging of scheduling runs (bool), enabled: 1, disabled: 0
+lg          1           enable logging of scheduling runs (boolean), enabled: 1, disabled: 0
 lr          100         limit number of log records to keep, 0 = no limit
 
 UI related:
@@ -75,11 +75,11 @@ gv.pon                  program on (Holds program number of currently running sc
 gv.ps        [S]        program schedule used for UI display (list of 2 element lists i.e. [program number, duration]). Lwngth = number of stations
 gv.rovals    [S]        run once values - list of duration times in seconds for a run once program (list, length = number of stations not counting master)
 gv.rs        [S]        run schedule (list [scheduled start time, scheduled stop time, duration, program number]). Length = number of stations
-gv.sbits     [B]        station bits, used to display stations that are on in UI, list of bytes (bitmasks), one byte per board. Length = number of boards + 1.
+gv.sbits     [8]        station bits, used to display stations that are on in UI, list of bytes (bitmasks), one byte per board. Length = number of boards + 1.
 gv.scount W?            station count, used in set station to track runing stations with master association
 gv.snames    [S]        station names, list read from snames.json in data folder. Length = number of stations
 gv.srvals    [S]        shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off). Length = number of stations
-gv.use_pigpio           set to 1 if pigpio library is installed (bool).
+gv.use_pigpio           set to 1 if pigpio library is installed (boolean).
 gv.use_gpio_pins        Controls SIP's use of GPIO pins, default = True, Set = False to disable.
 
 Read only (status info):

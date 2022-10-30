@@ -45,6 +45,24 @@ nr_settings = {}
 
 #### Functions ####
 
+def bit_read(byts, read_lst):
+    """ Read bits in bytes.
+        Return dict of bit values per input read list
+    """
+    res_lst = []
+    print("byts: ", type(byts))
+    print("read_lst:", type(read_lst))
+    for i in read_lst:
+        idx = int(i) - 1
+        bid = idx // 8
+        bit = (byts[bid] >> (idx % 8)) & 1
+        res_lst.append(bit)
+    res_dict = dict(zip(read_lst, res_lst))
+    return res_dict
+
+def bit_write():
+    pass
+
 def load_settings():
     global nr_settings
     try:
@@ -356,13 +374,21 @@ class parse_json(object):
                     res_dict = dict(zip(index_lst, sel_lst))
                     return res_dict                     
                 
+                elif "bits" in qdict:
+                    bit_dict = bit_read(getattr(gv, attr), json.loads(qdict["bits"]))
+                    return json.dumps(bit_dict)                
+                
                 else:                  
                     return json.dumps(getattr(gv, attr))
             except Exception as e:
                 return e
         elif "sd" in qdict:
-            try:
-                return json.dumps(gv.sd[qdict["sd"]])
+            try:               
+                if "bit" in qdict:
+                    bit_dict = bit_read(gv.sd[qdict["sd"]], json.loads(qdict["bits"]))
+                    return json.dumps(bit_dict)
+                else:
+                    return json.dumps(gv.sd[qdict["sd"]])
             except Exception as e:
                 return e            
         else:

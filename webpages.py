@@ -183,6 +183,8 @@ class change_options(ProtectedPage):
             except KeyError:
                 pass
 
+    def GET(self):
+        qdict = web.input()
         for f in ["name"]:
             if "o" + f in qdict:
                 gv.sd[f] = qdict["o" + f]
