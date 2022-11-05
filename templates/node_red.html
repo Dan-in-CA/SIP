@@ -1,8 +1,8 @@
 $def with(settings)
 <!-- Edit: Replace "proto_vals" with settings values for your plugin if used-->
 
-$var title: $_(u'SIP Proto Plugin') <!--Edit: Title to show on browser tab-->
-$var page: proto_plugin  <!--Edit: page name, used internally-->
+$var title: $_(u'SIP Node-RED') 
+$var page: node-red  <!--Edit: page name, used internally-->
 <script>
 
     // Initialize behaviors
@@ -16,14 +16,15 @@ $var page: proto_plugin  <!--Edit: page name, used internally-->
         });
 
         jQuery("button#docButton").click(function(){
-            window.open("static/docs/plugins/proto-docs.html", "_blank"); //Edit: replace "proto-docs.html"
+            //window.open("static/docs/plugins/proto-docs.html", "_blank"); //Edit: replace "proto-docs.html"
+            window.open("static/docs/plugins/node-red-docs.html", "_blank");
         });
 
     });
 </script>
 
 <div id="plugin">
-    <div class="title">Node-red Plugin  <!--Edit: User page heading, Make relevant to your plugin-->
+    <div class="title">Node-red Extension  <!--Edit: User page heading, Make relevant to your plugin-->
     <button class="execute" id="docButton" type="button" >$_(u'Help')</button>
     </div>
 
@@ -50,27 +51,27 @@ $var page: proto_plugin  <!--Edit: page name, used internally-->
             </thead>            
             
 <!--             <tr>
-                <td style='text-transform: none;'>$_(u'Allow settings change'):</td>  Edit
+                <td style='text-transform: none;'>$_(u'settings change'):</td>  Edit
                 <td><input type="checkbox" name="chng-settings" ${"checked" if 'chng-settings' in settings else ""}></td>
             </tr> -->
 
             <tr>
-                <td style='text-transform: none;'>$_(u'Allow sd changes'):</td>
+                <td style='text-transform: none;'>$_(u'sd changes'):</td>
                 <td><input type="checkbox" name="chng-sd" ${"checked" if 'chng-sd' in settings else ""}></td>
             </tr> 
 
             <tr>
-                <td style='text-transform: none;'>$_(u'Allow gv changes'):</td>
+                <td style='text-transform: none;'>$_(u'gv changes'):</td>
                 <td><input type="checkbox" name="chng-gv" ${"checked" if 'chng-gv' in settings else ""}></td>
             </tr>
             
             <tr>
-                <td style='text-transform: none;'>$_(u'Allow station on/off'):</td>
+                <td style='text-transform: none;'>$_(u'station on/off'):</td>
                 <td><input type="checkbox" name="chng-stn" ${"checked" if 'chng-stn' in settings else ""}></td>
             </tr> 
 
             <tr>
-                <td style='text-transform: none;'>$_(u'Allow Run once'):</td>
+                <td style='text-transform: none;'>$_(u'Run once'):</td>
                 <td><input type="checkbox" name="chng-ro" ${"checked" if 'chng-ro' in settings else ""}></td>
             </tr>
                      

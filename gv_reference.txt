@@ -119,4 +119,3 @@ station_names           station names have been changed
 stations_scheduled      a program is started (Scheduled or "run now"), or station is manually started (check gv.srvals for stations set to run))
 value_change            a controller value has changed (see controller values above)
 zone_change             GPIO pins are activated according to gv.srvals
-

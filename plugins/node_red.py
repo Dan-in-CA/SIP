@@ -38,7 +38,7 @@ urls.extend([
 # fmt: on
 
 # Add this plugin to the PLUGINS menu ["Menu Name", "URL"], (Optional)
-gv.plugin_menu.append([_(u"Node-red Plugin"), u"/node-red-sp"])
+gv.plugin_menu.append([_(u"Node-red Settings"), u"/node-red-sp"])
 
 prior_srvals = [0] * len(gv.srvals)
 nr_settings = {}
@@ -370,15 +370,23 @@ class parse_json(object):
                 
                 elif "item" in qdict: 
                     item_lst = json.loads(qdict["item"])
-                    for i in item_lst:
-                        sel_lst.append(gv_lst[i - 1])
+                    ### handle index out of range error ###
+                    try:
+                        for i in item_lst:
+                            sel_lst.append(gv_lst[i - 1])
+                    except IndexError:
+                        pass
+                        # return "Too many items requested, " + str(len(item_lst) - 1) + " items in list"                   
                     res_dict = dict(zip(item_lst, sel_lst))
                     return res_dict                    
                     
                 elif "index" in qdict: 
-                    index_lst = json.loads(qdict["index"])
-                    for i in index_lst:
-                        sel_lst.append(gv_lst[i])
+                    index_lst = json.loads(qdict["index"])                   
+                    try:
+                        for i in index_lst:
+                            sel_lst.append(gv_lst[i])
+                    except IndexError:
+                        return "Error, max index is " + str(len(index_lst) - 2)                         
                     res_dict = dict(zip(index_lst, sel_lst))
                     return res_dict                     
                 
@@ -390,6 +398,7 @@ class parse_json(object):
                     return json.dumps(getattr(gv, attr))
             except Exception as e:
                 return e
+            
         elif "sd" in qdict:
             try:               
                 if "bit" in qdict:
