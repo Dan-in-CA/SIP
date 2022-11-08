@@ -25,7 +25,7 @@ import web
 from web import form
 
 try:
-    from gpio_pins import GPIO, pin_rain_sense, pin_relay
+    from gpio_pins import GPIO, pin_rain_sense, pin_relay, set_output
 
     if gv.use_pigpio:
         import pigpio
@@ -277,9 +277,10 @@ def check_rain():
 
 def clear_mm():
     """
-    Clear manual mode settings and stop any running zones.
+    Clear manual mode settings and stop any running stations.
     """
-    from gpio_pins import set_output
+    # from gpio_pins import set_output
+    print("clearing mm")  # - test
 
     if gv.sd["mm"]:
         # gv.sbits = [0] * (gv.sd["nbrd"])  # - test
@@ -292,7 +293,7 @@ def clear_mm():
             gv.rs.append([0, 0, 0, 0])
         gv.srvals = [0] * (gv.sd["nst"])
         set_output()
-    return
+    # return
 
 
 def plugin_adjustment():

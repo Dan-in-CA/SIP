@@ -6,7 +6,6 @@ from __future__ import print_function
 
 # standard library imports
 import json  # for working with data file
-import requests
 import threading
 from threading import Thread
 from time import sleep
@@ -17,6 +16,7 @@ import gpio_pins
 import gv  # Get access to SIP's settings
 from helpers import * # provides functions for button taps
 # import helpers
+import requests
 from sip import template_render  #  Needed for working with web.py templates
 from urls import urls  # Get access to SIP's URLs
 import web  # web.py framework
@@ -40,6 +40,8 @@ urls.extend([
 # Add this plugin to the PLUGINS menu ["Menu Name", "URL"], (Optional)
 gv.plugin_menu.append([_(u"Node-red Settings"), u"/node-red-sp"])
 
+#### Global variables ####
+base_url = "http://localhost/"
 prior_srvals = [0] * len(gv.srvals)
 nr_settings = {}
 
@@ -417,12 +419,16 @@ class parse_json(object):
         data = json.loads(data.decode('utf-8'))      
         not_writable = ["cputemp",
                         "day_ord",
+                        "lang", 
                         "now",
                         "nowt",
+                        "npw",
                         "output_srvals",
                         "output_srvals_lock",
+                        "passphrase",
                         "plugin_data",
                         "plugin_menu",
+                        'pw',
                         "ver_str",
                         "ver_date"
                         ]
@@ -488,9 +494,11 @@ class parse_json(object):
                     except Exception as e:
                         return e                    
 
-                else:
+                elif hasattr(gv, data["gv"]):                   
                     setattr(gv, data["gv"], data["val"])
                     return "gv." + data["gv"] + " updated to " + str(data["val"])
+                else:
+                    return "Unknown request"
             except Exception as e:
                 return e                 
        
@@ -499,12 +507,54 @@ class parse_json(object):
               and "chng-sd" in nr_settings
               ):              
             if "val"in data:
-                val = data["val"]
+                val = int(data["val"])
             else:
                 val = None
             try:     
+                # Change values
                 if data["sd"] == "rd":
-                    set_rain_delay(val)
+                    requests.get(url = base_url + "cv", params = {"rd":val})
+                    
+                elif data["sd"] == "mm":
+                    if int(val) == 0:
+                        clear_mm()
+                        gv.sd["mm"] = 0
+                    else:
+                        gv.sd["mm"] = 1
+                           
+                elif (data["sd"] == "rsn"
+                   and val == 1
+                   ):
+                    stop_stations()
+                         
+                # Change options
+                elif data["sd"] == "nbrd":
+                    # if val > 0: val -= 1  # - test
+                    requests.get(url = base_url + "co", params = {"onbrd":val})
+                    
+                elif data["sd"] == "htp":
+                    requests.get(url = base_url + "co", params = {"ohtp":val})                    
+                       
+                elif data["sd"] == "idd":
+                    if val == 1:
+                        requests.get(url = base_url + "co", params = {"oidd":val})
+                    else:
+                        requests.get(url = base_url + "co", params = {"none":val})
+                        
+                elif ((data["sd"] == "mton"
+                      or data["sd"] == "mtoff")
+                      and (val < -60 
+                           or val > 60)            
+                      ):
+                    return "Error val must be -60 to 60"
+                
+                elif data["sd"] == "rbt":
+                    requests.get(url = base_url + "co", params = {"rbt":val})
+                    
+                elif data["sd"] == "rstrt":
+                    requests.get(url = base_url + "co", params = {"rstrt":val})                                   
+                    
+                    
                 elif ( gv.sd["urs"]
                       and data["sd"] == "rs"
                       ):
@@ -515,7 +565,7 @@ class parse_json(object):
                     bit_write(data["sd"], data["bit"])
                                      
                 else:
-                    gv.sd[data["sd"]] = val
+                    gv.sd[data["sd"]] = val # handle all other vars
                 if ("save" in data
                     and data["save"] == 1
                     ):
@@ -530,6 +580,9 @@ class parse_json(object):
            ### need to get val from data and call named function
            
             print("tap received")
+            # URL = ''
+            # requests.post(base_url + "co", params = data )
+            
            # gv.cputemp = get_cpu_temp()
            # template_render.home()   # - test
            # print(web.ctx)
@@ -598,7 +651,7 @@ class parse_json(object):
         
         else:
             # print("invalid post")  # - test
-            return "Invalid post"            
+            return "Unknown request"            
 
 
 #  Run when plugin is loaded

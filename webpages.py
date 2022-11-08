@@ -120,7 +120,14 @@ class change_values(ProtectedPage):
     """Save controller values, return browser to home page."""
 
     def GET(self):
+        self.change_values()
+        
+    # def POST(self):
+    #     self.change_values()
+        
+    def change_values(self):    
         qdict = web.input()
+        print("cv qdict: ", qdict)  # - test
         if "rsn" in qdict and qdict["rsn"] == "1":
             stop_stations()
             raise web.seeother("/")
@@ -165,11 +172,12 @@ class view_options(ProtectedPage):
 class change_options(ProtectedPage):
     """Save changes to options made on the options page."""
 
-    def POST(self):
+    def GET(self):
         self.change_options()
         
-    def GET(self):
-        self.change_options()    
+    def POST(self):
+        print("co post: ", web.input())
+        self.change_options()           
         
     def change_options(self):    
         qdict = web.input()
@@ -228,13 +236,13 @@ class change_options(ProtectedPage):
                 if (f == "mton"
                     and (int(qdict["o" + f]) < -60
                          or int(qdict["o" + f]) > 60)
-                ):  # handle values less than zero or greater than 60 (temp fix)
+                ):  # handle values less than -60 or greater than 60 (temp fix)
                     raise web.seeother("/vo?errorCode=mton_mismatch")
                 elif (
                     f == "mtoff"
                     and (int(qdict["o" + f]) < -60
                          or int(qdict["o" + f]) > 60)
-                ):  # handle values less than or  greater than 60
+                ):  # handle values less than -60 or greater than 60
                     raise web.seeother("/vo?errorCode=mtoff_mismatch")
                 gv.sd[f] = int(qdict["o" + f])
 

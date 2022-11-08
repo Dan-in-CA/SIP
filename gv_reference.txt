@@ -10,6 +10,7 @@ en          1           enabled (boolean, system operation)
 mm          0           manual mode (boolean)
 rbt         0           reboot (boolean)
 rd          0           rain delay (hours)
+rstrt       0           restart software  (boolean)
 
 from options:
 =============
