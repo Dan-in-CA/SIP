@@ -189,23 +189,23 @@ zones = signal("zone_change")
 zones.connect(send_zone_change)
 
 #### blinker signals ##########
-# alarm
-# new_day
-# loggedin
-# option_change
-# program_change
-# program_deleted
-# program_toggled
-# rain_changed
-# rain_delay_change
-# rebooted
-# restarting
-# running_program_change
-# station_completed
-# station_names
-# stations_scheduled
-# value_change
-# zone_change
+"alarm"
+"new_day"
+"loggedin"
+"option_change"
+"program_change"
+"program_deleted"
+"program_toggled"
+"rain_changed"
+"rain_delay_change"
+"rebooted"
+"restarting"
+"running_program_change"
+"station_completed"
+"station_names"
+"stations_scheduled"
+"value_change"
+"zone_change"
 ###############################
 
 
@@ -516,20 +516,20 @@ class parse_json(object):
                     requests.get(url = base_url + "cv", params = {"rd":val})
                     
                 elif data["sd"] == "mm":
-                    if int(val) == 0:
+                    if val == 0:
                         clear_mm()
                         gv.sd["mm"] = 0
-                    else:
+                    elif val == 1:
                         gv.sd["mm"] = 1
-                           
+                    else:
+                        return "invalid request"    
+                                               
                 elif (data["sd"] == "rsn"
                    and val == 1
                    ):
-                    stop_stations()
-                         
+                    stop_stations()                         
                 # Change options
                 elif data["sd"] == "nbrd":
-                    # if val > 0: val -= 1  # - test
                     requests.get(url = base_url + "co", params = {"onbrd":val})
                     
                 elif data["sd"] == "htp":
@@ -538,8 +538,10 @@ class parse_json(object):
                 elif data["sd"] == "idd":
                     if val == 1:
                         requests.get(url = base_url + "co", params = {"oidd":val})
-                    else:
+                    elif val == 0:
                         requests.get(url = base_url + "co", params = {"none":val})
+                    else:
+                        return "invalid request"                        
                         
                 elif ((data["sd"] == "mton"
                       or data["sd"] == "mtoff")
@@ -553,8 +555,7 @@ class parse_json(object):
                     
                 elif data["sd"] == "rstrt":
                     requests.get(url = base_url + "co", params = {"rstrt":val})                                   
-                    
-                    
+                                    
                 elif ( gv.sd["urs"]
                       and data["sd"] == "rs"
                       ):

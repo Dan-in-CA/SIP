@@ -37,4 +37,5 @@ web/
 /static/docs/plugins/*
 !/static/docs/plugins/proto-docs.html
 !/static/docs/plugins/system_update-docs.html
+!/static/docs/plugins/node-red-docs.html
 todo.txt
