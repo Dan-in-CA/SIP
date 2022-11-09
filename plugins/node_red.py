@@ -101,14 +101,14 @@ def to_node_red(note):
     url = nr_settings["nr-url"]
     x = requests.get(url, params = note)
 
-
-def set_rain_delay(hrs):
-    gv.sd["rd"] = hrs
-    gv.sd["rdst"] = int(
-        gv.now + hrs * 3600
-    )
-    stop_onrain()
-    report_rain_delay_change()
+#
+# def set_rain_delay(hrs):
+#     gv.sd["rd"] = hrs
+#     gv.sd["rdst"] = int(
+#         gv.now + hrs * 3600
+#     )
+#     stop_onrain()
+#     report_rain_delay_change()
             
 def set_rain_sensed(i):
     if i:
@@ -188,6 +188,8 @@ def send_zone_change(name, **kw):
 zones = signal("zone_change")
 zones.connect(send_zone_change)
 
+
+
 #### blinker signals ##########
 "alarm"
 "new_day"
@@ -207,6 +209,8 @@ zones.connect(send_zone_change)
 "value_change"
 "zone_change"
 ###############################
+
+
 
 
 def send_blinker_signal():
@@ -370,15 +374,15 @@ class parse_json(object):
                     res_dict = dict(zip(sn_lst, sel_lst))
                     return res_dict
                 
-                elif "item" in qdict: 
+                elif "item" in qdict:
                     item_lst = json.loads(qdict["item"])
-                    ### handle index out of range error ###
                     try:
                         for i in item_lst:
                             sel_lst.append(gv_lst[i - 1])
+                    except TypeError:
+                        return "Error, item value must be an array in double quotes"
                     except IndexError:
                         pass
-                        # return "Too many items requested, " + str(len(item_lst) - 1) + " items in list"                   
                     res_dict = dict(zip(item_lst, sel_lst))
                     return res_dict                    
                     
@@ -387,8 +391,11 @@ class parse_json(object):
                     try:
                         for i in index_lst:
                             sel_lst.append(gv_lst[i])
+                    except TypeError:
+                        return "Error, item value must be an array in double quotes"
                     except IndexError:
-                        return "Error, max index is " + str(len(index_lst) - 2)                         
+                        # return "Error, max index is " + str(len(index_lst) - 2)
+                        pass                        
                     res_dict = dict(zip(index_lst, sel_lst))
                     return res_dict                     
                 
@@ -433,7 +440,8 @@ class parse_json(object):
                         "ver_date"
                         ]
         
-        # Set gv values
+        #######################
+        #### Set gv values ####
         if ("gv" in data
             and "chng-gv" in nr_settings
             ):
@@ -456,11 +464,8 @@ class parse_json(object):
                              ]  # these return lists
                     ):
                     gv_lst = getattr(gv, attr)
-                             
-                             
+                                                          
                 if "sn"  in data or "station" in data:
-                    # ):
-                    # sn_lst = []
                     if "sn" in data:
                         sn_dict = data["sn"]
                     elif "station" in data:
@@ -502,7 +507,8 @@ class parse_json(object):
             except Exception as e:
                 return e                 
        
-        # Handle sd settings
+        #######################
+        #### set sd values ####
         elif ("sd" in data
               and "chng-sd" in nr_settings
               ):              

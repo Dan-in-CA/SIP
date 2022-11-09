@@ -69,7 +69,7 @@ Read + write:
 ===========
 gv.bsy                  SIP is busy, stations are running
 gv.lrun      [4]        last run, used to add data to log file (list: [station index, program number, duration, end time]). Length = 4
-gv.pd        [P]        program data - loaded from file at startup (list of dicts). Length = number of programs
+gv.pd        [P]        program data - loaded from file at startup (list of dicts). Length = number of programs.
 gv.pluginStn            Used to display plugin data next to station time countdown on home page timeline.
 gv.pnames    [P]        program names - list of strings. length = numbr of programs
 gv.pon                  program on (Holds program number of currently running scheduling program)
