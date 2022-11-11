@@ -281,17 +281,19 @@ $if gv.sd['mm']:
         $for bid in range(0, gv.sd['nbrd']):
             $for s in range(0,8):
                 $ sid = bid*8 + s;
-                $ sn = sid + 1
                 $ sbit = (gv.sbits[bid]>>s)&1
                 $ show = (gv.sd['show'][bid]>>s)&1
+                $ revals = gv.srvals
+                $revals.reverse()
+                
                 $if show == 1:
                     <tr>
                         <td class='station_name'>${snames[sid]}</td>
-                        $if sn == gv.sd['mas']:
-                            $if sbit:
+                        $if sid + 1 == gv.sd['mas']:
+                            $if revals[sid]:
                                 <td class="master station_on">$_('On (Master)')</td>
                             $else:
-                                <td class="master station_off">$_('Off (Master)')</td>
+                                <td class="master station_off">$_('Off (Master)')</td>   
                         $else:
                             $ rem = gv.ps[sid][1]
                             $if rem > 65536:

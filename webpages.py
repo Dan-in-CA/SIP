@@ -417,6 +417,8 @@ class get_set_station(ProtectedPage):
         qdict = web.input()
 
         sid = get_input(qdict, "sid", 0, int) - 1
+        bid = sid // 8
+        snmo = (gv.sd["mo"][bid] >> (sid % 8)) & 1  # station enables master operation
         set_to = get_input(qdict, "set_to", None, int)
         set_time = get_input(qdict, "set_time", 0, int)
 
@@ -432,11 +434,11 @@ class get_set_station(ProtectedPage):
             else:
                 return _("Station ") + str(sid + 1) + _(" not found.")
         elif gv.sd["mm"]:
-            if set_to:  # if status is on
+            if set_to:  # if station is turning on
                 if gv.sd["seq"]:
-                    if gv.sd["mas"]: # if a master is set
-                        for i in range(gv.sd["nst"]):
-                            if i != gv.sd["mas"] - 1:
+                    if gv.sd["mas"] and snmo: # if a master is set
+                        for i in range(gv.sd["nst"]):  # clear running stations
+                            if i != gv.sd["mas"] - 1:  # if not mster
                                 gv.srvals[i] = 0
                                 gv.rs[i] = [0, 0, 0, 0]
                                 gv.ps[i] = [0, 0]
@@ -460,9 +462,11 @@ class get_set_station(ProtectedPage):
                 gv.ps[sid][1] = set_time
                 gv.sd["bsy"] = 1
                 time.sleep(1)
-            else:  # If status is off
-                gv.rs[sid][1] = gv.now + 2
-                time.sleep(2)
+            else:  # If station is turning off
+                gv.rs[sid][1] = gv.now + 1
+                if gv.sd["mas"]:
+                    gv.rs[gv.sd["mas"] - 1][1] = gv.now + 1
+                time.sleep(1)
             raise web.seeother("/")
         else:
             return _("Manual mode not active.")

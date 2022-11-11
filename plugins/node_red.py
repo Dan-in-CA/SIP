@@ -436,12 +436,18 @@ class parse_json(object):
                         "plugin_data",
                         "plugin_menu",
                         'pw',
+                        "upas",
                         "ver_str",
                         "ver_date"
                         ]
         
+        danger_list = ["nst",
+                       "nopts",
+                       "nprogs",                                   
+                      ]
+        
         #######################
-        #### Set gv values ####
+        #### Set gv values ####        
         if ("gv" in data
             and "chng-gv" in nr_settings
             ):
@@ -571,8 +577,15 @@ class parse_json(object):
                     # print("bits in data: ", data["bit"])  # - test
                     bit_write(data["sd"], data["bit"])
                                      
-                else:
-                    gv.sd[data["sd"]] = val # handle all other vars
+                else:  # handle all other vars
+                    if (not data["sd"] in danger_list
+                        or ("force" in data
+                            and data["force"] == 1 )
+                        ): 
+                        gv.sd[data["sd"]] = val
+                    else:
+                        return "Not recommended"
+                                             
                 if ("save" in data
                     and data["save"] == 1
                     ):
