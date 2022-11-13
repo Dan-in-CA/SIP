@@ -201,6 +201,7 @@ def timing_loop():
             if not program_running:
                 gv.srvals = [0] * (gv.sd["nst"])
                 set_output()
+                gv.rovals = [0] * gv.sd["nst"]  # - test
                 gv.sbits = [0] * (gv.sd["nbrd"] + 1)
                 gv.ps = []
                 for i in range(gv.sd["nst"]):

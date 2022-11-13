@@ -10,10 +10,10 @@ $code:
     jQuery(document).ready(function(){    	
         jQuery("button#cRunNow").click(function(){
             var comm="/cr?&t=[";
-            var sid,strmm,strss,mm,ss,matchfound=0;
-            for (sid=0; sid<nbrd*8; sid++) {
-                if (sid+1 == mas) {
-                    comm+="0,";
+            var sid, strmm, strss, mm, ss, matchfound=0;
+            for (sid = 0; sid < nbrd * 8; sid ++) {
+                if (sid + 1 == mas) {
+                    comm += "0,";
                     continue;
                 }
                 strmm = jQuery("input[name='mm" + sid + "']").val();
@@ -21,17 +21,17 @@ $code:
                 mm = (strmm=="" || strmm==undefined ? 0 : parseInt(strmm));
                 ss = (strss=="" || strss==undefined ? 0 : parseInt(strss));
                 if (!(mm >= 0 && ss >= 0 && ss < 60)) {
-                    alert($:{json.dumps(_(u'Timer values wrong: '), ensure_ascii=False)} + strmm + ":" + strss);
+                    alert($:{json.dumps(_('Timer values wrong: '), ensure_ascii=False)} + strmm + ":" + strss);
                     return;
                 }
-                if (mm*60+ss > 0) {
-                    matchfound=1;
+                if (mm * 60 + ss > 0) {
+                    matchfound = 1;
                 }
-                comm += (mm*60+ss) + ",";
+                comm += (mm * 60 + ss) + ",";
             }
-            comm += "0]";
+            comm = comm.slice(0, -1) + "]";
             if (!matchfound) {
-                alert($:{json.dumps(_(u'No station is scheduled to run'), ensure_ascii=False)});
+                alert($:{json.dumps(_('No station is scheduled to run'), ensure_ascii=False)});
                 return;
             }
             window.location = comm;
@@ -49,12 +49,12 @@ $code:
 </script>
 
 <div id="runonce">
-    <div class="title">$_(u'Run Once Program')</div>
+    <div class="title">$_('Run Once Program')</div>
     <form name="rf" action="/cr" method="get">
         <table class="stationList">
-            $for bid in range(0, gv.sd['nbrd']):
-                $for s in range(0,8):
-                    $ sid = bid*8 + s
+            $for bid in range(gv.sd['nbrd']):
+                $for s in range(8):
+                    $ sid = bid * 8 + s
                     $ show = (gv.sd['show'][bid]>>s)&1
                     $if show == 1 and sid+1 != gv.sd['mas']:
                         <tr>
@@ -70,7 +70,7 @@ $code:
 
 
 <div class="controls">
-    <button id="cRunNow" class="submit"><b>$_(u'Run Now')</b></button>
-    <button id="cResetTime" class="refresh">$_(u'Reset Time')</button>
-    <button id="cCancel" class="cancel danger">$_(u'Cancel')</button>
+    <button id="cRunNow" class="submit"><b>$_('Run Now')</b></button>
+    <button id="cResetTime" class="refresh">$_('Reset Time')</button>
+    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
 </div>

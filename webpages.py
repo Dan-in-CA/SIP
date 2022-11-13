@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# Python 2/3 compatibility imports
-# from six.moves import map
-
 # standard library imports
 import json
 import ast
@@ -480,14 +477,15 @@ class view_runonce(ProtectedPage):
 
 
 class change_runonce(ProtectedPage):
-    """Start a Run Once program. This will override any running program."""
+    """Start a Run Once program. 
+    This will override any running program.
+    """
 
     def GET(self):
         qdict = web.input()
         if not gv.sd["en"]:  # check operation status
             return
         gv.rovals = json.loads(qdict["t"])
-        gv.rovals.pop()
         for sid in range(gv.sd["nst"]):
             if (gv.srvals[sid]
                 and not sid == gv.sd["mas"] - 1
