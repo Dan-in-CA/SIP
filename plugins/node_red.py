@@ -43,7 +43,11 @@ gv.plugin_menu.append([_(u"Node-red Settings"), u"/node-red-sp"])
 #### Global variables ####
 base_url = "http://localhost/"
 prior_srvals = [0] * len(gv.srvals)
+prior_rd = 0
 nr_settings = {}
+no_rerun = 0
+new_on = 0
+
 
 #### Functions ####
 
@@ -97,9 +101,12 @@ def load_settings():
 load_settings()    
 
 def to_node_red(note):
-    # url = 'http://localhost:1880/node_red' #### Get from nr_settings
     url = nr_settings["nr-url"]
-    x = requests.get(url, params = note)
+    # print("104 to node-red: ", note)  # - test)
+    resp = requests.get(url, params = note)
+    # print("response: ", resp)  # - test
+
+
 
 #
 # def set_rain_delay(hrs):
@@ -118,42 +125,39 @@ def set_rain_sensed(i):
           
     
 def run_once(list, pre):
+    """ 
+    Start a run once program from node-red
+    Optionally disable preemption of running program.
+    """   
+    if not gv.sd["en"]:  # check if SIP is enabled
+        return       
     if pre:
-        for sid in range(gv.sd[u"nst"]):
-            if (gv.srvals[sid]
-                and not sid == gv.sd["mas"] - 1
-                ):  # if currently on and not master, log result
-                gv.lrun[0] = sid  # station index
-                gv.lrun[1] = gv.rs[sid][3]  # program number
-                gv.lrun[2] = int(gv.now - gv.rs[sid][0]) # start time
-                gv.lrun[3] = gv.now # end time
-                log_run()
-                report_station_completed(sid + 1)        
-    
+        stop_stations()  # preempt any running program.
+    gv.rovals = [0] * gv.sd["nst"]
+    # dur_sum = 0
     for item in list:
-        if not gv.sd[u"en"]:  # check operation status
-            return
-        gv.rovals = [0] * gv.sd["nst"]
         for s in list:
-            gv.rovals[s[0] - 1] = s[1]             
-        stations = [0] * gv.sd["nbrd"]
-        gv.ps = []  # program schedule (for display)
-        # gv.rs = []  # run schedule
-        for sid in range(gv.sd["nst"]):
-            gv.ps.append([0, 0])
-            gv.rs.append([0, 0, 0, 0])
-        for sid, dur in enumerate(gv.rovals):
+            gv.rovals[s[0] - 1] = s[1]
+            # sid = s[0] - 1
+            # dur = s[1]  
+            stations = [0] * gv.sd["nbrd"]
+            dur_sum = 0
+        for sid, dur in enumerate(gv.rovals):          
             if dur:  # if this element has a value
-                gv.rs[sid][0] = gv.now
+            # if dur:
+                gv.rs[sid][0] = gv.now + dur_sum
+                dur_sum += dur
+                gv.rs[sid][1] = gv.now + dur_sum
                 gv.rs[sid][2] = dur
                 gv.rs[sid][3] = 98
                 gv.ps[sid][0] = 98
                 gv.ps[sid][1] = dur
-                stations[sid // 8] += 2 ** (sid % 8)
-        schedule_stations(stations)           
+                stations[sid // 8] += 2 ** (sid % 8)            
+    if not gv.sd["bsy"]:
+        schedule_stations(stations)            
 
 def send_zone_change(name, **kw):
-    """ Send notification to N0de-red 
+    """ Send notification to node-red 
         when core program signals a change in station state.
     """
     global prior_srvals
@@ -188,7 +192,20 @@ def send_zone_change(name, **kw):
 zones = signal("zone_change")
 zones.connect(send_zone_change)
 
+def send_rain_delay_change(name, **kw):
+    global prior_rd, new_on
+    if gv.sd["rd"] != prior_rd: # rain delay has changed
+        if gv.sd["rd"]: #  just switched on
+            state = 1
+            new_on = 1
+        else:           #  Just switched off
+            state = 0
+        note = {"rd_state": state}
+        to_node_red(note)
+        prior_rd = gv.sd["rd"]  
 
+rd_change = signal("value_change")
+rd_change.connect(send_rain_delay_change)
 
 #### blinker signals ##########
 "alarm"
@@ -199,7 +216,7 @@ zones.connect(send_zone_change)
 "program_deleted"
 "program_toggled"
 "rain_changed"
-"rain_delay_change"
+# "rain_delay_change" # included with "value_change"
 "rebooted"
 "restarting"
 "running_program_change"
@@ -422,8 +439,11 @@ class parse_json(object):
         
     def POST(self):
         """ Update SIP with value sent from node-red. """
+        global no_rerun, new_on
         data = web.data()
-        data = json.loads(data.decode('utf-8'))      
+        # print("447 data: ", data)  # - test
+        data = json.loads(data.decode('utf-8'))
+           
         not_writable = ["cputemp",
                         "day_ord",
                         "lang", 
@@ -445,6 +465,17 @@ class parse_json(object):
                        "nopts",
                        "nprogs",                                   
                       ]
+        
+        prog_keys = ['cycle_min',
+                     'day_mask',
+                     'duration_sec',
+                     'enabled',
+                     'interval_base_day',
+                     'name', 'start_min',
+                     'station_mask',
+                     'stop_min',
+                     'type'
+                    ]
         
         #######################
         #### Set gv values ####        
@@ -521,13 +552,33 @@ class parse_json(object):
             if "val"in data:
                 val = int(data["val"])
             else:
-                val = None
+                val = None                
+            if (no_rerun 
+                  and val != -1
+                  ):
+                no_rerun = 0
+            if (new_on
+                and val == -1
+                ):
+                new_on = 0
+                return
             try:     
                 # Change values
-                if data["sd"] == "rd":
-                    requests.get(url = base_url + "cv", params = {"rd":val})
+                if data["sd"] == "rd":  # rain delay
+                    # print("562 val: ", val)  # - test
+                    if (not val == None
+                        and not gv.sd["rd"]  # Rain delay already set
+                        and not val == -1
+                        or val == 0
+                        ):
+                        requests.get(url = base_url + "cv", params = {"rd":val})
+                        #### If val == -1 send off message to node-red one time 
+                    elif val == -1:
+                        no_rerun += 1
+                        note = {"rd_state": "0"}
+                        to_node_red(note)                        
                     
-                elif data["sd"] == "mm":
+                elif data["sd"] == "mm":  # manual mode
                     if val == 0:
                         clear_mm()
                         gv.sd["mm"] = 0
@@ -659,6 +710,7 @@ class parse_json(object):
         elif (("ro" in data or "run once" in data)
               and "chng-ro" in nr_settings
               ):
+            print("709 data: ", data)
             pre = 1
             if ("preempt" in data
                 and data["preempt"] == 0
