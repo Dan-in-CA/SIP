@@ -45,8 +45,6 @@ base_url = "http://localhost/"
 prior_srvals = [0] * len(gv.srvals)
 prior_rd = 0
 nr_settings = {}
-no_rerun = 0
-new_on = 0
 
 
 #### Functions ####
@@ -133,28 +131,81 @@ def run_once(list, pre):
         return       
     if pre:
         stop_stations()  # preempt any running program.
-    gv.rovals = [0] * gv.sd["nst"]
-    # dur_sum = 0
-    for item in list:
-        for s in list:
-            gv.rovals[s[0] - 1] = s[1]
-            # sid = s[0] - 1
-            # dur = s[1]  
-            stations = [0] * gv.sd["nbrd"]
-            dur_sum = 0
-        for sid, dur in enumerate(gv.rovals):          
-            if dur:  # if this element has a value
-            # if dur:
-                gv.rs[sid][0] = gv.now + dur_sum
-                dur_sum += dur
-                gv.rs[sid][1] = gv.now + dur_sum
-                gv.rs[sid][2] = dur
-                gv.rs[sid][3] = 98
-                gv.ps[sid][0] = 98
-                gv.ps[sid][1] = dur
-                stations[sid // 8] += 2 ** (sid % 8)            
+    dur_sum = 0
+    stations = [0] * gv.sd["nbrd"]
+    for s in list:
+        ident = s[0]
+        try:
+            if isinstance(ident, int):
+                sid = ident -1
+            elif ident.isnumeric():  # quoted number
+                sid = int(ident) -1
+            else:
+                 sid = gv.snames.index(ident)
+        except Exception as e:
+            print("Error: ", e)  # name not found
+            return e
+        dur = s[1]
+        gv.rs[sid][0] = gv.now + dur_sum
+        dur_sum += dur
+        gv.rs[sid][1] = gv.now + dur_sum
+        gv.rs[sid][2] = dur
+        gv.rs[sid][3] = 98
+        gv.ps[sid][0] = 98
+        gv.ps[sid][1] = dur
+        stations[sid // 8] += 2 ** (sid % 8)
     if not gv.sd["bsy"]:
-        schedule_stations(stations)            
+        schedule_stations(stations)
+        
+def station_on_off(data):
+    if (not gv.sd["mm"]  # SIP is not in manual mode
+        and not "req mm" in data 
+        or ("req mm" in data                
+            and data["req mm"] == 1
+            and not gv.sd["mm"])
+        ):
+        return "Error: manual mode required"
+    try:
+        station = data["sn"]
+    except KeyError:
+        station = data["station"]               
+    val = data["set"]
+    new_srvals = gv.srvals
+    masid = gv.sd["mas"] - 1
+    for sn in range(len(station)): # number of stations in data
+        sid = station[sn] - 1 # station index
+        bid = sid // 8
+        if val: # set == 1 in Node-red - applies to all stations in data                   
+            new_srvals[sid] = 1 # station[s] == station number in UI 
+            gv.srvals[sid] = 1                 
+            gv.sbits[bid] |= 1 << sid % 8  # Set sbits for this station                   
+            gv.ps[sid][0] = 100
+            gv.rs[sid] = [gv.now, float("inf"), 0, 100] 
+                             
+        else:
+            gv.sbits[bid] &= ~(1 << sid)
+            gv.ps[sid][0] = 0
+            gv.lrun = [sid,
+                       gv.rs[sid][3],
+                       gv.now - gv.rs[sid][0],
+                       gv.now
+                       ]
+            log_run()
+            gv.rs[sid] = [0,0,0,0]
+    gpio_pins.set_output()
+    
+def run_now(ident):
+    try:
+        if isinstance(ident, int):
+            pid = ident -1
+        elif ident.isnumeric():  # quoted number
+            pid = int(ident) -1
+        else:
+             pid = gv.pnames.index(ident)
+    except Exception as e:
+        print("Error: ", e)  # name not found
+        return e
+    run_program(pid)  
 
 def send_zone_change(name, **kw):
     """ Send notification to node-red 
@@ -193,11 +244,10 @@ zones = signal("zone_change")
 zones.connect(send_zone_change)
 
 def send_rain_delay_change(name, **kw):
-    global prior_rd, new_on
+    global prior_rd
     if gv.sd["rd"] != prior_rd: # rain delay has changed
         if gv.sd["rd"]: #  just switched on
             state = 1
-            new_on = 1
         else:           #  Just switched off
             state = 0
         note = {"rd_state": state}
@@ -439,7 +489,6 @@ class parse_json(object):
         
     def POST(self):
         """ Update SIP with value sent from node-red. """
-        global no_rerun, new_on
         data = web.data()
         # print("447 data: ", data)  # - test
         data = json.loads(data.decode('utf-8'))
@@ -548,33 +597,23 @@ class parse_json(object):
         #### set sd values ####
         elif ("sd" in data
               and "chng-sd" in nr_settings
-              ):              
+              ):
+            # print("data: ", data)  # - test          
             if "val"in data:
                 val = int(data["val"])
             else:
                 val = None                
-            if (no_rerun 
-                  and val != -1
-                  ):
-                no_rerun = 0
-            if (new_on
-                and val == -1
-                ):
-                new_on = 0
-                return
             try:     
                 # Change values
                 if data["sd"] == "rd":  # rain delay
-                    # print("562 val: ", val)  # - test
-                    if (not val == None
-                        and not gv.sd["rd"]  # Rain delay already set
-                        and not val == -1
+                    if ((not val == None
+                        # and not gv.sd["rd"]  # Rain delay already set
+                        and not val == -1)
                         or val == 0
                         ):
                         requests.get(url = base_url + "cv", params = {"rd":val})
-                        #### If val == -1 send off message to node-red one time 
+                        data = ""
                     elif val == -1:
-                        no_rerun += 1
                         note = {"rd_state": "0"}
                         to_node_red(note)                        
                     
@@ -670,41 +709,43 @@ class parse_json(object):
         elif (("sn" in data or "station" in data)
               and "chng-stn" in nr_settings
               ):
-            if (not gv.sd["mm"]  # SIP is not in manual mode
-                and not "req mm" in data 
-                or ("req mm" in data                
-                    and data["req mm"] == 1
-                    and not gv.sd["mm"])
-                ):
-                return "Error: manual mode required"
-            try:
-                station = data["sn"]
-            except KeyError:
-                station = data["station"]               
-            val = data["set"]
-            new_srvals = gv.srvals
-            masid = gv.sd["mas"] - 1
-            for sn in range(len(station)): # number of stations in data
-                sid = station[sn] - 1 # station index
-                bid = sid // 8
-                if val: # set == 1 in Node-red - applies to all stations in data                   
-                    new_srvals[sid] = 1 # station[s] == station number in UI 
-                    gv.srvals[sid] = 1                 
-                    gv.sbits[bid] |= 1 << sid % 8  # Set sbits for this station                   
-                    gv.ps[sid][0] = 100
-                    gv.rs[sid] = [gv.now, float("inf"), 0, 100] 
-                                     
-                else:
-                    gv.sbits[bid] &= ~(1 << sid)
-                    gv.ps[sid][0] = 0
-                    gv.lrun = [sid,
-                               gv.rs[sid][3],
-                               gv.now - gv.rs[sid][0],
-                               gv.now
-                               ]
-                    log_run()
-                    gv.rs[sid] = [0,0,0,0]
-            gpio_pins.set_output()
+            station_on_off(data)
+            
+            # if (not gv.sd["mm"]  # SIP is not in manual mode
+            #     and not "req mm" in data 
+            #     or ("req mm" in data                
+            #         and data["req mm"] == 1
+            #         and not gv.sd["mm"])
+            #     ):
+            #     return "Error: manual mode required"
+            # try:
+            #     station = data["sn"]
+            # except KeyError:
+            #     station = data["station"]               
+            # val = data["set"]
+            # new_srvals = gv.srvals
+            # masid = gv.sd["mas"] - 1
+            # for sn in range(len(station)): # number of stations in data
+            #     sid = station[sn] - 1 # station index
+            #     bid = sid // 8
+            #     if val: # set == 1 in Node-red - applies to all stations in data                   
+            #         new_srvals[sid] = 1 # station[s] == station number in UI 
+            #         gv.srvals[sid] = 1                 
+            #         gv.sbits[bid] |= 1 << sid % 8  # Set sbits for this station                   
+            #         gv.ps[sid][0] = 100
+            #         gv.rs[sid] = [gv.now, float("inf"), 0, 100] 
+            #
+            #     else:
+            #         gv.sbits[bid] &= ~(1 << sid)
+            #         gv.ps[sid][0] = 0
+            #         gv.lrun = [sid,
+            #                    gv.rs[sid][3],
+            #                    gv.now - gv.rs[sid][0],
+            #                    gv.now
+            #                    ]
+            #         log_run()
+            #         gv.rs[sid] = [0,0,0,0]
+            # gpio_pins.set_output()
                    
         # run once
         elif (("ro" in data or "run once" in data)
@@ -721,8 +762,11 @@ class parse_json(object):
             except KeyError:
                 run_once(data["run once"], pre)
         
+        elif ("run" in data):
+              run_now(data["run"])
+        
         else:
-            # print("invalid post")  # - test
+            # print("Unknown request: ", data)  # - test
             return "Unknown request"            
 
 

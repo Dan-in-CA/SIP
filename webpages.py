@@ -620,30 +620,7 @@ class run_now(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        pid = int(qdict["pid"])
-        p = gv.pd[int(qdict["pid"])]  # program data
-        stop_stations()
-        extra_adjustment = plugin_adjustment()
-        sid = -1
-        for b in range(gv.sd["nbrd"]):  # check each station
-            for s in range(8):
-                sid += 1  # station index
-                if sid + 1 == gv.sd["mas"]:  # skip if this is master valve
-                    continue
-                if (
-                    p["station_mask"][b] & 1 << s
-                ):  # if this station is scheduled in this program
-                    if gv.sd["idd"]:
-                        duration = p["duration_sec"][sid]
-                    else:
-                        duration = p["duration_sec"][0]
-                    if not gv.sd["iw"][b] & 1 << s:
-                        duration = duration * gv.sd["wl"] // 100 * extra_adjustment
-                    gv.rs[sid][2] = duration
-                    gv.rs[sid][3] = pid + 1  # store program number in schedule
-                    gv.ps[sid][0] = pid + 1  # store program number for display
-                    gv.ps[sid][1] = duration  # duration
-        schedule_stations(p["station_mask"])  # + gv.sd["nbrd"]])
+        run_program(int(qdict["pid"]))
         raise web.seeother("/")
 
 
