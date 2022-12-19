@@ -195,13 +195,14 @@ def station_on_off(data):
     gpio_pins.set_output()
     
 def run_now(ident):
+    print("198 ideint: ", ident)  # - test
     try:
         if isinstance(ident, int):
             pid = ident -1
         elif ident.isnumeric():  # quoted number
             pid = int(ident) -1
         else:
-             pid = gv.pnames.index(ident)
+             pid = gv.pnames.index(str(ident))
     except Exception as e:
         print("Error: ", e)  # name not found
         return e
@@ -764,6 +765,10 @@ class parse_json(object):
         
         elif ("run" in data):
               run_now(data["run"])
+              
+        # stop all stations
+        elif ("stop-all" in data):
+            stop_stations()
         
         else:
             # print("Unknown request: ", data)  # - test
