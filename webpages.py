@@ -124,7 +124,7 @@ class change_values(ProtectedPage):
         
     def change_values(self):    
         qdict = web.input()
-        print("cv qdict: ", qdict)  # - test
+        # print("cv qdict: ", qdict)  # - test
         if "rsn" in qdict and qdict["rsn"] == "1":
             stop_stations()
             raise web.seeother("/")
@@ -173,7 +173,7 @@ class change_options(ProtectedPage):
         self.change_options()
         
     def POST(self):
-        print("co post: ", web.input())
+        # print("co post: ", web.input())  # - test
         self.change_options()           
         
     def change_options(self):    
@@ -550,6 +550,7 @@ class change_program(ProtectedPage):
         qdict = web.input()
         pnum = int(qdict["pid"]) + 1  # program number
         cp = json.loads(qdict["v"])
+        # gv.pnames[pnum - 1] = cp["name"]
         if cp["enabled"] == 0 and pnum == gv.pon:  # if disabled and program is running
             for i in range(len(gv.ps)):
                 if gv.ps[i][0] == pnum:
@@ -565,8 +566,10 @@ class change_program(ProtectedPage):
             cp["day_mask"] = ref % cp["interval_base_day"]  # + 128
         if qdict["pid"] == "-1":  # add new program
             gv.pd.append(cp)
+            gv.pnames.append(cp["name"])
         else:
             gv.pd[int(qdict["pid"])] = cp  # replace program
+            gv.pnames[int(qdict["pid"])] = cp["name"]
         jsave(gv.pd, "programData")
         report_program_change()
         raise web.seeother("/vp")
@@ -579,9 +582,11 @@ class delete_program(ProtectedPage):
         qdict = web.input()
         if qdict["pid"] == "-1":
             del gv.pd[:]
+            del gv.pnames[:]
             jsave(gv.pd, "programData")
         else:
             del gv.pd[int(qdict["pid"])]
+            del gv.pnames[int(qdict["pid"])]
         jsave(gv.pd, "programData")
         report_program_deleted()
         raise web.seeother("/vp")
@@ -684,11 +689,16 @@ class api_status(ProtectedPage):
                                 rem = 0
 
                             id_nr = gv.ps[sid][0]
-                            pname = "P" + str(id_nr)
+                            if gv.pon:
+                                pname = gv.pnames[gv.pon - 1]
+                            else:
+                                pname = "P" + str(id_nr)                            
                             if id_nr == 255 or id_nr == 99:
                                 pname = "Manual Mode"
                             if id_nr == 254 or id_nr == 98:
                                 pname = "Run-once Program"
+                            if id_nr == 254 or id_nr == 100:
+                                pname = "Node-red Program"
 
                             if sbit:
                                 status["status"] = "on"

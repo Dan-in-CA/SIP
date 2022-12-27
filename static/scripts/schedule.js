@@ -57,8 +57,7 @@ function doSimulation() { // Create schedule by a full program simulation, was d
   for(sid=0;sid<nst;sid++)  { // for for each station...
     st_array[sid]=0;pid_array[sid]=0;et_array[sid]=0; // initilize element[station index]=0 for start time, program, end time 
   }
-  do { // check through every program
-//	  console.log("sarting do looop");	  
+  do { // check through every program	  
     busy=0;
     endmin=0;
     match_found=0;
@@ -130,7 +129,7 @@ function doSimulation() { // Create schedule by a full program simulation, was d
       simminutes++; // increment simulation time
     }
   } while(simminutes<=24*60); // simulation ends at 24 hours
-//  console.log('schedule: ' + JSON.stringify(schedule))
+ // console.log('schedule: ' + JSON.stringify(schedule))
   return schedule
 }
 
@@ -163,10 +162,14 @@ function fromClock(clock) {
 function programName(p) {
 	if (p == "Manual" || p == "Run-once") {
 		return p + " Program";
-	}	
+	}
 	else if(isNaN(p)) {
 		return p;	
-	} else {
+	} 
+	else if(progNames[p -1] != "") {
+	    return progNames[p -1];
+	} 	
+	else {
 		return "Program " + p;
 	}
 }
@@ -221,7 +224,7 @@ function displaySchedule(schedule) {
 		}
 	});
 	jQuery("#legend").empty();
-	for (let p in programClassesUsed) {
+	for (var p in programClassesUsed) {
 		jQuery("#legend").append("<span class='" + programClassesUsed[p] + "'>" + programName(p) + "</span>");
 	}
 	jQuery(".scheduleMarker").mouseover(scheduleMarkerMouseover);
@@ -236,7 +239,7 @@ function displaySchedule(schedule) {
 function displayProgram() { // Controls home page irrigation timeline
 	//if (displayScheduleDate > devt) { //dk
 	if (displayScheduleDate > new Date(Date.now() + tzOffsetDif)) { //dk
-		let schedule = doSimulation(); //dk
+		var schedule = doSimulation(); //dk
 		displaySchedule(schedule);
 	} else {
 		let visibleDate = toXSDate(displayScheduleDate);
@@ -250,7 +253,7 @@ function displayProgram() { // Controls home page irrigation timeline
 				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
 			}
 			if (toXSDate(displayScheduleDate) == toXSDate(new Date(Date.now() + tzOffsetDif))) {
-				let schedule = doSimulation(); //dk
+				var schedule = doSimulation(); //dk
 				log = log.concat(schedule);
 			}
 			displaySchedule(log);

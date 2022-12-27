@@ -339,9 +339,9 @@ $code:
             let endTime;
             if (jQuery("button#cRecurring").hasClass("on")) {  //Single pass
                 if (idd) {
-                    endTime = startTime + idurations.reduce((a,b) => a + b, 0) / 60;
+                    endTime = Math.round(startTime + idurations.reduce((a,b) => a + b, 0) / 60);
                 } else {
-                    endTime = startTime + (gduration / 60);
+                    endTime = Math.round(startTime + (gduration / 60));
                 }   
             } else {                                           //recurring
                 interval = parseTime("ti");

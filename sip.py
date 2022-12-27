@@ -3,10 +3,11 @@
 
 # standard library imports
 import ast
-from calendar import timegm
+# from calendar import timegm
 from datetime import date
 import i18n
 import json
+import math #  check for infinity: math.isinf(math.inf)
 import os
 import subprocess
 import sys
@@ -48,11 +49,8 @@ gv.restarted = 1
 
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
-    try:
-        print(_("Starting timing loop") + "\n")
-    except Exception:
-        pass
-    last_min = 0
+    print(_("Starting timing loop") + "\n")
+    prior_min = 0
     while True:  # infinite loop
         cur_ord = (
             date.today().toordinal()  # day of year 
@@ -60,12 +58,9 @@ def timing_loop():
         if cur_ord > gv.day_ord:
             gv.day_ord = cur_ord
             report_new_day()
-        gv.nowt = (
-            time.localtime()  # Current time as time struct.  Updated once per second.
-        )
-        gv.now = timegm(  # Current time as timestamp based on local time from the Pi. Updated once per second.
-            gv.nowt
-        )
+        
+        gv.now = round(time.time()) # Current time as seconds since the epoch, in UTC. Updated once per second.
+        lt = time.localtime(gv.now)  # Current time as time struct.
         
         if gv.sd["mas"]: #  If master is defined
             masid = gv.sd["mas"] -1 # master station index
@@ -76,49 +71,50 @@ def timing_loop():
             gv.sd["en"]
             and not gv.sd["mm"]
             and (not gv.sd["bsy"] or not gv.sd["seq"])
-        ):
-            this_min = int(gv.now // 60)
-            if this_min != last_min:  # only check programs once a minute
-                last_min = this_min
+            ):
+            this_min = (lt.tm_hour * 60) + lt.tm_min
+            if this_min != prior_min:  # only check programs once a minute
+                prior_min = this_min
                 for i, p in enumerate(gv.pd):  # get both index and prog item
-                    if prog_match(p) and any(p["duration_sec"]):
-                        # check each station per boards listed in program up to number of boards in Options
-                        for b in range(len(p["station_mask"])):
-                            for s in range(8):
-                                sid = b * 8 + s  # station index
-                                if (gv.srvals[sid]
-                                    and gv.sd["seq"]
-                                ):
-                                    continue  # skip if currently on and sequential mode
-                                if sid == masid: 
-                                    continue  # skip, this is master station
-                                
-                                # station duration conditionally scaled by "water level"
-                                if gv.sd["iw"][b] & 1 << s:
-                                    duration_adj = 1.0
-                                    if gv.sd["idd"]:
-                                        duration = p["duration_sec"][sid]
+                    if p["start_min"] == this_min:
+                        if prog_match(p) and any(p["duration_sec"]):
+                            # check each station per boards listed in program up to number of boards in Options
+                            
+                            for b in range(len(p["station_mask"])):
+                                for s in range(8):
+                                    sid = b * 8 + s  # station index
+                                    if (gv.srvals[sid]
+                                        and gv.sd["seq"]
+                                    ):
+                                        continue  # skip if currently on and sequential mode
+                                    if sid == masid: 
+                                        continue  # skip, this is master station                               
+                                    # station duration conditionally scaled by "water level"
+                                    if gv.sd["iw"][b] & 1 << s: # If ignore water level.
+                                        duration_adj = 1.0
+                                        if gv.sd["idd"]:
+                                            duration = p["duration_sec"][sid]
+                                        else:
+                                            duration = p["duration_sec"][0]
                                     else:
-                                        duration = p["duration_sec"][0]
-                                else:
-                                    duration_adj = (
-                                        gv.sd["wl"] / 100.0
-                                    ) * plugin_adjustment() # was extra_adjustment
-                                    if gv.sd["idd"]:
-                                        duration = (
-                                            p["duration_sec"][sid] * duration_adj
-                                        )
-                                    else:
-                                        duration = p["duration_sec"][0] * duration_adj
-                                    duration = int(round(duration))  # convert to int
-                                if (
-                                    p["station_mask"][b] & 1 << s  # if this station is scheduled in this program
-                                ):
-                                    gv.rs[sid][2] = duration
-                                    gv.rs[sid][3] = i + 1  # program number for scheduling
-                                    gv.ps[sid][0] = i + 1  # program number for display
-                                    gv.ps[sid][1] = duration
-                        schedule_stations(p["station_mask"])  # turns on gv.sd["bsy"]
+                                        duration_adj = (
+                                            gv.sd["wl"] / 100.0
+                                        ) * plugin_adjustment() # was extra_adjustment
+                                        if gv.sd["idd"]:
+                                            duration = (
+                                                p["duration_sec"][sid] * duration_adj
+                                            )
+                                        else:
+                                            duration = p["duration_sec"][0] * duration_adj
+                                    duration = round(duration)  # convert to int
+                                    if (
+                                        p["station_mask"][b] & 1 << s  # if this station is scheduled in this program
+                                    ):
+                                        gv.rs[sid][2] = duration
+                                        gv.rs[sid][3] = i + 1  # program number for scheduling
+                                        gv.ps[sid][0] = i + 1  # program number for display
+                                        gv.ps[sid][1] = duration
+                            schedule_stations(p["station_mask"])  # turns on gv.sd["bsy"]
 
         if gv.sd["bsy"]:
             for b in range(gv.sd["nbrd"]):  # Check each station once a second
@@ -138,9 +134,9 @@ def timing_loop():
                                 report_station_completed(sid + 1)
                             gv.rs[sid] = [0, 0, 0, 0]
                     else:  # if this station is not yet on
-                        if (gv.rs[sid][0] <= gv.now 
-                           and gv.now < gv.rs[sid][1]
-                        ):
+                        if (gv.now >= gv.rs[sid][0]  # - test
+                            and gv.now < gv.rs[sid][1]  # - test
+                           ):
                             if sid != masid: # if not master
                                 if (gv.sd["mo"][b] & (1 << s) # station activates master
                                     and gv.sd["mton"] < 0 # master has a negative delay
@@ -192,9 +188,8 @@ def timing_loop():
                 for sid in range(len(gv.rs)):  # loop through program schedule (gv.ps)
                     if gv.rs[sid][2] == 0:  # skip stations with no duration
                         continue
-                    if gv.srvals[
-                        sid
-                    ]:  # If station is on, decrement time remaining display
+                    if gv.srvals[sid]:
+                      # If station is on, decrement time remaining display
                         if gv.ps[sid][1] > 0:  # if time is left
                             gv.ps[sid][1] -= 1
 
@@ -206,9 +201,9 @@ def timing_loop():
                 gv.ps = []
                 for i in range(gv.sd["nst"]):
                     gv.ps.append([0, 0])
-                gv.rs = []
-                for i in range(gv.sd["nst"]):
-                    gv.rs.append([0, 0, 0, 0])
+                # gv.rs = []  # - test zlrngyh of gv.rs is adjusted by webpages.py update_scount()
+                # for i in range(gv.sd["nst"]):
+                #     gv.rs.append([0, 0, 0, 0]) #  clear run schedule  # - test
                 gv.sd["bsy"] = 0
 
             if (gv.sd["mas"] #  master is defined
@@ -277,7 +272,7 @@ template_globals = {
     "web": web,
     "round": round,
     "time": time,
-    "timegm": timegm,
+    # "timegm": timegm,
 }
 
 template_render = web.template.render(

@@ -18,6 +18,7 @@ import math
 
 # local module imports
 from blinker import signal
+from gpio_pins import set_output
 import gv
 import i18n
 from web.webapi import seeother
@@ -110,8 +111,7 @@ def reboot(wait=1, block=False):
     Set to True at start of thread (recursive).
     """
     if block:
-        from gpio_pins import set_output
-
+        # from gpio_pins import set_output  # - test
         gv.srvals = [0] * (gv.sd["nst"])
         set_output()
         if gv.use_pigpio:
@@ -135,8 +135,7 @@ def poweroff(wait=1, block=False):
     Set to True at start of thread (recursive).
     """
     if block:
-        from gpio_pins import set_output
-
+        # from gpio_pins import set_output  # - test
         gv.srvals = [0] * (gv.sd["nst"])
         set_output()
         if gv.use_pigpio:
@@ -161,8 +160,7 @@ def restart(wait=1, block=False):
     """
     if block:
         report_restart()
-        from gpio_pins import set_output
-
+        # from gpio_pins import set_output  # - test
         gv.srvals = [0] * (gv.sd["nst"])
         set_output()
         if gv.use_pigpio:
@@ -244,7 +242,7 @@ def check_rain():
     Sets gv.sd["rs"] to 1 if rain is detected otherwise 0.
     """
 
-    global pi
+    global pi, rain
     rain_sensor = gv.sd["rs"]
     try:
         if gv.sd["rst"] == 1:  # Rain sensor type normally open (default)
@@ -326,29 +324,22 @@ def get_cpu_temp():
 
 def timestr(t):
     """
-    Convert duration in seconds to string in the form mm:ss.
+    Convert duration in seconds to string in the form h:mm:ss.
     """
-    return (
-        str((t // 60 >> 0) // 10 >> 0)
-        + str((t // 60 >> 0) % 10)
-        + ":"
-        + str((t % 60 >> 0) // 10 >> 0)
-        + str((t % 60 >> 0) % 10)
-    )
-
+    m, s = divmod(t, 60)
+    h, m = divmod(m, 60)
+    if h:
+        return f"{h:d}:{m:02d}:{s:02d}"
+    else:
+        return f"{m:02d}:{s:02d}"
+    
 
 def log_run():
     """
     Add run data to json log file - most recent first.
     If a record limit is specified (gv.sd["lr"]) the number of records is truncated.
     """
-
     if gv.sd["lg"]:
-        program = "program" 
-        station = "station"
-        duration = "duration"
-        strt = "start"
-        date = "date"
         if gv.lrun[1] == 0:  # skip program 0
             return
         elif gv.lrun[1] == 98:
@@ -361,24 +352,32 @@ def log_run():
             pgr = str(gv.pd[gv.lrun[1] - 1]["name"])      
         else:
             pgr = "" + str(gv.lrun[1])
-        start = time.gmtime(gv.now - gv.lrun[2])
+        start = time.localtime()
+        dur_m, dur_s = divmod(gv.lrun[2], 60)
+        dur_h, dur_m = divmod(dur_m, 60)
+        start_time = time.localtime(gv.rs[gv.lrun[0]][0]) #  Get start time from run schedule      
         logline = (
             '{"'
-            + program
-            + '":"'
+            + "program"
+            + '": "'
             + pgr
-            + '","'
-            + station
-            + '":'
+            + '", "'
+            + "station"
+            + '": '
             + str(gv.lrun[0])
-            + ',"'
-            + duration
-            + '":"'
+            + ', "'
+            + "duration"
+            + '": "'
             + timestr(gv.lrun[2])
-            + '","'
-            + strt
-            + '":"'
-            + time.strftime('%H:%M:%S","' + date + '":"%Y-%m-%d"', start)
+            + '", "'
+            + "start"
+            + '": '
+            # + f'"{start.tm_hour - dur_h:d}:{start.tm_min - dur_m:02d}:{start.tm_sec - dur_s:02d}"'
+            + f'"{start_time.tm_hour:02d}:{start_time.tm_min:02d}:{start_time.tm_sec:02d}"'
+            + ', "'
+            + "date"
+            + '": "'
+            + time.strftime('%Y-%m-%d"', start)
             + "}"
         )       
         lines = []
@@ -401,7 +400,8 @@ def prog_match(prog):
     if not prog["enabled"]:
         return 0  # Skip if program is not enabled
     devday = int(gv.now // 86400)  # Check day match
-    lt = time.gmtime(gv.now)
+    lt = time.localtime(gv.now)  # - test
+    # lt = time.localtime()
     if prog["type"] == "interval":
         if (devday % prog["interval_base_day"]) != prog["day_mask"]:
             return 0
@@ -416,7 +416,7 @@ def prog_match(prog):
                 return 0
             elif lt.tm_mday % 2 != 1:
                 return 0     
-    this_minute = (lt.tm_hour * 60) + lt.tm_min  # Check time match
+    this_minute = (lt.tm_hour * 60) + lt.tm_min  # Check time match in minutes
     if this_minute < prog["start_min"] or this_minute >= prog["stop_min"]:
         return 0
     if prog["cycle_min"] == 0 and (this_minute == prog["start_min"]):
@@ -436,7 +436,7 @@ def schedule_stations(stations):
     """
     Schedule stations/valves/zones to run.
     """
-
+    # print("H 439 stations: ", stations)  # - test
     if (gv.sd["rd"]   #  If rain delay or rain detected by sensor
         or (gv.sd["urs"]
             and gv.sd["rs"]
@@ -455,9 +455,9 @@ def schedule_stations(stations):
                         not rain
                         or gv.sd["ir"][b] & 1 << s  # if no rain or station ignores rain
                     ):
-                        gv.rs[sid][0] = accumulate_time  # start at accumulated time
+                        gv.rs[sid][0] = int(accumulate_time)  # start at accumulated time
                         accumulate_time += gv.rs[sid][2]  # add duration
-                        gv.rs[sid][1] = accumulate_time  # set new stop time
+                        gv.rs[sid][1] = int(accumulate_time)  # set new stop time
                         accumulate_time += gv.sd["sdt"]  # add station delay
                         report_stations_scheduled()
                         gv.sd["bsy"] = 1
@@ -477,26 +477,22 @@ def schedule_stations(stations):
                         or gv.sd["ir"][b] & 1 << s
                     ):  # if no rain or station ignores rain
                         gv.rs[sid][0] = gv.now  # set start time
-                        gv.rs[sid][1] = gv.now + gv.rs[sid][2]  # set stop time
+                        gv.rs[sid][1] = gv.now + int(gv.rs[sid][2])  # set stop time
                         report_stations_scheduled()
                         gv.sd["bsy"] = 1
                     else:  # if rain and station does not ignore, clear station from display
                         gv.sbits[b] &= ~1 << s
                         gv.ps[s] = [0, 0]
-    report_stations_scheduled()
-    gv.sd["bsy"] = 1
-    return
+    # report_stations_scheduled()
+    # gv.sd["bsy"] = 1
 
 
 def stop_onrain():
     """
     Stop stations that do not ignore rain.
     """
-
-    from gpio_pins import set_output
-
+    # from gpio_pins import set_output  # - test
     do_set_output = False
-
     for b in range(gv.sd["nbrd"]):
         for s in range(8):
             sid = b * 8 + s  # station index
@@ -508,7 +504,6 @@ def stop_onrain():
                 gv.sbits[b] &= ~1 << s  # Clears stopped stations from display
                 gv.ps[sid] = [0, 0]
                 gv.rs[sid] = [0, 0, 0, 0]
-
     if do_set_output:
         set_output()
     return
@@ -518,8 +513,7 @@ def stop_stations():
     """
     Stop all running stations, clear schedules.
     """
-    from gpio_pins import set_output
-
+    # from gpio_pins import set_output  # - test
     gv.srvals = [0] * (gv.sd["nst"])
     set_output()
     gv.ps = []
@@ -551,11 +545,35 @@ def read_log():
     except IOError:
         return result
     
+def clear_stations():  # - test
+    print("clearing stations")  # - test
+    # lst = [i for i, e in enumerate(rs) if e != [0, 0, 0, 0]]
+    for idx, stn in enumerate(gv.rs):       
+        if stn[3] == 100:
+            continue # skip stations run by node-red  
+        gv.srvals[idx] = 0  # * (gv.sd["nst"])
+        # set_output()
+        gv.ps[idx] = [0, 0]
+        gv.rs[idx] = [0, 0, 0, 0]
+        # gv.sd["bsy"] = 0
+        # gv.kr = 1  # - test
+    # set_output()
+
 def run_program(pid):
     """
     Run a program, pid == program index
     """  
-    stop_stations()
+    nr_run = 0
+    for stn in gv.rs:  # - test
+        if stn[3] == 100:
+            # print("found prog 100")
+            nr_run = 1
+            break
+    if nr_run:
+        clear_stations()  # - test
+    else:
+        stop_stations()
+    
     p = gv.pd[pid]  # program data    
     sid = -1
     for b in range(gv.sd["nbrd"]):  # check each station
@@ -603,8 +621,6 @@ def station_names():
         jsave(stations, "snames")
         return stations
 
-gv.pnames = []
-
 def load_programs():
     """
     Load program data into memory from /data/programData.json file if it exists.
@@ -613,8 +629,9 @@ def load_programs():
     try:
         with open("./data/programData.json", "r") as pf:
             gv.pd = json.load(pf)
-            for p in gv.pd:
-                gv.pnames.append(str(p["name"]))
+            gv.pnames = [""] * len(gv.pd)
+            for p in range(len(gv.pd)):
+                gv.pnames[p] = (str(gv.pd[p]["name"]))
     except IOError:
         #  Check if programs.json file exists (old format) and if so, run conversion
         if os.path.isfile("./data/programs.json"):

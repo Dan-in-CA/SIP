@@ -19,7 +19,7 @@ $code:
     months = json.dumps([_('January'), _('February'), _('March'), _('April'), _('May'), _('June'), _('July'), _('August'), _('September'), _('October'), _('November'), _('December')])
 
 $code:
-    deviceOffset = int(time.time() - timegm(time.localtime()))
+    deviceOffset = gv.tz_offset
 
 <!DOCTYPE html>
 <html lang="en">

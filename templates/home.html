@@ -6,6 +6,12 @@ $var page: home
 $code:
 	tf = gv.sd["tf"]
 	snames = gv.snames
+	
+ $code:
+    if gv.pon:
+        sipPname = gv.pnames[gv.pon - 1]
+    else:
+        sipPname = ""	
 
 $code:
 	def two_digits(n):
@@ -40,7 +46,7 @@ $code:
     let useRainsense = ${gv.sd["urs"]};
     let devt = ${gv.now};
     let pluginStn = $:{json.dumps(gv.pluginStn, ensure_ascii=False)};
-    const progNames = Array.from($:{gv.pnames});
+    let progNames = Array.from($:{gv.pnames});
     let h = 0;
     let w = 100;
     
@@ -50,12 +56,19 @@ $code:
             return "n/a";
         }
         let pname = "P" + lrpid;
+        
+//         if ($# ${sipPname}) {
+//             pname = $# $:{json.dumps(sipPname, ensure_ascii=False)};
+//         }
+        
         if (lrpid == 255 || lrpid == 99) {
             pname = $:{json.dumps(_('Manual Mode'), ensure_ascii=False)};
         }
         if (lrpid == 254 || lrpid == 98) {
             pname = $:{json.dumps(_('Run Once Program'), ensure_ascii=False)};
         }
+        
+
         let runDate = (new Date(lret * 1000)).toString(); // + timezoneSuffix; //dk
         return snames[lrsid] + $:{json.dumps(_(' ran '), ensure_ascii=False)} + pname + $:{json.dumps(_(' for '), ensure_ascii=False)} + (lrdur / 60>>0) + "m" + (lrdur % 60) + "s" + $:{json.dumps(_(' on '), ensure_ascii=False)} + runDate;
     }

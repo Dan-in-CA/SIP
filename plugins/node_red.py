@@ -150,8 +150,8 @@ def run_once(list, pre):
         dur_sum += dur
         gv.rs[sid][1] = gv.now + dur_sum
         gv.rs[sid][2] = dur
-        gv.rs[sid][3] = 98
-        gv.ps[sid][0] = 98
+        gv.rs[sid][3] = 100
+        gv.ps[sid][0] = 100
         gv.ps[sid][1] = dur
         stations[sid // 8] += 2 ** (sid % 8)
     if not gv.sd["bsy"]:

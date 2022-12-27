@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # standard library imports
-from calendar import timegm
+# from calendar import timegm
 from collections import OrderedDict
 import json
 import subprocess
@@ -22,7 +22,7 @@ minor_ver = " beta " # 0
 #     print(_("Could not use git to determine version!"), e)
 #     revision = 999
     # ver_str = "{}.{}.{}".format(major_ver, minor_ver, revision)   
-ver_str = "{}.{}".format(major_ver, minor_ver)    
+ver_str = f"{major_ver}.{minor_ver}" # .format(major_ver, minor_ver)    
 
 try:
     ver_date = subprocess.check_output(
@@ -106,11 +106,15 @@ else:
 from helpers import load_programs, station_names
 
 day_ord = 0
-nowt = time.localtime()
-now = timegm(nowt)
-tz_offset = int(
-    time.time() - timegm(time.localtime())
-)  # compatible with Javascript (negative tz shown as positive value)
+kr = 0 #  Keep a manual (program # 99) or run once (program 98) when another program starts or stops.
+now = time.time()
+nowt = time.localtime(now)
+tz_offset = time.timezone
+
+# tz_offset = int(
+#     now - timegm(nowt)
+# )  # compatible with Javascript (negative tz shown as positive value)
+
 plugin_menu = []  # Empty list of lists for plugin links (e.g. ["name", "URL"])
 srvals = [0] * (sd["nst"])  # Shift Register values
 output_srvals = [0] * (sd["nst"])  # Shift Register values last set by set_output()
