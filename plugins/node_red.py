@@ -185,17 +185,16 @@ def station_on_off(data):
             gv.ps[sid][0] = 100
             gv.ps[sid][1] = float("inf")                         
         else:
-            gv.rs[sid] = [0,0,0,0]
-            gv.srvals[sid] = 0 
-            gv.sbits[bid] &= ~(1 << (sid % 8))
-            gv.ps[sid] = [0,0]
             gv.lrun = [sid,
                        gv.rs[sid][3],
                        gv.now - gv.rs[sid][0],
                        gv.now
-                       ]
-            log_run()
-            
+                       ]  
+            log_run()                      
+            gv.rs[sid] = [0,0,0,0]
+            gv.srvals[sid] = 0 
+            gv.sbits[bid] &= ~(1 << (sid % 8))
+            gv.ps[sid] = [0,0]          
     gpio_pins.set_output()
     
 def run_now(ident):
