@@ -158,40 +158,44 @@ def run_once(list, pre):
         schedule_stations(stations)
         
 def station_on_off(data):
-    if (not gv.sd["mm"]  # SIP is not in manual mode
-        and not "req mm" in data 
-        or ("req mm" in data                
-            and data["req mm"] == 1
-            and not gv.sd["mm"])
-        ):
-        return "Error: manual mode required"
-    try:
+    # print("nr 161 on-off)")
+    # if (not gv.sd["mm"]  # SIP is not in manual mode
+    #     and not "req mm" in data 
+    #     or ("req mm" in data                
+    #         and data["req mm"] == 1
+    #         and not gv.sd["mm"])
+    #     ):
+    #     return "Error: manual mode required"
+    if "sn" in data:
         station = data["sn"]
-    except KeyError:
+    elif "station" in data:
         station = data["station"]               
     val = data["set"]
-    new_srvals = gv.srvals
+    # new_srvals = gv.srvals
     masid = gv.sd["mas"] - 1
     for sn in range(len(station)): # number of stations in data
         sid = station[sn] - 1 # station index
+        print("nr 178 on-off sid: ", sid)
         bid = sid // 8
         if val: # set == 1 in Node-red - applies to all stations in data                   
-            new_srvals[sid] = 1 # station[s] == station number in UI 
+            # new_srvals[sid] = 1 # station[s] == station number in UI 
+            gv.rs[sid] = [gv.now, float("inf"), 0, 100]
             gv.srvals[sid] = 1                 
-            gv.sbits[bid] |= 1 << sid % 8  # Set sbits for this station                   
+            gv.sbits[bid] |= 1 << (sid % 8)  # Set sbits for this station                   
             gv.ps[sid][0] = 100
-            gv.rs[sid] = [gv.now, float("inf"), 0, 100] 
-                             
+            gv.ps[sid][1] = float("inf")                         
         else:
-            gv.sbits[bid] &= ~(1 << sid)
-            gv.ps[sid][0] = 0
+            gv.rs[sid] = [0,0,0,0]
+            gv.srvals[sid] = 0 
+            gv.sbits[bid] &= ~(1 << (sid % 8))
+            gv.ps[sid] = [0,0]
             gv.lrun = [sid,
                        gv.rs[sid][3],
                        gv.now - gv.rs[sid][0],
                        gv.now
                        ]
             log_run()
-            gv.rs[sid] = [0,0,0,0]
+            
     gpio_pins.set_output()
     
 def run_now(ident):
@@ -491,8 +495,9 @@ class parse_json(object):
     def POST(self):
         """ Update SIP with value sent from node-red. """
         data = web.data()
-        # print("447 data: ", data)  # - test
+
         data = json.loads(data.decode('utf-8'))
+        print("NR 496 data: ", data)  # - test
            
         not_writable = ["cputemp",
                         "day_ord",
@@ -758,9 +763,9 @@ class parse_json(object):
                 and data["preempt"] == 0
                ):
                 pre = 0
-            try:
+            if "ro" in data:
                 run_once(data["ro"], pre)
-            except KeyError:
+            elif "run once" in data:
                 run_once(data["run once"], pre)
         
         elif ("run" in data):

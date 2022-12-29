@@ -689,7 +689,9 @@ class api_status(ProtectedPage):
                                 rem = 0
 
                             id_nr = gv.ps[sid][0]
-                            if gv.pon:
+                            if (gv.pon 
+                                and not gv.pon > len(gv.pnames)                                
+                                ):
                                 pname = gv.pnames[gv.pon - 1]
                             else:
                                 pname = "P" + str(id_nr)                            

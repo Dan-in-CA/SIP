@@ -106,7 +106,7 @@ else:
 from helpers import load_programs, station_names
 
 day_ord = 0
-kr = 0 #  Keep a manual (program # 99) or run once (program 98) when another program starts or stops.
+node_runs = {}
 now = time.time()
 nowt = time.localtime(now)
 tz_offset = time.timezone

@@ -44,9 +44,6 @@ import web  # the Web.py module. See webpy.org (Enables the Python SIP web inter
 sys.path.append("./plugins")
 gv.restarted = 1
 
-# command = "hostname -I"
-# ip_addr = subprocess.check_output(command.split()).strip().split()
-
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
     print(_("Starting timing loop") + "\n")
@@ -78,8 +75,7 @@ def timing_loop():
                 for i, p in enumerate(gv.pd):  # get both index and prog item
                     if p["start_min"] == this_min:
                         if prog_match(p) and any(p["duration_sec"]):
-                            # check each station per boards listed in program up to number of boards in Options
-                            
+                            # check each station per boards listed in program up to number of boards in Options                           
                             for b in range(len(p["station_mask"])):
                                 for s in range(8):
                                     sid = b * 8 + s  # station index
@@ -99,7 +95,7 @@ def timing_loop():
                                     else:
                                         duration_adj = (
                                             gv.sd["wl"] / 100.0
-                                        ) * plugin_adjustment() # was extra_adjustment
+                                        ) * plugin_adjustment()
                                         if gv.sd["idd"]:
                                             duration = (
                                                 p["duration_sec"][sid] * duration_adj
@@ -114,14 +110,16 @@ def timing_loop():
                                         gv.rs[sid][3] = i + 1  # program number for scheduling
                                         gv.ps[sid][0] = i + 1  # program number for display
                                         gv.ps[sid][1] = duration
-                            schedule_stations(p["station_mask"])  # turns on gv.sd["bsy"]
+                            schedule_stations(p["station_mask"])  # -> helpers, turns on gv.sd["bsy"]
 
-        if gv.sd["bsy"]:
+        if (gv.sd["bsy"]
+            or any(gv.node_runs)
+            ):
             for b in range(gv.sd["nbrd"]):  # Check each station once a second
                 for s in range(8):
                     sid = b * 8 + s  # station index
                     if gv.srvals[sid]:  # if this station is on
-                        if gv.now >= gv.rs[sid][1]:  # check if time is up
+                        if gv.now >= gv.rs[sid][1]:  # if time is up
                             gv.srvals[sid] = 0
                             set_output()
                             gv.sbits[b] &= ~(1 << s)
@@ -134,14 +132,14 @@ def timing_loop():
                                 report_station_completed(sid + 1)
                             gv.rs[sid] = [0, 0, 0, 0]
                     else:  # if this station is not yet on
-                        if (gv.now >= gv.rs[sid][0]  # - test
-                            and gv.now < gv.rs[sid][1]  # - test
+                        if (gv.now >= gv.rs[sid][0]
+                            and gv.now < gv.rs[sid][1]
                            ):
                             if sid != masid: # if not master
                                 if (gv.sd["mo"][b] & (1 << s) # station activates master
                                     and gv.sd["mton"] < 0 # master has a negative delay
                                     and not gv.srvals[masid] # master is not on
-                                ):
+                                    ):
                                     # advance remaining stations start and stop times by master negative delay
                                     for stn in range(sid, len(gv.rs)):
                                         if gv.rs[stn][3]:  # If station has a duration  
@@ -159,7 +157,7 @@ def timing_loop():
                                     gv.ps[sid][1] = gv.rs[sid][2]
                                 if (gv.sd["mas"] # Master is defined
                                     and gv.sd["mo"][b] & (1 << s) # this station activates master.
-                                ):  # Master settings
+                                    ):  # Master settings
                                     if gv.sd["mton"] > 0:
                                         gv.rs[masid][0] = gv.rs[sid][0] + gv.sd["mton"] # this is where master is scheduled
                                     gv.rs[masid][1] = gv.rs[sid][1] + gv.sd["mtoff"]
@@ -201,7 +199,7 @@ def timing_loop():
                 gv.ps = []
                 for i in range(gv.sd["nst"]):
                     gv.ps.append([0, 0])
-                # gv.rs = []  # - test zlrngyh of gv.rs is adjusted by webpages.py update_scount()
+                # gv.rs = []  # - test Length of gv.rs is adjusted by webpages.py update_scount()
                 # for i in range(gv.sd["nst"]):
                 #     gv.rs.append([0, 0, 0, 0]) #  clear run schedule  # - test
                 gv.sd["bsy"] = 0
@@ -330,6 +328,5 @@ if __name__ == "__main__":
             print("SSL error", e)
             restart(2)
 
-    # print("IP: ", ip_addr[0].decode("utf-8"))
     app.run()
 

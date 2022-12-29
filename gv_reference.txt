@@ -68,8 +68,8 @@ tu          "C"         Temperature unit that appears in the page footer ("C" or
 Read + write:
 ===========
 gv.bsy                  SIP is busy, stations are running
-# gv.kr        [S]        Keep running, allows a manual or run once station to keep running when a scheduled program starts or stops.
 gv.lrun      [4]        last run, used to add data to log file (list: [station index, program number, duration, end time]). Length = 4
+gv.node_runs            Dictionary of stations being controlled by node-red. 
 gv.now                  Current time as seconds since the epoch, in UTC. Updated once per second.
 gv.pd        [P]        program data - loaded from file at startup (list of dicts). Length = number of programs.
 gv.pluginStn            Used to display plugin data next to station time countdown on home page timeline.

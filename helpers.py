@@ -436,18 +436,17 @@ def schedule_stations(stations):
     """
     Schedule stations/valves/zones to run.
     """
-    # print("H 439 stations: ", stations)  # - test
-    if (gv.sd["rd"]   #  If rain delay or rain detected by sensor
+    if (gv.sd["rd"]   #  If rain delay
         or (gv.sd["urs"]
             and gv.sd["rs"]
-            )
+            ) #  rain detected by sensor
         ):
         rain = True
     else:
         rain = False               
     accumulate_time = gv.now
     if gv.sd["seq"]:  # sequential mode, stations run one after another
-        for b in range(len(stations)):  # stations is a list of bitmasks, one per board
+        for b in range(len(stations)):  # stations is a list of bitmasks in the program, one per board
             for s in range(8):
                 sid = b * 8 + s  # station index
                 if gv.rs[sid][2]:  # if station has a duration value
@@ -469,7 +468,8 @@ def schedule_stations(stations):
             for s in range(8):
                 sid = b * 8 + s  # station index
                 if (
-                    not stations[b] & 1 << s or gv.srvals[sid]
+                    not stations[b] & 1 << s 
+                    or gv.srvals[sid]
                 ):
                     continue  # skip stations not in prog or already running
                 if gv.rs[sid][2]:  # if station has a duration value
@@ -483,8 +483,8 @@ def schedule_stations(stations):
                     else:  # if rain and station does not ignore, clear station from display
                         gv.sbits[b] &= ~1 << s
                         gv.ps[s] = [0, 0]
-    # report_stations_scheduled()
-    # gv.sd["bsy"] = 1
+    # report_stations_scheduled()  # - test
+    # gv.sd["bsy"] = 1  # - test
 
 
 def stop_onrain():
@@ -564,9 +564,8 @@ def run_program(pid):
     Run a program, pid == program index
     """  
     nr_run = 0
-    for stn in gv.rs:  # - test
+    for stn in gv.rs:  # - test # check for stations run by Node-red
         if stn[3] == 100:
-            # print("found prog 100")
             nr_run = 1
             break
     if nr_run:
@@ -574,26 +573,24 @@ def run_program(pid):
     else:
         stop_stations()
     
-    p = gv.pd[pid]  # program data    
-    sid = -1
+    p = gv.pd[pid]  # program data
     for b in range(gv.sd["nbrd"]):  # check each station
         for s in range(8):
-            sid += 1  # station index
-            if sid + 1 == gv.sd["mas"]:  # skip if this is master valve
-                continue
+            if s + 1 == gv.sd["mas"]:
+                continue  # skip if this is master valve
             if (
                 p["station_mask"][b] & 1 << s
             ):  # this station is scheduled in this program
                 if gv.sd["idd"]:
-                    duration = p["duration_sec"][sid]
+                    duration = p["duration_sec"][s]
                 else:
                     duration = p["duration_sec"][0]
                 if not gv.sd["iw"][b] & 1 << s:
                     duration = duration * gv.sd["wl"] // 100 * plugin_adjustment()
-                gv.rs[sid][2] = duration
-                gv.rs[sid][3] = pid + 1  # store program number in schedule
-                gv.ps[sid][0] = pid + 1  # store program number for display
-                gv.ps[sid][1] = duration  # duration
+                gv.rs[s][2] = duration
+                gv.rs[s][3] = pid + 1  # store program number in schedule
+                gv.ps[s][0] = pid + 1  # store program number for display
+                gv.ps[s][1] = duration  # duration
     schedule_stations(p["station_mask"])  # + gv.sd["nbrd"]])     
 
 

@@ -8,7 +8,7 @@ $code:
 	snames = gv.snames
 	
  $code:
-    if gv.pon:
+    if gv.pon and not gv.pon > len(gv.pnames):
         sipPname = gv.pnames[gv.pon - 1]
     else:
         sipPname = ""	
@@ -85,6 +85,10 @@ $code:
                     if (minutes < 10) {minutes = "0"+minutes;}
                     if (seconds < 10) {seconds = "0"+seconds;}
                     if (station.status == "on") {
+                    	if (station.programName == "Node-red Program" && station.remaining == 0) {
+                    		display = $:{json.dumps(_('On'), ensure_ascii=False)};
+                    	}
+                    	else {
                         display = minutes+":"+seconds;
 	                        if (typeof pluginStn !== 'undefined' && pluginStn.length) {
 	                      	pluginStn.forEach(
@@ -96,7 +100,8 @@ $code:
 	                      			display = display + ", " +  item[0] + ": " + item[1];
 	                      		}
 	                      	});
-	                      }                        
+	                        }
+	                        }                        
                         
                     } else {
                         display = "(" + minutes+":"+seconds + ")";

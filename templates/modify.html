@@ -283,9 +283,9 @@ $code:
             let dm = parseInt(jQuery("#tdm").val());
             let ds = parseInt(jQuery("#tds").val());
             let gduration = dm * 60 + ds;
-            if(!idd) {
-                if (!(dm >= 0 && ds >= 0 && ds < 60 && gduration > 0)) {
-                    alert($:{json.dumps(_(u"Please enter a Duration to continue."), ensure_ascii=False)});
+            if(!idd) {                           	
+                if (!(dm >= 0 && ds >= 0 && gduration > 0)) {
+                    alert($:{json.dumps(_("Please enter a Duration to continue."), ensure_ascii=False)});
                     return;
                 }
             }
@@ -306,7 +306,7 @@ $code:
                             let ds = parseInt(jQuery("#tds" + sid).val());
                             sduration = dm * 60 + ds;
                             if (!(dm >= 0 && ds >= 0 && ds < 60 && sduration > 0)) {
-                                alert($:{json.dumps(_(u'Duration must be later than start.'), ensure_ascii=False)});
+                                alert($:{json.dumps(_('Duration must be later than start.'), ensure_ascii=False)});
                                 return;
                             }
                         } else {
