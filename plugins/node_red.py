@@ -6,6 +6,7 @@ from __future__ import print_function
 
 # standard library imports
 import json  # for working with data file
+import re
 import threading
 from threading import Thread
 from time import sleep
@@ -14,8 +15,7 @@ from time import sleep
 from blinker import signal
 import gpio_pins
 import gv  # Get access to SIP's settings
-from helpers import * # provides functions for button taps
-# import helpers
+from helpers import * # provides utility functions
 import requests
 from sip import template_render  #  Needed for working with web.py templates
 from urls import urls  # Get access to SIP's URLs
@@ -25,6 +25,7 @@ from webpages import ProtectedPage  # Needed for security
 # from webpages import refresh_page
 from webpages import showInFooter # Enable plugin to display readings in UI footer
 from webpages import showOnTimeline # Enable plugin to display station data on timeline
+# from matplotlib.backends.qt_editor._formlayout import datalist
 
 
 # Add new URLs to access classes in this plugin.
@@ -90,6 +91,7 @@ def load_settings():
                     "chng-ro": "on",                    
                     "nr-url": "http://localhost:1880/node_red",
                     "chng-stn": "on",
+                    "chng-prog": "on",
                     "blinker-signals": "on"
                 } 
         jsave(nr_settings, "node_red")
@@ -156,29 +158,75 @@ def run_once(list, pre):
         stations[sid // 8] += 2 ** (sid % 8)
     if not gv.sd["bsy"]:
         schedule_stations(stations)
-        
+
+def program_on_off(data):
+    """ Disable or enable a SIP program.
+        Optionally end the program if running.
+    """
+    if "prog" in data:
+        program = data["prog"]
+    elif "program" in data:
+        program = data["program"]   
+    state = int(data["set"])
+    for p in range(len(program)):
+        prog_p = program[p]       
+        if isinstance(prog_p, int):
+            pid = prog_p - 1            
+        elif isinstance(prog_p, str):
+            if prog_p.isnumeric():  # quoted number
+                pid = int(prog_p) -1        
+            elif prog_p.lower() == "all":
+                for i in range(len(gv.pd)):
+                    gv.pd[i]["enabled"] = state
+                return
+            else:
+                try:
+                    pid = gv.pnames.index(prog_p)
+                except ValueError as e:
+                    return e              
+        if ("end" in data
+            and int(data["end"]) == 1
+            and state == 0
+            and gv.pon - 1 == pid  # The program to be disabled is running                
+            ):
+            stop_stations()        
+        gv.pd[pid]["enabled"] = state
+    jsave(gv.pd, "programData")
+    
+                     
 def station_on_off(data):
-    # print("nr 161 on-off)")
-    # if (not gv.sd["mm"]  # SIP is not in manual mode
-    #     and not "req mm" in data 
-    #     or ("req mm" in data                
-    #         and data["req mm"] == 1
-    #         and not gv.sd["mm"])
-    #     ):
-    #     return "Error: manual mode required"
     if "sn" in data:
         station = data["sn"]
     elif "station" in data:
         station = data["station"]               
-    val = data["set"]
-    # new_srvals = gv.srvals
+    state = data["set"]
     masid = gv.sd["mas"] - 1
+    if "preempt" in data:
+        pre = data["preempt"]
+    else:
+        pre = 0    
     for sn in range(len(station)): # number of stations in data
-        sid = station[sn] - 1 # station index
-        print("nr 178 on-off sid: ", sid)
+        stn = station[sn]
+        if isinstance(stn, int):
+            sid = stn - 1 # station index            
+        elif isinstance(stn, str):
+            if stn.isnumeric():  # quoted number
+                sid = int(stn) -1        
+            else:
+                try:
+                    sid = gv.snames.index(stn)
+                except ValueError as e:
+                    return e             
         bid = sid // 8
-        if val: # set == 1 in Node-red - applies to all stations in data                   
-            # new_srvals[sid] = 1 # station[s] == station number in UI 
+        
+        if (not pre  # preempt is not set
+            and gv.pon  # a program is running
+            and (gv.pd[gv.pon - 1]["station_mask"][bid]) & 1 << sid  # station is in the program
+            and gv.rs[sid][2]  # station has a duration in running program
+            ):
+            continue  # Skip if station is controlled by a running program
+        
+        if state: # set == 1 in Node-red - applies to all stations in data                   
             gv.rs[sid] = [gv.now, float("inf"), 0, 100]
             gv.srvals[sid] = 1                 
             gv.sbits[bid] |= 1 << (sid % 8)  # Set sbits for this station                   
@@ -489,6 +537,7 @@ class parse_json(object):
             except Exception as e:
                 return e            
         else:
+            print ("unknown request: ", qdict)
             return "Unknown request"
         
     def POST(self):
@@ -496,7 +545,7 @@ class parse_json(object):
         data = web.data()
 
         data = json.loads(data.decode('utf-8'))
-        print("NR 496 data: ", data)  # - test
+        print("NR 501 data: ", data)  # - test
            
         not_writable = ["cputemp",
                         "day_ord",
@@ -770,12 +819,17 @@ class parse_json(object):
         elif ("run" in data):
               run_now(data["run"])
               
+        elif (("prog" in data or"program" in data)
+              and "chng-prog" in nr_settings
+              ):           
+            program_on_off(data)
+              
         # stop all stations
-        elif ("stop-all" in data):
+        elif "stop-all" in data:
             stop_stations()
         
         else:
-            # print("Unknown request: ", data)  # - test
+            print("Unknown request: ", data)  # - test
             return "Unknown request"            
 
 

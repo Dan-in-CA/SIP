@@ -71,6 +71,11 @@ $var page: node-red  <!--Edit: page name, used internally-->
             </tr> 
 
             <tr>
+                <td style='text-transform: none;'>$_(u'program on/off'):</td>
+                <td><input type="checkbox" name="chng-stn" ${"checked" if 'chng-prog' in settings else ""}></td>
+            </tr>            
+            
+            <tr>
                 <td style='text-transform: none;'>$_(u'Run once'):</td>
                 <td><input type="checkbox" name="chng-ro" ${"checked" if 'chng-ro' in settings else ""}></td>
             </tr>
