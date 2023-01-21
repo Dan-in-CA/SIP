@@ -34,17 +34,6 @@ $var page: node-red  <!--Edit: page name, used internally-->
         <table class="optionList">
 
             <!--Check boxes-->
-            <thead>
-                <th class="stationNumber">$_('To Node-red')</th>
-            </thead>
-            <tr>
-                <td style='text-transform: none;'>$_('Send station on/off'):</td>  <!--Edit-->
-                <td><input type="checkbox" name="station-on-off"  ${"checked" if 'station-on-off' in settings else ""}></td>
-            </tr>
-            <tr>
-                <td style='text-transform: none;'>$_('Send blinker signals'):</td>  <!--Edit-->
-                <td><input type="checkbox" name="blinker-signals"  ${"checked" if 'blinker-signals' in settings else ""}></td>
-            </tr>
             
             <thead>
                 <th class="stationNumber">$_(u'From Node-red')</th>
@@ -56,6 +45,41 @@ $var page: node-red  <!--Edit: page name, used internally-->
             </tr> -->
 
             <tr>
+                <td style='text-transform: none;'>$_(u'program on/off'):</td>
+                <td><input type="checkbox" name="chng-prog" ${"checked" if 'chng-prog' in settings else ""}></td>
+            </tr>
+            
+            <tr>
+                <td style='text-transform: none;'>$_(u'rain delay'):</td>
+                <td><input type="checkbox" name="chng-rd" ${"checked" if 'chng-rd' in settings else ""}></td>
+            </tr>            
+            
+            <tr>
+                <td style='text-transform: none;'>$_(u'run now'):</td>
+                <td><input type="checkbox" name="chng-rn" ${"checked" if 'chng-rn' in settings else ""}></td>
+            </tr>                         
+            
+            <tr>
+                <td style='text-transform: none;'>$_(u'run once'):</td>
+                <td><input type="checkbox" name="chng-ro" ${"checked" if 'chng-ro' in settings else ""}></td>
+            </tr>          
+            
+            <tr>
+                <td style='text-transform: none;'>$_(u'station switch'):</td>
+                <td><input type="checkbox" name="chng-stn" ${"checked" if 'chng-stn' in settings else ""}></td>
+            </tr>
+            
+            <tr>
+                <td style='text-transform: none;'>$_(u'stop all'):</td>
+                <td><input type="checkbox" name="stop-stn" ${"checked" if 'stop-stn' in settings else ""}></td>
+            </tr>         
+            
+            <tr>
+                <td style='text-transform: none;'>$_(u'water level'):</td>
+                <td><input type="checkbox" name="chng-wl" ${"checked" if 'chng-wl' in settings else ""}></td>
+            </tr>                       
+                 
+            <tr>
                 <td style='text-transform: none;'>$_(u'sd changes'):</td>
                 <td><input type="checkbox" name="chng-sd" ${"checked" if 'chng-sd' in settings else ""}></td>
             </tr> 
@@ -63,23 +87,19 @@ $var page: node-red  <!--Edit: page name, used internally-->
             <tr>
                 <td style='text-transform: none;'>$_(u'gv changes'):</td>
                 <td><input type="checkbox" name="chng-gv" ${"checked" if 'chng-gv' in settings else ""}></td>
-            </tr>
-            
-            <tr>
-                <td style='text-transform: none;'>$_(u'station on/off'):</td>
-                <td><input type="checkbox" name="chng-stn" ${"checked" if 'chng-stn' in settings else ""}></td>
-            </tr> 
+            </tr>                 
 
+            <thead>
+                <th class="stationNumber">$_('To Node-red')</th>
+            </thead>
             <tr>
-                <td style='text-transform: none;'>$_(u'program on/off'):</td>
-                <td><input type="checkbox" name="chng-stn" ${"checked" if 'chng-prog' in settings else ""}></td>
-            </tr>            
-            
-            <tr>
-                <td style='text-transform: none;'>$_(u'Run once'):</td>
-                <td><input type="checkbox" name="chng-ro" ${"checked" if 'chng-ro' in settings else ""}></td>
+                <td style='text-transform: none;'>$_('Send station on/off'):</td>  <!--Edit-->
+                <td><input type="checkbox" name="station-on-off"  ${"checked" if 'station-on-off' in settings else ""}></td>
             </tr>
-                     
+            <tr>
+                <td style='text-transform: none;'>$_('Send blinker signals'):</td>  <!--Edit-->
+                <td><input type="checkbox" name="blinker-signals"  ${"checked" if 'blinker-signals' in settings else ""}></td>
+            </tr>                     
 
         </table></br>
 

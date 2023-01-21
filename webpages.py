@@ -124,7 +124,6 @@ class change_values(ProtectedPage):
         
     def change_values(self):    
         qdict = web.input()
-        # print("cv qdict: ", qdict)  # - test
         if "rsn" in qdict and qdict["rsn"] == "1":
             stop_stations()
             raise web.seeother("/")
@@ -134,20 +133,21 @@ class change_values(ProtectedPage):
             gv.srvals = [0] * (gv.sd["nst"])  # turn off all stations
             set_output()
         if "mm" in qdict and qdict["mm"] == "0":
-            clear_mm()
-        if "rd" in qdict and qdict["rd"] != "0" and qdict["rd"] != "":
-            gv.sd["rd"] = int(float(qdict["rd"]))
-            gv.sd["rdst"] = int(
-                gv.now + gv.sd["rd"] * 3600
-            )  # + 1  # +1 adds a smidge just so after a round trip the display hasn"t already counted down by a minute.
-            stop_onrain()
-            report_rain_delay_change()
-        elif "rd" in qdict and qdict["rd"] == "0":
-            gv.sd["rdst"] = 0
+            clear_mm()            
+        if "rd" in qdict:        
+            if qdict["rd"]:
+                gv.sd["rd"] = int(float(qdict["rd"]))
+                gv.sd["rdst"] = round(gv.now + gv.sd["rd"] * 3600)
+                stop_onrain()
+                report_rain_delay_change()
+            else:
+                gv.sd["rd"] = 0
+                gv.sd["rdst"] = 0
+                report_rain_delay_change()
         for key in list(qdict.keys()):
             try:
                 gv.sd[key] = int(qdict[key])
-            except Exception as e:
+            except Exception:
                 pass
         jsave(gv.sd, "sd")
         report_value_change()
@@ -173,7 +173,6 @@ class change_options(ProtectedPage):
         self.change_options()
         
     def POST(self):
-        # print("co post: ", web.input())  # - test
         self.change_options()           
         
     def change_options(self):    

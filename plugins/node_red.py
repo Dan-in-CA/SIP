@@ -21,7 +21,7 @@ from sip import template_render  #  Needed for working with web.py templates
 from urls import urls  # Get access to SIP's URLs
 import web  # web.py framework
 import webpages
-from webpages import ProtectedPage  # Needed for security
+from webpages import ProtectedPage, report_value_change  # Needed for security
 # from webpages import refresh_page
 from webpages import showInFooter # Enable plugin to display readings in UI footer
 from webpages import showOnTimeline # Enable plugin to display station data on timeline
@@ -88,10 +88,14 @@ def load_settings():
         nr_settings = {"station-on-off": "on",
                     "chng-gv": "on",
                     "chng-sd": "on",
-                    "chng-ro": "on",                    
+                    "chng-rd": "on",
+                    "chng-ro": "on",
+                    "chng-rn": "on",                     
                     "nr-url": "http://localhost:1880/node_red",
                     "chng-stn": "on",
+                    "stop-stn": "on",
                     "chng-prog": "on",
+                    "chng-wl": "on",
                     "blinker-signals": "on"
                 } 
         jsave(nr_settings, "node_red")
@@ -102,20 +106,10 @@ load_settings()
 
 def to_node_red(note):
     url = nr_settings["nr-url"]
-    # print("104 to node-red: ", note)  # - test)
+    print("NR 109 to node-red: ", note)  # - test)
     resp = requests.get(url, params = note)
-    # print("response: ", resp)  # - test
+    # print("NR 111 response: ", resp)  # - test
 
-
-
-#
-# def set_rain_delay(hrs):
-#     gv.sd["rd"] = hrs
-#     gv.sd["rdst"] = int(
-#         gv.now + hrs * 3600
-#     )
-#     stop_onrain()
-#     report_rain_delay_change()
             
 def set_rain_sensed(i):
     if i:
@@ -246,7 +240,7 @@ def station_on_off(data):
     gpio_pins.set_output()
     
 def run_now(ident):
-    print("198 ideint: ", ident)  # - test
+    # print("198 ideint: ", ident)  # - test
     try:
         if isinstance(ident, int):
             pid = ident -1
@@ -295,19 +289,24 @@ def send_zone_change(name, **kw):
 zones = signal("zone_change")
 zones.connect(send_zone_change)
 
-def send_rain_delay_change(name, **kw):
-    global prior_rd
-    if gv.sd["rd"] != prior_rd: # rain delay has changed
-        if gv.sd["rd"]: #  just switched on
-            state = 1
-        else:           #  Just switched off
-            state = 0
-        note = {"rd_state": state}
-        to_node_red(note)
-        prior_rd = gv.sd["rd"]  
+def send_rain_delay_change(name, **kw):  # see line 663
+    """ Send rain delay state change to node-red
+    """
+    # global prior_rd
+    # if gv.sd["rd"] != prior_rd: # rain delay has changed
+    if gv.sd["rd"]: #  just switched on
+        state = 1
+    else:           #  Just switched off
+        state = 0
+    note = {"rd_state": state}
+    to_node_red(note)  # see line 107
+    prior_rd = gv.sd["rd"]  
 
-rd_change = signal("value_change")
+rd_change = signal("rain_delay_change")
 rd_change.connect(send_rain_delay_change)
+
+# rd_change = signal("value_change")
+# rd_change.connect(send_rain_delay_change)
 
 #### blinker signals ##########
 "alarm"
@@ -318,7 +317,7 @@ rd_change.connect(send_rain_delay_change)
 "program_deleted"
 "program_toggled"
 "rain_changed"
-# "rain_delay_change" # included with "value_change"
+"rain_delay_change" # included with "value_change"
 "rebooted"
 "restarting"
 "running_program_change"
@@ -543,9 +542,8 @@ class parse_json(object):
     def POST(self):
         """ Update SIP with value sent from node-red. """
         data = web.data()
-
         data = json.loads(data.decode('utf-8'))
-        print("NR 501 data: ", data)  # - test
+        print("NR 554 data: ", data)  # - test
            
         not_writable = ["cputemp",
                         "day_ord",
@@ -660,16 +658,19 @@ class parse_json(object):
             try:     
                 # Change values
                 if data["sd"] == "rd":  # rain delay
-                    if ((not val == None
-                        # and not gv.sd["rd"]  # Rain delay already set
-                        and not val == -1)
-                        or val == 0
+                    print("NR 672 val: ", val)  # - test
+                    if (not val == None
+                        and "chng-rd" in nr_settings
                         ):
-                        requests.get(url = base_url + "cv", params = {"rd":val})
-                        data = ""
-                    elif val == -1:
-                        note = {"rd_state": "0"}
-                        to_node_red(note)                        
+                        if not val == 0:    
+                            gv.sd["rd"] = val
+                            gv.sd["rdst"] = round(gv.now + val * 3600)
+                            stop_onrain()
+                        elif val == 0:
+                            gv.sd["rd"] = 0
+                            gv.sd["rdst"] = 0                                               
+                            # data = ""
+                    report_rain_delay_change() # see line 292               
                     
                 elif data["sd"] == "mm":  # manual mode
                     if val == 0:
@@ -681,9 +682,15 @@ class parse_json(object):
                         return "invalid request"    
                                                
                 elif (data["sd"] == "rsn"
-                   and val == 1
-                   ):
-                    stop_stations()                         
+                      and val == 1
+                      ):
+                    stop_stations()
+                    
+                elif (data["sd"] == "wl"
+                      and "chng-wl" in nr_settings
+                      ):
+                    gv.sd["wl"] = val                 
+                                            
                 # Change options
                 elif data["sd"] == "nbrd":
                     requests.get(url = base_url + "co", params = {"onbrd":val})
@@ -734,7 +741,7 @@ class parse_json(object):
                     and data["save"] == 1
                     ):
                     jsave(gv.sd, "sd")
-                return "gv.sd[" + data["sd"] + "] updated to " + str(val)                    
+                    return "gv.sd[" + data["sd"] + "] updated to " + str(val)                    
             except Exception as e:
                 return e 
         
@@ -816,8 +823,8 @@ class parse_json(object):
             elif "run once" in data:
                 run_once(data["run once"], pre)
         
-        elif ("run" in data):
-              run_now(data["run"])
+        elif ("runProg" in data):
+              run_now(data["runProg"])
               
         elif (("prog" in data or"program" in data)
               and "chng-prog" in nr_settings
@@ -825,7 +832,7 @@ class parse_json(object):
             program_on_off(data)
               
         # stop all stations
-        elif "stop-all" in data:
+        elif "stopAll" in data:
             stop_stations()
         
         else:
