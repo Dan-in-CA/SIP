@@ -1,9 +1,9 @@
 // Set up a live clock based on device time
 
 function dateString(d) {
-	let dateString = dayList [d.getDay()]; // Moved translatable text to base.html, dk
+	let dateString = dayList [d.getDay()];
 	dateString += " " + d.getDate() + " ";
-	dateString += monthList [d.getMonth()]; // Moved translatable text to base.html, dk
+	dateString += monthList [d.getMonth()];
 	return dateString;
 }
 

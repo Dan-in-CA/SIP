@@ -76,7 +76,7 @@ def timing_loop():
                     if p["start_min"] == this_min:
                         if prog_match(p) and any(p["duration_sec"]):
                             # check each station per boards listed in program up to number of boards in Options                           
-                            for b in range(len(p["station_mask"])):
+                            for b in range(len(p["station_mask"])):  # len is number of bytes
                                 for s in range(8):
                                     sid = b * 8 + s  # station index
                                     if (gv.srvals[sid]

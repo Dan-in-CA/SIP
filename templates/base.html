@@ -128,7 +128,7 @@ $code:
             let man = $:{json.dumps(_('Manual'), ensure_ascii=False)};
             let program = $:{json.dumps(_('Program'), ensure_ascii=False)};
             let idd = $:{gv.sd['idd']};
-            let pluginVals;
+            let pluginVals;           
 
             jQuery(document).ready(function(){
                 jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + '/plugins\'">$_('Manage Plugins')</button><br/>');
@@ -176,21 +176,10 @@ $code:
     </script>
     <script src="static/scripts/behaviors.js"></script>
     <script src="static/scripts/schedule.js"></script>
-    <script src="static/scripts/intervalSelect.js"></script>
-    
-    <script> // Experimental function
-    function refresh() {
-        jQuery.ajax({
-        	url: "/refresh",
-        	success: function() {
-        		location.reload();
-        	  }
-        	});
-    }
-    </script>
+    <script src="static/scripts/intervalSelect.js"></script>  
     
 </head>
-<!-- <body onload="refresh()"> -->
+
 <body>
     <div class="content">
         <form name="tt" action="/ttu" method="get">
@@ -260,6 +249,7 @@ $code:
           </div>
 
         </div>
-    </div>
+    </div>   
+    
 </body>
 </html>

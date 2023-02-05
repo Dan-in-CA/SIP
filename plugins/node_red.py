@@ -1,14 +1,12 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-# Python 2/3 compatibility imports
-from __future__ import print_function
+# Node-RED SIP extensiion plugin
 
 # standard library imports
 import json  # for working with data file
 import re
-import threading
-from threading import Thread
+# import threading
+# from threading import Thread
 from time import sleep
 
 # local module imports
@@ -22,24 +20,22 @@ from urls import urls  # Get access to SIP's URLs
 import web  # web.py framework
 import webpages
 from webpages import ProtectedPage, report_value_change  # Needed for security
-# from webpages import refresh_page
+from webpages import report_option_change # refresh_page
 from webpages import showInFooter # Enable plugin to display readings in UI footer
 from webpages import showOnTimeline # Enable plugin to display station data on timeline
-# from matplotlib.backends.qt_editor._formlayout import datalist
 
 
 # Add new URLs to access classes in this plugin.
 # fmt: off
 urls.extend([
-    u"/node-red-sp", u"plugins.node_red.settings",
-    u"/node-red-save", u"plugins.node_red.save_settings",
-    u"/jsin", u"plugins.node_red.parse_json"
-
+    "/node-red-sp", "plugins.node_red.settings",
+    "/node-red-save", "plugins.node_red.save_settings",
+    "/jsin", "plugins.node_red.parse_json"
     ])
 # fmt: on
 
 # Add this plugin to the PLUGINS menu ["Menu Name", "URL"], (Optional)
-gv.plugin_menu.append([_(u"Node-red Settings"), u"/node-red-sp"])
+gv.plugin_menu.append([_("Node-red Settings"), "/node-red-sp"])
 
 #### Global variables ####
 base_url = "http://localhost/"
@@ -343,22 +339,22 @@ test_timeline = 0
  
 if test_footer:
     example1 = showInFooter()  #  instantiate class to enable data in footer
-    example1.label = u"Proto example data"
+    example1.label = "Proto example data"
     example1.val = 0
-    example1.unit = u" sec"
+    example1.unit = " sec"
      
     example2 = showInFooter() #  instantiate class to enable data in footer
-    example2.label = u"Second example data"
+    example2.label = "Second example data"
     example2.val = 0
-    example2.unit = u" seconds"
+    example2.unit = " seconds"
 
 if test_timeline:
     flow1 = showOnTimeline()  #  instantiate class to enable data on timeline
-    flow1.unit = u"lph"
+    flow1.unit = "lph"
     flow1.val = 1
      
     flow2 = showOnTimeline()  #  instantiate class to enable data on timeline
-    flow2.unit = u"Used(L)"
+    flow2.unit = "Used(L)"
     flow2.val = 1
 
 def data_test():
@@ -391,7 +387,7 @@ class settings(ProtectedPage):
     def GET(self):
         try:
             with open(
-                u"./data/node_red.json", u"r"
+                "./data/node_red.json", "r"
             ) as f:  # Read settings from json file if it exists
                 nr_settings = json.load(f)
         except IOError:  # If file does not exist return empty value
@@ -412,31 +408,10 @@ class save_settings(ProtectedPage):
         qdict = (
             web.input()
         )  # Dictionary of values returned as query string from settings page.
-        with open(u"./data/node_red.json", u"w") as f:
+        with open("./data/node_red.json", "w") as f:
             json.dump(qdict, f, indent=4)  # save to file
             nr_settings = dict(qdict)           
-        raise web.seeother(u"/")  # Return user to home page.
-    
-# class refresh_page(object):
-#     """Return event to trigger page reload."""
-#     # flag = None
-#     # def __init__(self):
-#     #     self.run()
-#
-#     def GET(self):
-#         print("AJAX request recieved")  # - test       
-#         event_obj = threading.Event()
-#         print("e-object: ", event_obj)  # - test
-#         self.flag = event_obj.wait()
-#
-#     # def run(self): ### maybe make this external
-#         thread1 = threading.Thread(target=self.GET)
-#         thread1.start()
-
-#     @staticmethod
-#     def send(self):
-#         # self.flag.set
-#         self.event_obj.set()
+        raise web.seeother("/")  # Return user to home page.
 
 
 class parse_json(object):
@@ -670,7 +645,8 @@ class parse_json(object):
                             gv.sd["rd"] = 0
                             gv.sd["rdst"] = 0                                               
                             # data = ""
-                    report_rain_delay_change() # see line 292               
+                    report_rain_delay_change() # see line 292
+                    report_option_change()               
                     
                 elif data["sd"] == "mm":  # manual mode
                     if val == 0:
@@ -689,7 +665,8 @@ class parse_json(object):
                 elif (data["sd"] == "wl"
                       and "chng-wl" in nr_settings
                       ):
-                    gv.sd["wl"] = val                 
+                    gv.sd["wl"] = val
+                    report_option_change()                
                                             
                 # Change options
                 elif data["sd"] == "nbrd":

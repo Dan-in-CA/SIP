@@ -32,6 +32,6 @@ urls = [
     "/logout", "webpages.logout",
     "/restart", "webpages.sw_restart",
     "/rss", "webpages.rain_sensor_state",
-    "/refresh", "node_red.refresh_page"
+    "/refresh", "webpages.page_refresh"
     # fmt: on
 ]

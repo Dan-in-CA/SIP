@@ -21,6 +21,7 @@ from blinker import signal
 from gpio_pins import set_output
 import gv
 import i18n
+# import requests
 from web.webapi import seeother
 import web
 from web import form
@@ -626,9 +627,12 @@ def load_programs():
     try:
         with open("./data/programData.json", "r") as pf:
             gv.pd = json.load(pf)
-            gv.pnames = [""] * len(gv.pd)
-            for p in range(len(gv.pd)):
-                gv.pnames[p] = (str(gv.pd[p]["name"]))
+            gv.pnames = []
+            for idx, p in enumerate(gv.pd):
+                if p["name"] == "":
+                    gv.pnames.append(idx + 1)
+                else:
+                    gv.pnames.append(str(p["name"]))
     except IOError:
         #  Check if programs.json file exists (old format) and if so, run conversion
         if os.path.isfile("./data/programs.json"):
