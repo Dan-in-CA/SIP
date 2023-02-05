@@ -13,8 +13,8 @@ class SSLFileobjectMixin:
     def sendall(self, *args, **kwargs): ...
     def send(self, *args, **kwargs): ...
 
-class SSLFileobjectStreamReader(SSLFileobjectMixin, StreamReader): ...  # type:ignore
-class SSLFileobjectStreamWriter(SSLFileobjectMixin, StreamWriter): ...  # type:ignore
+class SSLFileobjectStreamReader(SSLFileobjectMixin, StreamReader): ...  # type:ignore[misc]
+class SSLFileobjectStreamWriter(SSLFileobjectMixin, StreamWriter): ...  # type:ignore[misc]
 
 class SSLConnectionProxyMeta:
     def __new__(mcl, name, bases, nmspc): ...

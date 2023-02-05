@@ -39,3 +39,4 @@ web/
 !/static/docs/plugins/system_update-docs.html
 !/static/docs/plugins/node-red-docs.html
 todo.txt
+/_temp/*

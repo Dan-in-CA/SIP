@@ -1,12 +1,11 @@
-# !/usr/bin/env python
+# !/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 # Node-RED SIP extensiion plugin
 
 # standard library imports
 import json  # for working with data file
-import re
-# import threading
-# from threading import Thread
+# import re
 from time import sleep
 
 # local module imports
@@ -19,10 +18,8 @@ from sip import template_render  #  Needed for working with web.py templates
 from urls import urls  # Get access to SIP's URLs
 import web  # web.py framework
 import webpages
-from webpages import ProtectedPage, report_value_change  # Needed for security
-from webpages import report_option_change # refresh_page
-from webpages import showInFooter # Enable plugin to display readings in UI footer
-from webpages import showOnTimeline # Enable plugin to display station data on timeline
+from webpages import ProtectedPage  # Needed for security
+from webpages import report_option_change, report_value_change
 
 
 # Add new URLs to access classes in this plugin.
@@ -30,7 +27,7 @@ from webpages import showOnTimeline # Enable plugin to display station data on t
 urls.extend([
     "/node-red-sp", "plugins.node_red.settings",
     "/node-red-save", "plugins.node_red.save_settings",
-    "/jsin", "plugins.node_red.parse_json"
+    "/jsin", "plugins.node_red.handle_requests"
     ])
 # fmt: on
 
@@ -40,7 +37,6 @@ gv.plugin_menu.append([_("Node-red Settings"), "/node-red-sp"])
 #### Global variables ####
 base_url = "http://localhost/"
 prior_srvals = [0] * len(gv.srvals)
-prior_rd = 0
 nr_settings = {}
 
 
@@ -78,8 +74,7 @@ def load_settings():
         with open(
             "./data/node_red.json", "r"
         ) as f:  # Read nr_settings from json file if it exists
-            nr_settings = json.load(f)
-            # print("settings type:", type(nr_settings))  # - test                
+            nr_settings = json.load(f)               
     except IOError:  # If file does not exist save default values
         nr_settings = {"station-on-off": "on",
                     "chng-gv": "on",
@@ -95,14 +90,13 @@ def load_settings():
                     "blinker-signals": "on"
                 } 
         jsave(nr_settings, "node_red")
-    # print("node-red settings: ", nr_settings)  # - test
     return
     
 load_settings()    
 
 def to_node_red(note):
     url = nr_settings["nr-url"]
-    print("NR 109 to node-red: ", note)  # - test)
+    # print("NR 109 to node-red: ", note)  # - test)
     resp = requests.get(url, params = note)
     # print("NR 111 response: ", resp)  # - test
 
@@ -236,7 +230,6 @@ def station_on_off(data):
     gpio_pins.set_output()
     
 def run_now(ident):
-    # print("198 ideint: ", ident)  # - test
     try:
         if isinstance(ident, int):
             pid = ident -1
@@ -282,28 +275,24 @@ def send_zone_change(name, **kw):
                     note = {"station": i + 1, "name": name, "state": 1}
                     to_node_red(note)               
         prior_srvals = gv.srvals[:]
+        
 zones = signal("zone_change")
 zones.connect(send_zone_change)
 
 def send_rain_delay_change(name, **kw):  # see line 663
     """ Send rain delay state change to node-red
     """
-    # global prior_rd
-    # if gv.sd["rd"] != prior_rd: # rain delay has changed
     if gv.sd["rd"]: #  just switched on
         state = 1
     else:           #  Just switched off
         state = 0
     note = {"rd_state": state}
-    to_node_red(note)  # see line 107
-    prior_rd = gv.sd["rd"]  
+    to_node_red(note)  # see line 107 
 
 rd_change = signal("rain_delay_change")
 rd_change.connect(send_rain_delay_change)
 
-# rd_change = signal("value_change")
-# rd_change.connect(send_rain_delay_change)
-
+###############################
 #### blinker signals ##########
 "alarm"
 "new_day"
@@ -324,62 +313,6 @@ rd_change.connect(send_rain_delay_change)
 "zone_change"
 ###############################
 
-
-
-
-def send_blinker_signal():
-    pass
-
-#############################
-### Data display examples ###
-
-## use 1 to turn on for testing, 0 to turn off ##
-test_footer = 0
-test_timeline = 0
- 
-if test_footer:
-    example1 = showInFooter()  #  instantiate class to enable data in footer
-    example1.label = "Proto example data"
-    example1.val = 0
-    example1.unit = " sec"
-     
-    example2 = showInFooter() #  instantiate class to enable data in footer
-    example2.label = "Second example data"
-    example2.val = 0
-    example2.unit = " seconds"
-
-if test_timeline:
-    flow1 = showOnTimeline()  #  instantiate class to enable data on timeline
-    flow1.unit = "lph"
-    flow1.val = 1
-     
-    flow2 = showOnTimeline()  #  instantiate class to enable data on timeline
-    flow2.unit = "Used(L)"
-    flow2.val = 1
-
-def data_test():
-        while True: #  Display simulated plugin data
-            
-            #  Update footer data
-            if test_footer:
-                example1.val += 2 #  update plugin data 1
-                example2.val += 4 #  update plugin data 2
-            
-            #  Update timeline data
-            if test_timeline:
-                flow1.val += 1
-                flow2.val += 2
-            
-            sleep(1)        
-
-# Run data_test() in baskground thread
-ft = Thread(target = data_test)
-ft.daemon = True
-ft.start()
-
-### End data display examples ###
-#################################
-
 class settings(ProtectedPage):
     """
     Load an html page for entering plugin settings.
@@ -392,7 +325,6 @@ class settings(ProtectedPage):
                 nr_settings = json.load(f)
         except IOError:  # If file does not exist return empty value
             nr_settings = {}  # Default settings. can be list, dictionary, etc.
-        # print("settings type:", type(nr_settings))  # - test
         return template_render.node_red(nr_settings)  # open settings page
 
 
@@ -402,7 +334,6 @@ class save_settings(ProtectedPage):
     Will create or update file when SUBMIT button is clicked
     CheckBoxes only appear in qdict if they are checked.
     """
-    # global nr_settings
     def GET(self):
         global nr_settings
         qdict = (
@@ -413,10 +344,9 @@ class save_settings(ProtectedPage):
             nr_settings = dict(qdict)           
         raise web.seeother("/")  # Return user to home page.
 
-
-class parse_json(object):
+class handle_requests(object):
     """
-    parse JSON request message from node-red
+    parse request messages from node-red
     """    
 
 # gv lists:
@@ -427,7 +357,6 @@ class parse_json(object):
         qdict = (
             dict(web.input())  # Dictionary of JSON values
         )
-        # print("qdict: ", qdict)  # - test
         if "gv" in qdict:
             attr = str(qdict["gv"])
             try:
@@ -455,8 +384,7 @@ class parse_json(object):
                     gv_lst = getattr(gv, attr)
                     sel_lst = []                             
                              
-                if ("sn"  in qdict or "station" in qdict):
-                    # ):
+                if "sn"  in qdict or "station" in qdict:
                     sn_lst = []
                     if "sn" in qdict:
                         sn_lst = json.loads(qdict["sn"])
@@ -487,7 +415,6 @@ class parse_json(object):
                     except TypeError:
                         return "Error, item value must be an array in double quotes"
                     except IndexError:
-                        # return "Error, max index is " + str(len(index_lst) - 2)
                         pass                        
                     res_dict = dict(zip(index_lst, sel_lst))
                     return res_dict                     
@@ -511,15 +438,14 @@ class parse_json(object):
             except Exception as e:
                 return e            
         else:
-            print ("unknown request: ", qdict)
+            print ("unknown request: ", qdict)  # - test
             return "Unknown request"
         
     def POST(self):
         """ Update SIP with value sent from node-red. """
         data = web.data()
         data = json.loads(data.decode('utf-8'))
-        print("NR 554 data: ", data)  # - test
-           
+        # print("NR 448 data: ", data)  # - test          
         not_writable = ["cputemp",
                         "day_ord",
                         "lang", 
@@ -702,7 +628,6 @@ class parse_json(object):
                     set_rain_sensed(val) 
                     
                 elif  "bit" in data:
-                    # print("bits in data: ", data["bit"])  # - test
                     bit_write(data["sd"], data["bit"])
                                      
                 else:  # handle all other vars
@@ -721,69 +646,12 @@ class parse_json(object):
                     return "gv.sd[" + data["sd"] + "] updated to " + str(val)                    
             except Exception as e:
                 return e 
-        
-        # simulate button click/tap
-        elif "tap" in data:
-            
-           ### need to get val from data and call named function
-           
-            print("tap received")
-            # URL = ''
-            # requests.post(base_url + "co", params = data )
-            
-           # gv.cputemp = get_cpu_temp()
-           # template_render.home()   # - test
-           # print(web.ctx)
-           # raise web.seeother("localhost/")
-           
-           #### page refresh test
-           # print("flag info: ", refresh_page.flag)
-           # refresh_page.send()
-       
-            # clear_mm()
-            # gv.sd["mm"] = 0
-            
+
         # Station on off
         elif (("sn" in data or "station" in data)
               and "chng-stn" in nr_settings
               ):
             station_on_off(data)
-            
-            # if (not gv.sd["mm"]  # SIP is not in manual mode
-            #     and not "req mm" in data 
-            #     or ("req mm" in data                
-            #         and data["req mm"] == 1
-            #         and not gv.sd["mm"])
-            #     ):
-            #     return "Error: manual mode required"
-            # try:
-            #     station = data["sn"]
-            # except KeyError:
-            #     station = data["station"]               
-            # val = data["set"]
-            # new_srvals = gv.srvals
-            # masid = gv.sd["mas"] - 1
-            # for sn in range(len(station)): # number of stations in data
-            #     sid = station[sn] - 1 # station index
-            #     bid = sid // 8
-            #     if val: # set == 1 in Node-red - applies to all stations in data                   
-            #         new_srvals[sid] = 1 # station[s] == station number in UI 
-            #         gv.srvals[sid] = 1                 
-            #         gv.sbits[bid] |= 1 << sid % 8  # Set sbits for this station                   
-            #         gv.ps[sid][0] = 100
-            #         gv.rs[sid] = [gv.now, float("inf"), 0, 100] 
-            #
-            #     else:
-            #         gv.sbits[bid] &= ~(1 << sid)
-            #         gv.ps[sid][0] = 0
-            #         gv.lrun = [sid,
-            #                    gv.rs[sid][3],
-            #                    gv.now - gv.rs[sid][0],
-            #                    gv.now
-            #                    ]
-            #         log_run()
-            #         gv.rs[sid] = [0,0,0,0]
-            # gpio_pins.set_output()
                    
         # run once
         elif (("ro" in data or "run once" in data)
@@ -813,13 +681,5 @@ class parse_json(object):
             stop_stations()
         
         else:
-            print("Unknown request: ", data)  # - test
+            # print("Unknown request: ", data)  # - test
             return "Unknown request"            
-
-
-#  Run when plugin is loaded
-
-# load_settings()
-
-# empty_function()
-# to_node_red()

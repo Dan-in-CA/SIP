@@ -21,7 +21,6 @@ from blinker import signal
 from gpio_pins import set_output
 import gv
 import i18n
-# import requests
 from web.webapi import seeother
 import web
 from web import form
@@ -112,7 +111,6 @@ def reboot(wait=1, block=False):
     Set to True at start of thread (recursive).
     """
     if block:
-        # from gpio_pins import set_output  # - test
         gv.srvals = [0] * (gv.sd["nst"])
         set_output()
         if gv.use_pigpio:
@@ -136,7 +134,6 @@ def poweroff(wait=1, block=False):
     Set to True at start of thread (recursive).
     """
     if block:
-        # from gpio_pins import set_output  # - test
         gv.srvals = [0] * (gv.sd["nst"])
         set_output()
         if gv.use_pigpio:
@@ -161,7 +158,6 @@ def restart(wait=1, block=False):
     """
     if block:
         report_restart()
-        # from gpio_pins import set_output  # - test
         gv.srvals = [0] * (gv.sd["nst"])
         set_output()
         if gv.use_pigpio:
@@ -401,7 +397,7 @@ def prog_match(prog):
     if not prog["enabled"]:
         return 0  # Skip if program is not enabled
     devday = int(gv.now // 86400)  # Check day match
-    lt = time.localtime(gv.now)  # - test
+    lt = time.localtime(gv.now)
     # lt = time.localtime()
     if prog["type"] == "interval":
         if (devday % prog["interval_base_day"]) != prog["day_mask"]:
@@ -484,15 +480,12 @@ def schedule_stations(stations):
                     else:  # if rain and station does not ignore, clear station from display
                         gv.sbits[b] &= ~1 << s
                         gv.ps[s] = [0, 0]
-    # report_stations_scheduled()  # - test
-    # gv.sd["bsy"] = 1  # - test
 
 
 def stop_onrain():
     """
     Stop stations that do not ignore rain.
     """
-    # from gpio_pins import set_output  # - test
     do_set_output = False
     for b in range(gv.sd["nbrd"]):
         for s in range(8):
@@ -514,7 +507,6 @@ def stop_stations():
     """
     Stop all running stations, clear schedules.
     """
-    # from gpio_pins import set_output  # - test
     gv.srvals = [0] * (gv.sd["nst"])
     set_output()
     gv.ps = []

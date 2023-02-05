@@ -1,16 +1,10 @@
 """Tests for managing HTTP issues (malformed requests, etc)."""
-# -*- coding: utf-8 -*-
-# vim: set fileencoding=utf-8 :
-
-from __future__ import absolute_import, division, print_function
-__metaclass__ = type
 
 import errno
 import socket
+import urllib.parse  # noqa: WPS301
 
 import pytest
-import six
-from six.moves import urllib
 
 from cheroot.test import helper
 
@@ -54,8 +48,6 @@ class HelloController(helper.Controller):
         WSGI 1.0 is a mess around unicode. Create endpoints
         that match the PATH_INFO that it produces.
         """
-        if six.PY2:
-            return string
         return string.encode('utf-8').decode('latin-1')
 
     handlers = {
@@ -63,7 +55,13 @@ class HelloController(helper.Controller):
         '/no_body': hello,
         '/body_required': body_required,
         '/query_string': query_string,
+        # FIXME: Unignore the pylint rules in pylint >= 2.15.4.
+        # Refs:
+        # * https://github.com/PyCQA/pylint/issues/6592
+        # * https://github.com/PyCQA/pylint/pull/7395
+        # pylint: disable-next=too-many-function-args
         _munge('/привіт'): hello,
+        # pylint: disable-next=too-many-function-args
         _munge('/Юххууу'): hello,
         '/\xa0Ðblah key 0 900 4 data': hello,
         '/*': asterisk,
@@ -71,11 +69,7 @@ class HelloController(helper.Controller):
 
 
 def _get_http_response(connection, method='GET'):
-    c = connection
-    kwargs = {'strict': c.strict} if hasattr(c, 'strict') else {}
-    # Python 3.2 removed the 'strict' feature, saying:
-    # "http.client now always assumes HTTP/1.x compliant servers."
-    return c.response_class(c.sock, method=method, **kwargs)
+    return connection.response_class(connection.sock, method=method)
 
 
 @pytest.fixture
@@ -151,7 +145,6 @@ def test_parse_acceptable_uri(test_client, uri):
     assert actual_status == HTTP_OK
 
 
-@pytest.mark.xfail(six.PY2, reason='Fails on Python 2')
 def test_parse_uri_unsafe_uri(test_client):
     """Test that malicious URI does not allow HTTP injection.
 
