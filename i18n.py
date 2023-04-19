@@ -30,6 +30,7 @@ languages = {
     "de_DE": "German",
     "gr_GR": "Greek",
     "it_IT": "Italian",
+    "pl_PL": "Polish",
     "pt_PT": "Portuguese",
     "sl_SL": "Slovenian",
     "es_ES": "Spanish",
