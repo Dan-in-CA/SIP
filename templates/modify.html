@@ -499,7 +499,7 @@ let cycleTime = ${two_digits(program['cycle_min'] % 60)};
                     <td colspan="7">
                         <button id="cRestrictions" class="toggle choice ${'off' if even or odd else 'on'}"><span class='toggleleft'>$_(u"Any Day")</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u"Restrict Day")</span></button>
                         <span id="evenodd" $:{u"" if even or odd else "style='display:none'"}>
-                            <button id="cEvenOdd" class="toggle narrow choice ${'on' if even else 'off'}" ><span class='toggleleft'>$_(u"Even")</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u"Odd")</span></button>
+                            <button id="cEvenOdd" class="toggle choice ${'on' if even else 'off'}" ><span class='toggleleft'>$_(u"Even")</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u"Odd")</span></button>
                             $_(u'(except 31st and Feb 29th)')</span>
                     </td>
                 </tr>
