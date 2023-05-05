@@ -36,12 +36,12 @@ $var page: node-red
             
             <thead>
                 <th class="stationNumber">$_('From Node-red')</th>
-            </thead>            
-            
-<!--             <tr>
+            </thead>
+
+            <tr>
                 <td style='text-transform: none;'>$_('settings change'):</td>  Edit
                 <td><input type="checkbox" name="chng-settings" ${"checked" if 'chng-settings' in settings else ""}></td>
-            </tr> -->
+            </tr>
 
             <tr>
                 <td style='text-transform: none;'>$_('program on/off'):</td>
@@ -102,7 +102,6 @@ $var page: node-red
 
         </table></br>
 
-<!--         <p>$_('Node-red url')</p>  Edit -->
         <table class="optionList">
 
             <!--Text fields-->
@@ -111,11 +110,10 @@ $var page: node-red
             </thead>
 
             <tr>
-<!--                 <td style='text-transform: none;'>$_'url'):</td> -->
+
                 <td><input type="text"  size=40" name="nr-url" value="${settings['nr-url'] if 'nr-url' in settings else 'http://localhost:1880/node_red' }"></td>
             </tr>
         </table>
-
     </form>
 
 <div class="controls">
