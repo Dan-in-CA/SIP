@@ -8,8 +8,8 @@ function dateString(d) {
 }
 
 function updateClock() { // Controls time and date clock.
-	// Do our best to match this clock with the device clock (instead of the client device clock)
-	let now = new Date(Date.now() + cliTzOffset - devTzOffset);
+	// match this clock with the device clock (instead of the client clock)
+	let now = new Date(Date.now(devt));
 
 	/*
 		Uncomment to test styling - sets a random time
