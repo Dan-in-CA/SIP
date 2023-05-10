@@ -1,5 +1,5 @@
 // Global vars
-var displayScheduleDate = new Date(Date.now(devt));
+var displayScheduleDate = new Date(Date.now() + tzDiff);
 var displayScheduleTimeout;
 var sid,sn,t;
 var simdate = displayScheduleDate; // date for simulation
@@ -174,7 +174,7 @@ function displaySchedule(schedule) {
 	if (displayScheduleTimeout != null) {
 		clearTimeout(displayScheduleTimeout);
 	}
-	var now = new Date(Date.now(devt));
+	var now = new Date(Date.now() + tzDiff);
 	var nowMark = now.getHours()*60 + now.getMinutes();
 	var isToday = toXSDate(displayScheduleDate) == toXSDate(now);
 	var programClassesUsed = new Object();
@@ -232,7 +232,7 @@ function displaySchedule(schedule) {
 }
 
 function displayProgram() { // Controls home page irrigation timeline
-	if (displayScheduleDate > new Date(Date.now(devt))) {
+	if (displayScheduleDate > new Date(Date.now() + tzDiff)) {
 		var schedule = doSimulation(); //dk
 		displaySchedule(schedule);
 	} else {
@@ -246,7 +246,7 @@ function displayProgram() { // Controls home page irrigation timeline
 				}
 				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
 			}
-			if (toXSDate(displayScheduleDate) == toXSDate(new Date(Date.now(devt)))) {
+			if (toXSDate(displayScheduleDate) == toXSDate(new Date(Date.now() + tzDiff))) {
 				var schedule = doSimulation(); //dk
 				log = log.concat(schedule);
 			}

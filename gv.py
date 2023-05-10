@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # standard library imports
-# from calendar import timegm
+from calendar import timegm
 from collections import OrderedDict
 import json
 import subprocess
@@ -109,11 +109,9 @@ day_ord = 0
 node_runs = {}
 now = time.time()
 nowt = time.localtime(now)
-tz_offset = time.timezone
 
-# tz_offset = int(
-#     now - timegm(nowt)
-# )  # compatible with Javascript (negative tz shown as positive value)
+tz_offset = round(now - timegm(nowt)
+)  # compatible with Javascript (negative tz shown as positive value)
 
 plugin_menu = []  # Empty list of lists for plugin links (e.g. ["name", "URL"])
 srvals = [0] * (sd["nst"])  # Shift Register values
