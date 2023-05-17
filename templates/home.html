@@ -261,7 +261,7 @@ $code:
     function countdownTimer(timerId) {
         let timerElement = jQuery("#" + timerId);
         let timerValue = parseFloat(timerElement.attr("data"));
-        let remaining = timerValue - devt; //Date.now(); // DK change
+        let remaining = timerValue - Date.now(); // DK change - was devt;
         let rHours = Math.floor(remaining / 3600000);
         let rMinutes = Math.floor((remaining%3600000) / 60000);
         if (rHours <=0 && rMinutes <=0) {

@@ -9,8 +9,6 @@ function dateString(d) {
 
 function updateClock() { // Controls time and date clock.
 	// match this clock with the device clock (instead of the client clock)
-	//let now = new Date(Date.now(devt));
-	//let now = new Date(Date.now() + cliTzOffset - devTzOffset);
 	let now = new Date(Date.now() + tzDiff);
 
 

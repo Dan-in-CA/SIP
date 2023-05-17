@@ -82,7 +82,7 @@ def load_settings():
                     "chng-rd": "on",
                     "chng-ro": "on",
                     "chng-rn": "on",                     
-                    "nr-url": "http://localhost:1880/node_red",
+                    "nr-url": "http://localhost:1880/node-red",
                     "chng-stn": "on",
                     "stop-stn": "on",
                     "chng-prog": "on",
@@ -94,11 +94,11 @@ def load_settings():
     
 load_settings()    
 
-def to_node_red(note):
+def to_node_red(msg):
     url = nr_settings["nr-url"]
-    # print("NR 109 to node-red: ", note)  # - test)
-    resp = requests.get(url, params = note)
-    # print("NR 111 response: ", resp)  # - test
+    # print("NR 99 to node-red: ", msg)  # - test)
+    resp = requests.get(url, params = msg)
+    # print("NR 101 response: ", resp)  # - test
 
             
 def set_rain_sensed(i):
@@ -246,6 +246,7 @@ def send_zone_change(name, **kw):
     """ Send notification to node-red 
         when core program signals a change in station state.
     """
+    # print("249 send_zone_change")
     global prior_srvals
     if len(gv.srvals) > len(prior_srvals):
         prior_srvals += [0] * (len(gv.srvals) - len(prior_srvals))
@@ -263,8 +264,8 @@ def send_zone_change(name, **kw):
                         name = "master"
                     else:
                         name =  gv.snames[i]   
-                    note = {"station": i + 1, "name": name,  "state": 0}
-                    to_node_red(note)
+                    msg = {"station": i + 1, "name": name,  "state": 0}
+                    to_node_red(msg)
                 else:
                     if (gv.sd["mas"]
                         and gv.sd["mas"] == i + 1
@@ -272,8 +273,8 @@ def send_zone_change(name, **kw):
                         name = "master"
                     else:
                         name =  gv.snames[i]                    
-                    note = {"station": i + 1, "name": name, "state": 1}
-                    to_node_red(note)               
+                    msg = {"station": i + 1, "name": name, "state": 1}
+                    to_node_red(msg)               
         prior_srvals = gv.srvals[:]
         
 zones = signal("zone_change")
@@ -286,8 +287,8 @@ def send_rain_delay_change(name, **kw):  # see line 663
         state = 1
     else:           #  Just switched off
         state = 0
-    note = {"rd_state": state}
-    to_node_red(note)  # see line 107 
+    msg = {"rd_state": state}
+    to_node_red(msg)  # see line 107 
 
 rd_change = signal("rain_delay_change")
 rd_change.connect(send_rain_delay_change)
@@ -305,12 +306,12 @@ rd_change.connect(send_rain_delay_change)
 "rain_delay_change" # included with "value_change"
 "rebooted"
 "restarting"
-"running_program_change"
+"running_program_change" # to do
 "station_completed"
 "station_names"
 "stations_scheduled"
 "value_change"
-"zone_change"
+"zone_change" # working
 ###############################
 
 class settings(ProtectedPage):
