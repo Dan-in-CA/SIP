@@ -179,6 +179,9 @@ def program_on_off(data):
     
                      
 def station_on_off(data):
+    """ Enable or disable a station.
+        Called by "station switch" node.
+    """
     if "sn" in data:
         station = data["sn"]
     elif "station" in data:
@@ -361,13 +364,6 @@ class handle_requests(object):
         if "gv" in qdict:
             attr = str(qdict["gv"])
             try:
-                # if (attr == "rs"
-                #     and "station" in qdict
-                #     ):
-                #     stn_rs = gv.rs[int(qdict["station"]) - 1]
-                #     msg = {"start": stn_rs[0], "end": stn_rs[1], "duration": stn_rs[2]}
-                #     return json.dumps(msg)
-                
                 if (attr in ["ps",
                              "rovals",
                              "rs",
@@ -446,7 +442,7 @@ class handle_requests(object):
         """ Update SIP with value sent from node-red. """
         data = web.data()
         data = json.loads(data.decode('utf-8'))
-        # print("NR 448 data: ", data)  # - test          
+        # print("NR 449 data: ", data)  # - test          
         not_writable = ["cputemp",
                         "day_ord",
                         "lang", 
@@ -551,39 +547,32 @@ class handle_requests(object):
         #### set sd values ####
         elif ("sd" in data
               and "chng-sd" in nr_settings
+              and "val" in data
               ):
-            # print("data: ", data)  # - test          
-            if "val"in data:
-                val = int(data["val"])
-            else:
-                val = None                
+            val = int(data["val"])               
             try:     
                 # Change values
                 if data["sd"] == "rd":  # rain delay
                     print("NR 672 val: ", val)  # - test
-                    if (not val == None
-                        and "chng-rd" in nr_settings
-                        ):
-                        if not val == 0:    
-                            gv.sd["rd"] = val
-                            gv.sd["rdst"] = round(gv.now + val * 3600)
+                    if ("chng-rd" in nr_settings):
+                        gv.sd["rd"] = val
+                        if val:    
+                            gv.sd["rdst"] = round(gv.now + (val * 3600))
                             stop_onrain()
-                        elif val == 0:
-                            gv.sd["rd"] = 0
-                            gv.sd["rdst"] = 0                                               
-                            # data = ""
+                        else:
+                            gv.sd["rdst"] = 0                                                                        
                     report_rain_delay_change() # see line 292
                     report_option_change()               
                     
-                elif data["sd"] == "mm":  # manual mode
-                    if val == 0:
+                elif data["sd"] == "mm":  # manual mode                   
+                    if val == 1:
+                        gv.sd["mm"] = 1                    
+                    elif val == 0:
                         clear_mm()
                         gv.sd["mm"] = 0
-                    elif val == 1:
-                        gv.sd["mm"] = 1
                     else:
-                        return "invalid request"    
-                                               
+                        return "invalid request"
+                    
                 elif (data["sd"] == "rsn"
                       and val == 1
                       ):
@@ -610,21 +599,30 @@ class handle_requests(object):
                     else:
                         return "invalid request"                        
                         
-                elif ((data["sd"] == "mton"
-                      or data["sd"] == "mtoff")
-                      and (val < -60 
-                           or val > 60)            
-                      ):
-                    return "Error val must be -60 to 60"
-                
+                elif data["sd"] == "mton":                                  
+                    if (val < -60 
+                         or val > 60          
+                         ):     
+                        return "Error val must be -60 to +60"
+                    else:
+                        gv.sd["mton"] = val
+                      
+                elif data["sd"] == "mtoff":
+                    if (val < -60 
+                         or val > 60          
+                         ):     
+                        return "Error val must be -60 to 60"
+                    else:
+                        gv.sd["mtoff"] = val
+
                 elif data["sd"] == "rbt":
                     requests.get(url = base_url + "co", params = {"rbt":val})
                     
                 elif data["sd"] == "rstrt":
                     requests.get(url = base_url + "co", params = {"rstrt":val})                                   
                                     
-                elif ( gv.sd["urs"]
-                      and data["sd"] == "rs"
+                elif (data["sd"] == "rs"
+                      and gv.sd["urs"]
                       ):
                     set_rain_sensed(val) 
                     
@@ -682,5 +680,4 @@ class handle_requests(object):
             stop_stations()
         
         else:
-            # print("Unknown request: ", data)  # - test
             return "Unknown request"            
