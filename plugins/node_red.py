@@ -79,8 +79,8 @@ def load_settings():
     except IOError:  # If file does not exist save default values
         nr_settings = {
             "station-on-off": "on",
-            "chng-gv": "on",
-            "chng-sd": "on",
+            "chng-gv": "off",
+            "chng-sd": "off",
             "chng-rd": "on",
             "chng-ro": "on",
             "chng-rn": "on",
@@ -281,6 +281,7 @@ def send_zone_change(name, **kw):
                     else:
                         name = gv.snames[i]
                     msg = {"station": i + 1, "name": name, "state": 1}
+                    # print("sending message to NR")  # - test
                     to_node_red(msg)
         prior_srvals = gv.srvals[:]
 

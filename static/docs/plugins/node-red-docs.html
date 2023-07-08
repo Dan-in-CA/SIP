@@ -1,155 +1,30 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>SIP Node-RED-Docs</title>
-  </head>
-  <body BGCOLOR="#ffffff">
-    <h1>Documentation for the SIP Node-RED extension</h1>
-<p>The node-red extension is designed to integrate node red with SIP so that node-red flows can get (read) and set (write) SIP variables.
-You can see a full list of accessible variables in the <strong><a href="https://github.com/Dan-in-CA/SIP/blob/P3-only/gv_reference.txt" target="_blank">gv_reference.txt</a></strong> file with a description of each variable.</p>
+<!DOCTYPE HTML>
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset="utf-8">
+	<TITLE>SIP n-r help</TITLE>
+	<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+	<STYLE TYPE="text/css">
+	<!--
+		P { font-family: "Lucida Grande", "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "Lucida Sans Unicode", "Helvetica", "Arial", sans-serif }
+		H2.cjk { font-family: "SimSun" }
+		H2.ctl { font-family: "Mangal" }
+		PRE.cjk { font-family: "NSimSun", monospace }
+		CODE.cjk { font-family: "NSimSun", monospace }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" BGCOLOR="#ffffff" DIR="LTR" STYLE="border: none; padding: 0in">
+<H1><A NAME="proto-plugin-documentation"></A>Node-red Extension
+Documentation</H1>
+<H2 CLASS="western"><A NAME="about-the-node-red-extension"></A>About the
+NODE-Red Extension</H2>
+<p>The node-red Extension is a SIP plugin designed to integrate node red with SIP so that node-red flows can easily interact with SIP.</p>
+<p>The extension uses HTTP POST requests to send commands to SIP and HTTP GET requests to receive data from SIP.</p>
 
-<h2>Node-RED messages</h2>
-<p>The node-red extension enables two-way communication between node-red and SIP by using messages in JSON, a standard data interchange and file format.<br />
-JSON provides a bridge between SIP's Python code and node-red's JavaScript code.
-The extension uses HTTP GET and POST requests to receive and send data from and to SIP.</p>
-
-<ul>
-  <li>GET requests are sent from node-red to read data from SIP.</li>
-  <li>POST requests are used to change SIP settings and control SIP's operation.</li>
-</ul>
-
-<p>Using two different request types eliminates the need for the message to indicate if it is being used to read or write data.<br />
-Messages the extension uses are kept as simple and uniform as possible.</p>
-
-<p>SIP's data and configuration is stored in named variables. All of SIP's settings and control variables can be read by node-red and most of them can be changed (written).<br />
-There are 2 basic types of data in SIP's variables:</p>
-
-<ul>
-  <li>Single value data including numbers and boolean values (on/off, true/false, 1/0)</li>
-  <li>List data, consisting of multiple values stored in an array or as bits in a byte (bit flags)</li>
-</ul>
-
-<p>In the next section you will see a series of example JSON messages that can be used to get status information or control SIP.</p>
-
-<h3>message format</h3>
-<p>Let's take a look at the general format of a message.<br />
-A message is in the form of a JSON object. It is enclosed in curly braces, { and }.<br />
-Inside the braces are one or more <strong>name–value pairs</strong> consisting of a <strong>name (key)</strong> in double quotes followed by a <strong>colon :</strong> then a <strong>value</strong> that can be a number, a string in double quotes, an array or a JSON object.<br />
-For example, the message to read SIP's manual mode setting would be:<br />
-<strong>{"sd":"mm"}</strong><br />
-where the name <strong>"sd"</strong> indicates a setting in SIP's <strong>Settings Dictionary</strong><br />
-and the value <strong>"mm"</strong> is the current <strong>manual mode</strong> setting.<br />
-SIP will return 0 if not in manual mode or 1 if  manual mode is on.</p>
-
-<p>If you request the value of a SIP variable that is a list (array), SIP will return the entire array.<br />
-you can request only one or just a few elements from a list such as station names <strong>(gv.snames)</strong> using a name–value pair with a value that is an array enclosed in double quotes:<br />
-<strong>{"gv":"snames", "station":"[1, 2, 3]"}</strong><br />
-SIP will return a JSON object of the name(s) corresponding to the station number(s) in the <strong>"station"</strong> pair.
-Note that the name–value pairs are separated by a comma.<br />
-Some name–value pairs in the example messages below are optional and the node-red extension will supply a default value if the pair is not included in the message. Also, a few of the commonly used key names have short alternate names such as <strong>"station"</strong> and <strong>"sn"</strong>.</p>
-
-<h2>Example messages</h2>
-<h3>GET messages that read SIP settings and status:</h3>
-<p><strong>Get gv and sd value(s):</strong><br />
-<strong>{"gv":"&lt;name&gt;"}</strong><br />
-or<br />
-<strong>{"sd":"&lt;name&gt;"}</strong><br />
-Read the current value of any of the 25 gv or 38 sd variables listed in the <strong><a href="https://github.com/Dan-in-CA/SIP/blob/P3-only/gv_reference.txt" target="_blank">gv_reference.txt</a></strong> file. Replacing <strong>&lt;name&gt;</strong> with the name of the variable to be read.<br />
-Returns a single value or an array depending on the variable.</p>
-
-<p><strong>Get gv station values:</strong><br />
-<strong>{"gv":"&lt;name&gt;", "station":"[1, 3, 5]"}</strong><br />
-or<br />
-<strong>{"gv":"&lt;name&gt;", "sn":"[1, 3, 5]"}</strong></p>
-
-<p>Returns a JSON object containing current value(s) for one or more stations from any of the 6 station related gv variables, indicated in the <strong>gv_reference.txt</strong> file by <strong>[S]</strong>.</p>
-
-<p><strong>Get list item(s) (counting from 1):</strong><br />
-<strong>{"gv":"&lt;name&gt;", "item":"[1, 2, 3]"}</strong><br />
-A generic message to select one or more elements from a variable holding an array. <strong>Item numbers</strong> start from <strong>1</strong> Replacing <strong>"&lt;name&gt;"</strong> with the name of the variable.</p>
-
-<p>Returns a JSON object containing current value(s) for the specified element(s) of the variable</p>
-
-<p><strong>Get list item(s) by index (counting from 0):</strong><br />
-<strong>{"gv":"&lt;name&gt;", "index":"[0, 1, 2]"}</strong><br />
-A generic message to select one or more elements from a variable holding an array.
-<strong>Index numbers</strong> start from <strong>0</strong> and are equal to item number - 1 Replacing <strong>"&lt;name&gt;"</strong> with the name of the variable.</p>
-
-<p>Returns a JSON object containing current value(s) for the specified element(s) of the variable</p>
-
-<p><strong>Get bits from a byte (bit flags):</strong><br />
-<strong>{"sd":"&lt;name&gt;", "bit":"[1, 4, 6]"}</strong><br />
-A message to get the setting(s) of one or more items stored as a bit in a byte (bit flags) indicated in the gv_refrence.txt file as <strong>[0]</strong> <strong>[8]</strong> or <strong>[255]</strong>.</p>
-
-<h3>POST messages that change settings and control SIP's operation:</h3>
-
-<p><strong>Change an sd or gv setting:</strong><br />
-<strong>{"sd":"&lt;name&gt;", "val":x, "save":0}</strong><br />
-or<br />
-<strong>{"gv":"&lt;name&gt;", "val":x}</strong><br />
-<strong>"sd"</strong> refers to the SIP <strong>Settings Dictionary</strong> that holds SIP configuration settings. <br />
-<strong>"gv"</strong> refers to SIP <strong>Global Variables</strong> that hold status information and control values.<br />
-See the <strong><a href="https://github.com/Dan-in-CA/SIP/blob/P3-only/gv_reference.txt" target="_blank">gv_reference.txt</a></strong> file in the SIP folder for a list that describes each of the sd and gv settings.<br />
-Replace <strong>"&lt;name&gt;"</strong> with the name of the setting to be changed.<br />
-<strong>"val"</strong> (required) is the new value the setting should have. It can be a number, a string in double quotes, an array in square brakets, or a JSON object in curly braces depending on the type of value to be changed. <strong>Boolean values</strong> should be <strong>1</strong> for <strong>true</strong> or <strong>0</strong> for <strong>false</strong>.<br />
-<strong>"save"</strong> (optioinal) controls if the <strong>"sd"</strong> setting will be saved to a file (<strong>sd.json</strong>) in the SIP/data folder.<br />
-If "save" is <strong>0</strong> (default) or if "save" is not used, the setting will only be changed in memory and will not survive a software re-start or system reboot.<br />
-If "save is <strong>1</strong>, the <strong>"sd"</strong> setting will persist in the file.<br />
-<strong>"gv"</strong> values are not saved to a file.</p>
-
-<p><strong>Turn one or more stations on or off:</strong><br />
-<strong>{"sn":[3,5], "set":1, "req mm":1}</strong><br />
-or<br />
-<strong>{"station":[3], "set":0, "req mm":1}</strong><br />
-The required key <strong>name</strong> can be <strong>"sn"</strong> or <strong>"station"</strong>. Either will work.<br />
-The <strong>value</strong> is an <strong>array</strong> of one or more station numbers seperated by commas.<br />
-if <strong>"set"</strong> (required) is <strong>1</strong> the station(s) will be turned on. If <strong>"set"</strong> is <strong>0</strong> the station(s) will be turned off.<br />
-<strong>"req mm"</strong> (optional) means <strong>Require manual mode</strong>. If it is <strong>1</strong> (default) or <strong>"req mm"</strong> is <strong>not used</strong>, SIP must be manual mode for this request to work.<br />
-if <strong>"req mm"</strong> is <strong>0</strong>, stations will be turned on or off even if SIP is not in manual mode and other stations are running.</p>
-
-<p><strong>Set station related gv list values:</strong><br />
-<strong>{"gv":"&lt;name&gt;", "sn":{"1":[x,x,x],"2":[x,x,x]}}</strong>  <br />
-A message to set one or more values in a station related <strong>"gv"</strong> list variable. Indicated by <strong>[S]</strong> in gv_reference.txt.<br />
-Replace <strong>"&lt;name&gt;"</strong> with the name of the variable to change.<br />
-The <strong>value</strong> of the <strong>"sn"</strong> pair is a <strong>JSON object</strong> contining one or more <strong>name-value</strong> pairs with the <strong>name</strong> a station number in double quotes and the <strong>value</strong> an array of values. The number and type of elements in the array depend on the length and type of list the variable holds.</p>
-
-<p><strong>Set gv list item by item number:</strong><br />
-<strong>{"gv":"&lt;name&gt;", "item":{"1":x, "2":x} }</strong><br />
-A generic message for setting one or more elements in a <strong>gv</strong>  list variable. Indicated by <strong>[X]</strong> in gv_reference.txt. <strong>X</strong> being a number or letter.<br />
-Replace <strong>"&lt;name&gt;"</strong> with the name of the variable to change.<br />
-The <strong>value</strong> of the <strong>"item"</strong> pair is a <strong>JSON object</strong> contining one or more <strong>name-value</strong> pairs with the <strong>name</strong> an item number in double quotes. The <strong>value</strong> depends on the type of elements in the array the variable holds.<br />
-Item numbers are counted starting from 1.</p>
-
-<p><strong>Set gv list item by index:</strong><br />
-<strong>{"gv":"&lt;name&gt;", "index":{"0":x, "1":x} }</strong><br />
-A generic message for setting one or more element in a <strong>gv</strong> list variable. Indicated by <strong>[X]</strong> in gv_reference.txt. <strong>X</strong> being a number or letter.<br />
-Replace <strong>"&lt;name&gt;"</strong> with the name of the variable to change. The <strong>value</strong> of the <strong>"index"</strong> pair is a <strong>JSON object</strong> contining one or more <strong>name-value</strong> pairs with the <strong>name</strong> an index number in double quotes. The <strong>value</strong> depends on the type of elements in the array the variable holds.<br />
-Index numbers are counted starting from 0.</p>
-
-<p><strong>Turn "sd" bits on or off in a byte (bit flags)</strong><br />
-<strong>{"sd":"&lt;name&gt;", "bit":{"1":1, "2":0, "3":1}}</strong><br />
-The SIP Settings Dictionaary includes a few variables that store boolean values as bits in a byte (bit flags.). These are settings on the stations page that have check boxes as input. They are listed in gv_reterence.txt as:</p>
-<ul>
-  <li>ir (ignore rain)</li>
-  <li>iw (ignore plugin adjustments and water level)</li>
-  <li>mo (activate master)</li>
-  <li>show (show the station in the SIP UI "enable")</li>
-</ul>
-
-<p>Replace &lt;name&gt; with the name of the variable you want to change. The <strong>"bit"</strong> pair has a value that is a JSON dictionary containing <strong>name-value</strong> pairs where the <strong>name</strong> is a station number in double quotes and the <strong>value</strong> is <strong>1</strong> to enable the setting or <strong>0</strong> to disable.</p>
-
-<p><strong>Start a run once program.</strong><br />
-<strong>{"ro":<code>[[2, 10], [3,10], [5,5]]</code>, "preempt":1}</strong><br />
-or<br />
-<strong>{"run once":<code>[[2, 10], [3,5], [5,5]]</code>, "preempt":1}</strong>  <br />
-The required name can be <strong>"ro"</strong> or <strong>"run once"</strong>. Either will work.<br />
-The <strong>value</strong> (required) is an array of 2 element sub-arrays (note the double <strong>[[</strong> and <strong>]]</strong> at the start and end). Each 2 element inner array contains a station number and the time in seconds for it to run.<br />
-In the example shown above the first inner array <strong>[2,10]</strong> has station 2 running for 10 seconds<br />
-<strong>"preempt"</strong> (optional) controls if a program that is already running will be ended (preempted) when the run once program starts.<br />
-If <strong>"preeempt"</strong> is <strong>1</strong> (default) or if <strong>"preempt"</strong> is <strong>not used</strong>, any running program will be ended.<br />
-If <strong>"preempt"</strong> is <strong>0</strong>, the run once program will be run allong with any already running program</p>
+<h2>Requirements for using node-red with SIP</h2>
+<p>You must have node-red installed. It can be on this Raspberry pi (recommended) or on another system on your network.</p>
 
 
-  </body>
-</html>
+</BODY>
+</HTML>
