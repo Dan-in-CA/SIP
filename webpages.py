@@ -56,7 +56,6 @@ def report_program_toggle():
     program_toggled.send()
         
 
-
 ### Web pages ######################
 
 class WebPage(object):
