@@ -110,7 +110,6 @@ class home(ProtectedPage):
     """Open Home page."""
 
     def GET(self):
-        # print(web.ctx)  # - test
         return template_render.home()
 
 
@@ -120,16 +119,11 @@ class change_values(ProtectedPage):
     def GET(self):
         self.change_values()
         
-    # def POST(self):
-    #     self.change_values()
-        
     def change_values(self):    
         qdict = web.input()
         if "rsn" in qdict and qdict["rsn"] == "1":
             stop_stations()
             raise web.seeother("/")
-        # if "en" in qdict and qdict["en"] == "":
-        #     qdict["en"] = "1"  # default
         elif "en" in qdict and qdict["en"] == "0":
             gv.srvals = [0] * (gv.sd["nst"])  # turn off all stations
             set_output()
@@ -901,33 +895,4 @@ class rain_sensor_state(ProtectedPage):
 
     def GET(self):
         return gv.sd["rs"]
-    
-class send_refresh(ProtectedPage):
-    """Return a page refresh event"""
-    
-    def GET(self):
-        qdict = web.input()
-        if "send" in qdict:
-            self.send
-        # else:
-        # web.header("Content-Type", "text/event-stream")
-        # return json.dumps("data: \n\n", ensure_ascii=False)
-
-    def send(self):
-        print("page_refresh method")  # - test     
-        # web.header("Content-Type", "text/event-stream")
-        # return json.dumps("data: refresh\n\n", ensure_ascii=False)
-    
-def refresh_page(name, **kw):
-    """ Send page refresh event to browser.
-    """
-    print("refresh_page function")  # - test
-    pass
-    # page_refresh.send()
-    # raise web.seeother("/refresh?send=True")
-    
-option_change = signal("option_change")
-option_change.connect(refresh_page)  
-
-value_change = signal("value_change")
-value_change.connect(refresh_page)         
+         
