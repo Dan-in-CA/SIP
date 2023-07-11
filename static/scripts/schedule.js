@@ -1,10 +1,8 @@
 // Global vars
-var tzOffsetDif = cliTzOffset - devTzOffset
-var displayScheduleDate = new Date(Date.now() + tzOffsetDif); // dk
+var displayScheduleDate = new Date(Date.now() + tzDiff);
 var displayScheduleTimeout;
 var sid,sn,t;
 var simdate = displayScheduleDate; // date for simulation
-//var simdate = new Date(Date.now()); // date for simulation
 if (typeof progs !== 'undefined'){var nprogs = progs.length}; // number of programs
 if (typeof nbrd !== 'undefined'){var nst = nbrd*8}; // number of stations
 
@@ -46,8 +44,6 @@ function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is schedu
 }
 
 function doSimulation() { // Create schedule by a full program simulation, was draw_program()
-  //if(typeof(simstart)==='undefined') simstart = 0; // set parameter default
-//  var simminutes=simstart; // start at time set by calling function or 0 as default
   var simminutes=0;
   var busy=0,match_found=0,endmin=0,bid,s,sid,pid;
   var st_array=new Array(nst); //start time per station in seconds (since midnight)?
@@ -57,8 +53,7 @@ function doSimulation() { // Create schedule by a full program simulation, was d
   for(sid=0;sid<nst;sid++)  { // for for each station...
     st_array[sid]=0;pid_array[sid]=0;et_array[sid]=0; // initilize element[station index]=0 for start time, program, end time 
   }
-  do { // check through every program
-//	  console.log("sarting do looop");	  
+  do { // check through every program	  
     busy=0;
     endmin=0;
     match_found=0;
@@ -72,7 +67,6 @@ function doSimulation() { // Create schedule by a full program simulation, was d
           if((pd['station_mask'][bid])&(1<<s)) { // if this station is selected in this program...
         	  if(!idd==1) { //not individual station times
         	   var duration=pd['duration_sec'][0]; // get the program duration
-//            if(idd==1)  //is individual station time
         	  } else {var duration=pd['duration_sec'][sid];
         	  }  //get the station duration
             et_array[sid]=duration; // Set duration for this station
@@ -130,7 +124,7 @@ function doSimulation() { // Create schedule by a full program simulation, was d
       simminutes++; // increment simulation time
     }
   } while(simminutes<=24*60); // simulation ends at 24 hours
-//  console.log('schedule: ' + JSON.stringify(schedule))
+ // console.log('schedule: ' + JSON.stringify(schedule))
   return schedule
 }
 
@@ -163,10 +157,14 @@ function fromClock(clock) {
 function programName(p) {
 	if (p == "Manual" || p == "Run-once") {
 		return p + " Program";
-	}	
+	}
 	else if(isNaN(p)) {
 		return p;	
-	} else {
+	} 
+	else if(progNames[p -1] != "") {
+	    return progNames[p -1];
+	} 	
+	else {
 		return "Program " + p;
 	}
 }
@@ -176,7 +174,7 @@ function displaySchedule(schedule) {
 	if (displayScheduleTimeout != null) {
 		clearTimeout(displayScheduleTimeout);
 	}
-	var now = new Date(Date.now() + tzOffsetDif); // will show device time
+	var now = new Date(Date.now() + tzDiff);
 	var nowMark = now.getHours()*60 + now.getMinutes();
 	var isToday = toXSDate(displayScheduleDate) == toXSDate(now);
 	var programClassesUsed = new Object();
@@ -234,14 +232,13 @@ function displaySchedule(schedule) {
 }
 
 function displayProgram() { // Controls home page irrigation timeline
-	//if (displayScheduleDate > devt) { //dk
-	if (displayScheduleDate > new Date(Date.now() + tzOffsetDif)) { //dk
+	if (displayScheduleDate > new Date(Date.now() + tzDiff)) {
 		var schedule = doSimulation(); //dk
 		displaySchedule(schedule);
 	} else {
-		var visibleDate = toXSDate(displayScheduleDate);
+		let visibleDate = toXSDate(displayScheduleDate);
 		jQuery.getJSON("/api/log?date=" + visibleDate, function(log) {
-			for (var l in log) {
+			for (let l in log) {
 				log[l].duration = fromClock(log[l].duration);
 				log[l].start = fromClock(log[l].start)/60;
 				if (log[l].date != visibleDate) {
@@ -249,7 +246,7 @@ function displayProgram() { // Controls home page irrigation timeline
 				}
 				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
 			}
-			if (toXSDate(displayScheduleDate) == toXSDate(new Date(Date.now() + tzOffsetDif))) {
+			if (toXSDate(displayScheduleDate) == toXSDate(new Date(Date.now() + tzDiff))) {
 				var schedule = doSimulation(); //dk
 				log = log.concat(schedule);
 			}
@@ -261,8 +258,8 @@ function displayProgram() { // Controls home page irrigation timeline
 jQuery(document).ready(displayProgram);
 
 function scheduleMarkerMouseover() {
-	var description = jQuery(this).attr("data");
-	var markerClass = jQuery(this).attr("class");
+	let description = jQuery(this).attr("data");
+	let markerClass = jQuery(this).attr("class");
 	markerClass = markerClass.substring(markerClass.indexOf("program"));
 	markerClass = markerClass.substring(0,markerClass.indexOf(" "));
 	jQuery(this).append('<span class="showDetails ' + markerClass + '">' + description + '</span>');

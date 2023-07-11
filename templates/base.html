@@ -8,18 +8,18 @@ $code:
 
 $code:
     def plugin_adjustment():
-        duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith(u'wl_')]
+        duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith('wl_')]
         result = 100.0
         for entry in duration_adjustments:
             result *= entry / 100.0
         return '%.0f' % result
 
 $code:
-    days= json.dumps([_(u'Sunday'), _(u'Monday'), _(u'Tuesday'), _(u'Wednesday'), _(u'Thursday'), _(u'Friday'), _(u'Saturday')])
-    months = json.dumps([_(u'January'), _(u'February'), _(u'March'), _(u'April'), _(u'May'), _(u'June'), _(u'July'), _(u'August'), _(u'September'), _(u'October'), _(u'November'), _(u'December')])
+    days= json.dumps([_('Sunday'), _('Monday'), _('Tuesday'), _('Wednesday'), _('Thursday'), _('Friday'), _('Saturday')])
+    months = json.dumps([_('January'), _('February'), _('March'), _('April'), _('May'), _('June'), _('July'), _('August'), _('September'), _('October'), _('November'), _('December')])
 
 $code:
-    deviceOffset = int(time.time() - timegm(time.localtime()))
+    deviceOffset = gv.tz_offset
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +28,7 @@ $code:
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="IE=edge">  
     
-    <title>${content.title + (" - " + gv.sd[u'name'] if gv.sd[u'name'] != u"SIP" else "")}</title>
+    <title>${content.title + (" - " + gv.sd['name'] if gv.sd['name'] != "SIP" else "")}</title>
     
     <link rel="apple-touch-icon" sizes="57x57" href="static/images/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="static/images/apple-icon-60x60.png">
@@ -48,7 +48,7 @@ $code:
     <meta name="msapplication-TileImage" content="static/images/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
-    <link href="${'static/themes/' + gv.sd[u'theme'] + '/base.css'}" rel="stylesheet" type="text/css"/>
+    <link href="${'static/themes/' + gv.sd['theme'] + '/base.css'}" rel="stylesheet" type="text/css"/>
     <style>
     	div {overflow-y: hidden;}
     	div.row {overflow-y: visible;}
@@ -94,45 +94,46 @@ $code:
 
     </style>
     
-    <script src="static/scripts/jquery-3.4.1.min.js"></script>
+    <script src="static/scripts/jquery-3.6.1.min.js"></script>
     
     <script>
         // Variables set server-side
-        let devTzOffset = ${deviceOffset} * 1000
+        let devt = ${gv.now};
+        let devTzOffset = ${deviceOffset} * 1000;
         let cliTzOffset = new Date().getTimezoneOffset() * 60 * 1000;
-        let timeFormat = ${gv.sd[u"tf"]};
+        let tzDiff = 0 //cliTzOffset - devTzOffset;
+        let timeFormat = ${gv.sd["tf"]};
         let dayList = $:{days};
         let monthList = $:{months};
 
         let cputemp = "${gv.cputemp}";
-        let tempunit = "${gv.sd[u'tu']}";
+        let tempunit = "${gv.sd['tu']}";
 
         $if content.page != 'login':
             let snames = $:{json.dumps(gv.snames, ensure_ascii=False)};
             let lrun = ${gv.lrun};
-            let rdst = ${gv.sd[u'rdst']}*1000;
-            let upas = ${gv.sd[u'upas']};
-            let en = ${gv.sd[u'en']};
-            let mm = ${gv.sd[u'mm']};
-            let rd = ${gv.sd[u'rd']};
-            let wl = ${gv.sd[u'wl']};
+            let rdst = ${gv.sd['rdst']}*1000;
+            let upas = ${gv.sd['upas']};
+            let en = ${gv.sd['en']};
+            let mm = ${gv.sd['mm']};
+            let rd = ${gv.sd['rd']};
+            let wl = ${gv.sd['wl']};
             let wlx = $:{plugin_adjustment()};
-            let iw = ${gv.sd[u'iw']};
-            let mas = ${gv.sd[u'mas']};
-            let nbrd = ${gv.sd[u'nbrd']};
+            let iw = ${gv.sd['iw']};
+            let mas = ${gv.sd['mas']};
+            let nbrd = ${gv.sd['nbrd']};
             let plugins = $:{json.dumps(gv.plugin_menu, ensure_ascii=False)};
             let progs = $:{json.dumps(gv.pd, ensure_ascii=False)};
-//             var nprogs = ${len(gv.pd)};
-            let sdt = ${gv.sd[u'sdt']};
-            let seq = ${gv.sd[u'seq']};
-            let run_once = $:{json.dumps(_(u'Run-once'), ensure_ascii=False)};
-            let man = $:{json.dumps(_(u'Manual'), ensure_ascii=False)};
-            let program = $:{json.dumps(_(u'Program'), ensure_ascii=False)};
-            let idd = $:{gv.sd[u'idd']};
-            let pluginVals;
+            let sdt = ${gv.sd['sdt']};
+            let seq = ${gv.sd['seq']};
+            let run_once = $:{json.dumps(_('Run-once'), ensure_ascii=False)};
+            let man = $:{json.dumps(_('Manual'), ensure_ascii=False)};
+            let program = $:{json.dumps(_('Program'), ensure_ascii=False)};
+            let idd = $:{gv.sd['idd']};
+            let pluginVals;           
 
             jQuery(document).ready(function(){
-                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + '/plugins\'">$_(u'Manage Plugins')</button><br/>');
+                jQuery('#pluginMenu').append('<button class="execute" id="pluginMgr" type="button" onclick="window.location.href=\'' + '/plugins\'">$_('Manage Plugins')</button><br/>');
                 $if len(uplugin_menu) > 0:
                 	$for i, plugin in enumerate(uplugin_menu):
 
@@ -167,8 +168,8 @@ $code:
                    jQuery.getJSON("/api/plugins", function(piVals) {   
                 	   pluginVals = piVals;
                 	   	   if (piVals.fdata) {
-	                		   for (var i = 0; i < piVals.fdata.length; i++) {
-							   var parID = 'piData' + piVals.fdata[i][0];
+	                		   for (let i = 0; i < piVals.fdata.length; i++) {
+							   let parID = 'piData' + piVals.fdata[i][0];
 	                    	   jQuery('p#'+parID ).find('span[name="val"]').text(piVals.fdata[i][1])};
                 	   	   }
                    });
@@ -177,8 +178,10 @@ $code:
     </script>
     <script src="static/scripts/behaviors.js"></script>
     <script src="static/scripts/schedule.js"></script>
-    <script src="static/scripts/intervalSelect.js"></script>
+    <script src="static/scripts/intervalSelect.js"></script>  
+    
 </head>
+
 <body>
     <div class="content">
         <form name="tt" action="/ttu" method="get">
@@ -189,7 +192,7 @@ $code:
         </div>
 
         <div class="header">
-            <div class="title">${gv.sd[u'name'] if gv.sd[u'name'] != u"SIP" else u""}</div>
+            <div class="title">${gv.sd['name'] if gv.sd['name'] != "SIP" else ""}</div>
         </div>
 
         <div class="body">
@@ -202,15 +205,15 @@ $code:
 
                 $if content.page != 'login':
                     <div id="nav">
-                        <button id="bHome" class="home${' here' if content.page=='home' else ''}" title=$:{json.dumps(_(u'Home'), ensure_ascii=False)}>$_(u'Home')</button>
-                        <button id="bPrograms" class="programs${' here' if content.page=='programs' else ''}" title=$:{json.dumps(_(u'Define Programs'), ensure_ascii=False)}>$_(u'Programs')</button>
-                        <button id="bRunOnce" class="start${' here' if content.page=='runonce' else ''}" title=$:{json.dumps(_(u'Define Run Once Program'), ensure_ascii=False)}>$_(u'Run Once')</button>
-                        <button id="bPlugins" class="plugins${' here' if content.page=='plugins' else ''}" title=$:{json.dumps(_(u'Access Plugins'), ensure_ascii=False)}>$_(u'Plugins')</button>
-                        <button id="bLog" class="log${' here' if content.page=='log' else ''}" title=$:{json.dumps(_(u'View Log'), ensure_ascii=False)}>$_(u'Log')</button>
-                        <button id="bOptions" class="options${' here' if content.page=='options' else ''}" title=$:{json.dumps(_(u'Options'), ensure_ascii=False)}>$_(u'Options')</button>
-                        <button id="bStations" class="stations${' here' if content.page=='stations' else ''}" title=$:{json.dumps(_(u'Configure Stations'), ensure_ascii=False)}>$_(u'Stations')</button>
-                        $if (gv.sd[u'upas']):
-                            <button id="bLogout" class="logout" title=$:{json.dumps(_(u'Logout'), ensure_ascii=False)}>$_(u'Logout')</button>
+                        <button id="bHome" class="home${' here' if content.page=='home' else ''}" title=$:{json.dumps(_('Home'), ensure_ascii=False)}>$_('Home')</button>
+                        <button id="bPrograms" class="programs${' here' if content.page=='programs' else ''}" title=$:{json.dumps(_('Define Programs'), ensure_ascii=False)}>$_('Programs')</button>
+                        <button id="bRunOnce" class="start${' here' if content.page=='runonce' else ''}" title=$:{json.dumps(_('Define Run Once Program'), ensure_ascii=False)}>$_('Run Once')</button>
+                        <button id="bPlugins" class="plugins${' here' if content.page=='plugins' else ''}" title=$:{json.dumps(_('Access Plugins'), ensure_ascii=False)}>$_('Plugins')</button>
+                        <button id="bLog" class="log${' here' if content.page=='log' else ''}" title=$:{json.dumps(_('View Log'), ensure_ascii=False)}>$_('Log')</button>
+                        <button id="bOptions" class="options${' here' if content.page=='options' else ''}" title=$:{json.dumps(_('Options'), ensure_ascii=False)}>$_('Options')</button>
+                        <button id="bStations" class="stations${' here' if content.page=='stations' else ''}" title=$:{json.dumps(_('Configure Stations'), ensure_ascii=False)}>$_('Stations')</button>
+                        $if (gv.sd['upas']):
+                            <button id="bLogout" class="logout" title=$:{json.dumps(_('Logout'), ensure_ascii=False)}>$_('Logout')</button>
                     </div>
 
                 $:{content}
@@ -218,23 +221,23 @@ $code:
             </div>
         </div>
         <div class="footer">
-          $if content.page != u'login':
+          $if content.page != 'login':
               $if (gv.pluginFtr):
                   <div  align="right">
                   <div class="piDatFooter" id="pluginPars"></div> <!--div for plugin data display -->
                   </div>                   
               <div>
                   <div class="controls">
-                    <button id="bHelp" class="help" title=$:{json.dumps(_(u'Documentation wiki'), ensure_ascii=False)}>&nbsp;&nbsp;$_(u'?')&nbsp;&nbsp;</button>
+                    <button id="bHelp" class="help" title=$:{json.dumps(_('Documentation wiki'), ensure_ascii=False)}>&nbsp;&nbsp;$_('?')&nbsp;&nbsp;</button>
                   </div>
               </div>
 
           <div>
-             <form name="tt" action="${u'/ttu'}" method="get">
-                 <input type="hidden" name="tunit" value="${gv.sd[u'tu']}">
-                 <div class="text-nowrap">$_(u'CPU Temp'):
-                     <button type="submit"  id="heat" style="color: #fff" class="font-weight-bold btn-link btn" title=$:{json.dumps(_(u'Click to toggle Celsius &lt; &gt; Fahrenheit'), ensure_ascii=False)}>
-                     ${convert_temp(gv.cputemp,'C', gv.sd[u'tu'])} ${gv.sd[u'tu']}
+             <form name="tt" action="${'/ttu'}" method="get">
+                 <input type="hidden" name="tunit" value="${gv.sd['tu']}">
+                 <div class="text-nowrap">$_('CPU Temp'):
+                     <button type="submit"  id="heat" style="color: #fff" class="font-weight-bold btn-link btn" title=$:{json.dumps(_('Click to toggle Celsius &lt; &gt; Fahrenheit'), ensure_ascii=False)}>
+                     ${convert_temp(gv.cputemp,'C', gv.sd['tu'])} ${gv.sd['tu']}
                      </button>
                  </div>
              </form>
@@ -243,11 +246,12 @@ $code:
 
           <div>
               <div>
-                <p class="text-nowrap"><a target="_blank" href="https://github.com/Dan-in-CA/sip">$_(u'Software')</a> $_(u'version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
+                <p class="text-nowrap"><a target="_blank" href="https://github.com/Dan-in-CA/sip">$_('Software')</a> $_('version'): <b>${gv.ver_str} (${gv.ver_date})</b></p>
               </div>
           </div>
 
         </div>
-    </div>
+    </div>   
+    
 </body>
 </html>

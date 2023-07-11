@@ -1,0 +1,122 @@
+$def with(settings)
+
+$var title: $_('SIP Node-RED') 
+$var page: node-red
+
+<script>
+    // Initialize behaviors
+    jQuery(document).ready(function(){
+
+        jQuery("#cSubmit").click(function() {
+            jQuery("#pluginForm").submit();
+        });
+        jQuery("button#cCancel").click(function(){
+            window.location="/";
+        });
+
+        jQuery("button#docButton").click(function(){
+            window.open("https://github.com/Dan-in-CA/node-red-sip-irrigation-nodes/wiki", "_blank");
+        });
+
+    });
+</script>
+
+<div id="plugin">
+    <div class="title">Node-red Extension
+    <button class="execute" id="docButton" type="button" >$_('Help')</button>
+    </div>
+
+    <p>$_('Node-red access options')</p>
+    <form id="pluginForm" action="${'/node-red-save'}" method="get">
+
+        <table class="optionList">
+
+            <!--Check boxes-->
+            
+            <thead>
+                <th class="stationNumber">$_('From Node-red')</th>
+            </thead>
+
+            <tr>
+                <td style='text-transform: none;'>$_('settings change'):</td>  Edit
+                <td><input type="checkbox" name="chng-settings" ${"checked" if 'chng-settings' in settings else ""}></td>
+            </tr>
+
+            <tr>
+                <td style='text-transform: none;'>$_('program on/off'):</td>
+                <td><input type="checkbox" name="chng-prog" ${"checked" if 'chng-prog' in settings else ""}></td>
+            </tr>
+            
+            <tr>
+                <td style='text-transform: none;'>$_('rain delay'):</td>
+                <td><input type="checkbox" name="chng-rd" ${"checked" if 'chng-rd' in settings else ""}></td>
+            </tr>            
+            
+            <tr>
+                <td style='text-transform: none;'>$_('run now'):</td>
+                <td><input type="checkbox" name="chng-rn" ${"checked" if 'chng-rn' in settings else ""}></td>
+            </tr>                         
+            
+            <tr>
+                <td style='text-transform: none;'>$_('run once'):</td>
+                <td><input type="checkbox" name="chng-ro" ${"checked" if 'chng-ro' in settings else ""}></td>
+            </tr>          
+            
+            <tr>
+                <td style='text-transform: none;'>$_('station switch'):</td>
+                <td><input type="checkbox" name="chng-stn" ${"checked" if 'chng-stn' in settings else ""}></td>
+            </tr>
+            
+            <tr>
+                <td style='text-transform: none;'>$_('stop all'):</td>
+                <td><input type="checkbox" name="stop-stn" ${"checked" if 'stop-stn' in settings else ""}></td>
+            </tr>         
+            
+            <tr>
+                <td style='text-transform: none;'>$_('water level'):</td>
+                <td><input type="checkbox" name="chng-wl" ${"checked" if 'chng-wl' in settings else ""}></td>
+            </tr>                       
+                 
+            <tr>
+                <td style='text-transform: none;'>$_('sd changes'):</td>
+                <td><input type="checkbox" name="chng-sd" ${"checked" if 'chng-sd' in settings else ""}></td>
+            </tr> 
+
+            <tr>
+                <td style='text-transform: none;'>$_('gv changes'):</td>
+                <td><input type="checkbox" name="chng-gv" ${"checked" if 'chng-gv' in settings else ""}></td>
+            </tr>                 
+
+            <thead>
+                <th class="stationNumber">$_('To Node-red')</th>
+            </thead>
+            <tr>
+                <td style='text-transform: none;'>$_('Send station on/off'):</td>  <!--Edit-->
+                <td><input type="checkbox" name="station-on-off"  ${"checked" if 'station-on-off' in settings else ""}></td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>$_('Send blinker signals'):</td>  <!--Edit-->
+                <td><input type="checkbox" name="blinker-signals"  ${"checked" if 'blinker-signals' in settings else ""}></td>
+            </tr>                     
+
+        </table></br>
+
+        <table class="optionList">
+
+            <!--Text fields-->
+            <thead>
+                <th class="stationNumber">$_('Node-red URL')</th>  <!--Edit: Optional-->
+            </thead>
+
+            <tr>
+
+                <td><input type="text"  size=40" name="nr-url" value="${settings['nr-url'] if 'nr-url' in settings else 'http://localhost:1880/node_red' }"></td>
+            </tr>
+        </table>
+    </form>
+
+<div class="controls">
+    <button id="cSubmit" class="submit"><b>$_('Submit')</b></button>
+    <button id="cCancel" class="cancel danger">$_('Cancel')</button>
+</div>
+</div>

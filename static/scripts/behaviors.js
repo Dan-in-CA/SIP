@@ -1,15 +1,16 @@
 // Set up a live clock based on device time
 
 function dateString(d) {
-	var dateString = dayList [d.getDay()]; // Moved translatable text to base.html, dk
+	let dateString = dayList [d.getDay()];
 	dateString += " " + d.getDate() + " ";
-	dateString += monthList [d.getMonth()]; // Moved translatable text to base.html, dk
+	dateString += monthList [d.getMonth()];
 	return dateString;
 }
 
 function updateClock() { // Controls time and date clock.
-	// Do our best to match this clock with the device clock (instead of the client device clock)
-	var now = new Date(Date.now() + cliTzOffset - devTzOffset);
+	// match this clock with the device clock (instead of the client clock)
+	let now = new Date(Date.now() + tzDiff);
+
 
 	/*
 		Uncomment to test styling - sets a random time

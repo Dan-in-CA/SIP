@@ -54,7 +54,7 @@ def report_program_deleted():
 program_toggled = signal("program_toggled")
 def report_program_toggle():
     program_toggled.send()
-
+        
 
 ### Web pages ######################
 
@@ -119,35 +119,30 @@ class change_values(ProtectedPage):
     def GET(self):
         self.change_values()
         
-    # def POST(self):
-    #     self.change_values()
-        
     def change_values(self):    
         qdict = web.input()
-        print("cv qdict: ", qdict)  # - test
         if "rsn" in qdict and qdict["rsn"] == "1":
             stop_stations()
             raise web.seeother("/")
-        if "en" in qdict and qdict["en"] == "":
-            qdict["en"] = "1"  # default
         elif "en" in qdict and qdict["en"] == "0":
             gv.srvals = [0] * (gv.sd["nst"])  # turn off all stations
             set_output()
         if "mm" in qdict and qdict["mm"] == "0":
-            clear_mm()
-        if "rd" in qdict and qdict["rd"] != "0" and qdict["rd"] != "":
-            gv.sd["rd"] = int(float(qdict["rd"]))
-            gv.sd["rdst"] = int(
-                gv.now + gv.sd["rd"] * 3600
-            )  # + 1  # +1 adds a smidge just so after a round trip the display hasn"t already counted down by a minute.
-            stop_onrain()
-            report_rain_delay_change()
-        elif "rd" in qdict and qdict["rd"] == "0":
-            gv.sd["rdst"] = 0
+            clear_mm()            
+        if "rd" in qdict:        
+            if qdict["rd"]:
+                gv.sd["rd"] = int(float(qdict["rd"]))
+                gv.sd["rdst"] = round(gv.now + gv.sd["rd"] * 3600)
+                stop_onrain()
+                report_rain_delay_change()
+            else:
+                gv.sd["rd"] = 0
+                gv.sd["rdst"] = 0
+                report_rain_delay_change()
         for key in list(qdict.keys()):
             try:
                 gv.sd[key] = int(qdict[key])
-            except Exception as e:
+            except Exception:
                 pass
         jsave(gv.sd, "sd")
         report_value_change()
@@ -173,7 +168,6 @@ class change_options(ProtectedPage):
         self.change_options()
         
     def POST(self):
-        print("co post: ", web.input())
         self.change_options()           
         
     def change_options(self):    
@@ -565,8 +559,10 @@ class change_program(ProtectedPage):
             cp["day_mask"] = ref % cp["interval_base_day"]  # + 128
         if qdict["pid"] == "-1":  # add new program
             gv.pd.append(cp)
+            gv.pnames.append(cp["name"])
         else:
             gv.pd[int(qdict["pid"])] = cp  # replace program
+            gv.pnames[int(qdict["pid"])] = cp["name"]
         jsave(gv.pd, "programData")
         report_program_change()
         raise web.seeother("/vp")
@@ -579,9 +575,11 @@ class delete_program(ProtectedPage):
         qdict = web.input()
         if qdict["pid"] == "-1":
             del gv.pd[:]
+            del gv.pnames[:]
             jsave(gv.pd, "programData")
         else:
             del gv.pd[int(qdict["pid"])]
+            del gv.pnames[int(qdict["pid"])]
         jsave(gv.pd, "programData")
         report_program_deleted()
         raise web.seeother("/vp")
@@ -620,30 +618,7 @@ class run_now(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        pid = int(qdict["pid"])
-        p = gv.pd[int(qdict["pid"])]  # program data
-        stop_stations()
-        extra_adjustment = plugin_adjustment()
-        sid = -1
-        for b in range(gv.sd["nbrd"]):  # check each station
-            for s in range(8):
-                sid += 1  # station index
-                if sid + 1 == gv.sd["mas"]:  # skip if this is master valve
-                    continue
-                if (
-                    p["station_mask"][b] & 1 << s
-                ):  # if this station is scheduled in this program
-                    if gv.sd["idd"]:
-                        duration = p["duration_sec"][sid]
-                    else:
-                        duration = p["duration_sec"][0]
-                    if not gv.sd["iw"][b] & 1 << s:
-                        duration = duration * gv.sd["wl"] // 100 * extra_adjustment
-                    gv.rs[sid][2] = duration
-                    gv.rs[sid][3] = pid + 1  # store program number in schedule
-                    gv.ps[sid][0] = pid + 1  # store program number for display
-                    gv.ps[sid][1] = duration  # duration
-        schedule_stations(p["station_mask"])  # + gv.sd["nbrd"]])
+        run_program(int(qdict["pid"]))
         raise web.seeother("/")
 
 
@@ -707,11 +682,18 @@ class api_status(ProtectedPage):
                                 rem = 0
 
                             id_nr = gv.ps[sid][0]
-                            pname = "P" + str(id_nr)
+                            if (gv.pon 
+                                and not gv.pon > len(gv.pnames)                                
+                                ):
+                                pname = gv.pnames[gv.pon - 1]
+                            else:
+                                pname = "P" + str(id_nr)                            
                             if id_nr == 255 or id_nr == 99:
                                 pname = "Manual Mode"
                             if id_nr == 254 or id_nr == 98:
                                 pname = "Run-once Program"
+                            if id_nr == 254 or id_nr == 100:
+                                pname = "Node-red Program"
 
                             if sbit:
                                 status["status"] = "on"
@@ -912,3 +894,4 @@ class rain_sensor_state(ProtectedPage):
 
     def GET(self):
         return gv.sd["rs"]
+         

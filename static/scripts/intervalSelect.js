@@ -2,16 +2,16 @@
 	Behaviors and animation loops for interval selector
 */
 
-var animations = [];
-var frameRate = 15, growRate = 2, shrinkRate = 1;
+let animations = [];
+let frameRate = 15, growRate = 2, shrinkRate = 1;
 
 function processAnimations() {
-	var active = false;
+	let active = false;
 	for (var a in animations) {
-		var anim = animations[a];
-		var currentSize = jQuery(anim.element).css("font-size");
+		let anim = animations[a];
+		let currentSize = jQuery(anim.element).css("font-size");
 		currentSize = parseInt(currentSize.replace("px",""));
-		var newSize = currentSize + (anim.finalSize < currentSize ? Math.min(-shrinkRate,currentSize - anim.finalSize) : Math.min(growRate,anim.finalSize - currentSize));
+		let newSize = currentSize + (anim.finalSize < currentSize ? Math.min(-shrinkRate,currentSize - anim.finalSize) : Math.min(growRate,anim.finalSize - currentSize));
 		jQuery(anim.element).css("font-size", newSize + "px");
 		if (newSize == anim.finalSize) {
 			animations.splice(a, 1);
@@ -24,8 +24,8 @@ function processAnimations() {
 	}
 }
 function addAnimation(element, finalSize) {
-	var thisIndex = jQuery(element).index();
-	var found = false;
+	let thisIndex = jQuery(element).index();
+	let found = false;
 	for (var a in animations) {
 		if (animations[a].index == thisIndex && jQuery(animations[a].element).is(jQuery(element))) {
 			animations[a].finalSize = finalSize;
@@ -50,7 +50,7 @@ function intervalSelectMouseover() {
 }
 
 function intervalSelectMouseout() {
-	var originalSize = 	jQuery(this).hasClass("distance0") ? 40 : 
+	let originalSize = 	jQuery(this).hasClass("distance0") ? 40 : 
 						(jQuery(this).hasClass("distance1") ? 34 :
 						(jQuery(this).hasClass("distance2") ? 30 :
 						26));
