@@ -17,7 +17,7 @@ import traceback
 import gv  # Get access to SIP's settings
 from helpers import restart
 from sip import template_render
-from urls import urls  # Get access to SIP's URLsimport errno
+from urls import urls  # Get access to SIP's URLs
 import web
 from webpages import ProtectedPage
 

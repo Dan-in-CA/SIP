@@ -13,7 +13,7 @@ import gpio_pins
 import gv  # Get access to SIP's settings
 from helpers import *  # provides utility functions
 import requests
-from sip import template_render  #  Needed for working with web.py templates
+from sip import template_render
 from urls import urls  # Get access to SIP's URLs
 import web
 import webpages
