@@ -15,7 +15,7 @@ from helpers import *  # provides utility functions
 import requests
 from sip import template_render  #  Needed for working with web.py templates
 from urls import urls  # Get access to SIP's URLs
-import web  # web.py framework
+import web
 import webpages
 from webpages import ProtectedPage  # Needed for security
 from webpages import report_option_change, report_value_change
