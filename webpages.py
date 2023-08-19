@@ -270,26 +270,28 @@ class change_options(ProtectedPage):
         """
         Increase or decrease the number of stations displayed when
         number of expansion boards is changed in options.
-
-        Increase or decrase the lengths of program "duration_sec" and "station_mask"
-        when number of expansion boards is changed
         """
         if int(qdict["onbrd"]) + 1 > gv.sd["nbrd"]:  # Lengthen lists
             incr = int(qdict["onbrd"]) - (gv.sd["nbrd"] - 1)
+            sn_incr = incr * 8
             for i in range(incr):
                 gv.sd["mo"].append(0)
                 gv.sd["ir"].append(0)
                 gv.sd["iw"].append(0)
+                gv.sbits.append(0)
                 gv.sd["show"].append(255)
-            ln = len(gv.snames)
-            for i in range(incr * 8):
-                gv.snames.append("S" + "{:0>2d}".format(i + 1 + ln))
+                
             for i in range(incr * 8):
                 gv.srvals.append(0)
                 gv.ps.append([0, 0])
                 gv.rs.append([0, 0, 0, 0])
-            for i in range(incr):
-                gv.sbits.append(0)
+            # for i in range(incr):
+            #     gv.sbits.append(0)
+            
+            ln = len(gv.snames)
+            for i in range(incr * 8):
+                gv.snames.append(("S" + f"{i + 1 + ln}".zfill(2)))            
+                
         elif int(qdict["onbrd"]) + 1 < gv.sd["nbrd"]:  # Shorten lists
             onbrd = int(qdict["onbrd"])
             decr = gv.sd["nbrd"] - (onbrd + 1)
@@ -306,6 +308,10 @@ class change_options(ProtectedPage):
         jsave(gv.snames, "snames")
 
     def update_prog_lists(self, change):
+        """
+        Increase or decrase the lengths of program "duration_sec" and "station_mask"
+        when number of expansion boards is changed        
+        """
         for p in gv.pd:
             if (
                 change == "idd"

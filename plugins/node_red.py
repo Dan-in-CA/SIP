@@ -34,13 +34,11 @@ urls.extend([
 gv.plugin_menu.append([_("Node-red Settings"), "/node-red-sp"])
 
 #### Global variables ####
-base_url = "http://localhost/"
 prior_srvals = [0] * len(gv.srvals)
 nr_settings = {}
-
+base_url = "http://localhost/"
 
 #### Functions ####
-
 
 def bit_read(byts, read_lst):
     """Read bits in bytes.
@@ -70,12 +68,13 @@ def bit_write(bytes, bit_dict):
 
 
 def load_settings():
-    global nr_settings
+    global nr_settings, base_url
     try:
         with open(
             "./data/node_red.json", "r"
         ) as f:  # Read nr_settings from json file if it exists
             nr_settings = json.load(f)
+            # base_url = nr_settings["nr-url"]
     except IOError:  # If file does not exist save default values
         nr_settings = {
             "station-on-off": "on",
@@ -303,6 +302,48 @@ def send_rain_delay_change(name, **kw):  # see line 663
 rd_change = signal("rain_delay_change")
 rd_change.connect(send_rain_delay_change)
 
+def adjust_lists(chng):
+    chng = 2  # - test
+    sn_chng = chng * 8
+    
+    if chng + 1 > gv.sd["nbrd"]:  # Lengthen lists
+        gv.sd["mo"].extend([0] * chng)
+        gv.sd["ir"].extend([0] * chng)
+        gv.sd["iw"].extend([0] * chng)
+        gv.sd["show"].extend([255] * chng)
+        gv.sbits.extend([0] * chng)
+        
+        gv.srvals.extend([0] * sn_chng)
+        gv.ps.extend([[0, 0]] * sn_chng)
+        gv.rs.extend([[0, 0, 0, 0]] * sn_chng)        
+        
+        ln = len(gv.snames)
+        for i in range(sn_chng):
+            gv.snames.append("S" + f"{i + 1 + ln}".zfill(2))
+    
+    elif chng + 1 < gv.sd["nbrd"]:  # Shorten lists  
+    
+    
+            pass
+            
+        # elif int(qdict["onbrd"]) + 1 < gv.sd["nbrd"]:  # Shorten lists
+        #     onbrd = int(qdict["onbrd"])
+        #     decr = gv.sd["nbrd"] - (onbrd + 1)
+        #     gv.sd["mo"] = gv.sd["mo"][: (onbrd + 1)]
+        #     gv.sd["ir"] = gv.sd["ir"][: (onbrd + 1)]
+        #     gv.sd["iw"] = gv.sd["iw"][: (onbrd + 1)]
+        #     gv.sd["show"] = gv.sd["show"][: (onbrd + 1)]
+        #     newlen = gv.sd["nst"] - decr * 8
+        #     gv.srvals = gv.srvals[:newlen]
+        #     gv.ps = gv.ps[:newlen]
+        #     gv.rs = gv.rs[:newlen]
+        #     gv.snames = gv.snames[:newlen]
+        #     gv.sbits = gv.sbits[: onbrd + 1]
+            
+    jsave(gv.snames, "snames")            
+
+
+
 ###############################
 #### blinker signals ##########
 "alarm"
@@ -367,6 +408,7 @@ class handle_requests(object):
     def GET(self):
         """return value from get request."""
         qdict = dict(web.input())  # Dictionary of JSON values
+        print("node-red request: ", qdict)
         if "gv" in qdict:
             attr = str(qdict["gv"])
             try:
