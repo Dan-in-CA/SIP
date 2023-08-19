@@ -109,6 +109,7 @@ class home(ProtectedPage):
     """Open Home page."""
 
     def GET(self):
+        # print(web.ctx)  # - test
         return template_render.home()
 
 
