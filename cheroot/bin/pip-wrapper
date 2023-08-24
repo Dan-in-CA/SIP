@@ -1,0 +1,31 @@
+#! /usr/bin/env python
+"""A pip-wrapper that injects platform-specific constraints into pip."""
+import sys
+
+from pip_constraint_helpers import (
+    get_constraint_file_path,
+    get_runtime_python_tag,
+    make_pip_cmd,
+    run_cmd,
+)
+
+
+def main(argv):
+    """Invoke pip with the matching constraints file, if present.
+
+    :param argv: List of command-line arguments.
+    """
+    constraint_file_path = get_constraint_file_path(
+        req_dir=argv[1],
+        toxenv=argv[0],
+        python_tag=get_runtime_python_tag(),
+    )
+    pip_cmd = make_pip_cmd(
+        pip_args=argv[2:],
+        constraint_file_path=constraint_file_path,
+    )
+    run_cmd(pip_cmd)
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])

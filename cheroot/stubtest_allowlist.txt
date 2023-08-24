@@ -1,0 +1,43 @@
+# generated members by metaclass
+cheroot.ssl.pyopenssl.SSLConnection.accept
+cheroot.ssl.pyopenssl.SSLConnection.bind
+cheroot.ssl.pyopenssl.SSLConnection.close
+cheroot.ssl.pyopenssl.SSLConnection.connect
+cheroot.ssl.pyopenssl.SSLConnection.connect_ex
+cheroot.ssl.pyopenssl.SSLConnection.family
+cheroot.ssl.pyopenssl.SSLConnection.fileno
+cheroot.ssl.pyopenssl.SSLConnection.get_app_data
+cheroot.ssl.pyopenssl.SSLConnection.get_cipher_list
+cheroot.ssl.pyopenssl.SSLConnection.get_context
+cheroot.ssl.pyopenssl.SSLConnection.get_peer_certificate
+cheroot.ssl.pyopenssl.SSLConnection.getpeername
+cheroot.ssl.pyopenssl.SSLConnection.getsockname
+cheroot.ssl.pyopenssl.SSLConnection.getsockopt
+cheroot.ssl.pyopenssl.SSLConnection.gettimeout
+cheroot.ssl.pyopenssl.SSLConnection.listen
+cheroot.ssl.pyopenssl.SSLConnection.makefile
+cheroot.ssl.pyopenssl.SSLConnection.pending
+cheroot.ssl.pyopenssl.SSLConnection.read
+cheroot.ssl.pyopenssl.SSLConnection.recv
+cheroot.ssl.pyopenssl.SSLConnection.renegotiate
+cheroot.ssl.pyopenssl.SSLConnection.send
+cheroot.ssl.pyopenssl.SSLConnection.sendall
+cheroot.ssl.pyopenssl.SSLConnection.set_accept_state
+cheroot.ssl.pyopenssl.SSLConnection.set_app_data
+cheroot.ssl.pyopenssl.SSLConnection.set_connect_state
+cheroot.ssl.pyopenssl.SSLConnection.setblocking
+cheroot.ssl.pyopenssl.SSLConnection.setsockopt
+cheroot.ssl.pyopenssl.SSLConnection.settimeout
+cheroot.ssl.pyopenssl.SSLConnection.shutdown
+cheroot.ssl.pyopenssl.SSLConnection.sock_shutdown
+cheroot.ssl.pyopenssl.SSLConnection.state_string
+cheroot.ssl.pyopenssl.SSLConnection.want_read
+cheroot.ssl.pyopenssl.SSLConnection.want_write
+cheroot.ssl.pyopenssl.SSLConnection.write
+
+# false positives (https://github.com/python/mypy/issues/11843)
+cheroot.connections.IS_WINDOWS
+cheroot.ssl.builtin.IS_ABOVE_OPENSSL10
+
+# suppress is both a function and class
+cheroot._compat.suppress

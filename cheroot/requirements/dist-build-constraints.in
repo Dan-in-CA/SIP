@@ -1,0 +1,12 @@
+# NOTE: Keep this in sync with `pyproject.toml -> [build-system] -> requires`
+# NOTE: at all times.
+
+# Essentials
+setuptools >= 34.4
+
+# Plugins
+setuptools_scm[toml] >= 3.5
+setuptools_scm_git_archive >= 1.1
+
+# Dynamic (coming from setuptools' PEP 517 build backend)
+wheel
