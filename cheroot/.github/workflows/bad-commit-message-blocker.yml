@@ -1,0 +1,19 @@
+---
+
+name: Good commit messages
+
+on:   # yamllint disable-line rule:truthy
+  pull_request:
+
+jobs:
+  check-commit-message:
+    name: 📝
+    if: github.event.pull_request.user.type != 'Bot'
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Verify commit messages follow best practices in CI
+      uses: platisd/bad-commit-message-blocker@1.0.1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+...

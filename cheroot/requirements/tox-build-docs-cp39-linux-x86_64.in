@@ -1,0 +1,9 @@
+-r tests.in  # `sphinxcontrib-autodoc` will import all the files
+
+Sphinx >= 1.8.2, < 4.4.0  # the top limit is to avoid extlinks
+jaraco.packaging >= 3.2
+sphinx-tabs >= 1.1.0
+
+furo
+python-dateutil  # `scm_tag_titles_ext` extension dep in docs/
+sphinxcontrib-apidoc >= 0.3.0

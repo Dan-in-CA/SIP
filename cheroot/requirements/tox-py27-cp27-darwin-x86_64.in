@@ -1,0 +1,70 @@
+
+# NOTE: `apipkg` has broken the support of Python 3.4, seemingly
+# NOTE: accidentally. It's a transitive dependency for us, through
+# NOTE: `pytest-xdist` -> `execnet`.
+# Ref: https://github.com/pytest-dev/apipkg/issues/29
+apipkg != 2.1.0; python_version == "3.4"
+
+# chardet is a dependency of requests. It is optional under
+# Python 3 but is used if present. Starting with requests v2.26.0,
+# requests depends on charset_normalizer that emits a warning in
+# our tests:
+# ```
+# UserWarning: Trying to detect encoding from a tiny portion
+# of (12) byte(s).
+# ```
+# Ref: https://github.com/psf/requests/commit/2ed84f5
+# To avoid the warning, we declare a direct dependency on chardet
+# here so that it's use is adjusted across Python 2 and Python 3:
+chardet
+
+# Address https://github.com/tartley/colorama/issues/240.
+# It's a transitive dependency of pytest-watch plugin.
+colorama!=0.4.2; python_version == "3.4"
+
+# measure test coverage
+coverage == 6.2; python_version >= "3.6"
+coverage < 5; python_version == "3.4"
+coverage < 6; python_version < "3.6" and python_version != "3.4"
+futures; python_version == "2.7"
+jaraco.context
+
+jaraco.text>=3.1
+
+portend
+pyopenssl
+
+# The pypytools library provides a cross-implementation context
+# manager for disabling garbage collection in specific blocks
+# of the control flow:
+pypytools
+
+pytest-cov==2.8.1; python_version == "3.4"  # pyup: < 2.9
+pytest-cov==2.12.0; python_version != "3.4"
+pytest-forked>=1.1.3; sys_platform != "win32" and python_version >= '3.0' and python_version <= '3.4'
+pytest-forked>=1.2.0; sys_platform != "win32" and (python_version < '3.0' or python_version > '3.4')
+pytest-mock>=1.11.0
+pytest-rerunfailures < 9; python_version <= "2.7" or python_version == "3.4"
+pytest-rerunfailures < 10; python_version == "3.5"
+pytest-rerunfailures; python_version >= "3.6"
+pytest-sugar>=0.9.3
+pytest-watch==4.2.0
+pytest-xdist>=1.28.0
+pytest>=4.6.6
+
+# HTTP over UNIX socket
+requests-unixsocket
+requests_toolbelt
+
+# TLS
+trustme>=0.4.0
+urllib3<1.25; python_version == "3.4"  # pyup: < 1.25
+
+# This addresses https://github.com/cherrypy/cheroot/issues/173.
+# It's a transitive dependency of requests library.
+# Also: requests>=2.22.0 doesn't support Python 3.4
+# yet requests==2.21.0 doesn't support urllib3>=1.25
+# Allowing requests with a lower urllib3 version
+# so that tests'd pass
+urllib3>=1.25; python_version != "3.4"
+watchdog<1.0.0; python_version < "3.6"

@@ -1,0 +1,447 @@
+---
+
+name: pip-tools
+
+on:   # yamllint disable-line rule:truthy
+  workflow_dispatch:
+    inputs:
+      package-distribuition:
+        # github.event_name == 'workflow_dispatch'
+        # && github.event.inputs.package-distribuition
+        description: >-
+          A target Python package distribution to upgrade
+        required: false
+  schedule:
+  - cron: 1 0 * * *  # Run daily at 0:01 UTC
+
+env:
+  git-branch: >-
+    maintenance/pip-tools-constraint-lockfiles${{
+      (
+      github.event_name == 'workflow_dispatch'
+      && github.event.inputs.package-distribuition
+      )
+      && format('-updating-{0}', github.event.inputs.package-distribuition) || '' }}
+
+concurrency:
+  group: >-
+    ${{
+        github.workflow
+    }}-${{
+        github.event.inputs.package-distribuition
+        || github.event.pull_request.number
+        || github.sha
+    }}
+  cancel-in-progress: true
+
+jobs:
+
+  deps:
+    name: >-
+      ⛓🔒 🐍${{
+          matrix.python-version
+      }} @ ${{
+          matrix.os
+      }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python-version:
+        # NOTE: The latest and the lowest supported Pythons are prioritized
+        # NOTE: to improve the responsiveness. It's nice to see the most
+        # NOTE: important results first.
+        - >-
+          3.10
+        - pypy2
+        - 3.9
+        - 3.8
+        - pypy-3.7
+        - 3.7
+        - 3.6
+        - 3.5
+        - 2.7
+        - 3.11.0-alpha - 3.11.0
+        - pypy-3.6
+        os:
+        - ubuntu-18.04
+        - macOS-11.0
+        - windows-2019
+        exclude:
+        # NOTE: macOS PyPy 3.6 job is excluded because during
+        # NOTE: self-provisioning, invoking `ensurepip` fails to load
+        # NOTE: some CFFI libs with a traceback saying
+        # NOTE: `AttributeError: No symbol SCDynamicStoreCopyProxies
+        # NOTE: found in library <None>`
+        - os: macOS-11.0
+          python-version: pypy-3.6
+        include:
+        # NOTE: The only GNU/Linux CPython 3.4 available is built for Ubuntu 18
+        # https://github.com/actions/python-versions/blob/c483657/versions-manifest.json#L1228
+        - os: ubuntu-18.04
+          python-version: 3.4
+
+    env:
+      PIP_DISABLE_PIP_VERSION_CHECK: 1
+      PIP_NO_PYTHON_VERSION_WARNING: 1
+      PIP_NO_WARN_SCRIPT_LOCATION: 1
+      PY_COLORS: 1
+
+    steps:
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Upgrade pip with `requires_python`
+      run: >-
+        python -m
+        pip install
+        --user
+        --upgrade
+        --force-reinstall
+        pip-with-requires-python
+    - name: Upgrade setuptools
+      # ...to compensate the `PYTHONPATH` leak in the Python
+      # 3.4-compatible `pip` that seems to attempt to import a
+      # non-isolated `setuptools` version
+      if: matrix.python-version == '3.4'
+      run: >-
+        python -m
+        pip install
+        --user
+        --upgrade
+        --force-reinstall
+        setuptools
+    - name: Install pip-tools
+      run: >-
+        python -m
+        pip install
+        --user
+        pip-tools
+
+    - name: Grab the source from Git
+      uses: actions/checkout@v2
+    - name: Setup git user as [bot]
+      # Refs:
+      # * https://github.community/t/github-actions-bot-email-address/17204/6
+      # * https://github.com/actions/checkout/issues/13#issuecomment-724415212
+      uses: fregante/setup-git-user@v1.0.1
+
+    - name: Generate constraints files
+      id: constraints
+      # NOTE: `sed` under macOS needs a backup argument.
+      # Ref: https://stackoverflow.com/a/7573438/595220
+      run: >
+        set -x
+
+
+        BASE_NAME=$(
+        PYTHONPATH=bin/ python -c
+        'from pip_constraint_helpers import get_constraint_file_path,
+        get_runtime_python_tag;
+        print(get_constraint_file_path(
+        "", "py", get_runtime_python_tag())[:-4]
+        )
+        '
+        )
+
+
+        ${{
+        (
+        matrix.python-version == '2.7'
+        || matrix.python-version == '3.4'
+        || matrix.python-version == '3.5'
+        || matrix.python-version == 'pypy2'
+        )
+        && 'echo ".  # runtime deps of the project" >> requirements/tests.in'
+        || ''
+        }}
+
+
+        (cd requirements/;
+        ${{
+        runner.os != 'Windows'
+        && 'ln -svf tests.in "${BASE_NAME}.in"; git add "${BASE_NAME}.in"'
+        || 'GIT_INDEX_OBJECT_SYMLINK_TYPE=120000;
+        SYMLINK_TARGET_HASH=$(echo -n tests.in | git hash-object --stdin);
+        CURRENT_SRC_OBJECT_TYPE="$(git ls-tree HEAD -- "${BASE_NAME}.in" | awk "{print\$1}")";
+        echo "CURRENT_SRC_OBJECT_TYPE=${CURRENT_SRC_OBJECT_TYPE}";
+        if [[ "${GIT_INDEX_OBJECT_SYMLINK_TYPE}" !=
+        "${CURRENT_SRC_OBJECT_TYPE}" ]];
+        then
+        git update-index --add --cacheinfo
+        "${GIT_INDEX_OBJECT_SYMLINK_TYPE}" "${SYMLINK_TARGET_HASH}"
+        "requirements/${BASE_NAME}.in" &&
+        git status &&
+        git restore -- "${BASE_NAME}.in";
+        fi'
+        }}
+        )
+
+
+        python -m piptools compile
+        --allow-unsafe
+        ${{
+        (
+        github.event_name == 'workflow_dispatch'
+        && github.event.inputs.package-distribuition
+        )
+        && format(
+        '--upgrade-package="{0}"',
+        github.event.inputs.package-distribuition
+        )
+        || '--upgrade'
+        }}
+        --output-file="requirements/${BASE_NAME}.txt"
+        ${{
+        (
+        matrix.python-version != '2.7'
+        && matrix.python-version != '3.4'
+        && matrix.python-version != '3.5'
+        && matrix.python-version != 'pypy2'
+        )
+        && '--strip-extras'
+        || ''
+        }}
+        "requirements/${BASE_NAME}.in"
+        ${{
+        (
+        matrix.python-version != '2.7'
+        && matrix.python-version != '3.4'
+        && matrix.python-version != '3.5'
+        && matrix.python-version != 'pypy2'
+        )
+        && 'setup.cfg'
+        || ''
+        }}
+
+
+        ${{
+        (
+        matrix.python-version == '2.7'
+        || matrix.python-version == '3.4'
+        || matrix.python-version == '3.5'
+        || matrix.python-version == 'pypy2'
+        )
+        && 'git checkout -- requirements/tests.in'
+        || ''
+        }}
+
+
+        ${{
+        (
+        runner.os != 'macOS' &&
+        (
+        matrix.python-version == '2.7'
+        || matrix.python-version == '3.4'
+        || matrix.python-version == '3.5'
+        || matrix.python-version == 'pypy2'
+        )
+        )
+        && 'sed -i
+        "s/\\[.*\\]//g;/^file:.*$/{N;N; s/^file:[^\"$\"]*\\n//;}"
+        "requirements/${BASE_NAME}.txt"'
+        || ''
+        }}
+        ${{
+        (
+        runner.os == 'macOS' &&
+        (
+        matrix.python-version == '2.7'
+        || matrix.python-version == '3.4'
+        || matrix.python-version == '3.5'
+        || matrix.python-version == 'pypy2'
+        )
+        )
+        && 'sed -i ""
+        "s/\\[.*\\]//g;/^file:.*$/{N;N; s/^file:[^\"$\"]*\\n//;}"
+        "requirements/${BASE_NAME}.txt"'
+        || ''
+        }}
+
+
+        git add "requirements/${BASE_NAME}.txt"
+
+
+        git commit -m "Update ${BASE_NAME} constraints${{
+        (
+        github.event_name == 'workflow_dispatch'
+        && github.event.inputs.package-distribuition
+        )
+        && format(' for {0}', github.event.inputs.package-distribuition)
+        || ''
+        }}" requirements/
+        && echo "::set-output name=patch::0001-Update-${BASE_NAME}-constraints.patch"
+        || :
+      shell: bash
+
+    - name: Log the patch
+      if: steps.constraints.outputs.patch
+      run: git show --color
+    - name: Create a temporary patch directory
+      if: steps.constraints.outputs.patch
+      run: mkdir -pv '${{ runner.temp }}/patches'
+      shell: bash
+    - name: Create a patch from the last Git commit
+      if: steps.constraints.outputs.patch
+      run: >-
+        git format-patch
+        --output='${{
+            runner.temp
+        }}/patches/${{
+            steps.constraints.outputs.patch
+        }}'
+        -1
+        HEAD
+    - name: Save the package bump patch as a GHA artifact
+      if: steps.constraints.outputs.patch
+      uses: actions/upload-artifact@v2
+      with:
+        name: pip-constraints-git-patches
+        path: ${{ runner.temp }}/patches/${{ steps.constraints.outputs.patch }}
+
+  check:  # This job does nothing and is only used for the branch protection
+    name: >-
+      check
+      ⮸
+      ${{
+      (
+          github.event_name == 'workflow_dispatch'
+          && github.event.inputs.package-distribuition
+      )
+      && format('`{0}`', github.event.inputs.package-distribuition)
+      || 'everything'
+      }}
+    if: always()
+
+    needs:
+    - deps
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Decide whether the needed jobs succeeded or failed
+      uses: re-actors/alls-green@release/v1
+      with:
+        jobs: ${{ toJSON(needs) }}
+
+  publish-pr:
+    name: Open/refresh a PR
+    needs:
+    - check
+    runs-on: Ubuntu-latest
+
+    environment: pip-tools
+
+    permissions:
+      contents: write  # Needed to enable auto-merge
+      pull-requests: write
+
+    steps:
+    - name: Download all the dists
+      id: artifacts-download
+      continue-on-error: true  # and judge whether there's updates later
+      uses: actions/download-artifact@v2
+      with:
+        name: pip-constraints-git-patches
+        path: ${{ runner.temp }}/patches/
+    - name: >-
+        Determine whether any change suggestions to lockfiles
+        have been produced
+      if: steps.artifacts-download.outcome == 'success'
+      id: artifacts
+      run: echo '::set-output name=lockfile-updates-needed::true'
+    - name: Grab the source from Git
+      if: steps.artifacts.outputs.lockfile-updates-needed
+      uses: actions/checkout@v2
+      with:
+        ssh-key: ${{ secrets.PIP_TOOLS_DEPLOYMENT_KEY }}
+    - name: Setup git user as [bot]
+      if: steps.artifacts.outputs.lockfile-updates-needed
+      # Refs:
+      # * https://github.community/t/github-actions-bot-email-address/17204/6
+      # * https://github.com/actions/checkout/issues/13#issuecomment-724415212
+      uses: fregante/setup-git-user@v1.0.1
+
+    - name: Figure out if the pre-existing remote branch exists
+      if: steps.artifacts.outputs.lockfile-updates-needed
+      id: pre-existing-remote-branch
+      run: >-
+        echo "::set-output name=info::$(
+        git ls-remote origin '${{ env.git-branch }}'
+        )"
+    - name: Fetch the existing remote PR branch
+      if: steps.pre-existing-remote-branch.outputs.info
+      run: git fetch origin '${{ env.git-branch }}'
+    - name: Switch to the PR branch
+      if: steps.artifacts.outputs.lockfile-updates-needed
+      run: git checkout -B '${{ env.git-branch }}'
+    - name: Make an empty initial commit
+      if: >-
+        !steps.pre-existing-remote-branch.outputs.info
+        && steps.artifacts.outputs.lockfile-updates-needed
+      run: git commit --allow-empty -m "Pip-tools initial commit $(uuidgen)"
+    - name: Push the PR branch to remote
+      # ... so that it's possible to create a PR out of it
+      if: >-
+        !steps.pre-existing-remote-branch.outputs.info
+        && steps.artifacts.outputs.lockfile-updates-needed
+      # FIXME: use `GITHUB_TOKEN`
+      run: git push --atomic origin 'HEAD:${{ env.git-branch }}'
+    - name: Wipe the dummy commit
+      if: >-
+        !steps.pre-existing-remote-branch.outputs.info
+        && steps.artifacts.outputs.lockfile-updates-needed
+      # ... so that it's possible to create a PR out of it
+      run: git reset HEAD^
+
+    - name: Create a PR
+      if: >-
+        !steps.pre-existing-remote-branch.outputs.info
+        && steps.artifacts.outputs.lockfile-updates-needed
+      id: pr
+      uses: vsoch/pull-request-action@1.0.18
+      env:
+        BRANCH_PREFIX: ''
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PULL_REQUEST_BODY: >-
+          Automated pip-tools-managed pip constraint lockfiles update.
+        PULL_REQUEST_BRANCH: ${{ github.event.repository.default_branch }}
+        PULL_REQUEST_FROM_BRANCH: ${{ env.git-branch }}
+        PULL_REQUEST_TITLE: >-
+          Bump transitive deps in pip-tools-managed lockfiles${{
+          (
+          github.event_name == 'workflow_dispatch'
+          && github.event.inputs.package-distribuition
+          )
+          && format(' for {0}', github.event.inputs.package-distribuition)
+          || ''
+          }}
+    - name: Log the pull request details
+      run: >-
+        echo
+        "PR number: ${{ steps.pr.outputs.pull_request_number }}"
+        "\nPR URL: ${{ steps.pr.outputs.pull_request_url }}"
+
+    - name: List Git patches
+      if: steps.artifacts.outputs.lockfile-updates-needed
+      run: ls -alh '${{ runner.temp }}/patches/'
+    - name: Apply patches to the Git repo
+      if: steps.artifacts.outputs.lockfile-updates-needed
+      run: git am '${{ runner.temp }}/patches'/*.patch
+    - name: Force-push the PR branch to remote
+      # ... with only the useful commits which will cause a `pull_request` `synchronize`
+      # event because of the SSH key
+      if: steps.artifacts.outputs.lockfile-updates-needed
+      run: git push --atomic origin 'HEAD:${{ env.git-branch }}' --force-with-lease
+
+    - name: Enable auto-merge for the PR
+      if: steps.pr.outputs.pull_request_url
+      run: >-
+        gh pr merge
+        --auto --merge
+        '${{ steps.pr.outputs.pull_request_url }}'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+...

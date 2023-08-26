@@ -1,0 +1,15 @@
+pre-commit  # main unified linting framework
+
+# Dependencies for the local `stubtest` hook
+mypy  # provides the main `stubtest` executable
+
+# Extra runtime dependencies for `stubtest` to see runtime variables
+# that are also declared in `*.pyi` files the same way they are
+# declared:
+pyOpenSSL
+
+# Extra dependencies providing external type definitions:
+types-backports
+types-pyOpenSSL
+types-requests
+types-six
