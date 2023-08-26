@@ -1,3 +1,0 @@
-gcc
-libenchant1c2a
-python3-dev

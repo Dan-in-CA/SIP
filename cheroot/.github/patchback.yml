@@ -1,5 +1,0 @@
----
-backport_branch_prefix: patchback/backports/
-backport_label_prefix: backport-
-target_branch_prefix: maint/
-...
