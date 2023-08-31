@@ -622,8 +622,8 @@ class handle_requests(object):
                     gv.sd["wl"] = val
                     report_option_change()
 
-                # Change options
-                elif data["sd"] == "nbrd":
+                # Change options #### Remove calls to url=base_url ####
+                elif data["sd"] == "nbrd": ## This will call adjust_lists(chng)
                     requests.get(url=base_url + "co", params={"onbrd": val})
 
                 elif data["sd"] == "htp":
