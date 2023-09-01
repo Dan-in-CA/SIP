@@ -19,6 +19,7 @@ import web
 import webpages
 from webpages import ProtectedPage  # Needed for security
 from webpages import report_option_change, report_value_change
+from webpages import change_options
 
 
 # Add new URLs to access classes in this plugin.
@@ -304,43 +305,49 @@ rd_change.connect(send_rain_delay_change)
 
 def adjust_lists(chng):
     chng = 2  # - test
-    sn_chng = chng * 8
+    change_values.update_scount(chng)
+    # - test
+    gv.sd["nbrd"] = brd_count
+    gv.sd["nst"] = gv.sd["nbrd"] * 8
+    change_values.update_prog_lists("nbrd")
     
-    if chng + 1 > gv.sd["nbrd"]:  # Lengthen lists
-        gv.sd["mo"].extend([0] * chng)
-        gv.sd["ir"].extend([0] * chng)
-        gv.sd["iw"].extend([0] * chng)
-        gv.sd["show"].extend([255] * chng)
-        gv.sbits.extend([0] * chng)
-        
-        gv.srvals.extend([0] * sn_chng)
-        gv.ps.extend([[0, 0]] * sn_chng)
-        gv.rs.extend([[0, 0, 0, 0]] * sn_chng)        
-        
-        ln = len(gv.snames)
-        for i in range(sn_chng):
-            gv.snames.append("S" + f"{i + 1 + ln}".zfill(2))
-    
-    elif chng + 1 < gv.sd["nbrd"]:  # Shorten lists  
-    
-    
-            pass
-            
-        # elif int(qdict["onbrd"]) + 1 < gv.sd["nbrd"]:  # Shorten lists
-        #     onbrd = int(qdict["onbrd"])
-        #     decr = gv.sd["nbrd"] - (onbrd + 1)
-        #     gv.sd["mo"] = gv.sd["mo"][: (onbrd + 1)]
-        #     gv.sd["ir"] = gv.sd["ir"][: (onbrd + 1)]
-        #     gv.sd["iw"] = gv.sd["iw"][: (onbrd + 1)]
-        #     gv.sd["show"] = gv.sd["show"][: (onbrd + 1)]
-        #     newlen = gv.sd["nst"] - decr * 8
-        #     gv.srvals = gv.srvals[:newlen]
-        #     gv.ps = gv.ps[:newlen]
-        #     gv.rs = gv.rs[:newlen]
-        #     gv.snames = gv.snames[:newlen]
-        #     gv.sbits = gv.sbits[: onbrd + 1]
-            
-    jsave(gv.snames, "snames")            
+    # sn_chng = chng * 8
+    #
+    # if chng + 1 > gv.sd["nbrd"]:  # Lengthen lists
+    #     gv.sd["mo"].extend([0] * chng)
+    #     gv.sd["ir"].extend([0] * chng)
+    #     gv.sd["iw"].extend([0] * chng)
+    #     gv.sd["show"].extend([255] * chng)
+    #     gv.sbits.extend([0] * chng)
+    #
+    #     gv.srvals.extend([0] * sn_chng)
+    #     gv.ps.extend([[0, 0]] * sn_chng)
+    #     gv.rs.extend([[0, 0, 0, 0]] * sn_chng)        
+    #
+    #     ln = len(gv.snames)
+    #     for i in range(sn_chng):
+    #         gv.snames.append("S" + f"{i + 1 + ln}".zfill(2))
+    #
+    # elif chng + 1 < gv.sd["nbrd"]:  # Shorten lists  
+    #
+    #
+    #         pass
+    #
+    #     # elif int(qdict["onbrd"]) + 1 < gv.sd["nbrd"]:  # Shorten lists
+    #     #     onbrd = int(qdict["onbrd"])
+    #     #     decr = gv.sd["nbrd"] - (onbrd + 1)
+    #     #     gv.sd["mo"] = gv.sd["mo"][: (onbrd + 1)]
+    #     #     gv.sd["ir"] = gv.sd["ir"][: (onbrd + 1)]
+    #     #     gv.sd["iw"] = gv.sd["iw"][: (onbrd + 1)]
+    #     #     gv.sd["show"] = gv.sd["show"][: (onbrd + 1)]
+    #     #     newlen = gv.sd["nst"] - decr * 8
+    #     #     gv.srvals = gv.srvals[:newlen]
+    #     #     gv.ps = gv.ps[:newlen]
+    #     #     gv.rs = gv.rs[:newlen]
+    #     #     gv.snames = gv.snames[:newlen]
+    #     #     gv.sbits = gv.sbits[: onbrd + 1]
+    #
+    # jsave(gv.snames, "snames")            
 
 
 
@@ -623,8 +630,13 @@ class handle_requests(object):
                     report_option_change()
 
                 # Change options #### Remove calls to url=base_url ####
-                elif data["sd"] == "nbrd": ## This will call adjust_lists(chng)
-                    requests.get(url=base_url + "co", params={"onbrd": val})
+                elif (data["sd"] == "nbrd" ## This will call adjust_lists(chng)
+                    and val != gv.sd["nbrd"]
+                      ):
+                    brd_chng = val - gv.sd["nbrd"]
+                    print("brd_chng: ", brd_chng)  # - test
+                    # requests.get(url=base_url + "co", params={"onbrd": val})
+                    change_options.update_scount(brd_chng)
 
                 elif data["sd"] == "htp":
                     requests.get(url=base_url + "co", params={"ohtp": val})
