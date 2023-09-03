@@ -118,14 +118,14 @@ $code:
 <div id="programs">
     $for pid in range(nprogs):
         $ prog = gv.pd[pid]
-        <div id="p${pid}" class="controlBlock program ${'disabled' if prog['enabled'] == 0 else ''}">
+        <div id="p${pid}" class="controlblock program ${'disabled' if prog['enabled'] == 0 else ''}">
          <p>
              <button class="cDisable toggle ${'off' if prog['enabled'] == 0 else 'on'}" data="${pid}">
                  <span class='toggleleft'>$_(u'On')</span>
                  <span class='togglesep'>&nbsp;</span>
                  <span class='toggleright'>$_(u'Off')</span>
              </button>
-        ${display_name()}: <span class="val">${pdays(prog['day_mask'], prog['interval_base_day'])}</span></b>
+             <span class="val">${display_name()}</span>: <span>${pdays(prog['day_mask'], prog['interval_base_day'])}</span></b>
          </p>
             $ start = prog['start_min']
             $ end = prog['stop_min']
