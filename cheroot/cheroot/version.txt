@@ -1,5 +1,0 @@
-cheroot vesion 8.6.0
-Python 3 only
-
-rewquires jaraco.functools
-pip3 install jaraco.functools
