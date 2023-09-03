@@ -583,11 +583,10 @@ class handle_requests(object):
                     report_option_change()
 
                 # Change options #### Remove calls to url=base_url ####
-                elif (data["sd"] == "nbrd" ## This will call adjust_lists(chng)
+                elif (data["sd"] == "nbrd"
                     and val != gv.sd["nbrd"]  # number f boards has changed
                       ):
                     brd_chng = val - gv.sd["nbrd"]
-                    print("brd_chng: ", brd_chng)
                     change_options.update_scount(brd_chng)
                     gv.sd["nbrd"] = gv.sd["nbrd"] + brd_chng
                     gv.sd["nst"] = gv.sd["nbrd"] * 8
@@ -598,13 +597,24 @@ class handle_requests(object):
                     # requests.get(url=base_url + "co", params={"ohtp": val})   
                     gv.sd["htp"] = val
 
-                elif data["sd"] == "idd":
-                    if val == 1:
-                        requests.get(url=base_url + "co", params={"oidd": val})
-                    elif val == 0:
-                        requests.get(url=base_url + "co", params={"none": val})
+                elif data["sd"] == "idd":                  
+                    if (val != gv.sd["idd"]
+                        and (val == 0 or val == 1)
+                        ):
+                        gv.sd["idd"] = val
+                        change_options.update_prog_lists("idd")
+                        jsave(gv.sd, "sd")
+                        return "Individual durations changed"
                     else:
-                        return "invalid request"
+                        return "Error val must be 0 or 1"                                                                                                                                                                                                                                                                                      
+                    
+                    # if val == 1:
+                    #     requests.get(url=base_url + "co", params={"oidd": val})
+                    # elif val == 0:
+                    #     requests.get(url=base_url + "co", params={"none": val})
+                    
+                    # else:
+                    #     return "Error val must be 0 or 1"
 
                 elif data["sd"] == "mton":
                     if val < -60 or val > 60:
