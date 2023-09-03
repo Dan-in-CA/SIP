@@ -381,6 +381,7 @@ button.pushon.on {
 
 input.timeInput {
 	font-size: 12pt;
+	width: 3em;
 }
 /******** Station Table Styles **********/
 
@@ -789,12 +790,13 @@ td.stationSchedule {
 	white-space: nowrap;
 	user-select: none;
 	-webkit-user-select: none;
+	width: 3em;
    }
    input[type=number][size="3"]{
     width: 3em;
    }
-   input[type=number][size="2"]{
-    width: 2em;
+   input[type=number][size="3"]{
+    width: 3em;
    }
    .breakBefore {
     display: table;
