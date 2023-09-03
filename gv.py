@@ -123,7 +123,7 @@ pd = load_programs()  # Load program data from file
 plugin_data = {}  # Empty dictionary to hold plugin based global data
 pluginFtr = []  # Empty list to hold plugin data for display in footer
 pluginStn = []  # Empty list to hold plugin data for display on timeline
-pnames = []
+pnames = ["undefined"]
 
 ps = []  # Program schedule (used for UI display)
 for i in range(sd["nst"]):
