@@ -128,7 +128,8 @@ span.stationName:last-child:after {
 	content: "";
 }
 .program {
-	width:50%;
+    width: 75%;
+    max-width: 600px;
 }
 .program p:first-child {
 	background-color: #2E3959;
@@ -410,6 +411,7 @@ table.stationList {
 	border-spacing: 0px;
 	empty-cells: show;
 	border-collapse: separate;
+	margin: 6px 0px;
 }
 td.station_name {
 	text-align: right; 

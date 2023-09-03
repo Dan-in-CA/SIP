@@ -383,12 +383,14 @@ let cycleTime = ${two_digits(program['cycle_min'] % 60)};
         <input type="hidden" name="pid" value="${pid}">
         <input type="hidden" name="v" value="$:{program}">
         
-        <label for="pname"><b>$_(u'Program name'):</b> </label><input type="text" id="pname" name="pname" value = "${p_name}">
         
         <div style="padding-left:5px;padding-right:5px;">
             <p><button id="cProgramEnabled" class="toggle ${'on' if program['enabled'] else 'off'}"><span class='toggleleft'>$_(u'Program On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_(u'Program Off')</span></button></p>
 
-            <div class="controlBlock">
+            <div class="controlblock">
+                <p>
+                    <label for="pname"><b>$_(u'Program name'):</b> </label><input type="text" id="pname" name="pname" value = "${p_name}">
+                </p>
                 <p>
                 $ t = formatTime(two_digits(program['start_min'] / 60) + ":" + two_digits(program['start_min'] % 60))
                 
