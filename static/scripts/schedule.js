@@ -2,7 +2,6 @@
 var displayScheduleDate = new Date(Date.now() + tzDiff);
 var displayScheduleTimeout;
 var sid,sn,t;
-var simdate = displayScheduleDate; // date for simulation
 if (typeof progs !== 'undefined'){var nprogs = progs.length}; // number of programs
 if (typeof nbrd !== 'undefined'){var nst = nbrd*8}; // number of stations
 
@@ -43,7 +42,7 @@ function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is schedu
   return 0;  // no match found
 }
 
-function doSimulation() { // Create schedule by a full program simulation, was draw_program()
+function doSimulation(simdate) { // Create schedule by a full program simulation, was draw_program()
   var simminutes=0;
   var busy=0,match_found=0,endmin=0,bid,s,sid,pid;
   var st_array=new Array(nst); //start time per station in seconds (since midnight)?
@@ -157,15 +156,16 @@ function fromClock(clock) {
 function programName(p) {
 	if (p == "Manual" || p == "Run-once") {
 		return p + " Program";
-	}
-	else if(isNaN(p)) {
+	}	
+	else if(isNaN(p)) { // If not a number assume it's the program name
 		return p;	
-	} 
-	else if(progNames[p -1] != "") {
-	    return progNames[p -1];
-	} 	
-	else {
-		return "Program " + p;
+	} else {
+		// If it's a number, look up the name.  If it's missing or the default value, use the program number instead
+		if (progs[p-1].name == "Unnamed" || progs[p-1].name == "") {
+			return "Program " + p;
+		} else {
+			return progs[p-1].name;
+		}
 	}
 }
 
@@ -177,7 +177,7 @@ function displaySchedule(schedule) {
 	var now = new Date(Date.now() + tzDiff);
 	var nowMark = now.getHours()*60 + now.getMinutes();
 	var isToday = toXSDate(displayScheduleDate) == toXSDate(now);
-	var programClassesUsed = new Object();
+	var programsUsed = new Object();
 	jQuery(".stationSchedule .scheduleTick").each(function() {
 		jQuery(this).empty();
 		var sid = jQuery(this).parent().attr("data");
@@ -203,7 +203,7 @@ function displaySchedule(schedule) {
 						} else {
 							programClass = "program" + (parseInt(schedule[s].program))%10;
 						}
-						programClassesUsed[schedule[s].program] = programClass;
+						programsUsed[schedule[s].program] = programClass;
 						var markerClass = (schedule[s].date == undefined ? "schedule" : "history");
 						boxes.append("<div class='scheduleMarker " + programClass + " " + markerClass + "' style='left:" + barStart*100 + "%;width:" + barWidth*100 + "%' data='" + programName(schedule[s].program) + ": " + schedule[s].label + "'></div>");
 					}
@@ -219,8 +219,8 @@ function displaySchedule(schedule) {
 		}
 	});
 	jQuery("#legend").empty();
-	for (var p in programClassesUsed) {
-		jQuery("#legend").append("<span class='" + programClassesUsed[p] + "'>" + programName(p) + "</span>");
+	for (var p in programsUsed) {
+		jQuery("#legend").append("<span class='" + programsUsed[p] + "'>" + programName(p) + "</span>");
 	}
 	jQuery(".scheduleMarker").mouseover(scheduleMarkerMouseover);
 	jQuery(".scheduleMarker").mouseout(scheduleMarkerMouseout);
@@ -232,9 +232,24 @@ function displaySchedule(schedule) {
 }
 
 function displayProgram() { // Controls home page irrigation timeline
-	if (displayScheduleDate > new Date(Date.now() + tzDiff)) {
-		var schedule = doSimulation(); //dk
-		displaySchedule(schedule);
+	if (displayScheduleDate > new Date(Date.now() + tzDiff)) { 
+		// run the schedule for yesterday to see if anything is spilling over into today
+		var yesterdaysSchedule = doSimulation(new Date(displayScheduleDate.getTime() - 24*60*60*1000));
+		var spillOvers = [];
+		for (var s in yesterdaysSchedule) {
+			if (yesterdaysSchedule[s].start + yesterdaysSchedule[s].duration/60 > 1440) {
+				//Found a program hanging over from yesterday
+				spillOvers.push({
+					program : yesterdaysSchedule[s].program,
+					station : yesterdaysSchedule[s].station,
+					start : 0,
+					duration : yesterdaysSchedule[s].duration - (1440-yesterdaysSchedule[s].start)*60,
+					label : yesterdaysSchedule[s].label
+				});
+			}
+		}
+		var schedule = doSimulation(displayScheduleDate);
+		displaySchedule(schedule.concat(spillOvers));
 	} else {
 		let visibleDate = toXSDate(displayScheduleDate);
 		jQuery.getJSON("/api/log?date=" + visibleDate, function(log) {
@@ -247,7 +262,7 @@ function displayProgram() { // Controls home page irrigation timeline
 				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
 			}
 			if (toXSDate(displayScheduleDate) == toXSDate(new Date(Date.now() + tzDiff))) {
-				var schedule = doSimulation(); //dk
+				var schedule = doSimulation(displayScheduleDate); //dk
 				log = log.concat(schedule);
 			}
 			displaySchedule(log);
