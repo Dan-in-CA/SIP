@@ -1,12 +1,14 @@
 """Extensions to unittest for web frameworks.
 
-Use the WebCase.getPage method to request a page from your HTTP server.
+Use the :py:meth:`WebCase.getPage` method to request a page
+from your HTTP server.
+
 Framework Integration
 =====================
 If you have control over your server process, you can handle errors
 in the server-side of the HTTP conversation a bit better. You must run
-both the client (your WebCase tests) and the server in the same process
-(but in separate threads, obviously).
+both the client (your :py:class:`WebCase` tests) and the server in the
+same process (but in separate threads, obviously).
 When an error occurs in the framework, call server_error. It will print
 the traceback to stdout, and keep any assertions you have from running
 (the assumption is that, if the server errors, the page output will not
@@ -24,7 +26,7 @@ import time
 import traceback
 import os
 import json
-import unittest
+import unittest  # pylint: disable=deprecated-module,preferred-module
 import warnings
 import functools
 
@@ -122,7 +124,7 @@ class WebCase(unittest.TestCase):
     def _Conn(self):
         """Return HTTPConnection or HTTPSConnection based on self.scheme.
 
-        * from http.client.
+        * from :py:mod:`python:http.client`.
         """
         cls_name = '{scheme}Connection'.format(scheme=self.scheme.upper())
         return getattr(http_client, cls_name)
@@ -157,7 +159,7 @@ class WebCase(unittest.TestCase):
 
     @property
     def persistent(self):
-        """Presense of the persistent HTTP connection."""
+        """Presence of the persistent HTTP connection."""
         return hasattr(self.HTTP_CONN, '__class__')
 
     @persistent.setter
@@ -174,9 +176,11 @@ class WebCase(unittest.TestCase):
 
     def getPage(
         self, url, headers=None, method='GET', body=None,
-        protocol=None, raise_subcls=None,
+        protocol=None, raise_subcls=(),
     ):
-        """Open the url with debugging support. Return status, headers, body.
+        """Open the url with debugging support.
+
+        Return status, headers, body.
 
         url should be the identifier passed to the server, typically a
         server-absolute path and query string (sent between method and
@@ -184,16 +188,16 @@ class WebCase(unittest.TestCase):
         enabled in the server.
 
         If the application under test generates absolute URIs, be sure
-        to wrap them first with strip_netloc::
+        to wrap them first with :py:func:`strip_netloc`::
 
-            class MyAppWebCase(WebCase):
-                def getPage(url, *args, **kwargs):
-                    super(MyAppWebCase, self).getPage(
-                        cheroot.test.webtest.strip_netloc(url),
-                        *args, **kwargs
-                    )
+            >>> class MyAppWebCase(WebCase):
+            ...     def getPage(url, *args, **kwargs):
+            ...         super(MyAppWebCase, self).getPage(
+            ...             cheroot.test.webtest.strip_netloc(url),
+            ...             *args, **kwargs
+            ...         )
 
-        `raise_subcls` is passed through to openURL.
+        ``raise_subcls`` is passed through to :py:func:`openURL`.
         """
         ServerError.on = False
 
@@ -202,13 +206,17 @@ class WebCase(unittest.TestCase):
         if isinstance(body, six.text_type):
             body = body.encode('utf-8')
 
+        # for compatibility, support raise_subcls is None
+        raise_subcls = raise_subcls or ()
+
         self.url = url
         self.time = None
         start = time.time()
         result = openURL(
             url, headers, method, body, self.HOST, self.PORT,
             self.HTTP_CONN, protocol or self.PROTOCOL,
-            raise_subcls=raise_subcls, ssl_context=self.ssl_context,
+            raise_subcls=raise_subcls,
+            ssl_context=self.ssl_context,
         )
         self.time = time.time() - start
         self.status, self.headers, self.body = result
@@ -243,7 +251,7 @@ class WebCase(unittest.TestCase):
 
     console_height = 30
 
-    def _handlewebError(self, msg):
+    def _handlewebError(self, msg):  # noqa: C901  # FIXME
         print('')
         print('    ERROR: %s' % msg)
 
@@ -426,7 +434,7 @@ def cleanHeaders(headers, method, body, host, port):
     # Add the required Host request header if not present.
     # [This specifies the host:port of the server, not the client.]
     found = False
-    for k, v in headers:
+    for k, _v in headers:
         if k.lower() == 'host':
             found = True
             break
@@ -483,16 +491,16 @@ def openURL(*args, **kwargs):
     """
     Open a URL, retrying when it fails.
 
-    Specify `raise_subcls` (class or tuple of classes) to exclude
+    Specify ``raise_subcls`` (class or tuple of classes) to exclude
     those socket.error subclasses from being suppressed and retried.
     """
     raise_subcls = kwargs.pop('raise_subcls', ())
     opener = functools.partial(_open_url_once, *args, **kwargs)
 
     def on_exception():
-        type_, exc = sys.exc_info()[:2]
+        exc = sys.exc_info()[1]
         if isinstance(exc, raise_subcls):
-            raise
+            raise exc
         time.sleep(0.5)
 
     # Try up to 10 times
@@ -549,7 +557,11 @@ def strip_netloc(url):
     server-absolute portion.
 
     Useful for wrapping an absolute-URI for which only the
-    path is expected (such as in calls to getPage).
+    path is expected (such as in calls to :py:meth:`WebCase.getPage`).
+
+    .. testsetup::
+
+       from cheroot.test.webtest import strip_netloc
 
     >>> strip_netloc('https://google.com/foo/bar?bing#baz')
     '/foo/bar?bing'
@@ -561,7 +573,7 @@ def strip_netloc(url):
     '/foo/bar?bing'
     """
     parsed = urllib_parse.urlparse(url)
-    scheme, netloc, path, params, query, fragment = parsed
+    _scheme, _netloc, path, params, query, _fragment = parsed
     stripped = '', '', path, params, query, ''
     return urllib_parse.urlunparse(stripped)
 

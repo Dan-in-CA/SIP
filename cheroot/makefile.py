@@ -68,7 +68,7 @@ class MakeFile_PY2(getattr(socket, '_fileobject', object)):
             self._refcount -= 1
 
     def write(self, data):
-        """Sendall for non-blocking sockets."""
+        """Send entire data contents for non-blocking sockets."""
         bytes_sent = 0
         data_mv = memoryview(data)
         payload_size = len(data_mv)
@@ -122,7 +122,7 @@ class MakeFile_PY2(getattr(socket, '_fileobject', object)):
     # FauxSocket is no longer needed
     del FauxSocket
 
-    if not _fileobject_uses_str_type:
+    if not _fileobject_uses_str_type:  # noqa: C901  # FIXME
         def read(self, size=-1):
             """Read data from the socket to buffer."""
             # Use max, disallow tiny reads in a loop as they are very
@@ -235,6 +235,7 @@ class MakeFile_PY2(getattr(socket, '_fileobject', object)):
                         break
                     buf.write(data)
                 return buf.getvalue()
+
             else:
                 # Read until size bytes or \n or EOF seen, whichever comes
                 # first
@@ -279,6 +280,11 @@ class MakeFile_PY2(getattr(socket, '_fileobject', object)):
                     buf_len += n
                     # assert buf_len == buf.tell()
                 return buf.getvalue()
+
+        def has_data(self):
+            """Return true if there is buffered data to read."""
+            return bool(self._rbuf.getvalue())
+
     else:
         def read(self, size=-1):
             """Read data from the socket to buffer."""
@@ -395,6 +401,10 @@ class MakeFile_PY2(getattr(socket, '_fileobject', object)):
                     buf_len += n
                 return ''.join(buffers)
 
+        def has_data(self):
+            """Return true if there is buffered data to read."""
+            return bool(self._rbuf)
+
 
 if not six.PY2:
     class StreamReader(io.BufferedReader):
@@ -410,6 +420,10 @@ if not six.PY2:
             val = super().read(*args, **kwargs)
             self.bytes_read += len(val)
             return val
+
+        def has_data(self):
+            """Return true if there is buffered data to read."""
+            return len(self._read_buf) > self._read_pos
 
     class StreamWriter(BufferedWriter):
         """Socket stream writer."""

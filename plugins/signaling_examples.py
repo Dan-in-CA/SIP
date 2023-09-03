@@ -10,101 +10,103 @@ import gv
 
 # Function to be run when sigal is recieved.
 def notify_alarm_toggled(name, **kw):
-    print(u"Messge from {}!: {}".format(name, kw[u"txt"]))
+    ### uncomment the following line to print message to standard out on SIP startup ###
+    # print("Messge from {}!: {}".format(name, kw["txt"]))
+    pass
 
 # instance of named signal
-alarm = signal(u"alarm_toggled")  
+alarm = signal("alarm_toggled")  
 # Connect signal to function to be run.
 alarm.connect(notify_alarm_toggled)
 
 # Send alarm signal 
 # (normally this would be in a function in a different module)
-alarm.send(u"Signaling plugin", txt=u"Just an example!")
+alarm.send("Signaling plugin", txt="Just an example!")
 
 ### new day ###
 def notify_new_day(name, **kw):
-    print(u"A new day has started.")
+    print("A new day has started.")
 
-new_day = signal(u"new_day")
+new_day = signal("new_day")
 new_day.connect(notify_new_day)
 
 ### login ###
 def notify_login(name, **kw):
-    print(u"someone logged in")
+    print("someone logged in")
 
 
-loggedin = signal(u"loggedin")
+loggedin = signal("loggedin")
 loggedin.connect(notify_login)
 
 ### Option settings ###
 def notify_option_change(name, **kw):
-    print(u"Option settings changed in gv.sd")
+    print("Option settings changed in gv.sd")
     #  gv.sd is a dictionary containing the setting that changed.
     #  See "from options" in gv_reference.txt
 
 
-option_change = signal(u"option_change")
+option_change = signal("option_change")
 option_change.connect(notify_option_change)
 
 ### program change ##
 def notify_program_change(name, **kw):
-    print(u"Programs changed")
+    print("Programs changed")
     #  Programs are in gv.pd and /data/programs.json
 
 
-program_change = signal(u"program_change")
+program_change = signal("program_change")
 program_change.connect(notify_program_change)
 
 ### program deleted ###
 def notify_program_deleted(name, **kw):
-    print(u"Program deleted")
+    print("Program deleted")
     #  Programs are in gv.pd and /data/programs.json
 
 
-program_deleted = signal(u"program_deleted")
+program_deleted = signal("program_deleted")
 program_deleted.connect(notify_program_deleted)
 
 ### program toggled ###
 def notify_program_toggled(name, **kw):
-    print(u"Program toggled on or off")
+    print("Program toggled on or off")
     #  Programs are in gv.pd and /data/programs.json
 
 
-program_toggled = signal(u"program_toggled")
+program_toggled = signal("program_toggled")
 program_toggled.connect(notify_program_toggled)
 
 ### Rain Changed ##
 def notify_rain_changed(name, **kw):
-    print(u"Rain changed (from plugin)")
+    print("Rain changed (from plugin)")
     #  Programs are in gv.pd and /data/programs.json
 
 
-rain_changed = signal(u"rain_changed")
+rain_changed = signal("rain_changed")
 rain_changed.connect(notify_rain_changed)
 
 ### Reboot ###
 def notify_rebooted(name, **kw):
-    print(u"System rebooted")
+    print("System rebooted")
 
 
-rebooted = signal(u"rebooted")
+rebooted = signal("rebooted")
 rebooted.connect(notify_rebooted)
 
 ### Restart ###
 def notify_restart(name, **kw):
-    print(u"System is restarting")
+    print("System is restarting")
 
 
-restart = signal(u"restart")
+restart = signal("restart")
 restart.connect(notify_restart)
 
 ### Station Names ###
 def notify_station_names(name, **kw):
-    print(u"Station names changed")
+    print("Station names changed")
     # Station names are in gv.snames and /data/snames.json
 
 
-station_names = signal(u"station_names")
+station_names = signal("station_names")
 station_names.connect(notify_station_names)
 
 ### Stations were sheduled to run ###
@@ -112,35 +114,35 @@ station_names.connect(notify_station_names)
 #       - A program is run (Scheduled or "run now")
 #       - Stations are manually started with RunOnce
 def notify_station_scheduled(name, **kw):
-    print(u"Some Stations have been scheduled: {}".format(str(gv.rs)))
+    print("Some Stations have been scheduled: {}".format(str(gv.rs)))
 
 
-program_started = signal(u"stations_scheduled")
+program_started = signal("stations_scheduled")
 program_started.connect(notify_station_scheduled)
 
 ### Station Completed ###
 def notify_station_completed(station, **kw):
-    print(u"Station {} run completed".format(station))
+    print("Station {} run completed".format(station))
 
 
-complete = signal(u"station_completed")
+complete = signal("station_completed")
 complete.connect(notify_station_completed)
 
 ### System settings ###
 def notify_value_change(name, **kw):
-    print(u"Controller values changed in gv.sd")
+    print("Controller values changed in gv.sd")
     #  gv.sd is a dictionary containing the setting that changed.
     #  See "from controller values (cvalues)" gv_reference.txt
 
 
-value_change = signal(u"value_change")
+value_change = signal("value_change")
 value_change.connect(notify_value_change)
 
 ### valves ###
 def notify_zone_change(name, **kw):
-    print(u"zones changed")
+    print("zones changed")
     print(gv.srvals)  #  This shows the state of the zones.
 
 
-zones = signal(u"zone_change")
+zones = signal("zone_change")
 zones.connect(notify_zone_change)

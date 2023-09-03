@@ -1,9 +1,9 @@
 # coding=utf-8
 
 __author__ = (
-    u"Gina Häußge <osd@foosel.net>, Christopher Bright <christopher.bright@gmail.com>"
+    "Gina Häußge <osd@foosel.net>, Christopher Bright <christopher.bright@gmail.com>"
 )
-__license__ = u"GNU Affero General Public License http://www.gnu.org/licenses/agpl.html"
+__license__ = "GNU Affero General Public License http://www.gnu.org/licenses/agpl.html"
 
 
 class ReverseProxied(object):
@@ -29,22 +29,22 @@ class ReverseProxied(object):
         self.app = app
 
     def __call__(self, environ, start_response):
-        script_name = environ.get(u"HTTP_X_SCRIPT_NAME", u"")
+        script_name = environ.get("HTTP_X_SCRIPT_NAME", "")
 
         if script_name:
-            environ[u"SCRIPT_NAME"] = script_name
-            path_info = environ[u"PATH_INFO"]
+            environ["SCRIPT_NAME"] = script_name
+            path_info = environ["PATH_INFO"]
             if path_info.startswith(script_name):
-                environ[u"PATH_INFO"] = path_info[len(script_name) :]
+                environ["PATH_INFO"] = path_info[len(script_name) :]
 
-        scheme = environ.get(u"X-Forwarded-Proto", "")
+        scheme = environ.get("X-Forwarded-Proto", "")
 
         if scheme:
-            environ[u"wsgi.url_scheme"] = scheme
+            environ["wsgi.url_scheme"] = scheme
 
-        host = environ.get(u"HTTP_X_FORWARDED_HOST", "")
+        host = environ.get("HTTP_X_FORWARDED_HOST", "")
 
         if host:
-            environ[u"HTTP_HOST"] = host
+            environ["HTTP_HOST"] = host
 
         return self.app(environ, start_response)

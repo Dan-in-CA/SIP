@@ -2,7 +2,6 @@
 var displayScheduleDate = new Date(Date.now() + tzDiff);
 var displayScheduleTimeout;
 var sid,sn,t;
-
 if (typeof progs !== 'undefined'){var nprogs = progs.length}; // number of programs
 if (typeof nbrd !== 'undefined'){var nst = nbrd*8}; // number of stations
 

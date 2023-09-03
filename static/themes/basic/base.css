@@ -69,6 +69,8 @@ div.header div.titlenote {
 }
 
 div.footer {
+/* 	right: 0px; */
+	float: right;
 	background-image: url(grass.jpg);
 	background-position: top right -220px;
 	background-repeat: no-repeat;
@@ -77,8 +79,7 @@ div.footer {
 	text-align: right;
 	padding: 16px 160px 16px 50px;
 	font-size:9pt;
-	clear: both;
-/* 	width: 100%; */
+	width: 100%;
 }
 
 div.content {
@@ -285,6 +286,10 @@ button.on {
 }
 button.off {
 	background-color: #7D1921;
+}
+button:disabled, button[disabled] {
+	pointer-events: none;
+	opacity: 0.3;
 }
 button.execute {
 	background-color: #2E3959;
@@ -583,6 +588,7 @@ td.stationSchedule {
 .program8 {background-color: hsl(275,80%,40%)}
 .program9 {background-color: hsl(125,80%,40%)}
 .programManual {background-color: hsl(25,80%,40%)}
+
 .schedule {
 	background-image:url("whitestripes.png");
 }
@@ -674,7 +680,16 @@ td.stationSchedule {
    }
    div.ftrInfo {
 	  min-width: 100px;
-   }  
+   }
+   
+   div.footer {
+     background-image: none;
+     padding: 16px 16px 16px 50px;
+   }
+   #pluginPars {
+	  width: 90%;
+    }
+
    div#status {
       float: none;
       width: 100%;

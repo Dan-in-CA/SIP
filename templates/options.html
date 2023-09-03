@@ -68,9 +68,13 @@ $code:
                 jQuery("#errorcpw").text($:{json.dumps(_(u"Passwords don't match, please re-enter."), ensure_ascii=False)});
                 jQuery("#errorcpw").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
                 break;
-            case "mton_minus":
-                jQuery("#errormton").text($:{json.dumps(_(u"Must be 0 to +60, please re-enter."), ensure_ascii=False)});
+            case "mton_mismatch":
+                jQuery("#errormton").text($:{json.dumps(_(u"Must be -60 to +60, please re-enter."), ensure_ascii=False)});
                 jQuery("#errormton").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
+                break;
+            case "mtoff_mismatch":
+                jQuery("#errormtoff").text($:{json.dumps(_(u"Must be -60 to +60, please re-enter."), ensure_ascii=False)});
+                jQuery("#errormtoff").parents(".collapsible").toggleClass("expanded").toggleClass("collapsed");
                 break;                 
         }
 
@@ -82,7 +86,7 @@ $code:
 <div id="options">
     <div class="title">$_(u'Edit Options')</div>
     <button id="tooltips">$_(u'Show Tooltips')</button>
-    <form name="of" action="/co" method="get">
+    <form name="of" action="/co" method="POST">
     $code:
         output = ""
         oldcategory = ""
@@ -126,7 +130,7 @@ $code:
                     bid = i // 8
                     sid = i % 8
                     if (gv.sd['show'][bid]>>sid)&1 == 1:
-                        output += "<option " + ("selected " if value==i+1 else "") + "value='" + str(i+1) + "'>" + snames[i] + "  (Station " + str(i+1) + ")</option>\n"
+                        output += "<option " + ("selected " if value==i+1 else "") + "value='" + str(i+1) + "'>" + snames[i] + " (" + _('Station') + " " + str(i+1) + ")</option>\n"
                 output += "</select>\n"
             elif name == "htp":
                 output += "<input name='ohtp' type='text' size='5' maxlength='5' value='" + str(value) + "'>\n"
@@ -134,6 +138,8 @@ $code:
                 output += "<input name='onbrd' type='text' size='3' maxlength='3' value='" + str(value - 1) + "'>\n"           
             elif name == "mton":    
                 output += "<input name='omton' type='text' size='3' maxlength='3' value='" + str(value) + "'><span class='inputError' id='error" + name + "'></span>\n"           
+            elif name == "mtoff":    
+                output += "<input name='omtoff' type='text' size='3' maxlength='3' value='" + str(value) + "'><span class='inputError' id='error" + name + "'></span>\n"             
             else:
                 output += "<input name='o" + name + "' type='text' size='3' maxlength='3' value='" + str(value) + "'>\n"
 
