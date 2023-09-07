@@ -37,7 +37,7 @@ gv.plugin_menu.append([_("Node-red Settings"), "/node-red-sp"])
 #### Global variables ####
 prior_srvals = [0] * len(gv.srvals)
 nr_settings = {}
-base_url = "http://localhost/"
+# base_url = "http://localhost/"
 
 #### Functions ####
 
@@ -69,13 +69,12 @@ def bit_write(bytes, bit_dict):
 
 
 def load_settings():
-    global nr_settings, base_url
+    global nr_settings #, base_url
     try:
         with open(
             "./data/node_red.json", "r"
         ) as f:  # Read nr_settings from json file if it exists
             nr_settings = json.load(f)
-            # base_url = nr_settings["nr-url"]
     except IOError:  # If file does not exist save default values
         nr_settings = {
             "station-on-off": "on",
@@ -596,6 +595,8 @@ class handle_requests(object):
                 elif data["sd"] == "htp":
                     # requests.get(url=base_url + "co", params={"ohtp": val})   
                     gv.sd["htp"] = val
+                    jsave(gv.sd, "sd")
+                    return "htp changed"
 
                 elif data["sd"] == "idd":                  
                     if (val != gv.sd["idd"]
@@ -628,11 +629,17 @@ class handle_requests(object):
                     else:
                         gv.sd["mtoff"] = val
 
-                elif data["sd"] == "rbt":
-                    requests.get(url=base_url + "co", params={"rbt": val})
+                elif (data["sd"] == "rbt"
+                    and val == 1
+                ):
+                    reboot()
+                    # requests.get(url=base_url + "co", params={"rbt": val})
 
-                elif data["sd"] == "rstrt":
-                    requests.get(url=base_url + "co", params={"rstrt": val})
+                elif (data["sd"] == "rstrt"
+                      and val == 1
+                      ):
+                    restart()
+                    # requests.get(url=base_url + "co", params={"rstrt": val})
 
                 elif data["sd"] == "rs" and gv.sd["urs"]:
                     set_rain_sensed(val)
