@@ -572,7 +572,13 @@ class change_program(ProtectedPage):
             gv.pnames.append(cp["name"])
         else:
             gv.pd[int(qdict["pid"])] = cp  # replace program
-            gv.pnames[int(qdict["pid"])] = cp["name"]
+            try:
+                gv.pnames[int(qdict["pid"])] = cp["name"]
+            except IndexError:
+                if len(gv.pnames) < len(gv.pd):
+                    diff = len(gv.pd) - len(gv.pnames)
+                    gv.pnames.extend([""] * diff)
+                gv.pnames[int(qdict["pid"])] = cp["name"]
         jsave(gv.pd, "programData")
         report_program_change()
         raise web.seeother("/vp")
