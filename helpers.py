@@ -349,9 +349,10 @@ def log_run():
             pgr = str(gv.pd[gv.lrun[1] - 1]["name"])      
         else:
             pgr = "" + str(gv.lrun[1])
-        start = time.localtime()
-        dur_m, dur_s = divmod(gv.lrun[2], 60)
-        dur_h, dur_m = divmod(dur_m, 60)
+        if (gv.lrun[3] == 0):
+            start = time.localtime()
+        else:
+            start =time.localtime(gv.lrun[3])
         start_time = time.localtime(gv.rs[gv.lrun[0]][0]) #  Get start time from run schedule      
         logline = (
             '{"'
