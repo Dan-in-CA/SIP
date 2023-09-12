@@ -375,7 +375,7 @@ def log_run():
             + ', "'
             + "date"
             + '": "'
-            + time.strftime('%Y-%m-%d"', start)
+            + time.strftime('%Y-%m-%d"', start_time)
             + "}"
         )       
         lines = []

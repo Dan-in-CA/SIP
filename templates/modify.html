@@ -341,7 +341,7 @@ $code:
                 if (idd) {
                     endTime = Math.round(startTime + idurations.reduce((a,b) => a + b, 0) / 60);
                 } else {
-                    endTime = Math.round(startTime + (gduration / 60));
+                    endTime = Math.round(startTime + (gduration));
                 }   
             } else {                                           //recurring
                 interval = parseTime("ti");
