@@ -128,7 +128,8 @@ span.stationName:last-child:after {
 	content: "";
 }
 .program {
-	width:50%;
+    width: 75%;
+    max-width: 600px;
 }
 .program p:first-child {
 	background-color: #2E3959;
@@ -381,6 +382,7 @@ button.pushon.on {
 
 input.timeInput {
 	font-size: 12pt;
+	width: 3em;
 }
 /******** Station Table Styles **********/
 
@@ -410,6 +412,7 @@ table.stationList {
 	border-spacing: 0px;
 	empty-cells: show;
 	border-collapse: separate;
+	margin: 6px 0px;
 }
 td.station_name {
 	text-align: right; 
@@ -789,12 +792,13 @@ td.stationSchedule {
 	white-space: nowrap;
 	user-select: none;
 	-webkit-user-select: none;
+	width: 3em;
    }
    input[type=number][size="3"]{
     width: 3em;
    }
-   input[type=number][size="2"]{
-    width: 2em;
+   input[type=number][size="3"]{
+    width: 3em;
    }
    .breakBefore {
     display: table;
