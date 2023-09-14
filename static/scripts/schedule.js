@@ -106,7 +106,8 @@ function doSimulation(simdate) { // Create schedule by a full program simulation
     for(sid=0;sid<nst;sid++) { // for each station
       if(pid_array[sid]) { // if this station is included...
         schedule.push({ // data for creating home page program display
-                        program: pid_array[sid], // program number
+                        program: progs[pid_array[sid]-1].name, // program name
+						program_index: pid_array[sid], //program number
                         station: sid, // station index
                         start: st_array[sid]/60, // start time, minutes since midnight
                         duration: et_array[sid]-st_array[sid], // duration in seconds
@@ -195,13 +196,10 @@ function displaySchedule(schedule) {
 						var barWidth = Math.max(0.05,Math.min(relativeEnd, 60)/60 - barStart);
 						var programClass;
 						var idx;						
-						if (schedule[s].program == "Manual" || schedule[s].program == "Run-once") {
+						if (schedule[s].program_index == 99 || schedule[s].program_index == 98) {
 							programClass = "programManual";						
-						} else if(isNaN(schedule[s].program)) {
-							idx = progNames.indexOf(schedule[s].program);
-							programClass = "program" + (idx + 1)%10;	
 						} else {
-							programClass = "program" + (parseInt(schedule[s].program))%10;
+							programClass = "program" + (parseInt(schedule[s].program_index))%10;
 						}
 						programsUsed[schedule[s].program] = programClass;
 						var markerClass = (schedule[s].date == undefined ? "schedule" : "history");
@@ -241,6 +239,7 @@ function displayProgram() { // Controls home page irrigation timeline
 				//Found a program hanging over from yesterday
 				spillOvers.push({
 					program : yesterdaysSchedule[s].program,
+					program_index : yesterdaysSchedule[s].program_index,
 					station : yesterdaysSchedule[s].station,
 					start : 0,
 					duration : yesterdaysSchedule[s].duration - (1440-yesterdaysSchedule[s].start)*60,
@@ -258,6 +257,15 @@ function displayProgram() { // Controls home page irrigation timeline
 				log[l].start = fromClock(log[l].start)/60;
 				if (log[l].date != visibleDate) {
 					log[l].start -= 24*60;
+				}
+				if (log[l].program_index == undefined) { // previous log versions only record name, recreate the program_index
+					if (log[l].program == "Run-once") log[l].program_index = 98;
+					else if (log[l].program == "Manual") log[l].program_index = 99;
+					else {
+						log[l].program_index = progNames.indexOf(log[l].program);
+						// Note this could give the wrong name if programs have been deleted since the log entry was generated,
+						// but the effects of this will be minimal and the old log entry will eventually expire anyway.
+					}
 				}
 				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
 			}
