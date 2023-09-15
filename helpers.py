@@ -374,8 +374,12 @@ def log_run():
             + ', "'
             + "date"
             + '": "'
-            + time.strftime('%Y-%m-%d"', start_time)
-            + "}"
+            + time.strftime('%Y-%m-%d', start_time)
+            + '", "'
+            + "program_index"
+            + '": "'
+            + str(gv.lrun[1])
+            + '"}'
         )       
         lines = []
         lines.append(logline + "\n")

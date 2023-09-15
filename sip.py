@@ -73,7 +73,13 @@ def timing_loop():
             if this_min != prior_min:  # only check programs once a minute
                 prior_min = this_min
                 for i, p in enumerate(gv.pd):  # get both index and prog item
-                    if p["start_min"] == this_min:
+                    start_triggers = [ p["start_min"] ]
+                    if p["cycle_min"] != 0:
+                        recurring_start = p["start_min"]
+                        while recurring_start < p["stop_min"]:
+                            recurring_start += p["cycle_min"]
+                            start_triggers.append(recurring_start)
+                    if this_min in start_triggers:
                         if prog_match(p) and any(p["duration_sec"]):
                             # check each station per boards listed in program up to number of boards in Options                           
                             for b in range(len(p["station_mask"])):  # len is number of bytes
