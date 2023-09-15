@@ -744,17 +744,21 @@ class api_log(ProtectedPage):
 
         records = read_log()
         data = []
-
+        
         for event in records:
             # return any records starting on this date
             if "date" not in qdict or event["date"] == thedate:
                 data.append(event)
                 # also return any records starting the day before and completing after midnight
             if event["date"] == prevdate:
+                duration_components = event["duration"].split(":")
+                duration = int(duration_components[0]);
+                if len(duration_components) > 2:
+                    duration = duration*60 + int(duration_components[1])
                 if (
                     int(event["start"].split(":")[0]) * 60
                     + int(event["start"].split(":")[1])
-                    + int(event["duration"].split(":")[0])
+                    + duration
                     > 24 * 60
                 ):
                     data.append(event)
@@ -768,9 +772,13 @@ class water_log(ProtectedPage):
 
     def GET(self):
         records = read_log()
-        data = _("Date, Start Time, Zone, Duration, Program") + "\n"
+        data = _("Date, Start Time, Zone, Duration, Program Name, Program Index, Adjustment") + "\n"
         for r in records:
             event = ast.literal_eval(json.dumps(r))
+            if not("program_index" in event):
+                event["program_index"] = "n/a"
+            if not("adjustment" in event):
+                event["adjustment"] = "n/a"   
             data += (
                 event["date"]
                 + ", "
@@ -781,6 +789,10 @@ class water_log(ProtectedPage):
                 + event["duration"]
                 + ", "
                 + event["program"]
+                + ", "
+                + event["program_index"]
+                + ", "
+                + event["adjustment"]
                 + "\n"
             )
 
