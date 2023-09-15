@@ -203,7 +203,7 @@ function displaySchedule(schedule) {
 						}
 						programsUsed[schedule[s].program] = programClass;
 						var markerClass = (schedule[s].date == undefined ? "schedule" : "history");
-						boxes.append("<div class='scheduleMarker " + programClass + " " + markerClass + "' style='left:" + barStart*100 + "%;width:" + barWidth*100 + "%' data='" + programName(schedule[s].program) + ": " + schedule[s].label + "'></div>");
+						boxes.append("<div class='scheduleMarker " + programClass + " " + markerClass + "' style='left:" + barStart*100 + "%;width:" + barWidth*100 + "%' title='" + programName(schedule[s].program) + ": " + schedule[s].label + "'></div>");
 					}
 				}
 			}
@@ -220,8 +220,6 @@ function displaySchedule(schedule) {
 	for (var p in programsUsed) {
 		jQuery("#legend").append("<span class='" + programsUsed[p] + "'>" + programName(p) + "</span>");
 	}
-	jQuery(".scheduleMarker").mouseover(scheduleMarkerMouseover);
-	jQuery(".scheduleMarker").mouseout(scheduleMarkerMouseout);
 	
 	jQuery("#displayScheduleDate").text(dateString(displayScheduleDate) + (displayScheduleDate.getFullYear() == now.getFullYear() ? "" : ", " + displayScheduleDate.getFullYear()));
 	if (isToday) {
@@ -255,6 +253,7 @@ function displayProgram() { // Controls home page irrigation timeline
 			for (let l in log) {
 				log[l].duration = fromClock(log[l].duration);
 				log[l].start = fromClock(log[l].start)/60;
+				recorded_log_start = log[l].start;  // Save original value for label
 				if (log[l].date != visibleDate) {
 					log[l].start -= 24*60;
 				}
@@ -267,7 +266,10 @@ function displayProgram() { // Controls home page irrigation timeline
 						// but the effects of this will be minimal and the old log entry will eventually expire anyway.
 					}
 				}
-				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
+				log[l].label = toClock(recorded_log_start, timeFormat) + " for " + toClock(log[l].duration/60, 1);
+				if (log[l].adjustment != undefined && log[l].adjustment != 0) {
+					log[l].label += " (adjusted " + log[l].adjustment + "%)";
+				}
 			}
 			if (toXSDate(displayScheduleDate) == toXSDate(new Date(Date.now() + tzDiff))) {
 				var schedule = doSimulation(displayScheduleDate); //dk
@@ -280,15 +282,3 @@ function displayProgram() { // Controls home page irrigation timeline
 
 jQuery(document).ready(displayProgram);
 
-function scheduleMarkerMouseover() {
-	let description = jQuery(this).attr("data");
-	let markerClass = jQuery(this).attr("class");
-	markerClass = markerClass.substring(markerClass.indexOf("program"));
-	markerClass = markerClass.substring(0,markerClass.indexOf(" "));
-	jQuery(this).append('<span class="showDetails ' + markerClass + '">' + description + '</span>');
-	jQuery(this).children(".showDetails").mouseover(function(){ return false; });
-	jQuery(this).children(".showDetails").mouseout(function(){ return false; });
-}
-function scheduleMarkerMouseout() {
-	jQuery(this).children(".showDetails").remove();
-}
