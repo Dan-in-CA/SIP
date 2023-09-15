@@ -198,9 +198,11 @@ class change_options(ProtectedPage):
                 gv.sd[f] = qdict["o" + f]
 
         if "onbrd" in qdict:
-            if int(qdict["onbrd"]) + 1 != gv.sd["nbrd"]:
-                self.update_scount(qdict)
-            gv.sd["nbrd"] = int(qdict["onbrd"]) + 1
+            brd_count = int(qdict["onbrd"]) + 1
+            if brd_count != gv.sd["nbrd"]:  # number of boards has changed
+                brd_chng = brd_count - gv.sd["nbrd"]
+                self.update_scount(brd_chng)
+            gv.sd["nbrd"] = brd_count
             gv.sd["nst"] = gv.sd["nbrd"] * 8
             self.update_prog_lists("nbrd")
 
@@ -267,46 +269,54 @@ class change_options(ProtectedPage):
             raise web.seeother("/restart")
         raise web.seeother("/")
 
-    def update_scount(self, qdict):
+    @staticmethod
+    def update_scount(brd_chng):
         """
         Increase or decrease the number of stations displayed when
         number of expansion boards is changed in options.
-
-        Increase or decrase the lengths of program "duration_sec" and "station_mask"
-        when number of expansion boards is changed
         """
-        if int(qdict["onbrd"]) + 1 > gv.sd["nbrd"]:  # Lengthen lists
-            incr = int(qdict["onbrd"]) - (gv.sd["nbrd"] - 1)
-            for i in range(incr):
-                gv.sd["mo"].append(0)
-                gv.sd["ir"].append(0)
-                gv.sd["iw"].append(0)
-                gv.sd["show"].append(255)
+        print("changing scount", brd_chng)  # - test
+        if brd_chng > 0:  # Lengthen lists
+            incr = brd_chng - (gv.sd["nbrd"] - 1)
+            sn_incr = incr * 8          
+            gv.sd["mo"].extend([0] * incr)
+            gv.sd["ir"].extend([0] * incr)
+            gv.sd["iw"].extend([0] * incr)
+            gv.sd["show"].extend([255] * incr)
+            gv.sbits.extend([0] * incr)
+            
+            gv.srvals.extend([0] * sn_incr)
+            gv.ps.extend([[0, 0]] * sn_incr)
+            gv.rs.extend([[0, 0, 0, 0]] * sn_incr)             
+            
             ln = len(gv.snames)
-            for i in range(incr * 8):
-                gv.snames.append("S" + "{:0>2d}".format(i + 1 + ln))
-            for i in range(incr * 8):
-                gv.srvals.append(0)
-                gv.ps.append([0, 0])
-                gv.rs.append([0, 0, 0, 0])
-            for i in range(incr):
-                gv.sbits.append(0)
-        elif int(qdict["onbrd"]) + 1 < gv.sd["nbrd"]:  # Shorten lists
-            onbrd = int(qdict["onbrd"])
-            decr = gv.sd["nbrd"] - (onbrd + 1)
-            gv.sd["mo"] = gv.sd["mo"][: (onbrd + 1)]
-            gv.sd["ir"] = gv.sd["ir"][: (onbrd + 1)]
-            gv.sd["iw"] = gv.sd["iw"][: (onbrd + 1)]
-            gv.sd["show"] = gv.sd["show"][: (onbrd + 1)]
-            newlen = gv.sd["nst"] - decr * 8
+            for i in range(sn_incr):
+                gv.snames.append(("S" + f"{i + 1 + ln}".zfill(2)))            
+                
+        elif brd_chng < 0:  # Shorten lists
+            new_count = gv.sd["nbrd"] + brd_chng           
+            gv.sd["mo"] = gv.sd["mo"][: new_count]
+            gv.sd["ir"] = gv.sd["ir"][: new_count]
+            gv.sd["iw"] = gv.sd["iw"][: new_count]
+            gv.sd["show"] = gv.sd["show"][: new_count]            
+                       
+            newlen = gv.sd["nst"] + (brd_chng *8) 
             gv.srvals = gv.srvals[:newlen]
             gv.ps = gv.ps[:newlen]
             gv.rs = gv.rs[:newlen]
             gv.snames = gv.snames[:newlen]
-            gv.sbits = gv.sbits[: onbrd + 1]
+            gv.sbits = gv.sbits[: new_count]
         jsave(gv.snames, "snames")
+        print("snames saved")  # - test
+        # change_values.update_prog_lists("nbrd")
 
-    def update_prog_lists(self, change):
+    @staticmethod
+    def update_prog_lists(change):
+        """
+        Increase or decrase the lengths of program "duration_sec" and "station_mask"
+        when number of expansion boards is changed        
+        """
+        print("updating prog_lists")  # - test
         for p in gv.pd:
             if (
                 change == "idd"

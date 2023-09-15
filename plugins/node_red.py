@@ -13,12 +13,13 @@ import gpio_pins
 import gv  # Get access to SIP's settings
 from helpers import *  # provides utility functions
 import requests
-from sip import template_render  #  Needed for working with web.py templates
+from sip import template_render
 from urls import urls  # Get access to SIP's URLs
-import web  # web.py framework
+import web
 import webpages
 from webpages import ProtectedPage  # Needed for security
 from webpages import report_option_change, report_value_change
+from webpages import change_options
 
 
 # Add new URLs to access classes in this plugin.
@@ -34,13 +35,11 @@ urls.extend([
 gv.plugin_menu.append([_("Node-red Settings"), "/node-red-sp"])
 
 #### Global variables ####
-base_url = "http://localhost/"
 prior_srvals = [0] * len(gv.srvals)
 nr_settings = {}
-
+# base_url = "http://localhost/"
 
 #### Functions ####
-
 
 def bit_read(byts, read_lst):
     """Read bits in bytes.
@@ -70,7 +69,7 @@ def bit_write(bytes, bit_dict):
 
 
 def load_settings():
-    global nr_settings
+    global nr_settings #, base_url
     try:
         with open(
             "./data/node_red.json", "r"
@@ -303,6 +302,7 @@ def send_rain_delay_change(name, **kw):  # see line 663
 rd_change = signal("rain_delay_change")
 rd_change.connect(send_rain_delay_change)
 
+
 ###############################
 #### blinker signals ##########
 "alarm"
@@ -367,6 +367,7 @@ class handle_requests(object):
     def GET(self):
         """return value from get request."""
         qdict = dict(web.input())  # Dictionary of JSON values
+        print("node-red request: ", qdict)
         if "gv" in qdict:
             attr = str(qdict["gv"])
             try:
@@ -580,20 +581,41 @@ class handle_requests(object):
                     gv.sd["wl"] = val
                     report_option_change()
 
-                # Change options
-                elif data["sd"] == "nbrd":
-                    requests.get(url=base_url + "co", params={"onbrd": val})
+                # Change options #### Remove calls to url=base_url ####
+                elif (data["sd"] == "nbrd"
+                    and val != gv.sd["nbrd"]  # number f boards has changed
+                      ):
+                    brd_chng = val - gv.sd["nbrd"]
+                    change_options.update_scount(brd_chng)
+                    gv.sd["nbrd"] = gv.sd["nbrd"] + brd_chng
+                    gv.sd["nst"] = gv.sd["nbrd"] * 8
+                    change_options.update_prog_lists("nbrd")
+                    return "Station count changed"
 
                 elif data["sd"] == "htp":
-                    requests.get(url=base_url + "co", params={"ohtp": val})
+                    # requests.get(url=base_url + "co", params={"ohtp": val})   
+                    gv.sd["htp"] = val
+                    jsave(gv.sd, "sd")
+                    return "htp changed"
 
-                elif data["sd"] == "idd":
-                    if val == 1:
-                        requests.get(url=base_url + "co", params={"oidd": val})
-                    elif val == 0:
-                        requests.get(url=base_url + "co", params={"none": val})
+                elif data["sd"] == "idd":                  
+                    if (val != gv.sd["idd"]
+                        and (val == 0 or val == 1)
+                        ):
+                        gv.sd["idd"] = val
+                        change_options.update_prog_lists("idd")
+                        jsave(gv.sd, "sd")
+                        return "Individual durations changed"
                     else:
-                        return "invalid request"
+                        return "Error val must be 0 or 1"                                                                                                                                                                                                                                                                                      
+                    
+                    # if val == 1:
+                    #     requests.get(url=base_url + "co", params={"oidd": val})
+                    # elif val == 0:
+                    #     requests.get(url=base_url + "co", params={"none": val})
+                    
+                    # else:
+                    #     return "Error val must be 0 or 1"
 
                 elif data["sd"] == "mton":
                     if val < -60 or val > 60:
@@ -607,11 +629,17 @@ class handle_requests(object):
                     else:
                         gv.sd["mtoff"] = val
 
-                elif data["sd"] == "rbt":
-                    requests.get(url=base_url + "co", params={"rbt": val})
+                elif (data["sd"] == "rbt"
+                    and val == 1
+                ):
+                    reboot()
+                    # requests.get(url=base_url + "co", params={"rbt": val})
 
-                elif data["sd"] == "rstrt":
-                    requests.get(url=base_url + "co", params={"rstrt": val})
+                elif (data["sd"] == "rstrt"
+                      and val == 1
+                      ):
+                    restart()
+                    # requests.get(url=base_url + "co", params={"rstrt": val})
 
                 elif data["sd"] == "rs" and gv.sd["urs"]:
                     set_rain_sensed(val)

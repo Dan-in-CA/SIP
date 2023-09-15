@@ -35,7 +35,7 @@ def convert():
         for b in range(7, (7 + gv.sd["nbrd"])):
             new_prog["station_mask"].append(old_data[i][b])
                             
-        new_prog["name"] = "Unnamed" # Not in old format
+        new_prog["name"] = "" # Not in old format
         
         #  decode program type from old format & clean up new format
         new_prog["type"] = "NA"
