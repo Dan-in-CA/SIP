@@ -317,6 +317,13 @@ def get_cpu_temp():
         return temp
     except Exception:
         return ""
+    
+def total_adjustment():
+    duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith('wl_')]
+    result = float(gv.sd["wl"])
+    for entry in duration_adjustments:
+        result *= entry/100.0
+    return '%.0f' % result    
 
 
 def timestr(t):
@@ -358,6 +365,10 @@ def log_run():
             + "program"
             + '": "'
             + pgr
+            + '", "'
+            + "adjustment"
+            + '": "'
+            + total_adjustment()
             + '", "'
             + "station"
             + '": '
