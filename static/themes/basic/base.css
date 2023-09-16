@@ -570,6 +570,8 @@ td.stationSchedule {
 	display:none;
 }
 .scheduleTick {
+	overflow-x:hidden;
+	overflow-y:hidden;
 	position: relative;
 	font-size: 9px;
 	text-align:center;
