@@ -343,15 +343,19 @@ def log_run():
     Add run data to json log file - most recent first.
     If a record limit is specified (gv.sd["lr"]) the number of records is truncated.
     """
+    adj = total_adjustment()
     if gv.sd["lg"]:
         if gv.lrun[1] == 0:  # skip program 0
             return
         elif gv.lrun[1] == 98:
             pgr = _("Run-once")
+            adj = "---"
         elif gv.lrun[1] == 99:
             pgr = _("Manual")
+            adj = "---"
         elif gv.lrun[1] == 100:
-            pgr = "Node-red"            
+            pgr = "Node-red"  
+            adj = "---"          
         elif gv.pd[gv.lrun[1] - 1]["name"] != "":
             pgr = str(gv.pd[gv.lrun[1] - 1]["name"])      
         else:
@@ -368,7 +372,8 @@ def log_run():
             + '", "'
             + "adjustment"
             + '": "'
-            + total_adjustment()
+            # + total_adjustment()
+            + adj
             + '", "'
             + "station"
             + '": '
