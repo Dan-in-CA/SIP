@@ -8,11 +8,11 @@ if (typeof nbrd !== 'undefined'){var nst = nbrd*8}; // number of stations
 function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is scheduled for this date (displayScheduleDate) called from doSimulation
   // simminutes is minute count generated in doSimulation()
   // simdate is a JavaScript date object
-  simday = Math.floor(simdate/(1000*3600*24)) // The number of days since epoc
   var wd,dn;
   if(pd['enabled']==0)  return 0; // program not enabled, do not match
   if(pd['type'] == 'interval') { // if interval program... 
-    if(((simday)%pd['interval_base_day'])!=pd['day_mask']) return 0; // remainder checking	
+	simday = Math.floor(new Date(simdate.getUTCFullYear(), simdate.getUTCMonth(), simdate.getUTCDate(),Math.floor(simminutes/60), simminutes%60)/(1000*60*60*24))
+	if(((simday)%pd['interval_base_day'])!=pd['day_mask']) return 0; // remainder checking	
   } else { // Not interval 
     wd=(simdate.getDay()+6)%7; // getDay assumes sunday is 0, converts to Monday is 0 (weekday index)
     if((pd['day_mask']&(1<<wd))==0) return 0; // weekday checking  
@@ -267,7 +267,7 @@ function displayProgram() { // Controls home page irrigation timeline
 					}
 				}
 				log[l].label = toClock(recorded_log_start, timeFormat) + " for " + toClock(log[l].duration/60, 1);
-				if (log[l].adjustment != undefined && log[l].adjustment != 0) {
+				if (log[l].adjustment != undefined && log[l].adjustment != "100") {
 					log[l].label += " (adjusted " + log[l].adjustment + "%)";
 				}
 			}
