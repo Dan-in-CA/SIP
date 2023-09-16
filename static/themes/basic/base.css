@@ -567,11 +567,11 @@ td.stationSchedule {
 	background-color: #397F19;	
 }
 .scheduleMarker .markerDetail {
+	overflow-x:hidden;
+	overflow-y:hidden;
 	display:none;
 }
 .scheduleTick {
-	overflow-x:hidden;
-	overflow-y:hidden;
 	position: relative;
 	font-size: 9px;
 	text-align:center;
