@@ -111,6 +111,7 @@ def timing_loop():
                                     duration = round(duration)  # convert to int
                                     if (
                                         p["station_mask"][b] & 1 << s  # if this station is scheduled in this program
+                                        and duration # station has a duration
                                     ):
                                         gv.rs[sid][2] = duration
                                         gv.rs[sid][3] = i + 1  # program number for scheduling
