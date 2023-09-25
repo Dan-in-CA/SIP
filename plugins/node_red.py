@@ -34,11 +34,13 @@ urls.extend([
 # Add this plugin to the PLUGINS menu ["Menu Name", "URL"], (Optional)
 gv.plugin_menu.append([_("Node-red Settings"), "/node-red-sp"])
 
+##########################
 #### Global variables ####
+
 prior_srvals = [0] * len(gv.srvals)
 nr_settings = {}
-# base_url = "http://localhost/"
 
+###################
 #### Functions ####
 
 def bit_read(byts, read_lst):
@@ -69,7 +71,7 @@ def bit_write(bytes, bit_dict):
 
 
 def load_settings():
-    global nr_settings #, base_url
+    global nr_settings  # , base_url
     try:
         with open(
             "./data/node_red.json", "r"
@@ -153,6 +155,7 @@ def program_on_off(data):
         program = data["prog"]
     elif "program" in data:
         program = data["program"]
+    
     state = int(data["set"])
     for p in range(len(program)):
         prog_p = program[p]
@@ -174,7 +177,7 @@ def program_on_off(data):
             "end" in data
             and int(data["end"]) == 1
             and state == 0
-            and gv.pon - 1 == pid  # The program to be disabled is running
+            # and gv.pon - 1 == pid  # The program to be disabled is running
         ):
             stop_stations()
         gv.pd[pid]["enabled"] = state
@@ -255,7 +258,6 @@ def send_zone_change(name, **kw):
     """Send notification to node-red
     when core program signals a change in station state.
     """
-    # print("249 send_zone_change")
     global prior_srvals
     if len(gv.srvals) > len(prior_srvals):
         prior_srvals += [0] * (len(gv.srvals) - len(prior_srvals))
@@ -329,7 +331,6 @@ class settings(ProtectedPage):
     """
     Load an html page for entering plugin settings.
     """
-
     def GET(self):
         try:
             with open(
@@ -347,7 +348,6 @@ class save_settings(ProtectedPage):
     Will create or update file when SUBMIT button is clicked
     CheckBoxes only appear in qdict if they are checked.
     """
-
     def GET(self):
         global nr_settings
         qdict = (
@@ -356,6 +356,7 @@ class save_settings(ProtectedPage):
         with open("./data/node_red.json", "w") as f:
             json.dump(qdict, f, indent=4)  # save to file
             nr_settings = dict(qdict)
+            # print("nr_settings: ", nr_settings)  # - test
         raise web.seeother("/")  # Return user to home page.
 
 
@@ -363,7 +364,6 @@ class handle_requests(object):
     """
     parse request messages from node-red
     """
-
     def GET(self):
         """return value from get request."""
         qdict = dict(web.input())  # Dictionary of JSON values
@@ -397,7 +397,6 @@ class handle_requests(object):
                         sel_lst.append(gv_lst[i - 1])
                     res_dict = dict(zip(sn_lst, sel_lst))
                     return res_dict
-
                 elif "item" in qdict:
                     item_lst = json.loads(qdict["item"])
                     try:
@@ -409,7 +408,6 @@ class handle_requests(object):
                         pass
                     res_dict = dict(zip(item_lst, sel_lst))
                     return res_dict
-
                 elif "index" in qdict:
                     index_lst = json.loads(qdict["index"])
                     try:
@@ -421,16 +419,13 @@ class handle_requests(object):
                         pass
                     res_dict = dict(zip(index_lst, sel_lst))
                     return res_dict
-
                 elif "bit" in qdict:
                     bit_dict = bit_read(getattr(gv, attr), json.loads(qdict["bit"]))
                     return json.dumps(bit_dict)
-
                 else:
                     return json.dumps(getattr(gv, attr))
             except Exception as e:
                 return e
-
         elif "sd" in qdict:
             try:
                 if "bit" in qdict:
@@ -506,7 +501,6 @@ class handle_requests(object):
                     "plugin_menu",
                 ]:  # these return lists
                     gv_lst = getattr(gv, attr)
-
                 if "sn" in data or "station" in data:
                     if "sn" in data:
                         sn_dict = data["sn"]
@@ -517,7 +511,6 @@ class handle_requests(object):
                         idx = int(i) - 1
                         gv_lst[idx] = sn_dict[i]
                     return "gv." + attr + " has ben updated"
-
                 elif "item" in data:
                     try:
                         item_dict = data["item"]
@@ -528,7 +521,6 @@ class handle_requests(object):
                         return "gv." + attr + " has ben updated"
                     except Exception as e:
                         return e
-
                 elif "index" in data:
                     try:
                         index_dict = data["item"]
@@ -539,7 +531,6 @@ class handle_requests(object):
                         return "gv." + attr + " has ben updated"
                     except Exception as e:
                         return e
-
                 elif hasattr(gv, data["gv"]):
                     setattr(gv, data["gv"], data["val"])
                     return "gv." + data["gv"] + " updated to " + str(data["val"])
@@ -564,7 +555,6 @@ class handle_requests(object):
                             gv.sd["rdst"] = 0
                     report_rain_delay_change()  # see line 292
                     report_option_change()
-
                 elif data["sd"] == "mm":  # manual mode
                     if val == 1:
                         gv.sd["mm"] = 1
@@ -573,80 +563,51 @@ class handle_requests(object):
                         gv.sd["mm"] = 0
                     else:
                         return "invalid request"
-
                 elif data["sd"] == "rsn" and val == 1:
                     stop_stations()
-
                 elif data["sd"] == "wl" and "chng-wl" in nr_settings:
                     gv.sd["wl"] = val
                     report_option_change()
-
-                # Change options #### Remove calls to url=base_url ####
-                elif (data["sd"] == "nbrd"
+                elif (
+                    data["sd"] == "nbrd"
                     and val != gv.sd["nbrd"]  # number f boards has changed
-                      ):
+                ):
                     brd_chng = val - gv.sd["nbrd"]
                     change_options.update_scount(brd_chng)
                     gv.sd["nbrd"] = gv.sd["nbrd"] + brd_chng
                     gv.sd["nst"] = gv.sd["nbrd"] * 8
                     change_options.update_prog_lists("nbrd")
                     return "Station count changed"
-
                 elif data["sd"] == "htp":
-                    # requests.get(url=base_url + "co", params={"ohtp": val})   
                     gv.sd["htp"] = val
                     jsave(gv.sd, "sd")
                     return "htp changed"
-
-                elif data["sd"] == "idd":                  
-                    if (val != gv.sd["idd"]
-                        and (val == 0 or val == 1)
-                        ):
+                elif data["sd"] == "idd":
+                    if val != gv.sd["idd"] and (val == 0 or val == 1):
                         gv.sd["idd"] = val
                         change_options.update_prog_lists("idd")
                         jsave(gv.sd, "sd")
                         return "Individual durations changed"
                     else:
-                        return "Error val must be 0 or 1"                                                                                                                                                                                                                                                                                      
-                    
-                    # if val == 1:
-                    #     requests.get(url=base_url + "co", params={"oidd": val})
-                    # elif val == 0:
-                    #     requests.get(url=base_url + "co", params={"none": val})
-                    
-                    # else:
-                    #     return "Error val must be 0 or 1"
-
+                        return "Error val must be 0 or 1"
                 elif data["sd"] == "mton":
                     if val < -60 or val > 60:
                         return "Error val must be -60 to +60"
                     else:
                         gv.sd["mton"] = val
-
                 elif data["sd"] == "mtoff":
                     if val < -60 or val > 60:
                         return "Error val must be -60 to 60"
                     else:
                         gv.sd["mtoff"] = val
-
-                elif (data["sd"] == "rbt"
-                    and val == 1
-                ):
+                elif data["sd"] == "rbt" and val == 1:
                     reboot()
-                    # requests.get(url=base_url + "co", params={"rbt": val})
-
-                elif (data["sd"] == "rstrt"
-                      and val == 1
-                      ):
+                elif data["sd"] == "rstrt" and val == 1:
                     restart()
-                    # requests.get(url=base_url + "co", params={"rstrt": val})
-
                 elif data["sd"] == "rs" and gv.sd["urs"]:
                     set_rain_sensed(val)
-
                 elif "bit" in data:
                     bit_write(data["sd"], data["bit"])
-
                 else:  # handle all other vars
                     if not data["sd"] in danger_list or (
                         "force" in data and data["force"] == 1
@@ -676,11 +637,17 @@ class handle_requests(object):
             elif "run once" in data:
                 run_once(data["run once"], pre)
 
+        # run now
         elif "runProg" in data:
             run_now(data["runProg"])
 
-        elif ("prog" in data or "program" in data) and "chng-prog" in nr_settings:
-            program_on_off(data)
+        # program on/off
+        elif ("prog" in data or "program" in data):
+            if "chng-prog" in nr_settings:
+                program_on_off(data)
+            else:
+                msg = {"payload": "Program control is disabled"}
+                to_node_red(msg)
 
         # stop all stations
         elif "stopAll" in data:

@@ -101,7 +101,7 @@ $code:
         let devt = ${gv.now};
         let devTzOffset = ${deviceOffset} * 1000;
         let cliTzOffset = new Date().getTimezoneOffset() * 60 * 1000;
-        let tzDiff = 0 //cliTzOffset - devTzOffset;
+        let tzDiff = cliTzOffset - devTzOffset;
         let timeFormat = ${gv.sd["tf"]};
         let dayList = $:{days};
         let monthList = $:{months};
