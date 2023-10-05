@@ -38,6 +38,7 @@ gv.plugin_menu.append([_("Node-red Settings"), "/node-red-sp"])
 #### Global variables ####
 
 prior_srvals = [0] * len(gv.srvals)
+# prior_progs = sorted(gv.pd)
 nr_settings = {}
 
 ###################
@@ -254,6 +255,8 @@ def run_now(ident):
     run_program(pid)
 
 
+### send blinker signals ###
+
 def send_zone_change(name, **kw):
     """Send notification to node-red
     when core program signals a change in station state.
@@ -283,7 +286,7 @@ def send_zone_change(name, **kw):
                     else:
                         name = gv.snames[i]
                     msg = {"station": i + 1, "name": name, "state": 1}
-                    # print("sending message to NR")  # - test
+                    print("sending message to NR")  # - test
                     to_node_red(msg)
         prior_srvals = gv.srvals[:]
 
@@ -291,7 +294,7 @@ def send_zone_change(name, **kw):
 zones = signal("zone_change")
 zones.connect(send_zone_change)
 
-
+### rain delay ###
 def send_rain_delay_change(name, **kw):  # see line 663
     """Send rain delay state change to node-red"""
     if gv.sd["rd"]:  #  just switched on
@@ -299,23 +302,51 @@ def send_rain_delay_change(name, **kw):  # see line 663
     else:  #  Just switched off
         state = 0
     msg = {"rd_state": state}
-    to_node_red(msg)  # see line 107
+    to_node_red(msg)
 
 
 rd_change = signal("rain_delay_change")
 rd_change.connect(send_rain_delay_change)
 
+### new day ###
+def send_new_day(name, **kw):
+    msg = {"newDay": gv.now}
+    to_node_red(msg)
+
+new_day = signal("new_day")
+new_day.connect(send_new_day)
+
+### logged in ###
+def send_login(name, **kw):
+    msg = {"logIn": "user logged in"}
+    to_node_red(msg)
+
+loggedin = signal("loggedin")
+loggedin.connect(send_login)
+
+### program change ##
+# def send_program_change(name, **kw):
+#     # print("Programs changed")  # - test
+#     s_progs = sorted(gv.pd)
+#     while i < len(prior_progs): # changes of program deleted, need to account for new programs.
+#         if s_progs[i] != prior_progs[i]:
+#             pass
+    
+# program_change = signal("program_change")
+# program_change.connect(send_program_change)    
+
 
 ###############################
 #### blinker signals ##########
 "alarm"
-"new_day"
-"loggedin"
-"option_change"
+"new_day" # working
+"loggedin" # done
+"option_change" 
 "program_change"
+"program_added"
 "program_deleted"
 "program_toggled"
-"rain_changed"
+"rain_changed" # need new state
 "rain_delay_change"  # included with "value_change"
 "rebooted"
 "restarting"
@@ -323,7 +354,7 @@ rd_change.connect(send_rain_delay_change)
 "station_completed"
 "station_names"
 "stations_scheduled"
-"value_change"
+"value_change" # done - may need modification
 "zone_change"  # working
 ###############################
 

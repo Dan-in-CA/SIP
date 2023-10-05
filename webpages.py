@@ -45,6 +45,10 @@ program_change = signal("program_change")
 def report_program_change():
     program_change.send()
 
+program_added = signal("program_added")
+def report_program_added():
+    program_added.send()
+
 
 program_deleted = signal("program_deleted")
 def report_program_deleted():
@@ -52,8 +56,8 @@ def report_program_deleted():
 
 
 program_toggled = signal("program_toggled")
-def report_program_toggle():
-    program_toggled.send()
+def report_program_toggle(index, state):
+    program_toggled.send("SIP", index = index, state = state)
         
 
 ### Web pages ######################
@@ -570,6 +574,8 @@ class change_program(ProtectedPage):
         if qdict["pid"] == "-1":  # add new program
             gv.pd.append(cp)
             gv.pnames.append(cp["name"])
+            report_program_added()
+            print("program added")  # - test
         else:
             gv.pd[int(qdict["pid"])] = cp  # replace program
             try:
@@ -579,8 +585,10 @@ class change_program(ProtectedPage):
                     diff = len(gv.pd) - len(gv.pnames)
                     gv.pnames.extend([""] * diff)
                 gv.pnames[int(qdict["pid"])] = cp["name"]
+            report_program_change() ### add program index ###
+            print("program modified")  # - test
         jsave(gv.pd, "programData")
-        report_program_change()
+        # report_program_change()  # - test
         raise web.seeother("/vp")
 
 
@@ -597,7 +605,8 @@ class delete_program(ProtectedPage):
             del gv.pd[int(qdict["pid"])]
             del gv.pnames[int(qdict["pid"])]
         jsave(gv.pd, "programData")
-        report_program_deleted()
+        report_program_deleted() ### add program index ###
+        print("program at index " + qdict["pid"] + " deleted" )  # - test
         raise web.seeother("/vp")
 
 
@@ -606,9 +615,11 @@ class enable_program(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        gv.pd[int(qdict["pid"])]["enabled"] = int(qdict["enable"])
+        index = int(qdict["pid"])
+        state = int(qdict["enable"])
+        gv.pd[index]["enabled"] = state
         jsave(gv.pd, "programData")
-        report_program_toggle()
+        report_program_toggle(index, state) #  send program index and state
         raise web.seeother("/vp")
 
 
@@ -631,7 +642,6 @@ class clear_log(ProtectedPage):
 
 class run_now(ProtectedPage):
     """Run a scheduled program now. This will override any running programs."""
-
     def GET(self):
         qdict = web.input()
         run_program(int(qdict["pid"]))
@@ -640,7 +650,6 @@ class run_now(ProtectedPage):
 
 class toggle_temp(ProtectedPage):
     """Change units of Raspi"s CPU temperature display on home page."""
-
     def GET(self):
         qdict = web.input()
         if qdict["tunit"] == "C":
@@ -653,7 +662,6 @@ class toggle_temp(ProtectedPage):
 
 class api_status(ProtectedPage):
     """Simple Status API"""
-
     def GET(self):
         statuslist = []
         status = {
@@ -733,7 +741,6 @@ class api_status(ProtectedPage):
 
 class api_log(ProtectedPage):
     """Simple Log API"""
-
     def GET(self):
         qdict = web.input()
         thedate = qdict["date"]
@@ -769,7 +776,6 @@ class api_log(ProtectedPage):
 
 class water_log(ProtectedPage):
     """Simple Log API"""
-
     def GET(self):
         records = read_log()
         data = _("Date, Start Time, Zone, Duration, Program Name, Program Index, Adjustment") + "\n"
@@ -860,8 +866,7 @@ class showOnTimeline(object):
         use [instance name].unit = [unit name] to set unit for data e.g. "lph".
         use [instance name].val = [plugin data] to display plugin data
         use [instance name].clear to remove from display e.g. if station not included in plugin.
-    """
-    
+    """  
     def __init__(self, val = "", unit = ""):
         self._val = val
         self._unit = unit
@@ -919,7 +924,6 @@ class plugin_data(ProtectedPage):
 
 class rain_sensor_state(ProtectedPage):
     """Return rain sensor state."""
-
     def GET(self):
         return gv.sd["rs"]
          
