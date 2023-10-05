@@ -163,7 +163,7 @@ function fromClock(clock) {
 }
 
 function programName(p) {
-	if (p == "Manual" || p == "Run-once") {
+	if (p == "Manual" || p == "Run-once" || p == "Node-red") {
 		return p + " Program";
 	}	
 	else if(isNaN(p)) { // If not a number assume it's the program name
