@@ -11,8 +11,16 @@ function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is schedu
   var wd,dn;
   if(pd['enabled']==0)  return 0; // program not enabled, do not match
   if(pd['type'] == 'interval') { // if interval program... 
-	simday = Math.floor(new Date(simdate.getUTCFullYear(), simdate.getUTCMonth(), simdate.getUTCDate(),Math.floor(simminutes/60), simminutes%60)/(1000*60*60*24))
-	if(((simday)%pd['interval_base_day'])!=pd['day_mask']) return 0; // remainder checking	
+	// Create a date object representing the requested display date starting at midnight
+	dateToSim = new Date(simdate);
+	dateToSim.setHours(0);
+	dateToSim.setMinutes(0);
+	dateToSim.setSeconds(0);
+	// Calculate a unique day count since the start of the epoch, this must match days_since_epoch()
+	// as it would be calculated on the device for the day
+	simday = Math.floor(dateToSim.valueOf()/(24*60*60*1000));
+	if((simday % pd['interval_base_day']) != pd['day_mask'])
+		return 0; // return if this day offset doesn't match the remainder
   } else { // Not interval 
     wd=(simdate.getDay()+6)%7; // getDay assumes sunday is 0, converts to Monday is 0 (weekday index)
     if((pd['day_mask']&(1<<wd))==0) return 0; // weekday checking  
@@ -157,8 +165,7 @@ function fromClock(clock) {
 function programName(p) {
 	if (p == "Manual" || p == "Run-once" || p == "Node-red") {
 		return p + " Program";
-	}
-	else if(p === "")return;
+	}	
 	else if(isNaN(p)) { // If not a number assume it's the program name
 		return p;	
 	} else {
@@ -211,7 +218,7 @@ function displaySchedule(schedule) {
 		}
 		if (isToday && slice <= nowMark && nowMark < slice+60) {
 			var stationOn = jQuery(this).parent().children(".stationStatus").hasClass("station_on");
-			boxes.append("<div class='nowMarker" + (stationOn?" on":"")+ "' style='width:2px;left:"+ (nowMark-slice)/60*100 + "%;'>");
+			boxes.append("<div class='nowMarker" + (stationOn?" on":"")+ "' style='width:2px;left:"+ Math.round((nowMark-slice)/60*(this.clientWidth-2)) + "px;'>");
 		}
 		if (boxes.children().length > 0) {
 			jQuery(this).append(boxes);
@@ -229,7 +236,7 @@ function displaySchedule(schedule) {
 }
 
 function displayProgram() { // Controls home page irrigation timeline
-	if (displayScheduleDate > new Date(Date.now() + tzDiff)) { 
+	if (toXSDate(displayScheduleDate) > toXSDate(new Date(Date.now() + tzDiff))) { 
 		// run the schedule for yesterday to see if anything is spilling over into today
 		var yesterdaysSchedule = doSimulation(new Date(displayScheduleDate.getTime() - 24*60*60*1000));
 		var spillOvers = [];
