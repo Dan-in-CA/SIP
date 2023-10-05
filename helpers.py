@@ -410,17 +410,24 @@ def log_run():
     return
 
 
+def days_since_epoch():
+    # helper function for calculating interval program daystamp, relative to local device time
+    epoch = datetime.datetime(1970, 1, 1)   # no timezone info, so we can treat the epoch start in the local timezone instead of utc
+    today = datetime.datetime.now()
+    current_date = datetime.datetime(today.year, today.month, today.day)
+    days = (current_date - epoch).days
+    return days
+
 def prog_match(prog):
     """
     Test a program for current date and time match.
     """
     if not prog["enabled"]:
         return 0  # Skip if program is not enabled
-    devday = int(gv.now // 86400)  # Check day match
+    
     lt = time.localtime(gv.now)
-    # lt = time.localtime()
     if prog["type"] == "interval":
-        if (devday % prog["interval_base_day"]) != prog["day_mask"]:
+        if (days_since_epoch() % prog["interval_base_day"]) != prog["day_mask"]:
             return 0
     else:  # Weekday program
         if not prog["day_mask"] - 128 & 1 << lt.tm_wday:
@@ -732,7 +739,6 @@ def convert_temp(temp, from_unit='C', to_unit='F'):
     try:
         temp = float(temp)
     except(ValueError, TypeError) as e:
-        print("Error: ", e)
         return float('nan')
 
     from_unit = from_unit.upper()  # handle lower case input
@@ -753,3 +759,8 @@ def convert_temp(temp, from_unit='C', to_unit='F'):
         return convert_temp(c_temp, 'C', to_unit)
 
     return round(temp, 2)
+
+def temp_string(temp, unit):
+    if math.isnan(temp):
+        return "--"
+    return str(temp) + "&deg" + unit
