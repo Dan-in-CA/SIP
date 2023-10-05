@@ -408,7 +408,7 @@ table.stationList {
 	background-color: white;
 	border:3px solid #2E3959;
 	border-radius: 12px;
-	padding: 4px;
+	padding: 4px 0px;
 	border-spacing: 0px;
 	empty-cells: show;
 	border-collapse: separate;
@@ -440,7 +440,8 @@ td.stationStatus {
 	color: white;
 	background-color: #7D1921;
 	padding: 0px 12px;
-	border-bottom: 2px solid white;
+	border-top: 1px solid white;
+	border-bottom: 1px solid white;
 }
 td.stationStatus.station_on {
 	background-color: #32A620;
@@ -547,31 +548,28 @@ td.stationSchedule {
 	padding: 0px;
 }
 .scheduleMarkerContainer {
+	overflow-x:hidden;
 	margin:0px;
 	padding:0px;
-	height:28px;
+	height:30px;
 	position:relative;
 }
 .scheduleMarker {
 	position:absolute;
 	top: 0px;
-	height:28px;
+	height:30px;
 }
 .nowMarker {
 	position:absolute;
 	top: 0px;
-	background-color: #7D1921;
-	height:28px;
+	background-color: #af232f;
+	height:30px;
 }
 .nowMarker.on {
-	background-color: #397F19;	
-}
-.scheduleMarker .markerDetail {
-	overflow-x:hidden;
-	overflow-y:hidden;
-	display:none;
+	background-color: #4aa320;	
 }
 .scheduleTick {
+	padding: 0px;
 	position: relative;
 	font-size: 9px;
 	text-align:center;

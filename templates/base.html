@@ -101,7 +101,7 @@ $code:
         let devt = ${gv.now};
         let devTzOffset = ${deviceOffset} * 1000;
         let cliTzOffset = new Date().getTimezoneOffset() * 60 * 1000;
-        let tzDiff = 0 //cliTzOffset - devTzOffset;
+        let tzDiff = cliTzOffset - devTzOffset;
         let timeFormat = ${gv.sd["tf"]};
         let dayList = $:{days};
         let monthList = $:{months};
@@ -237,7 +237,7 @@ $code:
                  <input type="hidden" name="tunit" value="${gv.sd['tu']}">
                  <div class="text-nowrap">$_('CPU Temp'):
                      <button type="submit"  id="heat" style="color: #fff" class="font-weight-bold btn-link btn" title=$:{json.dumps(_('Click to toggle Celsius &lt; &gt; Fahrenheit'), ensure_ascii=False)}>
-                     ${convert_temp(gv.cputemp,'C', gv.sd['tu'])} ${gv.sd['tu']}
+                     ${temp_string(convert_temp(gv.cputemp,'C', gv.sd['tu']), gv.sd['tu'])}
                      </button>
                  </div>
              </form>
