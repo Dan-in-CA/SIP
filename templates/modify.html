@@ -68,9 +68,10 @@ $code:
                 newhour = hour-12
             return str(newhour)  + t[2:] + (" am" if hour<12 else " pm")
             
-    def pdays(days, dayInterval):
-        days = days & 0x7f
-        daysRemaining = ((days + dayInterval)-(gv.dse % dayInterval)) % dayInterval
+    def pdays(daym, dayInterval):
+        daym = daym & 0x7f
+        dse = int(gv.now/86400) # days since epoc
+        daysRemaining = ((daym + dayInterval)-(dse % dayInterval)) % dayInterval
         return daysRemaining
 
 <script>

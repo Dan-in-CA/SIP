@@ -536,10 +536,11 @@ class modify_program(ProtectedPage):
         if pid != -1:
             mp = gv.pd[pid]  # Modified program
             if mp["type"] == "interval":
+                dse = int(gv.now // 86400)
                 # Convert absolute to relative days remaining for display
                 rel_rem = (
                     ((mp["day_mask"]) + mp["interval_base_day"])
-                    - (gv.dse % mp["interval_base_day"])
+                    - (dse % mp["interval_base_day"])
                 ) % mp["interval_base_day"]
             p_name = mp["name"]
             prog = str(mp).replace(" ", "") #  strip out spaces
@@ -563,7 +564,8 @@ class change_program(ProtectedPage):
                 if gv.rs[i][3] == pnum:
                     gv.rs[i] = [0, 0, 0, 0]
         if cp["type"] == "interval":
-            ref = gv.dse + cp["day_mask"]  # - 128
+            dse = int(gv.now // 86400)
+            ref = dse + cp["day_mask"]  # - 128
             cp["day_mask"] = ref % cp["interval_base_day"]  # + 128
         if qdict["pid"] == "-1":  # add new program
             gv.pd.append(cp)
