@@ -19,10 +19,13 @@ $code:
         output = ""
         if prog['type'] == 'interval':
             days = days&0x7f
-            dse = int(gv.now/86400) # days since epoc
-            daysRemaining = ((days + dayInterval)-(dse % dayInterval)) % dayInterval
+            daysRemaining = ((days + dayInterval)-(gv.dse % dayInterval)) % dayInterval
             output += _(u"Every ") + str(dayInterval) + " " + _(u"days")
-            if daysRemaining:
+            if daysRemaining == 0:
+                output += ", " + _(u'starting today') + "."
+            elif daysRemaining == 1:
+                output += ", " + _(u'starting tomorrow') + "."
+            else:
                 output += ", " + _(u'starting in') + " " + str(daysRemaining) + " " + _(u'days') + "."
         else: 
             if days == 127:

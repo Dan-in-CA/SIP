@@ -92,6 +92,7 @@ gv.cputemp              CPU temperature from internal sensor.
 gv.day_ord              Day of year as int (ordinal)
 gv.now                  current time as timestamp, updated once per second at top of timing loop
 gv.nowt                 current time as struct time, updated once per second at top of timing loop
+gv.dse                  days since epoch, providing a "daystamp" against which to evaluate interval programs, updated with gv.now
 gv.output_srvals [S]    shift register values, used to turn zones on or off (list of one byte per station, 1 = turn on, 0 = turn off)
 gv.output_srvals_lock   a mutex used whenever gv.output_srvals must be accessed atomically
 gv.plugin_data          dictionary (index by plugin root web prefix) to hold plugin data.

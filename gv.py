@@ -103,12 +103,13 @@ if sd["pigpio"]:
 else:
     use_pigpio = False
 
-from helpers import load_programs, station_names
+from helpers import load_programs, station_names, days_since_epoch
 
 day_ord = 0
 node_runs = {}
 now = time.time()
 nowt = time.localtime(now)
+dse = days_since_epoch()
 
 tz_offset = round(now - timegm(nowt)
 )  # compatible with Javascript (negative tz shown as positive value)
