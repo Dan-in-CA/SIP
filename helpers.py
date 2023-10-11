@@ -763,4 +763,4 @@ def convert_temp(temp, from_unit='C', to_unit='F'):
 def temp_string(temp, unit):
     if math.isnan(temp):
         return "--"
-    return str(temp) + "&deg" + unit
+    return str(temp) + "° " + unit
