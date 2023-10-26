@@ -416,7 +416,8 @@ def log_run():
 
 
 def days_since_epoch():
-    # helper function for calculating interval program daystamp, relative to local device time
+    """ helper function for calculating interval program daystamp, relative to local device time
+    """
     epoch = datetime.datetime(1970, 1, 1)   # no timezone info, so we can treat the epoch start in the local timezone instead of utc
     today = datetime.datetime.now()
     current_date = datetime.datetime(today.year, today.month, today.day)
