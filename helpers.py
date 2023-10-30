@@ -342,21 +342,7 @@ def log_run():
     """
     Add run data to json log file - most recent first.
     If a record limit is specified (gv.sd["lr"]) the number of records is truncated.
-    """
-    pid = gv.lrun[1] - 1
-    if pid >= len(gv.pd):
-        pid = 0
-    if not gv.sd["idd"]:
-        # if (pid == 99
-        #     or pid == 98
-        #     or pid == 97
-        #     ): pid = 0
-        # print("from helpers 350, ", pid)  # - test
-        pdur = gv.pd[pid]["duration_sec"][0]
-    else:
-        pdur = gv.pd[pid]["duration_sec"][gv.lrun[0]]
-    adj = str(round((gv.lrun[2] / pdur) * 100)) 
-        
+    """  
     if gv.sd["lg"]:
         if gv.lrun[1] == 0:  # skip program 0
             return
@@ -369,10 +355,18 @@ def log_run():
         elif gv.lrun[1] == 100:
             pgr = "Node-red"  
             adj = "---"          
-        elif gv.pd[gv.lrun[1] - 1]["name"] != "":
-            pgr = str(gv.pd[gv.lrun[1] - 1]["name"])      
         else:
-            pgr = "" + str(gv.lrun[1])
+            if gv.pd[gv.lrun[1] - 1]["name"] != "":
+                pgr = str(gv.pd[gv.lrun[1] - 1]["name"])      
+            else:
+                pgr = "" + str(gv.lrun[1])               
+            pid = gv.lrun[1] - 1
+            if not gv.sd["idd"]:
+                 pdur = gv.pd[pid]["duration_sec"][0]
+            else:
+                pdur = gv.pd[pid]["duration_sec"][gv.lrun[0]]
+            adj = str(round((gv.lrun[2] / pdur) * 100))
+            
         start = time.localtime()
         dur_m, dur_s = divmod(gv.lrun[2], 60)
         dur_h, dur_m = divmod(dur_m, 60)
