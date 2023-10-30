@@ -344,7 +344,14 @@ def log_run():
     If a record limit is specified (gv.sd["lr"]) the number of records is truncated.
     """
     pid = gv.lrun[1] - 1
+    if pid >= len(gv.pd):
+        pid = 0
     if not gv.sd["idd"]:
+        # if (pid == 99
+        #     or pid == 98
+        #     or pid == 97
+        #     ): pid = 0
+        # print("from helpers 350, ", pid)  # - test
         pdur = gv.pd[pid]["duration_sec"][0]
     else:
         pdur = gv.pd[pid]["duration_sec"][gv.lrun[0]]

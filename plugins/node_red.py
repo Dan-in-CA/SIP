@@ -41,8 +41,161 @@ prior_srvals = [0] * len(gv.srvals)
 # prior_progs = sorted(gv.pd)
 nr_settings = {}
 
+list_vars = [
+    "ps",
+    "rovals",
+    "rs",
+    "snames",
+    "srvals",
+    "output_srvals",
+    "lrun",
+    "pd",
+    "pnames",
+    "sbits",
+    "plugin_menu",
+    ]
+
+not_writable = [
+    "cputemp",
+    "day_ord",
+    "lang",
+    "now",
+    "nowt",
+    "npw",
+    "output_srvals",
+    "output_srvals_lock",
+    "passphrase",
+    "plugin_data",
+    "plugin_menu",
+    "pw",
+    "upas",
+    "ver_str",
+    "ver_date",
+    ]
+
+danger_list = [
+    "nst",
+    "nopts",
+    "nprogs",
+    ]
+
+prog_keys = [
+    "cycle_min",
+    "day_mask",
+    "duration_sec",
+    "enabled",
+    "interval_base_day",
+    "name",
+    "start_min",
+    "station_mask",
+    "stop_min",
+    "type",
+    ]
+
 ###################
 #### Functions ####
+
+def set_rd(val):
+    if "chng-rd" in nr_settings:
+        gv.sd["rd"] = val
+        if val:
+            gv.sd["rdst"] = round(gv.now + (val * 3600))
+            stop_onrain()
+        else:
+            gv.sd["rdst"] = 0
+        jsave(gv.sd, "sd")
+    report_rain_delay_change()
+    report_option_change()
+    
+def set_mm(val):
+    if "chng-sd" in nr_settings:
+        if val == 1:
+            gv.sd["mm"] = 1
+            jsave(gv.sd, "sd")
+        elif val == 0:
+            clear_mm()
+            gv.sd["mm"] = 0
+            jsave(gv.sd, "sd")
+        else:
+            return "invalid request, must be 0 or 1"    
+        
+def set_rsn(val):
+    if "stop-stn" in nr_settings:
+        if val == 1: stop_stations()
+                
+def set_wl(val):
+    if "chng-wl" in nr_settings:
+        gv.sd["wl"] = val
+        jsave(gv.sd, "sd")
+        report_option_change()
+        
+def set_nbrd(val):
+    if "chng-sd" in nr_settings:
+        if val != gv.sd["nbrd"]:  # number f boards has changed
+            if val == 0: val = 1
+            brd_chng = val - gv.sd["nbrd"]
+            change_options.update_scount(brd_chng)
+            gv.sd["nbrd"] = gv.sd["nbrd"] + brd_chng
+            gv.sd["nst"] = gv.sd["nbrd"] * 8
+            change_options.update_prog_lists("nbrd")
+            jsave(gv.sd, "sd")
+            # return "Station count changed"
+            msg = {"payload":"Station count set to " + str(val * 8)}
+            msg = json.dumps(msg)
+            print("msg: ", msg)  # - test
+            to_node_red(msg)
+    
+def set_htp(val):
+    if "chng-sd" in nr_settings:
+        gv.sd["htp"] = val
+        jsave(gv.sd, "sd")
+        return "htp changed"
+
+def set_idd(val):
+    if "chng-sd" in nr_settings:
+        if val != gv.sd["idd"] and (val == 0 or val == 1):
+            gv.sd["idd"] = val
+            change_options.update_prog_lists("idd")
+            jsave(gv.sd, "sd")
+            return "Individual durations changed"
+        else:
+            return "Error val must be 0 or 1"
+    
+def set_mton(val):
+    if "chng-sd" in nr_settings:
+        if val < -60 or val > 60:
+            return "Error val must be -60 to +60"
+        else:
+            gv.sd["mton"] = val
+        jsave(gv.sd, "sd")
+        
+def set_mtoff(val):
+    if "chng-sd" in nr_settings:
+        if val < -60 or val > 60:
+            return "Error val must be -60 to 60"
+        else:
+            gv.sd["mtoff"] = val
+        jsave(gv.sd, "sd")
+
+def set_rbt(val):
+    if "chng-sd" in nr_settings:
+        if val == 1: reboot()
+        
+def set_rstrt(val):
+    if "chng-sd" in nr_settings:
+        if val == 1: restart()
+    
+def set_rs(val):
+    if "chng-sd" in nr_settings:
+        if val == 0 or val == 1:
+            gv.sd["rst"] = val
+        else:
+            return "invalid input, must be 0 or 1"
+        jsave(gv.sd, "sd")
+             
+
+def skip():  # - test
+    pass
 
 def bit_read(byts, read_lst):
     """Read bits in bytes.
@@ -105,11 +258,12 @@ def to_node_red(msg):
     resp = requests.post(url, data = msg)
 
 
-def set_rain_sensed(i):
-    if i:
-        gv.sd["rst"] = 0
-    else:
-        gv.sd["rst"] = 1
+# def set_rain_sensed(i):
+#     gv.sd["rst"] = 0 if i else gv.sd["rst"] = 1
+    # if i:
+    #     gv.sd["rst"] = 0
+    # else:
+    #     gv.sd["rst"] = 1
 
 
 def run_once(list, pre):
@@ -189,6 +343,7 @@ def station_on_off(data):
     """Enable or disable a station.
     Called by "station switch" node.
     """
+    print("data 346: ", data)  # - test
     if "sn" in data:
         station = data["sn"]
     elif "station" in data:
@@ -286,7 +441,7 @@ def send_zone_change(name, **kw):
                     else:
                         name = gv.snames[i]
                     msg = {"station": i + 1, "name": name, "state": 1}
-                    print("sending message to NR")  # - test
+                    # print("sending message to NR")  # - test
                     to_node_red(msg)
         prior_srvals = gv.srvals[:]
 
@@ -358,6 +513,27 @@ loggedin.connect(send_login)
 "zone_change"  # working
 ###############################
 
+#### dicts ####
+
+set_sd = {
+        "rd": set_rd,
+        "mm": set_mm,
+        "rsn": set_rsn,
+        "wl": set_wl,
+        "nbrd": set_nbrd,
+        "htp": set_htp,
+        "idd": set_idd,
+        "mton": set_mton,
+        "mtoff": set_mtoff,
+        "rbt": set_rbt,
+        "rstrt": set_rstrt,
+        "rs": set_rs      
+        }
+
+#################
+
+###########################
+#### Class definitions ####
 
 class settings(ProtectedPage):
     """
@@ -397,7 +573,7 @@ class handle_requests(object):
     parse request messages from node-red
     """
     def GET(self):
-        """return value from get request."""
+        """return a value from get request."""
         qdict = dict(web.input())  # Dictionary of JSON values
         print("node-red request: ", qdict)  # - test
         if "gv" in qdict:
@@ -474,42 +650,42 @@ class handle_requests(object):
         """Update SIP with value sent from node-red."""
         data = web.data()
         data = json.loads(data.decode("utf-8"))
-        not_writable = [
-            "cputemp",
-            "day_ord",
-            "lang",
-            "now",
-            "nowt",
-            "npw",
-            "output_srvals",
-            "output_srvals_lock",
-            "passphrase",
-            "plugin_data",
-            "plugin_menu",
-            "pw",
-            "upas",
-            "ver_str",
-            "ver_date",
-        ]
-
-        danger_list = [
-            "nst",
-            "nopts",
-            "nprogs",
-        ]
-
-        prog_keys = [
-            "cycle_min",
-            "day_mask",
-            "duration_sec",
-            "enabled",
-            "interval_base_day",
-            "name",
-            "start_min",
-            "station_mask",
-            "stop_min",
-            "type",
-        ]
+        # not_writable = [
+        #     "cputemp",
+        #     "day_ord",
+        #     "lang",
+        #     "now",
+        #     "nowt",
+        #     "npw",
+        #     "output_srvals",
+        #     "output_srvals_lock",
+        #     "passphrase",
+        #     "plugin_data",
+        #     "plugin_menu",
+        #     "pw",
+        #     "upas",
+        #     "ver_str",
+        #     "ver_date",
+        # ]
+        #
+        # danger_list = [
+        #     "nst",
+        #     "nopts",
+        #     "nprogs",
+        # ]
+        #
+        # prog_keys = [
+        #     "cycle_min",
+        #     "day_mask",
+        #     "duration_sec",
+        #     "enabled",
+        #     "interval_base_day",
+        #     "name",
+        #     "start_min",
+        #     "station_mask",
+        #     "stop_min",
+        #     "type",
+        # ]
 
         #######################
         #### Set gv values ####
@@ -579,72 +755,97 @@ class handle_requests(object):
         #### set sd values ####
         elif "sd" in data and "val" in data:
             if "chng-sd" in nr_settings:
-                val = int(data["val"])
-                try:
+                
+                # val = int(data["val"]) #### remove after refactor.
+                                 
                     # Change values
-                    if data["sd"] == "rd":  # rain delay
-                        if "chng-rd" in nr_settings:
-                            gv.sd["rd"] = val
-                            if val:
-                                gv.sd["rdst"] = round(gv.now + (val * 3600))
-                                stop_onrain()
-                            else:
-                                gv.sd["rdst"] = 0
-                        report_rain_delay_change()  # see line 292
-                        report_option_change()
-                    elif data["sd"] == "mm":  # manual mode
-                        if val == 1:
-                            gv.sd["mm"] = 1
-                        elif val == 0:
-                            clear_mm()
-                            gv.sd["mm"] = 0
-                        else:
-                            return "invalid request"
-                    elif data["sd"] == "rsn" and val == 1:
-                        stop_stations()
-                    elif data["sd"] == "wl" and "chng-wl" in nr_settings:
-                        gv.sd["wl"] = val
-                        report_option_change()
-                    elif (
-                        data["sd"] == "nbrd"
-                        and val != gv.sd["nbrd"]  # number f boards has changed
-                    ):
-                        brd_chng = val - gv.sd["nbrd"]
-                        change_options.update_scount(brd_chng)
-                        gv.sd["nbrd"] = gv.sd["nbrd"] + brd_chng
-                        gv.sd["nst"] = gv.sd["nbrd"] * 8
-                        change_options.update_prog_lists("nbrd")
-                        return "Station count changed"
-                    elif data["sd"] == "htp":
-                        gv.sd["htp"] = val
-                        jsave(gv.sd, "sd")
-                        return "htp changed"
-                    elif data["sd"] == "idd":
-                        if val != gv.sd["idd"] and (val == 0 or val == 1):
-                            gv.sd["idd"] = val
-                            change_options.update_prog_lists("idd")
-                            jsave(gv.sd, "sd")
-                            return "Individual durations changed"
-                        else:
-                            return "Error val must be 0 or 1"
-                    elif data["sd"] == "mton":
-                        if val < -60 or val > 60:
-                            return "Error val must be -60 to +60"
-                        else:
-                            gv.sd["mton"] = val
-                    elif data["sd"] == "mtoff":
-                        if val < -60 or val > 60:
-                            return "Error val must be -60 to 60"
-                        else:
-                            gv.sd["mtoff"] = val
-                    elif data["sd"] == "rbt" and val == 1:
-                        reboot()
-                    elif data["sd"] == "rstrt" and val == 1:
-                        restart()
-                    elif data["sd"] == "rs" and gv.sd["urs"]:
-                        set_rain_sensed(val)
-                    elif "bit" in data:
+                try:                    
+                    set_sd[data["sd"]](int(data["val"]))
+                except KeyError:
+                    return "invalid request"
+                    
+                    # if data["sd"] == "rd":  # rain delay
+                    #     pass
+                   
+                    #     if "chng-rd" in nr_settings:
+                    #         gv.sd["rd"] = val
+                    #         if val:
+                    #             gv.sd["rdst"] = round(gv.now + (val * 3600))
+                    #             stop_onrain()
+                    #         else:
+                    #             gv.sd["rdst"] = 0
+                    #     report_rain_delay_change()  # see line 292
+                    #     report_option_change()
+                        
+                        
+                        
+                    # elif data["sd"] == "mm":  # manual mode
+                        # if val == 1:
+                        #     gv.sd["mm"] = 1
+                        # elif val == 0:
+                        #     clear_mm()
+                        #     gv.sd["mm"] = 0
+                        # else:
+                        #     return "invalid request"
+                        
+                    # elif data["sd"] == "rsn" and val == 1:
+                    #     stop_stations()
+                        
+                    # elif data["sd"] == "wl" and "chng-wl" in nr_settings:
+                    #     gv.sd["wl"] = val
+                    #     report_option_change()
+                        
+                    # elif (
+                    #     data["sd"] == "nbrd"
+                    #     and val != gv.sd["nbrd"]  # number f boards has changed
+                    # ):
+                    #     brd_chng = val - gv.sd["nbrd"]
+                    #     change_options.update_scount(brd_chng)
+                    #     gv.sd["nbrd"] = gv.sd["nbrd"] + brd_chng
+                    #     gv.sd["nst"] = gv.sd["nbrd"] * 8
+                    #     change_options.update_prog_lists("nbrd")
+                    #     return "Station count changed"
+                    
+                    # elif data["sd"] == "htp":
+                    #     gv.sd["htp"] = val
+                    #     jsave(gv.sd, "sd")
+                    #     return "htp changed"
+                    
+                    # elif data["sd"] == "idd":
+                    #     if val != gv.sd["idd"] and (val == 0 or val == 1):
+                    #         gv.sd["idd"] = val
+                    #         change_options.update_prog_lists("idd")
+                    #         jsave(gv.sd, "sd")
+                    #         return "Individual durations changed"
+                    #     else:
+                    #         return "Error val must be 0 or 1"
+                        
+                    # elif data["sd"] == "mton":
+                    #     if val < -60 or val > 60:
+                    #         return "Error val must be -60 to +60"
+                    #     else:
+                    #         gv.sd["mton"] = val
+                            
+                    # elif data["sd"] == "mtoff":
+                    #     if val < -60 or val > 60:
+                    #         return "Error val must be -60 to 60"
+                    #     else:
+                    #         gv.sd["mtoff"] = val
+                            
+                    # elif data["sd"] == "rbt" and val == 1:
+                    #     reboot()
+                        
+                    # elif data["sd"] == "rstrt" and val == 1:
+                    #     restart()
+                        
+                    # elif data["sd"] == "rs" and gv.sd["urs"]:
+                    #     set_rain_sensed(val)
+                    
+                    ############### end of sd requests #############    
+                        
+                    if "bit" in data:
                         bit_write(data["sd"], data["bit"])
+                        
                     else:  # handle all other vars
                         if not data["sd"] in danger_list or (
                             "force" in data and data["force"] == 1
@@ -656,6 +857,7 @@ class handle_requests(object):
                     if "save" in data and data["save"] == 1:
                         jsave(gv.sd, "sd")
                         return "gv.sd[" + data["sd"] + "] updated to " + str(val)
+                    
                 except Exception as e:
                     return e
             else:
