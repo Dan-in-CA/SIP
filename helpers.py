@@ -607,10 +607,10 @@ def run_program(pid):
                     duration = p["duration_sec"][0]
                 if not gv.sd["iw"][b] & 1 << s:
                     duration = duration * gv.sd["wl"] // 100 * plugin_adjustment()
-                gv.rs[s][2] = duration
-                gv.rs[s][3] = pid + 1  # store program number in schedule
-                gv.ps[s][0] = pid + 1  # store program number for display
-                gv.ps[s][1] = duration  # duration
+                gv.rs[s+b*8][2] = duration
+                gv.rs[s+b*8][3] = pid + 1  # store program number in schedule
+                gv.ps[s+b*8][0] = pid + 1  # store program number for display
+                gv.ps[s+b*8][1] = duration  # duration
     schedule_stations(p["station_mask"])  # + gv.sd["nbrd"]])     
 
 
