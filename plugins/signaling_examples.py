@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 # !/usr/bin/env python
+
 #  This plugin includes example functions that are triggered by events in sip.py
 
 from blinker import signal
@@ -67,8 +68,15 @@ program_deleted = signal("program_deleted")
 program_deleted.connect(notify_program_deleted)
 
 ### program toggled ###
-def notify_program_toggled(name, **kw):
-    print("Program toggled on or off")
+def notify_program_toggled(name, index, state):
+    if name != "SIP":
+        return
+    if state:
+        status = "enabled"
+    else:
+        status = "disabled"
+    print("program " + str(index  + 1) +" " + status)
+    # print("Program toggled on or off")
     #  Programs are in gv.pd and /data/programs.json
 
 
