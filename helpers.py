@@ -317,6 +317,13 @@ def get_cpu_temp():
         return temp
     except Exception:
         return ""
+    
+def total_adjustment():
+    duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith('wl_')]
+    result = float(gv.sd["wl"])
+    for entry in duration_adjustments:
+        result *= entry/100.0
+    return '%.0f' % result    
 
 
 def timestr(t):
@@ -335,30 +342,45 @@ def log_run():
     """
     Add run data to json log file - most recent first.
     If a record limit is specified (gv.sd["lr"]) the number of records is truncated.
-    """
+    """  
     if gv.sd["lg"]:
         if gv.lrun[1] == 0:  # skip program 0
             return
         elif gv.lrun[1] == 98:
             pgr = _("Run-once")
+            adj = "---"
         elif gv.lrun[1] == 99:
             pgr = _("Manual")
+            adj = "---"
         elif gv.lrun[1] == 100:
-            pgr = "Node-red"            
-        elif gv.pd[gv.lrun[1] - 1]["name"] != "":
-            pgr = str(gv.pd[gv.lrun[1] - 1]["name"])      
+            pgr = "Node-red"  
+            adj = "---"          
         else:
-            pgr = "" + str(gv.lrun[1])
-        if (gv.lrun[3] == 0):
-            start = time.localtime()
-        else:
-            start =time.localtime(gv.lrun[3])
+            if gv.pd[gv.lrun[1] - 1]["name"] != "":
+                pgr = str(gv.pd[gv.lrun[1] - 1]["name"])      
+            else:
+                pgr = "" + str(gv.lrun[1])               
+            pid = gv.lrun[1] - 1
+            if not gv.sd["idd"]:
+                 pdur = gv.pd[pid]["duration_sec"][0]
+            else:
+                pdur = gv.pd[pid]["duration_sec"][gv.lrun[0]]
+            adj = str(round((gv.lrun[2] / pdur) * 100))
+            
+        start = time.localtime()
+        dur_m, dur_s = divmod(gv.lrun[2], 60)
+        dur_h, dur_m = divmod(dur_m, 60)
         start_time = time.localtime(gv.rs[gv.lrun[0]][0]) #  Get start time from run schedule      
         logline = (
             '{"'
             + "program"
             + '": "'
             + pgr
+            + '", "'
+            + "adjustment"
+            + '": "'
+            # + total_adjustment()
+            + adj
             + '", "'
             + "station"
             + '": '
@@ -370,13 +392,16 @@ def log_run():
             + '", "'
             + "start"
             + '": '
-            # + f'"{start.tm_hour - dur_h:d}:{start.tm_min - dur_m:02d}:{start.tm_sec - dur_s:02d}"'
             + f'"{start_time.tm_hour:02d}:{start_time.tm_min:02d}:{start_time.tm_sec:02d}"'
             + ', "'
             + "date"
             + '": "'
-            + time.strftime('%Y-%m-%d"', start_time)
-            + "}"
+            + time.strftime('%Y-%m-%d', start_time)
+            + '", "'
+            + "program_index"
+            + '": "'
+            + str(gv.lrun[1])
+            + '"}'
         )       
         lines = []
         lines.append(logline + "\n")
@@ -391,17 +416,25 @@ def log_run():
     return
 
 
+def days_since_epoch():
+    """ helper function for calculating interval program daystamp, relative to local device time
+    """
+    epoch = datetime.datetime(1970, 1, 1)   # no timezone info, so we can treat the epoch start in the local timezone instead of utc
+    today = datetime.datetime.now()
+    current_date = datetime.datetime(today.year, today.month, today.day)
+    days = (current_date - epoch).days
+    return days
+
 def prog_match(prog):
     """
     Test a program for current date and time match.
     """
     if not prog["enabled"]:
         return 0  # Skip if program is not enabled
-    devday = int(gv.now // 86400)  # Check day match
+    
     lt = time.localtime(gv.now)
-    # lt = time.localtime()
     if prog["type"] == "interval":
-        if (devday % prog["interval_base_day"]) != prog["day_mask"]:
+        if (days_since_epoch() % prog["interval_base_day"]) != prog["day_mask"]:
             return 0
     else:  # Weekday program
         if not prog["day_mask"] - 128 & 1 << lt.tm_wday:
@@ -508,12 +541,28 @@ def stop_stations():
     """
     Stop all running stations, clear schedules.
     """
+    prev_srvals =  gv.srvals
+    print("prev_srval: ", prev_srvals)  # - test
+    print(gv.rs)  # - test
+    
     gv.srvals = [0] * (gv.sd["nst"])
-    set_output()
+    set_output() #  This stops all stations
     gv.ps = []
     for i in range(gv.sd["nst"]):
         gv.ps.append([0, 0])
     gv.sbits = [0] * (gv.sd["nbrd"] + 1)
+    
+    ### insert log data for halted station
+    # i = 0
+    # while i < len(prev_srvals):
+    #     if prev_srvals[i]:
+    #         gv.lrun[0] = i
+    #         gv.lrun[1] = gv.rs[i][3]
+    #         gv.lrun[2] = gv.now - gv.rs[i][0]
+    #         print("gv.lrun: ", gv.lrun)  # - test
+    #         log_run()
+    #     i += 1   
+    ###
     gv.rs = []
     for i in range(gv.sd["nst"]):
         gv.rs.append([0, 0, 0, 0])
@@ -581,10 +630,10 @@ def run_program(pid):
                     duration = p["duration_sec"][0]
                 if not gv.sd["iw"][b] & 1 << s:
                     duration = duration * gv.sd["wl"] // 100 * plugin_adjustment()
-                gv.rs[s][2] = duration
-                gv.rs[s][3] = pid + 1  # store program number in schedule
-                gv.ps[s][0] = pid + 1  # store program number for display
-                gv.ps[s][1] = duration  # duration
+                gv.rs[s+b*8][2] = duration
+                gv.rs[s+b*8][3] = pid + 1  # store program number in schedule
+                gv.ps[s+b*8][0] = pid + 1  # store program number for display
+                gv.ps[s+b*8][1] = duration  # duration
     schedule_stations(p["station_mask"])  # + gv.sd["nbrd"]])     
 
 
@@ -713,7 +762,6 @@ def convert_temp(temp, from_unit='C', to_unit='F'):
     try:
         temp = float(temp)
     except(ValueError, TypeError) as e:
-        print("Error: ", e)
         return float('nan')
 
     from_unit = from_unit.upper()  # handle lower case input
@@ -734,3 +782,8 @@ def convert_temp(temp, from_unit='C', to_unit='F'):
         return convert_temp(c_temp, 'C', to_unit)
 
     return round(temp, 2)
+
+def temp_string(temp, unit):
+    if math.isnan(temp):
+        return "--"
+    return str(temp) + "° " + unit

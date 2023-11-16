@@ -45,6 +45,10 @@ program_change = signal("program_change")
 def report_program_change():
     program_change.send()
 
+program_added = signal("program_added")
+def report_program_added():
+    program_added.send()
+
 
 program_deleted = signal("program_deleted")
 def report_program_deleted():
@@ -52,8 +56,8 @@ def report_program_deleted():
 
 
 program_toggled = signal("program_toggled")
-def report_program_toggle():
-    program_toggled.send()
+def report_program_toggle(index, state):
+    program_toggled.send("SIP", index = index, state = state)
         
 
 ### Web pages ######################
@@ -198,9 +202,11 @@ class change_options(ProtectedPage):
                 gv.sd[f] = qdict["o" + f]
 
         if "onbrd" in qdict:
-            if int(qdict["onbrd"]) + 1 != gv.sd["nbrd"]:
-                self.update_scount(qdict)
-            gv.sd["nbrd"] = int(qdict["onbrd"]) + 1
+            brd_count = int(qdict["onbrd"]) + 1
+            if brd_count != gv.sd["nbrd"]:  # number of boards has changed
+                brd_chng = brd_count - gv.sd["nbrd"]
+                self.update_scount(brd_chng)
+            gv.sd["nbrd"] = brd_count
             gv.sd["nst"] = gv.sd["nbrd"] * 8
             self.update_prog_lists("nbrd")
 
@@ -267,46 +273,54 @@ class change_options(ProtectedPage):
             raise web.seeother("/restart")
         raise web.seeother("/")
 
-    def update_scount(self, qdict):
+    @staticmethod
+    def update_scount(brd_chng):
         """
         Increase or decrease the number of stations displayed when
         number of expansion boards is changed in options.
-
-        Increase or decrase the lengths of program "duration_sec" and "station_mask"
-        when number of expansion boards is changed
         """
-        if int(qdict["onbrd"]) + 1 > gv.sd["nbrd"]:  # Lengthen lists
-            incr = int(qdict["onbrd"]) - (gv.sd["nbrd"] - 1)
-            for i in range(incr):
-                gv.sd["mo"].append(0)
-                gv.sd["ir"].append(0)
-                gv.sd["iw"].append(0)
-                gv.sd["show"].append(255)
+        print("changing scount", brd_chng)  # - test
+        if brd_chng > 0:  # Lengthen lists
+            incr = brd_chng - (gv.sd["nbrd"] - 1)
+            sn_incr = incr * 8          
+            gv.sd["mo"].extend([0] * incr)
+            gv.sd["ir"].extend([0] * incr)
+            gv.sd["iw"].extend([0] * incr)
+            gv.sd["show"].extend([255] * incr)
+            gv.sbits.extend([0] * incr)
+            
+            gv.srvals.extend([0] * sn_incr)
+            gv.ps.extend([[0, 0]] * sn_incr)
+            gv.rs.extend([[0, 0, 0, 0]] * sn_incr)             
+            
             ln = len(gv.snames)
-            for i in range(incr * 8):
-                gv.snames.append("S" + "{:0>2d}".format(i + 1 + ln))
-            for i in range(incr * 8):
-                gv.srvals.append(0)
-                gv.ps.append([0, 0])
-                gv.rs.append([0, 0, 0, 0])
-            for i in range(incr):
-                gv.sbits.append(0)
-        elif int(qdict["onbrd"]) + 1 < gv.sd["nbrd"]:  # Shorten lists
-            onbrd = int(qdict["onbrd"])
-            decr = gv.sd["nbrd"] - (onbrd + 1)
-            gv.sd["mo"] = gv.sd["mo"][: (onbrd + 1)]
-            gv.sd["ir"] = gv.sd["ir"][: (onbrd + 1)]
-            gv.sd["iw"] = gv.sd["iw"][: (onbrd + 1)]
-            gv.sd["show"] = gv.sd["show"][: (onbrd + 1)]
-            newlen = gv.sd["nst"] - decr * 8
+            for i in range(sn_incr):
+                gv.snames.append(("S" + f"{i + 1 + ln}".zfill(2)))            
+                
+        elif brd_chng < 0:  # Shorten lists
+            new_count = gv.sd["nbrd"] + brd_chng           
+            gv.sd["mo"] = gv.sd["mo"][: new_count]
+            gv.sd["ir"] = gv.sd["ir"][: new_count]
+            gv.sd["iw"] = gv.sd["iw"][: new_count]
+            gv.sd["show"] = gv.sd["show"][: new_count]            
+                       
+            newlen = gv.sd["nst"] + (brd_chng *8) 
             gv.srvals = gv.srvals[:newlen]
             gv.ps = gv.ps[:newlen]
             gv.rs = gv.rs[:newlen]
             gv.snames = gv.snames[:newlen]
-            gv.sbits = gv.sbits[: onbrd + 1]
+            gv.sbits = gv.sbits[: new_count]
         jsave(gv.snames, "snames")
+        print("snames saved")  # - test
+        # change_values.update_prog_lists("nbrd")
 
-    def update_prog_lists(self, change):
+    @staticmethod
+    def update_prog_lists(change):
+        """
+        Increase or decrase the lengths of program "duration_sec" and "station_mask"
+        when number of expansion boards is changed        
+        """
+        print("updating prog_lists")  # - test
         for p in gv.pd:
             if (
                 change == "idd"
@@ -526,11 +540,10 @@ class modify_program(ProtectedPage):
         if pid != -1:
             mp = gv.pd[pid]  # Modified program
             if mp["type"] == "interval":
-                dse = int(gv.now // 86400)
                 # Convert absolute to relative days remaining for display
                 rel_rem = (
                     ((mp["day_mask"]) + mp["interval_base_day"])
-                    - (dse % mp["interval_base_day"])
+                    - (gv.dse % mp["interval_base_day"])
                 ) % mp["interval_base_day"]
             p_name = mp["name"]
             prog = str(mp).replace(" ", "") #  strip out spaces
@@ -554,12 +567,13 @@ class change_program(ProtectedPage):
                 if gv.rs[i][3] == pnum:
                     gv.rs[i] = [0, 0, 0, 0]
         if cp["type"] == "interval":
-            dse = int(gv.now // 86400)
-            ref = dse + cp["day_mask"]  # - 128
+            ref = gv.dse + cp["day_mask"]  # - 128
             cp["day_mask"] = ref % cp["interval_base_day"]  # + 128
         if qdict["pid"] == "-1":  # add new program
             gv.pd.append(cp)
             gv.pnames.append(cp["name"])
+            report_program_added()
+            print("program added")  # - test
         else:
             gv.pd[int(qdict["pid"])] = cp  # replace program
             try:
@@ -569,8 +583,10 @@ class change_program(ProtectedPage):
                     diff = len(gv.pd) - len(gv.pnames)
                     gv.pnames.extend([""] * diff)
                 gv.pnames[int(qdict["pid"])] = cp["name"]
+            report_program_change() ### add program index ###
+            print("program modified")  # - test
         jsave(gv.pd, "programData")
-        report_program_change()
+        # report_program_change()  # - test
         raise web.seeother("/vp")
 
 
@@ -587,7 +603,8 @@ class delete_program(ProtectedPage):
             del gv.pd[int(qdict["pid"])]
             del gv.pnames[int(qdict["pid"])]
         jsave(gv.pd, "programData")
-        report_program_deleted()
+        report_program_deleted() ### add program index ###
+        print("program at index " + qdict["pid"] + " deleted" )  # - test
         raise web.seeother("/vp")
 
 
@@ -596,9 +613,11 @@ class enable_program(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        gv.pd[int(qdict["pid"])]["enabled"] = int(qdict["enable"])
+        index = int(qdict["pid"])
+        state = int(qdict["enable"])
+        gv.pd[index]["enabled"] = state
         jsave(gv.pd, "programData")
-        report_program_toggle()
+        report_program_toggle(index, state) #  send program index and state
         raise web.seeother("/vp")
 
 
@@ -621,7 +640,6 @@ class clear_log(ProtectedPage):
 
 class run_now(ProtectedPage):
     """Run a scheduled program now. This will override any running programs."""
-
     def GET(self):
         qdict = web.input()
         run_program(int(qdict["pid"]))
@@ -630,7 +648,6 @@ class run_now(ProtectedPage):
 
 class toggle_temp(ProtectedPage):
     """Change units of Raspi"s CPU temperature display on home page."""
-
     def GET(self):
         qdict = web.input()
         if qdict["tunit"] == "C":
@@ -643,7 +660,6 @@ class toggle_temp(ProtectedPage):
 
 class api_status(ProtectedPage):
     """Simple Status API"""
-
     def GET(self):
         statuslist = []
         status = {
@@ -723,7 +739,6 @@ class api_status(ProtectedPage):
 
 class api_log(ProtectedPage):
     """Simple Log API"""
-
     def GET(self):
         qdict = web.input()
         thedate = qdict["date"]
@@ -734,17 +749,21 @@ class api_log(ProtectedPage):
 
         records = read_log()
         data = []
-
+        
         for event in records:
             # return any records starting on this date
             if "date" not in qdict or event["date"] == thedate:
                 data.append(event)
                 # also return any records starting the day before and completing after midnight
             if event["date"] == prevdate:
+                duration_components = event["duration"].split(":")
+                duration = int(duration_components[0]);
+                if len(duration_components) > 2:
+                    duration = duration*60 + int(duration_components[1])
                 if (
                     int(event["start"].split(":")[0]) * 60
                     + int(event["start"].split(":")[1])
-                    + int(event["duration"].split(":")[0])
+                    + duration
                     > 24 * 60
                 ):
                     data.append(event)
@@ -755,12 +774,15 @@ class api_log(ProtectedPage):
 
 class water_log(ProtectedPage):
     """Simple Log API"""
-
     def GET(self):
         records = read_log()
-        data = _("Date, Start Time, Zone, Duration, Program") + "\n"
+        data = _("Date, Start Time, Zone, Duration, Program Name, Program Index, Adjustment") + "\n"
         for r in records:
             event = ast.literal_eval(json.dumps(r))
+            if not("program_index" in event):
+                event["program_index"] = "n/a"
+            if not("adjustment" in event):
+                event["adjustment"] = "n/a"   
             data += (
                 event["date"]
                 + ", "
@@ -771,6 +793,10 @@ class water_log(ProtectedPage):
                 + event["duration"]
                 + ", "
                 + event["program"]
+                + ", "
+                + event["program_index"]
+                + ", "
+                + event["adjustment"]
                 + "\n"
             )
 
@@ -838,8 +864,7 @@ class showOnTimeline(object):
         use [instance name].unit = [unit name] to set unit for data e.g. "lph".
         use [instance name].val = [plugin data] to display plugin data
         use [instance name].clear to remove from display e.g. if station not included in plugin.
-    """
-    
+    """  
     def __init__(self, val = "", unit = ""):
         self._val = val
         self._unit = unit
@@ -897,7 +922,6 @@ class plugin_data(ProtectedPage):
 
 class rain_sensor_state(ProtectedPage):
     """Return rain sensor state."""
-
     def GET(self):
         return gv.sd["rs"]
          

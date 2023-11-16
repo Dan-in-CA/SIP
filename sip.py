@@ -36,6 +36,7 @@ from helpers import (
     stop_onrain,
     restart,
     convert_temp,
+    temp_string
 )
 from ReverseProxied import ReverseProxied
 from urls import urls  # Provides access to URLs for UI pages
@@ -73,7 +74,13 @@ def timing_loop():
             if this_min != prior_min:  # only check programs once a minute
                 prior_min = this_min
                 for i, p in enumerate(gv.pd):  # get both index and prog item
-                    if p["start_min"] == this_min:
+                    start_triggers = [ p["start_min"] ]
+                    if p["cycle_min"] != 0:
+                        recurring_start = p["start_min"]
+                        while recurring_start < p["stop_min"]:
+                            recurring_start += p["cycle_min"]
+                            start_triggers.append(recurring_start)
+                    if this_min in start_triggers:
                         if prog_match(p) and any(p["duration_sec"]):
                             # check each station per boards listed in program up to number of boards in Options                           
                             for b in range(len(p["station_mask"])):  # len is number of bytes
@@ -105,6 +112,7 @@ def timing_loop():
                                     duration = round(duration)  # convert to int
                                     if (
                                         p["station_mask"][b] & 1 << s  # if this station is scheduled in this program
+                                        and duration # station has a duration
                                     ):
                                         gv.rs[sid][2] = duration
                                         gv.rs[sid][3] = i + 1  # program number for scheduling
@@ -128,7 +136,6 @@ def timing_loop():
                                 gv.lrun[0] = sid
                                 gv.lrun[1] = gv.rs[sid][3]
                                 gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-                                gv.lrun[3] = gv.now
                                 log_run()
                                 report_station_completed(sid + 1)
                             gv.rs[sid] = [0, 0, 0, 0]
@@ -262,6 +269,7 @@ template_globals = {
     "str": str,
     "eval": eval,
     "convert_temp": convert_temp,
+    "temp_string" : temp_string,
     "session": web.config._session,
     "json": json,
     "ast": ast,

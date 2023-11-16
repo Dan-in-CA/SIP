@@ -8,11 +8,19 @@ if (typeof nbrd !== 'undefined'){var nst = nbrd*8}; // number of stations
 function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is scheduled for this date (displayScheduleDate) called from doSimulation
   // simminutes is minute count generated in doSimulation()
   // simdate is a JavaScript date object
-  simday = Math.floor(simdate/(1000*3600*24)) // The number of days since epoc
   var wd,dn;
   if(pd['enabled']==0)  return 0; // program not enabled, do not match
   if(pd['type'] == 'interval') { // if interval program... 
-    if(((simday)%pd['interval_base_day'])!=pd['day_mask']) return 0; // remainder checking	
+	// Create a date object representing the requested display date starting at midnight
+	dateToSim = new Date(simdate);
+	dateToSim.setHours(0);
+	dateToSim.setMinutes(0);
+	dateToSim.setSeconds(0);
+	// Calculate a unique day count since the start of the epoch, this must match days_since_epoch()
+	// as it would be calculated on the device for the day
+	simday = Math.floor(dateToSim.valueOf()/(24*60*60*1000));
+	if((simday % pd['interval_base_day']) != pd['day_mask'])
+		return 0; // return if this day offset doesn't match the remainder
   } else { // Not interval 
     wd=(simdate.getDay()+6)%7; // getDay assumes sunday is 0, converts to Monday is 0 (weekday index)
     if((pd['day_mask']&(1<<wd))==0) return 0; // weekday checking  
@@ -106,7 +114,8 @@ function doSimulation(simdate) { // Create schedule by a full program simulation
     for(sid=0;sid<nst;sid++) { // for each station
       if(pid_array[sid]) { // if this station is included...
         schedule.push({ // data for creating home page program display
-                        program: pid_array[sid], // program number
+                        program: progs[pid_array[sid]-1].name, // program name
+						program_index: pid_array[sid], //program number
                         station: sid, // station index
                         start: st_array[sid]/60, // start time, minutes since midnight
                         duration: et_array[sid]-st_array[sid], // duration in seconds
@@ -154,7 +163,7 @@ function fromClock(clock) {
 }
 
 function programName(p) {
-	if (p == "Manual" || p == "Run-once") {
+	if (p == "Manual" || p == "Run-once" || p == "Node-red") {
 		return p + " Program";
 	}	
 	else if(isNaN(p)) { // If not a number assume it's the program name
@@ -195,24 +204,21 @@ function displaySchedule(schedule) {
 						var barWidth = Math.max(0.05,Math.min(relativeEnd, 60)/60 - barStart);
 						var programClass;
 						var idx;						
-						if (schedule[s].program == "Manual" || schedule[s].program == "Run-once") {
+						if (schedule[s].program_index == 99 || schedule[s].program_index == 98) {
 							programClass = "programManual";						
-						} else if(isNaN(schedule[s].program)) {
-							idx = progNames.indexOf(schedule[s].program);
-							programClass = "program" + (idx + 1)%10;	
 						} else {
-							programClass = "program" + (parseInt(schedule[s].program))%10;
+							programClass = "program" + (parseInt(schedule[s].program_index))%10;
 						}
 						programsUsed[schedule[s].program] = programClass;
 						var markerClass = (schedule[s].date == undefined ? "schedule" : "history");
-						boxes.append("<div class='scheduleMarker " + programClass + " " + markerClass + "' style='left:" + barStart*100 + "%;width:" + barWidth*100 + "%' data='" + programName(schedule[s].program) + ": " + schedule[s].label + "'></div>");
+						boxes.append("<div class='scheduleMarker " + programClass + " " + markerClass + "' style='left:" + barStart*100 + "%;width:" + barWidth*100 + "%' title='" + programName(schedule[s].program) + ": " + schedule[s].label + "'></div>");
 					}
 				}
 			}
 		}
 		if (isToday && slice <= nowMark && nowMark < slice+60) {
 			var stationOn = jQuery(this).parent().children(".stationStatus").hasClass("station_on");
-			boxes.append("<div class='nowMarker" + (stationOn?" on":"")+ "' style='width:2px;left:"+ (nowMark-slice)/60*100 + "%;'>");
+			boxes.append("<div class='nowMarker" + (stationOn?" on":"")+ "' style='width:2px;left:"+ Math.round((nowMark-slice)/60*(this.clientWidth-2)) + "px;'>");
 		}
 		if (boxes.children().length > 0) {
 			jQuery(this).append(boxes);
@@ -222,8 +228,6 @@ function displaySchedule(schedule) {
 	for (var p in programsUsed) {
 		jQuery("#legend").append("<span class='" + programsUsed[p] + "'>" + programName(p) + "</span>");
 	}
-	jQuery(".scheduleMarker").mouseover(scheduleMarkerMouseover);
-	jQuery(".scheduleMarker").mouseout(scheduleMarkerMouseout);
 	
 	jQuery("#displayScheduleDate").text(dateString(displayScheduleDate) + (displayScheduleDate.getFullYear() == now.getFullYear() ? "" : ", " + displayScheduleDate.getFullYear()));
 	if (isToday) {
@@ -232,7 +236,7 @@ function displaySchedule(schedule) {
 }
 
 function displayProgram() { // Controls home page irrigation timeline
-	if (displayScheduleDate > new Date(Date.now() + tzDiff)) { 
+	if (toXSDate(displayScheduleDate) > toXSDate(new Date(Date.now() + tzDiff))) { 
 		// run the schedule for yesterday to see if anything is spilling over into today
 		var yesterdaysSchedule = doSimulation(new Date(displayScheduleDate.getTime() - 24*60*60*1000));
 		var spillOvers = [];
@@ -241,6 +245,7 @@ function displayProgram() { // Controls home page irrigation timeline
 				//Found a program hanging over from yesterday
 				spillOvers.push({
 					program : yesterdaysSchedule[s].program,
+					program_index : yesterdaysSchedule[s].program_index,
 					station : yesterdaysSchedule[s].station,
 					start : 0,
 					duration : yesterdaysSchedule[s].duration - (1440-yesterdaysSchedule[s].start)*60,
@@ -256,10 +261,23 @@ function displayProgram() { // Controls home page irrigation timeline
 			for (let l in log) {
 				log[l].duration = fromClock(log[l].duration);
 				log[l].start = fromClock(log[l].start)/60;
+				recorded_log_start = log[l].start;  // Save original value for label
 				if (log[l].date != visibleDate) {
 					log[l].start -= 24*60;
 				}
-				log[l].label = toClock(log[l].start, timeFormat) + " for " + toClock(log[l].duration, 1);
+				if (log[l].program_index == undefined) { // previous log versions only record name, recreate the program_index
+					if (log[l].program == "Run-once") log[l].program_index = 98;
+					else if (log[l].program == "Manual") log[l].program_index = 99;
+					else {
+						log[l].program_index = progNames.indexOf(log[l].program);
+						// Note this could give the wrong name if programs have been deleted since the log entry was generated,
+						// but the effects of this will be minimal and the old log entry will eventually expire anyway.
+					}
+				}
+				log[l].label = toClock(recorded_log_start, timeFormat) + " for " + toClock(log[l].duration/60, 1);
+				if (log[l].adjustment != undefined && log[l].adjustment != "100") {
+					log[l].label += " (adjusted " + log[l].adjustment + "%)";
+				}
 			}
 			if (toXSDate(displayScheduleDate) == toXSDate(new Date(Date.now() + tzDiff))) {
 				var schedule = doSimulation(displayScheduleDate); //dk
@@ -272,15 +290,3 @@ function displayProgram() { // Controls home page irrigation timeline
 
 jQuery(document).ready(displayProgram);
 
-function scheduleMarkerMouseover() {
-	let description = jQuery(this).attr("data");
-	let markerClass = jQuery(this).attr("class");
-	markerClass = markerClass.substring(markerClass.indexOf("program"));
-	markerClass = markerClass.substring(0,markerClass.indexOf(" "));
-	jQuery(this).append('<span class="showDetails ' + markerClass + '">' + description + '</span>');
-	jQuery(this).children(".showDetails").mouseover(function(){ return false; });
-	jQuery(this).children(".showDetails").mouseout(function(){ return false; });
-}
-function scheduleMarkerMouseout() {
-	jQuery(this).children(".showDetails").remove();
-}
