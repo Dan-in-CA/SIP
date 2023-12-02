@@ -514,6 +514,7 @@ def schedule_stations(stations):
                     else:  # if rain and station does not ignore, clear station from display
                         gv.sbits[b] &= ~1 << s
                         gv.ps[sid] = [0, 0]
+                        gv.rs[sid] = [0,0,0,0]
 
 
 def stop_onrain():
