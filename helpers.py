@@ -493,7 +493,7 @@ def schedule_stations(stations):
                         gv.sd["bsy"] = 1
                     else:
                         gv.sbits[b] &= ~1 << s
-                        gv.ps[s] = [0, 0]
+                        gv.ps[sid] = [0, 0]
     else:  # concurrent mode, stations allowed to run in parallel
         for b in range(len(stations)):
             for s in range(8):
@@ -513,7 +513,8 @@ def schedule_stations(stations):
                         gv.sd["bsy"] = 1
                     else:  # if rain and station does not ignore, clear station from display
                         gv.sbits[b] &= ~1 << s
-                        gv.ps[s] = [0, 0]
+                        gv.ps[sid] = [0, 0]
+                        gv.rs[sid] = [0,0,0,0]
 
 
 def stop_onrain():
@@ -619,21 +620,22 @@ def run_program(pid):
     p = gv.pd[pid]  # program data
     for b in range(gv.sd["nbrd"]):  # check each station
         for s in range(8):
-            if s + 1 == gv.sd["mas"]:
+            sid = b * 8 + s  # station index
+            if sid + 1 == gv.sd["mas"]:
                 continue  # skip if this is master valve
             if (
                 p["station_mask"][b] & 1 << s
             ):  # this station is scheduled in this program
                 if gv.sd["idd"]:
-                    duration = p["duration_sec"][s]
+                    duration = p["duration_sec"][sid]
                 else:
                     duration = p["duration_sec"][0]
                 if not gv.sd["iw"][b] & 1 << s:
                     duration = duration * gv.sd["wl"] // 100 * plugin_adjustment()
-                gv.rs[s+b*8][2] = duration
-                gv.rs[s+b*8][3] = pid + 1  # store program number in schedule
-                gv.ps[s+b*8][0] = pid + 1  # store program number for display
-                gv.ps[s+b*8][1] = duration  # duration
+                gv.rs[sid][2] = duration
+                gv.rs[sid][3] = pid + 1  # store program number in schedule
+                gv.ps[sid][0] = pid + 1  # store program number for display
+                gv.ps[sid][1] = duration  # duration
     schedule_stations(p["station_mask"])  # + gv.sd["nbrd"]])     
 
 
