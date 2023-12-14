@@ -44,6 +44,61 @@ $code:
 //            tq = (tq/15>>0)/4.0;
 //            th = th+(th>=0?tq:-tq);
 //            jQuery("input[name='otz']").val(((th+12)*4)>>0);
+            var masterButton = jQuery("td.stationMaster input[type='radio']:checked");
+            if (masterButton.length == 0) {
+                mas = 0;
+            } else {
+                mas = parseInt(masterButton[0].id.split("s")[1]) + 1;
+            }
+            jQuery("#omas").val(mas);
+            if (mas>0) {
+                var s, bid, sid, vm;
+                for (bid=0; bid<nbrd; bid++) {
+                    vm = 0;
+                    for (s=0; s<8; s++) {
+                        sid = bid*8 + (7-s);
+                        vm = vm<<1;
+                        if (sid == mas-1) {
+                            vm = vm + 1;
+                            continue;
+                        }
+                        if	(jQuery("#mc"+sid).is(":checked")) {
+                            vm = vm + 1;
+                        }
+                    }
+                    jQuery("#m"+bid).val(vm);
+                }
+            }
+            var vi, vs, vw;
+            for (bid=0; bid<nbrd; bid++) {
+                vi = 0;
+                vs = 0;
+                vw = 0;
+                for (s=0; s<8; s++) {
+                    sid = bid*8 + (7-s);
+                    vi = vi<<1;
+                    vs = vs<<1;
+                    vw = vw<<1;
+                    if (sid == mas-1) {
+                        vi = vi + 1;
+                        vs = vs + 1;
+                        vw = vw + 1;
+                        continue;
+                    }
+                    if (jQuery("#rc"+sid).is(":checked")) {
+                        vi = vi + 1;
+                    }
+                    if (jQuery("#wlc"+sid).is(":checked")) {
+                        vw = vw + 1;
+                    }
+                    if (jQuery("#show"+sid).is(":checked")) {
+                        vs = vs + 1;
+                    }
+                }
+                jQuery("#i"+bid).val(vi);
+                jQuery("#sh"+bid).val(vs);
+                jQuery("#w"+bid).val(vw);
+            }
             jQuery("form[name='of']").submit();
         });
 
@@ -80,6 +135,57 @@ $code:
 
         jQuery(".collapsible h4").first().parent(".category").toggleClass("expanded").toggleClass("collapsed");
 
+        jQuery("button#cResetNames").click(function(){
+            jQuery("#stationOpts input[type='text']").each(function () {
+                jQuery(this).val("S" + (parseInt(jQuery(this).attr("name").substring(1)) + 1));
+            });
+            return false; //Prevent event propagation (e.g. cancel/save)
+        });
+
+        jQuery("button#cClearMaster").click(function(){
+            // Clear all "master" radio buttons
+            var previousSelection = jQuery("#stationOpts input[type='radio']:checked");
+            previousSelection.prop("checked",false);
+            previousSelection.closest("tr").find("input[type='checkbox']").prop("disabled", false);
+            // Disable all "enable master" checkboxes
+            jQuery("td.stationMasterEnabled input[type='checkbox']").prop("disabled", true);
+            // Disable the now unnecessary "clear master" button
+            jQuery("button#cClearMaster").prop("disabled", true);
+            return false; //Prevent event propagation (e.g. cancel/save)
+        });
+
+        jQuery("#stationOpts input[type='radio']").on('change',function() {
+            // Enable all "enable master" checkboxes (do this before disabling the specific row), omiting disabled stations
+            jQuery("td.stationMasterEnabled input[type='checkbox']").each(function() {
+                var enabled = jQuery(this).closest("tr").find("td.stationShow input[type='checkbox']:checked").length == 1;
+                jQuery(this).prop("disabled", !enabled );
+            });
+            // Disable all other controls on this station when it's in master mode
+            jQuery(this).closest("tr").find("input[type='checkbox']").prop("disabled", true);
+            // Clear the previous value of the button
+            var previousSelection = jQuery("#stationOpts input[type='radio']:checked").not(this);
+            if (previousSelection != undefined) {
+                previousSelection.prop('checked',false);
+                var stationNumber = previousSelection.val();
+                previousSelection.closest("tr").find("input[type='checkbox']").prop("disabled", false);
+            }
+            // Make sure the "clear master" button is enabled
+            jQuery("button#cClearMaster").prop("disabled", false);
+        });
+
+        jQuery("#stationOpts input[type='radio']").click(function() {
+            var newMaster = jQuery(this).val();
+        });
+        jQuery("td.stationShow input[type='checkbox']").click(function() {
+            var newEnabled = jQuery(this).prop('checked');
+            jQuery(this).closest("tr").find("td.stationMaster input[type='radio']").prop("disabled", !newEnabled);
+            jQuery(this).closest("tr").find("td.stationIgnore input[type='checkbox']").prop("disabled", !newEnabled);
+            jQuery(this).closest("tr").find("td.stationIgnoreML input[type='checkbox']").prop("disabled", !newEnabled);
+            if (jQuery("td.stationMaster input[type='radio']:checked").length > 0) {
+                jQuery(this).closest("tr").find("td.stationMasterEnabled input[type='checkbox']").prop("disabled", !newEnabled);
+            }
+        });
+        
     });
 
 </script>
@@ -94,57 +200,99 @@ $code:
         for opt in opts:
             label = opt[0]
             datatype = opt[1]
-            if datatype != "password":
+            if datatype != "password" and datatype != "external":
                 value = gv.sd[opt[2]]
             name = opt[2]
             tooltip = opt[3]
             category = opt[4]
 
             if category != oldcategory:
-                output += categoryCloser + "<div class='category collapsible collapsed'><h4>" + category + "</h4>"
+                output += categoryCloser + "<div class='category collapsible collapsed'><h4>" + category + "</h4>\n"
                 categoryCloser = "</div>"
             oldcategory = category
-            output += "<div class='option' title='" + tooltip + "'><label><span class='optLabel'>" + label + ":</span>\n"
-            if datatype == "boolean":
-                output += "<input name='o" + name + "' type='checkbox' " + ("checked" if value>0 else "") + ">\n"
-            elif datatype == "string":
-                output += "<input name='o" + name + "' type='text' size='39' maxlength='39' value=\"" + value + "\">\n"
-            elif datatype == "password":
-                output += "<input name='" + name + "' type='password' size='31' maxlength='31'><span class='inputError' id='error" + name + "'></span>\n"
-            elif name == "lang":
-                output += "<select name= 'olang'>\n"
-                output += "<option " + ("selected " if value=='default' else "") + "value='default'>"+_(u'Default')+"</option>\n"
-                for L in langKeys:
-                    output += "<option " + ("selected " if value==L else "") + "value='"+L+"'>"+languages[L]+"</option>\n"
-                output += "</select>\n"
-            elif name == "tz":
-                output += "<input name='otz' type='hidden' value='0'>\n"
-                tz = value - 48
-                th = ("+" if tz>=0 else "-") + str(abs(tz)/4>>0)
-                tq = str((abs(tz)%4)*15/10>>0) + str((abs(tz)%4)*15%10)
-                output += "<input name='th' type='text' size='3' maxlength='3' value='"+ th +"'>:<input name='tq' type='text' size='3' maxlength='3' value='" + tq + "'>\n"
-            elif name == "mas":
-                output += "<select name='omas'>\n"
-                output += "<option " + ("selected " if value==0 else "") + "value='0'>"+_(u'None')+"</option>\n"
-                for i in range(gv.sd['nst']):
-                    bid = i // 8
-                    sid = i % 8
-                    if (gv.sd['show'][bid]>>sid)&1 == 1:
-                        output += "<option " + ("selected " if value==i+1 else "") + "value='" + str(i+1) + "'>" + snames[i] + " (" + _('Station') + " " + str(i+1) + ")</option>\n"
-                output += "</select>\n"
-            elif name == "htp":
-                output += "<input name='ohtp' type='text' size='5' maxlength='5' value='" + str(value) + "'>\n"
-            elif name == "nbrd":
-                output += "<input name='onbrd' type='text' size='3' maxlength='3' value='" + str(value - 1) + "'>\n"           
-            elif name == "mton":    
-                output += "<input name='omton' type='text' size='3' maxlength='3' value='" + str(value) + "'><span class='inputError' id='error" + name + "'></span>\n"           
-            elif name == "mtoff":    
-                output += "<input name='omtoff' type='text' size='3' maxlength='3' value='" + str(value) + "'><span class='inputError' id='error" + name + "'></span>\n"             
-            else:
-                output += "<input name='o" + name + "' type='text' size='3' maxlength='3' value='" + str(value) + "'>\n"
+            if name == "stations":  #station names is a special case, requiring special treatment and saving to a separate file.
+                output += "<div class='option' title='" + tooltip + "'>\n"
+                output += "<table id='stationOpts'>\n<thead>\n<tr>\n"
+                output += "<th class='stationNumber'>" + _(u'Station') + "</th>\n"
+                output += "<th class='stationName'>" + _(u'Name') + "</th>\n"
+                output += "<th class='stationShow'>" + _(u'Enabled?') + "&nbsp;&nbsp;</th>\n"
+                output += "<th class='stationMaster'>" + _(u'Master?') + "</th>\n"
+                output += "<th class='stationIgnore'>" + _(u'Ignore Rain?') + "&nbsp;&nbsp;</th>\n"
+                output += "<th class='stationIgnoreWL'>" + _(u'Ignore Plugin adjustments?') + "&nbsp;&nbsp;</th>\n"
+                output += "<th class='stationMasterEnabled'>" + _(u'Activate Master?') + "</th>\n"
+                output += "</tr>\n</thead>\n"
+                output += "<tbody>\n" 
+                     
+                output += "<tr><td></td><td  class='optTooltip' colspan='6'>" + tooltip + "</td></tr>\n";
+                for bid in range(0,gv.sd['nbrd']):
+                    for s in range(0,8):
+                        sid = bid*8 + s;
+                        output += "<tr><td class='stationNumber'>" + str(sid + 1) + "</td>\n"
+                        output += "<td class='stationName'>\n"
+                        output += "<input type='text' size='" + str(gv.sd['snlen']) + "' maxlength='" + str(gv.sd['snlen']) + "' value='" + gv.snames[sid] + "' name='s" + str(sid) + "' id='s" + str(sid) + "'>\n"
+                        output += "</td>\n"
 
-            output += "<span class='optTooltip'>" + tooltip + "</span>\n"
-            output += "</label></div>\n\n"
+                        output += "<td class='stationShow'>\n"
+                        output += "<label class='notSelectable'>&nbsp;<input type='checkbox' " + ("checked" if gv.sd['show'][bid]&(1<<s) else "") + (" disabled" if gv.sd['mas']==sid+1 else "") + " id='show" + str(sid) + "'>&nbsp;</label>\n"
+                        output += "</td>\n"
+
+                        output += "<td class='stationMaster'>\n"
+                        output += "<label class='notSelectable'>&nbsp;<input type='radio' " + ("checked" if (sid == gv.sd['mas'] - 1) else "") + ("" if gv.sd['show'][bid]&(1<<s) else " disabled") + " id='mas" + str(sid) + "' value='" + str(sid + 1) + "'>&nbsp;</label>\n"
+                        output += "</td>\n"
+                            
+                        output += "<td class='stationIgnore'>\n"
+                        output += "<label class='notSelectable'>&nbsp;<input type='checkbox' " + ("checked" if gv.sd['ir'][bid]&(1<<s) else "") + ("" if gv.sd['show'][bid]&(1<<s) else " disabled") + (" disabled" if gv.sd['mas']==sid+1 else "") + " id='rc" + str(sid) + "'>&nbsp;</label>\n"
+                        output += "</td>\n"
+
+                        output += "<td class='stationIgnoreML'>\n"
+                        output += "<label class='notSelectable'>&nbsp;<input type='checkbox' " + ("checked" if gv.sd['iw'][bid]&(1<<s) else "") + ("" if gv.sd['show'][bid]&(1<<s) else " disabled") + (" disabled" if gv.sd['mas']==sid+1 else "") + " id='wlc" + str(sid) + "'>&nbsp;</label>\n"
+                        output += "</td>\n"
+
+                        output += "<td class='stationMasterEnabled'>\n"
+                        output += "<label class='notSelectable'>&nbsp;<input type='checkbox' " + ("checked" if gv.sd['mo'][bid]&(1<<s) else "") + (" disabled" if gv.sd['mas']==0 or gv.sd['mas']==sid+1 or not(gv.sd['show'][bid]&(1<<s)) else "") + " id='mc" + str(sid) + "'>&nbsp;</label>\n"
+                        output += "</td>\n"
+
+                        output += "</tr>\n"
+
+                output += "<tr>\n<td></td>\n"
+                output += "<td class='stationControls'><button id='cResetNames'>" + (u'Reset Names') + "</button></td>\n"
+                output += "<td colspan='3' style='text-align:center' class='stationControls'><button id='cClearMaster' " + (" disabled" if gv.sd['mas']==0 else "") + ">" + (u'Clear Master') + "</button></td>\n"
+                output += "</tr>\n"
+                
+                output += "</tbody>\n</table>\n</div>\n"
+            else:
+                output += "<div class='option' title='" + tooltip + "'><label><span class='optLabel'>" + label + ":</span>\n"
+                if datatype == "boolean":
+                    output += "<input name='o" + name + "' type='checkbox' " + ("checked" if value>0 else "") + ">\n"
+                elif datatype == "string":
+                    output += "<input name='o" + name + "' type='text' size='39' maxlength='39' value=\"" + value + "\">\n"
+                elif datatype == "password":
+                    output += "<input name='" + name + "' type='password' size='31' maxlength='31'><span class='inputError' id='error" + name + "'></span>\n"
+                elif name == "lang":
+                    output += "<select name= 'olang'>\n"
+                    output += "<option " + ("selected " if value=='default' else "") + "value='default'>"+_(u'Default')+"</option>\n"
+                    for L in langKeys:
+                        output += "<option " + ("selected " if value==L else "") + "value='"+L+"'>"+languages[L]+"</option>\n"
+                    output += "</select>\n"
+                elif name == "tz":
+                    output += "<input name='otz' type='hidden' value='0'>\n"
+                    tz = value - 48
+                    th = ("+" if tz>=0 else "-") + str(abs(tz)/4>>0)
+                    tq = str((abs(tz)%4)*15/10>>0) + str((abs(tz)%4)*15%10)
+                    output += "<input name='th' type='text' size='3' maxlength='3' value='"+ th +"'>:<input name='tq' type='text' size='3' maxlength='3' value='" + tq + "'>\n"
+                elif name == "htp":
+                    output += "<input name='ohtp' type='text' size='5' maxlength='5' value='" + str(value) + "'>\n"
+                elif name == "nbrd":
+                    output += "<input name='onbrd' type='text' size='3' maxlength='3' value='" + str(value - 1) + "'>\n"           
+                elif name == "mton":    
+                    output += "<input name='omton' type='text' size='3' maxlength='3' value='" + str(value) + "'><span class='inputError' id='error" + name + "'></span>\n"           
+                elif name == "mtoff":    
+                    output += "<input name='omtoff' type='text' size='3' maxlength='3' value='" + str(value) + "'><span class='inputError' id='error" + name + "'></span>\n"             
+                else:
+                    output += "<input name='o" + name + "' type='text' size='3' maxlength='3' value='" + str(value) + "'>\n"
+
+                output += "<span class='optTooltip'>" + tooltip + "</span>\n"
+                output += "</label></div>\n\n"
         output += categoryCloser + "<div class='category collapsible collapsed'><h4>"+_(u'System Restart')+"</h4>"
         output += "<div class='option'>"
         output += "&nbsp;<button id='cRestart' class='restart danger' title=" + json.dumps(_(u'Restart software'), ensure_ascii=False)+">" + _(u'Restart SIP')+"</button>"
@@ -154,6 +302,12 @@ $code:
     $:{output}
         <input type="hidden" name="rbt" value="0">
         <input type="hidden" name="rstrt" value="0">
+        <input type="hidden" id="omas" name="omas" value="0">
+        $for bid in range(gv.sd['nbrd']):
+            <input type="hidden" id="i${bid}" name="i${bid}"/>
+            <input type="hidden" id="sh${bid}" name="sh${bid}"/>
+            <input type="hidden" id="w${bid}" name="w${bid}"/>
+            <input type="hidden" id="m${bid}" name="m${bid}"/>
     </form>
 </div>
 

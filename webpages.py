@@ -176,6 +176,43 @@ class change_options(ProtectedPage):
         
     def change_options(self):    
         qdict = web.input()
+        print(qdict)
+        for i in range(gv.sd["nbrd"]):  # capture master associations
+            if "m" + str(i) in qdict:
+                try:
+                    gv.sd["mo"][i] = int(qdict["m" + str(i)])
+                except ValueError:
+                    gv.sd["mo"][i] = 0
+            if "i" + str(i) in qdict:
+                try:
+                    gv.sd["ir"][i] = int(qdict["i" + str(i)])
+                except ValueError:
+                    gv.sd["ir"][i] = 0
+            if "w" + str(i) in qdict:
+                try:
+                    gv.sd["iw"][i] = int(qdict["w" + str(i)])
+                except ValueError:
+                    gv.sd["iw"][i] = 0
+            if "sh" + str(i) in qdict:
+                try:
+                    gv.sd["show"][i] = int(qdict["sh" + str(i)])
+                except ValueError:
+                    gv.sd["show"][i] = 255
+            if "d" + str(i) in qdict:
+                try:
+                    gv.sd["show"][i] = ~int(qdict["d" + str(i)]) & 255
+                except ValueError:
+                    gv.sd["show"][i] = 255
+        names = []
+        for i in range(gv.sd["nst"]):
+            if "s" + str(i) in qdict:
+                names.append(qdict["s" + str(i)])
+            else:
+                names.append("S" + "{:0>2d}".format(i + 1))
+        gv.snames = names
+        jsave(names, "snames")
+        report_station_names()
+
         if "opw" in qdict and qdict["opw"] != "":
             try:
                 if password_hash(qdict["opw"]) == gv.sd["passphrase"]:
@@ -362,57 +399,6 @@ class change_options(ProtectedPage):
                 elif gv.sd["nbrd"] < len(p["station_mask"]):
                     p["station_mask"] = p["station_mask"][: gv.sd["nbrd"]]
         jsave(gv.pd, "programData")
-
-
-class view_stations(ProtectedPage):
-    """Open a page to view and edit a run once program."""
-
-    def GET(self):
-        return template_render.stations()
-
-
-class change_stations(ProtectedPage):
-    """Save changes to station names, ignore rain and master associations."""
-
-    def GET(self):
-        qdict = web.input()
-        for i in range(gv.sd["nbrd"]):  # capture master associations
-            if "m" + str(i) in qdict:
-                try:
-                    gv.sd["mo"][i] = int(qdict["m" + str(i)])
-                except ValueError:
-                    gv.sd["mo"][i] = 0
-            if "i" + str(i) in qdict:
-                try:
-                    gv.sd["ir"][i] = int(qdict["i" + str(i)])
-                except ValueError:
-                    gv.sd["ir"][i] = 0
-            if "w" + str(i) in qdict:
-                try:
-                    gv.sd["iw"][i] = int(qdict["w" + str(i)])
-                except ValueError:
-                    gv.sd["iw"][i] = 0
-            if "sh" + str(i) in qdict:
-                try:
-                    gv.sd["show"][i] = int(qdict["sh" + str(i)])
-                except ValueError:
-                    gv.sd["show"][i] = 255
-            if "d" + str(i) in qdict:
-                try:
-                    gv.sd["show"][i] = ~int(qdict["d" + str(i)]) & 255
-                except ValueError:
-                    gv.sd["show"][i] = 255
-        names = []
-        for i in range(gv.sd["nst"]):
-            if "s" + str(i) in qdict:
-                names.append(qdict["s" + str(i)])
-            else:
-                names.append("S" + "{:0>2d}".format(iu + 1))
-        gv.snames = names
-        jsave(names, "snames")
-        jsave(gv.sd, "sd")
-        report_station_names()
-        raise web.seeother("/")
 
 
 class get_set_station(ProtectedPage):
