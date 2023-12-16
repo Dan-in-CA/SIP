@@ -256,6 +256,14 @@ div#status {
     overflow:hidden;
     width: 40px;
 }
+#nav button.options {
+	background-image: url('options.png');
+	background-repeat: no-repeat;
+	background-position: center center;
+	text-indent:-99999em;
+    overflow:hidden;
+    width: 40px;
+}
 
 /******** Button Styles **********/
 
@@ -536,7 +544,7 @@ table.logList th {
 }
 .option {
 	margin: 0px;
-	padding: 6px 0px;
+	padding: 2px 6px;
 	clear:both;
 }
 
