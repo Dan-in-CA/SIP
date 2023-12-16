@@ -12,8 +12,8 @@ import time
 ##############################
 #### Revision information ####
 major_ver = 5
-minor_ver = 0
-old_count = 1073 #  update this to reset revision number.
+minor_ver = 1
+old_count = 1137 #  update this to reset revision number.
 
 try:
     revision = int(subprocess.check_output(["git", "rev-list", "--count", "HEAD"]))
@@ -49,7 +49,7 @@ sd = {
     "htp": 80,
     "htip": "::",
     "nst": 8,
-   "rdst": 0,
+    "rdst": 0,
     "loc": "",
     "tz": 48,
     "tf": 1,
@@ -192,32 +192,11 @@ options = [
         _("System"),
     ],
     [
-        _("Enable passphrase"),
-        "boolean",
-        "upas",
-        _("Minimal security. \nPrevent unauthorized users from accessing the system without a passphrase. \n*** Default is opendoor ***"),
-        _("Manage Passphrase"),
-    ],
-    [
-        _("Current passphrase"),
-        "password",
-        "opw",
-        _("Enter the current passphrase. \n*** Defalut is opendoor ***"),
-        _("Manage Passphrase"),
-    ],
-    [
-        _("New passphrase"),
-        "password",
-        "npw",
-        _("Enter a new passphrase."),
-        _("Manage Passphrase"),
-    ],
-    [
-        _("Confirm passphrase"),
-        "password",
-        "cpw",
-        _("Confirm the new passphrase."),
-        _("Manage Passphrase"),
+        _("Station Names"),
+        "external",
+        "stations",
+        _("Define your own station names and options: Which stations are connected/enabled? Which one (if any) controls the master valve? Should a station ignore adjustmenst from rain or plugins? Should a station require the master valve to be activated to run?"),
+        _("Stations"),
     ],
     [
         _("Sequential"),
@@ -255,25 +234,18 @@ options = [
         _("Station Handling"),
     ],
     [
-        _("Master station"),
-        "int",
-        "mas",
-        _("Select master station."),
-        _("Configure Master"),
-    ],
-    [
         _("Master on delay"),
         "int",
         "mton",
         _("Master on delay (in seconds), between -60 and +60."),
-        _("Configure Master"),
+        _("Station Handling"),
     ],
     [
         _("Master off delay"),
         "int",
         "mtoff",
         _("Master off delay (in seconds), between -60 and +60."),
-        _("Configure Master"),
+        _("Station Handling"),
     ],
     [
         _("Use rain sensor"),
@@ -305,4 +277,33 @@ options = [
         _("Length of log to keep, 0=no limits."),
         _("Logging"),
     ],
+    [
+        _("Enable passphrase"),
+        "boolean",
+        "upas",
+        _("Minimal security. \nPrevent unauthorized users from accessing the system without a passphrase. \n*** Default is opendoor ***"),
+        _("Manage Passphrase"),
+    ],
+    [
+        _("Current passphrase"),
+        "password",
+        "opw",
+        _("Enter the current passphrase. \n*** Defalut is opendoor ***"),
+        _("Manage Passphrase"),
+    ],
+    [
+        _("New passphrase"),
+        "password",
+        "npw",
+        _("Enter a new passphrase."),
+        _("Manage Passphrase"),
+    ],
+    [
+        _("Confirm passphrase"),
+        "password",
+        "cpw",
+        _("Confirm the new passphrase."),
+        _("Manage Passphrase"),
+    ],
+
 ]
