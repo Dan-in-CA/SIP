@@ -909,5 +909,6 @@ class plugin_data(ProtectedPage):
 class rain_sensor_state(ProtectedPage):
     """Return rain sensor state."""
     def GET(self):
+        web.header("Content-Type", "application/json")
         return gv.sd["rs"]
          
