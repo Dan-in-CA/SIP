@@ -211,19 +211,43 @@ def set_rstrt(val):
     if "chng-sd" in nr_settings:
         if val == 1: restart()
     
-def set_rs(val):
+def set_rst(val):
     if "chng-sd" in nr_settings:
         if val == 0 or val == 1:
             gv.sd["rst"] = val
             msg = "Rain detected" if val else "no rain"
             to_node_red(msg)
+<<<<<<< HEAD
+=======
         else:
             msg = "invalid input, must be 0 or 1"
             to_node_red(msg)
             return
         jsave(gv.sd, "sd")
-             
+        
+def set_rs(val):
+    if "chng-sd" in nr_settings:
+        if val == 0 or val == 1:
+            gv.sd["rs"] = val
+        else:
+            return "invalid input, must be 0 or 1"
+        jsave(gv.sd, "sd")        
+        
+def set_urs(val):
+    if "chng-sd" in nr_settings:
+        if val == 0 or val == 1:
+            gv.sd["urs"] = val
+>>>>>>> master
+        else:
+            msg = "invalid input, must be 0 or 1"
+            to_node_red(msg)
+            return
+        jsave(gv.sd, "sd")
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 # def skip():  # - test
 #     pass
 
@@ -548,7 +572,9 @@ set_sd = {
         "mtoff": set_mtoff,
         "rbt": set_rbt,
         "rstrt": set_rstrt,
-        "rs": set_rs      
+        "rs": set_rs,
+        "rst": set_rst,
+        "urs": set_urs
         }
 
 #################

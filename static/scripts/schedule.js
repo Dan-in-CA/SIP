@@ -162,18 +162,18 @@ function fromClock(clock) {
 	return duration;
 }
 
+
+
 function programName(p) {
-	if (p == "Manual" || p == "Run-once" || p == "Node-red") {
-		return p + " Program";
-	}	
-	else if(isNaN(p)) { // If not a number assume it's the program name
-		return p;	
-	} else {
-		// If it's a number, look up the name.  If it's missing or the default value, use the program number instead
-		if (progs[p-1].name == "Unnamed" || progs[p-1].name == "") {
-			return "Program " + p;
-		} else {
-			return progs[p-1].name;
+	if(typeof p === 'string' || p instanceof String) { // it's a string
+		if (p == "Manual" || p == "Run-once" || p == "Node-red") {
+			return p + " Program";
+		}	
+		else if(!isNaN(p)) { // If p contains a number
+			return "Program " + p
+		}
+		else {
+			return p;
 		}
 	}
 }
@@ -193,6 +193,9 @@ function displaySchedule(schedule) {
 		var slice = parseInt(jQuery(this).attr("data"))*60;
 		var boxes = jQuery("<div class='scheduleMarkerContainer'></div>");
 		for (var s in schedule) {
+			if(schedule[s].program === "" || schedule[s].program === "Unnamed") {
+				schedule[s].program = "program " + schedule[s].program_index.toString();
+			}			
 			if (schedule[s].station == sid) {
 				if (!(isToday && schedule[s].date == undefined && schedule[s].start + schedule[s].duration/60 < nowMark)) {
 					var relativeStart = schedule[s].start - slice;
