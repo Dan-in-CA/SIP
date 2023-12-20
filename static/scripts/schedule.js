@@ -121,7 +121,6 @@ function doSimulation(simdate) { // Create schedule by a full program simulation
                         duration: et_array[sid]-st_array[sid], // duration in seconds
                         label: toClock(st_array[sid]/60, timeFormat) + " for " + toClock(((et_array[sid]/60)-(st_array[sid]/60)), 1) // ***not the same as log data date element
                       });
-                      // console.log("schedule ", schedule)
       }
     }	  
     if (busy) { // if system buisy...
@@ -133,7 +132,7 @@ function doSimulation(simdate) { // Create schedule by a full program simulation
       simminutes++; // increment simulation time
     }
   } while(simminutes<=24*60); // simulation ends at 24 hours
-   //console.log('schedule: ' + JSON.stringify(schedule))
+ // console.log('schedule: ' + JSON.stringify(schedule))
   return schedule
 }
 
@@ -163,30 +162,24 @@ function fromClock(clock) {
 	return duration;
 }
 
+
+
 function programName(p) {
-	console.log("p is ", p);
-	if (p == "Manual" || p == "Run-once" || p == "Node-red") {
-		return p + " Program";
-	}	
-	//else if(isNaN(p)) { // If not a number assume it's the program name
-	//	return p;
-		
-	else if(typeof p === 'string' || p instanceof String) { // it's a string
-		if(p !== "") return p;		
-			
-	} else {
-		// If it's a number, look up the name.  If it's missing or the default value, use the program number instead
-		if (progs[p-1].name === "Unnamed" || progs[p-1].name === "") {
-			return "Program " + p;
-		} else {
-			return progs[p-1].name;
+	if(typeof p === 'string' || p instanceof String) { // it's a string
+		if (p == "Manual" || p == "Run-once" || p == "Node-red") {
+			return p + " Program";
+		}	
+		else if(!isNaN(p)) { // If p contains a number
+			return "Program " + p
+		}
+		else {
+			return p;
 		}
 	}
 }
 
 // show timeline on home page
 function displaySchedule(schedule) {
-	//console.log("schedule: ", schedule)
 	if (displayScheduleTimeout != null) {
 		clearTimeout(displayScheduleTimeout);
 	}
@@ -200,6 +193,9 @@ function displaySchedule(schedule) {
 		var slice = parseInt(jQuery(this).attr("data"))*60;
 		var boxes = jQuery("<div class='scheduleMarkerContainer'></div>");
 		for (var s in schedule) {
+			if(schedule[s].program === "" || schedule[s].program === "Unnamed") {
+				schedule[s].program = "program " + schedule[s].program_index.toString();
+			}			
 			if (schedule[s].station == sid) {
 				if (!(isToday && schedule[s].date == undefined && schedule[s].start + schedule[s].duration/60 < nowMark)) {
 					var relativeStart = schedule[s].start - slice;
@@ -216,7 +212,6 @@ function displaySchedule(schedule) {
 						} else {
 							programClass = "program" + (parseInt(schedule[s].program_index))%10;
 						}
-						//console.log("programClass: ", programClass)
 						programsUsed[schedule[s].program] = programClass;
 						var markerClass = (schedule[s].date == undefined ? "schedule" : "history");
 						boxes.append("<div class='scheduleMarker " + programClass + " " + markerClass + "' style='left:" + barStart*100 + "%;width:" + barWidth*100 + "%' title='" + programName(schedule[s].program) + ": " + schedule[s].label + "'></div>");
@@ -288,7 +283,7 @@ function displayProgram() { // Controls home page irrigation timeline
 				}
 			}
 			if (toXSDate(displayScheduleDate) == toXSDate(new Date(Date.now() + tzDiff))) {
-				var schedule = doSimulation(displayScheduleDate);
+				var schedule = doSimulation(displayScheduleDate); //dk
 				log = log.concat(schedule);
 			}
 			displaySchedule(log);
