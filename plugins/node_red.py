@@ -237,6 +237,7 @@ def set_urs(val):
     if "chng-sd" in nr_settings:
         if val == 0 or val == 1:
             gv.sd["urs"] = val
+<<<<<<< Updated upstream
 >>>>>>> master
         else:
             msg = "invalid input, must be 0 or 1"
@@ -246,6 +247,12 @@ def set_urs(val):
 
 <<<<<<< HEAD
 =======
+=======
+        else:
+            return "invalid input, must be 0 or 1"
+        jsave(gv.sd, "sd")
+
+>>>>>>> Stashed changes
 
 >>>>>>> master
 # def skip():  # - test
