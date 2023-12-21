@@ -217,8 +217,6 @@ def set_rst(val):
             gv.sd["rst"] = val
             msg = "Rain detected" if val else "no rain"
             to_node_red(msg)
-<<<<<<< HEAD
-=======
         else:
             msg = "invalid input, must be 0 or 1"
             to_node_red(msg)
@@ -237,24 +235,13 @@ def set_urs(val):
     if "chng-sd" in nr_settings:
         if val == 0 or val == 1:
             gv.sd["urs"] = val
-<<<<<<< Updated upstream
->>>>>>> master
         else:
             msg = "invalid input, must be 0 or 1"
             to_node_red(msg)
             return
         jsave(gv.sd, "sd")
 
-<<<<<<< HEAD
-=======
-=======
-        else:
-            return "invalid input, must be 0 or 1"
-        jsave(gv.sd, "sd")
 
->>>>>>> Stashed changes
-
->>>>>>> master
 # def skip():  # - test
 #     pass
 
