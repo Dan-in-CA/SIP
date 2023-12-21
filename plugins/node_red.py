@@ -181,8 +181,7 @@ def set_idd(val):
         else:
             msg = "Error val must be 0 or 1"
         to_node_red(msg)
-        
-    
+           
 def set_mton(val):
     if "chng-sd" in nr_settings:
         if val < -60 or val > 60:
@@ -238,7 +237,6 @@ def set_urs(val):
         else:
             return "invalid input, must be 0 or 1"
         jsave(gv.sd, "sd")
-
 
 # def skip():  # - test
 #     pass
