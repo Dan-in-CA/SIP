@@ -392,6 +392,16 @@ input.timeInput {
 	font-size: 12pt;
 	width: 3em;
 }
+
+input.timeVal {
+	font-size: 12pt;
+	width: 3em;
+}
+
+input[type='number']{
+    width: 2.5em;
+} 
+
 /******** Station Table Styles **********/
 
 table.optionList {
