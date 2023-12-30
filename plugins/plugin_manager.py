@@ -8,6 +8,7 @@ import pathlib
 import re
 import subprocess
 import time
+from urllib.request import urlopen
 
 # local module imports
 import gv  # Get access to SIP's settings
