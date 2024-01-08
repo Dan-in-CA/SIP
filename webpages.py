@@ -279,6 +279,15 @@ class change_options(ProtectedPage):
                 ):  # handle values less than -60 or greater than 60
                     raise web.seeother("/vo?errorCode=mtoff_mismatch")
                 gv.sd[f] = int(qdict["o" + f])
+       
+        if "opigpio" in qdict and ( 
+              qdict["opigpio"] == "on" or qdict["opigpio"] == "1"
+            ):
+            gv.sd["pigpio"] = 1
+            qdict["rstrt"] = "1"  # force restart with change in htip
+        elif not "opigpio" in qdict and (gv.sd["pigpio"] == 1):                       
+            gv.sd["pigpio"] = 0
+            qdict["rstrt"] = "1"  # force restart with change in htip
 
         for f in [
             "upas",
@@ -287,7 +296,6 @@ class change_options(ProtectedPage):
             "seq",
             "rst",
             "lg",
-            "pigpio",
             "alr",
         ]:
             if "o" + f in qdict and (
