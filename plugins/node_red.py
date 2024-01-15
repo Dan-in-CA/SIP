@@ -235,7 +235,9 @@ def set_urs(val):
         if val == 0 or val == 1:
             gv.sd["urs"] = val
         else:
-            return "invalid input, must be 0 or 1"
+            msg = "invalid input, must be 0 or 1"
+            to_node_red(msg)
+            return
         jsave(gv.sd, "sd")
 
 # def skip():  # - test
@@ -299,7 +301,11 @@ load_settings()
 
 def to_node_red(msg):
     url = nr_settings["nr-url"]
-    resp = requests.post(url, data = msg)
+    try:
+        resp = requests.post(url, data = msg)
+    except Exception:
+        pass
+        
 
 def run_once(list, pre):
     """

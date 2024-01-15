@@ -296,6 +296,7 @@ def plugin_adjustment():
     """
     duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith("wl_")]
     result = reduce(lambda x, y: x * y / 100.0, duration_adjustments, 1.0)
+    gv.plugin_adj = result  # - test
     return result
 
 
@@ -365,8 +366,7 @@ def log_run():
                  pdur = gv.pd[pid]["duration_sec"][0]
             else:
                 pdur = gv.pd[pid]["duration_sec"][gv.lrun[0]]
-            adj = str(round((gv.lrun[2] / pdur) * 100))
-            
+            adj = str(round((gv.lrun[2] / pdur) * 100))         
         start = time.localtime()
         dur_m, dur_s = divmod(gv.lrun[2], 60)
         dur_h, dur_m = divmod(dur_m, 60)
