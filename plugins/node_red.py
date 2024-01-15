@@ -301,7 +301,11 @@ load_settings()
 
 def to_node_red(msg):
     url = nr_settings["nr-url"]
-    resp = requests.post(url, data = msg)
+    try:
+        resp = requests.post(url, data = msg)
+    except Exception:
+        pass
+        
 
 def run_once(list, pre):
     """

@@ -46,7 +46,7 @@ if gv.platform == "pi":
             gv.pin_map = [ #  Board numbering
                 0, #  offset for 1 based numbering
                 0,  0,
-                0,  0,
+                3,  0,
                 5,  0,
                 7,  8,
                 0,  10,
@@ -82,7 +82,7 @@ if gv.platform == "pi":
             gv.pin_map = [#  Board numbering
                 0, #  offset for 1 based numbering
                 0,  0,
-                0,  0,
+                3,  0,
                 5,  0,
                 7,  8,
                 0,  10,
