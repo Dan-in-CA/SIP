@@ -379,7 +379,6 @@ def log_run():
             + '", "'
             + "adjustment"
             + '": "'
-            # + total_adjustment()
             + adj
             + '", "'
             + "station"
@@ -636,7 +635,8 @@ def run_program(pid):
                 gv.rs[sid][3] = pid + 1  # store program number in schedule
                 gv.ps[sid][0] = pid + 1  # store program number for display
                 gv.ps[sid][1] = duration  # duration
-    schedule_stations(p["station_mask"])  # + gv.sd["nbrd"]])     
+                gv.pon = pid + 1  # - test
+    schedule_stations(p["station_mask"])     
 
 
 def jsave(data, fname):
