@@ -499,9 +499,9 @@ def schedule_stations(stations):
                 sid = b * 8 + s  # station index
                 if (
                     not stations[b] & 1 << s 
-                    or gv.srvals[sid]
+                    # or gv.srvals[sid]  # - test
                 ):
-                    continue  # skip stations not in prog or already running
+                    continue  # skip stations not in prog # or already running
                 if gv.rs[sid][2]:  # if station has a duration value
                     if (not rain
                         or gv.sd["ir"][b] & 1 << s
@@ -542,8 +542,8 @@ def stop_stations():
     Stop all running stations, clear schedules.
     """
     prev_srvals =  gv.srvals
-    print("prev_srval: ", prev_srvals)  # - test
-    print(gv.rs)  # - test
+    # print("prev_srval: ", prev_srvals)  # - test
+    # print(gv.rs)  # - test
     
     gv.srvals = [0] * (gv.sd["nst"])
     set_output() #  This stops all stations
@@ -553,15 +553,15 @@ def stop_stations():
     gv.sbits = [0] * (gv.sd["nbrd"] + 1)
     
     ### insert log data for halted station
-    # i = 0
-    # while i < len(prev_srvals):
-    #     if prev_srvals[i]:
-    #         gv.lrun[0] = i
-    #         gv.lrun[1] = gv.rs[i][3]
-    #         gv.lrun[2] = gv.now - gv.rs[i][0]
-    #         print("gv.lrun: ", gv.lrun)  # - test
-    #         log_run()
-    #     i += 1   
+    i = 0
+    while i < len(prev_srvals):
+        if prev_srvals[i]:
+            gv.lrun[0] = i
+            gv.lrun[1] = gv.rs[i][3]
+            gv.lrun[2] = gv.now - gv.rs[i][0]
+            # print("gv.lrun: ", gv.lrun)  # - test
+            log_run()
+        i += 1   
     ###
     gv.rs = []
     for i in range(gv.sd["nst"]):
@@ -637,6 +637,48 @@ def run_program(pid):
                 gv.ps[sid][1] = duration  # duration
                 gv.pon = pid + 1  # - test
     schedule_stations(p["station_mask"])     
+
+def run_once(vals = gv.rovals, bump = None, pnum = 98):
+    """
+    Runs a one-time program based on a list of durations. One for each station
+    Arguments:
+    vals: a list of length = number of stations
+    bump: controls of running program will be stoped (bumped
+    pnum: program number, default 98 (run once). Used in log.
+    """   
+    print
+    # for sid in range(gv.sd["nst"]):
+    #     if (gv.srvals[sid]
+    #         and not sid == gv.sd["mas"] - 1
+    #         ):  # if currently on and not master, log result
+    #         gv.lrun[0] = sid  # station index
+    #         gv.lrun[1] = gv.rs[sid][3]  # program number
+    #         gv.lrun[2] = int(gv.now - gv.rs[sid][0])
+    #         gv.lrun[3] = gv.now #  start time
+    #         log_run()
+    #         report_station_completed(sid + 1)
+    # stations = [0] * gv.sd["nbrd"]
+    
+    # gv.ps = []  # program schedule (for display)
+    # gv.rs = []  # run schedule
+    # for sid in range(gv.sd["nst"]):
+    #     gv.ps.append([0, 0])
+    #     gv.rs.append([0, 0, 0, 0])
+    stations = [0] * gv.sd["nbrd"]
+    if(gv.sd["seq"] and bump != 0
+        or (not gv.sd["seq"] and bump == 1)
+        ):
+        stop_stations()
+    # for sid, dur in enumerate(vals):
+    for sid, dur in enumerate(gv.rovals):
+        if dur:  # if this element has a value
+            gv.rs[sid][0] = gv.now
+            gv.rs[sid][2] = dur
+            gv.rs[sid][3] = pnum
+            gv.ps[sid][0] = pnum
+            gv.ps[sid][1] = dur
+            stations[sid // 8] += 2 ** (sid % 8)
+    schedule_stations(stations)
 
 
 def jsave(data, fname):

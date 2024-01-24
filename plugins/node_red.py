@@ -307,11 +307,12 @@ def to_node_red(msg):
         pass
         
 
-def run_once(list, pre):
-    """
+def nr_run_once(list, pre):
+    """-
     Start a run once program from node-red
     Optionally disable preemption of running program.
     """
+    print("nr list: ", list)
     if not gv.sd["en"]:  # check if SIP is enabled
         return
     if pre:
@@ -788,9 +789,9 @@ class handle_requests(object):
                 if "preempt" in data and data["preempt"] == 0:
                     pre = 0                 
                 if "ro" in data:
-                    run_once(data["ro"], pre)
+                    nr_run_once(data["ro"], pre)
                 elif "run once" in data:
-                    run_once(data["run once"], pre)
+                    nr_run_once(data["run once"], pre)
             else:
                 msg = "Run Once is disabled"
                 to_node_red(msg)                  
