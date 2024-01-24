@@ -642,11 +642,10 @@ def run_once(bump = None, pnum = 98):
     """
     Runs a one-time program based on a list of durations. One for each station
     Arguments:
-    vals: a list of length = number of stations
-    bump: controls of running program will be stoped (bumped
+    bump: controls of running program will be stopped (bumped
     pnum: program number, default 98 (run once). Used in log.
     """   
-    print("gv.rovals: ", gv.rovals)  # - test
+    # print("gv.rovals: ", gv.rovals)  # - test
     # for sid in range(gv.sd["nst"]):
     #     if (gv.srvals[sid]
     #         and not sid == gv.sd["mas"] - 1
@@ -669,7 +668,6 @@ def run_once(bump = None, pnum = 98):
         or (not gv.sd["seq"] and bump == 1)
         ):
         stop_stations()
-    # for sid, dur in enumerate(vals):
     for sid, dur in enumerate(gv.rovals):
         if dur:  # if this element has a value
             gv.rs[sid][0] = gv.now

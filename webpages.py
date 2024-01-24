@@ -487,9 +487,8 @@ class change_runonce(ProtectedPage):
         qdict = web.input()
         if not gv.sd["en"]:  # check operation status
             return
-        gv.rovals = json.loads(qdict["t"])
-        
-        run_once(gv.rovals)  # - test
+        gv.rovals = json.loads(qdict["t"])     
+        run_once()  # - test
         
         # for sid in range(gv.sd["nst"]):
         #     if (gv.srvals[sid]

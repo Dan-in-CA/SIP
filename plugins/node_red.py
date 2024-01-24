@@ -312,13 +312,13 @@ def nr_run_once(list, pre):
     Start a run once program from node-red
     Optionally disable preemption of running program.
     """
-    print("nr list: ", list)
+    # print("nr list: ", list)  # - test
     if not gv.sd["en"]:  # check if SIP is enabled
         return
-    if pre:
-        stop_stations()  # preempt any running program.
-    dur_sum = 0
-    stations = [0] * gv.sd["nbrd"]
+    # if pre:
+    #     stop_stations()  # preempt any running program.
+    # dur_sum = 0
+    # stations = [0] * gv.sd["nbrd"]
     for s in list:
         ident = s[0]
         try:
@@ -332,16 +332,19 @@ def nr_run_once(list, pre):
             print("Error: ", e)  # name not found
             return e
         dur = s[1]
-        gv.rs[sid][0] = gv.now + dur_sum
-        dur_sum += dur
-        gv.rs[sid][1] = gv.now + dur_sum
-        gv.rs[sid][2] = dur
-        gv.rs[sid][3] = 100
-        gv.ps[sid][0] = 100
-        gv.ps[sid][1] = dur
-        stations[sid // 8] += 2 ** (sid % 8)
-    if not gv.sd["bsy"]:
-        schedule_stations(stations)
+        gv.rovals[sid] = dur
+        run_once(pnum = 100, bump = pre)
+    #
+    #     gv.rs[sid][0] = gv.now + dur_sum
+    #     dur_sum += dur
+    #     gv.rs[sid][1] = gv.now + dur_sum
+    #     gv.rs[sid][2] = dur
+    #     gv.rs[sid][3] = 100
+    #     gv.ps[sid][0] = 100
+    #     gv.ps[sid][1] = dur
+    #     stations[sid // 8] += 2 ** (sid % 8)
+    # if not gv.sd["bsy"]:
+    #     schedule_stations(stations)
 
 
 def program_on_off(data):
@@ -788,10 +791,29 @@ class handle_requests(object):
                 pre = 1
                 if "preempt" in data and data["preempt"] == 0:
                     pre = 0                 
-                if "ro" in data:
-                    nr_run_once(data["ro"], pre)
+                if "ro" in data: 
+                    list = data["ro"]                   
+                    # nr_run_once(data["ro"], pre)
                 elif "run once" in data:
-                    nr_run_once(data["run once"], pre)
+                    list = data["run_once"]
+                    # nr_run_once(data["run once"], pre)
+                
+                for s in list:
+                    ident = s[0]
+                    try:
+                        if isinstance(ident, int):
+                            sid = ident - 1
+                        elif ident.isnumeric():  # quoted number
+                            sid = int(ident) - 1
+                        else:
+                            sid = gv.snames.index(ident)
+                    except Exception as e:
+                        print("Error: ", e)  # name not found
+                        return e
+                    # dur = s[1]
+                    # gv.rovals[sid] = dur
+                    gv.rovals[sid] = s[1]
+                run_once(pnum = 100, bump = pre)               
             else:
                 msg = "Run Once is disabled"
                 to_node_red(msg)                  
