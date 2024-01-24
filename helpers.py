@@ -638,7 +638,7 @@ def run_program(pid):
                 gv.pon = pid + 1  # - test
     schedule_stations(p["station_mask"])     
 
-def run_once(vals = gv.rovals, bump = None, pnum = 98):
+def run_once(bump = None, pnum = 98):
     """
     Runs a one-time program based on a list of durations. One for each station
     Arguments:
