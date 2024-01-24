@@ -646,7 +646,7 @@ def run_once(vals = gv.rovals, bump = None, pnum = 98):
     bump: controls of running program will be stoped (bumped
     pnum: program number, default 98 (run once). Used in log.
     """   
-    print
+    print("gv.rovals: ", gv.rovals)  # - test
     # for sid in range(gv.sd["nst"]):
     #     if (gv.srvals[sid]
     #         and not sid == gv.sd["mas"] - 1
