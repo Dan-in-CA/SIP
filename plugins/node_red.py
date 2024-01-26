@@ -793,11 +793,9 @@ class handle_requests(object):
                     pre = 0                 
                 if "ro" in data: 
                     list = data["ro"]                   
-                    # nr_run_once(data["ro"], pre)
                 elif "run once" in data:
                     list = data["run_once"]
-                    # nr_run_once(data["run once"], pre)
-                
+                gv.rovals = [0] * gv.sd["nst"]  # clear gv.rovals           
                 for s in list:
                     ident = s[0]
                     try:
@@ -810,8 +808,6 @@ class handle_requests(object):
                     except Exception as e:
                         print("Error: ", e)  # name not found
                         return e
-                    # dur = s[1]
-                    # gv.rovals[sid] = dur
                     gv.rovals[sid] = s[1]
                 run_once(pnum = 100, bump = pre)               
             else:

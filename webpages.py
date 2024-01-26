@@ -488,33 +488,7 @@ class change_runonce(ProtectedPage):
         if not gv.sd["en"]:  # check operation status
             return
         gv.rovals = json.loads(qdict["t"])     
-        run_once()  # - test
-        
-        # for sid in range(gv.sd["nst"]):
-        #     if (gv.srvals[sid]
-        #         and not sid == gv.sd["mas"] - 1
-        #         ):  # if currently on and not master, log result
-        #         gv.lrun[0] = sid  # station index
-        #         gv.lrun[1] = gv.rs[sid][3]  # program number
-        #         gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-        #         gv.lrun[3] = gv.now #  start time
-        #         log_run()
-        #         report_station_completed(sid + 1)
-        # stations = [0] * gv.sd["nbrd"]
-        # gv.ps = []  # program schedule (for display)
-        # gv.rs = []  # run schedule
-        # for sid in range(gv.sd["nst"]):
-        #     gv.ps.append([0, 0])
-        #     gv.rs.append([0, 0, 0, 0])
-        # for sid, dur in enumerate(gv.rovals):
-        #     if dur:  # if this element has a value
-        #         gv.rs[sid][0] = gv.now
-        #         gv.rs[sid][2] = dur
-        #         gv.rs[sid][3] = 98
-        #         gv.ps[sid][0] = 98
-        #         gv.ps[sid][1] = dur
-        #         stations[sid // 8] += 2 ** (sid % 8)
-        # schedule_stations(stations)
+        run_once()
         raise web.seeother("/")
 
 

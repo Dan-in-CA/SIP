@@ -641,28 +641,11 @@ def run_program(pid):
 def run_once(bump = None, pnum = 98):
     """
     Runs a one-time program based on a list of durations. One for each station
+    gv.rovals must contain a list of durations in seconds.
     Arguments:
-    bump: controls of running program will be stopped (bumped
+    bump: controls if running program will be stopped (bumped).
     pnum: program number, default 98 (run once). Used in log.
     """   
-    # print("gv.rovals: ", gv.rovals)  # - test
-    # for sid in range(gv.sd["nst"]):
-    #     if (gv.srvals[sid]
-    #         and not sid == gv.sd["mas"] - 1
-    #         ):  # if currently on and not master, log result
-    #         gv.lrun[0] = sid  # station index
-    #         gv.lrun[1] = gv.rs[sid][3]  # program number
-    #         gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-    #         gv.lrun[3] = gv.now #  start time
-    #         log_run()
-    #         report_station_completed(sid + 1)
-    # stations = [0] * gv.sd["nbrd"]
-    
-    # gv.ps = []  # program schedule (for display)
-    # gv.rs = []  # run schedule
-    # for sid in range(gv.sd["nst"]):
-    #     gv.ps.append([0, 0])
-    #     gv.rs.append([0, 0, 0, 0])
     stations = [0] * gv.sd["nbrd"]
     if(gv.sd["seq"] and bump != 0
         or (not gv.sd["seq"] and bump == 1)
