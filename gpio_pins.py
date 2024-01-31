@@ -3,9 +3,21 @@
 # local module imports
 from blinker import signal
 import gv
+import uuid
+
+def verify_pi():
+    """
+    Verify that we are running on a Raspberry Pi.
+    """
+    rpi_MAC = ["28CDC1", "B827EB", "D83ADD", "DCA632", "E45F01"]
+    vendor = str((hex(uuid.getnode())))[2:8].upper()
+    return vendor in rpi_MAC
+
+if verify_pi():
+    gv.platform = "pi"
+    
 try:
     import RPi.GPIO as GPIO
-    gv.platform = "pi"
 except ImportError:
     try:
         import Adafruit_BBIO.GPIO as GPIO  # Required for accessing GPIO pins on Beagle Bone Black
@@ -22,7 +34,7 @@ except ImportError:
            
 # fmt: off
 if gv.platform == "pi":
-    rev = GPIO.RPI_REVISION
+    rev = GPIO.RPI_INFO['P1_REVISION']
     if rev == 1:
         # map 26 physical pins (1 based) with 0 for pins that do not have a gpio number
         if gv.use_pigpio:

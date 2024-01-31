@@ -296,7 +296,7 @@ def plugin_adjustment():
     """
     duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith("wl_")]
     result = reduce(lambda x, y: x * y / 100.0, duration_adjustments, 1.0)
-    gv.plugin_adj = result  # - test
+    gv.plugin_adj = result
     return result
 
 
@@ -651,6 +651,12 @@ def run_once(bump = None, pnum = 98):
         or (not gv.sd["seq"] and bump == 1)
         ):
         stop_stations()
+    
+    if (gv.pon == 98
+        and not gv.sd["seq"]
+        ):  # a run_once program is running in concurrent mode
+        pass
+    
     for sid, dur in enumerate(gv.rovals):
         if dur:  # if this element has a value
             gv.rs[sid][0] = gv.now
