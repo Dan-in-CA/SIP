@@ -58,13 +58,13 @@ def report_station_completed(station):
     station_completed.send(station)
 
 
-stations_scheduled = signal("stations_scheduled")
+station_scheduled = signal("station_scheduled")
 
-def report_stations_scheduled(txt=None):
+def report_station_scheduled(station):
     """
-    Send blinker signal indicating that stations had been scheduled.
-    """
-    stations_scheduled.send("SIP", txt=txt)
+    Send blinker signal indicating that a station has been scheduled.
+    """    
+    station_scheduled.send(station)  
 
 
 rain_changed = signal("rain_changed")
@@ -488,7 +488,7 @@ def schedule_stations(stations):
                         accumulate_time += gv.rs[sid][2]  # add duration
                         gv.rs[sid][1] = int(accumulate_time)  # set new stop time
                         accumulate_time += gv.sd["sdt"]  # add station delay
-                        report_stations_scheduled()
+                        report_station_scheduled(sid + 1)  # station number
                         gv.sd["bsy"] = 1
                     else:
                         gv.sbits[b] &= ~1 << s
@@ -508,7 +508,7 @@ def schedule_stations(stations):
                     ):  # if no rain or station ignores rain
                         gv.rs[sid][0] = gv.now  # set start time
                         gv.rs[sid][1] = gv.now + int(gv.rs[sid][2])  # set stop time
-                        report_stations_scheduled()
+                        report_station_scheduled()
                         gv.sd["bsy"] = 1
                     else:  # if rain and station does not ignore, clear station from display
                         gv.sbits[b] &= ~1 << s
@@ -552,17 +552,15 @@ def stop_stations():
         gv.ps.append([0, 0])
     gv.sbits = [0] * (gv.sd["nbrd"] + 1)
     
-    ### insert log data for halted station
+    # insert log data for halted station
     i = 0
     while i < len(prev_srvals):
         if prev_srvals[i]:
             gv.lrun[0] = i
             gv.lrun[1] = gv.rs[i][3]
             gv.lrun[2] = gv.now - gv.rs[i][0]
-            # print("gv.lrun: ", gv.lrun)  # - test
             log_run()
         i += 1   
-    ###
     gv.rs = []
     for i in range(gv.sd["nst"]):
         gv.rs.append([0, 0, 0, 0])
@@ -630,7 +628,7 @@ def run_program(pid):
                 else:
                     duration = p["duration_sec"][0]
                 if not gv.sd["iw"][b] & 1 << s:
-                    duration = duration * gv.sd["wl"] // 100 * plugin_adjustment()
+                    duration = int(duration * gv.sd["wl"] // 100 * plugin_adjustment())
                 gv.rs[sid][2] = duration
                 gv.rs[sid][3] = pid + 1  # store program number in schedule
                 gv.ps[sid][0] = pid + 1  # store program number for display
