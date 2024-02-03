@@ -232,6 +232,7 @@ def timing_loop():
         else:  # Not busy
             if gv.pon != None:
                 gv.pon = None
+                gv.rn = 0
                 report_running_program_change()
 
         if gv.sd["urs"]:
