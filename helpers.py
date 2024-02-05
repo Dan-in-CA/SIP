@@ -56,6 +56,15 @@ def report_station_completed(station):
     Include the station number as data.
     """
     station_completed.send(station)
+    
+
+stations_scheduled = signal("stations_scheduled")
+
+def report_stations_scheduled(txt=None):
+    """
+    Send blinker signal indicating that stations have been scheduled.
+    """
+    stations_scheduled.send("SIP", txt=txt)    
 
 
 station_scheduled = signal("station_scheduled")
@@ -163,7 +172,10 @@ def restart(wait=1, block=False):
         if gv.use_pigpio:
             pass
         else:
-            GPIO.cleanup()
+            try:
+                GPIO.cleanup()
+            except NameError:
+                pass
         time.sleep(wait)
         try:
             print(_("Restarting..."))
@@ -508,7 +520,7 @@ def schedule_stations(stations):
                     ):  # if no rain or station ignores rain
                         gv.rs[sid][0] = gv.now  # set start time
                         gv.rs[sid][1] = gv.now + int(gv.rs[sid][2])  # set stop time
-                        report_station_scheduled()
+                        report_station_scheduled(sid + 1)
                         gv.sd["bsy"] = 1
                     else:  # if rain and station does not ignore, clear station from display
                         gv.sbits[b] &= ~1 << s
