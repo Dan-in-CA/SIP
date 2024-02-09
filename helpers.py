@@ -62,6 +62,7 @@ stations_scheduled = signal("stations_scheduled")
 
 def report_stations_scheduled(txt=None):
     """
+    - deprecated - Will be removed in a future release.
     Send blinker signal indicating that stations have been scheduled.
     """
     stations_scheduled.send("SIP", txt=txt)    
@@ -424,7 +425,6 @@ def log_run():
                 f.writelines(lines[: gv.sd["lr"]])
             else:
                 f.writelines(lines)
-    return
 
 
 def days_since_epoch():
@@ -509,10 +509,7 @@ def schedule_stations(stations):
         for b in range(len(stations)):
             for s in range(8):
                 sid = b * 8 + s  # station index
-                if (
-                    not stations[b] & 1 << s 
-                    # or gv.srvals[sid]  # - test
-                ):
+                if not stations[b] & 1 << s:
                     continue  # skip stations not in prog # or already running
                 if gv.rs[sid][2]:  # if station has a duration value
                     if (not rain
@@ -554,17 +551,15 @@ def stop_stations():
     Stop all running stations, clear schedules.
     """
     prev_srvals =  gv.srvals
-    print("prev_srval: ", prev_srvals)  # - test
-    print(gv.rs)  # - test
+    print("prev_srval: ", prev_srvals)
     
     gv.srvals = [0] * (gv.sd["nst"])
     set_output() #  This stops all stations
     gv.ps = []
     for i in range(gv.sd["nst"]):
         gv.ps.append([0, 0])
-    gv.sbits = [0] * (gv.sd["nbrd"] + 1)
-    
-    # insert log data for halted station
+    gv.sbits = [0] * (gv.sd["nbrd"] + 1)  
+    # log data for halted station
     i = 0
     while i < len(prev_srvals):
         if prev_srvals[i]:
@@ -598,31 +593,25 @@ def read_log():
     except IOError:
         return result
     
-def clear_stations():  # - test
-    print("clearing stations")  # - test
-    # lst = [i for i, e in enumerate(rs) if e != [0, 0, 0, 0]]
+def clear_stations():
     for idx, stn in enumerate(gv.rs):       
         if stn[3] == 100:
             continue # skip stations run by node-red  
-        gv.srvals[idx] = 0  # * (gv.sd["nst"])
-        # set_output()
+        gv.srvals[idx] = 0
         gv.ps[idx] = [0, 0]
         gv.rs[idx] = [0, 0, 0, 0]
-        # gv.sd["bsy"] = 0
-        # gv.kr = 1  # - test
-    # set_output()
 
 def run_program(pid):
     """
     Run a program, pid == program index
     """  
     nr_run = 0
-    for stn in gv.rs:  # - test # check for stations run by Node-red
+    for stn in gv.rs:
         if stn[3] == 100:
             nr_run = 1
             break
     if nr_run:
-        clear_stations()  # - test
+        clear_stations()
     else:
         stop_stations()
     
@@ -663,14 +652,17 @@ def run_once(bump = None, pnum = 98):
         ):
         stop_stations()
     
-    if (gv.pon == 98
-        and not gv.sd["seq"]
-        ):  # a run_once program is running in concurrent mode
-        pass
-    
     for sid, dur in enumerate(gv.rovals):
+        if (gv.srvals[sid]  # this station is on
+            and not gv.sd["seq"]  # concurrent mode
+            and gv.rovals[sid]  # this station has been rescheduled.
+            ):
+            gv.lrun[0] = sid
+            gv.lrun[1] = gv.rs[sid][3]
+            gv.lrun[2] = int(gv.now) - gv.rs[sid][0]
+            log_run()                        
         if dur:  # if this element has a value
-            gv.rs[sid][0] = gv.now
+            gv.rs[sid][0] = gv.now  # set start time
             gv.rs[sid][2] = dur
             gv.rs[sid][3] = pnum
             gv.ps[sid][0] = pnum
@@ -800,7 +792,6 @@ def convert_temp(temp, from_unit='C', to_unit='F'):
       supported units :
       Celsius, Fahrenheit, Kelvin
      """
-
     try:
         temp = float(temp)
     except(ValueError, TypeError) as e:

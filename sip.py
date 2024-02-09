@@ -65,8 +65,7 @@ def timing_loop():
         else:
             masid = None
         
-        if (
-            gv.sd["en"]
+        if (gv.sd["en"]
             and not gv.sd["mm"]
             and (not gv.sd["bsy"] or not gv.sd["seq"])
             ):
@@ -95,7 +94,7 @@ def timing_loop():
                                     # station duration conditionally scaled by "water level"
                                     if gv.sd["iw"][b] & 1 << s: # If ignore water level.
                                         duration_adj = 1.0
-                                        if gv.sd["idd"]:
+                                        if gv.sd["idd"]:  # If individual duration per station.
                                             duration = p["duration_sec"][sid]
                                         else:
                                             duration = p["duration_sec"][0]
@@ -120,9 +119,7 @@ def timing_loop():
                                         gv.ps[sid][1] = duration
                             schedule_stations(p["station_mask"])  # -> helpers, turns on gv.sd["bsy"]
 
-        if (gv.sd["bsy"]
-            or any(gv.node_runs)
-            ):
+        if gv.sd["bsy"]:
             for b in range(gv.sd["nbrd"]):  # Check each station once a second
                 for s in range(8):
                     sid = b * 8 + s  # station index
