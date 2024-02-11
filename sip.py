@@ -257,7 +257,6 @@ class SIPApp(web.application):
 
 
 app = SIPApp(urls, globals())
-#  disableShiftRegisterOutput()
 web.config.debug = False  # Improves page load speed
 web.config._session = web.session.Session(
     app, web.session.DiskStore("sessions"), initializer={"user": "anonymous"}
@@ -298,7 +297,7 @@ if __name__ == "__main__":
         pass
     for name in plugins.__all__:
         print(" ", name)
-
+    
     gv.plugin_menu.sort(key=lambda entry: entry[0])
 
     #  Keep plugin manager at top of menu

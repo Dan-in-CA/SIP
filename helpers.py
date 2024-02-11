@@ -182,13 +182,13 @@ def restart(wait=1, block=False):
             print(_("Restarting..."))
         except Exception:
             pass
-        gv.restarted = 0
-        pid = os.getpid()
-        command = "systemctl status " + str(pid)
-        output = str(subprocess.check_output(command.split()))
-        unit_name = output.split()[1]
-        command = "systemctl restart " + unit_name
-        subprocess.Popen(command.split())
+        try:
+            command = "systemctl status sip"
+            subprocess.check_output(command.split())
+            command = "systemctl restart sip"
+            subprocess.Popen(command.split())            
+        except subprocess.CalledProcessError:
+            gv.restarted = 0
     else:
         t = Thread(target=restart, args=(wait, True))
         t.start()
