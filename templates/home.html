@@ -49,6 +49,9 @@ $code:
     let h = 0;
     let w = 100;
     
+
+    var refreshDelay = $gv.prd;
+    
     function formatLogline(log) {
         let lrsid = lrun[0], lrpid = lrun[1], lrdur = lrun[2], lret = lrun[3];
         if (lrpid == 0) {
@@ -171,9 +174,6 @@ $code:
 		if($remTime) {
 			setTimeout(refreshPage, ${remTime + 1} * 1000);		
 		}
-        function refreshPage() {
-        	window.location = "/";
-        	}
 		
         $if gv.sd['mm'] == 0:
             statusTimer();

@@ -114,7 +114,6 @@ class update_plugins(ProtectedPage):
                 else:
                     command = "chmod g-x plugins/" + f
                     subprocess.call(command.split())
-                # time.sleep(1)
             raise web.seeother("/restart")
         if qdict["btnId"] == "del":
             del_list = []
@@ -182,7 +181,6 @@ class install_plugins(ProtectedPage):
     class restart_page(ProtectedPage):
         """Restart sip."""
         def GET(self):
-            restart()
-            # time.sleep(5)
-            return template_render.home()
-            # raise web.seeother("/")
+            restart(2)
+            gv.prd = 5           
+            return template_render.log()

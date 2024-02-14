@@ -113,7 +113,6 @@ class home(ProtectedPage):
     """Open Home page."""
 
     def GET(self):
-        # print(web.ctx)  # - test
         return template_render.home()
 
 
@@ -324,7 +323,7 @@ class change_options(ProtectedPage):
         Increase or decrease the number of stations displayed when
         number of expansion boards is changed in options.
         """
-        print("changing scount", brd_chng)  # - test
+        # print("changing scount", brd_chng)  # - test
         if brd_chng > 0:  # Lengthen lists
             incr = brd_chng - (gv.sd["nbrd"] - 1)
             sn_incr = incr * 8          
@@ -356,7 +355,6 @@ class change_options(ProtectedPage):
             gv.snames = gv.snames[:newlen]
             gv.sbits = gv.sbits[: new_count]
         jsave(gv.snames, "snames")
-        print("snames saved")  # - test
         # change_values.update_prog_lists("nbrd")
 
     @staticmethod
@@ -365,7 +363,6 @@ class change_options(ProtectedPage):
         Increase or decrase the lengths of program "duration_sec" and "station_mask"
         when number of expansion boards is changed        
         """
-        print("updating prog_lists")  # - test
         for p in gv.pd:
             if (
                 change == "idd"
@@ -543,7 +540,7 @@ class change_program(ProtectedPage):
             gv.pd.append(cp)
             gv.pnames.append(cp["name"])
             report_program_added()
-            print("program added")  # - test
+            # print("program added")  # - test
         else:
             gv.pd[int(qdict["pid"])] = cp  # replace program
             try:
@@ -554,9 +551,8 @@ class change_program(ProtectedPage):
                     gv.pnames.extend([""] * diff)
                 gv.pnames[int(qdict["pid"])] = cp["name"]
             report_program_change() ### add program index ###
-            print("program modified")  # - test
+            # print("program modified")  # - test
         jsave(gv.pd, "programData")
-        # report_program_change()  # - test
         raise web.seeother("/vp")
 
 
@@ -574,7 +570,6 @@ class delete_program(ProtectedPage):
             del gv.pnames[int(qdict["pid"])]
         jsave(gv.pd, "programData")
         report_program_deleted() ### add program index ###
-        print("program at index " + qdict["pid"] + " deleted" )  # - test
         raise web.seeother("/vp")
 
 

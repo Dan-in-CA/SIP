@@ -199,14 +199,11 @@ def timing_loop():
             if not program_running:
                 gv.srvals = [0] * (gv.sd["nst"])
                 set_output()
-                gv.rovals = [0] * gv.sd["nst"]  # - test
+                gv.rovals = [0] * gv.sd["nst"]
                 gv.sbits = [0] * (gv.sd["nbrd"] + 1)
                 gv.ps = []
                 for i in range(gv.sd["nst"]):
                     gv.ps.append([0, 0])
-                # gv.rs = []  # - test Length of gv.rs is adjusted by webpages.py update_scount()
-                # for i in range(gv.sd["nst"]):
-                #     gv.rs.append([0, 0, 0, 0]) #  clear run schedule  # - test
                 gv.sd["bsy"] = 0
 
             if (gv.sd["mas"] #  master is defined
@@ -272,7 +269,7 @@ template_globals = {
     "ast": ast,
     "_": _,
     "i18n": i18n,
-    "app_path": lambda p: web.ctx.homepath + p,  # - test
+    "app_path": lambda p: web.ctx.homepath + p,
     "web": web,
     "round": round,
     "time": time,
@@ -332,7 +329,7 @@ if __name__ == "__main__":
             gv.sd["htp"] = int(80)
             jsave(gv.sd, "sd")
             print("SSL error", e)
-            restart(2)
+            restart()
 
     app.run()
 

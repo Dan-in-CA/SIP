@@ -136,6 +136,7 @@ bsy = 0 # A program is running
 pon = None  # Program on (Holds program number of a running program)
 sbits = [0] * (sd["nbrd"] + 1)  # Used to display stations that are on in UI
 
+prd = 2  # page refresh delay
 rs = []  # run schedule
 for j in range(sd["nst"]):
     rs.append(
