@@ -182,5 +182,3 @@ class install_plugins(ProtectedPage):
         """Restart sip."""
         def GET(self):
             restart(2)
-            gv.prd = 5           
-            return template_render.log()
