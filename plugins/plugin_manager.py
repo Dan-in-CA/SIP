@@ -156,9 +156,14 @@ class install_plugins(ProtectedPage):
             data = resp.text.splitlines()
             sep = [i for i, s in enumerate(data) if "###" in s][0]
             file_list = [line.strip() for line in data[int(sep) + 2 :]]
-            short_list = [
-                x for x in file_list if not "data" in x and not "manifest" in x
-            ]
+            short_list = []
+            for line in file_list:
+                parts = line.split()
+                if (not parts[1] == "data"
+                   and not parts[1] == "plugins/manifests"
+                    ):
+                    short_list.append(line)
+            
             with open(f"plugins/manifests/{p}.manifest", "w") as new_mf:
                 new_mf.writelines(resp.text)
             for f in short_list:
