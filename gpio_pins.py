@@ -15,9 +15,11 @@ def verify_pi():
 
 if verify_pi():
     gv.platform = "pi"
+    # print("Pi verified")  # - test
     
 try:
     import RPi.GPIO as GPIO
+    gv.platform = "pi"
 except ImportError:
     try:
         import Adafruit_BBIO.GPIO as GPIO  # Required for accessing GPIO pins on Beagle Bone Black
