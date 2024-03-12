@@ -5,6 +5,7 @@
 import ast
 import base64
 import json
+import os
 import pathlib
 import re
 import requests
@@ -18,6 +19,8 @@ from sip import template_render
 from urls import urls  # Get access to SIP's URLs
 import web
 from webpages import ProtectedPage
+
+SIP_REPO_URL = os.getenv("SIP_REO_URL", "https://raw.github.com/Dan-in-CA/SIP_plugins/master")
 
 installed = []
 
@@ -69,11 +72,9 @@ def parse_manifest(plugin):
 def get_readme():
     plugs = {}
     try:
-        resp = requests.get("https://api.github.com/repos/Dan-in-CA/SIP_plugins/readme")
-        txt = resp.text
-        data = ast.literal_eval(txt)
-        text = base64.b64decode(data["content"]).decode('utf-8')
-        t_list = text.split()        
+        url = f"{SIP_REPO_URL}/README.md"
+        resp = requests.get(url)
+        t_list = resp.text.split()
         sep = [i for i, s in enumerate(t_list) if "***" in s][0]
         plug_list = t_list[sep + 1 :]
         breaks = [i for i, s in enumerate(plug_list) if "---" in s]
@@ -151,7 +152,7 @@ class install_plugins(ProtectedPage):
         """Get plugins to install"""
         qdict = web.input()
         for p in list(qdict.keys()):
-            url = f"https://raw.github.com/Dan-in-CA/SIP_plugins/master/{p}/{p}.manifest"
+            url = f"{SIP_REPO_URL}/{p}/{p}.manifest"
             resp = requests.get(url)
             data = resp.text.splitlines()
             sep = [i for i, s in enumerate(data) if "###" in s][0]
@@ -163,21 +164,20 @@ class install_plugins(ProtectedPage):
                    and not parts[1] == "plugins/manifests"
                     ):
                     short_list.append(line)
-            
+
             with open(f"plugins/manifests/{p}.manifest", "w") as new_mf:
                 new_mf.writelines(resp.text)
             for f in short_list:
                 pf = f.split()
-                resp = requests.get(f"https://raw.github.com/Dan-in-CA/SIP_plugins/master/{p}/{pf[0]}")
+                resp = requests.get(f"{SIP_REPO_URL}/{p}/{pf[0]}")
                 try:
                     f_data = resp.text
                     with open(f"{pf[1]}/{pf[0]}", "w") as next_file:
-                        next_file.write(f_data)                        
+                        next_file.write(f_data)
                 except FileNotFoundError: # If a needed sub-directory is missing
-                    sub = pf[1].split("/")
-                    pathlib.Path("plugins/" + sub[1]).mkdir(exist_ok=True) 
+                    os.makedirs(pf[1], exist_ok=True)
                     with open(pf[1] + "/" + pf[0], "w") as next_file:
-                        next_file.write(f_data)                                                  
+                        next_file.write(f_data)
                 except UnicodeDecodeError:
                     with open(pf[1] + "/" + pf[0], "wb") as next_file:
                         next_file.write(f_data)

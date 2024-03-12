@@ -36,6 +36,7 @@ tf          1           time format (24 hour clock = 1, 12 hour clock = 0)
 upas        0           use passphrase (boolean)
 urs         0           use rain sensor (boolean)
 wl          100         water level (global percent adjustment of watering time)
+wl_*        0           set by plugins to override wl       
 
 for scheduling:
 ===============
