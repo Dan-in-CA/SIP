@@ -11,7 +11,8 @@ cat << EOF > /tmp/sip.service
 #
 [Unit]
 Description=SIP for Python3
-After=syslog.target network.target
+After=syslog.target network.target network-online.target
+Wants=network-online.target
 
 [Service]
 ExecStart=/usr/bin/python3 -u ${install_location}/sip.py
