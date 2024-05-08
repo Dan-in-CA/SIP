@@ -26,3 +26,4 @@ EOF
 
 sudo cp /tmp/sip.service /etc/systemd/system/
 sudo systemctl enable sip.service
+sudo git config --system --add safe.directory ${install_location}
