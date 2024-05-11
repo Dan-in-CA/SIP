@@ -5,6 +5,7 @@
 from calendar import timegm
 from collections import OrderedDict
 import json
+import os
 import subprocess
 from threading import RLock
 import time
@@ -13,24 +14,26 @@ import time
 #### Revision information ####
 major_ver = 5
 minor_ver = 1
+revision = 999
 old_count = 1137 #  update this to reset revision number.
 
 try:
     revision = int(subprocess.check_output(["git", "rev-list", "--count", "HEAD"]))
-    ver_str = "{}.{}.{}".format(major_ver, minor_ver, (revision - old_count))
-except Exception as e:
-    print(_("Could not use git to determine version!"), e)
-    revision = 999
-    ver_str = "{}.{}.{}".format(major_ver, minor_ver, revision)   
-# ver_str = f"{major_ver}.{minor_ver}" # .format(major_ver, minor_ver)    
-
+    ver_str = f"{major_ver}.{minor_ver}.{revision - old_count}"
+except Exception:
+    print("adding git safe.directory exception")
+    sip_dir  = os.getcwd()
+    command = f"git config --global --add safe.directory {sip_dir}"
+    subprocess.call(command.split())
+    revision = int(subprocess.check_output(["git", "rev-list", "--count", "HEAD"]))
+    ver_str = f"{major_ver}.{minor_ver}.{revision - old_count}"
 try:
     ver_date = subprocess.check_output(
         ["git", "log", "-1", "--format=%cd", "--date=short"]
     ).strip()
     ver_date = ver_date.decode('utf-8')
 except Exception as e:
-    print(_("Could not use git to determine date of last commit!"), e)
+    print(_("Could not use git to determine version and date of last commit!"), e)
     ver_date = "2015-01-09"
 
 #####################
