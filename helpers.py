@@ -551,8 +551,6 @@ def stop_stations():
     Stop all running stations, clear schedules.
     """
     prev_srvals =  gv.srvals
-    print("prev_srval: ", prev_srvals)
-
     gv.srvals = [0] * (gv.sd["nst"])
     set_output() #  This stops all stations
     gv.ps = []

@@ -608,6 +608,7 @@ class run_now(ProtectedPage):
     def GET(self):
         qdict = web.input()
         run_program(int(qdict["pid"]))
+        report_running_program_change()
         raise web.seeother("/")
 
 

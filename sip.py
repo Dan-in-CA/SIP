@@ -112,7 +112,7 @@ def timing_loop():
                                     if (
                                         p["station_mask"][b] & 1 << s  # if this station is scheduled in this program
                                         and duration # station has a duration
-                                    ):
+                                        ):
                                         gv.rs[sid][2] = duration
                                         gv.rs[sid][3] = i + 1  # program number for scheduling
                                         gv.ps[sid][0] = i + 1  # program number for display
