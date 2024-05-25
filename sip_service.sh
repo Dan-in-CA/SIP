@@ -4,7 +4,7 @@
 ###
 
 install_location=$(pwd)
-python3 -m venv ${install_location}/.venv
+python3 -m venv --system-site-packages ${install_location}/.venv
 
 echo ===== Creating and installing SystemD service =====
 cat << EOF > /tmp/sip.service
@@ -16,7 +16,7 @@ After=syslog.target network.target network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStartPre=//${install_location}/.venv/bin/activate
+Environment="PATH=/${install_location}/.venv/bin:${PATH}"
 ExecStart=/${install_location}/.venv/bin/python3 -u ${install_location}/sip.py
 Restart=on-abort
 WorkingDirectory=${install_location}
