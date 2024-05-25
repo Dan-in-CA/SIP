@@ -4,6 +4,7 @@
 ###
 
 install_location=$(pwd)
+python3 -m venv ${install_location}/.venv
 
 echo ===== Creating and installing SystemD service =====
 cat << EOF > /tmp/sip.service
@@ -15,7 +16,7 @@ After=syslog.target network.target network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=/usr/bin/python3 -u ${install_location}/sip.py
+ExecStart=/${install_location}/.venv/bin/python3 -u ${install_location}/sip.py
 Restart=on-abort
 WorkingDirectory=${install_location}
 SyslogIdentifier=sip
