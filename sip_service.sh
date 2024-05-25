@@ -16,6 +16,7 @@ After=syslog.target network.target network-online.target
 Wants=network-online.target
 
 [Service]
+ExecStartPre=//${install_location}/.venv/bin/activate
 ExecStart=/${install_location}/.venv/bin/python3 -u ${install_location}/sip.py
 Restart=on-abort
 WorkingDirectory=${install_location}
