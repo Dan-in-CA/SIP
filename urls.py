@@ -8,8 +8,6 @@ urls = [
     "/cv", "webpages.change_values",
     "/vo", "webpages.view_options",
     "/co", "webpages.change_options",
-    "/vs", "webpages.view_stations",
-    "/cs", "webpages.change_stations",
     "/sn", "webpages.get_set_station",
     "/vr", "webpages.view_runonce",
     "/cr", "webpages.change_runonce",

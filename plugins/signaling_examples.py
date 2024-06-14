@@ -117,16 +117,16 @@ def notify_station_names(name, **kw):
 station_names = signal("station_names")
 station_names.connect(notify_station_names)
 
-### Stations were sheduled to run ###
+
+### Stations were scheduled to run ###
 # gets triggered when:
 #       - A program is run (Scheduled or "run now")
 #       - Stations are manually started with RunOnce
-def notify_station_scheduled(name, **kw):
-    print("Some Stations have been scheduled: {}".format(str(gv.rs)))
-
-
-program_started = signal("stations_scheduled")
-program_started.connect(notify_station_scheduled)
+def report_station_scheduled(station, **kw):
+    print("A station has been scheduled: {}".format(str(station)))
+    
+program_started = signal("station_scheduled")
+program_started.connect(report_station_scheduled)
 
 ### Station Completed ###
 def notify_station_completed(station, **kw):

@@ -5,6 +5,7 @@
 from calendar import timegm
 from collections import OrderedDict
 import json
+import os
 import subprocess
 from threading import RLock
 import time
@@ -12,25 +13,27 @@ import time
 ##############################
 #### Revision information ####
 major_ver = 5
-minor_ver = 0
-old_count = 1073 #  update this to reset revision number.
+minor_ver = 1
+revision = 999
+old_count = 1137 #  update this to reset revision number.
 
 try:
     revision = int(subprocess.check_output(["git", "rev-list", "--count", "HEAD"]))
-    ver_str = "{}.{}.{}".format(major_ver, minor_ver, (revision - old_count))
-except Exception as e:
-    print(_("Could not use git to determine version!"), e)
-    revision = 999
-    ver_str = "{}.{}.{}".format(major_ver, minor_ver, revision)   
-# ver_str = f"{major_ver}.{minor_ver}" # .format(major_ver, minor_ver)    
-
+    ver_str = f"{major_ver}.{minor_ver}.{revision - old_count}"
+except Exception:
+    print("adding git safe.directory exception")
+    sip_dir  = os.getcwd()
+    command = f"git config --global --add safe.directory {sip_dir}"
+    subprocess.call(command.split())
+    revision = int(subprocess.check_output(["git", "rev-list", "--count", "HEAD"]))
+    ver_str = f"{major_ver}.{minor_ver}.{revision - old_count}"
 try:
     ver_date = subprocess.check_output(
         ["git", "log", "-1", "--format=%cd", "--date=short"]
     ).strip()
     ver_date = ver_date.decode('utf-8')
 except Exception as e:
-    print(_("Could not use git to determine date of last commit!"), e)
+    print(_("Could not use git to determine version and date of last commit!"), e)
     ver_date = "2015-01-09"
 
 #####################
@@ -49,7 +52,7 @@ sd = {
     "htp": 80,
     "htip": "::",
     "nst": 8,
-   "rdst": 0,
+    "rdst": 0,
     "loc": "",
     "tz": 48,
     "tf": 1,
@@ -105,6 +108,7 @@ else:
 
 from helpers import load_programs, station_names, days_since_epoch
 
+rn = 0
 day_ord = 0
 node_runs = {}
 now = time.time()
@@ -125,6 +129,7 @@ pd = load_programs()  # Load program data from file
 plugin_data = {}  # Empty dictionary to hold plugin based global data
 pluginFtr = []  # Empty list to hold plugin data for display in footer
 pluginStn = []  # Empty list to hold plugin data for display on timeline
+plugin_adj = 0  # holds wl adjustment set by plugins
 
 ps = []  # Program schedule (used for UI display)
 for i in range(sd["nst"]):
@@ -134,6 +139,7 @@ bsy = 0 # A program is running
 pon = None  # Program on (Holds program number of a running program)
 sbits = [0] * (sd["nbrd"] + 1)  # Used to display stations that are on in UI
 
+prd = 2  # page refresh delay
 rs = []  # run schedule
 for j in range(sd["nst"]):
     rs.append(
@@ -192,32 +198,11 @@ options = [
         _("System"),
     ],
     [
-        _("Enable passphrase"),
-        "boolean",
-        "upas",
-        _("Minimal security. \nPrevent unauthorized users from accessing the system without a passphrase. \n*** Default is opendoor ***"),
-        _("Manage Passphrase"),
-    ],
-    [
-        _("Current passphrase"),
-        "password",
-        "opw",
-        _("Enter the current passphrase. \n*** Defalut is opendoor ***"),
-        _("Manage Passphrase"),
-    ],
-    [
-        _("New passphrase"),
-        "password",
-        "npw",
-        _("Enter a new passphrase."),
-        _("Manage Passphrase"),
-    ],
-    [
-        _("Confirm passphrase"),
-        "password",
-        "cpw",
-        _("Confirm the new passphrase."),
-        _("Manage Passphrase"),
+        _("Station Names"),
+        "external",
+        "stations",
+        _("Define your own station names and options: Which stations are connected/enabled? Which one (if any) controls the master valve? Should a station ignore adjustmenst from rain or plugins? Should a station require the master valve to be activated to run?"),
+        _("Stations"),
     ],
     [
         _("Sequential"),
@@ -255,25 +240,18 @@ options = [
         _("Station Handling"),
     ],
     [
-        _("Master station"),
-        "int",
-        "mas",
-        _("Select master station."),
-        _("Configure Master"),
-    ],
-    [
         _("Master on delay"),
         "int",
         "mton",
         _("Master on delay (in seconds), between -60 and +60."),
-        _("Configure Master"),
+        _("Station Handling"),
     ],
     [
         _("Master off delay"),
         "int",
         "mtoff",
         _("Master off delay (in seconds), between -60 and +60."),
-        _("Configure Master"),
+        _("Station Handling"),
     ],
     [
         _("Use rain sensor"),
@@ -305,4 +283,33 @@ options = [
         _("Length of log to keep, 0=no limits."),
         _("Logging"),
     ],
+    [
+        _("Enable passphrase"),
+        "boolean",
+        "upas",
+        _("Minimal security. \nPrevent unauthorized users from accessing the system without a passphrase. \n*** Default is opendoor ***"),
+        _("Manage Passphrase"),
+    ],
+    [
+        _("Current passphrase"),
+        "password",
+        "opw",
+        _("Enter the current passphrase. \n*** Defalut is opendoor ***"),
+        _("Manage Passphrase"),
+    ],
+    [
+        _("New passphrase"),
+        "password",
+        "npw",
+        _("Enter a new passphrase."),
+        _("Manage Passphrase"),
+    ],
+    [
+        _("Confirm passphrase"),
+        "password",
+        "cpw",
+        _("Confirm the new passphrase."),
+        _("Manage Passphrase"),
+    ],
+
 ]

@@ -65,8 +65,7 @@ def timing_loop():
         else:
             masid = None
         
-        if (
-            gv.sd["en"]
+        if (gv.sd["en"]
             and not gv.sd["mm"]
             and (not gv.sd["bsy"] or not gv.sd["seq"])
             ):
@@ -95,7 +94,7 @@ def timing_loop():
                                     # station duration conditionally scaled by "water level"
                                     if gv.sd["iw"][b] & 1 << s: # If ignore water level.
                                         duration_adj = 1.0
-                                        if gv.sd["idd"]:
+                                        if gv.sd["idd"]:  # If individual duration per station.
                                             duration = p["duration_sec"][sid]
                                         else:
                                             duration = p["duration_sec"][0]
@@ -113,16 +112,14 @@ def timing_loop():
                                     if (
                                         p["station_mask"][b] & 1 << s  # if this station is scheduled in this program
                                         and duration # station has a duration
-                                    ):
+                                        ):
                                         gv.rs[sid][2] = duration
                                         gv.rs[sid][3] = i + 1  # program number for scheduling
                                         gv.ps[sid][0] = i + 1  # program number for display
                                         gv.ps[sid][1] = duration
                             schedule_stations(p["station_mask"])  # -> helpers, turns on gv.sd["bsy"]
 
-        if (gv.sd["bsy"]
-            or any(gv.node_runs)
-            ):
+        if gv.sd["bsy"]:
             for b in range(gv.sd["nbrd"]):  # Check each station once a second
                 for s in range(8):
                     sid = b * 8 + s  # station index
@@ -202,14 +199,11 @@ def timing_loop():
             if not program_running:
                 gv.srvals = [0] * (gv.sd["nst"])
                 set_output()
-                gv.rovals = [0] * gv.sd["nst"]  # - test
+                gv.rovals = [0] * gv.sd["nst"]
                 gv.sbits = [0] * (gv.sd["nbrd"] + 1)
                 gv.ps = []
                 for i in range(gv.sd["nst"]):
                     gv.ps.append([0, 0])
-                # gv.rs = []  # - test Length of gv.rs is adjusted by webpages.py update_scount()
-                # for i in range(gv.sd["nst"]):
-                #     gv.rs.append([0, 0, 0, 0]) #  clear run schedule  # - test
                 gv.sd["bsy"] = 0
 
             if (gv.sd["mas"] #  master is defined
@@ -232,6 +226,7 @@ def timing_loop():
         else:  # Not busy
             if gv.pon != None:
                 gv.pon = None
+                gv.rn = 0
                 report_running_program_change()
 
         if gv.sd["urs"]:
@@ -259,7 +254,6 @@ class SIPApp(web.application):
 
 
 app = SIPApp(urls, globals())
-#  disableShiftRegisterOutput()
 web.config.debug = False  # Improves page load speed
 web.config._session = web.session.Session(
     app, web.session.DiskStore("sessions"), initializer={"user": "anonymous"}
@@ -275,7 +269,7 @@ template_globals = {
     "ast": ast,
     "_": _,
     "i18n": i18n,
-    "app_path": lambda p: web.ctx.homepath + p,  # - test
+    "app_path": lambda p: web.ctx.homepath + p,
     "web": web,
     "round": round,
     "time": time,
@@ -300,7 +294,7 @@ if __name__ == "__main__":
         pass
     for name in plugins.__all__:
         print(" ", name)
-
+    
     gv.plugin_menu.sort(key=lambda entry: entry[0])
 
     #  Keep plugin manager at top of menu
@@ -335,7 +329,7 @@ if __name__ == "__main__":
             gv.sd["htp"] = int(80)
             jsave(gv.sd, "sd")
             print("SSL error", e)
-            restart(2)
+            restart()
 
     app.run()
 

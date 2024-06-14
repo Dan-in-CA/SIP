@@ -154,7 +154,7 @@ $code:
     // Initialize behaviors
     jQuery(document).ready(function(){
     	if(useRainsense){
-    		let rainCheck = setInterval(rainChange, 1000);
+    		let rainCheck = setInterval(rainChange, 10000);
     	}
     	
         if(restarted == 0) {
@@ -171,9 +171,6 @@ $code:
 		if($remTime) {
 			setTimeout(refreshPage, ${remTime + 1} * 1000);		
 		}
-        function refreshPage() {
-        	window.location = "/";
-        	}
 		
         $if gv.sd['mm'] == 0:
             statusTimer();

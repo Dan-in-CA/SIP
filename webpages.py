@@ -113,7 +113,6 @@ class home(ProtectedPage):
     """Open Home page."""
 
     def GET(self):
-        # print(web.ctx)  # - test
         return template_render.home()
 
 
@@ -176,6 +175,43 @@ class change_options(ProtectedPage):
         
     def change_options(self):    
         qdict = web.input()
+        print(qdict)
+        for i in range(gv.sd["nbrd"]):  # capture master associations
+            if "m" + str(i) in qdict:
+                try:
+                    gv.sd["mo"][i] = int(qdict["m" + str(i)])
+                except ValueError:
+                    gv.sd["mo"][i] = 0
+            if "i" + str(i) in qdict:
+                try:
+                    gv.sd["ir"][i] = int(qdict["i" + str(i)])
+                except ValueError:
+                    gv.sd["ir"][i] = 0
+            if "w" + str(i) in qdict:
+                try:
+                    gv.sd["iw"][i] = int(qdict["w" + str(i)])
+                except ValueError:
+                    gv.sd["iw"][i] = 0
+            if "sh" + str(i) in qdict:
+                try:
+                    gv.sd["show"][i] = int(qdict["sh" + str(i)])
+                except ValueError:
+                    gv.sd["show"][i] = 255
+            if "d" + str(i) in qdict:
+                try:
+                    gv.sd["show"][i] = ~int(qdict["d" + str(i)]) & 255
+                except ValueError:
+                    gv.sd["show"][i] = 255
+        names = []
+        for i in range(gv.sd["nst"]):
+            if "s" + str(i) in qdict:
+                names.append(qdict["s" + str(i)])
+            else:
+                names.append("S" + "{:0>2d}".format(i + 1))
+        gv.snames = names
+        jsave(names, "snames")
+        report_station_names()
+
         if "opw" in qdict and qdict["opw"] != "":
             try:
                 if password_hash(qdict["opw"]) == gv.sd["passphrase"]:
@@ -242,6 +278,15 @@ class change_options(ProtectedPage):
                 ):  # handle values less than -60 or greater than 60
                     raise web.seeother("/vo?errorCode=mtoff_mismatch")
                 gv.sd[f] = int(qdict["o" + f])
+       
+        if "opigpio" in qdict and ( 
+              qdict["opigpio"] == "on" or qdict["opigpio"] == "1"
+            ):
+            gv.sd["pigpio"] = 1
+            qdict["rstrt"] = "1"  # force restart with change in htip
+        elif not "opigpio" in qdict and (gv.sd["pigpio"] == 1):                       
+            gv.sd["pigpio"] = 0
+            qdict["rstrt"] = "1"  # force restart with change in htip
 
         for f in [
             "upas",
@@ -250,7 +295,6 @@ class change_options(ProtectedPage):
             "seq",
             "rst",
             "lg",
-            "pigpio",
             "alr",
         ]:
             if "o" + f in qdict and (
@@ -279,7 +323,7 @@ class change_options(ProtectedPage):
         Increase or decrease the number of stations displayed when
         number of expansion boards is changed in options.
         """
-        print("changing scount", brd_chng)  # - test
+        # print("changing scount", brd_chng)  # - test
         if brd_chng > 0:  # Lengthen lists
             incr = brd_chng - (gv.sd["nbrd"] - 1)
             sn_incr = incr * 8          
@@ -311,7 +355,6 @@ class change_options(ProtectedPage):
             gv.snames = gv.snames[:newlen]
             gv.sbits = gv.sbits[: new_count]
         jsave(gv.snames, "snames")
-        print("snames saved")  # - test
         # change_values.update_prog_lists("nbrd")
 
     @staticmethod
@@ -320,7 +363,6 @@ class change_options(ProtectedPage):
         Increase or decrase the lengths of program "duration_sec" and "station_mask"
         when number of expansion boards is changed        
         """
-        print("updating prog_lists")  # - test
         for p in gv.pd:
             if (
                 change == "idd"
@@ -362,57 +404,6 @@ class change_options(ProtectedPage):
                 elif gv.sd["nbrd"] < len(p["station_mask"]):
                     p["station_mask"] = p["station_mask"][: gv.sd["nbrd"]]
         jsave(gv.pd, "programData")
-
-
-class view_stations(ProtectedPage):
-    """Open a page to view and edit a run once program."""
-
-    def GET(self):
-        return template_render.stations()
-
-
-class change_stations(ProtectedPage):
-    """Save changes to station names, ignore rain and master associations."""
-
-    def GET(self):
-        qdict = web.input()
-        for i in range(gv.sd["nbrd"]):  # capture master associations
-            if "m" + str(i) in qdict:
-                try:
-                    gv.sd["mo"][i] = int(qdict["m" + str(i)])
-                except ValueError:
-                    gv.sd["mo"][i] = 0
-            if "i" + str(i) in qdict:
-                try:
-                    gv.sd["ir"][i] = int(qdict["i" + str(i)])
-                except ValueError:
-                    gv.sd["ir"][i] = 0
-            if "w" + str(i) in qdict:
-                try:
-                    gv.sd["iw"][i] = int(qdict["w" + str(i)])
-                except ValueError:
-                    gv.sd["iw"][i] = 0
-            if "sh" + str(i) in qdict:
-                try:
-                    gv.sd["show"][i] = int(qdict["sh" + str(i)])
-                except ValueError:
-                    gv.sd["show"][i] = 255
-            if "d" + str(i) in qdict:
-                try:
-                    gv.sd["show"][i] = ~int(qdict["d" + str(i)]) & 255
-                except ValueError:
-                    gv.sd["show"][i] = 255
-        names = []
-        for i in range(gv.sd["nst"]):
-            if "s" + str(i) in qdict:
-                names.append(qdict["s" + str(i)])
-            else:
-                names.append("S" + "{:0>2d}".format(iu + 1))
-        gv.snames = names
-        jsave(names, "snames")
-        jsave(gv.sd, "sd")
-        report_station_names()
-        raise web.seeother("/")
 
 
 class get_set_station(ProtectedPage):
@@ -493,32 +484,8 @@ class change_runonce(ProtectedPage):
         qdict = web.input()
         if not gv.sd["en"]:  # check operation status
             return
-        gv.rovals = json.loads(qdict["t"])
-        for sid in range(gv.sd["nst"]):
-            if (gv.srvals[sid]
-                and not sid == gv.sd["mas"] - 1
-                ):  # if currently on and not master, log result
-                gv.lrun[0] = sid  # station index
-                gv.lrun[1] = gv.rs[sid][3]  # program number
-                gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-                gv.lrun[3] = gv.now #  start time
-                log_run()
-                report_station_completed(sid + 1)
-        stations = [0] * gv.sd["nbrd"]
-        gv.ps = []  # program schedule (for display)
-        gv.rs = []  # run schedule
-        for sid in range(gv.sd["nst"]):
-            gv.ps.append([0, 0])
-            gv.rs.append([0, 0, 0, 0])
-        for sid, dur in enumerate(gv.rovals):
-            if dur:  # if this element has a value
-                gv.rs[sid][0] = gv.now
-                gv.rs[sid][2] = dur
-                gv.rs[sid][3] = 98
-                gv.ps[sid][0] = 98
-                gv.ps[sid][1] = dur
-                stations[sid // 8] += 2 ** (sid % 8)
-        schedule_stations(stations)
+        gv.rovals = json.loads(qdict["t"])     
+        run_once()
         raise web.seeother("/")
 
 
@@ -573,7 +540,7 @@ class change_program(ProtectedPage):
             gv.pd.append(cp)
             gv.pnames.append(cp["name"])
             report_program_added()
-            print("program added")  # - test
+            # print("program added")  # - test
         else:
             gv.pd[int(qdict["pid"])] = cp  # replace program
             try:
@@ -584,9 +551,8 @@ class change_program(ProtectedPage):
                     gv.pnames.extend([""] * diff)
                 gv.pnames[int(qdict["pid"])] = cp["name"]
             report_program_change() ### add program index ###
-            print("program modified")  # - test
+            # print("program modified")  # - test
         jsave(gv.pd, "programData")
-        # report_program_change()  # - test
         raise web.seeother("/vp")
 
 
@@ -604,7 +570,6 @@ class delete_program(ProtectedPage):
             del gv.pnames[int(qdict["pid"])]
         jsave(gv.pd, "programData")
         report_program_deleted() ### add program index ###
-        print("program at index " + qdict["pid"] + " deleted" )  # - test
         raise web.seeother("/vp")
 
 
@@ -643,6 +608,7 @@ class run_now(ProtectedPage):
     def GET(self):
         qdict = web.input()
         run_program(int(qdict["pid"]))
+        report_running_program_change()
         raise web.seeother("/")
 
 
@@ -923,5 +889,6 @@ class plugin_data(ProtectedPage):
 class rain_sensor_state(ProtectedPage):
     """Return rain sensor state."""
     def GET(self):
+        web.header("Content-Type", "application/json")
         return gv.sd["rs"]
          

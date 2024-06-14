@@ -10,6 +10,7 @@ web/
 /__pycache__
 /.settings
 /data/*.db
+data/simple_chart
 /plugins/*
 !/plugins/proto.py
 !/plugins/mobile_app.py
@@ -38,5 +39,9 @@ web/
 !/static/docs/plugins/proto-docs.html
 !/static/docs/plugins/system_update-docs.html
 !/static/docs/plugins/node-red-docs.html
+static/scripts/chart.umd.min.js
+static/scripts/chartjs-adapter-luxon.umd.min.js
+static/scripts/d3.min.js
+static/scripts/luxon.min.js
 todo.txt
 /_temp/*

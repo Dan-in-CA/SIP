@@ -3,6 +3,20 @@
 # local module imports
 from blinker import signal
 import gv
+import uuid
+
+def verify_pi():
+    """
+    Verify that we are running on a Raspberry Pi.
+    """
+    rpi_MAC = ["28CDC1", "B827EB", "D83ADD", "DCA632", "E45F01"]
+    vendor = str((hex(uuid.getnode())))[2:8].upper()
+    return vendor in rpi_MAC
+
+if verify_pi():
+    gv.platform = "pi"
+    # print("Pi verified")  # - test
+    
 try:
     import RPi.GPIO as GPIO
     gv.platform = "pi"
@@ -22,7 +36,7 @@ except ImportError:
            
 # fmt: off
 if gv.platform == "pi":
-    rev = GPIO.RPI_REVISION
+    rev = GPIO.RPI_INFO['P1_REVISION']
     if rev == 1:
         # map 26 physical pins (1 based) with 0 for pins that do not have a gpio number
         if gv.use_pigpio:
@@ -46,7 +60,7 @@ if gv.platform == "pi":
             gv.pin_map = [ #  Board numbering
                 0, #  offset for 1 based numbering
                 0,  0,
-                0,  0,
+                3,  0,
                 5,  0,
                 7,  8,
                 0,  10,
@@ -82,7 +96,7 @@ if gv.platform == "pi":
             gv.pin_map = [#  Board numbering
                 0, #  offset for 1 based numbering
                 0,  0,
-                0,  0,
+                3,  0,
                 5,  0,
                 7,  8,
                 0,  10,

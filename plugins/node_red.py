@@ -92,6 +92,20 @@ prog_keys = [
     "type",
     ]
 
+list_vars = [
+    "ps",
+    "rovals",
+    "rs",
+    "snames",
+    "srvals",
+    "output_srvals",
+    "lrun",
+    "pd",
+    "pnames",
+    "sbits",
+    "plugin_menu",
+    ]  # these return lists
+
 ###################
 #### Functions ####
 
@@ -101,9 +115,12 @@ def set_rd(val):
         if val:
             gv.sd["rdst"] = round(gv.now + (val * 3600))
             stop_onrain()
+            msg = f"Rain delay set to {val}"
         else:
             gv.sd["rdst"] = 0
+            msg = f"Rain delay off"
         jsave(gv.sd, "sd")
+        # to_node_red(msg)
     report_rain_delay_change()
     report_option_change()
     
@@ -112,12 +129,15 @@ def set_mm(val):
         if val == 1:
             gv.sd["mm"] = 1
             jsave(gv.sd, "sd")
+            msg = "Manual mode on"
         elif val == 0:
             clear_mm()
             gv.sd["mm"] = 0
             jsave(gv.sd, "sd")
+            msg = "Manual mode off"
         else:
-            return "invalid request, must be 0 or 1"    
+            msg = "invalid request, must be 0 or 1"
+        to_node_red(msg)   
         
 def set_rsn(val):
     if "stop-stn" in nr_settings:
@@ -127,29 +147,28 @@ def set_wl(val):
     if "chng-wl" in nr_settings:
         gv.sd["wl"] = val
         jsave(gv.sd, "sd")
+        msg = f"water level set to {val}"
+        to_node_red(msg)
         report_option_change()
         
 def set_nbrd(val):
     if "chng-sd" in nr_settings:
-        if val != gv.sd["nbrd"]:  # number f boards has changed
+        if val != gv.sd["nbrd"]:  # number of boards has changed
             if val == 0: val = 1
             brd_chng = val - gv.sd["nbrd"]
             change_options.update_scount(brd_chng)
             gv.sd["nbrd"] = gv.sd["nbrd"] + brd_chng
             gv.sd["nst"] = gv.sd["nbrd"] * 8
             change_options.update_prog_lists("nbrd")
-            jsave(gv.sd, "sd")
-            # return "Station count changed"
-            msg = {"payload":"Station count set to " + str(val * 8)}
-            msg = json.dumps(msg)
-            print("msg: ", msg)  # - test
+            sn_count = gv.sd["nst"]
+            msg = f"Station count set  to {sn_count}"
             to_node_red(msg)
     
 def set_htp(val):
     if "chng-sd" in nr_settings:
         gv.sd["htp"] = val
         jsave(gv.sd, "sd")
-        return "htp changed"
+        msg =  f"htp changed to {val}"
 
 def set_idd(val):
     if "chng-sd" in nr_settings:
@@ -157,14 +176,18 @@ def set_idd(val):
             gv.sd["idd"] = val
             change_options.update_prog_lists("idd")
             jsave(gv.sd, "sd")
-            return "Individual durations changed"
+            setting = "on" if val else "off"
+            msg =  f"Individual durations {setting}"
         else:
-            return "Error val must be 0 or 1"
-    
+            msg = "Error val must be 0 or 1"
+        to_node_red(msg)
+           
 def set_mton(val):
     if "chng-sd" in nr_settings:
         if val < -60 or val > 60:
-            return "Error val must be -60 to +60"
+            msg = "Error val must be -60 to +60"
+            to_node_red(msg)
+            return
         else:
             gv.sd["mton"] = val
         jsave(gv.sd, "sd")
@@ -172,7 +195,9 @@ def set_mton(val):
 def set_mtoff(val):
     if "chng-sd" in nr_settings:
         if val < -60 or val > 60:
-            return "Error val must be -60 to 60"
+            mag = "Error val must be -60 to 60"
+            to_node_red(msg)
+            return
         else:
             gv.sd["mtoff"] = val
         jsave(gv.sd, "sd")
@@ -185,25 +210,46 @@ def set_rstrt(val):
     if "chng-sd" in nr_settings:
         if val == 1: restart()
     
-def set_rs(val):
+def set_rst(val):
     if "chng-sd" in nr_settings:
         if val == 0 or val == 1:
             gv.sd["rst"] = val
+            msg = "Rain detected" if val else "no rain"
+            to_node_red(msg)
+        else:
+            msg = "invalid input, must be 0 or 1"
+            to_node_red(msg)
+            return
+        jsave(gv.sd, "sd")
+        
+def set_rs(val):
+    if "chng-sd" in nr_settings:
+        if val == 0 or val == 1:
+            gv.sd["rs"] = val
         else:
             return "invalid input, must be 0 or 1"
+        jsave(gv.sd, "sd")        
+        
+def set_urs(val):
+    if "chng-sd" in nr_settings:
+        if val == 0 or val == 1:
+            gv.sd["urs"] = val
+        else:
+            msg = "invalid input, must be 0 or 1"
+            to_node_red(msg)
+            return
         jsave(gv.sd, "sd")
-             
 
-def skip():  # - test
-    pass
+# def skip():  # - test
+#     pass
 
 def bit_read(byts, read_lst):
     """Read bits in bytes.
     Return dict of bit values per input read list
     """
     res_lst = []
-    print("byts: ", byts)
-    print("read_lst:", read_lst)
+    # print("byts: ", byts)  # - test
+    # print("read_lst:", read_lst)  # - test
     for i in read_lst:
         idx = int(i) - 1
         bid = idx // 8
@@ -255,51 +301,50 @@ load_settings()
 
 def to_node_red(msg):
     url = nr_settings["nr-url"]
-    resp = requests.post(url, data = msg)
+    try:
+        resp = requests.post(url, data = msg)
+    except Exception:
+        pass
+        
 
-
-# def set_rain_sensed(i):
-#     gv.sd["rst"] = 0 if i else gv.sd["rst"] = 1
-    # if i:
-    #     gv.sd["rst"] = 0
-    # else:
-    #     gv.sd["rst"] = 1
-
-
-def run_once(list, pre):
-    """
-    Start a run once program from node-red
-    Optionally disable preemption of running program.
-    """
-    if not gv.sd["en"]:  # check if SIP is enabled
-        return
-    if pre:
-        stop_stations()  # preempt any running program.
-    dur_sum = 0
-    stations = [0] * gv.sd["nbrd"]
-    for s in list:
-        ident = s[0]
-        try:
-            if isinstance(ident, int):
-                sid = ident - 1
-            elif ident.isnumeric():  # quoted number
-                sid = int(ident) - 1
-            else:
-                sid = gv.snames.index(ident)
-        except Exception as e:
-            print("Error: ", e)  # name not found
-            return e
-        dur = s[1]
-        gv.rs[sid][0] = gv.now + dur_sum
-        dur_sum += dur
-        gv.rs[sid][1] = gv.now + dur_sum
-        gv.rs[sid][2] = dur
-        gv.rs[sid][3] = 100
-        gv.ps[sid][0] = 100
-        gv.ps[sid][1] = dur
-        stations[sid // 8] += 2 ** (sid % 8)
-    if not gv.sd["bsy"]:
-        schedule_stations(stations)
+# def nr_run_once(list, pre):
+#     """-
+#     Start a run once program from node-red
+#     Optionally disable preemption of running program.
+#     """
+#     # print("nr list: ", list)  # - test
+#     if not gv.sd["en"]:  # check if SIP is enabled
+#         return
+#     # if pre:
+#     #     stop_stations()  # preempt any running program.
+#     # dur_sum = 0
+#     # stations = [0] * gv.sd["nbrd"]
+#     for s in list:
+#         ident = s[0]
+#         try:
+#             if isinstance(ident, int):
+#                 sid = ident - 1
+#             elif ident.isnumeric():  # quoted number
+#                 sid = int(ident) - 1
+#             else:
+#                 sid = gv.snames.index(ident)
+#         except Exception as e:
+#             print("Error: ", e)  # name not found
+#             return e
+#         dur = s[1]
+#         gv.rovals[sid] = dur
+#         run_once(pnum = 100, bump = pre)
+#     #
+#     #     gv.rs[sid][0] = gv.now + dur_sum
+#     #     dur_sum += dur
+#     #     gv.rs[sid][1] = gv.now + dur_sum
+#     #     gv.rs[sid][2] = dur
+#     #     gv.rs[sid][3] = 100
+#     #     gv.ps[sid][0] = 100
+#     #     gv.ps[sid][1] = dur
+#     #     stations[sid // 8] += 2 ** (sid % 8)
+#     # if not gv.sd["bsy"]:
+#     #     schedule_stations(stations)
 
 
 def program_on_off(data):
@@ -343,7 +388,6 @@ def station_on_off(data):
     """Enable or disable a station.
     Called by "station switch" node.
     """
-    print("data 346: ", data)  # - test
     if "sn" in data:
         station = data["sn"]
     elif "station" in data:
@@ -450,7 +494,7 @@ zones = signal("zone_change")
 zones.connect(send_zone_change)
 
 ### rain delay ###
-def send_rain_delay_change(name, **kw):  # see line 663
+def send_rain_delay_change(name, **kw):
     """Send rain delay state change to node-red"""
     if gv.sd["rd"]:  #  just switched on
         state = 1
@@ -465,7 +509,7 @@ rd_change.connect(send_rain_delay_change)
 
 ### new day ###
 def send_new_day(name, **kw):
-    msg = {"newDay": gv.now}
+    msg = "A new day has started"
     to_node_red(msg)
 
 new_day = signal("new_day")
@@ -473,22 +517,11 @@ new_day.connect(send_new_day)
 
 ### logged in ###
 def send_login(name, **kw):
-    msg = {"logIn": "user logged in"}
+    msg = "User logged in"
     to_node_red(msg)
 
 loggedin = signal("loggedin")
-loggedin.connect(send_login)
-
-### program change ##
-# def send_program_change(name, **kw):
-#     # print("Programs changed")  # - test
-#     s_progs = sorted(gv.pd)
-#     while i < len(prior_progs): # changes of program deleted, need to account for new programs.
-#         if s_progs[i] != prior_progs[i]:
-#             pass
-    
-# program_change = signal("program_change")
-# program_change.connect(send_program_change)    
+loggedin.connect(send_login)   
 
 
 ###############################
@@ -513,7 +546,19 @@ loggedin.connect(send_login)
 "zone_change"  # working
 ###############################
 
-#### dicts ####
+#### function dicts ####
+
+get_gv = {
+    
+    }
+
+
+set_GV = {
+        "sn": "",
+        "station": "",
+        "item": "",
+        "index": "",        
+    }
 
 set_sd = {
         "rd": set_rd,
@@ -527,7 +572,9 @@ set_sd = {
         "mtoff": set_mtoff,
         "rbt": set_rbt,
         "rstrt": set_rstrt,
-        "rs": set_rs      
+        "rs": set_rs,
+        "rst": set_rst,
+        "urs": set_urs
         }
 
 #################
@@ -564,7 +611,6 @@ class save_settings(ProtectedPage):
         with open("./data/node_red.json", "w") as f:
             json.dump(qdict, f, indent=4)  # save to file
             nr_settings = dict(qdict)
-            # print("nr_settings: ", nr_settings)  # - test
         raise web.seeother("/")  # Return user to home page.
 
 
@@ -575,25 +621,12 @@ class handle_requests(object):
     def GET(self):
         """return a value from get request."""
         qdict = dict(web.input())  # Dictionary of JSON values
-        print("node-red request: ", qdict)  # - test
         if "gv" in qdict:
             attr = str(qdict["gv"])
             try:
-                if attr in [
-                    "ps",
-                    "rovals",
-                    "rs",
-                    "snames",
-                    "srvals",
-                    "output_srvals",
-                    "lrun",
-                    "pd",
-                    "pnames",
-                    "sbits",
-                    "plugin_menu",
-                ]:  # these return lists
+                if attr in list_vars:
                     gv_lst = getattr(gv, attr)
-                    sel_lst = []
+                    sel_lst = [] # empty list to hold elements from list in qdict
 
                 if "sn" in qdict or "station" in qdict:
                     sn_lst = []
@@ -605,6 +638,7 @@ class handle_requests(object):
                         sel_lst.append(gv_lst[i - 1])
                     res_dict = dict(zip(sn_lst, sel_lst))
                     return res_dict
+                
                 elif "item" in qdict:
                     item_lst = json.loads(qdict["item"])
                     try:
@@ -616,6 +650,7 @@ class handle_requests(object):
                         pass
                     res_dict = dict(zip(item_lst, sel_lst))
                     return res_dict
+                
                 elif "index" in qdict:
                     index_lst = json.loads(qdict["index"])
                     try:
@@ -627,18 +662,22 @@ class handle_requests(object):
                         pass
                     res_dict = dict(zip(index_lst, sel_lst))
                     return res_dict
+                
                 elif "bit" in qdict:
                     bit_dict = bit_read(getattr(gv, attr), json.loads(qdict["bit"]))
                     return json.dumps(bit_dict)
+                
                 else:
                     return json.dumps(getattr(gv, attr))
+                
             except Exception as e:
                 return e
+            
         elif "sd" in qdict:
             try:
                 if "bit" in qdict:
                     bit_dict = bit_read(gv.sd[qdict["sd"]], json.loads(qdict["bit"]))
-                    return json.dumps(bit_dict)
+                    return json.dumps(bit_dict)               
                 else:
                     return json.dumps(gv.sd[qdict["sd"]])
             except Exception as e:
@@ -650,42 +689,6 @@ class handle_requests(object):
         """Update SIP with value sent from node-red."""
         data = web.data()
         data = json.loads(data.decode("utf-8"))
-        # not_writable = [
-        #     "cputemp",
-        #     "day_ord",
-        #     "lang",
-        #     "now",
-        #     "nowt",
-        #     "npw",
-        #     "output_srvals",
-        #     "output_srvals_lock",
-        #     "passphrase",
-        #     "plugin_data",
-        #     "plugin_menu",
-        #     "pw",
-        #     "upas",
-        #     "ver_str",
-        #     "ver_date",
-        # ]
-        #
-        # danger_list = [
-        #     "nst",
-        #     "nopts",
-        #     "nprogs",
-        # ]
-        #
-        # prog_keys = [
-        #     "cycle_min",
-        #     "day_mask",
-        #     "duration_sec",
-        #     "enabled",
-        #     "interval_base_day",
-        #     "name",
-        #     "start_min",
-        #     "station_mask",
-        #     "stop_min",
-        #     "type",
-        # ]
 
         #######################
         #### Set gv values ####
@@ -694,22 +697,11 @@ class handle_requests(object):
                 attr = data["gv"]
                 if attr in not_writable:
                     return "gv." + attr + " is not writable"
-    
+                 
                 try:
-                    if attr in [
-                        "ps",
-                        "rovals",
-                        "rs",
-                        "snames",
-                        "srvals",
-                        "output_srvals",
-                        "lrun",
-                        "pd",
-                        "pnames",
-                        "sbits",
-                        "plugin_menu",
-                    ]:  # these return lists
+                    if attr in list_vars:
                         gv_lst = getattr(gv, attr)
+                    
                     if "sn" in data or "station" in data:
                         if "sn" in data:
                             sn_dict = data["sn"]
@@ -720,6 +712,7 @@ class handle_requests(object):
                             idx = int(i) - 1
                             gv_lst[idx] = sn_dict[i]
                         return "gv." + attr + " has ben updated"
+                    
                     elif "item" in data:
                         try:
                             item_dict = data["item"]
@@ -730,6 +723,7 @@ class handle_requests(object):
                             return "gv." + attr + " has ben updated"
                         except Exception as e:
                             return e
+                    
                     elif "index" in data:
                         try:
                             index_dict = data["item"]
@@ -740,9 +734,11 @@ class handle_requests(object):
                             return "gv." + attr + " has ben updated"
                         except Exception as e:
                             return e
+                    
                     elif hasattr(gv, data["gv"]):
                         setattr(gv, data["gv"], data["val"])
                         return "gv." + data["gv"] + " updated to " + str(data["val"])
+                    
                     else:
                         return "Unknown request"
                 except Exception as e:
@@ -754,94 +750,14 @@ class handle_requests(object):
         #######################
         #### set sd values ####
         elif "sd" in data and "val" in data:
-            if "chng-sd" in nr_settings:
-                
-                # val = int(data["val"]) #### remove after refactor.
-                                 
-                    # Change values
+            if "chng-sd" in nr_settings:                             
+                # Change values
                 try:                    
                     set_sd[data["sd"]](int(data["val"]))
                 except KeyError:
-                    return "invalid request"
-                    
-                    # if data["sd"] == "rd":  # rain delay
-                    #     pass
-                   
-                    #     if "chng-rd" in nr_settings:
-                    #         gv.sd["rd"] = val
-                    #         if val:
-                    #             gv.sd["rdst"] = round(gv.now + (val * 3600))
-                    #             stop_onrain()
-                    #         else:
-                    #             gv.sd["rdst"] = 0
-                    #     report_rain_delay_change()  # see line 292
-                    #     report_option_change()
-                        
-                        
-                        
-                    # elif data["sd"] == "mm":  # manual mode
-                        # if val == 1:
-                        #     gv.sd["mm"] = 1
-                        # elif val == 0:
-                        #     clear_mm()
-                        #     gv.sd["mm"] = 0
-                        # else:
-                        #     return "invalid request"
-                        
-                    # elif data["sd"] == "rsn" and val == 1:
-                    #     stop_stations()
-                        
-                    # elif data["sd"] == "wl" and "chng-wl" in nr_settings:
-                    #     gv.sd["wl"] = val
-                    #     report_option_change()
-                        
-                    # elif (
-                    #     data["sd"] == "nbrd"
-                    #     and val != gv.sd["nbrd"]  # number f boards has changed
-                    # ):
-                    #     brd_chng = val - gv.sd["nbrd"]
-                    #     change_options.update_scount(brd_chng)
-                    #     gv.sd["nbrd"] = gv.sd["nbrd"] + brd_chng
-                    #     gv.sd["nst"] = gv.sd["nbrd"] * 8
-                    #     change_options.update_prog_lists("nbrd")
-                    #     return "Station count changed"
-                    
-                    # elif data["sd"] == "htp":
-                    #     gv.sd["htp"] = val
-                    #     jsave(gv.sd, "sd")
-                    #     return "htp changed"
-                    
-                    # elif data["sd"] == "idd":
-                    #     if val != gv.sd["idd"] and (val == 0 or val == 1):
-                    #         gv.sd["idd"] = val
-                    #         change_options.update_prog_lists("idd")
-                    #         jsave(gv.sd, "sd")
-                    #         return "Individual durations changed"
-                    #     else:
-                    #         return "Error val must be 0 or 1"
-                        
-                    # elif data["sd"] == "mton":
-                    #     if val < -60 or val > 60:
-                    #         return "Error val must be -60 to +60"
-                    #     else:
-                    #         gv.sd["mton"] = val
-                            
-                    # elif data["sd"] == "mtoff":
-                    #     if val < -60 or val > 60:
-                    #         return "Error val must be -60 to 60"
-                    #     else:
-                    #         gv.sd["mtoff"] = val
-                            
-                    # elif data["sd"] == "rbt" and val == 1:
-                    #     reboot()
-                        
-                    # elif data["sd"] == "rstrt" and val == 1:
-                    #     restart()
-                        
-                    # elif data["sd"] == "rs" and gv.sd["urs"]:
-                    #     set_rain_sensed(val)
-                    
-                    ############### end of sd requests #############    
+                    msg = "invalid request"
+                    to_node_red(msg)
+                    return    
                         
                     if "bit" in data:
                         bit_write(data["sd"], data["bit"])
@@ -853,10 +769,6 @@ class handle_requests(object):
                             gv.sd[data["sd"]] = val
                         else:
                             return "Not recommended"
-    
-                    if "save" in data and data["save"] == 1:
-                        jsave(gv.sd, "sd")
-                        return "gv.sd[" + data["sd"] + "] updated to " + str(val)
                     
                 except Exception as e:
                     return e
@@ -866,6 +778,7 @@ class handle_requests(object):
 
         # Station on off
         elif ("sn" in data or "station" in data):
+            print("station on off: ", data)  # - test
             if "chng-stn" in nr_settings:
                 station_on_off(data)
             else:
@@ -878,10 +791,25 @@ class handle_requests(object):
                 pre = 1
                 if "preempt" in data and data["preempt"] == 0:
                     pre = 0                 
-                if "ro" in data:
-                    run_once(data["ro"], pre)
+                if "ro" in data: 
+                    list = data["ro"]                   
                 elif "run once" in data:
-                    run_once(data["run once"], pre)
+                    list = data["run_once"]
+                # gv.rovals = [0] * gv.sd["nst"]  # clear gv.rovals           
+                for s in list:
+                    ident = s[0]
+                    try:
+                        if isinstance(ident, int):
+                            sid = ident - 1
+                        elif ident.isnumeric():  # quoted number
+                            sid = int(ident) - 1
+                        else:
+                            sid = gv.snames.index(ident)
+                    except Exception as e:
+                        print("Error: ", e)  # name not found
+                        return e
+                    gv.rovals[sid] = s[1]
+                run_once(pnum = 100, bump = pre)               
             else:
                 msg = "Run Once is disabled"
                 to_node_red(msg)                  
@@ -911,4 +839,6 @@ class handle_requests(object):
                 to_node_red(msg)
 
         else:
-            return "Unknown request"
+            msg = "Unknown request"
+            to_node_red(msg)
+            return
