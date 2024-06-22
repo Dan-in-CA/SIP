@@ -36,7 +36,8 @@ from helpers import (
     stop_onrain,
     restart,
     convert_temp,
-    temp_string
+    temp_string,
+    days_since_epoch
 )
 from ReverseProxied import ReverseProxied
 from urls import urls  # Provides access to URLs for UI pages
@@ -56,6 +57,7 @@ def timing_loop():
         if cur_ord > gv.day_ord:
             gv.day_ord = cur_ord
             report_new_day()
+            gv.dse = days_since_epoch()
         
         gv.now = round(time.time()) # Current time as seconds since the epoch, in UTC. Updated once per second.
         lt = time.localtime(gv.now)  # Current time as time struct.
