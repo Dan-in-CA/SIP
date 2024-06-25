@@ -8,17 +8,17 @@ if (typeof nbrd !== 'undefined'){var nst = nbrd*8}; // number of stations
 function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is scheduled for this date (displayScheduleDate) called from doSimulation
   // simminutes is minute count generated in doSimulation()
   // simdate is a JavaScript date object
-  var wd,dn;
+  var wd;
   if(pd['enabled']==0)  return 0; // program not enabled, do not match
   if(pd['type'] == 'interval') { // if interval program... 
 	// Create a date object representing the requested display date starting at midnight
-	dateToSim = new Date(simdate);
+	var dateToSim = new Date(simdate);
 	dateToSim.setHours(0);
 	dateToSim.setMinutes(0);
 	dateToSim.setSeconds(0);
 	// Calculate a unique day count since the start of the epoch, this must match days_since_epoch()
 	// as it would be calculated on the device for the day
-	simday = Math.floor(dateToSim.valueOf()/(24*60*60*1000));
+	var simday = Math.floor(dateToSim.valueOf()/(24*60*60*1000));
 	if((simday % pd['interval_base_day']) != pd['day_mask'])
 		return 0; // return if this day offset doesn't match the remainder
   } else { // Not interval 
