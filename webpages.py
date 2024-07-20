@@ -270,12 +270,17 @@ class change_options(ProtectedPage):
             gv.sd["htip"] = qdict["ohtip"]
 
         for f in ["sdt", "mas", "mton", "mtoff", "wl", "lr", "tz"]:
-            if (f == "sdt"
-                or f == "mton"
-                or f == "mtoff" 
-                and qdict["o" + f] == ""             
-                ):
-                qdict["o" + f] = 0
+            # if (f == "sdt"
+            #     or f == "mton"
+            #     or f == "mtoff" 
+            #     and qdict["o" + f] == ""             
+            #     ):
+            #     qdict["o" + f] = 0
+            # elif (f == "wl"
+            #       or f == "lr"
+            #       and qdict["o" + f] == ""
+            #       ):
+            #       qdict["o" + f] = 100
             if "o" + f in qdict:
                 if (f == "mton"
                     and (int(qdict["o" + f]) < -60
@@ -288,11 +293,6 @@ class change_options(ProtectedPage):
                          or int(qdict["o" + f]) > 60)
                 ):  # handle values less than -60 or greater than 60
                     raise web.seeother("/vo?errorCode=mtoff_mismatch")
-                elif (f == "wl"
-                      or f == "lr"
-                      and qdict["o" + f] == ""
-                      ):
-                      qdict["o" + f] = 100
                 gv.sd[f] = int(qdict["o" + f])
        
         if "opigpio" in qdict and ( 
