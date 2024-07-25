@@ -15,6 +15,7 @@ import gv
 from helpers import *
 from sip import template_render
 import web
+from multiprocessing.reduction import ACKNOWLEDGE
 
 loggedin = signal("loggedin")
 def report_login():
@@ -238,6 +239,8 @@ class change_options(ProtectedPage):
                 gv.sd[f] = qdict["o" + f]
 
         if "onbrd" in qdict:
+            if qdict["onbrd"] == "":
+                qdict["onbrd"] = 0
             brd_count = int(qdict["onbrd"]) + 1
             if brd_count != gv.sd["nbrd"]:  # number of boards has changed
                 brd_chng = brd_count - gv.sd["nbrd"]
@@ -247,6 +250,8 @@ class change_options(ProtectedPage):
             self.update_prog_lists("nbrd")
 
         if "ohtp" in qdict:
+            if qdict["ohtp"] == "":
+                qdict["ohtp"] = 80
             if "htp" not in gv.sd or gv.sd["htp"] != int(qdict["ohtp"]):
                 qdict["rstrt"] = "1"  # force restart with change in htp
             gv.sd["htp"] = int(qdict["ohtp"])
@@ -265,6 +270,17 @@ class change_options(ProtectedPage):
             gv.sd["htip"] = qdict["ohtip"]
 
         for f in ["sdt", "mas", "mton", "mtoff", "wl", "lr", "tz"]:
+            # if (f == "sdt"
+            #     or f == "mton"
+            #     or f == "mtoff" 
+            #     and qdict["o" + f] == ""             
+            #     ):
+            #     qdict["o" + f] = 0
+            # elif (f == "wl"
+            #       or f == "lr"
+            #       and qdict["o" + f] == ""
+            #       ):
+            #       qdict["o" + f] = 100
             if "o" + f in qdict:
                 if (f == "mton"
                     and (int(qdict["o" + f]) < -60
