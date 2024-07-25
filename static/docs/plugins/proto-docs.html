@@ -26,25 +26,28 @@ the basic components necessary for a functioning plugin.</P>
 <UL>
 	<LI><P STYLE="margin-bottom: 0in"><STRONG>proto.py</STRONG><BR>The
 	python program that does the actual work of the plugin. Location:
-	<STRONG>SIP/plugins</STRONG></P>
+	<STRONG>SIP/plugins</STRONG></P></LI>
 	<LI><P STYLE="margin-bottom: 0in"><STRONG>proto.html</STRONG><BR>A
 	web.py template that provides a user interface for the plugin. It
 	includes both Python code and web page markup. Location:
-	<STRONG>SIP/templates</STRONG></P>
+	<STRONG>SIP/templates</STRONG></P></LI>
+	<LI><P STYLE="margin-bottom: 0in"><STRONG>proto.js</STRONG><BR>A
+	javascript file that performs arbitrary augmentation of the UI through jQuery dynamic page manipulation.
+	Location: <STRONG>SIP/static/scripts</STRONG></P></LI>
 	<LI><P STYLE="margin-bottom: 0in"><STRONG>proto-docs.html</STRONG><BR>This
 	file. Provides documentation for the plugin including any special hardware needed and set up instructions. Location:
-	<STRONG>SIP/static/docs/plugins</STRONG></P>
+	<STRONG>SIP/static/docs/plugins</STRONG></P></LI>
 	<LI><P STYLE="margin-bottom: 0in"><STRONG>proto.manifest</STRONG><BR>A
 	simple text file containing a list of each of the plugin&rsquo;s
 	files with the path to it&rsquo;s location. The manifest is used by
 	the plugin manager to install and uninstall the plugin. The file
 	can also contain information about the plugin such as author, brief description, requirements, etc.
-	Location: <STRONG>SIP/plugins/manifest</STRONG></P>
+	Location: <STRONG>SIP/plugins/manifest</STRONG></P></LI>
 	<LI><P><STRONG>proto.json</STRONG><BR>An optional file used for
 	persistant storage of plugin settings. It is created by the plugin
 	the first time it is run and is not installed with the other files.
 	This allows for software updates without overwriting existing
-	settings. Location: <STRONG>SIP/data</STRONG></P>
+	settings. Location: <STRONG>SIP/data</STRONG></P></LI>
 </UL>
 <H2 CLASS="western"><A NAME="using-the-proto-plugin"></A>Using the
 proto plugin</H2>

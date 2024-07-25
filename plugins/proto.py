@@ -22,13 +22,15 @@ from webpages import showOnTimeline # Enable plugin to display station data on t
 urls.extend([
     u"/proto-sp", u"plugins.proto.settings",
     u"/proto-save", u"plugins.proto.save_settings"
-
     ])
 # fmt: on
 
 # Add this plugin to the PLUGINS menu ["Menu Name", "URL"], (Optional)
 gv.plugin_menu.append([_(u"Proto Plugin"), u"/proto-sp"])
 
+# Add plugin-specific javascript that may be required for the plug-in to make arbitrary UI changes
+# This is advanced capability with lots of rope to hang yourself, for simple data display we recommend showInFooter or showInTimeline
+gv.plugin_scripts.append("proto.js")
 
 def empty_function():  # Only a place holder
     """

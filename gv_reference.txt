@@ -99,6 +99,7 @@ gv.output_srvals [S]    shift register values, used to turn zones on or off (lis
 gv.output_srvals_lock   a mutex used whenever gv.output_srvals must be accessed atomically
 gv.plugin_data          dictionary (index by plugin root web prefix) to hold plugin data.
 gv.plugin_menu   [M]    list to hold a 2 element list for each plugin to be added to menu on home page (['menu text', 'url'])
+gv.plugin_scripts       list of strings representing the script file names (e.g. 'myPlugInScript.js') to be injected into base.html
 # gv.ver_str            software rev number (string)
 gv.ver_date             date of release (string)
 
