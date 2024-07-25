@@ -15,7 +15,6 @@ import gv
 from helpers import *
 from sip import template_render
 import web
-from multiprocessing.reduction import ACKNOWLEDGE
 
 loggedin = signal("loggedin")
 def report_login():
