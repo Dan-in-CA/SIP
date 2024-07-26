@@ -21,7 +21,8 @@ from webpages import showOnTimeline # Enable plugin to display station data on t
 # fmt: off
 urls.extend([
     u"/proto-sp", u"plugins.proto.settings",
-    u"/proto-save", u"plugins.proto.save_settings"
+    u"/proto-save", u"plugins.proto.save_settings",
+    u"/proto-data", u"plugins.proto.fetch_data",  # optional when the plugin exposes an API
     ])
 # fmt: on
 
@@ -86,6 +87,29 @@ ft = Thread(target = data_test)
 ft.daemon = True
 ft.start()
 
+### Example API for providing data to injected javascript ###
+def plugin_data(params):
+    # Package up your data for access by javascript
+    # Illustrate fetching a parameter 
+    if hasattr(params,"date"):
+        date = params.date
+    else:
+        date = "unspecified"
+
+    return { "example1" : example1.val,  "example2" : example2.val, "flow1" : flow1.val, "flow2": flow2.val, "date": date }
+
+
+# Simple API for providing json data to javascript
+class fetch_data(ProtectedPage):
+    """
+    Provide fresh data as json to the plugin javascript through an API
+    """
+
+    def GET(self):
+        web.header("Content-Type", "application/json")
+        return json.dumps(plugin_data(web.input()))
+
+
 ### End data display examples ###
 #################################
 
@@ -97,6 +121,9 @@ def notify_station_completed(station, **kw):
 complete = signal(u"station_completed")
 complete.connect(notify_station_completed)
 
+
+### Settings save/load examples ####
+####################################
 
 class settings(ProtectedPage):
     """

@@ -48,11 +48,19 @@ jQuery(document).ready(function(){
     to a separate day.  Thus a UI change that needs to correlate with the currently displayed schedule can use this
     mechanism to insert updates every time the schedule does.
 
-    Rename this function and references to it so it doesn't conflict with functions defined by any other plugins
+    Rename this function and references to it so it doesn't conflict with functions defined by any other 
+    
 */
 function proto_update_schedule() {
     /* your custom UI change code here */
     console.log("plugin home page schedule-change update")
+    // The following illustrates calling the plugin via API to obtain current data in json format.
+    // Illustrates passing a parameter, in this case representing the date used by the schedule display
+    $.get( "/proto-data", {"date" : toXSDate(displayScheduleDate)}, function( data ) {
+        // data is json passed back from the plugin, add code here to manipulate the UI accordingly
+        console.log("plugin data from API: ");
+        console.log(data);
+    });
     /* end custom UI code */
 }
 
@@ -64,7 +72,10 @@ jQuery(document).ready(function(){
     // Scope these changes to a specific page, look up in urls.py (e.g. home=="/", programs="/vp", runonce ="/vr" etc.)
     if (window.location.pathname == "/") {
         // Update with your specific function name
-        observer = new MutationObserver(proto_update_schedule);
-        observer.observe($('#displayScheduleDate')[0], {characterData: true, childList:true, subTree: true});
+        if ($('#displayScheduleDate').length > 0) {
+            // Verify the schedule is available (i.e. not in Manual mode)
+            observer = new MutationObserver(proto_update_schedule);
+            observer.observe($('#displayScheduleDate')[0], {characterData: true, childList:true, subTree: true});
+        }
     }
 });
