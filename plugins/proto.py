@@ -96,7 +96,7 @@ def plugin_data(params):
     else:
         date = "unspecified"
 
-    return { "example1" : example1.val,  "example2" : example2.val, "flow1" : flow1.val, "flow2": flow2.val, "date": date }
+    return {  "date": date }
 
 
 # Simple API for providing json data to javascript
