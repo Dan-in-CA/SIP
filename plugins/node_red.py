@@ -411,15 +411,12 @@ def station_on_off(data):
                 except ValueError as e:
                     return e
         bid = sid // 8
-
-        if (
-            not pre  # preempt is not set
-            and gv.pon  # a program is running
-            and (gv.pd[gv.pon - 1]["station_mask"][bid])
-            & 1 << sid  # station is in the program
+        if (not pre  # preempt is not set
+            and gv.bsy  # a program is running
             and gv.rs[sid][2]  # station has a duration in running program
-        ):
-            continue  # Skip if station is controlled by a running program
+            ): continue  # Skip if station is running
+        elif pre:
+            stop_stations()  # preempt any running program.
 
         if state:  # set == 1 in Node-red - applies to all stations in data
             gv.rs[sid] = [gv.now, float("inf"), 0, 100]
