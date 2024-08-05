@@ -560,10 +560,13 @@ def stop_stations():
     # log data for halted station
     i = 0
     while i < len(prev_srvals):
+        if i == gv.sd["mas"] -1:  # skip master:
+            i += 1
+            continue
         if prev_srvals[i]:
             gv.lrun[0] = i
             gv.lrun[1] = gv.rs[i][3]
-            gv.lrun[2] = gv.now - gv.rs[i][0]
+            gv.lrun[2] = gv.now - gv.rs[i][0]            
             log_run()
         i += 1
     gv.rs = []
