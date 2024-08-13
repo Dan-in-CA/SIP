@@ -184,6 +184,9 @@ $code:
     <script src="static/scripts/behaviors.js"></script>
     <script src="static/scripts/schedule.js"></script>
     <script src="static/scripts/intervalSelect.js"></script>  
+
+    $for script in gv.plugin_scripts:
+        <script src="static/scripts/$:{script}"></script>
     
 </head>
 

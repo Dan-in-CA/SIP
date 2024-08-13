@@ -129,6 +129,7 @@ pd = load_programs()  # Load program data from file
 plugin_data = {}  # Empty dictionary to hold plugin based global data
 pluginFtr = []  # Empty list to hold plugin data for display in footer
 pluginStn = []  # Empty list to hold plugin data for display on timeline
+plugin_scripts = []  # Empty list of script file names for script injections requested by plugins
 plugin_adj = 0  # holds wl adjustment set by plugins
 
 ps = []  # Program schedule (used for UI display)

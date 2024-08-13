@@ -21,14 +21,17 @@ from webpages import showOnTimeline # Enable plugin to display station data on t
 # fmt: off
 urls.extend([
     u"/proto-sp", u"plugins.proto.settings",
-    u"/proto-save", u"plugins.proto.save_settings"
-
+    u"/proto-save", u"plugins.proto.save_settings",
+    u"/proto-data", u"plugins.proto.fetch_data",  # optional when the plugin exposes an API
     ])
 # fmt: on
 
 # Add this plugin to the PLUGINS menu ["Menu Name", "URL"], (Optional)
 gv.plugin_menu.append([_(u"Proto Plugin"), u"/proto-sp"])
 
+# Add plugin-specific javascript that may be required for the plug-in to make arbitrary UI changes
+# This is advanced capability with lots of rope to hang yourself, for simple data display we recommend showInFooter or showInTimeline
+gv.plugin_scripts.append("proto.js")
 
 def empty_function():  # Only a place holder
     """
@@ -84,6 +87,29 @@ ft = Thread(target = data_test)
 ft.daemon = True
 ft.start()
 
+### Example API for providing data to injected javascript ###
+def plugin_data(params):
+    # Package up your data for access by javascript
+    # Illustrate fetching a parameter 
+    if hasattr(params,"date"):
+        date = params.date
+    else:
+        date = "unspecified"
+
+    return {  "date": date }
+
+
+# Simple API for providing json data to javascript
+class fetch_data(ProtectedPage):
+    """
+    Provide fresh data as json to the plugin javascript through an API
+    """
+
+    def GET(self):
+        web.header("Content-Type", "application/json")
+        return json.dumps(plugin_data(web.input()))
+
+
 ### End data display examples ###
 #################################
 
@@ -95,6 +121,9 @@ def notify_station_completed(station, **kw):
 complete = signal(u"station_completed")
 complete.connect(notify_station_completed)
 
+
+### Settings save/load examples ####
+####################################
 
 class settings(ProtectedPage):
     """
