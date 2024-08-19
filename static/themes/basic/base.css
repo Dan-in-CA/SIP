@@ -594,6 +594,9 @@ td.stationSchedule {
 	color: #2E3959;
 	border-right:1px solid #2E3959;
 }
+.scheduleHeader {
+	width : 4.17%;
+}
 .scheduleTick:last-child {
 	border-right: none;
 }
