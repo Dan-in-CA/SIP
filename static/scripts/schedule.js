@@ -5,20 +5,27 @@ var sid,sn,t;
 if (typeof progs !== 'undefined'){var nprogs = progs.length}; // number of programs
 if (typeof nbrd !== 'undefined'){var nst = nbrd*8}; // number of stations
 
+function simulated_days_since_epoch(simdate) {
+	// Calculate the "day number" of the requested date, from which we can calculate consistent interval day offsets
+	// This calculation mirrors that in the main timing loop (days_since_epoch) in order to acurately predict future interval runs
+
+	// Mark the linux epoch start - but adjusted for our local time zone
+	var epoch_start = new Date(1970,0,1);  
+	// Find any offset (in hours) due to daylight savings time between the current day of the year and Jan 1st which is when the epoch started
+	var dst_offset = 24 - ((new Date(simdate.getFullYear(),simdate.getMonth(), simdate.getDate()) - new Date(simdate.getFullYear(),0,1))/3600000) % 24;
+	// We can subtract dates, adjusting by DST, to get a unique day count in local display time - should always be a 
+	// constant value (from midnight to midnight local time) for a given date of display
+	var simday = Math.floor((simdate.valueOf() + dst_offset*(60*60*1000) - epoch_start.valueOf() )/(24*60*60*1000));
+	return simday;
+}
+
 function scheduledThisDate(pd,simminutes,simdate) { // check if progrm is scheduled for this date (displayScheduleDate) called from doSimulation
   // simminutes is minute count generated in doSimulation()
   // simdate is a JavaScript date object
   var wd;
   if(pd['enabled']==0)  return 0; // program not enabled, do not match
   if(pd['type'] == 'interval') { // if interval program... 
-	// Create a date object representing the requested display date starting at midnight
-	var dateToSim = new Date(simdate);
-	dateToSim.setHours(0);
-	dateToSim.setMinutes(0);
-	dateToSim.setSeconds(0);
-	// Calculate a unique day count since the start of the epoch, this must match days_since_epoch()
-	// as it would be calculated on the device for the day
-	var simday = Math.floor(dateToSim.valueOf()/(24*60*60*1000));
+	var simday = simulated_days_since_epoch(simdate);
 	if((simday % pd['interval_base_day']) != pd['day_mask'])
 		return 0; // return if this day offset doesn't match the remainder
   } else { // Not interval 
