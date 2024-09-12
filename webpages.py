@@ -269,16 +269,9 @@ class change_options(ProtectedPage):
             gv.sd["htip"] = qdict["ohtip"]
 
         for f in ["sdt", "mas", "mton", "mtoff", "wl", "lr", "tz"]:
-            if (f == "sdt"
-                or f == "mton"
-                or f == "mtoff" 
-                and qdict["o" + f] == ""             
-                ):
+            if (f in ["sdt", "mton", "mtoff"] and qdict["o" + f] == ""):
                 qdict["o" + f] = 0
-            elif (f == "wl"
-                  or f == "lr"
-                  and qdict["o" + f] == ""
-                  ):
+            elif (f in ["wl", "lr"] and qdict["o" + f] == ""):
                   qdict["o" + f] = 100
             if "o" + f in qdict:
                 if (f == "mton"
