@@ -47,7 +47,7 @@ class options(WebPage):  # /jo
                 u"sdt": gv.sd[u"sdt"],
                 u"mas": gv.sd[u"mas"],
                 u"mton": gv.sd[u"mton"],
-                u"mtof": gv.sd[u"mtoff"],
+                u"mtoff": gv.sd[u"mtoff"],
                 u"urs": gv.sd[u"urs"],
                 u"rso": gv.sd[u"rst"],
                 u"wl": gv.sd[u"wl"],
