@@ -175,7 +175,17 @@ class change_options(ProtectedPage):
         
     def change_options(self):    
         qdict = web.input()
-        print(qdict)
+        # print("webpages 178P: " , qdict)  # - test
+        if ("rstrt" in qdict
+            and qdict["rstrt" ] == "1"
+            ):
+            restart()
+            raise web.seeother("/restart")
+        elif ("rbt" in qdict
+              and qdict["rbt" ] == "1"
+              ):
+            report_rebooted()
+            reboot()
         for i in range(gv.sd["nbrd"]):  # capture master associations
             if "m" + str(i) in qdict:
                 try:
@@ -268,7 +278,7 @@ class change_options(ProtectedPage):
                 qdict["rstrt"] = "1"  # force restart with change in htip
             gv.sd["htip"] = qdict["ohtip"]
 
-        for f in ["sdt", "mas", "mton", "mtoff", "wl", "lr", "tz"]:
+        for f in ["sdt","mas", "mton", "mtoff", "wl", "lr", "tz"]:
             if (f in ["sdt", "mton", "mtoff"] and qdict["o" + f] == ""):
                 qdict["o" + f] = 0
             elif (f in ["wl", "lr"] and qdict["o" + f] == ""):

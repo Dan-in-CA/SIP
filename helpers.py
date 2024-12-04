@@ -251,7 +251,6 @@ def check_rain():
     Handles normally open and normally closed rain sensors
     Sets gv.sd["rs"] to 1 if rain is detected otherwise 0.
     """
-
     global pi, rain
     rain_sensor = gv.sd["rs"]
     try:
@@ -276,6 +275,9 @@ def check_rain():
                 if GPIO.input(pin_rain_sense) != rain_sensor:  # Rain sensor changed
                     rain_sensor = 1 - rain_sensor  #  toggle
     except NameError:
+        pass
+    
+    except RuntimeError:
         pass
 
     if gv.sd["rs"] != rain_sensor:  # Update if rain sensor changed

@@ -27,14 +27,16 @@ $code:
             jQuery(".optTooltip").toggle();
         });
 
-        jQuery("button#cReboot").click(function(){
+        jQuery("button#cReboot").click(function(event){
+        	event.preventDefault();
             jQuery("input[name='rbt']").val(1);
-            jQuery("form[name='of']").submit();
+            jQuery("#rf").submit();
         });
 
-        jQuery("button#cRestart").click(function(){
+        jQuery("button#cRestart").click(function(event){
+        	event.preventDefault();
             jQuery("input[name='rstrt']").val(1);
-            jQuery("form[name='of']").submit();
+            jQuery("#rf").submit();;
         });
 
         jQuery("button#cSubmit").click(function(){
@@ -300,15 +302,18 @@ $code:
         output += "</div>\n"
         output += categoryCloser
     $:{output}
-        <input type="hidden" name="rbt" value="0">
-        <input type="hidden" name="rstrt" value="0">
         <input type="hidden" id="omas" name="omas" value="0">
+
         $for bid in range(gv.sd['nbrd']):
             <input type="hidden" id="i${bid}" name="i${bid}"/>
             <input type="hidden" id="sh${bid}" name="sh${bid}"/>
             <input type="hidden" id="w${bid}" name="w${bid}"/>
             <input type="hidden" id="m${bid}" name="m${bid}"/>
     </form>
+    <form id="rf" action="/co" method="POST">
+        <input type="hidden" id="rbt" name="rbt" value="0">
+        <input type="hidden" id="rstrt" name="rstrt" value="0">    
+    </form>    
 </div>
 
 <div class="controls">
