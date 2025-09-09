@@ -108,6 +108,16 @@ def notify_restart(name, **kw):
 restart = signal("restart")
 restart.connect(notify_restart)
 
+
+### rs_ready ###
+def notify_rs_ready(name, **kw):
+    print("gv.rs is ready")
+
+
+rs_ready = signal("rs_ready")
+rs_ready.connect(notify_rs_ready)
+
+
 ### Station Names ###
 def notify_station_names(name, **kw):
     print("Station names changed")

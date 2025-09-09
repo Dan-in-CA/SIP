@@ -60,13 +60,6 @@ def report_station_completed(station):
 
 stations_scheduled = signal("stations_scheduled")
 
-def report_stations_scheduled(txt=None):
-    """
-    - deprecated - Will be removed in a future release.
-    Send blinker signal indicating that stations have been scheduled.
-    """
-    stations_scheduled.send("SIP", txt=txt)
-
 
 station_scheduled = signal("station_scheduled")
 
@@ -87,15 +80,6 @@ def report_rain_changed(txt=None):
     rain_changed.send()
 
 
-running_program_change = signal("running_program_change")
-
-def report_running_program_change():
-    """
-    Send blinker signal indicating that running program changed.
-    """
-    running_program_change.send()
-
-
 rain_delay_change = signal("rain_delay_change")
 
 def report_rain_delay_change():
@@ -113,6 +97,15 @@ def report_restart(txt=None):
     Send blinker signal indicating system will restart.
     """
     restarting.send()
+    
+rs_ready = signal("rs_ready")  #: Signal to send on gv.rs ready
+
+
+def report_rs_ready(txt=None):
+    """
+    Send blinker signal indicating run schedule (gv.rs) is ready
+    """
+    rs_ready.send()    
 
 
 def reboot(wait=1, block=False):
@@ -438,6 +431,15 @@ def days_since_epoch():
     days = (current_date - epoch).days
     return days
 
+def total_duration(prog): # total duration of all stations in program
+    if gv.sd["idd"]:
+        return sum(prog["duration_sec"])
+    else:
+        s_count = 0
+        for m in prog["station_mask"]:
+            s_count += bin(m).count('1')
+            return s_count * prog["duration_sec"][0]
+
 def prog_match(prog):
     """
     Test a program for current date and time match.
@@ -461,18 +463,30 @@ def prog_match(prog):
             elif lt.tm_mday % 2 != 1:
                 return 0
     this_minute = (lt.tm_hour * 60) + lt.tm_min  # Check time match in minutes
-    if this_minute < prog["start_min"] or this_minute >= prog["stop_min"]:
+    if this_minute < prog["start_min"] or this_minute >= (prog["stop_min"] + prog["cycle_min"]):
         return 0
-    if prog["cycle_min"] == 0 and (this_minute == prog["start_min"]):
+    dur_mins = -(total_duration(prog) // -60)
+    if (this_minute >= prog["start_min"]
+        and this_minute <= (prog["stop_min"] + prog["cycle_min"])
+        and gv.sd["seq"]   
+        ):
         return 1  # Program matched
-    elif (
-        prog["cycle_min"] != 0
-        and (this_minute - prog["start_min"])
-        // prog["cycle_min"]
-        * prog["cycle_min"]
-        == this_minute - prog["start_min"]
-    ):
-        return 1  # Program matched
+    
+    elif prog["cycle_min"] != 0:
+        mins_past_start = this_minute - prog["start_min"]
+        prior_cycles = mins_past_start // prog["cycle_min"]
+        past_mins = prog["start_min"] + (prior_cycles * prog["cycle_min"])
+        if (this_minute >= past_mins
+            and this_minute < past_mins + dur_mins
+            ):
+            return 1
+        
+    elif (this_minute >= prog["start_min"]
+          and gv.sd["seq"] == 0
+          and this_minute < prog["start_min"] + (max(prog["duration_sec"]) // 60)
+          ):
+        return 1
+            
     return 0
 
 
@@ -493,21 +507,37 @@ def schedule_stations(stations):
         for b in range(len(stations)):  # stations is a list of bitmasks in the program, one per board
             for s in range(8):
                 sid = b * 8 + s  # station index
-                if gv.rs[sid][2]:  # if station has a duration value
+                if (gv.rs[sid][2]
+                    and not gv.halted[sid]  # station has not been halted
+                    ):  # if station has a duration value
                     if (
                         not rain
                         or gv.sd["ir"][b] & 1 << s  # if no rain or station ignores rain
-                    ):
-                        gv.rs[sid][0] = int(accumulate_time)  # start at accumulated time
-                        accumulate_time += gv.rs[sid][2]  # add duration
-                        gv.rs[sid][1] = int(accumulate_time)  # set new stop time
-                        accumulate_time += gv.sd["sdt"]  # add station delay
-                        report_station_scheduled(sid + 1)  # station number
-                        gv.sd["bsy"] = 1
+                        ):
+                        if accumulate_time >= gv.rs[sid][1]: # gv.now is later than run time of station
+                            gv.rs[sid] = [0, 0, 0, 0]
+                            gv.ps[sid] = [0, 0]
+                            continue
+                        elif accumulate_time > gv.rs[sid][0] and accumulate_time < gv.rs[sid][1]: # within station run time
+                            gv.rs[sid][0] = int(accumulate_time)
+                            gv.rs[sid][2] = (gv.rs[sid][1] - accumulate_time)  # set duration to time remaining
+                            gv.ps[sid][1] = gv.rs[sid][2]
+                            accumulate_time += (gv.rs[sid][1] - accumulate_time)  + gv.sd["sdt"]
+                            report_station_scheduled(sid + 1)  # station number
+                            gv.sd["bsy"] = 1
+                        else:                      
+                            gv.rs[sid][0] = int(accumulate_time)
+                            accumulate_time += gv.rs[sid][2]  # add duration
+                            gv.rs[sid][1] = int(accumulate_time)  # set new stop time
+                            accumulate_time += gv.sd["sdt"]  # add station delay
+                            report_station_scheduled(sid + 1)  # station number
+                            gv.sd["bsy"] = 1
                     else:
-                        gv.sbits[b] &= ~1 << s
+                        gv.sbits[b] &= ~1 << s # turn off station sbit
                         gv.ps[sid] = [0, 0]
-    else:  # concurrent mode, stations allowed to run in parallel
+
+    # concurrent mode, stations allowed to run in parallel
+    elif gv.sd["seq"] == 0:
         for b in range(len(stations)):
             for s in range(8):
                 sid = b * 8 + s  # station index
@@ -517,15 +547,24 @@ def schedule_stations(stations):
                     if (not rain
                         or gv.sd["ir"][b] & 1 << s
                     ):  # if no rain or station ignores rain
-                        gv.rs[sid][0] = gv.now  # set start time
-                        gv.rs[sid][1] = gv.now + int(gv.rs[sid][2])  # set stop time
-                        report_station_scheduled(sid + 1)
-                        gv.sd["bsy"] = 1
+                        if gv.now > gv.rs[sid][0] and gv.now < gv.rs[sid][1]: # within station run time
+                            gv.rs[sid][0] = int(gv.now)
+                            gv.rs[sid][2] = int(gv.rs[sid][1] - gv.now)  # set duration to time remaining
+                            gv.ps[sid][1] = int(gv.rs[sid][2])
+                            report_station_scheduled(sid + 1)
+                            gv.sd["bsy"] = 1                        
+                        else:
+                            gv.rs[sid][0] = gv.now  # set start time
+                            gv.rs[sid][1] = gv.now + int(gv.rs[sid][2])  # set stop time
+                            report_station_scheduled(sid + 1)
+                            gv.sd["bsy"] = 1
                     else:  # if rain and station does not ignore, clear station from display
                         gv.sbits[b] &= ~1 << s
                         gv.ps[sid] = [0, 0]
                         gv.rs[sid] = [0,0,0,0]
-
+        
+        # else:
+    report_rs_ready()
 
 def stop_onrain():
     """
@@ -552,30 +591,21 @@ def stop_stations():
     """
     Stop all running stations, clear schedules.
     """
-    prev_srvals =  gv.srvals
+    gv.halted =  gv.srvals
     gv.srvals = [0] * (gv.sd["nst"])
     set_output() #  This stops all stations
-    gv.ps = []
-    for i in range(gv.sd["nst"]):
-        gv.ps.append([0, 0])
     gv.sbits = [0] * (gv.sd["nbrd"] + 1)
     # log data for halted station
-    i = 0
-    while i < len(prev_srvals):
+    for i in range(len(gv.halted)):
         if i == gv.sd["mas"] -1:  # skip master:
-            i += 1
             continue
-        if prev_srvals[i]:
+        if gv.halted[i]:
+            gv.ps[i] = [0, 0]
             gv.lrun[0] = i
             gv.lrun[1] = gv.rs[i][3]
             gv.lrun[2] = gv.now - gv.rs[i][0]            
             log_run()
-        i += 1
-    gv.rs = []
-    for i in range(gv.sd["nst"]):
-        gv.rs.append([0, 0, 0, 0])
-    gv.sd["bsy"] = 0
-    return
+            gv.rs[i] = [0, 0, 0, 0]
 
 
 def read_log():
@@ -607,6 +637,7 @@ def clear_stations():
 def run_program(pid):
     """
     Run a program, pid == program index
+    called from UI (webpages)
     """
     nr_run = 0
     for stn in gv.rs:

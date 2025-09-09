@@ -558,7 +558,6 @@ class change_program(ProtectedPage):
             gv.pd.append(cp)
             gv.pnames.append(cp["name"])
             report_program_added()
-            # print("program added")  # - test
         else:
             gv.pd[int(qdict["pid"])] = cp  # replace program
             try:
@@ -569,7 +568,6 @@ class change_program(ProtectedPage):
                     gv.pnames.extend([""] * diff)
                 gv.pnames[int(qdict["pid"])] = cp["name"]
             report_program_change() ### add program index ###
-            # print("program modified")  # - test
         jsave(gv.pd, "programData")
         raise web.seeother("/vp")
 

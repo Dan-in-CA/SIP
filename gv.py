@@ -13,9 +13,9 @@ import time
 ##############################
 #### Revision information ####
 major_ver = 5
-minor_ver = 1
+minor_ver = 2
 revision = 999
-old_count = 1137 #  update this to reset revision number.
+old_count = 1219 #  update this to reset revision number.
 
 try:
     revision = int(subprocess.check_output(["git", "rev-list", "--count", "HEAD"]))
@@ -114,6 +114,8 @@ node_runs = {}
 now = time.time()
 nowt = time.localtime(now)
 dse = days_since_epoch()
+lm = 0
+halted = [0] * (sd["nst"])  # used to hold station(s) that have been halted in stop_stations()
 
 tz_offset = round(now - timegm(nowt)
 )  # compatible with Javascript (negative tz shown as positive value)

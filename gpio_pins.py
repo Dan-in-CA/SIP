@@ -325,6 +325,7 @@ def set_output():
     """
     Activate pins according to gv.srvals.
     """
+    
 
     with gv.output_srvals_lock:
         gv.output_srvals = gv.srvals
