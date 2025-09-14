@@ -134,20 +134,14 @@ pluginStn = []  # Empty list to hold plugin data for display on timeline
 plugin_scripts = []  # Empty list of script file names for script injections requested by plugins
 plugin_adj = 0  # holds wl adjustment set by plugins
 
-ps = []  # Program schedule (used for UI display)
-for i in range(sd["nst"]):
-    ps.append([0, 0])
-
-bsy = 0 # A program is running
+ps = [list([0, 0]) for x in range(sd["nst"])]# Program schedule (used for UI display)
+# bsy = 0 # A program is running
 pon = None  # Program on (Holds program number of a running program)
 sbits = [0] * (sd["nbrd"] + 1)  # Used to display stations that are on in UI
 
 prd = 2  # page refresh delay
-rs = []  # run schedule
-for j in range(sd["nst"]):
-    rs.append(
-        [0, 0, 0, 0]
-    )  # scheduled start time, scheduled stop time, duration, program index
+
+rs = [list([0, 0, 0, 0]) for x in range(sd["nst"])]
 
 lrun = [0, 0, 0, 0]  # station index, program number, duration, end time (Used in UI)
 scount = (

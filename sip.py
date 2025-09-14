@@ -174,6 +174,7 @@ def timing_loop():
                     else:  # if this station is not yet on
                         if (gv.now >= gv.rs[sid][0]
                             and gv.now < gv.rs[sid][1]
+                            and not gv.halted[sid]
                            ):
                             if sid != masid: # if not master
                                 if (gv.sd["mo"][b] & (1 << s) # station activates master
@@ -207,7 +208,7 @@ def timing_loop():
                                 gv.srvals[sid] = 1  # this is where master is turned on
                                 set_output()
 
-            else:
+            else:  # for loop ended
                 program_running = False
                 pon = None
                 gv.halted = [0] * gv.sd["nst"]  # clear gv.halted
@@ -238,9 +239,9 @@ def timing_loop():
                 set_output()
                 gv.rovals = [0] * gv.sd["nst"]
                 gv.sbits = [0] * (gv.sd["nbrd"] + 1)
-                gv.ps = []
                 for i in range(gv.sd["nst"]):
                     gv.ps.append([0, 0])
+                gv.halted = [0] * gv.sd["nst"]  # clear gv.halted
                 gv.sd["bsy"] = 0
 
             if (gv.sd["mas"] #  master is defined
@@ -263,7 +264,6 @@ def timing_loop():
         else:  # Not busy
             if gv.pon != None:
                 gv.pon = None
-                gv.rn = 0
 
         if gv.sd["urs"]:
             check_rain()  # in helpers.py

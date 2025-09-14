@@ -272,14 +272,14 @@ $code:
 <div id="options">
     <button id="cStartStop" class="toggle ${'on' if gv.sd['en'] else 'off'}"><span class='toggleleft'>$_('System On')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_('System Off')</span></button>
     <br>
-    <button id="cWaterLevel" class="toggle choice ${'on' if gv.sd['wl']==100 else 'off'}"><span class='toggleleft'>$_('Normal')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>${_('Water Level') if gv.sd['wl']==100 else str(gv.sd['wl']) + '%' + _('Level')}</span></button><span class="noNewline">${'' if int(plugin_adjustment()) == 100 else _(' Plugin adjustments: ') + plugin_adjustment_list() + ('' if gv.sd['wl']==100 and '*' not in plugin_adjustment_list() else ' - Total adjustment: ' + total_adjustment() + '%')}</span>
+    <button id="cWaterLevel" class="toggle choice ${'on' if gv.sd['wl']==100 else 'off'}" title=$:{json.dumps(_('Adjust irrigation time'), ensure_ascii=False)}><span class='toggleleft'>$_('Normal')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>${_('Water Level') if gv.sd['wl']==100 else str(gv.sd['wl']) + '%' + _('Level')}</span></button><span class="noNewline">${'' if int(plugin_adjustment()) == 100 else _(' Plugin adjustments: ') + plugin_adjustment_list() + ('' if gv.sd['wl']==100 and '*' not in plugin_adjustment_list() else ' - Total adjustment: ' + total_adjustment() + '%')}</span>
     <br>
-    <button id="cRainDelay" class="toggle ${'off' if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']) else 'on'}"><span class='toggleleft'>$_('Active')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_('Rain Delay')</span></button><span class="noNewline">${'' if gv.sd['rdst'] - gv.now <= 0 else _( 'Rain delay time left' ) + ': ' +  str((int(gv.sd['rdst'] - gv.now) // 3600)) + ':' + str(int((gv.sd['rdst'] - gv.now) % 3600 // 60)).zfill(2)}</span>
+    <button id="cRainDelay" class="toggle ${'off' if gv.sd['rd'] or (gv.sd['urs'] and gv.sd['rs']) else 'on'}"title=$:{json.dumps(_('Delay irrigation'), ensure_ascii=False)}><span class='toggleleft'>$_('Active')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_('Rain Delay')</span></button><span class="noNewline">${'' if gv.sd['rdst'] - gv.now <= 0 else _( 'Rain delay time left' ) + ': ' +  str((int(gv.sd['rdst'] - gv.now) // 3600)) + ':' + str(int((gv.sd['rdst'] - gv.now) % 3600 // 60)).zfill(2)}</span>
 
     $if gv.sd['urs']:
         <span class="rainsense">${'' if gv.sd['rs'] else _('no')} $_('rain sensed')</span>
     <br>
-    <button id="cManual" class="toggle choice ${'off' if gv.sd['mm'] else 'on'}"><span class='toggleleft'>$_('Auto')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_('Manual')</span></button>
+    <button id="cManual" class="toggle choice ${'off' if gv.sd['mm'] else 'on'}"title=$:{json.dumps(_('Warning! Manual mode blocks scheduled programs'), ensure_ascii=False)}><span class='toggleleft'>$_('Auto')</span><span class='togglesep'>&nbsp;</span><span class='toggleright'>$_('Manual')</span></button>
 </div>
 
 <div id="stationsdiv">
@@ -411,5 +411,5 @@ $else:
     </form>
 </div>  
 <div class="controls">
-    <button id="pStopAll" class="execute delete">$_('Stop All Stations')</button>
+    <button id="pStopAll" class="execute delete"title=$:{json.dumps(_('Halt currently running stations until program ends'), ensure_ascii=False)}>$_('Stop All Stations')</button>
 </div>

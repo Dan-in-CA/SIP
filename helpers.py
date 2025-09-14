@@ -606,6 +606,35 @@ def stop_stations():
             gv.lrun[2] = gv.now - gv.rs[i][0]            
             log_run()
             gv.rs[i] = [0, 0, 0, 0]
+            
+            
+def preempt_program():
+    """
+    Stop all running stations, clear schedules.
+    """
+    if gv.pon:
+        pid = gv.pon - 1
+        gv.halted =  gv.srvals
+        gv.srvals = [0] * gv.sd["nst"]       
+        set_output() #  This stops all stations
+        gv.sbits = [0] * (gv.sd["nbrd"] + 1)
+        
+        # log data for halted station
+        for i in range(len(gv.halted)):
+            if i == gv.sd["mas"] -1:  # skip master:
+                continue
+            if gv.halted[i]:
+                gv.ps[i] = [0, 0]
+                gv.lrun[0] = i
+                gv.lrun[1] = gv.rs[i][3]
+                gv.lrun[2] = gv.now - gv.rs[i][0]            
+                log_run()
+                gv.rs[i] = [0, 0, 0, 0]
+        
+        gv.rs = [list([0, 0, 0, 0]) for x in range(gv.sd["nst"])]
+        gv.ps = [list([0, 0]) for x in range(gv.sd["nst"])]           
+        gv.pon = None
+        gv.halted = [0] * gv.sd["nst"]
 
 
 def read_log():
@@ -647,30 +676,48 @@ def run_program(pid):
     if nr_run:
         clear_stations()
     else:
-        stop_stations()
-
+        preempt_program()
+    lt = time.localtime(gv.now)   
     p = gv.pd[pid]  # program data
-    for b in range(gv.sd["nbrd"]):  # check each station
+    next_start = gv.now
+    
+    # check each station per boards listed in program up to number of boards in Options                           
+    for b in range(len(p["station_mask"])):  # len == number of bytes
         for s in range(8):
-            sid = b * 8 + s  # station index
-            if sid + 1 == gv.sd["mas"]:
-                continue  # skip if this is master valve
-            if (
-                p["station_mask"][b] & 1 << s
-            ):  # this station is scheduled in this program
-                if gv.sd["idd"]:
+            sid = b * 8 + s  # station index      
+            if sid == gv.sd["mas"] - 1: 
+                continue  # skip, this is master station                               
+            # station duration conditionally scaled by "water level"
+            if gv.sd["iw"][b] & 1 << s: # If ignore water level.
+                duration_adj = 1.0
+                if gv.sd["idd"]:  # If individual duration per station.
                     duration = p["duration_sec"][sid]
                 else:
                     duration = p["duration_sec"][0]
-                if not gv.sd["iw"][b] & 1 << s:
-                    duration = int(duration * gv.sd["wl"] // 100 * plugin_adjustment())
+            else:
+                duration_adj = (
+                    gv.sd["wl"] / 100.0
+                ) * plugin_adjustment()
+                if gv.sd["idd"]:
+                    duration = (
+                        p["duration_sec"][sid] * duration_adj
+                    )
+                else:
+                    duration = p["duration_sec"][0] * duration_adj
+            duration = round(duration)  # convert to int
+            if (p["station_mask"][b] & 1 << s  # if this station is scheduled in this program
+                and duration # station has a duration
+                ):                                   
+                gv.rs[sid][0] = next_start
+                next_stop = next_start + duration
+                gv.rs[sid][1] = next_stop
                 gv.rs[sid][2] = duration
-                gv.rs[sid][3] = pid + 1  # store program number in schedule
-                gv.ps[sid][0] = pid + 1  # store program number for display
-                gv.ps[sid][1] = duration  # duration
-                gv.pon = pid + 1
-                gv.rn = 1
-    schedule_stations(p["station_mask"])
+                gv.rs[sid][3] = pid + 1  # program number for scheduling
+                gv.ps[sid][0] = pid + 1  # program number for display
+                gv.ps[sid][1] = gv.rs[sid][2] # duration
+                if gv.sd["seq"]:
+                    next_start = next_stop
+    schedule_stations(p["station_mask"])  
 
 def run_once(bump = None, pnum = 98):
     """
