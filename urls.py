@@ -22,7 +22,7 @@ urls = [
     "/rp", "webpages.run_now",
     "/ttu", "webpages.toggle_temp",
     "/rev", "webpages.show_revision",
-    "/wl",  "webpages.water_log",
+    "/sip_log",  "webpages.water_log",
     "/api/status", "webpages.api_status",
     "/api/log", "webpages.api_log",
     "/api/plugins", "webpages.plugin_data",

@@ -757,7 +757,7 @@ class water_log(ProtectedPage):
     """Simple Log API"""
     def GET(self):
         records = read_log()
-        data = _("Date, Start Time, Zone, Duration, Program Name, Program Index, Adjustment") + "\n"
+        data = _("Date, Start Time, Station, Duration, Adjustments, Program") + "\n"
         for r in records:
             event = ast.literal_eval(json.dumps(r))
             if not("program_index" in event):
@@ -769,15 +769,16 @@ class water_log(ProtectedPage):
                 + ", "
                 + event["start"]
                 + ", "
-                + str(event["station"] + 1)
+                # + str(event["station"] + 1)
+                + gv.snames[event["station"]]
                 + ", "
                 + event["duration"]
                 + ", "
-                + event["program"]
-                + ", "
-                + event["program_index"]
-                + ", "
                 + event["adjustment"]
+                + " %, "
+                # + event["program_index"]
+                # + ", "
+                + event["program"]
                 + "\n"
             )
 
