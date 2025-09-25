@@ -731,12 +731,13 @@ def run_once(bump = None, pnum = 98):
     | Sequential   | 0    | 1    | 0  | 1  | 0   | 1    |
     | Stop running | No   | Yes  | No | No | Yes | Yes  |
     """
+    print("starting run once")  # - test
     stations = [0] * gv.sd["nbrd"]
     if(gv.sd["seq"] and bump != 0
         or (not gv.sd["seq"] and bump == 1)
         ):
         stop_stations()
-
+    next_start = gv.now
     for sid, dur in enumerate(gv.rovals):
         if (gv.srvals[sid]  # this station is on
             and not gv.sd["seq"]  # concurrent mode
@@ -747,12 +748,17 @@ def run_once(bump = None, pnum = 98):
             gv.lrun[2] = int(gv.now) - gv.rs[sid][0]
             log_run()
         if dur:  # if this element has a value
-            gv.rs[sid][0] = gv.now  # set start time
+            gv.rs[sid][0] = next_start  # set start time
+            next_stop = next_start + dur
+            gv.rs[sid][1] = next_stop
             gv.rs[sid][2] = dur
             gv.rs[sid][3] = pnum
             gv.ps[sid][0] = pnum
             gv.ps[sid][1] = dur
-            stations[sid // 8] += 2 ** (sid % 8)
+            if gv.sd["seq"]:
+                next_start = next_stop            
+            stations[sid // 8] += 2 ** (sid % 8)            
+    print("gv.rs: ", gv.rs)    
     schedule_stations(stations)
 
 
