@@ -74,6 +74,7 @@ gv.lrun      [4]        last run, used to add data to log file (list: [station i
 gv.node_runs            Dictionary of stations being controlled by node-red. 
 gv.now                  Current time as seconds since the epoch, in UTC. Updated once per second.
 gv.pd        [P]        program data - loaded from file at startup (list of dicts). Length = number of programs.
+gv.phold	 [p]		program hold - list holding suspended program index (gv.phold[0]) and scheduled stop time (gv.phold[1]).
 gv.pluginStn            Used to display plugin data next to station time countdown on home page timeline.
 gv.pnames    [P]        program names - list of strings. length = numbr of programs
 gv.pon                  program on (Holds program number of currently running scheduling program)

@@ -137,6 +137,7 @@ plugin_adj = 0  # holds wl adjustment set by plugins
 ps = [list([0, 0]) for x in range(sd["nst"])]# Program schedule (used for UI display)
 # bsy = 0 # A program is running
 pon = None  # Program on (Holds program number of a running program)
+phold = [0, 0]  # program on hold (suspended)
 sbits = [0] * (sd["nbrd"] + 1)  # Used to display stations that are on in UI
 
 prd = 2  # page refresh delay

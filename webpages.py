@@ -125,7 +125,11 @@ class change_values(ProtectedPage):
     def change_values(self):    
         qdict = web.input()
         if "rsn" in qdict and qdict["rsn"] == "1":
+            pid = gv.pon - 1           
             stop_stations()
+            if pid < 97:
+                gv.phold[0] = pid
+                gv.phold[1] = gv.lm + (gv.pd[pid]["start_min"] * 60) + total_duration(gv.pd[pid])         
             raise web.seeother("/")
         elif "en" in qdict and qdict["en"] == "0":
             gv.srvals = [0] * (gv.sd["nst"])  # turn off all stations
@@ -175,7 +179,6 @@ class change_options(ProtectedPage):
         
     def change_options(self):    
         qdict = web.input()
-        # print("webpages 178P: " , qdict)  # - test
         if ("rstrt" in qdict
             and qdict["rstrt" ] == "1"
             ):
@@ -248,7 +251,7 @@ class change_options(ProtectedPage):
                 gv.sd[f] = qdict["o" + f]
 
         if "onbrd" in qdict:
-            if qdict["onbrd"] == "":  # - test
+            if qdict["onbrd"] == "":
                 qdict["onbrd"] = 0
             brd_count = int(qdict["onbrd"]) + 1
             if brd_count != gv.sd["nbrd"]:  # number of boards has changed
@@ -341,7 +344,6 @@ class change_options(ProtectedPage):
         Increase or decrease the number of stations displayed when
         number of expansion boards is changed in options.
         """
-        # print("changing scount", brd_chng)  # - test
         if brd_chng > 0:  # Lengthen lists
             incr = brd_chng - (gv.sd["nbrd"] - 1)
             sn_incr = incr * 8          

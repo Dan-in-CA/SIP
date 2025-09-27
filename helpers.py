@@ -606,6 +606,9 @@ def stop_stations():
             gv.lrun[2] = gv.now - gv.rs[i][0]            
             log_run()
             gv.rs[i] = [0, 0, 0, 0]
+    # clear schedules
+    gv.rs = [list([0, 0, 0, 0]) for x in range(gv.sd["nst"])]
+    gv.ps = [list([0, 0]) for x in range(gv.sd["nst"])] 
             
             
 def preempt_program():
@@ -634,7 +637,7 @@ def preempt_program():
         gv.rs = [list([0, 0, 0, 0]) for x in range(gv.sd["nst"])]
         gv.ps = [list([0, 0]) for x in range(gv.sd["nst"])]           
         gv.pon = None
-        gv.halted = [0] * gv.sd["nst"]
+        # gv.halted = [0] * gv.sd["nst"]
 
 
 def read_log():
@@ -677,6 +680,7 @@ def run_program(pid):
         clear_stations()
     else:
         preempt_program()
+        # stop_stations()
     lt = time.localtime(gv.now)   
     p = gv.pd[pid]  # program data
     next_start = gv.now
@@ -731,7 +735,6 @@ def run_once(bump = None, pnum = 98):
     | Sequential   | 0    | 1    | 0  | 1  | 0   | 1    |
     | Stop running | No   | Yes  | No | No | Yes | Yes  |
     """
-    print("starting run once")  # - test
     stations = [0] * gv.sd["nbrd"]
     if(gv.sd["seq"] and bump != 0
         or (not gv.sd["seq"] and bump == 1)
@@ -757,8 +760,7 @@ def run_once(bump = None, pnum = 98):
             gv.ps[sid][1] = dur
             if gv.sd["seq"]:
                 next_start = next_stop            
-            stations[sid // 8] += 2 ** (sid % 8)            
-    print("gv.rs: ", gv.rs)    
+            stations[sid // 8] += 2 ** (sid % 8)               
     schedule_stations(stations)
 
 

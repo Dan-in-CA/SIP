@@ -79,6 +79,11 @@ def timing_loop():
             if this_min != prior_min:  # only check programs once a minute
                 prior_min = this_min
                 for i, p in enumerate(gv.pd):  # get both index and program item
+                    if gv.phold[0] == i:
+                        if gv.phold[1] >= gv.now:
+                            continue  # skip suspended program during run time
+                        else:
+                            gv.phold = [0, 0]                  
                     if (p["enabled"]
                           and gv.sd["seq"]
                           and this_min >= p["start_min"]
