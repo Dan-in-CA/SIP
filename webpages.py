@@ -345,7 +345,7 @@ class change_options(ProtectedPage):
         number of expansion boards is changed in options.
         """
         if brd_chng > 0:  # Lengthen lists
-            incr = brd_chng - (gv.sd["nbrd"] - 1)
+            incr = brd_chng
             sn_incr = incr * 8          
             gv.sd["mo"].extend([0] * incr)
             gv.sd["ir"].extend([0] * incr)
