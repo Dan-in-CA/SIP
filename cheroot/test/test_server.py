@@ -1,27 +1,24 @@
 """Tests for the HTTP server."""
-# -*- coding: utf-8 -*-
-# vim: set fileencoding=utf-8 :
-
-from __future__ import absolute_import, division, print_function
-__metaclass__ = type
 
 import os
+import queue
 import socket
 import tempfile
 import threading
+import types
 import uuid
+import urllib.parse  # noqa: WPS301
 
 import pytest
 import requests
 import requests_unixsocket
-import six
 
 from pypytools.gc.custom import DefaultGc
-from six.moves import queue, urllib
 
 from .._compat import bton, ntob
 from .._compat import IS_LINUX, IS_MACOS, IS_WINDOWS, SYS_PLATFORM
 from ..server import IS_UID_GID_RESOLVABLE, Gateway, HTTPServer
+from ..workers.threadpool import ThreadPool
 from ..testing import (
     ANY_INTERFACE_IPV4,
     ANY_INTERFACE_IPV6,
@@ -259,12 +256,13 @@ def peercreds_enabled_server(http_server, unix_sock_file):
 
 @unix_only_sock_test
 @non_macos_sock_test
-def test_peercreds_unix_sock(peercreds_enabled_server):
+@pytest.mark.flaky(reruns=3, reruns_delay=2)
+def test_peercreds_unix_sock(http_request_timeout, peercreds_enabled_server):
     """Check that ``PEERCRED`` lookup works when enabled."""
     httpserver = peercreds_enabled_server
     bind_addr = httpserver.bind_addr
 
-    if isinstance(bind_addr, six.binary_type):
+    if isinstance(bind_addr, bytes):
         bind_addr = bind_addr.decode()
 
     # pylint: disable=possibly-unused-variable
@@ -275,11 +273,17 @@ def test_peercreds_unix_sock(peercreds_enabled_server):
     expected_peercreds = '|'.join(map(str, expected_peercreds))
 
     with requests_unixsocket.monkeypatch():
-        peercreds_resp = requests.get(unix_base_uri + PEERCRED_IDS_URI)
+        peercreds_resp = requests.get(
+            unix_base_uri + PEERCRED_IDS_URI,
+            timeout=http_request_timeout,
+        )
         peercreds_resp.raise_for_status()
         assert peercreds_resp.text == expected_peercreds
 
-        peercreds_text_resp = requests.get(unix_base_uri + PEERCRED_TEXTS_URI)
+        peercreds_text_resp = requests.get(
+            unix_base_uri + PEERCRED_TEXTS_URI,
+            timeout=http_request_timeout,
+        )
         assert peercreds_text_resp.status_code == 500
 
 
@@ -290,14 +294,17 @@ def test_peercreds_unix_sock(peercreds_enabled_server):
 )
 @unix_only_sock_test
 @non_macos_sock_test
-def test_peercreds_unix_sock_with_lookup(peercreds_enabled_server):
+def test_peercreds_unix_sock_with_lookup(
+        http_request_timeout,
+        peercreds_enabled_server,
+):
     """Check that ``PEERCRED`` resolution works when enabled."""
     httpserver = peercreds_enabled_server
     httpserver.peercreds_resolve_enabled = True
 
     bind_addr = httpserver.bind_addr
 
-    if isinstance(bind_addr, six.binary_type):
+    if isinstance(bind_addr, bytes):
         bind_addr = bind_addr.decode()
 
     # pylint: disable=possibly-unused-variable
@@ -312,7 +319,10 @@ def test_peercreds_unix_sock_with_lookup(peercreds_enabled_server):
     )
     expected_textcreds = '!'.join(map(str, expected_textcreds))
     with requests_unixsocket.monkeypatch():
-        peercreds_text_resp = requests.get(unix_base_uri + PEERCRED_TEXTS_URI)
+        peercreds_text_resp = requests.get(
+            unix_base_uri + PEERCRED_TEXTS_URI,
+            timeout=http_request_timeout,
+        )
         peercreds_text_resp.raise_for_status()
         assert peercreds_text_resp.text == expected_textcreds
 
@@ -363,7 +373,37 @@ def test_high_number_of_file_descriptors(native_server_client, resource_limit):
     assert any(fn >= resource_limit for fn in native_process_conn.filenos)
 
 
-if not IS_WINDOWS:
+@pytest.mark.skipif(
+    not hasattr(socket, 'SO_REUSEPORT'),
+    reason='socket.SO_REUSEPORT is not supported on this platform',
+)
+@pytest.mark.parametrize(
+    'ip_addr',
+    (
+        ANY_INTERFACE_IPV4,
+        ANY_INTERFACE_IPV6,
+    ),
+)
+def test_reuse_port(http_server, ip_addr, mocker):
+    """Check that port initialized externally can be reused."""
+    family = socket.getaddrinfo(ip_addr, EPHEMERAL_PORT)[0][0]
+    s = socket.socket(family)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+    s.bind((ip_addr, EPHEMERAL_PORT))
+    server = HTTPServer(
+        bind_addr=s.getsockname()[:2], gateway=Gateway, reuse_port=True,
+    )
+    spy = mocker.spy(server, 'prepare')
+    server.prepare()
+    server.stop()
+    s.close()
+    assert spy.spy_exception is None
+
+
+ISSUE511 = IS_MACOS
+
+
+if not IS_WINDOWS and not ISSUE511:
     test_high_number_of_file_descriptors = pytest.mark.forked(
         test_high_number_of_file_descriptors,
     )
@@ -429,3 +469,90 @@ def many_open_sockets(request, resource_limit):
         # Close our open resources
         for test_socket in test_sockets:
             test_socket.close()
+
+
+@pytest.mark.parametrize(
+    ('minthreads', 'maxthreads', 'inited_maxthreads'),
+    (
+        (
+            # NOTE: The docstring only mentions -1 to mean "no max", but other
+            # NOTE: negative numbers should also work.
+            1,
+            -2,
+            float('inf'),
+        ),
+        (1, -1, float('inf')),
+        (1, 1, 1),
+        (1, 2, 2),
+        (1, float('inf'), float('inf')),
+        (2, -2, float('inf')),
+        (2, -1, float('inf')),
+        (2, 2, 2),
+        (2, float('inf'), float('inf')),
+    ),
+)
+def test_threadpool_threadrange_set(minthreads, maxthreads, inited_maxthreads):
+    """Test setting the number of threads in a ThreadPool.
+
+    The ThreadPool should properly set the min+max number of the threads to use
+    in the pool if those limits are valid.
+    """
+    tp = ThreadPool(
+        server=None,
+        min=minthreads,
+        max=maxthreads,
+    )
+    assert tp.min == minthreads
+    assert tp.max == inited_maxthreads
+
+
+@pytest.mark.parametrize(
+    ('minthreads', 'maxthreads', 'error'),
+    (
+        (-1, -1, 'min=-1 must be > 0'),
+        (-1, 0, 'min=-1 must be > 0'),
+        (-1, 1, 'min=-1 must be > 0'),
+        (-1, 2, 'min=-1 must be > 0'),
+        (0, -1, 'min=0 must be > 0'),
+        (0, 0, 'min=0 must be > 0'),
+        (0, 1, 'min=0 must be > 0'),
+        (0, 2, 'min=0 must be > 0'),
+        (1, 0, 'Expected an integer or the infinity value for the `max` argument but got 0.'),
+        (1, 0.5, 'Expected an integer or the infinity value for the `max` argument but got 0.5.'),
+        (2, 0, 'Expected an integer or the infinity value for the `max` argument but got 0.'),
+        (2, '1', "Expected an integer or the infinity value for the `max` argument but got '1'."),
+        (2, 1, 'max=1 must be > min=2'),
+    ),
+)
+def test_threadpool_invalid_threadrange(minthreads, maxthreads, error):
+    """Test that a ThreadPool rejects invalid min/max values.
+
+    The ThreadPool should raise an error with the proper message when
+    initialized with an invalid min+max number of threads.
+    """
+    with pytest.raises((ValueError, TypeError), match=error):
+        ThreadPool(
+            server=None,
+            min=minthreads,
+            max=maxthreads,
+        )
+
+
+def test_threadpool_multistart_validation(monkeypatch):
+    """Test for ThreadPool multi-start behavior.
+
+    Tests that when calling start() on a ThreadPool multiple times raises a
+    :exc:`RuntimeError`
+    """
+    # replace _spawn_worker with a function that returns a placeholder to avoid
+    # actually starting any threads
+    monkeypatch.setattr(
+        ThreadPool,
+        '_spawn_worker',
+        lambda _: types.SimpleNamespace(ready=True),
+    )
+
+    tp = ThreadPool(server=None)
+    tp.start()
+    with pytest.raises(RuntimeError, match='Threadpools can only be started once.'):
+        tp.start()

@@ -65,9 +65,6 @@ And now for a trivial doctest to exercise the test suite
 True
 """
 
-from __future__ import absolute_import, division, print_function
-__metaclass__ = type
-
 import os
 import io
 import re
@@ -78,20 +75,14 @@ import time
 import traceback as traceback_
 import logging
 import platform
+import queue
 import contextlib
 import threading
-
-try:
-    from functools import lru_cache
-except ImportError:
-    from backports.functools_lru_cache import lru_cache
-
-import six
-from six.moves import queue
-from six.moves import urllib
+import urllib.parse
+from functools import lru_cache
 
 from . import connections, errors, __version__
-from ._compat import bton, ntou
+from ._compat import bton
 from ._compat import IS_PPC
 from .workers import threadpool
 from .makefile import MakeFile, StreamWriter
@@ -606,8 +597,8 @@ class ChunkedRFile:
     def read_trailer_lines(self):
         """Read HTTP headers and yield them.
 
-        Returns:
-            Generator: yields CRLF separated lines.
+        :yields: CRLF separated lines
+        :ytype: bytes
 
         """
         if not self.closed:
@@ -817,10 +808,6 @@ class HTTPRequest:
             return False
 
         try:
-            if six.PY2:  # FIXME: Figure out better way to do this
-                # Ref: https://stackoverflow.com/a/196392/595220 (like this?)
-                """This is a dummy check for unicode in URI."""
-                ntou(bton(uri, 'ascii'), 'ascii')
             scheme, authority, path, qs, fragment = urllib.parse.urlsplit(uri)
         except UnicodeError:
             self.simple_response('400 Bad Request', 'Malformed Request-URI')
@@ -1120,7 +1107,7 @@ class HTTPRequest:
 
         buf.append(CRLF)
         if msg:
-            if isinstance(msg, six.text_type):
+            if isinstance(msg, str):
                 msg = msg.encode('ISO-8859-1')
             buf.append(msg)
 
@@ -1422,10 +1409,7 @@ class HTTPConnection:
             https://github.com/daveti/tcpSockHack
             msdn.microsoft.com/en-us/commandline/wsl/release_notes#build-15025
             """
-            six.raise_from(  # 3.6+: raise RuntimeError from socket_err
-                RuntimeError,
-                socket_err,
-            )
+            raise RuntimeError from socket_err
         else:
             pid, uid, gid = struct.unpack(PEERCRED_STRUCT_DEF, peer_creds)
             return pid, uid, gid
@@ -1588,8 +1572,11 @@ class HTTPServer:
     ``PEERCREDS``-provided IDs.
     """
 
+    reuse_port = False
+    """If True, set SO_REUSEPORT on the socket."""
+
     keep_alive_conn_limit = 10
-    """The maximum number of waiting keep-alive connections that will be kept open.
+    """Maximum number of waiting keep-alive connections that will be kept open.
 
     Default is 10. Set to None to have unlimited connections."""
 
@@ -1597,6 +1584,7 @@ class HTTPServer:
         self, bind_addr, gateway,
         minthreads=10, maxthreads=-1, server_name=None,
         peercreds_enabled=False, peercreds_resolve_enabled=False,
+        reuse_port=False,
     ):
         """Initialize HTTPServer instance.
 
@@ -1607,6 +1595,8 @@ class HTTPServer:
             maxthreads (int): maximum number of threads for HTTP thread pool
             server_name (str): web server name to be advertised via Server
                 HTTP header
+            reuse_port (bool): if True SO_REUSEPORT option would be set to
+                socket
         """
         self.bind_addr = bind_addr
         self.gateway = gateway
@@ -1622,6 +1612,7 @@ class HTTPServer:
         self.peercreds_resolve_enabled = (
             peercreds_resolve_enabled and peercreds_enabled
         )
+        self.reuse_port = reuse_port
         self.clear_stats()
 
     def clear_stats(self):
@@ -1762,13 +1753,13 @@ class HTTPServer:
         if os.getenv('LISTEN_PID', None):
             # systemd socket activation
             self.socket = socket.fromfd(3, socket.AF_INET, socket.SOCK_STREAM)
-        elif isinstance(self.bind_addr, (six.text_type, six.binary_type)):
+        elif isinstance(self.bind_addr, (str, bytes)):
             # AF_UNIX socket
             try:
                 self.bind_unix_socket(self.bind_addr)
             except socket.error as serr:
                 msg = '%s -- (%s: %s)' % (msg, self.bind_addr, serr)
-                six.raise_from(socket.error(msg), serr)
+                raise socket.error(msg) from serr
         else:
             # AF_INET or AF_INET6 socket
             # Get the correct address family for our host (allows IPv6
@@ -1896,6 +1887,7 @@ class HTTPServer:
             self.bind_addr,
             family, type, proto,
             self.nodelay, self.ssl_adapter,
+            self.reuse_port,
         )
         sock = self.socket = self.bind_socket(sock, self.bind_addr)
         self.bind_addr = self.resolve_real_bind_addr(sock)
@@ -1927,9 +1919,6 @@ class HTTPServer:
                     'remove() argument 1 must be encoded '
                     'string without null bytes, not unicode'
                     not in err_msg
-                    and 'embedded NUL character' not in err_msg  # py34
-                    and 'argument must be a '
-                    'string without NUL characters' not in err_msg  # pypy2
             ):
                 raise
         except ValueError as val_err:
@@ -1947,6 +1936,7 @@ class HTTPServer:
             bind_addr=bind_addr,
             family=socket.AF_UNIX, type=socket.SOCK_STREAM, proto=0,
             nodelay=self.nodelay, ssl_adapter=self.ssl_adapter,
+            reuse_port=self.reuse_port,
         )
 
         try:
@@ -1987,13 +1977,45 @@ class HTTPServer:
         return sock
 
     @staticmethod
-    def prepare_socket(bind_addr, family, type, proto, nodelay, ssl_adapter):
+    def _make_socket_reusable(socket_, bind_addr):
+        host, port = bind_addr[:2]
+        IS_EPHEMERAL_PORT = port == 0
+
+        if socket_.family not in (socket.AF_INET, socket.AF_INET6):
+            raise ValueError('Cannot reuse a non-IP socket')
+
+        if IS_EPHEMERAL_PORT:
+            raise ValueError('Cannot reuse an ephemeral port (0)')
+
+        # Most BSD kernels implement SO_REUSEPORT the way that only the
+        # latest listener can read from socket. Some of BSD kernels also
+        # have SO_REUSEPORT_LB that works similarly to SO_REUSEPORT
+        # in Linux.
+        if hasattr(socket, 'SO_REUSEPORT_LB'):
+            socket_.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT_LB, 1)
+        elif hasattr(socket, 'SO_REUSEPORT'):
+            socket_.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        elif IS_WINDOWS:
+            socket_.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        else:
+            raise NotImplementedError(
+                'Current platform does not support port reuse',
+            )
+
+    @classmethod
+    def prepare_socket(
+            cls, bind_addr, family, type, proto, nodelay, ssl_adapter,
+            reuse_port=False,
+    ):
         """Create and prepare the socket object."""
         sock = socket.socket(family, type, proto)
         connections.prevent_socket_inheritance(sock)
 
         host, port = bind_addr[:2]
         IS_EPHEMERAL_PORT = port == 0
+
+        if reuse_port:
+            cls._make_socket_reusable(socket_=sock, bind_addr=bind_addr)
 
         if not (IS_WINDOWS or IS_EPHEMERAL_PORT):
             """Enable SO_REUSEADDR for the current socket.
@@ -2007,10 +2029,7 @@ class HTTPServer:
             * https://gavv.github.io/blog/ephemeral-port-reuse/
             """
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        if nodelay and not isinstance(
-                bind_addr,
-                (six.text_type, six.binary_type),
-        ):
+        if nodelay and not isinstance(bind_addr, (str, bytes)):
             sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
         if ssl_adapter is not None:
@@ -2059,7 +2078,7 @@ class HTTPServer:
             """
             return bind_addr[:2]
 
-        if isinstance(bind_addr, six.binary_type):
+        if isinstance(bind_addr, bytes):
             bind_addr = bton(bind_addr)
 
         return bind_addr
@@ -2109,10 +2128,7 @@ class HTTPServer:
 
         sock = getattr(self, 'socket', None)
         if sock:
-            if not isinstance(
-                    self.bind_addr,
-                    (six.text_type, six.binary_type),
-            ):
+            if not isinstance(self.bind_addr, (str, bytes)):
                 # Touch our own socket to make accept() return immediately.
                 try:
                     host, port = sock.getsockname()[:2]
@@ -2179,7 +2195,7 @@ ssl_adapters = {
 def get_ssl_adapter_class(name='builtin'):
     """Return an SSL adapter class for the given name."""
     adapter = ssl_adapters[name.lower()]
-    if isinstance(adapter, six.string_types):
+    if isinstance(adapter, str):
         last_dot = adapter.rfind('.')
         attr_name = adapter[last_dot + 1:]
         mod_path = adapter[:last_dot]

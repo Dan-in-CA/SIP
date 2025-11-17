@@ -1,21 +1,16 @@
 """Utilities to manage open connections."""
 
-from __future__ import absolute_import, division, print_function
-__metaclass__ = type
-
 import io
 import os
 import socket
 import threading
 import time
+import selectors
+from contextlib import suppress
 
 from . import errors
-from ._compat import selectors
-from ._compat import suppress
 from ._compat import IS_WINDOWS
 from .makefile import MakeFile
-
-import six
 
 try:
     import fcntl
@@ -279,8 +274,7 @@ class ConnectionManager:
             # One of the reason on why a socket could cause an error
             # is that the socket is already closed, ignore the
             # socket error if we try to close it at this point.
-            # This is equivalent to OSError in Py3
-            with suppress(socket.error):
+            with suppress(OSError):
                 conn.close()
 
     def _from_server_socket(self, server_socket):  # noqa: C901  # FIXME
@@ -310,11 +304,10 @@ class ConnectionManager:
                         msg,
                     ]
 
-                    sock_to_make = s if not six.PY2 else s._sock
-                    wfile = mf(sock_to_make, 'wb', io.DEFAULT_BUFFER_SIZE)
+                    wfile = mf(s, 'wb', io.DEFAULT_BUFFER_SIZE)
                     try:
                         wfile.write(''.join(buf).encode('ISO-8859-1'))
-                    except socket.error as ex:
+                    except OSError as ex:
                         if ex.args[0] not in errors.socket_errors_to_ignore:
                             raise
                     return
@@ -327,10 +320,7 @@ class ConnectionManager:
 
             conn = self.server.ConnectionClass(self.server, s, mf)
 
-            if not isinstance(
-                    self.server.bind_addr,
-                    (six.text_type, six.binary_type),
-            ):
+            if not isinstance(self.server.bind_addr, (str, bytes)):
                 # optional values
                 # Until we do DNS lookups, omit REMOTE_HOST
                 if addr is None:  # sometimes this can happen
@@ -352,7 +342,7 @@ class ConnectionManager:
             # notice keyboard interrupts on Win32, which don't interrupt
             # accept() by default
             return
-        except socket.error as ex:
+        except OSError as ex:
             if self.server.stats['Enabled']:
                 self.server.stats['Socket Errors'] += 1
             if ex.args[0] in errors.socket_error_eintr:

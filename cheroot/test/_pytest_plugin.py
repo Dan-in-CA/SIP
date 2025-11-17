@@ -4,9 +4,6 @@ Contains hooks, which are tightly bound to the Cheroot framework
 itself, useless for end-users' app testing.
 """
 
-from __future__ import absolute_import, division, print_function
-__metaclass__ = type
-
 import pytest
 
 
@@ -41,10 +38,6 @@ def pytest_load_initial_conftests(early_config, parser, args):
         'pytest.PytestUnraisableExceptionWarning:_pytest.unraisableexception',
         'ignore:Exception ignored in. '
         '<socket.socket fd=-1, family=AF_INET6, '
-        'type=SocketKind.SOCK_STREAM, proto=.:'
-        'pytest.PytestUnraisableExceptionWarning:_pytest.unraisableexception',
-        'ignore:Exception ignored in. '
-        '<ssl.SSLSocket fd=-1, family=AddressFamily.AF_UNIX, '
         'type=SocketKind.SOCK_STREAM, proto=.:'
         'pytest.PytestUnraisableExceptionWarning:_pytest.unraisableexception',
     ))

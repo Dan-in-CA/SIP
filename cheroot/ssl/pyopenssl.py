@@ -50,15 +50,10 @@ will be read, and the context will be automatically created from them.
    pyopenssl
 """
 
-from __future__ import absolute_import, division, print_function
-__metaclass__ = type
-
 import socket
 import sys
 import threading
 import time
-
-import six
 
 try:
     import OpenSSL.version
@@ -201,6 +196,7 @@ class SSLConnectionProxyMeta:
 
         def lock_decorator(method):
             """Create a proxy method for a new class."""
+
             def proxy_wrapper(self, *args):
                 self._lock.acquire()
                 try:
@@ -217,6 +213,7 @@ class SSLConnectionProxyMeta:
 
         def make_property(property_):
             """Create a proxy method for a new class."""
+
             def proxy_prop_wrapper(self):
                 return getattr(self._ssl_conn, property_)
             proxy_prop_wrapper.__name__ = property_
@@ -229,8 +226,7 @@ class SSLConnectionProxyMeta:
         return type(name, bases, nmspc)
 
 
-@six.add_metaclass(SSLConnectionProxyMeta)
-class SSLConnection:
+class SSLConnection(metaclass=SSLConnectionProxyMeta):
     r"""A thread-safe wrapper for an ``SSL.Connection``.
 
     :param tuple args: the arguments to create the wrapped \
