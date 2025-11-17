@@ -1,9 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """web.py: makes web apps (http://webpy.org)"""
 
-from __future__ import generators
-
-from . import (
+from . import (  # noqa: F401
     db,
     debugerror,
     form,
@@ -16,17 +14,17 @@ from . import (
     webapi,
     wsgi,
 )
-from .application import *
-from .db import *
-from .debugerror import *
-from .http import *
-from .httpserver import *
-from .net import *
-from .utils import *
-from .webapi import *
-from .wsgi import *
+from .application import *  # noqa: F401,F403
+from .db import *  # noqa: F401,F403
+from .debugerror import *  # noqa: F401,F403
+from .http import *  # noqa: F401,F403
+from .httpserver import *  # noqa: F401,F403
+from .net import *  # noqa: F401,F403
+from .utils import *  # noqa: F401,F403
+from .webapi import *  # noqa: F401,F403
+from .wsgi import *  # noqa: F401,F403
 
-__version__ = "0.51"
+__version__ = "0.70"
 __author__ = [
     "Aaron Swartz <me@aaronsw.com>",
     "Anand Chitipothu <anandology@gmail.com>",

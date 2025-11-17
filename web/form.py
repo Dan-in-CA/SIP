@@ -27,7 +27,7 @@ def attrget(obj, attr, value=None):
     return value
 
 
-class Form(object):
+class Form:
     r"""
     HTML form.
 
@@ -69,10 +69,7 @@ class Form(object):
                     html
                 )
             else:
-                out += (
-                    '    <tr><th><label for="%s">%s</label></th><td>%s</td></tr>\n'
-                    % (net.websafe(i.id), net.websafe(i.description), html)
-                )
+                out += f'    <tr><th><label for="{net.websafe(i.id)}">{net.websafe(i.description)}</label></th><td>{html}</td></tr>\n'
         out += "</table>"
         return out
 
@@ -82,8 +79,7 @@ class Form(object):
         for i in self.inputs:
             if not i.is_hidden():
                 out.append(
-                    '<label for="%s">%s</label>'
-                    % (net.websafe(i.id), net.websafe(i.description))
+                    f'<label for="{net.websafe(i.id)}">{net.websafe(i.description)}</label>'
                 )
             out.append(i.pre)
             out.append(i.render())
@@ -104,7 +100,9 @@ class Form(object):
         for i in self.inputs:
             v = attrget(source, i.name)
             if _validate:
-                out = i.validate(v) and out
+                if not i.validate(v):
+                    self.note = i.note
+                    return False
             else:
                 i.set_value(v)
         if _validate:
@@ -149,7 +147,7 @@ class Form(object):
     d = property(_get_d)
 
 
-class Input(object):
+class Input:
     """Generic input. Type attribute must be specified when called directly.
 
     See also: <https://www.w3.org/TR/html52/sec-forms.html#the-input-element>
@@ -259,9 +257,7 @@ class AttributeList(dict):
         return AttributeList(self)
 
     def __str__(self):
-        return " ".join(
-            ['%s="%s"' % (k, net.websafe(v)) for k, v in sorted(self.items())]
-        )
+        return " ".join([f'{k}="{net.websafe(v)}"' for k, v in sorted(self.items())])
 
     def __repr__(self):
         return "<attrs: %s>" % repr(str(self))
@@ -270,10 +266,10 @@ class AttributeList(dict):
 class Textbox(Input):
     """Textbox input.
 
-        >>> Textbox(name='foo', value='bar').render()
-        u'<input id="foo" name="foo" type="text" value="bar"/>'
-        >>> Textbox(name='foo', value=0).render()
-        u'<input id="foo" name="foo" type="text" value="0"/>'
+    >>> Textbox(name='foo', value='bar').render()
+    u'<input id="foo" name="foo" type="text" value="bar"/>'
+    >>> Textbox(name='foo', value=0).render()
+    u'<input id="foo" name="foo" type="text" value="0"/>'
     """
 
     def get_type(self):
@@ -283,8 +279,8 @@ class Textbox(Input):
 class Password(Input):
     """Password input.
 
-        >>> Password(name='password', value='secret').render()
-        u'<input id="password" name="password" type="password" value="secret"/>'
+    >>> Password(name='password', value='secret').render()
+    u'<input id="password" name="password" type="password" value="secret"/>'
     """
 
     def get_type(self):
@@ -294,29 +290,29 @@ class Password(Input):
 class Textarea(Input):
     """Textarea input.
 
-        >>> Textarea(name='foo', value='bar').render()
-        u'<textarea id="foo" name="foo">bar</textarea>'
+    >>> Textarea(name='foo', value='bar').render()
+    u'<textarea id="foo" name="foo">bar</textarea>'
     """
 
     def render(self):
         attrs = self.attrs.copy()
         attrs["name"] = self.name
         value = net.websafe(self.value or "")
-        return "<textarea %s>%s</textarea>" % (attrs, value)
+        return f"<textarea {attrs}>{value}</textarea>"
 
 
 class Dropdown(Input):
     r"""Dropdown/select input.
 
-        >>> Dropdown(name='foo', args=['a', 'b', 'c'], value='b').render()
-        u'<select id="foo" name="foo">\n  <option value="a">a</option>\n  <option selected="selected" value="b">b</option>\n  <option value="c">c</option>\n</select>\n'
-        >>> Dropdown(name='foo', args=[('a', 'aa'), ('b', 'bb'), ('c', 'cc')], value='b').render()
-        u'<select id="foo" name="foo">\n  <option value="a">aa</option>\n  <option selected="selected" value="b">bb</option>\n  <option value="c">cc</option>\n</select>\n'
+    >>> Dropdown(name='foo', args=['a', 'b', 'c'], value='b').render()
+    u'<select id="foo" name="foo">\n  <option value="a">a</option>\n  <option selected="selected" value="b">b</option>\n  <option value="c">c</option>\n</select>\n'
+    >>> Dropdown(name='foo', args=[('a', 'aa'), ('b', 'bb'), ('c', 'cc')], value='b').render()
+    u'<select id="foo" name="foo">\n  <option value="a">aa</option>\n  <option selected="selected" value="b">bb</option>\n  <option value="c">cc</option>\n</select>\n'
     """
 
     def __init__(self, name, args, *validators, **attrs):
         self.args = args
-        super(Dropdown, self).__init__(name, *validators, **attrs)
+        super().__init__(name, *validators, **attrs)
 
     def render(self):
         attrs = self.attrs.copy()
@@ -346,26 +342,25 @@ class Dropdown(Input):
             select_p = ' selected="selected"'
         else:
             select_p = ""
-        return indent + '<option%s value="%s">%s</option>\n' % (
-            select_p,
-            net.websafe(value),
-            net.websafe(desc),
+        return (
+            indent
+            + f'<option{select_p} value="{net.websafe(value)}">{net.websafe(desc)}</option>\n'
         )
 
 
 class GroupedDropdown(Dropdown):
     r"""Grouped Dropdown/select input.
 
-        >>> GroupedDropdown(name='car_type', args=(('Swedish Cars', ('Volvo', 'Saab')), ('German Cars', ('Mercedes', 'Audi'))), value='Audi').render()
-        u'<select id="car_type" name="car_type">\n  <optgroup label="Swedish Cars">\n    <option value="Volvo">Volvo</option>\n    <option value="Saab">Saab</option>\n  </optgroup>\n  <optgroup label="German Cars">\n    <option value="Mercedes">Mercedes</option>\n    <option selected="selected" value="Audi">Audi</option>\n  </optgroup>\n</select>\n'
-        >>> GroupedDropdown(name='car_type', args=(('Swedish Cars', (('v', 'Volvo'), ('s', 'Saab'))), ('German Cars', (('m', 'Mercedes'), ('a', 'Audi')))), value='a').render()
-        u'<select id="car_type" name="car_type">\n  <optgroup label="Swedish Cars">\n    <option value="v">Volvo</option>\n    <option value="s">Saab</option>\n  </optgroup>\n  <optgroup label="German Cars">\n    <option value="m">Mercedes</option>\n    <option selected="selected" value="a">Audi</option>\n  </optgroup>\n</select>\n'
+    >>> GroupedDropdown(name='car_type', args=(('Swedish Cars', ('Volvo', 'Saab')), ('German Cars', ('Mercedes', 'Audi'))), value='Audi').render()
+    u'<select id="car_type" name="car_type">\n  <optgroup label="Swedish Cars">\n    <option value="Volvo">Volvo</option>\n    <option value="Saab">Saab</option>\n  </optgroup>\n  <optgroup label="German Cars">\n    <option value="Mercedes">Mercedes</option>\n    <option selected="selected" value="Audi">Audi</option>\n  </optgroup>\n</select>\n'
+    >>> GroupedDropdown(name='car_type', args=(('Swedish Cars', (('v', 'Volvo'), ('s', 'Saab'))), ('German Cars', (('m', 'Mercedes'), ('a', 'Audi')))), value='a').render()
+    u'<select id="car_type" name="car_type">\n  <optgroup label="Swedish Cars">\n    <option value="v">Volvo</option>\n    <option value="s">Saab</option>\n  </optgroup>\n  <optgroup label="German Cars">\n    <option value="m">Mercedes</option>\n    <option selected="selected" value="a">Audi</option>\n  </optgroup>\n</select>\n'
 
     """
 
     def __init__(self, name, args, *validators, **attrs):
         self.args = args
-        super(Dropdown, self).__init__(name, *validators, **attrs)
+        super().__init__(name, *validators, **attrs)
 
     def render(self):
         attrs = self.attrs.copy()
@@ -386,7 +381,7 @@ class GroupedDropdown(Dropdown):
 class Radio(Input):
     def __init__(self, name, args, *validators, **attrs):
         self.args = args
-        super(Radio, self).__init__(name, *validators, **attrs)
+        super().__init__(name, *validators, **attrs)
 
     def render(self):
         x = "<span>"
@@ -402,7 +397,7 @@ class Radio(Input):
             attrs["id"] = self.name + str(idx)
             if self.value == value:
                 attrs["checked"] = "checked"
-            x += "<input %s/> %s" % (attrs, net.websafe(desc))
+            x += f"<input {attrs}/> {net.websafe(desc)}"
         x += "</span>"
         return x
 
@@ -456,7 +451,7 @@ class Button(Input):
     """
 
     def __init__(self, name, *validators, **attrs):
-        super(Button, self).__init__(name, *validators, **attrs)
+        super().__init__(name, *validators, **attrs)
         self.description = ""
 
     def render(self):
@@ -465,14 +460,14 @@ class Button(Input):
         if self.value is not None:
             attrs["value"] = self.value
         html = attrs.pop("html", None) or net.websafe(self.name)
-        return "<button %s>%s</button>" % (attrs, html)
+        return f"<button {attrs}>{html}</button>"
 
 
 class Hidden(Input):
     """Hidden Input.
 
-        >>> Hidden(name='foo', value='bar').render()
-        u'<input id="foo" name="foo" type="hidden" value="bar"/>'
+    >>> Hidden(name='foo', value='bar').render()
+    u'<input id="foo" name="foo" type="hidden" value="bar"/>'
     """
 
     def is_hidden(self):
@@ -485,8 +480,8 @@ class Hidden(Input):
 class File(Input):
     """File input.
 
-        >>> File(name='f', accept=".doc,.docx,.xml").render()
-        u'<input accept=".doc,.docx,.xml" id="f" name="f" type="file"/>'
+    >>> File(name='f', accept=".doc,.docx,.xml").render()
+    u'<input accept=".doc,.docx,.xml" id="f" name="f" type="file"/>'
     """
 
     def get_type(self):
@@ -518,6 +513,38 @@ class Email(Input):
 
     def get_type(self):
         return "email"
+
+
+class Date(Input):
+    """Date input.
+
+    Note: Not supported by desktop Safari, Internet Explorer, or Opera Mini
+
+    See: <https://html.spec.whatwg.org/#date-state-(type=date)>
+
+    >>> Date(name='date', value='2020-04-01').render()
+    u'<input id="date" name="date" type="date" value="2020-04-01"/>'
+
+    """
+
+    def get_type(self):
+        return "date"
+
+
+class Time(Input):
+    """Time input.
+
+    Note: Not supported by desktop Safari, Internet Explorer, or Opera Mini
+
+    See: <https://html.spec.whatwg.org/#time-state-(type=time)>
+
+    >>> Time(name='time', value='07:00').render()
+    u'<input id="time" name="time" type="time" value="07:00"/>'
+
+    """
+
+    def get_type(self):
+        return "time"
 
 
 class Search(Input):
@@ -594,7 +621,7 @@ class Datalist(Input):
     """Datalist input.
 
     This is currently supported by Chrome, Firefox, Edge, and Opera. It is not
-    supported on Safari or Internet Explorer. Use it with caution. 
+    supported on Safari or Internet Explorer. Use it with caution.
 
     Datalist cannot be used separately. It must be bound to an input.
 
@@ -610,7 +637,7 @@ class Datalist(Input):
 
     def __init__(self, name, args, *validators, **kwargs):
         self.args = args
-        super(Datalist, self).__init__(name, *validators, **kwargs)
+        super().__init__(name, *validators, **kwargs)
 
     def render(self):
         attrs = self.attrs.copy()
@@ -623,7 +650,7 @@ class Datalist(Input):
                 label = net.websafe(arg[1])
             else:
                 label = net.websafe(arg)
-            x += '<option%s value="%s"/>' % (label_p, label)
+            x += f'<option{label_p} value="{label}"/>'
         x += "</datalist>"
         return x
 

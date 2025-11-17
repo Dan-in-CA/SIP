@@ -3,18 +3,11 @@ Network Utilities
 (from web.py)
 """
 
-
 import datetime
 import re
 import socket
 import time
-
-from .py3helpers import PY2, text_type
-
-try:
-    from urllib.parse import quote
-except ImportError:
-    from urllib import quote
+from urllib.parse import quote
 
 __all__ = [
     "validipaddr",
@@ -46,7 +39,7 @@ def validip6addr(address):
     """
     try:
         socket.inet_pton(socket.AF_INET6, address)
-    except (socket.error, AttributeError, ValueError):
+    except (OSError, AttributeError, ValueError):
         return False
 
     return True
@@ -194,13 +187,7 @@ def urlquote(val):
     if val is None:
         return ""
 
-    if PY2:
-        if isinstance(val, text_type):
-            val = val.encode("utf-8")
-        else:
-            val = str(val)
-    else:
-        val = str(val).encode("utf-8")
+    val = str(val).encode("utf-8")
     return quote(val)
 
 
@@ -236,11 +223,11 @@ def htmlquote(text):
         >>> htmlquote(u"<'&\">")
         u'&lt;&#39;&amp;&quot;&gt;'
     """
-    text = text.replace(u"&", u"&amp;")  # Must be done first!
-    text = text.replace(u"<", u"&lt;")
-    text = text.replace(u">", u"&gt;")
-    text = text.replace(u"'", u"&#39;")
-    text = text.replace(u'"', u"&quot;")
+    text = text.replace("&", "&amp;")  # Must be done first!
+    text = text.replace("<", "&lt;")
+    text = text.replace(">", "&gt;")
+    text = text.replace("'", "&#39;")
+    text = text.replace('"', "&quot;")
     return text
 
 
@@ -251,11 +238,11 @@ def htmlunquote(text):
         >>> htmlunquote(u'&lt;&#39;&amp;&quot;&gt;')
         u'<\'&">'
     """
-    text = text.replace(u"&quot;", u'"')
-    text = text.replace(u"&#39;", u"'")
-    text = text.replace(u"&gt;", u">")
-    text = text.replace(u"&lt;", u"<")
-    text = text.replace(u"&amp;", u"&")  # Must be done last!
+    text = text.replace("&quot;", '"')
+    text = text.replace("&#39;", "'")
+    text = text.replace("&gt;", ">")
+    text = text.replace("&lt;", "<")
+    text = text.replace("&amp;", "&")  # Must be done last!
     return text
 
 
@@ -271,18 +258,12 @@ def websafe(val):
         True
     """
     if val is None:
-        return u""
+        return ""
 
-    if PY2:
-        if isinstance(val, str):
-            val = val.decode("utf-8")
-        elif not isinstance(val, text_type):
-            val = text_type(val)
-    else:
-        if isinstance(val, bytes):
-            val = val.decode("utf-8")
-        elif not isinstance(val, str):
-            val = str(val)
+    if isinstance(val, bytes):
+        val = val.decode("utf-8")
+    elif not isinstance(val, str):
+        val = str(val)
 
     return htmlquote(val)
 

@@ -1,6 +1,7 @@
 """
 Interface to various templating engines.
 """
+
 import os.path
 
 __all__ = ["render_cheetah", "render_genshi", "render_mako", "cache"]
@@ -17,7 +18,7 @@ class render_cheetah:
 
     def __init__(self, path):
         # give error if Chetah is not installed
-        from Cheetah.Template import Template
+        from Cheetah.Template import Template  # noqa: F401
 
         self.path = path
 

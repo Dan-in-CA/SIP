@@ -14,20 +14,11 @@ __all__ = [
 ]
 
 import datetime
+from urllib.parse import urlencode as urllib_urlencode
 
 from . import net, utils
 from . import webapi as web
-from .py3helpers import iteritems, numeric_types
-
-try:
-    from urllib.parse import urlencode as urllib_urlencode
-except ImportError:
-    from urllib import urlencode as urllib_urlencode
-
-try:
-    xrange  # Python 2
-except NameError:
-    xrange = range  # Python 3
+from .py3helpers import iteritems
 
 
 def prefixurl(base=""):
@@ -36,7 +27,7 @@ def prefixurl(base=""):
     Maybe some other time.
     """
     url = web.ctx.path.lstrip("/")
-    for i in xrange(url.count("/")):
+    for i in range(url.count("/")):
         base += "../"
     if not base:
         base = "./"
@@ -48,7 +39,7 @@ def expires(delta):
     Outputs an `Expires` header for `delta` from now.
     `delta` is a `timedelta` object or a number of seconds.
     """
-    if isinstance(delta, numeric_types):
+    if isinstance(delta, int):
         delta = datetime.timedelta(seconds=delta)
     date_obj = datetime.datetime.utcnow() + delta
     web.header("Expires", net.httpdate(date_obj))
@@ -77,9 +68,7 @@ def modified(date=None, etag=None):
     `True`, or otherwise it raises NotModified error. It also sets
     `Last-Modified` and `ETag` output headers.
     """
-    n = set(
-        [x.strip('" ') for x in web.ctx.env.get("HTTP_IF_NONE_MATCH", "").split(",")]
-    )
+    n = {x.strip('" ') for x in web.ctx.env.get("HTTP_IF_NONE_MATCH", "").split(",")}
     m = net.parsehttpdate(web.ctx.env.get("HTTP_IF_MODIFIED_SINCE", "").split(";")[0])
     validate = False
     if etag:
@@ -117,7 +106,7 @@ def urlencode(query, doseq=0):
         else:
             return utils.safestr(value)
 
-    query = dict([(k, convert(v, doseq)) for k, v in query.items()])
+    query = {k: convert(v, doseq) for k, v in query.items()}
     return urllib_urlencode(query, doseq=doseq)
 
 

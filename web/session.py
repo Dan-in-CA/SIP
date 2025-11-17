@@ -6,28 +6,19 @@ Session Management
 import datetime
 import os
 import os.path
+import pickle
+import shutil
 import threading
 import time
+from base64 import decodebytes, encodebytes
 from copy import deepcopy
 from hashlib import sha1
 
 from . import utils
 from . import webapi as web
-from .py3helpers import PY2, iteritems
+from .py3helpers import iteritems
 
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-
-
-if PY2:
-    from base64 import encodestring as encodebytes, decodestring as decodebytes
-else:
-    from base64 import encodebytes, decodebytes
-
-
-__all__ = ["Session", "SessionExpired", "Store", "DiskStore", "DBStore"]
+__all__ = ["Session", "SessionExpired", "Store", "DiskStore", "DBStore", "MemoryStore"]
 
 web.config.session_parameters = utils.storage(
     {
@@ -51,9 +42,8 @@ class SessionExpired(web.HTTPError):
         web.HTTPError.__init__(self, "200 OK", {}, data=message)
 
 
-class Session(object):
-    """Session management for web.py
-    """
+class Session:
+    """Session management for web.py"""
 
     __slots__ = [
         "store",
@@ -151,16 +141,12 @@ class Session(object):
         del current_values["session_id"]
         del current_values["ip"]
 
-        if not self.get("_killed") and current_values != self._initializer:
+        if not self.get("_killed"):
             self._setcookie(self.session_id)
             self.store[self.session_id] = dict(self._data)
         else:
             if web.cookies().get(self._config.cookie_name):
-                self._setcookie(
-                    self.session_id,
-                    expires=self._config.timeout,
-                    samesite=self._config.get("samesite"),
-                )
+                self._setcookie(self.session_id, expires=-1)
 
     def _setcookie(self, session_id, expires="", **kw):
         cookie_name = self._config.cookie_name
@@ -172,7 +158,7 @@ class Session(object):
         web.setcookie(
             cookie_name,
             session_id,
-            expires=expires or self._config.timeout,
+            expires=expires,
             domain=cookie_domain,
             httponly=httponly,
             secure=secure,
@@ -188,10 +174,8 @@ class Session(object):
             now = time.time()
             secret_key = self._config.secret_key
 
-            hashable = "%s%s%s%s" % (rand, now, utils.safestr(web.ctx.ip), secret_key)
-            # TODO maybe a better way to deal with this, without using an if-statement
-            session_id = sha1(hashable if PY2 else hashable.encode("utf-8"))
-            session_id = session_id.hexdigest()
+            hashable = f"{rand}{now}{utils.safestr(web.ctx.ip)}{secret_key}"
+            session_id = sha1(hashable.encode("utf-8")).hexdigest()
             if session_id not in self.store:
                 break
         return session_id
@@ -242,7 +226,10 @@ class Store:
         return encodebytes(pickled)
 
     def decode(self, session_data):
-        """decodes the data to get back the session dict """
+        """decodes the data to get back the session dict"""
+        if isinstance(session_data, str):
+            session_data = session_data.encode()
+
         pickled = decodebytes(session_data)
         return pickle.loads(pickled)
 
@@ -294,14 +281,14 @@ class DiskStore(Store):
         path = self._get_path(key)
         pickled = self.encode(value)
         try:
-            tname = path + "." + threading.current_thread().getName()
+            tname = path + "." + threading.current_thread().name
             f = open(tname, "wb")
             try:
                 f.write(pickled)
             finally:
                 f.close()
-                os.rename(tname, path)  # atomary operation
-        except IOError:
+                shutil.move(tname, path)  # atomary operation
+        except OSError:
             pass
 
     def __delitem__(self, key):
@@ -310,12 +297,18 @@ class DiskStore(Store):
             os.remove(path)
 
     def cleanup(self, timeout):
+        if not os.path.isdir(self.root):
+            return
+
         now = time.time()
         for f in os.listdir(self.root):
             path = self._get_path(f)
             atime = os.stat(path).st_atime
             if now - atime > timeout:
-                os.remove(path)
+                if os.path.isdir(path):
+                    shutil.rmtree(path)
+                else:
+                    os.remove(path)
 
 
 class DBStore(Store):
@@ -348,7 +341,10 @@ class DBStore(Store):
             return self.decode(s.data)
 
     def __setitem__(self, key, value):
-        pickled = self.encode(value)
+        # Remove the leading `b` of bytes object (`b"..."`), otherwise encoded
+        # value is invalid base64 format.
+        pickled = self.encode(value).decode()
+
         now = datetime.datetime.now()
         if key in self:
             self.db.update(
@@ -427,8 +423,7 @@ class MemoryStore(Store):
         return key in self.d_store
 
     def __getitem__(self, key):
-        """ Return the value and update the last seen value
-        """
+        """Return the value and update the last seen value"""
         t, value = self.d_store[key]
         self.d_store[key] = (time.time(), value)
         return value

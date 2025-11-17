@@ -2,33 +2,22 @@
 Web application
 (from web.py)
 """
-from __future__ import print_function
 
 import itertools
 import os
 import sys
 import traceback
 import wsgiref.handlers
+from importlib import reload
 from inspect import isclass
 from io import BytesIO
+from urllib.parse import unquote, urlencode, urlparse
 
-from . import browser, httpserver, utils
+from . import browser, httpserver, utils, wsgi
 from . import webapi as web
-from . import wsgi
 from .debugerror import debugerror
-from .py3helpers import PY2, is_iter, iteritems, string_types
+from .py3helpers import iteritems
 from .utils import lstrips
-
-if PY2:
-    from urllib import splitquery, urlencode, unquote
-else:
-    from urllib.parse import urlparse, urlencode, unquote
-
-try:
-    reload  # Python 2
-except NameError:
-    from importlib import reload  # Python 3
-
 
 __all__ = [
     "application",
@@ -167,7 +156,7 @@ class application:
         host="0.0.0.0:8080",
         headers=None,
         https=False,
-        **kw
+        **kw,
     ):
         """Makes request to this application for the specified path and method.
         Response will be a storage object with data, status and headers.
@@ -218,12 +207,9 @@ class application:
         """
         # PY3DOCTEST: b'hello'
         # PY3DOCTEST: b'your user-agent is a small jumping bean/1.0 (compatible)'
-        if PY2:
-            path, maybe_query = splitquery(localpart)
-        else:
-            _p = urlparse(localpart)
-            path = _p.path
-            maybe_query = _p.query
+        _p = urlparse(localpart)
+        path = _p.path
+        maybe_query = _p.query
 
         query = maybe_query or ""
 
@@ -296,7 +282,7 @@ class application:
                 print(traceback.format_exc(), file=web.debug)
                 raise self.internalerror()
 
-        # processors must be applied in the resvere order. (??)
+        # processors must be applied in the reverse order. (??)
         return process(self.processors)
 
     def wsgifunc(self, *middleware):
@@ -317,7 +303,7 @@ class application:
             return itertools.chain([firstchunk], iterator)
 
         def wsgi(env, start_resp):
-            # clear threadlocal to avoid inteference of previous requests
+            # clear threadlocal to avoid interference of previous requests
             self._cleanup()
 
             self.load(env)
@@ -327,7 +313,7 @@ class application:
                     raise web.nomethod()
 
                 result = self.handle_with_processors()
-                if is_iter(result):
+                if result and hasattr(result, "__next__"):
                     result = peep(result)
                 else:
                     result = [result]
@@ -336,15 +322,10 @@ class application:
 
             def build_result(result):
                 for r in result:
-                    if PY2:
-                        yield utils.safestr(r)
+                    if isinstance(r, bytes):
+                        yield r
                     else:
-                        if isinstance(r, bytes):
-                            yield r
-                        elif isinstance(r, string_types):
-                            yield r.encode("utf-8")
-                        else:
-                            yield str(r).encode("utf-8")
+                        yield str(r).encode("utf-8")
 
             result = build_result(result)
 
@@ -375,8 +356,7 @@ class application:
         return wsgi.runwsgi(self.wsgifunc(*middleware))
 
     def stop(self):
-        """Stops the http server started by run.
-        """
+        """Stops the http server started by run."""
         if httpserver.server:
             httpserver.server.stop()
             httpserver.server = None
@@ -426,9 +406,7 @@ class application:
             minor = version[1]
 
             if major != 2:
-                raise EnvironmentError(
-                    "Google App Engine only supports python 2.5 and 2.7"
-                )
+                raise OSError("Google App Engine only supports python 2.5 and 2.7")
 
             # if 2.7, return a function that can be run by gae
             if minor == 7:
@@ -439,9 +417,7 @@ class application:
 
                 return run_wsgi_app(wsgiapp)
             else:
-                raise EnvironmentError(
-                    "Not a supported platform, use python 2.5 or 2.7"
-                )
+                raise OSError("Not a supported platform, use python 2.5 or 2.7")
         except ImportError:
             return wsgiref.handlers.CGIHandler().run(wsgiapp)
 
@@ -469,15 +445,17 @@ class application:
         ctx.realhome = ctx.home
         ctx.ip = env.get("REMOTE_ADDR")
         ctx.method = env.get("REQUEST_METHOD")
-        if PY2:
+        try:
+            ctx.path = bytes(env.get("PATH_INFO"), "latin1").decode("utf8")
+        except UnicodeDecodeError:  # If there are Unicode characters...
             ctx.path = env.get("PATH_INFO")
-        else:
-            ctx.path = env.get("PATH_INFO").encode("latin1").decode("utf8")
+
         # http://trac.lighttpd.net/trac/ticket/406 requires:
-        if env.get("SERVER_SOFTWARE", "").startswith("lighttpd/"):
+        if env.get("SERVER_SOFTWARE", "").startswith(("lighttpd/", "nginx/")):
             ctx.path = lstrips(env.get("REQUEST_URI").split("?")[0], ctx.homepath)
-            # Apache and CherryPy webservers unquote the url but lighttpd doesn't.
-            # unquote explicitly for lighttpd to make ctx.path uniform across all servers.
+            # Apache and CherryPy webservers unquote urls but lighttpd and nginx do not.
+            # Unquote explicitly for lighttpd and nginx to make ctx.path uniform across
+            # all servers.
             ctx.path = unquote(ctx.path)
 
         if env.get("QUERY_STRING"):
@@ -514,7 +492,7 @@ class application:
             return f.handle_with_processors()
         elif isclass(f):
             return handle_class(f)
-        elif isinstance(f, string_types):
+        elif isinstance(f, str):
             if f.startswith("redirect "):
                 url = f.split(" ", 1)[1]
                 if web.ctx.method == "GET":
@@ -542,10 +520,10 @@ class application:
                     return f, None
                 else:
                     continue
-            elif isinstance(what, string_types):
-                what, result = utils.re_subm(r"^%s\Z" % (pat,), what, value)
+            elif isinstance(what, str):
+                what, result = utils.re_subm(rf"^{pat}\Z", what, value)
             else:
-                result = utils.re_compile(r"^%s\Z" % (pat,)).match(value)
+                result = utils.re_compile(rf"^{pat}\Z").match(value)
 
             if result:  # it's a match
                 return what, [x for x in result.groups()]
@@ -675,7 +653,7 @@ class subdomain_application(application):
 
     def _match(self, mapping, value):
         for pat, what in mapping:
-            if isinstance(what, string_types):
+            if isinstance(what, str):
                 what, result = utils.re_subm("^" + pat + "$", what, value)
             else:
                 result = utils.re_compile("^" + pat + "$").match(value)
@@ -715,13 +693,12 @@ def unloadhook(h):
     def processor(handler):
         try:
             result = handler()
-            is_gen = is_iter(result)
         except:
             # run the hook even when handler raises some exception
             h()
             raise
 
-        if is_gen:
+        if result and hasattr(result, "__next__"):
             return wrap(result)
         else:
             h()
@@ -812,7 +789,7 @@ class Reloader:
 
         try:
             mtime = os.stat(mod.__file__).st_mtime
-        except (OSError, IOError):
+        except OSError:
             return
         if mod.__file__.endswith(self.__class__.SUFFIX) and os.path.exists(
             mod.__file__[:-1]

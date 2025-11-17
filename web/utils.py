@@ -1,34 +1,22 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 General Utilities
 (part of web.py)
 """
-from __future__ import print_function
 
 import datetime
 import os
 import re
+import shutil
 import subprocess
 import sys
 import threading
 import time
 import traceback
+from io import StringIO
 from threading import local as threadlocal
 
-from .py3helpers import (
-    PY2,
-    imap,
-    is_iter,
-    iteritems,
-    itervalues,
-    string_types,
-    text_type,
-)
-
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
+from .py3helpers import iteritems, itervalues
 
 __all__ = [
     "Storage",
@@ -173,12 +161,10 @@ def storify(mapping, *requireds, **defaults):
             return s
 
     def getvalue(x):
-        if hasattr(x, "file") and hasattr(x, "value"):
-            return x.value
-        elif hasattr(x, "value"):
-            return unicodify(x.value)
+        if hasattr(x, "file") and hasattr(x, "raw"):
+            return x.file.read()
         else:
-            return unicodify(x)
+            return unicodify(getattr(x, "value", x))
 
     stor = Storage()
     for key in requireds + tuple(mapping.keys()):
@@ -195,7 +181,7 @@ def storify(mapping, *requireds, **defaults):
 
         setattr(stor, key, value)
 
-    for (key, value) in iteritems(defaults):
+    for key, value in iteritems(defaults):
         result = value
         if hasattr(stor, key):
             result = stor[key]
@@ -209,19 +195,19 @@ def storify(mapping, *requireds, **defaults):
 class Counter(storage):
     """Keeps count of how many times something is added.
 
-        >>> c = counter()
-        >>> c.add('x')
-        >>> c.add('x')
-        >>> c.add('x')
-        >>> c.add('x')
-        >>> c.add('x')
-        >>> c.add('y')
-        >>> c['y']
-        1
-        >>> c['x']
-        5
-        >>> c.most()
-        ['x']
+    >>> c = counter()
+    >>> c.add('x')
+    >>> c.add('x')
+    >>> c.add('x')
+    >>> c.add('x')
+    >>> c.add('x')
+    >>> c.add('y')
+    >>> c['y']
+    1
+    >>> c['x']
+    5
+    >>> c.most()
+    ['x']
     """
 
     def add(self, n):
@@ -241,51 +227,51 @@ class Counter(storage):
     def percent(self, key):
         """Returns what percentage a certain key is of all entries.
 
-           >>> c = counter()
-           >>> c.add('x')
-           >>> c.add('x')
-           >>> c.add('x')
-           >>> c.add('y')
-           >>> c.percent('x')
-           0.75
-           >>> c.percent('y')
-           0.25
+        >>> c = counter()
+        >>> c.add('x')
+        >>> c.add('x')
+        >>> c.add('x')
+        >>> c.add('y')
+        >>> c.percent('x')
+        0.75
+        >>> c.percent('y')
+        0.25
         """
         return float(self[key]) / sum(self.values())
 
     def sorted_keys(self):
         """Returns keys sorted by value.
 
-             >>> c = counter()
-             >>> c.add('x')
-             >>> c.add('x')
-             >>> c.add('y')
-             >>> c.sorted_keys()
-             ['x', 'y']
+        >>> c = counter()
+        >>> c.add('x')
+        >>> c.add('x')
+        >>> c.add('y')
+        >>> c.sorted_keys()
+        ['x', 'y']
         """
         return sorted(self.keys(), key=lambda k: self[k], reverse=True)
 
     def sorted_values(self):
         """Returns values sorted by value.
 
-            >>> c = counter()
-            >>> c.add('x')
-            >>> c.add('x')
-            >>> c.add('y')
-            >>> c.sorted_values()
-            [2, 1]
+        >>> c = counter()
+        >>> c.add('x')
+        >>> c.add('x')
+        >>> c.add('y')
+        >>> c.sorted_values()
+        [2, 1]
         """
         return [self[k] for k in self.sorted_keys()]
 
     def sorted_items(self):
         """Returns items sorted by value.
 
-            >>> c = counter()
-            >>> c.add('x')
-            >>> c.add('x')
-            >>> c.add('y')
-            >>> c.sorted_items()
-            [('x', 2), ('y', 1)]
+        >>> c = counter()
+        >>> c.add('x')
+        >>> c.add('x')
+        >>> c.add('y')
+        >>> c.sorted_items()
+        [('x', 2), ('y', 1)]
         """
         return [(k, self[k]) for k in self.sorted_keys()]
 
@@ -365,32 +351,6 @@ def strips(text, remove):
     return rstrips(lstrips(text, remove), remove)
 
 
-def safeunicode(obj, encoding="utf-8"):
-    r"""
-    Converts any given object to unicode string.
-
-        >>> safeunicode('hello')
-        u'hello'
-        >>> safeunicode(2)
-        u'2'
-        >>> safeunicode('\xe1\x88\xb4')
-        u'\u1234'
-    """
-    t = type(obj)
-    if t is text_type:
-        return obj
-    elif t is bytes:
-        return obj.decode(encoding)
-    elif t in [int, float, bool]:
-        return text_type(obj)
-    # elif hasattr(obj, '__unicode__') or isinstance(obj, unicode):
-    #    return unicode(obj)
-    # else:
-    #    return str(obj).decode(encoding)
-    else:
-        return text_type(obj)
-
-
 def safestr(obj, encoding="utf-8"):
     r"""
     Converts any given object to utf-8 encoded string.
@@ -401,17 +361,14 @@ def safestr(obj, encoding="utf-8"):
         '2'
     """
 
-    if PY2 and isinstance(obj, text_type):
-        return obj.encode(encoding)
-    elif is_iter(obj):
-        return imap(safestr, obj)
+    if obj and hasattr(obj, "__next__"):
+        return [safestr(i) for i in obj]
     else:
         return str(obj)
 
 
-if not PY2:
-    # Since Python3, utf-8 encoded strings and unicode strings are the same thing
-    safeunicode = safestr
+# Since Python3, utf-8 encoded strings and unicode strings are the same thing
+safeunicode = safestr
 
 
 def timelimit(timeout):
@@ -445,7 +402,7 @@ def timelimit(timeout):
                     self.result = None
                     self.error = None
 
-                    self.setDaemon(True)
+                    self.daemon = True
                     self.start()
 
                 def run(self):
@@ -636,7 +593,7 @@ def iterview(x):
             spacing = ">" + (" " * (size - val))[1:]
         else:
             spacing = ""
-        return "[%s%s]" % ("=" * val, spacing)
+        return "[{}{}]".format("=" * val, spacing)
 
     def eta(elapsed, n, lenx):
         if n == 0:
@@ -770,8 +727,7 @@ iterbetter = IterBetter
 
 
 def safeiter(it, cleanup=None, ignore_errors=True):
-    """Makes an iterator safe by ignoring the exceptions occurred during the iteration.
-    """
+    """Makes an iterator safe by ignoring the exceptions occurred during the iteration."""
 
     def next():
         while True:
@@ -793,7 +749,7 @@ def safewrite(filename, content):
     """
     with open(filename + ".tmp", "w") as f:
         f.write(content)
-    os.rename(f.name, filename)
+    shutil.move(f.name, filename)
 
 
 def dictreverse(mapping):
@@ -803,7 +759,7 @@ def dictreverse(mapping):
         >>> dictreverse({1: 2, 3: 4})
         {2: 1, 4: 3}
     """
-    return dict([(value, key) for (key, value) in iteritems(mapping)])
+    return {value: key for (key, value) in iteritems(mapping)}
 
 
 def dictfind(dictionary, element):
@@ -816,7 +772,7 @@ def dictfind(dictionary, element):
         3
         >>> dictfind(d, 5)
     """
-    for (key, value) in iteritems(dictionary):
+    for key, value in iteritems(dictionary):
         if element is value:
             return key
 
@@ -833,7 +789,7 @@ def dictfindall(dictionary, element):
         []
     """
     res = []
-    for (key, value) in iteritems(dictionary):
+    for key, value in iteritems(dictionary):
         if element is value:
             res.append(key)
     return res
@@ -876,11 +832,11 @@ def dictadd(*dicts):
 def requeue(queue, index=-1):
     """Returns the element at index after moving it to the beginning of the queue.
 
-        >>> x = [1, 2, 3, 4]
-        >>> requeue(x)
-        4
-        >>> x
-        [4, 1, 2, 3]
+    >>> x = [1, 2, 3, 4]
+    >>> requeue(x)
+    4
+    >>> x
+    [4, 1, 2, 3]
     """
     x = queue.pop(index)
     queue.insert(0, x)
@@ -890,11 +846,11 @@ def requeue(queue, index=-1):
 def restack(stack, index=0):
     """Returns the element at index after moving it to the top of stack.
 
-           >>> x = [1, 2, 3, 4]
-           >>> restack(x)
-           1
-           >>> x
-           [2, 3, 4, 1]
+    >>> x = [1, 2, 3, 4]
+    >>> restack(x)
+    1
+    >>> x
+    [2, 3, 4, 1]
     """
     x = stack.pop(index)
     stack.append(x)
@@ -1207,8 +1163,8 @@ class Profile:
 
     def __call__(self, *args):  # , **kw):   kw unused
         import cProfile
-        import pstats
         import os
+        import pstats
         import tempfile
 
         f, filename = tempfile.mkstemp()
@@ -1233,7 +1189,7 @@ class Profile:
         # remove the tempfile
         try:
             os.remove(filename)
-        except IOError:
+        except OSError:
             pass
 
         return result, x
@@ -1265,7 +1221,7 @@ def tryall(context, prefix=None):
     """
     context = context.copy()  # vars() would update
     results = {}
-    for (key, value) in iteritems(context):
+    for key, value in iteritems(context):
         if not hasattr(value, "__call__"):
             continue
         if prefix and not key.startswith(prefix):
@@ -1282,7 +1238,7 @@ def tryall(context, prefix=None):
 
     print("-" * 40)
     print("results:")
-    for (key, value) in iteritems(results):
+    for key, value in iteritems(results):
         print(" " * 2, str(key) + ":", value)
 
 
@@ -1316,8 +1272,7 @@ class ThreadedDict(threadlocal):
         return id(self)
 
     def clear_all():
-        """Clears all ThreadedDict instances.
-        """
+        """Clears all ThreadedDict instances."""
         for t in list(ThreadedDict._instances):
             t.clear()
 
@@ -1408,7 +1363,7 @@ def autoassign(self, locals):
 
         def __init__(self, foo, bar, baz=1): autoassign(self, locals())
     """
-    for (key, value) in iteritems(locals):
+    for key, value in iteritems(locals):
         if key == "self":
             continue
         setattr(self, key, value)
@@ -1473,7 +1428,7 @@ def sendmail(from_address, to_address, subject, message, headers=None, **kw):
             filename = os.path.basename(getattr(a, "name", ""))
             content_type = getattr(a, "content_type", None)
             mail.attach(filename, a.read(), content_type)
-        elif isinstance(a, string_types):
+        elif isinstance(a, str):
             f = open(a, "rb")
             content = f.read()
             f.close()
