@@ -12,8 +12,7 @@ Most of the required Python packages and modules such as web.py and Cheroot are 
 Installing SIP by cloning from GitHub enables easy upgrades via `git pull` on the command line or by using the included `System_Update` plugin.
 
 To install, simply clone SIP into the /home/pi/ directory of your Raspberry Pi:\
-`sudo git clone https://github.com/Dan-in-CA/SIP.git`\
-Or use the install script described in the [documentation  wiki](https://github.com/Dan-in-CA/SIP/wiki/install_info).  
+`sudo git clone https://github.com/Dan-in-CA/SIP.git` 
 
 If you are running Raspberry Pi OS Lite you may need to install git first with:\
 `sudo apt-get install git`.\
@@ -46,3 +45,4 @@ To ask question, make suggestions and learn more about SIP please see the **Disc
 -----------------------------------------------------------------
 
 GNU GPL License
+
