@@ -26,7 +26,7 @@ There are a number of options for connecting SIP to an irrigation system includi
 ### Communication with other systems
 - SIP can be controlled and monitored using HTTP GET commands.
 - With the addition of available plugins SIP can communicate with other systems via MQTT.
-- there is a Node-RED plugin included with SIP that allows Node-RED flows to control SIP and receive status information from SIP.   
+- There is a Node-RED plugin included with SIP that allows Node-RED flows to control SIP and receive status information from SIP.   
 - SIP can also issue Linux shell commands when a station is turned on or off. This is useful for controlling wireless remote devices and for I2C relay hats and [boards](https://www.tindie.com/products/jap/8-channel-relay-board-for-raspberry-pi-and-arduino/).
 - There is also a mobile_app plugin shipped with SIP that transmits and receives SIP settings and status information in json format.
 - The [Blinker](https://pythonhosted.org/blinker/) package that is shipped with SIP sends messages to other Python modules such as plugins to report changes in status. See the signaling_examples.py file in SIP's plugins folder for examples.
@@ -45,4 +45,5 @@ To ask question, make suggestions and learn more about SIP please see the **Disc
 -----------------------------------------------------------------
 
 GNU GPL License
+
 
