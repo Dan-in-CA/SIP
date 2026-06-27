@@ -438,7 +438,8 @@ def total_duration(prog): # total duration of all stations in program
         s_count = 0
         for m in prog["station_mask"]:
             s_count += bin(m).count('1')
-            return s_count * prog["duration_sec"][0]
+
+        return s_count * prog["duration_sec"][0]
 
 def prog_match(prog):
     """
