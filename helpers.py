@@ -320,7 +320,7 @@ def get_cpu_temp():
         elif gv.platform == "pi":
             command = "cat /sys/class/thermal/thermal_zone0/temp"
             output = int(subprocess.check_output(command.split()))
-            temp = int(output / 1000.0)
+            temp = "%.1f" % (output / 1000.0)
         else:
             return ""
         return temp
@@ -438,7 +438,8 @@ def total_duration(prog): # total duration of all stations in program
         s_count = 0
         for m in prog["station_mask"]:
             s_count += bin(m).count('1')
-            return s_count * prog["duration_sec"][0]
+
+        return s_count * prog["duration_sec"][0]
 
 def prog_match(prog):
     """

@@ -296,8 +296,14 @@ class SIPApp(web.application):
 
 app = SIPApp(urls, globals())
 web.config.debug = False  # Improves page load speed
+store = None
+if os.path.isdir(u"/run/OSPi/sessions"):
+    store = web.session.DiskStore(u"/run/OSPi/sessions")
+else:
+    store = web.session.DiskStore("sessions")
+
 web.config._session = web.session.Session(
-    app, web.session.DiskStore("sessions"), initializer={"user": "anonymous"}
+    app, store, initializer={u"user": u"anonymous"}
 )
 template_globals = {
     "gv": gv,

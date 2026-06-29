@@ -18,6 +18,7 @@ Wants=network-online.target
 
 [Service]
 Environment="PATH=${install_location}/.venv/bin:${PATH}"
+ExecStartPre=mkdir -p /run/OSPi/sessions
 ExecStart=${install_location}/.venv/bin/python3 -u ${install_location}/sip.py
 Restart=on-abort
 WorkingDirectory=${install_location}
@@ -28,5 +29,7 @@ WantedBy=multi-user.target
 EOF
 
 sudo cp /tmp/sip.service /etc/systemd/system/
+sudo systemctl daemon-reload
 sudo systemctl enable sip.service
 sudo git config --system --add safe.directory ${install_location}
+sudo systemctl restart sip.service
