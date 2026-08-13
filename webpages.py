@@ -4,7 +4,6 @@
 import json
 import ast
 import datetime
-from datetime import date, datetime, timedelta
 import io
 import threading
 import time
@@ -23,16 +22,18 @@ def report_login():
 
 
 value_change = signal("value_change")
-def report_value_change(values):
-    value_change.send(None, values = values)
+def report_value_change():
+    value_change.send()
 
-water_level_change = signal("water_level_change")
-def report_water_level_change(water_level = None):
-    water_level_change.send(None, water_level = water_level)
 
 option_change = signal("option_change")
 def report_option_change():
     option_change.send()
+
+
+rebooted = signal("rebooted")
+def report_rebooted():
+    rebooted.send()
 
 
 station_names = signal("station_names")
@@ -41,28 +42,22 @@ def report_station_names():
 
 
 program_change = signal("program_change")
-def report_program_change(pid):
-    program_change.send(None, pid = pid)
-
+def report_program_change():
+    program_change.send()
 
 program_added = signal("program_added")
-def report_program_added(pid):
-    program_added.send(None, pid = pid)
+def report_program_added():
+    program_added.send()
 
 
 program_deleted = signal("program_deleted")
-def report_program_deleted(pid):
-    program_deleted.send(None,pid = pid)
-
-
-program_deleted_all = signal("program_deleted_all")
-def report_program_deleted_all():
-    program_deleted_all.send(None)
+def report_program_deleted():
+    program_deleted.send()
 
 
 program_toggled = signal("program_toggled")
-def report_program_toggle(pid, state):
-    program_toggled.send(None, pid = pid, state = state)
+def report_program_toggle(index, state):
+    program_toggled.send("SIP", index = index, state = state)
         
 
 ### Web pages ######################
@@ -135,45 +130,32 @@ class change_values(ProtectedPage):
             ):
             pid = gv.pon - 1           
             stop_stations()
+            if pid < 97:
+                gv.phold[0] = pid
+                gv.phold[1] = gv.lm + (gv.pd[pid]["start_min"] * 60) + total_duration(gv.pd[pid])         
             raise web.seeother("/")
         elif "en" in qdict and qdict["en"] == "0":
-            stop_stations()
+            gv.srvals = [0] * (gv.sd["nst"])  # turn off all stations
+            set_output()
         if "mm" in qdict and qdict["mm"] == "0":
-            clear_mm()
+            clear_mm()            
         if "rd" in qdict:        
             if qdict["rd"]:
-                rd = int(float(qdict["rd"]))
-                if rd != gv.sd["rd"]:
-                    gv.sd["rd"] = rd
-                    gv.sd["rdst"] = round(gv.now + rd * 3600)
-                    report_rain_delay_change()
-                if rd:
-                    stop_onrain()
+                gv.sd["rd"] = int(float(qdict["rd"]))
+                gv.sd["rdst"] = round(gv.now + gv.sd["rd"] * 3600)
+                stop_onrain()
+                report_rain_delay_change()
             else:
-                if gv.sd["rd"] or gv.sd["rdst"]:
-                    gv.sd["rd"] = 0
-                    gv.sd["rdst"] = 0
-                    report_rain_delay_change()
-
-        if "wl" in qdict: # Water level
-            try:
-                wl = int(qdict["wl"])
-                report_water_level_change(wl)
-            except ValueError: # no change
-                pass
-
-        # updates changed values
-        values = {}
+                gv.sd["rd"] = 0
+                gv.sd["rdst"] = 0
+                report_rain_delay_change()
         for key in list(qdict.keys()):
             try:
-                val = int(qdict[key])
-                gv.sd[key] = val
-                values[key] = val
-            except ValueError:
+                gv.sd[key] = int(qdict[key])
+            except Exception:
                 pass
         jsave(gv.sd, "sd")
-        if len(values):
-            report_value_change(values)
+        report_value_change()
         raise web.seeother("/")  # Send browser back to home page
 
 
@@ -208,8 +190,8 @@ class change_options(ProtectedPage):
         elif ("rbt" in qdict
               and qdict["rbt" ] == "1"
               ):
+            report_rebooted()
             reboot()
-            raise web.seeother("/restart")
         for i in range(gv.sd["nbrd"]):  # capture master associations
             if "m" + str(i) in qdict:
                 try:
@@ -242,12 +224,9 @@ class change_options(ProtectedPage):
                 names.append(qdict["s" + str(i)])
             else:
                 names.append("S" + "{:0>2d}".format(i + 1))
-        for i, name in enumerate(names): # Update only if changed
-            if gv.snames[i] != name:
-                gv.snames = names
-                jsave(names, "snames")
-                report_station_names()
-                break
+        gv.snames = names
+        jsave(names, "snames")
+        report_station_names()
 
         if "opw" in qdict and qdict["opw"] != "":
             try:
@@ -354,6 +333,7 @@ class change_options(ProtectedPage):
         if "rbt" in qdict and qdict["rbt"] == "1":
             gv.srvals = [0] * (gv.sd["nst"])
             set_output()
+            report_rebooted()
             reboot()
 
         if "rstrt" in qdict and qdict["rstrt"] == "1":
@@ -500,7 +480,6 @@ class get_set_station(ProtectedPage):
                 gv.rs[sid][3] = 99  # set program index
                 gv.ps[sid][1] = set_time
                 gv.sd["bsy"] = 1
-                report_station_scheduled(sid+1)
                 time.sleep(1)
             else:  # If station is turning off
                 gv.rs[sid][1] = gv.now + 1
@@ -566,40 +545,34 @@ class change_program(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        pid = int(qdict["pid"])  # program number
+        pnum = int(qdict["pid"]) + 1  # program number
         cp = json.loads(qdict["v"])
+        if cp["enabled"] == 0 and pnum == gv.pon:  # if disabled and program is running
+            for i in range(len(gv.ps)):
+                if gv.ps[i][0] == pnum:
+                    gv.ps[i] = [0, 0]
+                if gv.srvals[i]:
+                    gv.srvals[i] = 0
+            for i in range(len(gv.rs)):
+                if gv.rs[i][3] == pnum:
+                    gv.rs[i] = [0, 0, 0, 0]
         if cp["type"] == "interval":
             ref = gv.dse + cp["day_mask"]  # - 128
             cp["day_mask"] = ref % cp["interval_base_day"]  # + 128
-        if pid == -1:  # add new program
+        if qdict["pid"] == "-1":  # add new program
             gv.pd.append(cp)
             gv.pnames.append(cp["name"])
-            report_program_added(len(gv.pd) - 1)  # send program index
-        else: # modifiy existing program
-            stop_stations_pid(pid)
-
-            try:  # process program name
-                gv.pnames[pid] = cp["name"]
+            report_program_added()
+        else:
+            gv.pd[int(qdict["pid"])] = cp  # replace program
+            try:
+                gv.pnames[int(qdict["pid"])] = cp["name"]
             except IndexError:
                 if len(gv.pnames) < len(gv.pd):
                     diff = len(gv.pd) - len(gv.pnames)
                     gv.pnames.extend([""] * diff)
-                gv.pnames[pid] = cp["name"]
-
-            # Check if program enable was toggled
-            if cp["enabled"] != gv.pd[pid]["enabled"]:  # if changed
-                report_program_toggle(pid, state = True if cp["enabled"] else False)
-
-            # Check for other change(s) excluding "enabled"
-            ignore_key = "enabled"
-            p_changed = {k: v for k, v in gv.pd[pid].items() if k != ignore_key} != \
-                    {k: v for k, v in cp.items() if k != ignore_key}
-            
-            gv.pd[pid] = cp  # replace program
-
-            if p_changed:
-                report_program_change(pid)
-
+                gv.pnames[int(qdict["pid"])] = cp["name"]
+            report_program_change() ### add program index ###
         jsave(gv.pd, "programData")
         raise web.seeother("/vp")
 
@@ -609,17 +582,15 @@ class delete_program(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        pid = int(qdict["pid"])
-        if pid == "-1": # delete all programs
+        if qdict["pid"] == "-1":
             del gv.pd[:]
             del gv.pnames[:]
             jsave(gv.pd, "programData")
         else:
-            del gv.pd[pid]
-            del gv.pnames[pid]
+            del gv.pd[int(qdict["pid"])]
+            del gv.pnames[int(qdict["pid"])]
         jsave(gv.pd, "programData")
-        stop_stations()
-        report_program_deleted(pid) # send program index
+        report_program_deleted() ### add program index ###
         raise web.seeother("/vp")
 
 
@@ -628,11 +599,11 @@ class enable_program(ProtectedPage):
 
     def GET(self):
         qdict = web.input()
-        pid = int(qdict["pid"])
+        index = int(qdict["pid"])
         state = int(qdict["enable"])
-        gv.pd[pid]["enabled"] = state
+        gv.pd[index]["enabled"] = state
         jsave(gv.pd, "programData")
-        report_program_toggle(pid, state) #  send program index and state
+        report_program_toggle(index, state) #  send program index and state
         raise web.seeother("/vp")
 
 
@@ -758,8 +729,8 @@ class api_log(ProtectedPage):
         qdict = web.input()
         thedate = qdict["date"]
         # date parameter filters the log values returned; "yyyy-mm-dd" format
-        theday = datetime.strptime(thedate, "%Y-%m-%d")
-        prevday = theday - timedelta(days=1)
+        theday = datetime.date(*map(int, thedate.split("-")))
+        prevday = theday - datetime.timedelta(days=1)
         prevdate = prevday.strftime("%Y-%m-%d")
 
         records = read_log()
