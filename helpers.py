@@ -97,6 +97,13 @@ def report_restart(txt=None):
     Send blinker signal indicating system will restart.
     """
     restarting.send()
+
+
+rebooted = signal("rebooted")
+
+def report_rebooted():
+    rebooted.send()
+
     
 rs_ready = signal("rs_ready")  #: Signal to send on gv.rs ready
 
@@ -114,12 +121,16 @@ def reboot(wait=1, block=False):
     Set to True at start of thread (recursive).
     """
     if block:
+        report_rebooted()
         gv.srvals = [0] * (gv.sd["nst"])
         set_output()
         if gv.use_pigpio:
             pass
         else:
-            GPIO.cleanup()
+            try:
+               GPIO.cleanup()
+            except NameError:
+                pass
         time.sleep(wait)
         try:
             print(_("Rebooting..."))
