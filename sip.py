@@ -28,7 +28,6 @@ from helpers import (
     plugin_adjustment,
     prog_match,
     report_new_day,
-    report_station_completed,
     report_rain_delay_change,
     schedule_stations,
     station_names,
@@ -37,7 +36,8 @@ from helpers import (
     convert_temp,
     total_duration,
     temp_string,
-    days_since_epoch
+    days_since_epoch,
+    run_schedule_completed
 )
 from ReverseProxied import ReverseProxied
 from urls import urls  # Provides access to URLs for UI pages
@@ -56,16 +56,17 @@ def timing_loop():
         next_start = 0
         cur_ord = (date.today().toordinal())  # day of year
         if cur_ord > gv.day_ord:
-            gv.day_ord = cur_ord
-            report_new_day()         
+            gv.day_ord = cur_ord    
             gv.dse = days_since_epoch()
             today = datetime.now().date()
             midnight = datetime.combine(today, d_time.min)
-            gv.lm = round(midnight.timestamp())
-        
+            gv.lm = int(midnight.timestamp())
+            report_new_day()     
+            
         gv.now = round(time.time()) # Current time as seconds since the epoch, in UTC. Updated once per second.
-        lt = time.localtime(gv.now)  # Current time as time struct.
-        
+        gv.nowt = time.localtime(gv.now)  # Current time as time struct.
+        gv.now_min = (gv.nowt.tm_hour * 60) + gv.nowt.tm_min  # minutes past midnight
+
         if gv.sd["mas"]: #  If master is defined
             masid = gv.sd["mas"] -1 # master station index
         else:
@@ -169,13 +170,9 @@ def timing_loop():
                             set_output()
                             gv.sbits[b] &= ~(1 << s)
                             if sid != masid:  # if not master, fill out log
-                                gv.ps[sid] = [0, 0]
-                                gv.lrun[0] = sid
-                                gv.lrun[1] = gv.rs[sid][3]
-                                gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-                                log_run()
-                                report_station_completed(sid + 1)
-                            gv.rs[sid] = [0, 0, 0, 0]
+                                run_schedule_completed(sid, gv.rs[sid][0], gv.now, gv.rs[sid][3])
+                            else:
+                                gv.rs[sid] = [0, 0, 0, 0]
                     else:  # if this station is not yet on
                         if (gv.now >= gv.rs[sid][0]
                             and gv.now < gv.rs[sid][1]
@@ -199,8 +196,7 @@ def timing_loop():
                                     gv.srvals[sid] = 1  # station is turned on
                                     set_output()
                                     gv.sbits[b] |= 1 << s  # Set display to on
-                                    gv.ps[sid][0] = gv.rs[sid][3]
-                                    gv.ps[sid][1] = gv.rs[sid][2]
+                                    gv.ps[sid] = [ gv.rs[sid][3], gv.rs[sid][2] ]
                                 if (gv.sd["mas"] # Master is defined
                                     and gv.sd["mo"][b] & (1 << s) # this station activates master.
                                     ):  # Master settings
