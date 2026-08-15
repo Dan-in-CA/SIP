@@ -173,7 +173,7 @@ def timing_loop():
                             if sid != masid:  # if not master, fill out log
                                 run_schedule_completed(sid, gv.rs[sid][0], gv.now, gv.rs[sid][3])
                             else:
-                            gv.rs[sid] = [0, 0, 0, 0]
+                                gv.rs[sid] = [0, 0, 0, 0]
                     else:  # if this station is not yet on
                         if (gv.now >= gv.rs[sid][0]
                             and gv.now < gv.rs[sid][1]

@@ -411,27 +411,30 @@ def log_run():
     If a record limit is specified (gv.sd["lr"]) the number of records is truncated.
     DEPRECATED: Replaced by station_run_completed() or run_schedule_logger().
     """
-    if gv.sd["lg"]:
-        pnum = gv.lrun[1]
+    if not gv.sd["lg"]:
+        return  # skip
+    
+    pnum = gv.lrun[1]
 
-        if pnum == 0:  # skip program 0
-            return
-        
-        pid = pnum -1
-        sid = gv.lrun[0]
-        start = gv.rs[sid][0]
-        duration = gv.lrun[2]
+    if pnum == 0:  # skip program 0
+        return
+    
+    pid = pnum -1
+    sid = gv.lrun[0]
+    start = gv.rs[sid][0]
+    duration = gv.lrun[2]
 
-        if 0 < pnum < 98:  # calculate effective runtime duration %
-            if not gv.sd["idd"]:
-                pdur = gv.pd[pid]["duration_sec"][0]
+    if 0 < pnum < 98:  # calculate effective runtime duration %
+        if not gv.sd["idd"]:
+            pdur = gv.pd[pid]["duration_sec"][0]
         else:
-                pdur = gv.pd[pid]["duration_sec"][sid]
-            duration_adj = round((duration * 100) / int(pdur))
-            else:
-            duration_adj = None
+            pdur = gv.pd[pid]["duration_sec"][sid]
 
-        run_schedule_logger(sid, pid, start, duration, duration_adj)
+        duration_adj = round((duration * 100) / int(pdur))
+    else:
+        duration_adj = None
+
+    run_schedule_logger(sid, pid, start, duration, duration_adj)
 
 
 def run_schedule_completed(sid: int, start: int, stop: int, pnum: int, clear_rs: bool = True) -> None:
@@ -453,7 +456,6 @@ def run_schedule_completed(sid: int, start: int, stop: int, pnum: int, clear_rs:
     - Report station completed event
     - Update UI display : Reset program schedule ( gv.ps[sid] = [0,0])
     - By default, will reset running station data ( gv.rs[sid] = [0,0,0,0])
-
     """
   
     if pnum == 0:  # skip program 0
@@ -463,10 +465,11 @@ def run_schedule_completed(sid: int, start: int, stop: int, pnum: int, clear_rs:
     duration = stop - start
 
     if 0 < pnum < 98:  # calculate effective runtime duration %
-            if not gv.sd["idd"]:
-                 pdur = gv.pd[pid]["duration_sec"][0]
-            else:
+        if not gv.sd["idd"]:
+            pdur = gv.pd[pid]["duration_sec"][0]
+        else:
             pdur = gv.pd[pid]["duration_sec"][sid]
+
         duration_adj = round((duration * 100) / int(pdur))
     else:
         duration_adj = None
@@ -496,20 +499,20 @@ def run_schedule_logger(sid: int, pid: int, start: int, duration: int, duration_
     if gv.sd["lg"]:  # station log enabled 
         start_time = time.localtime(start)
         pnum = pid + 1
-        logline = {}
-        logline["program"] = prog_name(pid + 1)
-        logline["adjustment"] = str(duration_adj) if duration_adj else "---"
-        logline["station"] = sid
-        logline["duration"] = timestr(duration)
-        logline["start"] = f"{start_time.tm_hour:02d}:{start_time.tm_min:02d}:{start_time.tm_sec:02d}"
-        logline["date"] = time.strftime('%Y-%m-%d', start_time)
-        logline["program_index"] = str(pnum)
+        log_line = {}
+        log_line["program"] = prog_name(pid + 1)
+        log_line["adjustment"] = str(duration_adj) if duration_adj else "---"
+        log_line["station"] = sid
+        log_line["duration"] = timestr(duration)
+        log_line["start"] = f"{start_time.tm_hour:02d}:{start_time.tm_min:02d}:{start_time.tm_sec:02d}"
+        log_line["date"] = time.strftime('%Y-%m-%d', start_time)
+        log_line["program_index"] = str(pnum)
 
-        _run_sched_log_queue.put(logline)
+        _run_sched_log_queue.put(log_line)
 
 
 def log_writer(
-    msg_queue: queue.Queue, filename: str, batch_size: int = 10, timeout: float = 1.0
+    msg_queue: queue.Queue, filename: str, batch_size: int = 10, timeout: float = 1.5
 ):
     """
     Wait for and collects in memory multiple one line messages string,
@@ -544,9 +547,9 @@ def log_writer(
 
             log_messages.reverse()
             try:
-        lines = []
+                lines = []
                 for r in log_messages:
-            lines.append(json.dumps(r) + "\n")
+                    lines.append(json.dumps(r) + "\n")
 
                 # Read and append existing file content
                 with open(filename, encoding="utf-8") as logf:
@@ -558,10 +561,10 @@ def log_writer(
 
                 # Write to file
                 with open(filename, "w", encoding="utf-8") as f:
-            if gv.sd["lr"]:
-                f.writelines(lines[: gv.sd["lr"]])
-            else:
-                f.writelines(lines)
+                    if gv.sd["lr"]:
+                        f.writelines(lines[: gv.sd["lr"]])
+                    else:
+                        f.writelines(lines)
 
             except (OSError, json.JSONDecodeError, ValueError) as e:
                 print(f"[Error] Failed writing logs: {e}")
