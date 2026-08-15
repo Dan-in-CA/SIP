@@ -124,6 +124,11 @@ class change_values(ProtectedPage):
     def change_values(self):    
         qdict = web.input()
         if "rsn" in qdict and qdict["rsn"] == "1":
+            if gv.pon:
+                pid = gv.pon - 1           
+                if pid < 97:
+                    gv.phold[0] = pid
+                    gv.phold[1] = gv.lm + (gv.pd[pid]["start_min"] * 60) + total_duration(gv.pd[pid])
             stop_stations()
             raise web.seeother("/")
         elif "en" in qdict and qdict["en"] == "0":
