@@ -470,7 +470,10 @@ def run_schedule_completed(sid: int, start: int, stop: int, pnum: int, clear_rs:
         else:
             pdur = gv.pd[pid]["duration_sec"][sid]
 
-        duration_adj = round((duration * 100) / int(pdur))
+        if pdur:
+            duration_adj = round((duration * 100) / int(pdur))
+        else:
+            duration_adj = None
     else:
         duration_adj = None
 
