@@ -129,12 +129,8 @@ class change_values(ProtectedPage):
         if ("rsn" in qdict 
             and qdict["rsn"] == "1"
             and gv.pon
-            ):
-            pid = gv.pon - 1           
+            ):       
             stop_stations()
-            if pid < 97:
-                gv.phold[0] = pid
-                gv.phold[1] = gv.lm + (gv.pd[pid]["start_min"] * 60) + total_duration(gv.pd[pid])         
             raise web.seeother("/")
         elif "en" in qdict and qdict["en"] == "0":
             gv.srvals = [0] * (gv.sd["nst"])  # turn off all stations
