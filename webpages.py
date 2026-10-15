@@ -192,6 +192,7 @@ class change_options(ProtectedPage):
               ):
             report_rebooted()
             reboot()
+            raise web.seeother("/restart")
         for i in range(gv.sd["nbrd"]):  # capture master associations
             if "m" + str(i) in qdict:
                 try:
