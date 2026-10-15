@@ -30,6 +30,7 @@ from helpers import (
     report_new_day,
     report_station_completed,
     report_rain_delay_change,
+    report_running_program_change,
     schedule_stations,
     station_names,
     stop_onrain,
@@ -225,6 +226,7 @@ def timing_loop():
                     break
             if pon != gv.pon:  # Update number of running program
                 gv.pon = pon
+                report_running_program_change()
 
             if program_running:
                 if (gv.sd["urs"] 
@@ -269,6 +271,7 @@ def timing_loop():
         else:  # Not busy
             if gv.pon != None:
                 gv.pon = None
+                report_running_program_change()
 
         if gv.sd["urs"]:
             check_rain()  # in helpers.py

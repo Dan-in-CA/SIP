@@ -164,3 +164,11 @@ def notify_zone_change(name, **kw):
 
 zones = signal("zone_change")
 zones.connect(notify_zone_change)
+
+def report_running_program_change(name, **kw):
+    print("running program changed")
+    # print(gv.srvals)  #  This shows the state of the zones.
+
+
+program = signal("running_program_change")
+zones.connect(report_running_program_change)

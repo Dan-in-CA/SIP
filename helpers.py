@@ -78,6 +78,14 @@ def report_rain_changed(txt=None):
     Send blinker signal indicating that rain sensor changed.
     """
     rain_changed.send()
+    
+running_program_change = signal("running_program_change")
+
+def report_running_program_change():
+    """
+    Send blinker signal indicating that running program changed.
+    """
+    running_program_change.send()    
 
 
 rain_delay_change = signal("rain_delay_change")
