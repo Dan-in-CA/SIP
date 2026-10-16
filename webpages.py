@@ -144,11 +144,11 @@ class change_values(ProtectedPage):
                 gv.sd["rd"] = int(float(qdict["rd"]))
                 gv.sd["rdst"] = round(gv.now + gv.sd["rd"] * 3600)
                 stop_onrain()
-                report_rain_delay_change()
+                # report_rain_delay_change()
             else:
                 gv.sd["rd"] = 0
                 gv.sd["rdst"] = 0
-                report_rain_delay_change()
+                # report_rain_delay_change()
         for key in list(qdict.keys()):
             try:
                 gv.sd[key] = int(qdict[key])
