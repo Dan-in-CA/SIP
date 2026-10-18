@@ -31,11 +31,6 @@ def report_option_change():
     option_change.send()
 
 
-rebooted = signal("rebooted")
-def report_rebooted():
-    rebooted.send()
-
-
 station_names = signal("station_names")
 def report_station_names():
     station_names.send()
@@ -190,7 +185,6 @@ class change_options(ProtectedPage):
         elif ("rbt" in qdict
               and qdict["rbt" ] == "1"
               ):
-            report_rebooted()
             reboot()
             raise web.seeother("/restart")
         for i in range(gv.sd["nbrd"]):  # capture master associations
@@ -334,7 +328,6 @@ class change_options(ProtectedPage):
         if "rbt" in qdict and qdict["rbt"] == "1":
             gv.srvals = [0] * (gv.sd["nst"])
             set_output()
-            report_rebooted()
             reboot()
 
         if "rstrt" in qdict and qdict["rstrt"] == "1":

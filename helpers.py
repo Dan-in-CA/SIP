@@ -106,6 +106,13 @@ def report_restart(txt=None):
     """
     restarting.send()
     
+
+rebooted = signal("rebooted")
+
+def report_rebooted():
+    rebooted.send()
+
+    
 rs_ready = signal("rs_ready")  #: Signal to send on gv.rs ready
 
 
@@ -122,6 +129,7 @@ def reboot(wait=1, block=False):
     Set to True at start of thread (recursive).
     """
     if block:
+        report_rebooted()
         gv.srvals = [0] * (gv.sd["nst"])
         set_output()
         if gv.use_pigpio:
