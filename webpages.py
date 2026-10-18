@@ -478,6 +478,7 @@ class get_set_station(ProtectedPage):
                 gv.rs[sid][3] = 99  # set program index
                 gv.ps[sid][1] = set_time
                 gv.sd["bsy"] = 1
+                report_station_scheduled(sid+1)
                 time.sleep(1)
             else:  # If station is turning off
                 gv.rs[sid][1] = gv.now + 1
