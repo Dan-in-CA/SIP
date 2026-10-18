@@ -115,12 +115,23 @@ def report_rebooted():
     
 rs_ready = signal("rs_ready")  #: Signal to send on gv.rs ready
 
-
 def report_rs_ready(txt=None):
     """
     Send blinker signal indicating run schedule (gv.rs) is ready
     """
     rs_ready.send()    
+
+
+plugin_setting_change = signal("plugin_setting_change")
+
+
+def report_plugin_setting_change(name, **kw) -> None:
+    """
+    Send blinker signal indicating that plugin settings changed.
+    """
+    plugin_setting_change.send(name, **kw)
+
+
 
 
 def reboot(wait=1, block=False):
