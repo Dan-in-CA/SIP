@@ -219,9 +219,13 @@ class change_options(ProtectedPage):
                 names.append(qdict["s" + str(i)])
             else:
                 names.append("S" + "{:0>2d}".format(i + 1))
-        gv.snames = names
-        jsave(names, "snames")
-        report_station_names()
+
+        for sid, name in enumerate(names): 
+            if gv.snames[sid] != name:  # Save and report only if changed
+                gv.snames = names
+                jsave(names, "snames")
+                report_station_names()
+                break
 
         if "opw" in qdict and qdict["opw"] != "":
             try:
