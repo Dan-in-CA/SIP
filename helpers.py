@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import annotations  # Enables Python 3.10+ syntax in Python 3.9
+
 # standard library imports
 import ast
 import codecs
