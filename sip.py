@@ -38,7 +38,8 @@ from helpers import (
     convert_temp,
     total_duration,
     temp_string,
-    days_since_epoch
+    days_since_epoch,
+    run_schedule_completed
 )
 from ReverseProxied import ReverseProxied
 from urls import urls  # Provides access to URLs for UI pages
@@ -170,13 +171,9 @@ def timing_loop():
                             set_output()
                             gv.sbits[b] &= ~(1 << s)
                             if sid != masid:  # if not master, fill out log
-                                gv.ps[sid] = [0, 0]
-                                gv.lrun[0] = sid
-                                gv.lrun[1] = gv.rs[sid][3]
-                                gv.lrun[2] = int(gv.now - gv.rs[sid][0])
-                                log_run()
-                                report_station_completed(sid + 1)
-                            gv.rs[sid] = [0, 0, 0, 0]
+                                run_schedule_completed(sid, gv.rs[sid][0], gv.now, gv.rs[sid][3])
+                            else:
+                                gv.rs[sid] = [0, 0, 0, 0]
                     else:  # if this station is not yet on
                         if (gv.now >= gv.rs[sid][0]
                             and gv.now < gv.rs[sid][1]
