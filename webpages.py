@@ -4,6 +4,7 @@
 import json
 import ast
 import datetime
+from datetime import date, datetime, timedelta
 import io
 import threading
 import time
@@ -22,9 +23,12 @@ def report_login():
 
 
 value_change = signal("value_change")
-def report_value_change():
-    value_change.send()
+def report_value_change(values):
+    value_change.send(None, values = values)
 
+water_level_change = signal("water_level_change")
+def report_water_level_change(water_level = None):
+    water_level_change.send(None, water_level = water_level)
 
 option_change = signal("option_change")
 def report_option_change():
@@ -119,38 +123,52 @@ class change_values(ProtectedPage):
         
     def change_values(self):    
         qdict = web.input()
-        if ("rsn" in qdict 
-            and qdict["rsn"] == "1"
-            and gv.pon
-            ):
-            pid = gv.pon - 1           
+        if "rsn" in qdict and qdict["rsn"] == "1":
+            if gv.pon:
+                pid = gv.pon - 1           
+                if pid < 97:
+                    gv.phold[0] = pid
+                    gv.phold[1] = gv.lm + (gv.pd[pid]["start_min"] * 60) + total_duration(gv.pd[pid])
             stop_stations()
-            if pid < 97:
-                gv.phold[0] = pid
-                gv.phold[1] = gv.lm + (gv.pd[pid]["start_min"] * 60) + total_duration(gv.pd[pid])         
             raise web.seeother("/")
         elif "en" in qdict and qdict["en"] == "0":
-            gv.srvals = [0] * (gv.sd["nst"])  # turn off all stations
-            set_output()
+            stop_stations()
         if "mm" in qdict and qdict["mm"] == "0":
-            clear_mm()            
+            clear_mm()
         if "rd" in qdict:        
             if qdict["rd"]:
-                gv.sd["rd"] = int(float(qdict["rd"]))
-                gv.sd["rdst"] = round(gv.now + gv.sd["rd"] * 3600)
-                stop_onrain()
-                # report_rain_delay_change()
+                rd = int(float(qdict["rd"]))
+                if rd != gv.sd["rd"]:
+                    gv.sd["rd"] = rd
+                    gv.sd["rdst"] = round(gv.now + rd * 3600)
+                    report_rain_delay_change()
+                if rd:
+                    stop_onrain()
             else:
-                gv.sd["rd"] = 0
-                gv.sd["rdst"] = 0
-                # report_rain_delay_change()
+                if gv.sd["rd"] or gv.sd["rdst"]:
+                    gv.sd["rd"] = 0
+                    gv.sd["rdst"] = 0
+                    report_rain_delay_change()
+
+        if "wl" in qdict: # Water level
+            try:
+                wl = int(qdict["wl"])
+                report_water_level_change(wl)
+            except ValueError: # no change
+                pass
+
+        # updates changed values
+        values = {}
         for key in list(qdict.keys()):
             try:
-                gv.sd[key] = int(qdict[key])
-            except Exception:
+                val = int(qdict[key])
+                gv.sd[key] = val
+                values[key] = val
+            except ValueError:
                 pass
         jsave(gv.sd, "sd")
-        report_value_change()
+        if len(values):
+            report_value_change(values)
         raise web.seeother("/")  # Send browser back to home page
 
 
