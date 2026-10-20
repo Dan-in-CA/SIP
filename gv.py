@@ -111,7 +111,7 @@ from helpers import load_programs, station_names, days_since_epoch
 rn = 0
 day_ord = 0
 node_runs = {}
-now = time.time()
+now = round(time.time())
 nowt = time.localtime(now)
 dse = days_since_epoch()
 lm = 0
