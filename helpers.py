@@ -551,11 +551,12 @@ def log_writer(
         if log_messages:
 
             log_messages.reverse()
-            try:
-                lines = []
-                for r in log_messages:
-                    lines.append(json.dumps(r) + "\n")
 
+            lines = []
+            for r in log_messages:
+                lines.append(json.dumps(r) + "\n")
+
+            try:
                 # Read and append existing file content
                 with open(filename, encoding="utf-8") as logf:
                     for r in logf:
@@ -563,14 +564,16 @@ def log_writer(
                         if not r:
                             continue
                         lines.append(r + "\n")
+            except OSError as e:
+                print(f"[Warning] Log file not found or failed reading logs: {e}")
 
+            try:
                 # Write to file
                 with open(filename, "w", encoding="utf-8") as f:
                     if gv.sd["lr"]:
                         f.writelines(lines[: gv.sd["lr"]])
                     else:
                         f.writelines(lines)
-
             except (OSError, json.JSONDecodeError, ValueError) as e:
                 print(f"[Error] Failed writing logs: {e}")
 
