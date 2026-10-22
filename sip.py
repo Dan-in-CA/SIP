@@ -225,7 +225,6 @@ def timing_loop():
 
             if pon != gv.pon: # Running program has changed
                 gv.pon = pon # Update number of running program
-                gv.halted = [0] * gv.sd["nst"]  # clear halted list when program changes
                 report_running_program_change()
 
             if program_running:
