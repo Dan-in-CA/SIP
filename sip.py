@@ -214,18 +214,17 @@ def timing_loop():
                                 gv.srvals[sid] = 1  # this is where master is turned on
                                 set_output()
 
-            else:  # for loop ended
-                program_running = False
-                pon = None
-                gv.halted = [0] * gv.sd["nst"]  # clear gv.halted
-            
+            # Check if any program is running
+            program_running = False
+            pon = None
             for sid in range(gv.sd["nst"]):
                 if gv.rs[sid][1]:  # if any station is scheduled
                     program_running = True
                     pon = gv.rs[sid][3]
                     break
-            if pon != gv.pon:  # Update number of running program
-                gv.pon = pon
+
+            if pon != gv.pon: # Running program has changed
+                gv.pon = pon # Update number of running program
                 report_running_program_change()
 
             if program_running:
