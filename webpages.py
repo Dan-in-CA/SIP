@@ -746,8 +746,8 @@ class api_log(ProtectedPage):
         qdict = web.input()
         thedate = qdict["date"]
         # date parameter filters the log values returned; "yyyy-mm-dd" format
-        theday = datetime.date(*map(int, thedate.split("-")))
-        prevday = theday - datetime.timedelta(days=1)
+        theday = datetime.strptime(thedate, "%Y-%m-%d")
+        prevday = theday - timedelta(days=1)
         prevdate = prevday.strftime("%Y-%m-%d")
 
         records = read_log()
