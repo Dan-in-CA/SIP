@@ -348,7 +348,7 @@ def plugin_adjustment():
 def get_cpu_temp():
     """
     Reads and returns the Celsius temperature of the CPU if available.
-#     If unit is F, temperature is returned as Fahrenheit otherwise Celsius.
+    If unit is F, temperature is returned as Fahrenheit otherwise Celsius.
     """
     try:
         if gv.platform == "bo":
@@ -365,6 +365,9 @@ def get_cpu_temp():
         return ""
 
 def total_adjustment():
+    """
+    Sums irrigation time (water level) adjustments from multiple plugins.
+    """
     duration_adjustments = [gv.sd[entry] for entry in gv.sd if entry.startswith('wl_')]
     result = float(gv.sd["wl"])
     for entry in duration_adjustments:
@@ -587,7 +590,7 @@ def log_writer(
 
 def log_writer_thread_init():
     """
-    Initialyse the thread used for writing running schedule log messages
+    Initialise the thread used for writing running schedule log messages
     Return a queue for messages and a thread handle
     Should be called once.
     Set to write at every 10 messages or timeout of 1.0 sec.
@@ -617,65 +620,6 @@ def days_since_epoch():
     current_date = date(today.year, today.month, today.day)
     days = (current_date - epoch).days
     return days
-
-def total_duration(prog): # total duration of all stations in program
-    if gv.sd["idd"]:
-        return sum(prog["duration_sec"])
-    else:
-        s_count = 0
-        for m in prog["station_mask"]:
-            s_count += bin(m).count('1')
-
-        return s_count * prog["duration_sec"][0]
-
-def prog_match(prog):
-    """
-    Test a program for current date and time match.
-    """
-    if not prog["enabled"]:
-        return 0  # Skip if program is not enabled
-
-    lt = time.localtime(gv.now)
-    if prog["type"] == "interval":
-        if (days_since_epoch() % prog["interval_base_day"]) != prog["day_mask"]:
-            return 0
-    else:  # Weekday program
-        if not prog["day_mask"] - 128 & 1 << lt.tm_wday:
-            return 0
-        if prog["type"] == "evendays":
-            if lt.tm_mday % 2 != 0:
-                return 0
-        if prog["type"] == "odddays":
-            if lt.tm_mday == 31 or ((lt.tm_mon == 2 and lt.tm_mday == 29)):
-                return 0
-            elif lt.tm_mday % 2 != 1:
-                return 0
-    this_minute = (lt.tm_hour * 60) + lt.tm_min  # Check time match in minutes
-    if this_minute < prog["start_min"] or this_minute >= (prog["stop_min"] + prog["cycle_min"]):
-        return 0
-    dur_mins = -(total_duration(prog) // -60)
-    if (this_minute >= prog["start_min"]
-        and this_minute <= (prog["stop_min"] + prog["cycle_min"])
-        and gv.sd["seq"]   
-        ):
-        return 1  # Program matched
-    
-    elif prog["cycle_min"] != 0:
-        mins_past_start = this_minute - prog["start_min"]
-        prior_cycles = mins_past_start // prog["cycle_min"]
-        past_mins = prog["start_min"] + (prior_cycles * prog["cycle_min"])
-        if (this_minute >= past_mins
-            and this_minute < past_mins + dur_mins
-            ):
-            return 1
-        
-    elif (this_minute >= prog["start_min"]
-          and gv.sd["seq"] == 0
-          and this_minute < prog["start_min"] + (max(prog["duration_sec"]) // 60)
-          ):
-        return 1
-            
-    return 0
 
 
 def schedule_stations(stations):
